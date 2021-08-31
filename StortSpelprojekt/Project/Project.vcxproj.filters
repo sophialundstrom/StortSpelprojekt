@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{a1615b81-80d3-4cf8-b69a-d9f2f374b402}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics\Renderers">
+      <UniqueIdentifier>{20c5cf0f-f847-4e09-a639-da1c37ce0f83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{fa7cfd21-3f7c-4c98-a727-287ef296e521}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Deferred">
+      <UniqueIdentifier>{b03f4c45-efc9-4aed-98e9-5214d1d21682}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Displacement">
+      <UniqueIdentifier>{526370f5-da8d-4e61-ac87-372fcd425fd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Model">
+      <UniqueIdentifier>{8d93b321-f9b7-4293-a59b-1dcafcb9707d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Particle">
+      <UniqueIdentifier>{17241464-3c39-481d-9d56-381aa0919ade}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shadow">
+      <UniqueIdentifier>{cd15c6a6-3cb8-4bd7-a640-9806b6741db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\UVAnimation">
+      <UniqueIdentifier>{3e7eb5c7-a642-4a57-a011-17f65a06d2dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{1461a57e-7d3e-43b2-b1c3-f9936f350776}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{d1229bcc-9c0b-4c0a-86b5-e639ef218c2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene\Drawable">
+      <UniqueIdentifier>{0426d72a-e3dc-4c75-9caf-6c9325196f17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene\Drawable\Model">
+      <UniqueIdentifier>{f089d7be-34e3-4257-a210-e05c0887d687}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene">
+      <UniqueIdentifier>{bc321ab5-8fa1-47e8-85cf-30261f9fd5fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene\Drawable">
+      <UniqueIdentifier>{a634b05d-51af-4df2-a655-5e103a87df2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene\Drawable\Model">
+      <UniqueIdentifier>{5d82c9b2-1d6f-4c9f-849a-92b2739271fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Scene\Game">
+      <UniqueIdentifier>{186acd6b-a652-4879-9118-37cf9ac0b21a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\Scene\Drawable\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source Files\Scene\Drawable\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Source Files\Scene\Drawable</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderGraph.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderData.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMap.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredRenderer.h">
+      <Filter>Header Files\Graphics\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="DisplacementRenderer.h">
+      <Filter>Header Files\Graphics\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelRenderer.h">
+      <Filter>Header Files\Graphics\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleRenderer.h">
+      <Filter>Header Files\Graphics\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowRenderer.h">
+      <Filter>Header Files\Graphics\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\Graphics\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawable.h">
+      <Filter>Header Files\Scene\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Header Files\Scene\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>Header Files\Scene\Drawable\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry.h">
+      <Filter>Header Files\Scene\Drawable\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Scene\Drawable\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files\Scene\Drawable\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\Scene\Drawable\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\Scene\Drawable\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Pedestal.h">
+      <Filter>Header Files\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Diamond.h">
+      <Filter>Header Files\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXHelp.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="OBJLoader.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Print.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsLoader.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="DeferredVertexShader.hlsl">
+      <Filter>Resource Files\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredPixelShader.hlsl">
+      <Filter>Resource Files\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="DisplacementVertexShader.hlsl">
+      <Filter>Resource Files\Displacement</Filter>
+    </FxCompile>
+    <FxCompile Include="DisplacementHullShader.hlsl">
+      <Filter>Resource Files\Displacement</Filter>
+    </FxCompile>
+    <FxCompile Include="DisplacementDomainShader.hlsl">
+      <Filter>Resource Files\Displacement</Filter>
+    </FxCompile>
+    <FxCompile Include="DisplacementGeometryShader.hlsl">
+      <Filter>Resource Files\Displacement</Filter>
+    </FxCompile>
+    <FxCompile Include="DisplacementPixelShader.hlsl">
+      <Filter>Resource Files\Displacement</Filter>
+    </FxCompile>
+    <FxCompile Include="ModelVertexShader.hlsl">
+      <Filter>Resource Files\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="ModelGeometryShader.hlsl">
+      <Filter>Resource Files\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="ModelPixelShader.hlsl">
+      <Filter>Resource Files\Model</Filter>
+    </FxCompile>
+    <FxCompile Include="UVAnimationVertexShader.hlsl">
+      <Filter>Resource Files\UVAnimation</Filter>
+    </FxCompile>
+    <FxCompile Include="UVAnimationPixelShader.hlsl">
+      <Filter>Resource Files\UVAnimation</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowVertexShader.hlsl">
+      <Filter>Resource Files\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowHullShader.hlsl">
+      <Filter>Resource Files\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowDomainShader.hlsl">
+      <Filter>Resource Files\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleVertexShader.hlsl">
+      <Filter>Resource Files\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleGeometryShader.hlsl">
+      <Filter>Resource Files\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePixelShader.hlsl">
+      <Filter>Resource Files\Particle</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

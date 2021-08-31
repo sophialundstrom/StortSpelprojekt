@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\Project.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\DeferredPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\DeferredVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\DisplacementDomainShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\DisplacementGeometryShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\DisplacementHullShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\DisplacementPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\DisplacementVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\ModelGeometryShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\ModelPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\ModelVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\ParticleGeometryShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\ParticlePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\ParticleVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\ShadowDomainShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\ShadowHullShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\ShadowVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\UVAnimationPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Release\UVAnimationVertexShader.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>
