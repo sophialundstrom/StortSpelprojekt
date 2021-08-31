@@ -1,1 +1,37 @@
-﻿
+﻿C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\DeferredPixelShader.hlsl(113,22): warning X4000: use of potentially uninitialized variable (DirectionalLightCalculation)
+  
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredPixelShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredVertexShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DisplacementDomainShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DisplacementGeometryShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DisplacementHullShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DisplacementPixelShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DisplacementVertexShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ModelGeometryShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ModelPixelShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ModelVertexShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleGeometryShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticlePixelShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleVertexShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowDomainShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowHullShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowVertexShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\UVAnimationPixelShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\UVAnimationVertexShader.cso
+  Camera.cpp
+  Graphics.cpp
+  Main.cpp
+  Model.cpp
+  ParticleSystem.cpp
+  Scene.cpp
+  Texture.cpp
+  Window.cpp
+  Generating Code...
+LINK : warning LNK4098: defaultlib 'LIBCMTD' conflicts with use of other libs; use /NODEFAULTLIB:library
+ImGui.lib(imgui.obj) : warning LNK4099: PDB 'ImGui.pdb' was not found with 'ImGui.lib(imgui.obj)' or at 'C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ImGui.pdb'; linking object as if no debug info
+ImGui.lib(imgui_draw.obj) : warning LNK4099: PDB 'ImGui.pdb' was not found with 'ImGui.lib(imgui_draw.obj)' or at 'C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ImGui.pdb'; linking object as if no debug info
+ImGui.lib(imgui_impl_dx11.obj) : warning LNK4099: PDB 'ImGui.pdb' was not found with 'ImGui.lib(imgui_impl_dx11.obj)' or at 'C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ImGui.pdb'; linking object as if no debug info
+ImGui.lib(imgui_impl_win32.obj) : warning LNK4099: PDB '' was not found with 'ImGui.lib(imgui_impl_win32.obj)' or at ''; linking object as if no debug info
+ImGui.lib(imgui_tables.obj) : warning LNK4099: PDB 'ImGui.pdb' was not found with 'ImGui.lib(imgui_tables.obj)' or at 'C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ImGui.pdb'; linking object as if no debug info
+ImGui.lib(imgui_widgets.obj) : warning LNK4099: PDB 'ImGui.pdb' was not found with 'ImGui.lib(imgui_widgets.obj)' or at 'C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ImGui.pdb'; linking object as if no debug info
+  Project.vcxproj -> C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\Project.exe

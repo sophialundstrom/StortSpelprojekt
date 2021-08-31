@@ -2,63 +2,63 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\Project.exe</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\Project.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\DeferredPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\DeferredVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\DisplacementDomainShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DisplacementDomainShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\DisplacementGeometryShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DisplacementGeometryShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\DisplacementHullShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DisplacementHullShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\DisplacementPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DisplacementPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\DisplacementVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DisplacementVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\ModelGeometryShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ModelGeometryShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\ModelPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ModelPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\ModelVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\ParticleGeometryShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleGeometryShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\ParticlePixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticlePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\ParticleVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\ShadowDomainShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowDomainShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\ShadowHullShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowHullShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\ShadowVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\UVAnimationPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\UVAnimationPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\sophi\Desktop\Lundstrom_Sophia_Project\Project\x64\Debug\UVAnimationVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\UVAnimationVertexShader.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
