@@ -82,6 +82,28 @@ inline void UpdateBuffer(ID3D11Buffer*& buffer, const T& data)
 	Graphics::GetContext().Unmap(buffer, 0);
 }
 
+inline void CreateIndexBuffer(ID3D11Buffer*& buffer, const UINT& numIndices, const void* data)
+{
+	D3D11_BUFFER_DESC desc = {};
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.ByteWidth = sizeof(UINT) * numIndices;
+	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA resourceData = {};
+	resourceData.pSysMem = data;
+	resourceData.SysMemPitch = 0;
+	resourceData.SysMemSlicePitch = 0;
+
+	HRESULT hr = Graphics::GetDevice().CreateBuffer(&desc, &resourceData, &buffer);
+	if FAILED(hr)
+	{
+		Print("FAILED TO CREATE INDEX BUFFER");
+		return;
+	}
+}
+
 inline void CreateVertexBuffer(ID3D11Buffer*& buffer, const int& stride, const int& size, const void* data)
 {
 	D3D11_BUFFER_DESC desc = {};

@@ -1,1 +1,6 @@
-﻿
+﻿  Main.cpp
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\Application.h(16): error C2280: 'Scene::Scene(void)': attempting to reference a deleted function
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\Scene.h(26): message : see declaration of 'Scene::Scene'
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\Scene.h(26,2): message : 'Scene::Scene(void)': function was implicitly deleted because a data member 'Scene::player' has either no appropriate default constructor or overload resolution was ambiguous
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\Scene.h(16): message : see declaration of 'Scene::player'
+  Scene.cpp

@@ -8,12 +8,18 @@ struct RawDelta
 	RawDelta() = default;
 };
 
+struct MouseCoords
+{
+	int x, y;
+};
+
 class Event
 {
 private:
 	//MOUSE
 	static RawDelta rd;
 
+	static MouseCoords mc;
 	static bool leftIsPressed;
 
 	//KEYBOARD
@@ -24,12 +30,13 @@ private:
 	static bool movement;
 public:
 	//MOUSE
+	static MouseCoords MousePosition() { return mc; }
 	static void OnRawDelta(int dx, int dy) { rd.x = dx; rd.y = dy; }
 	static void ClearRawDelta() { rd.x = 0; rd.y = 0; }
 	static RawDelta ReadRawData() { return rd; }
 
 	static bool LeftIsClicked() { return leftIsPressed; }
-	static void OnLeftClick() { leftIsPressed = true; }
+	static void OnLeftClick(int x, int y) { leftIsPressed = true; mc = { x, y }; }
 	static void OnLeftRelease() { leftIsPressed = false; }
 
 	//KEYBOARD
@@ -44,6 +51,7 @@ public:
 };
 
 inline RawDelta Event::rd;
+inline MouseCoords Event::mc;
 inline bool Event::leftIsPressed;
 inline std::bitset<Event::keys> Event::keystates;
 inline bool Event::movement;

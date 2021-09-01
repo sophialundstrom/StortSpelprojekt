@@ -1,18 +1,20 @@
 #pragma once
-
-#include "Pedestal.h"
-#include <string>
-#include <memory>
+#include "Camera.h"
 
 class Player
 {
 private:
-	std::shared_ptr<Diamond> carriedDiamond;
-	bool carriesDiamond = false;
-	unsigned int numPlacedDiamonds = 0;
+	Camera camera;
 public:
-	UINT DiamondsPlaced() const { return this->numPlacedDiamonds; }
-	void PickUpDiamond(std::shared_ptr<Diamond> diamond) { diamond->PickUp(); carriedDiamond = diamond; carriesDiamond = true; }
-	void PlaceDiamond(std::shared_ptr<Pedestal> pedestal) { pedestal->PlaceDiamond(carriedDiamond); numPlacedDiamonds++; carriesDiamond = false; carriedDiamond = nullptr; }
-	bool IsCarryingObject() { return carriesDiamond; }
+	Player() = default;
+	Player(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed,
+		Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 forward = { 0.0f, 0.0f, 1.0f }, Vector3 up = { 0.0f, 1.0f, 0.0f })
+		:camera(FOV, aspectRatio, nearZ, farZ, rotationSpeed, moveSpeed, position, forward, up) {}
+
+	void Update()
+	{
+		camera.Update();
+	}
+
+	Camera& GetCamera() { return camera; }
 };

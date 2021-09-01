@@ -74,6 +74,7 @@ public:
 			matrices.world = model->GetWorldMatrix().Transpose();
 			matrices.WVP = ShaderData::lightMatrix * matrices.world;
 			UpdateBuffer(matrices_buf, matrices);
+			BindBuffer(matrices_buf, Shader::VS, 1);
 
 			//TO USE DISPLACEMENT OR NOT
 			UpdateBuffer(useDisplacement_buf, model->HasDisplacement());
@@ -111,9 +112,6 @@ public:
 
 				//SHADER
 				BindShaders(vertexShader);
-
-				//BUFFER
-				BindBuffer(matrices_buf, Shader::VS, 1);
 
 				for (UINT i = 0; i < model->MeshCount(); ++i)
 				{

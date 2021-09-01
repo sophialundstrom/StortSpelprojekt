@@ -64,6 +64,12 @@
     <Filter Include="Header Files\Scene\Game">
       <UniqueIdentifier>{186acd6b-a652-4879-9118-37cf9ac0b21a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Scene\Terrain">
+      <UniqueIdentifier>{d73aeb48-8473-4c38-b404-c9cf9d6abf29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics\Editors">
+      <UniqueIdentifier>{4d9985e3-1487-4720-8877-ff32c953c028}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -89,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Source Files\Scene\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>Header Files\Scene\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,12 +164,6 @@
     <ClInclude Include="Player.h">
       <Filter>Header Files\Scene\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Pedestal.h">
-      <Filter>Header Files\Scene\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Diamond.h">
-      <Filter>Header Files\Scene\Game</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>Header Files\Scene</Filter>
     </ClInclude>
@@ -202,6 +205,24 @@
     </ClInclude>
     <ClInclude Include="Time.h">
       <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>Header Files\Scene\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Picker.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorWindow.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="DemoEditor.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMainMenu.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

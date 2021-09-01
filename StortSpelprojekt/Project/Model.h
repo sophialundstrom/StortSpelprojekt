@@ -13,6 +13,7 @@ protected:
 	Matrix worldMatrix;
 
 	bool UVAnim = false;
+
 	UINT meshCount = 0;
 	std::vector<Mesh*> meshes;
 

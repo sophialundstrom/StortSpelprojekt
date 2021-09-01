@@ -17,14 +17,20 @@ HRESULT Graphics::CreateDeviceSwapchain(UINT windowWidth, UINT windowHeight, HWN
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.BufferCount = 1;
 	swapChainDesc.OutputWindow = window;
+	swapChainDesc.Windowed = false;
+
+#ifdef _DEBUG
 	swapChainDesc.Windowed = true;
+#endif
+
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;
 
 	UINT flags = 0;
-	#ifdef _DEBUG
-		flags = D3D11_CREATE_DEVICE_DEBUG;
-	#endif
+
+#ifdef _DEBUG
+	flags = D3D11_CREATE_DEVICE_DEBUG;
+#endif
 
 	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
 

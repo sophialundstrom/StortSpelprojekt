@@ -3,6 +3,8 @@
 #include "DirectXHelp.h"
 #include "Settings.h"
 
+#include "DemoEditor.h"
+
 class DeferredRenderer : public Renderer
 {
 private:
@@ -41,6 +43,9 @@ private:
 
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
+
+	//TEST
+	DemoEditor demoEditor;
 public:
 	DeferredRenderer(UINT width, UINT height)
 	{
@@ -177,6 +182,9 @@ public:
 		ImGUI::BeginFrame();
 
 		//IMGUI
+		demoEditor.Update();
+		demoEditor.Render();
+
 		ImGui::Begin("NORMALS");
 		ImGui::Image(srvs[1], { 1600 / 5, 900 / 5 });
 		ImGui::End();

@@ -1,6 +1,5 @@
 #pragma once
 #include "Light.h"
-#include "Camera.h"
 #include "Model.h"
 #include "ParticleSystem.h"
 #include "Player.h"
@@ -10,13 +9,10 @@
 class Scene
 {
 private:
-	Camera camera;
 	DirectionalLight directionalLight;
 	std::vector<PointLight> pointLights;
 
 	Player player;
-	std::vector<std::shared_ptr<Pedestal>> pedestals;
-	std::vector<std::shared_ptr<Diamond>> diamonds;
 
 	UINT numParticleSystems = 0;
 

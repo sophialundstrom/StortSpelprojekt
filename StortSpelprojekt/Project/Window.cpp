@@ -56,7 +56,9 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 	case WM_LBUTTONDOWN:
 	{
-		Event::OnLeftClick();
+		POINT pt;
+		if (GetCursorPos(&pt));
+			Event::OnLeftClick(pt.x, pt.y);
 		break;
 	}
 
@@ -117,8 +119,10 @@ Window::Window(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 
 	DeactivateCursor();
 
+#ifdef _DEBUG
 	AllocConsole();
 	(void)freopen("conout$", "w", stdout);
+#endif
 
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 }
