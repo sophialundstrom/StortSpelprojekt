@@ -117,8 +117,6 @@ Window::Window(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 	rid.hwndTarget = nullptr;
 	RegisterRawInputDevices(&rid, 1, sizeof(rid));
 
-	DeactivateCursor();
-
 #ifdef _DEBUG
 	AllocConsole();
 	(void)freopen("conout$", "w", stdout);

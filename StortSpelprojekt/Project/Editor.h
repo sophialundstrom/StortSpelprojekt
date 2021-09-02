@@ -1,14 +1,31 @@
-#include "EditorWindow.h"
+#include "ImGuiWin.h"
 
-enum class EditorType { UNDEFINED = -1, TERRAIN, LEVEL, PARTICLE, MATERIAL };
-
-class Editor : public EditorWindow
+class Editor
 {
 protected:
-	EditorType type = EditorType::UNDEFINED;
-public:
-	Editor(std::string name)
-		:EditorWindow(name) {}
+	bool done = false;
+	std::map<std::string, ImGuiWin> windows;
 
+	void AddWindow(std::string name)
+	{ windows.emplace(name, ImGuiWin(name)); }
+
+	void BeginFrame()
+	{
+		Graphics::BeginFrame();
+		ImGUI::BeginFrame();
+	}
+
+	void EndFrame()
+	{
+		for (auto& [name, window] : windows)
+			window.Render();
+
+		ImGUI::EndFrame();
+		Graphics::EndFrame();
+	}
+public:
+	Editor() = default;
 	virtual void Update() = 0;
+	virtual void Render() = 0;
+	bool IsDone() { return done; }
 };

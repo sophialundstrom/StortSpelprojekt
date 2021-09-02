@@ -17,6 +17,7 @@ Terrain::Terrain(float size)
 	//INDICES
 	UINT indices[]
 	{ 3, 1, 0, 2 };
+	indexCount = ARRAYSIZE(indices);
 	CreateIndexBuffer(indexBuffer, ARRAYSIZE(indices), &indices);
 }
 
@@ -26,11 +27,12 @@ Terrain::~Terrain()
 	vertexBuffer->Release();
 }
 
-void Terrain::Bind()
+void Terrain::Draw()
 {
 	Graphics::GetContext().IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
 	Graphics::GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+
+	Graphics::GetContext().DrawIndexed(indexCount, 0, 0);
 
 	Graphics::GetContext().IASetIndexBuffer(nullptr, DXGI_FORMAT_R32_UINT, 0);
 }

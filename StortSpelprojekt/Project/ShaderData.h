@@ -29,6 +29,14 @@ private:
 	//SAMPLER
 	static ID3D11SamplerState* wrapSampler;
 
+	//MATRICES & MATRICES-BUFFER
+	static ID3D11Buffer* matrices_buf;
+	struct TempMatrices
+	{
+		Matrix world;
+		Matrix viewPerspective;
+	} matrices;
+
 	//SHADOW MAP
 	static ShadowMap shadowMap;
 public:

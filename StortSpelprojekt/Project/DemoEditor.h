@@ -1,29 +1,48 @@
 #pragma once
 #include "Editor.h"
+#include "Time.h"
+#include "TempResources.h"
+#include "TempResources.h"
 
 class DemoEditor : public Editor
 {
 private:
-
+	
 public:
 	DemoEditor()
-		:Editor("DEMO")
 	{
-		AddTextComponent("Text");
-		AddSliderFloatComponent("Float Slider", -24.0f, 60.0f, 4.0f);
-		AddFloatComponent("Float", 56.0f);
-		AddCheckBoxComponent("CheckBox", false);
-		AddIntComponent("Int", 7);
-		AddSliderIntComponent("Int Slider", -4, 50, 34);
-		AddVector3Component("Vector3", Vector3(1.0f, 3.0f, 70.0f));
-		AddSliderVector3Component("Vector3 Slider", Vector3(-20.0f, 30.0f, 56.0f), -700, 700);
-		AddButtonComponent("Button", 50, 20);
+		AddWindow("Window 1");
+		windows["Window 1"].AddTextComponent("Text");
+		windows["Window 1"].AddSliderFloatComponent("Float Slider", -24.0f, 60.0f, 4.0f);
+		windows["Window 1"].AddFloatComponent("Float", 56.0f);
+		windows["Window 1"].AddCheckBoxComponent("CheckBox", false);
+		windows["Window 1"].AddIntComponent("Int", 7);
+		windows["Window 1"].AddSliderIntComponent("Int Slider", -4, 50, 34);
+		windows["Window 1"].AddVector3Component("Vector3", Vector3(1.0f, 3.0f, 70.0f));
+		windows["Window 1"].AddSliderVector3Component("Vector3 Slider", Vector3(-20.0f, 30.0f, 56.0f), -700, 700);
+		windows["Window 1"].AddButtonComponent("Button", 50, 20);
+
+		AddWindow("Window 2");
+		windows["Window 2"].AddTextComponent("Eh");
+		//osv...
 	}
 
 	// Inherited via Editor
+	virtual void Render() override
+	{
+		BeginFrame();
+		EndFrame();
+	}
+	
 	virtual void Update() override
 	{
-		if (GetValue<ButtonComponent>("Button"))
-			AddTextComponent("Added a new TextComponent");
+		if (windows["Window 1"].GetValue<ButtonComponent>("Button"))
+			windows["Window 1"].AddTextComponent("Added a new TextComponent");
+
+		TempResources::Inst().Test();
+
+		Print(windows["Window 1"].GetValue<IntComponent>("Int"));
+
+		windows["Window 1"].SetValue<FloatComponent, float>("Float", Time::Get());
 	}
 };

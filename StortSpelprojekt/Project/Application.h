@@ -5,19 +5,37 @@
 #include "Time.h"
 #include "Scene.h"
 
+#include "DebugMainMenu.h"
+#include "DemoEditor.h"
+
 class Application
 {
 private:
 	Window window;
 	Scene scene;
+
+	DebugMainMenu DBMainMenu;
+	DemoEditor demoEditor;
+
+	std::unique_ptr<TempResources> resources;
+
+	AppState state = DB_MAIN;
 public:
 	Application(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 		:window(width, height, title, instance)
 	{
-		Graphics::Initialize(width, height, window.HWnd());
-		RenderGraph::Initialize(width, height);
+		RECT clientRect;
+		GetClientRect(window.HWnd(), &clientRect);
+
+		UINT windowWidth = clientRect.right;
+		UINT windowHeight = clientRect.bottom;
+
+		Graphics::Initialize(windowWidth, windowHeight, window.HWnd());
+		RenderGraph::Initialize(windowWidth, windowHeight);
 		ImGUI::Initialize();
-		scene.Initialize(width, height);
+		scene.Initialize(windowWidth, windowHeight);
+
+		resources = std::make_unique<TempResources>();
 	}
 
 	~Application()
@@ -52,13 +70,34 @@ public:
 
 			if (Event::KeyIsPressed(VK_RETURN))
 				break;
+			
+			switch (state)
+			{
+			case DB_MAIN:
+				DBMainMenu.Update();
 
-			scene.Update();
+				if (DBMainMenu.GetState() != state)
+					state = DBMainMenu.GetState();
 
-			RenderGraph::Render();
+				DBMainMenu.Render();
+				break;
+
+			case DB_PLAY:
+				scene.Update();
+				RenderGraph::Render();
+				break;
+
+			case DB_LEVEL:
+				demoEditor.Update();
+
+				if (demoEditor.IsDone())
+					state = DB_MAIN;
+
+				demoEditor.Render();
+				break;
+			}
 
 			Event::ClearRawDelta();
-
 			Time::Update(timer.DeltaTime());
 		}
 	}

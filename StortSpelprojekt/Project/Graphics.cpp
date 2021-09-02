@@ -62,7 +62,7 @@ HRESULT Graphics::CreateDepthStencil(UINT windowWidth, UINT windowHeight)
 {
 	HRESULT hr;
 	D3D11_TEXTURE2D_DESC textureDesc = {};
-
+	
 	textureDesc.Width = windowWidth;
 	textureDesc.Height = windowHeight;
 	textureDesc.MipLevels = 1;

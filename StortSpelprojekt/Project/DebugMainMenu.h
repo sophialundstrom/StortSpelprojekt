@@ -1,25 +1,52 @@
 #pragma once
-#include "Editor.h"
+#include "ImGuiWin.h"
+#include "StateDefines.h"
 
-class DebugMainMenu : public Editor
+class DebugMainMenu
 {
 private:
-	bool setup = false;
+	bool firstFrame = true;
+	AppState state = DB_MAIN;
+	ImGuiWin window;
 public:
 	DebugMainMenu()
-		:Editor("DEBUG MAIN MENU")
+		:window("DEBUG MAIN MENU")
 	{
-		AddButtonComponent("PLAY DEBUG MODE", 200, 100);
-		AddButtonComponent("LEVEL EDITOR", 200, 100);
-		AddButtonComponent("TERRAIN EDITOR", 200, 100);
-		AddButtonComponent("MATERIAL EDITOR", 200, 100);
+		window.AddButtonComponent("PLAY DEBUG MODE", 200, 100);
+		window.AddButtonComponent("LEVEL EDITOR", 200, 100);
+		window.AddButtonComponent("TERRAIN EDITOR", 200, 100);
 	}
 
 	void Update()
 	{
-		if (setup)
-		{
+		if (firstFrame)
+			return;
 
-		}
+		if (window.GetValue<ButtonComponent>("PLAY DEBUG MODE"))
+			state = DB_PLAY;
+
+		else if (window.GetValue<ButtonComponent>("LEVEL EDITOR"))
+			state = DB_LEVEL;
+
+		else if (window.GetValue<ButtonComponent>("TERRAIN EDITOR"))
+			state = DB_TERRAIN;
 	}
+
+	void Render()
+	{
+		Graphics::BeginFrame();
+		ImGUI::BeginFrame();
+
+		window.Render();
+
+		if (firstFrame)
+			firstFrame = false;
+
+		ImGUI::EndFrame();
+		Graphics::EndFrame();
+	}
+
+	AppState GetState() { return state; }
+
+	void Reset() { state = DB_MAIN; firstFrame = true; }
 };

@@ -9,8 +9,8 @@
 struct ImGUI
 {
 	static void BeginFrame()
-	{
-		ImGui::GetIO().DisplaySize = { 1600, 900 };
+    {
+
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();

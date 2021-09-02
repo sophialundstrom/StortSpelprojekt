@@ -1,17 +1,5 @@
 ﻿  Main.cpp
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\EditorWindow.h(133,53): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\EditorWindow.h(133,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\EditorWindow.h(176,13): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\DemoEditor.h(26): message : see reference to function template instantiation 'auto EditorWindow::GetValue<ButtonComponent>(std::string)' being compiled
   Model.cpp
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\EditorWindow.h(133,53): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\EditorWindow.h(133,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\EditorWindow.h(176,13): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\DemoEditor.h(26): message : see reference to function template instantiation 'auto EditorWindow::GetValue<ButtonComponent>(std::string)' being compiled
   ParticleSystem.cpp
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\EditorWindow.h(133,53): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\EditorWindow.h(133,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\EditorWindow.h(176,13): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\DemoEditor.h(26): message : see reference to function template instantiation 'auto EditorWindow::GetValue<ButtonComponent>(std::string)' being compiled
   Generating Code...
   Project.vcxproj -> C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\Project.exe

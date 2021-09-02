@@ -215,13 +215,37 @@
     <ClInclude Include="Editor.h">
       <Filter>Header Files\Graphics\Editors</Filter>
     </ClInclude>
-    <ClInclude Include="EditorWindow.h">
-      <Filter>Header Files\Graphics\Editors</Filter>
-    </ClInclude>
     <ClInclude Include="DemoEditor.h">
       <Filter>Header Files\Graphics\Editors</Filter>
     </ClInclude>
     <ClInclude Include="DebugMainMenu.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiWin.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="StateDefines.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="TempModel.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="TempResources.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="TempMesh.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Header Files\Scene\Drawable\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainEditor.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainEditorRenderer.h">
       <Filter>Header Files\Graphics\Editors</Filter>
     </ClInclude>
   </ItemGroup>

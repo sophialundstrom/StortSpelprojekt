@@ -2,6 +2,11 @@
 #include "Graphics.h"
 #include "Math.h"
 
+struct HeightMap
+{
+	UINT width, height;
+	Vector3* data;
+};
 
 class Terrain
 {
@@ -14,11 +19,12 @@ private:
 		Vector2 texCoords;
 	};
 
+	UINT indexCount = 0;
 	ID3D11Buffer* indexBuffer = nullptr;
 	ID3D11Buffer* vertexBuffer = nullptr;
 public:
 	Terrain(float size);
 	~Terrain();
 
-	void Bind();
+	void Draw();
 };

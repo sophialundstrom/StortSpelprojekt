@@ -3,12 +3,12 @@
 #include "ShaderData.h"
 #include <memory>
 
-enum class RendererType { MODEL, DISPLACEMENT, PARTICLE, SHADOW, DEFERRED };
+enum class RendererType { UNDEFINED = -1, MODEL, DISPLACEMENT, PARTICLE, SHADOW, DEFERRED };
 
 class Renderer
 {
 protected:
-	RendererType type;
+	RendererType type = RendererType::UNDEFINED;
 	std::vector<std::shared_ptr<Drawable>> drawables;
 public:
 	virtual ~Renderer() = default;
