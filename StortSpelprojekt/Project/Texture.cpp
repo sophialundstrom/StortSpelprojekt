@@ -27,13 +27,13 @@ Texture::Texture(std::string path, std::string file)
 	data.SysMemPitch = imgWidth * STBI_rgb_alpha;
 
 	ID3D11Texture2D* img;
-	if (FAILED(Graphics::GetDevice().CreateTexture2D(&textureDesc, &data, &img)))
+	if (FAILED(Graphics::Inst().GetDevice().CreateTexture2D(&textureDesc, &data, &img)))
 	{
 		Print("FAILED TO CREATE TEXTURE 2D");
 		return;
 	}
 
-	if (FAILED(Graphics::GetDevice().CreateShaderResourceView(img, nullptr, &this->srv)))
+	if (FAILED(Graphics::Inst().GetDevice().CreateShaderResourceView(img, nullptr, &this->srv)))
 	{
 		Print("FAILED TO CREATE SHADER RESOURCE VIEW");
 		return;

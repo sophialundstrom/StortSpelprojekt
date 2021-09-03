@@ -1,12 +1,11 @@
 #include "Model.h"
 
-#include "OBJLoader.h"
 #include "RenderGraph.h"
 
 Model::Model(std::string file, Vector3 position, Vector3 rotation, Vector3 scale)
 	:Drawable(position, rotation, scale), name(file)
 {
-	OBJLoader::LoadModel(file, meshes, bounds);
+	//OBJLoader::LoadModel(file, meshes, bounds);
 	meshCount = (UINT)meshes.size();
 
 	Update();
@@ -41,10 +40,10 @@ void Model::Update()
 void Model::BindToRenderGraph()
 {
 	if (HasDisplacement())
-		RenderGraph::Bind(shared_from_this(), RendererType::DISPLACEMENT);
+		RenderGraph::Inst().Bind(shared_from_this(), RendererType::DISPLACEMENT);
 	else
-		RenderGraph::Bind(shared_from_this(), RendererType::MODEL);
-	RenderGraph::Bind(shared_from_this(), RendererType::SHADOW);
+		RenderGraph::Inst().Bind(shared_from_this(), RendererType::MODEL);
+	RenderGraph::Inst().Bind(shared_from_this(), RendererType::SHADOW);
 }
 
 bool Model::HasDisplacement() const
@@ -73,7 +72,7 @@ void Model::BindMeshBuffer(UINT index)
 	if (index > meshCount)
 		return;
 
-	Graphics::GetContext().IASetVertexBuffers(0, 1, &meshes[index]->vertexBuffer, &meshes[index]->stride, &meshes[index]->offset);
+	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &meshes[index]->vertexBuffer, &meshes[index]->stride, &meshes[index]->offset);
 }
 
 void Model::BindMeshTextures(UINT index, UINT startSlot, Shader shader)
@@ -105,5 +104,5 @@ void Model::DrawMesh(UINT index)
 	if (index > meshCount)
 		return;
 
-	Graphics::GetContext().Draw((UINT)meshes[index]->faces.size() * 3, 0);
+	Graphics::Inst().GetContext().Draw((UINT)meshes[index]->faces.size() * 3, 0);
 }

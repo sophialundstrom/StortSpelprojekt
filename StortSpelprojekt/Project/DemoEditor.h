@@ -1,7 +1,7 @@
 #pragma once
 #include "Editor.h"
 #include "Time.h"
-#include "TempResources.h"
+#include "Scene.h"
 #include "TempResources.h"
 
 class DemoEditor : public Editor
@@ -38,8 +38,6 @@ public:
 	{
 		if (windows["Window 1"].GetValue<ButtonComponent>("Button"))
 			windows["Window 1"].AddTextComponent("Added a new TextComponent");
-
-		TempResources::Inst().Test();
 
 		Print(windows["Window 1"].GetValue<IntComponent>("Int"));
 

@@ -16,3 +16,5 @@ C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowHul
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowVertexShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\UVAnimationPixelShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\UVAnimationVertexShader.cso
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ForwardModelVertexShader.cso
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ForwardModelPixelShader.cso

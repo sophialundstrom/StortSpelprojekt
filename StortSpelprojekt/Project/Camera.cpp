@@ -6,15 +6,11 @@
 
 #include <algorithm>
 
-Camera::Camera()
-{
-}
+Camera::Camera() {}
 
 Camera::Camera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position, Vector3 forward, Vector3 up)
 	:position(position), forward(forward), direction(forward), up(up), moveSpeed(moveSpeed), rotationSpeed(rotationSpeed), pitch(0), yaw(0)
 {
-	pickRange = 15.0f;
-
 	this->viewMatrix = Matrix::CreateLookAt(position, forward, up);
 	this->perspectiveMatrix = Matrix::CreatePerspectiveFieldOfView(FOV, aspectRatio, nearZ, farZ);
 }
@@ -55,13 +51,11 @@ void Camera::Rotate(float dx, float dy)
 
 void Camera::Update()
 {
-	if (!Settings::UseFreeCamera())
-		position.y = 6.0f;
+	if (Event::KeyIsPressed('Q'))
+		Rotate(0, 1);
 
-	if (!Event::MovementEnabled())
-		return;
-
-	Rotate((float)Event::ReadRawData().x, (float)Event::ReadRawData().y);
+	if (Event::KeyIsPressed('E'))
+		Rotate(0, -1);
 
 	if (Event::KeyIsPressed('W'))
 		MoveForward();
@@ -90,16 +84,4 @@ void Camera::Update()
 	const Vector3 target = position + lookAt;
 
 	viewMatrix = Matrix::CreateLookAt(position, target, up);
-}
-
-bool Camera::Intersects(const DirectX::BoundingBox& bounds)
-{
-	if (Vector3(bounds.Center - position).Length() > pickRange)
-		return false;
-
-	float temp;
-	if (bounds.Intersects(position, direction, temp))
-		return true;
-
-	return false;
 }

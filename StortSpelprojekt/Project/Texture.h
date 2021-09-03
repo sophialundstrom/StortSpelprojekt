@@ -17,23 +17,23 @@ public:
 		switch (shader)
 		{
 		case Shader::VS:
-			Graphics::GetContext().VSSetShaderResources(slot, 1, &srv);
+			Graphics::Inst().GetContext().VSSetShaderResources(slot, 1, &srv);
 			break;
 
 		case Shader::HS:
-			Graphics::GetContext().HSSetShaderResources(slot, 1, &srv);
+			Graphics::Inst().GetContext().HSSetShaderResources(slot, 1, &srv);
 			break;
 
 		case Shader::DS:
-			Graphics::GetContext().DSSetShaderResources(slot, 1, &srv);
+			Graphics::Inst().GetContext().DSSetShaderResources(slot, 1, &srv);
 			break;
 
 		case Shader::GS:
-			Graphics::GetContext().GSSetShaderResources(slot, 1, &srv);
+			Graphics::Inst().GetContext().GSSetShaderResources(slot, 1, &srv);
 			break;
 
 		case Shader::PS:
-			Graphics::GetContext().PSSetShaderResources(slot, 1, &srv);
+			Graphics::Inst().GetContext().PSSetShaderResources(slot, 1, &srv);
 			break;
 		}
 	}

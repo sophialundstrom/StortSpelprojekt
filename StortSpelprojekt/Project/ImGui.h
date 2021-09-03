@@ -28,7 +28,7 @@ struct ImGUI
 	{
 		ImGui::CreateContext();
 		ImGui_ImplWin32_Init(GetActiveWindow());
-		ImGui_ImplDX11_Init(&Graphics::GetDevice(), &Graphics::GetContext());
+		ImGui_ImplDX11_Init(&Graphics::Inst().GetDevice(), &Graphics::Inst().GetContext());
 
 		//THEME
         ImGui::GetStyle().FrameRounding = 4.0f;

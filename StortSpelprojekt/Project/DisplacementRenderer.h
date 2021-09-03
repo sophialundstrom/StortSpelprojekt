@@ -44,11 +44,11 @@ public:
 		CreateBuffer(blending_buf);
 
 		//SHADERS
-		LoadVertexShader(vertexShader, vs_path);
-		LoadHullShader(hullShader, hs_path);
-		LoadDomainShader(domainShader, ds_path);
-		LoadGeometryShader(geometryShader, gs_path);
-		LoadPixelShader(pixelShader, ps_path);
+		LoadShader(vertexShader, vs_path);
+		LoadShader(hullShader, hs_path);
+		LoadShader(domainShader, ds_path);
+		LoadShader(geometryShader, gs_path);
+		LoadShader(pixelShader, ps_path);
 	}
 
 	~DisplacementRenderer()
@@ -69,18 +69,21 @@ public:
 
 	void Render()
 	{
+		if (drawables.empty())
+			return;
+
 		//SHADERS
 		BindShaders(vertexShader, hullShader, domainShader, geometryShader, pixelShader, Settings::UseBackfaceCulling());
 
 		//INPUT LAYOUT
-		Graphics::GetContext().IASetInputLayout(ShaderData::inputLayout);
+		Graphics::Inst().GetContext().IASetInputLayout(ShaderData::Inst().inputLayout);
 
 		//TOPOLOGY
-		Graphics::GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+		Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 
 		//CAMERA & LIGHT MATRIX
-		matrices.viewPerspective = ShaderData::cameraMatrix;
-		matrices.lightViewPerspective = ShaderData::lightMatrix;
+		matrices.viewPerspective = ShaderData::Inst().cameraMatrix;
+		matrices.lightViewPerspective = ShaderData::Inst().lightMatrix;
 
 		//BUFFERS
 		UpdateBuffer(tesselation_buf, Settings::TesselationFactor());

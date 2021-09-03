@@ -35,7 +35,7 @@ private:
 	const std::string anim_ps_path = "../x64/Debug/UVAnimationPixelShader.cso";
 	ID3D11PixelShader* animPixelShader = nullptr;
 public:
-	ModelRenderer()
+	ModelRenderer(std::unique_ptr<ShaderData>& shaderData)
 		:matrices()
 	{
 		//BUFFERS
@@ -45,13 +45,13 @@ public:
 
 		//SHADERS
 		std::string byteCode;
-		LoadVertexShader(vertexShader, vs_path, byteCode);
-		LoadVertexShader(animVertexShader, anim_vs_path);
-		LoadGeometryShader(geometryShader, gs_path);
-		LoadPixelShader(pixelShader, ps_path);
-		LoadPixelShader(animPixelShader, anim_ps_path);
+		LoadShader(vertexShader, vs_path, byteCode);
+		LoadShader(animVertexShader, anim_vs_path);
+		LoadShader(geometryShader, gs_path);
+		LoadShader(pixelShader, ps_path);
+		LoadShader(animPixelShader, anim_ps_path);
 
-		ShaderData::Initialize(byteCode);
+		shaderData = std::make_unique<ShaderData>(byteCode);
 	}
 
 	~ModelRenderer()
@@ -71,15 +71,18 @@ public:
 
 	void Render()
 	{
+		if (drawables.empty())
+			return;
+
 		//INPUT LAYOUT
-		Graphics::GetContext().IASetInputLayout(ShaderData::inputLayout);
+		Graphics::Inst().GetContext().IASetInputLayout(ShaderData::Inst().inputLayout);
 
 		//TOPOLOGY
-		Graphics::GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		//CAMERA & LIGHT MATRIX
-		matrices.viewPerspective = ShaderData::cameraMatrix;
-		matrices.lightViewPerspective = ShaderData::lightMatrix;
+		matrices.viewPerspective = ShaderData::Inst().cameraMatrix;
+		matrices.lightViewPerspective = ShaderData::Inst().lightMatrix;
 
 		//RENDER BOUND DRAWABLES
 		for (auto& drawable : drawables)

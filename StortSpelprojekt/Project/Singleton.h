@@ -7,7 +7,7 @@ class Singleton
 public:
 	static S& Inst() { if (!instance) Print("SINGLETON WAS NOT INSTANCED"); return *instance; }
 protected:
-	Singleton(S* s) { if (instance != nullptr) Print("SINGLETON WAS ALREADY INSTANCED"); instance = s; }
+	Singleton(S* s) { if (instance != nullptr) { Print("SINGLETON WAS ALREADY INSTANCED"); return; } instance = s; }
 	~Singleton()    {  instance = nullptr; }
 private:
 	static S* instance;

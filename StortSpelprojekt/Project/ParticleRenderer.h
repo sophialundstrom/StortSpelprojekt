@@ -31,9 +31,9 @@ public:
 
 		//SHADERS
 		std::string byteCode;
-		LoadVertexShader(vertexShader, vs_path, byteCode);
-		LoadGeometryShader(geometryShader, gs_path);
-		LoadPixelShader(pixelShader, ps_path);
+		LoadShader(vertexShader, vs_path, byteCode);
+		LoadShader(geometryShader, gs_path);
+		LoadShader(pixelShader, ps_path);
 
 		//INPUT LAYOUT
 		D3D11_INPUT_ELEMENT_DESC inputDesc[] =
@@ -45,7 +45,7 @@ public:
 			{"VELOCITY", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 		};
 
-		HRESULT hr = Graphics::GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
+		HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
 		if FAILED(hr)
 		{
 			Print("FAILED TO CREATE INPUT LAYOUT");
@@ -71,20 +71,23 @@ public:
 
 	void Render()
 	{
+		if (drawables.empty())
+			return;
+
 		//INPUT LAYOUT
-		Graphics::GetContext().IASetInputLayout(inputLayout);
+		Graphics::Inst().GetContext().IASetInputLayout(inputLayout);
 
 		//TOPOLOGY
-		Graphics::GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+		Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 		//SHADERS
 		BindShaders(vertexShader, nullptr, nullptr, geometryShader, pixelShader);
 
 		//BUFFERS
-		UpdateBuffer(camera_buf, ShaderData::cameraPosition);
+		UpdateBuffer(camera_buf, ShaderData::Inst().cameraPosition);
 		BindBuffer(camera_buf, Shader::GS);
 
-		UpdateBuffer(matrix_buf, ShaderData::cameraMatrix);
+		UpdateBuffer(matrix_buf, ShaderData::Inst().cameraMatrix);
 		BindBuffer(matrix_buf, Shader::GS, 1);
 
 		for (auto& drawable : drawables)

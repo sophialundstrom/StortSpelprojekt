@@ -39,7 +39,7 @@ public:
 		textureDesc.MiscFlags = 0;
 
 		ID3D11Texture2D* texture = nullptr;
-		hr = Graphics::GetDevice().CreateTexture2D(&textureDesc, nullptr, &texture);
+		hr = Graphics::Inst().GetDevice().CreateTexture2D(&textureDesc, nullptr, &texture);
 		if FAILED(hr)
 		{
 			Print("FAILED TO CREATE TEXTURE 2D");
@@ -52,7 +52,7 @@ public:
 		dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;										//24 BIT DEPTH, 8 BIT STENCIL
 		dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;								//ACCESING AS TEXTURE2D
 		//dsvDesc.Texture2D.MipSlice = 0;
-		hr = Graphics::GetDevice().CreateDepthStencilView(texture, &dsvDesc, &dsv);
+		hr = Graphics::Inst().GetDevice().CreateDepthStencilView(texture, &dsvDesc, &dsv);
 		if FAILED(hr)
 		{
 			Print("FAILED TO CREATE DEPTH STENCIL VIEW");
@@ -65,7 +65,7 @@ public:
 		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;								//ACCESING AS TEXTURE2D
 		srvDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 		srvDesc.Texture2D.MostDetailedMip = 0;
-		hr = Graphics::GetDevice().CreateShaderResourceView(texture, &srvDesc, &srv);
+		hr = Graphics::Inst().GetDevice().CreateShaderResourceView(texture, &srvDesc, &srv);
 		if FAILED(hr)
 		{
 			Print("FAILED TO CREATE SHADER RESOURCE VIEW");
@@ -78,17 +78,17 @@ public:
 	void BindAsRenderTarget()
 	{
 		ID3D11ShaderResourceView* nullSRV = nullptr;										//REPLACE BOUND POSITION WITH NULL TO BE ABLE TO BE BOUND AS DEPTH STENCIL VIEW
-		Graphics::GetContext().PSSetShaderResources(7, 1, &nullSRV);
+		Graphics::Inst().GetContext().PSSetShaderResources(7, 1, &nullSRV);
 
-		Graphics::GetContext().RSSetViewports(1, &viewport);
+		Graphics::Inst().GetContext().RSSetViewports(1, &viewport);
 
 		ID3D11RenderTargetView* nullRTV = nullptr;											//NULL RENDER TARGET WONT OUTPUT ANYTHING, BUT SCENE WILL STILL BE "RENDERED" WITH OUT DEPTH STENCIL VIEW
-		Graphics::GetContext().OMSetRenderTargets(1, &nullRTV, dsv);
+		Graphics::Inst().GetContext().OMSetRenderTargets(1, &nullRTV, dsv);
 
-		Graphics::GetContext().ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		Graphics::Inst().GetContext().ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 
-	void BindAsResource() { Graphics::GetContext().PSSetShaderResources(7, 1, &srv); }
+	void BindAsResource() { Graphics::Inst().GetContext().PSSetShaderResources(7, 1, &srv); }
 
 	void RenderAsImage()
 	{

@@ -13,7 +13,7 @@ inline void CreateBuffer(ID3D11Buffer*& buffer, const UINT& size = 16)
 	bufferDesc.StructureByteStride = 0;
 	bufferDesc.ByteWidth = size;
 
-	HRESULT hr = Graphics::GetDevice().CreateBuffer(&bufferDesc, nullptr, &buffer);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateBuffer(&bufferDesc, nullptr, &buffer);
 	if FAILED(hr)
 		Print("FAILED TO CREATE BUFFER");
 }
@@ -30,7 +30,7 @@ inline void CreateStructuredBuffer(ID3D11Buffer*& buffer, ID3D11ShaderResourceVi
 	structuredBufferDesc.StructureByteStride = stride;
 	structuredBufferDesc.ByteWidth = maxSize;
 
-	hr = Graphics::GetDevice().CreateBuffer(&structuredBufferDesc, nullptr, &buffer);
+	hr = Graphics::Inst().GetDevice().CreateBuffer(&structuredBufferDesc, nullptr, &buffer);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE STRUCTURED BUFFER");
@@ -43,7 +43,7 @@ inline void CreateStructuredBuffer(ID3D11Buffer*& buffer, ID3D11ShaderResourceVi
 	srvDesc.Buffer.FirstElement = 0;
 	srvDesc.Buffer.NumElements = maxSize / stride;
 
-	hr = Graphics::GetDevice().CreateShaderResourceView(buffer, &srvDesc, &srv);
+	hr = Graphics::Inst().GetDevice().CreateShaderResourceView(buffer, &srvDesc, &srv);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE STRUCTURED BUFFER SRV");
@@ -55,7 +55,7 @@ inline void UpdateBuffer(ID3D11Buffer*& buffer, const void* data, const UINT& si
 {
 	D3D11_MAPPED_SUBRESOURCE mappedResource = {};
 
-	HRESULT hr = Graphics::GetContext().Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	HRESULT hr = Graphics::Inst().GetContext().Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if FAILED(hr)
 	{
 		Print("FAILED TO UPDATE BUFFER");
@@ -63,7 +63,7 @@ inline void UpdateBuffer(ID3D11Buffer*& buffer, const void* data, const UINT& si
 	}
 
 	memcpy(mappedResource.pData, data, size);
-	Graphics::GetContext().Unmap(buffer, 0);
+	Graphics::Inst().GetContext().Unmap(buffer, 0);
 }
 
 template<typename T>
@@ -71,7 +71,7 @@ inline void UpdateBuffer(ID3D11Buffer*& buffer, const T& data)
 {
 	D3D11_MAPPED_SUBRESOURCE mappedResource = {};
 
-	HRESULT hr = Graphics::GetContext().Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	HRESULT hr = Graphics::Inst().GetContext().Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if FAILED(hr)
 	{
 		Print("FAILED TO UPDATE BUFFER");
@@ -79,7 +79,7 @@ inline void UpdateBuffer(ID3D11Buffer*& buffer, const T& data)
 	}
 
 	memcpy(mappedResource.pData, &data, sizeof(data));
-	Graphics::GetContext().Unmap(buffer, 0);
+	Graphics::Inst().GetContext().Unmap(buffer, 0);
 }
 
 inline void CreateIndexBuffer(ID3D11Buffer*& buffer, const UINT& numIndices, const void* data)
@@ -96,7 +96,7 @@ inline void CreateIndexBuffer(ID3D11Buffer*& buffer, const UINT& numIndices, con
 	resourceData.SysMemPitch = 0;
 	resourceData.SysMemSlicePitch = 0;
 
-	HRESULT hr = Graphics::GetDevice().CreateBuffer(&desc, &resourceData, &buffer);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateBuffer(&desc, &resourceData, &buffer);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE INDEX BUFFER");
@@ -117,7 +117,7 @@ inline void CreateVertexBuffer(ID3D11Buffer*& buffer, const int& stride, const i
 	D3D11_SUBRESOURCE_DATA resourceData = {};
 	resourceData.pSysMem = data;
 
-	if FAILED(Graphics::GetDevice().CreateBuffer(&desc, &resourceData, &buffer))
+	if FAILED(Graphics::Inst().GetDevice().CreateBuffer(&desc, &resourceData, &buffer))
 		Print("FAILED TO CREATE VERTEX BUFFER");
 }
 
@@ -131,7 +131,7 @@ inline void CreateDynamicVertexBuffer(ID3D11Buffer*& buffer, const int& stride, 
 	desc.MiscFlags = 0;
 	desc.StructureByteStride = 0;
 
-	HRESULT hr = Graphics::GetDevice().CreateBuffer(&desc, nullptr, &buffer);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateBuffer(&desc, nullptr, &buffer);
 	if FAILED(hr)
 		Print("FAILED TO CREATE DYNAMIC VERTEX BUFFER");
 }
@@ -140,7 +140,7 @@ inline void UpdateDynamicVertexBuffer(ID3D11Buffer*& buffer, const int& size, co
 {
 	D3D11_MAPPED_SUBRESOURCE mappedResource = {};
 
-	HRESULT hr = Graphics::GetContext().Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	HRESULT hr = Graphics::Inst().GetContext().Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if FAILED(hr)
 	{
 		Print("FAILED TO UPDATE DYNAMIC VERTEX BUFFER");
@@ -148,10 +148,10 @@ inline void UpdateDynamicVertexBuffer(ID3D11Buffer*& buffer, const int& size, co
 	}
 
 	memcpy(mappedResource.pData, data, size);
-	Graphics::GetContext().Unmap(buffer, 0);
+	Graphics::Inst().GetContext().Unmap(buffer, 0);
 }
 
-inline void LoadVertexShader(ID3D11VertexShader*& vertexShader, std::string path, std::string& vertexShaderByteCode)
+inline void LoadShader(ID3D11VertexShader*& vertexShader, std::string path, std::string& vertexShaderByteCode)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -169,7 +169,7 @@ inline void LoadVertexShader(ID3D11VertexShader*& vertexShader, std::string path
 	reader.seekg(0, std::ios::beg);
 	shaderData.assign((std::istreambuf_iterator<char>(reader)), std::istreambuf_iterator<char>());
 
-	HRESULT hr = Graphics::GetDevice().CreateVertexShader(shaderData.c_str(), shaderData.length(), nullptr, &vertexShader);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateVertexShader(shaderData.c_str(), shaderData.length(), nullptr, &vertexShader);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE VERTEX SHADER");
@@ -181,7 +181,7 @@ inline void LoadVertexShader(ID3D11VertexShader*& vertexShader, std::string path
 	reader.close();
 };
 
-inline void LoadVertexShader(ID3D11VertexShader*& vertexShader, std::string path)
+inline void LoadShader(ID3D11VertexShader*& vertexShader, std::string path)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -199,7 +199,7 @@ inline void LoadVertexShader(ID3D11VertexShader*& vertexShader, std::string path
 	reader.seekg(0, std::ios::beg);
 	shaderData.assign((std::istreambuf_iterator<char>(reader)), std::istreambuf_iterator<char>());
 
-	HRESULT hr = Graphics::GetDevice().CreateVertexShader(shaderData.c_str(), shaderData.length(), nullptr, &vertexShader);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateVertexShader(shaderData.c_str(), shaderData.length(), nullptr, &vertexShader);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE VERTEX SHADER");
@@ -210,7 +210,7 @@ inline void LoadVertexShader(ID3D11VertexShader*& vertexShader, std::string path
 	reader.close();
 };
 
-inline void LoadPixelShader(ID3D11PixelShader*& pixelShader, std::string path)
+inline void LoadShader(ID3D11PixelShader*& pixelShader, std::string path)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -228,7 +228,7 @@ inline void LoadPixelShader(ID3D11PixelShader*& pixelShader, std::string path)
 	reader.seekg(0, std::ios::beg);
 	shaderData.assign((std::istreambuf_iterator<char>(reader)), std::istreambuf_iterator<char>());
 
-	HRESULT hr = Graphics::GetDevice().CreatePixelShader(shaderData.c_str(), shaderData.length(), nullptr, &pixelShader);
+	HRESULT hr = Graphics::Inst().GetDevice().CreatePixelShader(shaderData.c_str(), shaderData.length(), nullptr, &pixelShader);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE PIXEL SHADER");
@@ -239,7 +239,7 @@ inline void LoadPixelShader(ID3D11PixelShader*& pixelShader, std::string path)
 	reader.close();
 };
 
-inline void LoadHullShader(ID3D11HullShader*& hullShader, std::string path)
+inline void LoadShader(ID3D11HullShader*& hullShader, std::string path)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -257,7 +257,7 @@ inline void LoadHullShader(ID3D11HullShader*& hullShader, std::string path)
 	reader.seekg(0, std::ios::beg);
 	shaderData.assign((std::istreambuf_iterator<char>(reader)), std::istreambuf_iterator<char>());
 
-	HRESULT hr = Graphics::GetDevice().CreateHullShader(shaderData.c_str(), shaderData.length(), nullptr, &hullShader);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateHullShader(shaderData.c_str(), shaderData.length(), nullptr, &hullShader);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE HULL SHADER");
@@ -268,7 +268,7 @@ inline void LoadHullShader(ID3D11HullShader*& hullShader, std::string path)
 	reader.close();
 };
 
-inline void LoadDomainShader(ID3D11DomainShader*& domainShader, std::string path)
+inline void LoadShader(ID3D11DomainShader*& domainShader, std::string path)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -286,7 +286,7 @@ inline void LoadDomainShader(ID3D11DomainShader*& domainShader, std::string path
 	reader.seekg(0, std::ios::beg);
 	shaderData.assign((std::istreambuf_iterator<char>(reader)), std::istreambuf_iterator<char>());
 
-	HRESULT hr = Graphics::GetDevice().CreateDomainShader(shaderData.c_str(), shaderData.length(), nullptr, &domainShader);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateDomainShader(shaderData.c_str(), shaderData.length(), nullptr, &domainShader);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE DOMAIN SHADER");
@@ -297,7 +297,7 @@ inline void LoadDomainShader(ID3D11DomainShader*& domainShader, std::string path
 	reader.close();
 };
 
-inline void LoadGeometryShader(ID3D11GeometryShader*& geometryShader, std::string path)
+inline void LoadShader(ID3D11GeometryShader*& geometryShader, std::string path)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -315,7 +315,7 @@ inline void LoadGeometryShader(ID3D11GeometryShader*& geometryShader, std::strin
 	reader.seekg(0, std::ios::beg);
 	shaderData.assign((std::istreambuf_iterator<char>(reader)), std::istreambuf_iterator<char>());
 
-	HRESULT hr = Graphics::GetDevice().CreateGeometryShader(shaderData.c_str(), shaderData.length(), nullptr, &geometryShader);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateGeometryShader(shaderData.c_str(), shaderData.length(), nullptr, &geometryShader);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE GEOMETRY SHADER");
@@ -328,12 +328,11 @@ inline void LoadGeometryShader(ID3D11GeometryShader*& geometryShader, std::strin
 
 inline void BindShaders(ID3D11VertexShader* vertexShader = nullptr, ID3D11HullShader* hullShader = nullptr, ID3D11DomainShader* domainShader = nullptr, ID3D11GeometryShader* geometryShader = nullptr, ID3D11PixelShader* pixelShader = nullptr, bool culling = true)
 {
-	Graphics::GetContext().VSSetShader(vertexShader, nullptr, 0);
-	Graphics::GetContext().HSSetShader(hullShader, nullptr, 0);
-	Graphics::GetContext().DSSetShader(domainShader, nullptr, 0);
-	if (culling)
-		Graphics::GetContext().GSSetShader(geometryShader, nullptr, 0);
-	Graphics::GetContext().PSSetShader(pixelShader, nullptr, 0);
+	Graphics::Inst().GetContext().VSSetShader(vertexShader, nullptr, 0);
+	Graphics::Inst().GetContext().HSSetShader(hullShader, nullptr, 0);
+	Graphics::Inst().GetContext().DSSetShader(domainShader, nullptr, 0);
+	Graphics::Inst().GetContext().GSSetShader(geometryShader, nullptr, 0);
+	Graphics::Inst().GetContext().PSSetShader(pixelShader, nullptr, 0);
 }
 
 enum class Shader { VS, HS, DS, GS, PS };
@@ -342,23 +341,23 @@ inline void BindBuffer(ID3D11Buffer* buffer, Shader shader = Shader::VS, UINT sl
 	switch (shader)
 	{
 	case Shader::VS:
-		Graphics::GetContext().VSSetConstantBuffers(slot, 1, &buffer);
+		Graphics::Inst().GetContext().VSSetConstantBuffers(slot, 1, &buffer);
 		break;
 
 	case Shader::HS:
-		Graphics::GetContext().HSSetConstantBuffers(slot, 1, &buffer);
+		Graphics::Inst().GetContext().HSSetConstantBuffers(slot, 1, &buffer);
 		break;
 
 	case Shader::DS:
-		Graphics::GetContext().DSSetConstantBuffers(slot, 1, &buffer);
+		Graphics::Inst().GetContext().DSSetConstantBuffers(slot, 1, &buffer);
 		break;
 
 	case Shader::GS:
-		Graphics::GetContext().GSSetConstantBuffers(slot, 1, &buffer);
+		Graphics::Inst().GetContext().GSSetConstantBuffers(slot, 1, &buffer);
 		break;
 
 	case Shader::PS:
-		Graphics::GetContext().PSSetConstantBuffers(slot, 1, &buffer);
+		Graphics::Inst().GetContext().PSSetConstantBuffers(slot, 1, &buffer);
 		break;
 	}
 }

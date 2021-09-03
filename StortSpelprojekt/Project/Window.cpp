@@ -122,6 +122,7 @@ Window::Window(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 	(void)freopen("conout$", "w", stdout);
 #endif
 
+	ActivateCursor();
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
 }
 

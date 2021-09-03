@@ -1,5 +1,48 @@
 #include "Graphics.h"
 
+Graphics::Graphics(UINT windowWidth, UINT windowHeight, HWND window)
+	:Singleton(this)
+{
+	if FAILED(CreateDeviceSwapchain(windowWidth, windowHeight, window))
+	{
+		Print("FAILED TO CREATE DEVICE AND SWAP CHAIN");
+		return;
+	}
+
+	if FAILED(CreateRenderTarget())
+	{
+		Print("FAILED TO CREATE RENDER TARGET");
+		return;
+	}
+
+	if FAILED(CreateDepthStencil(windowWidth, windowHeight))
+	{
+		Print("FAILED TO CREATE DEPTH STENCIL");
+		return;
+	}
+
+	if FAILED(CreateRasterizerStates())
+	{
+		Print("FAILED TO CREATE RASTERIZER STATES");
+		return;
+	}
+
+	CreateViewport(windowWidth, windowHeight);
+}
+
+Graphics::~Graphics()
+{
+	noCullState->Release();
+	noCullWireframeState->Release();
+	dsView->Release();
+	dsTexture->Release();
+	backBuffer->Release();
+	swapChain->Release();
+
+	context->Release();
+	device->Release();
+}
+
 HRESULT Graphics::CreateDeviceSwapchain(UINT windowWidth, UINT windowHeight, HWND window)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
@@ -117,53 +160,10 @@ void Graphics::CreateViewport(UINT windowWidth, UINT windowHeight)
 	viewport.MaxDepth = 1;
 }
 
-bool Graphics::Initialize(UINT windowWidth, UINT windowHeight, HWND window)
-{
-	if FAILED(CreateDeviceSwapchain(windowWidth, windowHeight, window))
-	{
-		Print("FAILED TO CREATE DEVICE AND SWAP CHAIN");
-		return false;
-	}
-
-	if FAILED(CreateRenderTarget())
-	{
-		Print("FAILED TO CREATE RENDER TARGET");
-		return false;
-	}
-
-	if FAILED(CreateDepthStencil(windowWidth, windowHeight))
-	{
-		Print("FAILED TO CREATE DEPTH STENCIL");
-		return false;
-	}
-
-	if FAILED(CreateRasterizerStates())
-	{
-		Print("FAILED TO CREATE RASTERIZER STATES");
-		return false;
-	}
-
-	CreateViewport(windowWidth, windowHeight);
-	return true;
-}
-
 void Graphics::BeginFrame()
 {
 	context->RSSetViewports(1, &viewport);
 	context->OMSetRenderTargets(1, &backBuffer, dsView);
 	context->ClearRenderTargetView(backBuffer, backgroundColor);
 	context->ClearDepthStencilView(dsView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-}
-
-void Graphics::ShutDown()
-{
-	noCullState->Release();
-	noCullWireframeState->Release();
-	dsView->Release();
-	dsTexture->Release();
-	backBuffer->Release();
-	swapChain->Release();
-
-	context->Release();
-	device->Release();
 }

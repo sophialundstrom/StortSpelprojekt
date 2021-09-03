@@ -12,8 +12,6 @@ private:
 	Vector3 up;
 	Vector3 forward;
 
-	float pickRange;
-
 	float moveSpeed;
 	float rotationSpeed;
 
@@ -29,8 +27,6 @@ public:
 		Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 forward = { 0.0f, 0.0f, 1.0f }, Vector3 up = { 0.0f, 1.0f, 0.0f });
 
 	void Update();
-
-	bool Intersects(const DirectX::BoundingBox& bounds);
 
 	Vector3 GetDirection() const { return this->direction; }
 	Vector3 GetPosition() const { return this->position; }

@@ -65,7 +65,7 @@ public:
 		ID3D11Texture2D* textures[numTargets] = { nullptr };
 		for (UINT i = 0; i < numTargets; ++i)
 		{
-			hr = Graphics::GetDevice().CreateTexture2D(&textureDesc, nullptr, &textures[i]);
+			hr = Graphics::Inst().GetDevice().CreateTexture2D(&textureDesc, nullptr, &textures[i]);
 			if FAILED(hr)
 			{
 				Print("FAILED TO CREATE TEXTURE2D");
@@ -80,7 +80,7 @@ public:
 
 		for (UINT i = 0; i < numTargets; ++i)
 		{
-			hr = Graphics::GetDevice().CreateRenderTargetView(textures[i], &rtvDesc, &rtvs[i]);
+			hr = Graphics::Inst().GetDevice().CreateRenderTargetView(textures[i], &rtvDesc, &rtvs[i]);
 			if FAILED(hr)
 			{
 				Print("FAILED TO CREATE RENDER TARGET");
@@ -97,7 +97,7 @@ public:
 
 		for (UINT i = 0; i < numTargets; ++i)
 		{
-			hr = Graphics::GetDevice().CreateShaderResourceView(textures[i], &srvDesc, &srvs[i]);
+			hr = Graphics::Inst().GetDevice().CreateShaderResourceView(textures[i], &srvDesc, &srvs[i]);
 			if FAILED(hr)
 			{
 				Print("FAILED TO CREATE SHADER RESOURCE VIEW");
@@ -111,8 +111,8 @@ public:
 
 		//SHADERS
 		std::string byteCode;
-		LoadVertexShader(vertexShader, vs_path, byteCode);
-		LoadPixelShader(pixelShader, ps_path);
+		LoadShader(vertexShader, vs_path, byteCode);
+		LoadShader(pixelShader, ps_path);
 
 		//INPUT LAYOUT
 		D3D11_INPUT_ELEMENT_DESC inputDesc[] =
@@ -121,7 +121,7 @@ public:
 			{"TEXTURECOORDS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 		};
 
-		hr = Graphics::GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
+		hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
 		if FAILED(hr)
 		{
 			Print("FAILED TO CREATE INPUT LAYOUT");
@@ -172,10 +172,10 @@ public:
 	{
 		//DEACTIVATE WIREFRAME IF ENABLED
 		if (Settings::UseWireframe())
-			Graphics::DisableWireframe();
+			Graphics::Inst().DisableWireframe();
 
 		//START RENDERING TO BACK BUFFER
-		Graphics::BeginFrame();
+		Graphics::Inst().BeginFrame();
 		ImGUI::BeginFrame();
 
 		//IMGUI
@@ -188,48 +188,48 @@ public:
 		ImGui::End();
 
 		Settings::RenderUI();
-		ShaderData::shadowMap.RenderAsImage();
+		ShaderData::Inst().shadowMap.RenderAsImage();
 
 		//SHADERS
 		BindShaders(vertexShader, nullptr, nullptr, nullptr, pixelShader);
 
 		//SHADER RESOURCES
-		Graphics::GetContext().PSSetShaderResources(0, numTargets, srvs);
-		ShaderData::shadowMap.BindAsResource();
-		Graphics::GetContext().PSSetShaderResources(8, 1, &lights_buf_srv);
+		Graphics::Inst().GetContext().PSSetShaderResources(0, numTargets, srvs);
+		ShaderData::Inst().shadowMap.BindAsResource();
+		Graphics::Inst().GetContext().PSSetShaderResources(8, 1, &lights_buf_srv);
 
 		//BUFFERS
-		UpdateBuffer(light_buf, ShaderData::lightData);
+		UpdateBuffer(light_buf, ShaderData::Inst().lightData);
 		BindBuffer(light_buf, Shader::PS);
 
-		UpdateBuffer(camera_buf, ShaderData::cameraPosition);
+		UpdateBuffer(camera_buf, ShaderData::Inst().cameraPosition);
 		BindBuffer(camera_buf, Shader::PS, 1);
 
-		UpdateBuffer(numLights_buf, ShaderData::numPointLights);
+		UpdateBuffer(numLights_buf, ShaderData::Inst().numPointLights);
 		BindBuffer(numLights_buf, Shader::PS, 2);
 
 		UpdateBuffer(globalAmbient_buf, Settings::GlobalAmbient());
 		BindBuffer(globalAmbient_buf, Shader::PS, 3);
 
-		UpdateBuffer(lights_buf, ShaderData::pointLightsData, sizeof(PointLight) * ShaderData::numPointLights);
+		UpdateBuffer(lights_buf, ShaderData::Inst().pointLightsData, sizeof(PointLight) * ShaderData::Inst().numPointLights);
 
 		//TOPOLOGY
-		Graphics::GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+		Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 		//INPUT LAYOUT
-		Graphics::GetContext().IASetInputLayout(inputLayout);
+		Graphics::Inst().GetContext().IASetInputLayout(inputLayout);
 
 		//DRAW
-		Graphics::GetContext().IASetVertexBuffers(0, 1, &screenQuadBuffer, &stride, &offset);
-		Graphics::GetContext().Draw(4, 0);
+		Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &screenQuadBuffer, &stride, &offset);
+		Graphics::Inst().GetContext().Draw(4, 0);
 
 		//FINALLY RENDER TO BACK BUFFER
 		ImGUI::EndFrame();
-		Graphics::EndFrame();
+		Graphics::Inst().EndFrame();
 
 		//REACTIVATE WIREFRAME IF ENABLED
 		if (Settings::UseWireframe())
-			Graphics::EnableWireframe();
+			Graphics::Inst().EnableWireframe();
 
 		//RESET FOR NEXT FRAME
 		SetRenderTargets();
@@ -237,17 +237,17 @@ public:
 
 	void SetRenderTargets()
 	{
-		Graphics::GetContext().RSSetViewports(1, &Graphics::GetViewport());
+		Graphics::Inst().GetContext().RSSetViewports(1, &Graphics::Inst().GetViewport());
 
 		//RESET TEXTURES TO BE USED AS RENDER TARGETS
 		ID3D11ShaderResourceView* nullSRVs[numTargets] = { nullptr };
-		Graphics::GetContext().PSSetShaderResources(0, numTargets, nullSRVs);
+		Graphics::Inst().GetContext().PSSetShaderResources(0, numTargets, nullSRVs);
 
-		Graphics::GetContext().OMSetRenderTargets(numTargets, rtvs, &Graphics::GetDSV());
+		Graphics::Inst().GetContext().OMSetRenderTargets(numTargets, rtvs, &Graphics::Inst().GetDSV());
 
 		for (UINT i = 0; i < numTargets; ++i)
-			Graphics::GetContext().ClearRenderTargetView(rtvs[i], Graphics::GetBackgroundColor());
+			Graphics::Inst().GetContext().ClearRenderTargetView(rtvs[i], Graphics::Inst().GetBackgroundColor());
 
-		Graphics::GetContext().ClearDepthStencilView(&Graphics::GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		Graphics::Inst().GetContext().ClearDepthStencilView(&Graphics::Inst().GetDSV(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	}
 };

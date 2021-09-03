@@ -1,5 +1,4 @@
 #pragma once
-
 #include "ImGui.h"
 #include "Math.h"
 

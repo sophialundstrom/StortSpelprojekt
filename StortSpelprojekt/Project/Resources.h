@@ -127,7 +127,7 @@ public:
 			if (lib == mtllib)
 			{
 				UpdateBuffer(materialBuffer, std::next(material.begin(), ID)->second->data);
-				Graphics::GetContext().PSSetConstantBuffers(slot, 1, &materialBuffer);
+				Graphics::Inst().GetContext().PSSetConstantBuffers(slot, 1, &materialBuffer);
 			}
 	}
 

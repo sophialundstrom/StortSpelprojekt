@@ -175,11 +175,14 @@
     <ClInclude Include="DisplacementRenderer.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="Editor.h" />
+    <ClInclude Include="ForwardModelRenderer.h" />
     <ClInclude Include="ImGuiWin.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="ImGui.h" />
+    <ClInclude Include="LevelEditor.h" />
+    <ClInclude Include="MaterialLoader.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
@@ -209,8 +212,6 @@
     <ClInclude Include="TempModel.h" />
     <ClInclude Include="TempResources.h" />
     <ClInclude Include="Terrain.h" />
-    <ClInclude Include="TerrainEditor.h" />
-    <ClInclude Include="TerrainEditorRenderer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Vertex.h" />
@@ -274,6 +275,18 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="DisplacementVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="ForwardModelPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="ForwardModelVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

@@ -3,48 +3,53 @@
 #include "RenderGraph.h"
 #include "Event.h"
 #include "Time.h"
-#include "Scene.h"
 
 #include "DebugMainMenu.h"
 #include "DemoEditor.h"
+#include "LevelEditor.h"
 
 class Application
 {
 private:
 	Window window;
-	Scene scene;
 
 	DebugMainMenu DBMainMenu;
 	DemoEditor demoEditor;
 
+	std::unique_ptr<LevelEditor> levelEditor;
+
+	std::unique_ptr<Graphics> graphics;
+	std::unique_ptr<RenderGraph> renderGraph;
 	std::unique_ptr<TempResources> resources;
+	std::unique_ptr<ShaderData> shaderData;
 
 	AppState state = DB_MAIN;
 public:
 	Application(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 		:window(width, height, title, instance)
 	{
+		//GET CLIENT RECT (TITLE BAR OFFSET)
 		RECT clientRect;
 		GetClientRect(window.HWnd(), &clientRect);
 
 		UINT windowWidth = clientRect.right;
 		UINT windowHeight = clientRect.bottom;
 
-		Graphics::Initialize(windowWidth, windowHeight, window.HWnd());
-		RenderGraph::Initialize(windowWidth, windowHeight);
-		ImGUI::Initialize();
-		scene.Initialize(windowWidth, windowHeight);
+		//INITIALIZATION
+		graphics = std::make_unique<Graphics>(windowWidth, windowHeight, window.HWnd());
 
 		resources = std::make_unique<TempResources>();
+
+		renderGraph = std::make_unique<RenderGraph>(shaderData, windowWidth, windowHeight);
+	
+		levelEditor = std::make_unique<LevelEditor>(windowWidth, windowHeight);
+
+		ImGUI::Initialize();
 	}
 
 	~Application()
 	{
-		scene.ShutDown();
 		ImGUI::ShutDown();
-		RenderGraph::ShutDown();
-		ShaderData::ShutDown();
-		Graphics::ShutDown();
 	}
 
 	void Run()
@@ -83,17 +88,16 @@ public:
 				break;
 
 			case DB_PLAY:
-				scene.Update();
-				RenderGraph::Render();
+				RenderGraph::Inst().Render();
 				break;
 
 			case DB_LEVEL:
-				demoEditor.Update();
+				levelEditor->Update();
 
-				if (demoEditor.IsDone())
+				if (levelEditor->IsDone())
 					state = DB_MAIN;
 
-				demoEditor.Render();
+				levelEditor->Render();
 				break;
 			}
 

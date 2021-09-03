@@ -1,6 +1,7 @@
 #pragma once
 #include "Drawable.h"
 #include "ShaderData.h"
+#include "DirectXHelp.h"
 #include <memory>
 
 enum class RendererType { UNDEFINED = -1, MODEL, DISPLACEMENT, PARTICLE, SHADOW, DEFERRED };
@@ -14,5 +15,6 @@ public:
 	virtual ~Renderer() = default;
 	void Bind(std::shared_ptr<Drawable> drawable) { drawables.push_back(drawable); }
 	RendererType Type() { return type; }
+	void Clear() { drawables.clear(); }
 	virtual void Render() = 0;
 };

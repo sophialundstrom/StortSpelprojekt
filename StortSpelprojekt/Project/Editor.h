@@ -11,7 +11,7 @@ protected:
 
 	void BeginFrame()
 	{
-		Graphics::BeginFrame();
+		Graphics::Inst().BeginFrame();
 		ImGUI::BeginFrame();
 	}
 
@@ -21,7 +21,7 @@ protected:
 			window.Render();
 
 		ImGUI::EndFrame();
-		Graphics::EndFrame();
+		Graphics::Inst().EndFrame();
 	}
 public:
 	Editor() = default;

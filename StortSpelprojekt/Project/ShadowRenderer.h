@@ -36,9 +36,9 @@ public:
 		CreateBuffer(tesselation_buf);
 
 		//SHADERS
-		LoadVertexShader(vertexShader, vs_path);
-		LoadHullShader(hullShader, hs_path);
-		LoadDomainShader(domainShader, ds_path);
+		LoadShader(vertexShader, vs_path);
+		LoadShader(hullShader, hs_path);
+		LoadShader(domainShader, ds_path);
 	}
 
 	~ShadowRenderer()
@@ -57,11 +57,14 @@ public:
 
 	void Render()
 	{
+		if (drawables.empty())
+			return;
+
 		//SET SHADOW MAP AS RENDER TARGET
-		ShaderData::shadowMap.BindAsRenderTarget();
+		ShaderData::Inst().shadowMap.BindAsRenderTarget();
 
 		//INPUT LAYOUT
-		Graphics::GetContext().IASetInputLayout(ShaderData::inputLayout);
+		Graphics::Inst().GetContext().IASetInputLayout(ShaderData::Inst().inputLayout);
 
 		//RENDER BOUND DRAWABLES
 		for (auto& drawable : drawables)
@@ -72,7 +75,7 @@ public:
 
 			//Matrices
 			matrices.world = model->GetWorldMatrix().Transpose();
-			matrices.WVP = ShaderData::lightMatrix * matrices.world;
+			matrices.WVP = ShaderData::Inst().lightMatrix * matrices.world;
 			UpdateBuffer(matrices_buf, matrices);
 			BindBuffer(matrices_buf, Shader::VS, 1);
 
@@ -83,7 +86,7 @@ public:
 			if (model->HasDisplacement())
 			{
 				//TOPOLOGY
-				Graphics::GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+				Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 
 				//SHADER
 				BindShaders(vertexShader, hullShader, domainShader);
@@ -108,7 +111,7 @@ public:
 			else
 			{
 				//TOPOLOGY
-				Graphics::GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+				Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 				//SHADER
 				BindShaders(vertexShader);

@@ -16,7 +16,7 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::BindToRenderGraph()
 {
-	RenderGraph::Bind(shared_from_this(), RendererType::PARTICLE);
+	RenderGraph::Inst().Bind(shared_from_this(), RendererType::PARTICLE);
 }
 
 Vector2 ParticleSystem::GetParticleExtents() const
@@ -26,12 +26,12 @@ Vector2 ParticleSystem::GetParticleExtents() const
 
 void ParticleSystem::BindBuffer()
 {
-	Graphics::GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 }
 
 void ParticleSystem::DrawParticles()
 {
-	Graphics::GetContext().Draw(particleCount, 0);
+	Graphics::Inst().GetContext().Draw(particleCount, 0);
 }
 
 void ParticleSystem::Update()

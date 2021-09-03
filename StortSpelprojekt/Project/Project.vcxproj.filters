@@ -70,6 +70,9 @@
     <Filter Include="Header Files\Graphics\Editors">
       <UniqueIdentifier>{4d9985e3-1487-4720-8877-ff32c953c028}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\ForwardModel">
+      <UniqueIdentifier>{c7ed6ca3-7ae9-4fc6-895e-6eec9dcbf313}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -242,11 +245,14 @@
     <ClInclude Include="Vertex.h">
       <Filter>Header Files\Scene\Drawable\Model</Filter>
     </ClInclude>
-    <ClInclude Include="TerrainEditor.h">
+    <ClInclude Include="MaterialLoader.h">
       <Filter>Header Files\Graphics\Editors</Filter>
     </ClInclude>
-    <ClInclude Include="TerrainEditorRenderer.h">
+    <ClInclude Include="LevelEditor.h">
       <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardModelRenderer.h">
+      <Filter>Header Files\Graphics\Renderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -303,6 +309,12 @@
     </FxCompile>
     <FxCompile Include="ParticlePixelShader.hlsl">
       <Filter>Resource Files\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="ForwardModelVertexShader.hlsl">
+      <Filter>Resource Files\ForwardModel</Filter>
+    </FxCompile>
+    <FxCompile Include="ForwardModelPixelShader.hlsl">
+      <Filter>Resource Files\ForwardModel</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

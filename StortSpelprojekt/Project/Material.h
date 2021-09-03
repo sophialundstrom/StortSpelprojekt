@@ -32,13 +32,9 @@ struct Material
 		}
 	}
 
-	void BindDisplacementTexture(UINT slot = 0, Shader shader = Shader::DS)
-	{
-		displacementTexture->Bind(slot, shader);
-	}
+	void BindDisplacementTexture(UINT slot = 0, Shader shader = Shader::DS) { displacementTexture->Bind(slot, shader); }
 
-	Material(UINT ID = 0, std::string mtllib = "")
-		:ID(ID), mtllib(mtllib) {}
+	Material(UINT ID = 0, std::string mtllib = "") :ID(ID), mtllib(mtllib) {}
 
 	~Material()
 	{

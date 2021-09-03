@@ -1,36 +1,40 @@
 #pragma once
+#include "DirectXHelp.h"
 #include "Camera.h"
 #include "Light.h"
 #include "ShadowMap.h"
+#include "Singleton.h"
 
-class ShaderData
+class ShaderData : public Singleton<ShaderData>
 {
 	friend class ModelRenderer;
 	friend class ShadowRenderer;
 	friend class DisplacementRenderer;
 	friend class ParticleRenderer;
 	friend class DeferredRenderer;
+
+	friend class ForwardModelRenderer;
 private:
 	//CAMERA
-	static Matrix cameraMatrix;
-	static Vector3 cameraPosition;
+	Matrix cameraMatrix;
+	Vector3 cameraPosition;
 
 	//DIRECTIONAL LIGHT
-	static Matrix lightMatrix;
-	static DirectionalLight::Data lightData;
+	Matrix lightMatrix;
+	DirectionalLight::Data lightData;
 
 	//POINT LIGHTS
-	static UINT numPointLights;
-	static PointLight* pointLightsData;
+	UINT numPointLights;
+	PointLight* pointLightsData;
 
 	//INPUT LAYOUT
-	static ID3D11InputLayout* inputLayout;
+	ID3D11InputLayout* inputLayout;
 
 	//SAMPLER
-	static ID3D11SamplerState* wrapSampler;
+	ID3D11SamplerState* wrapSampler;
 
 	//MATRICES & MATRICES-BUFFER
-	static ID3D11Buffer* matrices_buf;
+	ID3D11Buffer* matrices_buf;
 	struct TempMatrices
 	{
 		Matrix world;
@@ -38,10 +42,13 @@ private:
 	} matrices;
 
 	//SHADOW MAP
-	static ShadowMap shadowMap;
+	ShadowMap shadowMap;
 public:
-	static void Initialize(std::string layoutByteCode)
+	ShaderData(std::string layoutByteCode)
+		:Singleton(this)
 	{
+		CreateBuffer(matrices_buf, sizeof(TempMatrices));
+
 		shadowMap = ShadowMap(4096);
 
 		//INPUT LAYOUT
@@ -52,7 +59,7 @@ public:
 			{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 		};
 
-		HRESULT hr = Graphics::GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), layoutByteCode.c_str(), layoutByteCode.length(), &inputLayout);
+		HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), layoutByteCode.c_str(), layoutByteCode.length(), &inputLayout);
 		if FAILED(hr)
 		{
 			Print("FAILED TO CREATE INPUT LAYOUT");
@@ -71,22 +78,32 @@ public:
 		samplerDesc.MinLOD = 0;
 		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-		hr = Graphics::GetDevice().CreateSamplerState(&samplerDesc, &wrapSampler);
+		hr = Graphics::Inst().GetDevice().CreateSamplerState(&samplerDesc, &wrapSampler);
 		if FAILED(hr)
 		{
 			Print("FAILED TO CREATE WRAP SAMPLER");
 			return;
 		}
 
-		Graphics::GetContext().PSSetSamplers(0, 1, &wrapSampler);
-		Graphics::GetContext().DSSetSamplers(0, 1, &wrapSampler);
+		Graphics::Inst().GetContext().PSSetSamplers(0, 1, &wrapSampler);
+		Graphics::Inst().GetContext().DSSetSamplers(0, 1, &wrapSampler);
 	}
 
-	static void Update(const Camera& camera, const DirectionalLight& directionalLight, const UINT& numPointLights, PointLight* pointLightsData)
+	~ShaderData()
+	{
+		matrices_buf->Release();
+		inputLayout->Release();
+		wrapSampler->Release();
+		shadowMap.ShutDown();
+	}
+
+	void Update(const Camera& camera, const DirectionalLight& directionalLight, const UINT& numPointLights, PointLight* pointLightsData)
 	{
 		//CAMERA
 		cameraMatrix = camera.GetMatrix();
 		cameraPosition = camera.GetPosition();
+
+		matrices.viewPerspective = cameraMatrix;
 
 		//DIRECTIONAL LIGHT
 		lightMatrix = directionalLight.GetMatrix();
@@ -96,21 +113,4 @@ public:
 		ShaderData::pointLightsData = pointLightsData;
 		ShaderData::numPointLights = numPointLights;
 	}
-
-	static void ShutDown()
-	{
-		inputLayout->Release();
-		wrapSampler->Release();
-		shadowMap.ShutDown();
-	}
 };
-
-inline Matrix ShaderData::cameraMatrix;
-inline Vector3 ShaderData::cameraPosition;
-inline Matrix ShaderData::lightMatrix;
-inline UINT ShaderData::numPointLights;
-inline PointLight* ShaderData::pointLightsData;
-inline DirectionalLight::Data ShaderData::lightData;
-inline ID3D11InputLayout* ShaderData::inputLayout;
-inline ID3D11SamplerState* ShaderData::wrapSampler;
-inline ShadowMap ShaderData::shadowMap;

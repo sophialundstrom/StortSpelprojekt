@@ -34,16 +34,16 @@ public:
 
 	void Render()
 	{
-		Graphics::BeginFrame();
+		if (firstFrame)
+			firstFrame = false;
+
+		Graphics::Inst().BeginFrame();
 		ImGUI::BeginFrame();
 
 		window.Render();
 
-		if (firstFrame)
-			firstFrame = false;
-
 		ImGUI::EndFrame();
-		Graphics::EndFrame();
+		Graphics::Inst().EndFrame();
 	}
 
 	AppState GetState() { return state; }
