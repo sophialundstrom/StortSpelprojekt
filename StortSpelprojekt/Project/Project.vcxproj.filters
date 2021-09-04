@@ -73,6 +73,12 @@
     <Filter Include="Resource Files\ForwardModel">
       <UniqueIdentifier>{c7ed6ca3-7ae9-4fc6-895e-6eec9dcbf313}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Graphics\Editors\ParticleEditor">
+      <UniqueIdentifier>{c6fd61be-2116-4a46-9df5-5e08f62a9657}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\ForwardParticle">
+      <UniqueIdentifier>{c7d26f10-53fa-45dc-8293-0b2d9fa16199}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -101,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="Terrain.cpp">
       <Filter>Header Files\Scene\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEditor.cpp">
+      <Filter>Header Files\Graphics\Editors\ParticleEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -254,6 +263,18 @@
     <ClInclude Include="ForwardModelRenderer.h">
       <Filter>Header Files\Graphics\Renderers</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleEditor.h">
+      <Filter>Header Files\Graphics\Editors\ParticleEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardParticleRenderer.h">
+      <Filter>Header Files\Graphics\Editors\ParticleEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiWinComponents.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DeferredVertexShader.hlsl">
@@ -315,6 +336,9 @@
     </FxCompile>
     <FxCompile Include="ForwardModelPixelShader.hlsl">
       <Filter>Resource Files\ForwardModel</Filter>
+    </FxCompile>
+    <FxCompile Include="ForwardParticlePixelShader.hlsl">
+      <Filter>Resource Files\ForwardParticle</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

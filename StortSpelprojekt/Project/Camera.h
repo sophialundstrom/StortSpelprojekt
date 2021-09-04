@@ -17,14 +17,15 @@ private:
 
 	float pitch;
 	float yaw;
-
-	void MoveRight(int sign = 1);
-	void MoveForward(int sign = 1);
-	void Rotate(float dx, float dy);
 public:
 	Camera();
 	Camera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed,
 		Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 forward = { 0.0f, 0.0f, 1.0f }, Vector3 up = { 0.0f, 1.0f, 0.0f });
+
+	void MoveUp(int sign = 1);
+	void MoveRight(int sign = 1);
+	void MoveForward(int sign = 1);
+	void Rotate(float dx, float dy);
 
 	void Update();
 

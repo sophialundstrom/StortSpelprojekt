@@ -4,7 +4,7 @@
 #include "Math.h"
 #include "Random.h"
 
-enum class EmitterType { CUBE, SPHERE, CONE };
+enum class EmitterType { SPHERE, CUBE, CONE };
 
 class ParticleSystem : public Drawable, public std::enable_shared_from_this<ParticleSystem>
 {
@@ -51,15 +51,44 @@ private:
 	std::vector<Particle> particles;
 	ID3D11Buffer* vertexBuffer;
 public:
+	const UINT ABSOLUTE_MAX_PARTICLES = 1000000u;
+
+	ParticleSystem() = default;
+	ParticleSystem(const std::string& file, bool preview = false);
 	ParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type);
 	~ParticleSystem();
 
 	void BindToRenderGraph();
 
-	Vector2 GetParticleExtents() const;
 
 	void BindBuffer();
 	void DrawParticles();
+	void Draw() const;
 
+	void Reset();
 	void Update();
+
+	//SET
+	void SetType(const EmitterType& type)				{ this->type = type; }
+	void SetSize(int size)								{ this->size = size; }
+	void SetParticleExtents(Vector2 extents)			{ this->particleExtents = extents; }
+	void SetParticleExtents(float width, float height)	{ this->particleExtents = Vector2(width, height); }
+	void SetParticleWidth(float value)					{ this->particleExtents.x = value; }
+	void SetParticleHeight(float value)					{ this->particleExtents.y = value; }
+	void SetMinVelocity(float value)					{ this->minVelocity = value; }
+	void SetMaxVelocity(float value)					{ this->maxVelocity = value; }
+	void SetMaxParticles(unsigned int amount)			{ this->maxParticles = amount; }
+	void SetParticlesLifetime(float amount)				{ this->particlesLifetime = amount; }
+	void SetTimeBetweenPartilces(float amount)			{ this->timeBetweenParticles = amount; }
+	
+	Vector2 GetParticleExtents() const		{ return this->particleExtents; }
+	EmitterType GetType() const				{ return this->type; }
+	float GetSize() const						{ return this->size; }
+	float GetParticleWidth() const			{ return this->particleExtents.x; }
+	float GetParticleHeight() const			{ return this->particleExtents.y; }
+	float GetMinVelocity() const			{ return this->minVelocity; }
+	float GetMaxVelocity() const			{ return this->maxVelocity; }
+	unsigned int GetMaxParticles() const	{ return this->maxParticles; }
+	float GetParticlesLifetime() const		{ return this->particlesLifetime; }
+	float GetTimeBetweenParticles() const	{ return this->timeBetweenParticles; }
 };

@@ -6,13 +6,18 @@
 
 #include <algorithm>
 
-Camera::Camera() {}
+Camera::Camera() : moveSpeed(0), rotationSpeed(0), pitch(0), yaw(0) {}
 
 Camera::Camera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position, Vector3 forward, Vector3 up)
 	:position(position), forward(forward), direction(forward), up(up), moveSpeed(moveSpeed), rotationSpeed(rotationSpeed), pitch(0), yaw(0)
 {
 	this->viewMatrix = Matrix::CreateLookAt(position, forward, up);
 	this->perspectiveMatrix = Matrix::CreatePerspectiveFieldOfView(FOV, aspectRatio, nearZ, farZ);
+}
+
+void Camera::MoveUp(int sign)
+{
+	position.y += moveSpeed * Time::GetDelta() * sign;
 }
 
 void Camera::MoveRight(int sign)
@@ -51,30 +56,6 @@ void Camera::Rotate(float dx, float dy)
 
 void Camera::Update()
 {
-	if (Event::KeyIsPressed('Q'))
-		Rotate(0, 1);
-
-	if (Event::KeyIsPressed('E'))
-		Rotate(0, -1);
-
-	if (Event::KeyIsPressed('W'))
-		MoveForward();
-
-	if (Event::KeyIsPressed('A'))
-		MoveRight(-1);
-
-	if (Event::KeyIsPressed('S'))
-		MoveForward(-1);
-
-	if (Event::KeyIsPressed('D'))
-		MoveRight();
-
-	if (Event::KeyIsPressed(32)) //SPACE
-		position.y += moveSpeed * Time::GetDelta();
-
-	if (Event::KeyIsPressed(16)) //SHIFT
-		position.y -= moveSpeed * Time::GetDelta();
-
 	Vector3 lookAt;
 	Vector3::Transform(forward, Matrix::CreateFromYawPitchRoll(yaw, pitch, 0.0f), lookAt);
 	lookAt.Normalize();

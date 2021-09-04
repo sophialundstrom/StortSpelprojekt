@@ -14,7 +14,7 @@ public:
 	{
 		window.AddButtonComponent("PLAY DEBUG MODE", 200, 100);
 		window.AddButtonComponent("LEVEL EDITOR", 200, 100);
-		window.AddButtonComponent("TERRAIN EDITOR", 200, 100);
+		window.AddButtonComponent("PARTICLE EDITOR", 200, 100);
 	}
 
 	void Update()
@@ -28,8 +28,8 @@ public:
 		else if (window.GetValue<ButtonComponent>("LEVEL EDITOR"))
 			state = DB_LEVEL;
 
-		else if (window.GetValue<ButtonComponent>("TERRAIN EDITOR"))
-			state = DB_TERRAIN;
+		else if (window.GetValue<ButtonComponent>("PARTICLE EDITOR"))
+			state = DB_PARTICLE;
 	}
 
 	void Render()

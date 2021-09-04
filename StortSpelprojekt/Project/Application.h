@@ -7,28 +7,34 @@
 #include "DebugMainMenu.h"
 #include "DemoEditor.h"
 #include "LevelEditor.h"
+#include "ParticleEditor.h"
 
 class Application
 {
 private:
+	//WINDOW
 	Window window;
 
 	DebugMainMenu DBMainMenu;
 	DemoEditor demoEditor;
 
+	//EDITORS
 	std::unique_ptr<LevelEditor> levelEditor;
+	std::unique_ptr<ParticleEditor> particleEditor;
 
+	//SINGLETONS
 	std::unique_ptr<Graphics> graphics;
 	std::unique_ptr<RenderGraph> renderGraph;
 	std::unique_ptr<TempResources> resources;
 	std::unique_ptr<ShaderData> shaderData;
 
+	//STATE
 	AppState state = DB_MAIN;
 public:
 	Application(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 		:window(width, height, title, instance)
 	{
-		//GET CLIENT RECT (TITLE BAR OFFSET)
+		//GET CLIENT RECT (BECAUSE OF TITLE BAR OFFSET)
 		RECT clientRect;
 		GetClientRect(window.HWnd(), &clientRect);
 
@@ -43,6 +49,8 @@ public:
 		renderGraph = std::make_unique<RenderGraph>(shaderData, windowWidth, windowHeight);
 	
 		levelEditor = std::make_unique<LevelEditor>(windowWidth, windowHeight);
+
+		particleEditor = std::make_unique<ParticleEditor>(windowWidth, windowHeight);
 
 		ImGUI::Initialize();
 	}
@@ -98,6 +106,15 @@ public:
 					state = DB_MAIN;
 
 				levelEditor->Render();
+				break;
+			
+			case DB_PARTICLE:
+				particleEditor->Update();
+
+				if (particleEditor->IsDone())
+					state = DB_MAIN;
+
+				particleEditor->Render();
 				break;
 			}
 

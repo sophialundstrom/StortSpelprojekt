@@ -1,3 +1,4 @@
+#pragma once
 #include "ImGuiWin.h"
 
 class Editor

@@ -10,42 +10,50 @@ void Scene::AddModel(const std::string& file)
 	UINT numInstances = 0;
 	std::string fileName = file;
 
-	for (auto& [name, drawable] : components.drawables)
+	for (auto& [name, drawable] : drawables)
 		if (name.find(file) != std::string::npos)
 			numInstances++;
 
 	if (numInstances > 0)
 	{
 		fileName = file + std::to_string(numInstances);
-		components.drawables[fileName] = std::make_shared<TempModel>(*std::dynamic_pointer_cast<TempModel>(components.drawables[file]));
+		drawables[fileName] = std::make_shared<TempModel>(*std::dynamic_pointer_cast<TempModel>(drawables[file]));
 	}
 
 	else
-		components.drawables[fileName] = std::make_shared<TempModel>(fileName);
+		drawables[fileName] = std::make_shared<TempModel>(fileName);
 }
 
 void Scene::AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type)
 {
+	std::string name = "Particle System";
+	UINT numInstances = 0;
+	for (auto& [name, drawable] : drawables)
+		if (name.find("Particle System") != std::string::npos)
+			numInstances++;
+
+	if (numInstances > 0)
+		name += std::to_string(numInstances);
+
 	auto particleSystem = std::make_shared<ParticleSystem>(maxParticles, timeBetweenParticles, particlesLifetime, minVelocity, maxVelocity, size, particleExtents, position, type);
 	particleSystem->BindToRenderGraph();
-	components.drawables.emplace("Particle System " + std::to_string(numParticleSystems), particleSystem);
-	numParticleSystems++;
+	drawables.emplace(name, particleSystem);
 }
 
 void Scene::AddPointLight(Vector3 position, float range, Vector3 attenuation, Vector4 color)
 {
-	if (components.pointLights.size() < MAX_LIGHTS)
-		components.pointLights.push_back(PointLight(position, range, attenuation, color));
+	if (pointLights.size() < MAX_LIGHTS)
+		pointLights.push_back(PointLight(position, range, attenuation, color));
 }
 
 void Scene::SetDirectionalLight(float range, float startAngle, int startDir)
 {
-	components.directionalLight = DirectionalLight(range, startAngle, startDir);
+	directionalLight = DirectionalLight(range, startAngle, startDir);
 }
 
 void Scene::SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position, Vector3 forward, Vector3 up)
 {
-	components.camera = Camera(FOV, aspectRatio, nearZ, farZ, rotationSpeed, moveSpeed, position, forward, up);
+	camera = Camera(FOV, aspectRatio, nearZ, farZ, rotationSpeed, moveSpeed, position, forward, up);
 }
 
 //SAVE FILE (EITHER DEFAULT OR SAVED GAME)
@@ -62,11 +70,11 @@ Scene::Scene(const std::string& file)
 
 void Scene::Update()
 {
-	components.camera.Update();
-	components.directionalLight.Update();
+	camera.Update();
+	directionalLight.Update();
 
-	for (auto& [name, drawable] : components.drawables)
+	for (auto& [name, drawable] : drawables)
 		drawable->Update();
 
-	ShaderData::Inst().Update(components.camera, components.directionalLight, (UINT)components.pointLights.size(), components.pointLights.data());
+	ShaderData::Inst().Update(camera, directionalLight, (UINT)pointLights.size(), pointLights.data());
 }

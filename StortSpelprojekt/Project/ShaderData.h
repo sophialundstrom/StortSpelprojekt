@@ -13,25 +13,27 @@ class ShaderData : public Singleton<ShaderData>
 	friend class ParticleRenderer;
 	friend class DeferredRenderer;
 
+	friend class ForwardParticleRenderer;
 	friend class ForwardModelRenderer;
 private:
 	//CAMERA
 	Matrix cameraMatrix;
 	Vector3 cameraPosition;
+	ID3D11Buffer* cameraPosition_buf;
 
 	//DIRECTIONAL LIGHT
 	Matrix lightMatrix;
 	DirectionalLight::Data lightData;
 
 	//POINT LIGHTS
-	UINT numPointLights;
-	PointLight* pointLightsData;
+	UINT numPointLights = 0;
+	PointLight* pointLightsData = nullptr;
 
 	//INPUT LAYOUT
-	ID3D11InputLayout* inputLayout;
+	ID3D11InputLayout* inputLayout = nullptr;
 
 	//SAMPLER
-	ID3D11SamplerState* wrapSampler;
+	ID3D11SamplerState* wrapSampler = nullptr;
 
 	//MATRICES & MATRICES-BUFFER
 	ID3D11Buffer* matrices_buf;
@@ -47,6 +49,7 @@ public:
 	ShaderData(std::string layoutByteCode)
 		:Singleton(this)
 	{
+		CreateBuffer(cameraPosition_buf);
 		CreateBuffer(matrices_buf, sizeof(TempMatrices));
 
 		shadowMap = ShadowMap(4096);
@@ -104,6 +107,8 @@ public:
 		cameraPosition = camera.GetPosition();
 
 		matrices.viewPerspective = cameraMatrix;
+		
+		UpdateBuffer(cameraPosition_buf, cameraPosition);
 
 		//DIRECTIONAL LIGHT
 		lightMatrix = directionalLight.GetMatrix();
@@ -112,5 +117,14 @@ public:
 		//POINT LIGHTS
 		ShaderData::pointLightsData = pointLightsData;
 		ShaderData::numPointLights = numPointLights;
+	}
+
+	void Update(const Camera& camera)
+	{
+		cameraMatrix = camera.GetMatrix();
+
+		cameraPosition = camera.GetPosition();
+
+		UpdateBuffer(cameraPosition_buf, cameraPosition);
 	}
 };

@@ -7,7 +7,7 @@ class DirectionalLight
 {
 private:
 	int dir = 1;
-	float range;
+	float range = 0;
 	float currentAngle = 0.5;
 	Vector3 position;
 	Matrix viewMatrix;

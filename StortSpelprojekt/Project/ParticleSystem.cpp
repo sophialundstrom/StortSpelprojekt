@@ -1,6 +1,56 @@
 #include "ParticleSystem.h"
 
 #include "RenderGraph.h"
+#include <filesystem>
+#include <fstream>
+
+ParticleSystem::ParticleSystem(const std::string& file, bool preview)
+	:timeSinceLastParticle(0), particleCount(0)
+{
+	std::string path = file;
+	if (file == "default.ps")
+	{
+		std::filesystem::path p = std::filesystem::current_path();
+		p += "\\ParticleSystems\\" + file;
+		path = p.string();
+	}
+
+	std::ifstream reader;
+
+	reader.open(path, std::ios::beg);
+	if (!reader.is_open())
+	{
+		Print("FAILED TO READ PARTICLE SYSTEM FILE");
+		return;
+	}
+
+	std::string str = "";
+	while (!reader.eof())
+	{
+		reader >> maxParticles;
+		reader >> timeBetweenParticles;
+		reader >> particlesLifetime;
+		reader >> minVelocity;
+		reader >> maxVelocity;
+		reader >> size;
+
+		reader >> particleExtents.x;
+		reader >> particleExtents.y;
+
+		reader >> position.x;
+		reader >> position.y;
+		reader >> position.z;
+
+		UINT temp;
+		reader >> temp;
+		type = EmitterType(temp);
+	}
+
+	if (preview)
+		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Particle), sizeof(Particle) * ABSOLUTE_MAX_PARTICLES);
+	else
+		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Particle), sizeof(Particle) * maxParticles);
+}
 
 ParticleSystem::ParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type)
 	:maxParticles(maxParticles), size(size), position(position), maxVelocity(maxVelocity), minVelocity(minVelocity), particleExtents(particleExtents),
@@ -19,11 +69,6 @@ void ParticleSystem::BindToRenderGraph()
 	RenderGraph::Inst().Bind(shared_from_this(), RendererType::PARTICLE);
 }
 
-Vector2 ParticleSystem::GetParticleExtents() const
-{
-	return this->particleExtents;
-}
-
 void ParticleSystem::BindBuffer()
 {
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
@@ -32,6 +77,19 @@ void ParticleSystem::BindBuffer()
 void ParticleSystem::DrawParticles()
 {
 	Graphics::Inst().GetContext().Draw(particleCount, 0);
+}
+
+void ParticleSystem::Draw() const
+{
+	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	Graphics::Inst().GetContext().Draw(particleCount, 0);
+}
+
+void ParticleSystem::Reset()
+{
+	particles.clear();
+	timeSinceLastParticle = 0;
+	particleCount = 0;
 }
 
 void ParticleSystem::Update()
