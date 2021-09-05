@@ -28,6 +28,15 @@
       <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DisplacementVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardModelPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardModelVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardParticlePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ModelGeometryShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
