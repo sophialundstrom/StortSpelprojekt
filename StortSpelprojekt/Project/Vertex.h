@@ -1,7 +1,6 @@
 #pragma once
 #include "Math.h"
 
-//VERTEX
 struct TempVertex
 {
 	Vector3 position;

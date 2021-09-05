@@ -99,8 +99,7 @@ public:
 			UpdateBuffer(extents_buf, particleSystem->GetParticleExtents());
 			BindBuffer(extents_buf, Shader::GS, 2);
 
-			particleSystem->BindBuffer();
-			particleSystem->DrawParticles();
+			particleSystem->Draw();
 		}
 	}
 };

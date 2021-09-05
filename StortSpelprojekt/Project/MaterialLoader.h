@@ -1,5 +1,5 @@
 #pragma once
-#include "TempResources.h"
+#include "Resources.h"
 
 #include "assimp\scene.h"
 #include "assimp\Importer.hpp"
@@ -9,8 +9,8 @@ namespace MaterialLoader
 {
 	inline void Load(aiMaterial* material)
 	{
-		if (TempResources::Inst().NumMaterials() > 0)
-			if (TempResources::Inst().MaterialExists(material->GetName().C_Str()))
+		if (Resources::Inst().NumMaterials() > 0)
+			if (Resources::Inst().MaterialExists(material->GetName().C_Str()))
 			{
 				Print("MATERIAL ALREADY EXISTS");
 				return;
@@ -18,7 +18,7 @@ namespace MaterialLoader
 
 		Material* newMaterial = new Material();
 
-		newMaterial->ID = TempResources::Inst().NumMaterials();
+		newMaterial->ID = Resources::Inst().NumMaterials();
 
 		aiString path;
 		UINT numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
@@ -44,6 +44,6 @@ namespace MaterialLoader
 		material->Get(AI_MATKEY_SHININESS, specularPower);
 		newMaterial->data.specularPower = specularPower;
 
-		TempResources::Inst().AddMaterial(newMaterial);
+		Resources::Inst().AddMaterial(newMaterial);
 	}
 };

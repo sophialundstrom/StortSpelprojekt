@@ -51,18 +51,13 @@ private:
 	std::vector<Particle> particles;
 	ID3D11Buffer* vertexBuffer = nullptr;
 public:
-	const UINT ABSOLUTE_MAX_PARTICLES = 1000000u;
+	static const UINT ABSOLUTE_MAX_PARTICLES = 1000000u;
 
 	ParticleSystem() = default;
 	ParticleSystem(const std::string& file, bool preview = false);
 	ParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type);
 	~ParticleSystem();
 
-	void BindToRenderGraph();
-
-
-	void BindBuffer();
-	void DrawParticles();
 	void Draw() const;
 
 	void Reset();

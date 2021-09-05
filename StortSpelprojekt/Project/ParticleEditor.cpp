@@ -3,41 +3,43 @@
 
 void ParticleEditor::Save(const std::string& file)
 {
+	if (file == "" || std::filesystem::path(file).extension() != ".ps")
+		return;
+
 	std::ofstream writer;
 	writer.open(file, std::ios::trunc);
 
-	writer << particleSystem->GetMaxParticles();
-	writer << " ";
-	writer << particleSystem->GetTimeBetweenParticles();
-	writer << " ";
-	writer << particleSystem->GetParticlesLifetime();
-	writer << " ";
-	writer << particleSystem->GetMinVelocity();
-	writer << " ";
-	writer << particleSystem->GetMaxVelocity();
-	writer << " ";
-	writer << particleSystem->GetSize();
-	writer << " ";
-	writer << particleSystem->GetParticleWidth();
-	writer << " ";
-	writer << particleSystem->GetParticleHeight();
-	writer << " ";
-	writer << particleSystem->GetPosition().x;
-	writer << " ";
-	writer << particleSystem->GetPosition().y;
-	writer << " ";
+	std::string space = " ";
+	writer << particleSystem->GetMaxParticles() << space;
+	writer << particleSystem->GetTimeBetweenParticles() << space;
+	writer << particleSystem->GetParticlesLifetime() << space;
+	writer << particleSystem->GetSize() << space;
+
+	writer << particleSystem->GetMinVelocity() << space;
+	writer << particleSystem->GetMaxVelocity() << space;
+
+	writer << particleSystem->GetParticleWidth() << space;
+	writer << particleSystem->GetParticleHeight() << space;
+
+	writer << (UINT)particleSystem->GetType() << space;
+
+	writer << particleSystem->GetPosition().x << space;
+	writer << particleSystem->GetPosition().y << space;
 	writer << particleSystem->GetPosition().z;
-	writer << " ";
-	writer << (UINT)particleSystem->GetType();
-	writer << " ";
 
 	writer.close();
 }
 
 void ParticleEditor::Load(const std::string& file)
 {
-	delete particleSystem;
-	particleSystem = nullptr;
+	if (file == "" || std::filesystem::path(file).extension() != ".ps")
+		return;
+
+	if (particleSystem)
+	{
+		delete particleSystem;
+		particleSystem = nullptr;
+	}
 
 	particleSystem = new ParticleSystem(file, true);
 
@@ -65,8 +67,6 @@ void ParticleEditor::Initialize(UINT windowWidth, UINT windowHeight)
 {
 	camera = Camera(PI_DIV4, (float)windowWidth / (float)windowHeight, 0.1f, 20.0f, 0, 0, { -2.5f, 5.0f, -15.0f }, { -2.5f, 0.0f, 0.0f });
 
-	particleSystem = new ParticleSystem("default.ps", true);
-
 	AddWindow("PARTICLE SYSTEM EDITOR");
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
 
@@ -74,26 +74,26 @@ void ParticleEditor::Initialize(UINT windowWidth, UINT windowHeight)
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("SYSTEM");
-	window.AddSliderIntComponent("MAX PARTICLES", 1, particleSystem->ABSOLUTE_MAX_PARTICLES, particleSystem->GetMaxParticles());
-	window.AddSliderFloatComponent("LIFETIME", 0.0f, 10.0f, particleSystem->GetParticlesLifetime());
-	window.AddSliderFloatComponent("DELTA SPAWN", particleSystem->GetTimeBetweenParticles());
-	window.AddSliderFloatComponent("SYSTEM SIZE", 0.0f, 50.0f, particleSystem->GetSize());
+	window.AddSliderIntComponent("MAX PARTICLES", 1, ParticleSystem::ABSOLUTE_MAX_PARTICLES);
+	window.AddSliderFloatComponent("DELTA SPAWN");
+	window.AddSliderFloatComponent("LIFETIME", 0.0f, 10.0f);
+	window.AddSliderFloatComponent("SYSTEM SIZE", 0.0f, 50.0f);
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("VELOCITY");
-	window.AddSliderFloatComponent("MIN VELOCITY", 0.0f, 500.0f, particleSystem->GetMinVelocity());
-	window.AddSliderFloatComponent("MAX VELOCITY", 0.0f, 500.0f, particleSystem->GetMaxVelocity());
+	window.AddSliderFloatComponent("MIN VELOCITY", 0.0f, 100.0f);
+	window.AddSliderFloatComponent("MAX VELOCITY", 0.0f, 100.0f);
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("DIMENSIONS");
 	window.AddCheckBoxComponent("KEEP SQUARE", true);
-	window.AddSliderFloatComponent("PARTICLE WIDTH", 0.0f, 0.5f, particleSystem->GetParticleWidth());
-	window.AddSliderFloatComponent("PARTICLE HEIGHT", 0.0f, 0.5f, particleSystem->GetParticleHeight());
+	window.AddSliderFloatComponent("PARTICLE WIDTH", 0.0f, 0.5f);
+	window.AddSliderFloatComponent("PARTICLE HEIGHT", 0.0f, 0.5f);
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("EMITTER");
 	const std::string names[] = { "SPHERE", "CUBE", "CONE" };
-	window.AddRadioButtonComponent("EMITTER TYPES", (UINT)particleSystem->GetType(), 3, names);
+	window.AddRadioButtonComponent("EMITTER TYPES", 0, 3, names);
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("IN CASE OF DELTA TIME BUG");
@@ -106,6 +106,8 @@ void ParticleEditor::Initialize(UINT windowWidth, UINT windowHeight)
 	window.AddSeperatorComponent();
 
 	window.AddButtonComponent("RETURN TO MENU", 120, 30);
+
+	Load("default.ps");
 }
 
 void ParticleEditor::Update()

@@ -57,7 +57,7 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	case WM_LBUTTONDOWN:
 	{
 		POINT pt;
-		if (GetCursorPos(&pt));
+		if (GetCursorPos(&pt))
 			Event::OnLeftClick(pt.x, pt.y);
 		break;
 	}

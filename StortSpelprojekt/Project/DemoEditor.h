@@ -2,7 +2,7 @@
 #include "Editor.h"
 #include "Time.h"
 #include "Scene.h"
-#include "TempResources.h"
+#include "Resources.h"
 
 class DemoEditor : public Editor
 {

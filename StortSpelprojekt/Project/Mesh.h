@@ -1,40 +1,47 @@
 #pragma once
-#include "Geometry.h"
-#include "Material.h"
+#include "Vertex.h"
+#include "Resources.h"
 
-struct Bounds
-{
-	float Xmin = D3D11_FLOAT32_MAX;
-	float Ymin = D3D11_FLOAT32_MAX;
-	float Zmin = D3D11_FLOAT32_MAX;
-	float Xmax = -D3D11_FLOAT32_MAX;
-	float Ymax = -D3D11_FLOAT32_MAX;
-	float Zmax = -D3D11_FLOAT32_MAX;
-};
+#include "assimp\scene.h"
 
 struct Mesh
 {
-	const UINT stride = sizeof(Vertex);
-	const UINT offset = 0;
+	std::string name = "";
 
-	std::vector<Face> faces;
+	UINT bufferID = -1;
+	UINT materialID = -1;
+	UINT vertexCount = -1;
 
-	std::string mtllib = "";
-	int materialID = -1;
-
-	ID3D11Buffer* vertexBuffer = nullptr;
-
-	Mesh(std::string mtllib)
-		:mtllib(mtllib)
-	{}
-
-	Mesh(const Mesh& mesh)
+	Mesh() = default;
+	Mesh(aiMesh* mesh)
+		:name(mesh->mName.C_Str())
 	{
-		this->faces = mesh.faces;
-		this->mtllib = mesh.mtllib;
-		this->materialID = mesh.materialID;
-		this->vertexBuffer = nullptr;
-	}
+		auto& resources = Resources::Inst();
+		std::vector<TempVertex> vertices(mesh->mNumVertices);
 
-	~Mesh() { vertexBuffer->Release(); }
+		for (UINT i = 0; i < mesh->mNumVertices; ++i)
+		{
+			aiVector3D val;
+
+			val = mesh->mVertices[i];
+			vertices[i].position = { val.x, val.y, val.z };
+
+			val = mesh->mNormals[i];
+			vertices[i].normal = { val.x, val.y, val.z };
+
+			val = mesh->mTextureCoords[0][i];
+			vertices[i].texCoords = { val.x, val.y };
+		}
+
+		vertexCount = mesh->mNumVertices;
+
+		bufferID = resources.NumBuffers();
+
+		materialID = resources.NumMaterials();
+
+		ID3D11Buffer* buffer;
+		CreateVertexBuffer(buffer, sizeof(TempVertex), sizeof(TempVertex) * vertexCount, vertices.data());
+
+		resources.AddVertexBuffer(mesh->mName.C_Str(), buffer);
+	}
 };

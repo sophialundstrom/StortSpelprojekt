@@ -27,20 +27,21 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 		reader >> maxParticles;
 		reader >> timeBetweenParticles;
 		reader >> particlesLifetime;
+		reader >> size;
+
 		reader >> minVelocity;
 		reader >> maxVelocity;
-		reader >> size;
 
 		reader >> particleExtents.x;
 		reader >> particleExtents.y;
 
-		reader >> position.x;
-		reader >> position.y;
-		reader >> position.z;
-
 		UINT temp;
 		reader >> temp;
 		type = EmitterType(temp);
+
+		reader >> position.x;
+		reader >> position.y;
+		reader >> position.z;
 	}
 
 	if (preview)
@@ -59,21 +60,6 @@ ParticleSystem::ParticleSystem(unsigned int maxParticles, float timeBetweenParti
 ParticleSystem::~ParticleSystem()
 {
 	vertexBuffer->Release();
-}
-
-void ParticleSystem::BindToRenderGraph()
-{
-	RenderGraph::Inst().Bind(shared_from_this(), RendererType::PARTICLE);
-}
-
-void ParticleSystem::BindBuffer()
-{
-	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-}
-
-void ParticleSystem::DrawParticles()
-{
-	Graphics::Inst().GetContext().Draw(particleCount, 0);
 }
 
 void ParticleSystem::Draw() const

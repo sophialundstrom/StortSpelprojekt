@@ -1,187 +1,116 @@
 #pragma once
-
+#include "Singleton.h"
+#include "Print.h"
 #include "Material.h"
+#include "Vertex.h"
 #include <map>
-#include <array>
 
-class Resources
+typedef enum { ID_INVALID = 9999 } ID_FLAG;
+
+class Resources : public Singleton<Resources>
 {
 private:
-	static ID3D11Buffer* materialBuffer;
-	static std::map<std::string, std::map<std::string, Material*>> materials;
+	const UINT stride = sizeof(TempVertex);
+	const UINT offset = 0;
+
+	std::shared_ptr<Material> currentMaterial = nullptr;
+	ID3D11Buffer* materialBuffer = nullptr;
+
+	ID3D11Buffer* currentVertexBuffer = nullptr;
+	std::map<std::string, ID3D11Buffer*> vertexBuffers;
+
+	std::map<UINT, std::shared_ptr<Material>> materials;
 public:
-	static bool CreateMaterialsFromFile(std::string file, std::string mtllib)
+	Resources()
+		:Singleton(this) { CreateBuffer(materialBuffer, sizeof(Material::Data)); }
+
+	~Resources()
 	{
-		if (materials.find(mtllib) != materials.end())
-			return true;
+		materialBuffer->Release();
+		materials.clear();
 
-		std::ifstream reader;
-
-		reader.open("Models/" + file + "/" + mtllib, std::ios::beg);
-		if (!reader.is_open())
-		{
-			Print("FAILED TO LOAD MTL-FILE: " + mtllib);
-			return false;
-		}
-
-		Material* material = nullptr;
-		while (!reader.eof())
-		{
-			std::string text;
-			reader >> text;
-
-			if (text == "newmtl")
-			{
-				if (material)
-					materials[mtllib][material->name] = material;
-
-				if (materials.count(mtllib) == 0)
-					material = new Material(0, mtllib);
-				else
-					material = new Material((UINT)materials.at(mtllib).size(), mtllib);
-
-				reader >> material->name;
-			}
-
-			if (text == "Kd")
-			{
-				Vector4 diffuse;
-
-				reader >> diffuse.x;
-				reader >> diffuse.y;
-				reader >> diffuse.z;
-				diffuse.w = 0;
-
-				if (material)
-					material->data.diffuse = diffuse;
-			}
-
-			if (text == "Ka")
-			{
-				Vector4 ambient;
-
-				reader >> ambient.x;
-				reader >> ambient.y;
-				reader >> ambient.z;
-				ambient.w = 0;
-
-				if (material)
-					material->data.ambient = ambient;
-			}
-
-			if (text == "Ks")
-			{
-				Vector4 specular;
-
-				reader >> specular.x;
-				reader >> specular.y;
-				reader >> specular.z;
-				specular.w = 0;
-
-				if (material)
-					material->data.specular = specular;
-			}
-
-			if (text == "Ns")
-			{
-				float specularPower;
-				reader >> specularPower;
-
-				if (material)
-					material->data.specularPower = specularPower;
-			}
-
-			if (text == "map_Kd")
-			{
-				std::string fileName;
-				reader >> fileName;
-
-				if (material)
-					material->diffuseTextures.emplace_back(new Texture("Models/" + file + "/" + fileName, fileName));
-			}
-
-			if (text == "")
-				if (material)
-					materials[mtllib][material->name] = material;
-		}
-
-		if (materialBuffer == nullptr)
-			CreateBuffer(materialBuffer, sizeof(Material::Data));
-
-		return true;
+		for (auto& [ID, buffer] : vertexBuffers)
+			buffer->Release();
 	}
 
-	static bool MaterialHasDisplacementTexture(std::string mtllib, UINT ID = 0)
+	//CHECK IF MATERIAL ALREADY EXISTS
+	bool MaterialExists(const std::string& name)
 	{
-		for (auto& [lib, material] : materials)
-			if (lib == mtllib)
-				for (auto& [name, mat] : material)
-					if (mat->displacementTexture)
-						return true;
+		for (auto& [ID, material] : materials)
+			if (material->name == name)
+				return true;
 		return false;
 	}
 
-	static void BindMaterial(std::string mtllib, UINT ID = 0, UINT slot = 0, Shader shader = Shader::PS)
+	//NUM MATERIALS
+	UINT NumMaterials() const { return (UINT)materials.size(); }
+
+	//NUM BUFFERS
+	UINT NumBuffers() const { return (UINT)vertexBuffers.size(); }
+	
+	//ADD NEW MATERIAL
+	void AddMaterial(Material* material) { materials.emplace(NumMaterials(), material); }
+
+	//ADD NEW VERTEX BUFFER
+	void AddVertexBuffer(const std::string& name, ID3D11Buffer* buffer) { vertexBuffers[name] = buffer; }
+
+	//GET MATERIAL ID FROM NAME
+	UINT GetMaterialIDFromName(const std::string& name)
 	{
-		for (auto& [lib, material] : materials)
-			if (lib == mtllib)
-			{
-				UpdateBuffer(materialBuffer, std::next(material.begin(), ID)->second->data);
-				Graphics::Inst().GetContext().PSSetConstantBuffers(slot, 1, &materialBuffer);
-			}
+		for (auto& [ID, material] : materials)
+			if (material->name == name)
+				return ID;
+		return ID_INVALID;
 	}
 
-	static void BindMaterialTextures(std::string mtllib, UINT ID = 0, UINT startSlot = 0, Shader shader = Shader::PS)
+	//GET VERTEX BUFFER ID FROM NAME
+	UINT GetBufferIDFromName(const std::string& name)
 	{
-		for (auto& [lib, material] : materials)
-			if (lib == mtllib)
-				std::next(material.begin(), ID)->second->BindDiffuseTextures(startSlot, shader);
+		UINT ID = 0;
+		for (auto& [n, buffer] : vertexBuffers)
+		{
+			ID++;
+			if (n == name)
+				return ID;
+		}
+					
+		return ID_INVALID;
 	}
 
-	static void BindMaterialDisplacementTexture(std::string mtllib, UINT ID = 0, UINT slot = 0, Shader shader = Shader::DS)
+	//BIND MATERIAL AT GIVEN INDEX
+	void BindMaterial(UINT materialID)
 	{
-		for (auto& [lib, material] : materials)
-			if (lib == mtllib)
-				std::next(material.begin(), ID)->second->BindDisplacementTexture(slot, shader);
+		std::shared_ptr<Material> material = materials[materialID];
+
+		if (currentMaterial != material)
+		{
+			UpdateBuffer(materialBuffer, material->data);
+			Graphics::Inst().GetContext().PSSetConstantBuffers(0, 1, &materialBuffer);
+			currentMaterial = material;
+
+			material->BindDiffuseTextures();
+		}
 	}
 
-	static int GetMaterialID(std::string mtllib, std::string name)
+	//BIND VERTEX BUFFER AND DRAW
+	void Draw(UINT vertexCount, UINT bufferID)
 	{
-		for (auto& [lib, material] : materials)
-			if (lib == mtllib)
-				for (auto& [matName, mat] : material)
-					if (name == matName)
-						return mat->ID;
-		return -1;
+		ID3D11Buffer* vertexBuffer = std::next(vertexBuffers.begin(), bufferID)->second;
+
+		if (currentVertexBuffer != vertexBuffer)
+			Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+
+		Graphics::Inst().GetContext().Draw(vertexCount, 0);
 	}
 
-	static void AddTexture(std::string mtllib, std::string name, std::string file)
-	{
-		for (auto& [lib, material] : materials)
-			if (lib == mtllib)
-				for (auto& [matName, mat] : material)
-					mat->diffuseTextures.emplace_back(new Texture("Models/" + name + "/" + file, file));
-	}
-
-	static void AddDisplacementTexture(std::string mtllib, std::string name, std::string file)
-	{
-		for (auto& [lib, material] : materials)
-			if (lib == mtllib)
-				for (auto& [matName, mat] : material)
-					if (!mat->displacementTexture) mat->displacementTexture = new Texture("Models/" + name + "/" + file, file);
-	}
-
-	static void ShutDown()
-	{
-		materialBuffer->Release();
-
-		for (auto& [mtllib, material] : materials)
-			for (auto& [name, mat] : material)
-				delete mat;
-
+	//CLEAR
+	void Clear()
+	{		
 		materials.clear();
+
+		for (auto& [ID, buffer] : vertexBuffers)
+			buffer->Release();
+
+		vertexBuffers.clear();
 	}
 };
-
-inline ID3D11Buffer* Resources::materialBuffer;
-inline std::map<std::string, std::map<std::string, Material*>> Resources::materials;

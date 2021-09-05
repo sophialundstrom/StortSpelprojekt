@@ -1,9 +1,6 @@
 #pragma once
 #include "Renderer.h"
 #include "DirectXHelp.h"
-#include "Settings.h"
-
-#include "DemoEditor.h"
 
 class DeferredRenderer : public Renderer
 {
@@ -170,25 +167,8 @@ public:
 
 	void Render()
 	{
-		//DEACTIVATE WIREFRAME IF ENABLED
-		if (Settings::UseWireframe())
-			Graphics::Inst().DisableWireframe();
-
 		//START RENDERING TO BACK BUFFER
 		Graphics::Inst().BeginFrame();
-		ImGUI::BeginFrame();
-
-		//IMGUI
-		ImGui::Begin("NORMALS");
-		ImGui::Image(srvs[1], { 1600 / 5, 900 / 5 });
-		ImGui::End();
-
-		ImGui::Begin("WORLD POSITIONS");
-		ImGui::Image(srvs[2], { 1600 / 5, 900 / 5 });
-		ImGui::End();
-
-		Settings::RenderUI();
-		ShaderData::Inst().shadowMap.RenderAsImage();
 
 		//SHADERS
 		BindShaders(vertexShader, nullptr, nullptr, nullptr, pixelShader);
@@ -208,9 +188,6 @@ public:
 		UpdateBuffer(numLights_buf, ShaderData::Inst().numPointLights);
 		BindBuffer(numLights_buf, Shader::PS, 2);
 
-		UpdateBuffer(globalAmbient_buf, Settings::GlobalAmbient());
-		BindBuffer(globalAmbient_buf, Shader::PS, 3);
-
 		UpdateBuffer(lights_buf, ShaderData::Inst().pointLightsData, sizeof(PointLight) * ShaderData::Inst().numPointLights);
 
 		//TOPOLOGY
@@ -224,12 +201,7 @@ public:
 		Graphics::Inst().GetContext().Draw(4, 0);
 
 		//FINALLY RENDER TO BACK BUFFER
-		ImGUI::EndFrame();
 		Graphics::Inst().EndFrame();
-
-		//REACTIVATE WIREFRAME IF ENABLED
-		if (Settings::UseWireframe())
-			Graphics::Inst().EnableWireframe();
 
 		//RESET FOR NEXT FRAME
 		SetRenderTargets();

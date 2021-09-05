@@ -16,6 +16,7 @@ private:
 	Window window;
 	UINT clientWidth, clientHeight;
 
+	//MAIN MENU
 	DebugMainMenu DBMainMenu;
 
 	//EDITORS
@@ -25,11 +26,11 @@ private:
 	//SINGLETONS
 	std::unique_ptr<Graphics> graphics;
 	std::unique_ptr<RenderGraph> renderGraph;
-	std::unique_ptr<TempResources> resources;
+	std::unique_ptr<Resources> resources;
 	std::unique_ptr<ShaderData> shaderData;
 
 	//STATE
-	AppState state = DB_MAIN;
+	AppState state = AppState::DB_MAIN;
 public:
 	Application(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 		:window(width, height, title, instance)
@@ -46,7 +47,7 @@ public:
 		//INITIALIZATION
 		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window.HWnd());
 
-		resources = std::make_unique<TempResources>();
+		resources = std::make_unique<Resources>();
 
 		renderGraph = std::make_unique<RenderGraph>(shaderData, clientWidth, clientHeight);
 	
@@ -88,7 +89,7 @@ public:
 			
 			switch (state)
 			{
-			case DB_MAIN:
+			case AppState::DB_MAIN:
 				DBMainMenu.Update();
 
 				if (DBMainMenu.GetState() != state)
@@ -96,10 +97,10 @@ public:
 					state = DBMainMenu.GetState();
 					DBMainMenu.Reset();
 
-					if (state == DB_LEVEL)
+					if (state == AppState::DB_LEVEL)
 						levelEditor->Initialize(clientWidth, clientHeight);
 
-					if (state == DB_PARTICLE)
+					if (state == AppState::DB_PARTICLE)
 						particleEditor->Initialize(clientWidth, clientHeight);
 
 					break;
@@ -108,17 +109,17 @@ public:
 				DBMainMenu.Render();
 				break;
 
-			case DB_PLAY:
+			case AppState::DB_PLAY:
 				RenderGraph::Inst().Render();
 				Event::ClearRawDelta();
 				break;
 
-			case DB_LEVEL:
+			case AppState::DB_LEVEL:
 				levelEditor->Update();
 
 				if (levelEditor->IsDone())
 				{
-					state = DB_MAIN;
+					state = AppState::DB_MAIN;
 					levelEditor->Reset();
 					break;
 				}
@@ -127,18 +128,21 @@ public:
 				levelEditor->Render();
 				break;
 			
-			case DB_PARTICLE:
+			case AppState::DB_PARTICLE:
 				particleEditor->Update();
 
 				if (particleEditor->IsDone())
 				{
-					state = DB_MAIN;
+					state = AppState::DB_MAIN;
 					particleEditor->Reset();
 					break;
 				}
 					
 				particleEditor->Render();
 				break;
+
+			case AppState::DB_EXIT:
+				return;
 			}
 
 			Time::Update(timer.DeltaTime());

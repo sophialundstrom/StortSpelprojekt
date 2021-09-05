@@ -1,6 +1,5 @@
 #include "Scene.h"
 #include "ShaderData.h"
-#include "SettingsLoader.h"
 #include "Event.h"
 
 #include <filesystem>
@@ -17,11 +16,11 @@ void Scene::AddModel(const std::string& file)
 	if (numInstances > 0)
 	{
 		fileName = file + std::to_string(numInstances);
-		drawables[fileName] = std::make_shared<TempModel>(*std::dynamic_pointer_cast<TempModel>(drawables[file]));
+		drawables[fileName] = std::make_shared<Model>(*std::dynamic_pointer_cast<Model>(drawables[file]));
 	}
 
 	else
-		drawables[fileName] = std::make_shared<TempModel>(fileName);
+		drawables[fileName] = std::make_shared<Model>(fileName);
 }
 
 void Scene::AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type)
@@ -36,14 +35,13 @@ void Scene::AddParticleSystem(unsigned int maxParticles, float timeBetweenPartic
 		name += std::to_string(numInstances);
 
 	auto particleSystem = std::make_shared<ParticleSystem>(maxParticles, timeBetweenParticles, particlesLifetime, minVelocity, maxVelocity, size, particleExtents, position, type);
-	particleSystem->BindToRenderGraph();
 	drawables.emplace(name, particleSystem);
 }
 
 void Scene::AddPointLight(Vector3 position, float range, Vector3 attenuation, Vector4 color)
 {
 	if (pointLights.size() < MAX_LIGHTS)
-		pointLights.push_back(PointLight(position, range, attenuation, color));
+		pointLights.push_back(PointLight(range, attenuation, color, position));
 }
 
 void Scene::SetDirectionalLight(float range, float startAngle, int startDir)

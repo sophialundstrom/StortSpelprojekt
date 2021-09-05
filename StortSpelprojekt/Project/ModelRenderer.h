@@ -1,7 +1,6 @@
 #pragma once
 #include "Renderer.h"
 #include "Model.h"
-#include "Settings.h"
 
 class ModelRenderer : public Renderer
 {
@@ -15,58 +14,37 @@ private:
 		Matrix lightViewPerspective;
 	} matrices;
 
-	float UVOffset = 0.0f;
-	ID3D11Buffer* UVOffset_buf = nullptr;
-	ID3D11Buffer* time_buf = nullptr;
-
-	//SHADERS
+	//SHADER PATHS
+#ifdef _DEBUG
 	const std::string vs_path = "../x64/Debug/ModelVertexShader.cso";
-	ID3D11VertexShader* vertexShader = nullptr;
-
-	const std::string anim_vs_path = "../x64/Debug/UVAnimationVertexShader.cso";
-	ID3D11VertexShader* animVertexShader = nullptr;
-
-	const std::string gs_path = "../x64/Debug/ModelGeometryShader.cso";
-	ID3D11GeometryShader* geometryShader = nullptr;
-
 	const std::string ps_path = "../x64/Debug/ModelPixelShader.cso";
+#else
+	const std::string vs_path = "../x64/Release/ModelVertexShader.cso";
+	const std::string ps_path = "../x64/Release/ModelPixelShader.cso";
+#endif
+	ID3D11VertexShader* vertexShader = nullptr;
 	ID3D11PixelShader* pixelShader = nullptr;
-
-	const std::string anim_ps_path = "../x64/Debug/UVAnimationPixelShader.cso";
-	ID3D11PixelShader* animPixelShader = nullptr;
 public:
 	ModelRenderer(std::unique_ptr<ShaderData>& shaderData)
 		:matrices()
 	{
 		//BUFFERS
 		CreateBuffer(matrices_buf, sizeof(Matrices));
-		CreateBuffer(UVOffset_buf);
-		CreateBuffer(time_buf);
 
 		//SHADERS
 		std::string byteCode;
 		LoadShader(vertexShader, vs_path, byteCode);
-		LoadShader(animVertexShader, anim_vs_path);
-		LoadShader(geometryShader, gs_path);
 		LoadShader(pixelShader, ps_path);
-		LoadShader(animPixelShader, anim_ps_path);
 
 		shaderData = std::make_unique<ShaderData>(byteCode);
 	}
 
 	~ModelRenderer()
 	{
-		//BUFFERS
 		matrices_buf->Release();
-		UVOffset_buf->Release();
-		time_buf->Release();
 
-		//SHADRES
 		vertexShader->Release();
-		animVertexShader->Release();
-		geometryShader->Release();
 		pixelShader->Release();
-		animPixelShader->Release();
 	}
 
 	void Render()
@@ -92,35 +70,14 @@ public:
 				continue;
 
 			//SHADERS
-			BindShaders(vertexShader, nullptr, nullptr, geometryShader, pixelShader, Settings::UseBackfaceCulling());
+			BindShaders(vertexShader, nullptr, nullptr, nullptr, pixelShader);
 
-			if (model->HasUVAnimation())
-			{
-				//IF UV ANIM SWAP PIXEL SHADER
-				BindShaders(animVertexShader, nullptr, nullptr, geometryShader, animPixelShader, Settings::UseBackfaceCulling());
-
-				UVOffset += Time::GetDelta() * 0.1f;
-				if (UVOffset > 1.0f)
-					UVOffset = UVOffset - 1.0f;
-
-				UpdateBuffer(time_buf, Time::Get());
-				BindBuffer(time_buf, Shader::VS, 1);
-
-				UpdateBuffer(UVOffset_buf, UVOffset);
-				BindBuffer(UVOffset_buf, Shader::PS, 1);
-			}
-
-			matrices.world = model->GetWorldMatrix().Transpose();
+			//BUFFER
+			matrices.world = model->GetMatrix().Transpose();
 			UpdateBuffer(matrices_buf, matrices);
 			BindBuffer(matrices_buf);
 
-			for (UINT i = 0; i < model->MeshCount(); ++i)
-			{
-				model->BindMeshTextures(i);
-				model->BindMeshMaterial(i);
-				model->BindMeshBuffer(i);
-				model->DrawMesh(i);
-			}
+			model->Draw();
 		}
 	}
 };

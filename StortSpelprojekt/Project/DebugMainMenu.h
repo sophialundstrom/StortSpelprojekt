@@ -6,7 +6,7 @@ class DebugMainMenu
 {
 private:
 	bool firstFrame = true;
-	AppState state = DB_MAIN;
+	AppState state = AppState::DB_MAIN;
 	ImGuiWin window;
 public:
 	DebugMainMenu()
@@ -15,6 +15,7 @@ public:
 		window.AddButtonComponent("PLAY DEBUG MODE", 200, 100);
 		window.AddButtonComponent("LEVEL EDITOR", 200, 100);
 		window.AddButtonComponent("PARTICLE EDITOR", 200, 100);
+		window.AddButtonComponent("EXIT", 200, 100);
 	}
 
 	void Update()
@@ -23,13 +24,16 @@ public:
 			return;
 
 		if (window.GetValue<ButtonComponent>("PLAY DEBUG MODE"))
-			state = DB_PLAY;
+			state = AppState::DB_PLAY;
 
 		else if (window.GetValue<ButtonComponent>("LEVEL EDITOR"))
-			state = DB_LEVEL;
+			state = AppState::DB_LEVEL;
 
 		else if (window.GetValue<ButtonComponent>("PARTICLE EDITOR"))
-			state = DB_PARTICLE;
+			state = AppState::DB_PARTICLE;
+
+		else if (window.GetValue<ButtonComponent>("EXIT"))
+			state = AppState::DB_EXIT;
 	}
 
 	void Render()
@@ -48,5 +52,5 @@ public:
 
 	AppState GetState() { return state; }
 
-	void Reset() { state = DB_MAIN; firstFrame = true; }
+	void Reset() { state = AppState::DB_MAIN; firstFrame = true; }
 };

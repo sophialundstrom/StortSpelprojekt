@@ -2,7 +2,7 @@
 #include "Light.h"
 #include "ParticleSystem.h"
 #include "Player.h"
-#include "TempModel.h"
+#include "Model.h"
 #include <map>
 
 class Scene

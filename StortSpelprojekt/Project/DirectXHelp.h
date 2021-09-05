@@ -179,7 +179,7 @@ inline void LoadShader(ID3D11VertexShader*& vertexShader, std::string path, std:
 	vertexShaderByteCode = shaderData;
 	shaderData.clear();
 	reader.close();
-};
+}
 
 inline void LoadShader(ID3D11VertexShader*& vertexShader, std::string path)
 {
@@ -208,7 +208,7 @@ inline void LoadShader(ID3D11VertexShader*& vertexShader, std::string path)
 
 	shaderData.clear();
 	reader.close();
-};
+}
 
 inline void LoadShader(ID3D11PixelShader*& pixelShader, std::string path)
 {
@@ -237,7 +237,7 @@ inline void LoadShader(ID3D11PixelShader*& pixelShader, std::string path)
 
 	shaderData.clear();
 	reader.close();
-};
+}
 
 inline void LoadShader(ID3D11HullShader*& hullShader, std::string path)
 {
@@ -266,7 +266,7 @@ inline void LoadShader(ID3D11HullShader*& hullShader, std::string path)
 
 	shaderData.clear();
 	reader.close();
-};
+}
 
 inline void LoadShader(ID3D11DomainShader*& domainShader, std::string path)
 {
@@ -295,7 +295,7 @@ inline void LoadShader(ID3D11DomainShader*& domainShader, std::string path)
 
 	shaderData.clear();
 	reader.close();
-};
+}
 
 inline void LoadShader(ID3D11GeometryShader*& geometryShader, std::string path)
 {
@@ -324,9 +324,9 @@ inline void LoadShader(ID3D11GeometryShader*& geometryShader, std::string path)
 
 	shaderData.clear();
 	reader.close();
-};
+}
 
-inline void BindShaders(ID3D11VertexShader* vertexShader = nullptr, ID3D11HullShader* hullShader = nullptr, ID3D11DomainShader* domainShader = nullptr, ID3D11GeometryShader* geometryShader = nullptr, ID3D11PixelShader* pixelShader = nullptr, bool culling = true)
+inline void BindShaders(ID3D11VertexShader* vertexShader = nullptr, ID3D11HullShader* hullShader = nullptr, ID3D11DomainShader* domainShader = nullptr, ID3D11GeometryShader* geometryShader = nullptr, ID3D11PixelShader* pixelShader = nullptr)
 {
 	Graphics::Inst().GetContext().VSSetShader(vertexShader, nullptr, 0);
 	Graphics::Inst().GetContext().HSSetShader(hullShader, nullptr, 0);

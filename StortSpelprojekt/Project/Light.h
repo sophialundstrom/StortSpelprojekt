@@ -1,7 +1,6 @@
 #pragma once
-#include "Math.h"
+#include "Drawable.h"
 #include "Time.h"
-#include "Settings.h"
 
 class DirectionalLight
 {
@@ -30,16 +29,9 @@ public:
 
 	void Update()
 	{
-		if (!Settings::UpdateDirectionalLight())
-			currentAngle = Settings::LightAngle();
-		else
-		{
-			currentAngle += Time::GetDelta() * 0.35f * dir;
-			if (currentAngle > PI - 0.5 || currentAngle < 0 + 0.5)
-				dir *= -1;
-
-			Settings::SetLightAngle(currentAngle);
-		}
+		currentAngle += Time::GetDelta() * 0.35f * dir;
+		if (currentAngle > PI - 0.5 || currentAngle < 0 + 0.5)
+			dir *= -1;
 
 		float x = cos(currentAngle);
 		float y = sin(currentAngle);
@@ -68,13 +60,52 @@ public:
 };
 
 #define MAX_LIGHTS 8
-struct PointLight
+struct Light : public Drawable
 {
-	Vector4 color;
-	Vector3 position;
-	float range;
-	Vector3 attenuation;
+	Light(Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 rotation = { 0.0f, 0.0f, 0.0f }, Vector3 scale = { 0.0f, 0.0f, 0.0f })
+		:Drawable(position, rotation, scale) {}
+};
 
-	PointLight(Vector3 position, float range, Vector3 attenuation = { 0.05f, 0.05f, 0.05f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f })
-		:position(position), range(range), attenuation(attenuation), color(color) {}
+struct PointLight : public Light
+{
+	struct Data
+	{
+		Vector4 color;
+		float range;
+		Vector3 attenuation;
+		Vector3 position;
+	} data;
+
+	PointLight(float range = 10.0f, Vector3 attenuation = { 1.0f, 1.0f, 1.0f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f }, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 rotation = { 0.0f, 0.0f, 0.0f }, Vector3 scale = { 0.0f, 0.0f, 0.0f })
+		:Light(position, rotation, scale) { data = { color, range, attenuation, position }; }
+
+	// Inherited via Drawable
+	virtual void Update() override
+	{
+		UpdateMatrix();
+		data.position = position;
+	}
+};
+
+struct SpotLight : public Light
+{
+	struct Data
+	{
+		Vector4 color;
+		float range;
+		Vector3 attenuation;
+		Vector3 position;
+		float angle;
+		Vector3 direction;
+	} data;
+
+	SpotLight(float range = 10.0f, float angle = PI_DIV4, Vector3 direction = { 0.0f, 0.0f, 1.0f }, Vector3 attenuation = { 1.0f, 1.0f, 1.0f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f }, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 rotation = { 0.0f, 0.0f, 0.0f }, Vector3 scale = { 1.0f, 1.0f, 1.0f })
+		:Light(position, rotation, scale) { data = { color, range, attenuation, position, angle, direction }; }
+
+	// Inherited via Drawable
+	virtual void Update() override
+	{
+		UpdateMatrix();
+		data.position = position;
+	}
 };

@@ -37,7 +37,7 @@ private:
 
 	//MATRICES & MATRICES-BUFFER
 	ID3D11Buffer* matrices_buf;
-	struct TempMatrices
+	struct Matrices
 	{
 		Matrix world;
 		Matrix viewPerspective;
@@ -50,7 +50,7 @@ public:
 		:Singleton(this)
 	{
 		CreateBuffer(cameraPosition_buf);
-		CreateBuffer(matrices_buf, sizeof(TempMatrices));
+		CreateBuffer(matrices_buf, sizeof(Matrices));
 
 		shadowMap = ShadowMap(4096);
 
@@ -94,6 +94,7 @@ public:
 
 	~ShaderData()
 	{
+		cameraPosition_buf->Release();
 		matrices_buf->Release();
 		inputLayout->Release();
 		wrapSampler->Release();

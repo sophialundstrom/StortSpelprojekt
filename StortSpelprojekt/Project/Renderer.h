@@ -4,7 +4,7 @@
 #include "DirectXHelp.h"
 #include <memory>
 
-enum class RendererType { UNDEFINED = -1, MODEL, DISPLACEMENT, PARTICLE, SHADOW, DEFERRED };
+enum class RendererType { UNDEFINED = -1, TERRAIN, MODEL, DISPLACEMENT, PARTICLE, SHADOW };
 
 class Renderer
 {

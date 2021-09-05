@@ -1,3 +1,2 @@
 #pragma once
-
-typedef enum { DB_MAIN, DB_PLAY, DB_LEVEL, DB_PARTICLE, MAIN, PLAY } AppState;
+	enum class AppState { DB_MAIN, DB_PLAY, DB_LEVEL, DB_PARTICLE, DB_EXIT };

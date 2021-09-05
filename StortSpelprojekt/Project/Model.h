@@ -1,49 +1,58 @@
 #pragma once
+#include "MaterialLoader.h"
 #include "Drawable.h"
 #include "Mesh.h"
-#include "Resources.h"
 
-#include <memory>
+#include "assimp\Importer.hpp"
+#include "assimp\postprocess.h"
 
-class Model : public Drawable, public std::enable_shared_from_this<Model>
+class Model : public Drawable
 {
-protected:
-	std::string name;
-
-	Matrix worldMatrix;
-
-	bool UVAnim = false;
-
-	UINT meshCount = 0;
-	std::vector<Mesh*> meshes;
-
-	Bounds bounds;
+private:
+	Mesh mesh;
 public:
-	Model(std::string file, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 rotation = { 0.0f, 0.0f, 0.0f }, Vector3 scale = { 1.0f, 1.0f, 1.0f });
-	Model(const Model& model);
-	virtual ~Model() { for (auto& mesh : meshes) delete mesh; }
+	Model(const std::string& fileName)
+	{
+		Assimp::Importer importer;
+		const aiScene* scene = importer.ReadFile("AssimpModels/" + fileName + ".fbx", aiProcess_Triangulate | aiProcess_SortByPType);
+		if (!scene)
+		{
+			Print("COULD NOT LOAD .FBX FILE");
+			return;
+		}
 
-	virtual void Update();
+		if (scene->HasMeshes())
+			mesh = Mesh(scene->mMeshes[0]);
 
-	//MATRIX
-	Matrix GetWorldMatrix() const { return this->worldMatrix; }
+		if (scene->HasMaterials())
+			MaterialLoader::Load(scene->mMaterials[0]);
+	}
 
-	//UV ANIMATION
-	bool HasUVAnimation() const { return this->UVAnim; }
-	void HasUVAnimation(bool value) { this->UVAnim = value; }
+	Model(const Model& other)
+		:mesh(other.mesh) 
+	{
+		this->parent = other.parent;
+	}
 
-	//TEXTURES
-	bool HasDisplacement() const;
-	void AddTexture(std::string file);
-	void AddDisplacementTexture(std::string file);
+	void Draw(bool useMaterial = true) { if (useMaterial) Resources::Inst().BindMaterial(mesh.materialID); Resources::Inst().Draw(mesh.vertexCount, mesh.bufferID); }
 
-	//RENDERING
-	void BindToRenderGraph();
+	void ApplyMaterial(const std::string& name)
+	{
+		UINT ID = Resources::Inst().GetMaterialIDFromName(name);
+		if (ID != ID_INVALID)
+			mesh.materialID = ID;
+	}
 
-	UINT MeshCount() const { return this->meshCount; }
-	void BindMeshBuffer(UINT index = 0);
-	void BindMeshTextures(UINT index = 0, UINT startSlot = 0, Shader shader = Shader::PS);
-	void BindMeshDisplacementTexture(UINT index = 0, UINT slot = 0, Shader shader = Shader::DS);
-	void BindMeshMaterial(UINT index = 0, UINT slot = 0);
-	void DrawMesh(UINT index = 0);
+	void ApplyMesh(const std::string& name)
+	{
+		UINT ID = Resources::Inst().GetBufferIDFromName(name);
+		if (ID != ID_INVALID)
+			mesh.bufferID = ID;
+	}
+
+	// Inherited via Drawable
+	virtual void Update() override
+	{
+		UpdateMatrix();
+	}
 };

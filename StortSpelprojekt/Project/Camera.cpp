@@ -1,6 +1,5 @@
 #include "Camera.h"
 
-#include "Settings.h"
 #include "Time.h"
 #include "Event.h"
 

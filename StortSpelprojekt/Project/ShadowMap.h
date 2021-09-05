@@ -90,13 +90,6 @@ public:
 
 	void BindAsResource() { Graphics::Inst().GetContext().PSSetShaderResources(7, 1, &srv); }
 
-	void RenderAsImage()
-	{
-		ImGui::Begin("SHADOW MAP");
-		ImGui::Image(srv, { size / 15.0f, size / 15.0f });
-		ImGui::End();
-	}
-
 	void ShutDown()
 	{
 		srv->Release();

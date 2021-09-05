@@ -43,7 +43,7 @@ void LevelEditor::Initialize(UINT windowWidth, UINT windowHeight)
 
 void LevelEditor::Update()
 {
-	if (firstFrame)
+	if (firstFrame)	//SAME FRAME WHEN COMPONENTS ARE CREATED - THEY ALL WILL COUNT AS CHANGED
 		return;
 
 	auto& window = windows["SCENE"];
@@ -105,5 +105,5 @@ void LevelEditor::Reset()
 	modelRenderer.Clear();
 	firstFrame = true;
 	done = false;
-	TempResources::Inst().Clear();
+	Resources::Inst().Clear();
 }
