@@ -20,7 +20,7 @@ public:
 		//----INSERT TERRAIN RENDERER----
 
 		//MODEL
-		renderers.insert(std::make_pair(RendererType::MODEL, std::make_unique<ModelRenderer>(shaderData)));
+		//renderers.insert(std::make_pair(RendererType::MODEL, std::make_unique<ModelRenderer>(shaderData)));
 
 		//PARTICLE
 		renderers.insert(std::make_pair(RendererType::PARTICLE, std::make_unique<ParticleRenderer>()));
@@ -39,8 +39,8 @@ public:
 			firstFrame = false;
 		}
 
-		for (auto& [type, renderer] : renderers)
-			renderer->Render();
+		/*for (auto& [type, renderer] : renderers)
+			renderer->Render();*/
 
 		deferredRenderer.Render();
 	}

@@ -158,9 +158,6 @@
     <ClInclude Include="DisplacementRenderer.h">
       <Filter>Header Files\Graphics\Renderers</Filter>
     </ClInclude>
-    <ClInclude Include="ModelRenderer.h">
-      <Filter>Header Files\Graphics\Renderers</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleRenderer.h">
       <Filter>Header Files\Graphics\Renderers</Filter>
     </ClInclude>
@@ -222,9 +219,6 @@
       <Filter>Header Files\Graphics\Debug\Editors</Filter>
     </ClInclude>
     <ClInclude Include="DebugMainMenu.h">
-      <Filter>Header Files\Graphics\Debug\Editors</Filter>
-    </ClInclude>
-    <ClInclude Include="StateDefines.h">
       <Filter>Header Files\Graphics\Debug\Editors</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
@@ -295,6 +289,12 @@
     </ClInclude>
     <ClInclude Include="States.h">
       <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="OldModelRenderer.h">
+      <Filter>Header Files\Graphics\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelRenderer.h">
+      <Filter>Header Files\Graphics\Renderers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

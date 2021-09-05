@@ -192,9 +192,10 @@
     <ClInclude Include="Math.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="ModelRenderer.h" />
     <ClInclude Include="OldMesh.h" />
     <ClInclude Include="OldModel.h" />
-    <ClInclude Include="ModelRenderer.h" />
+    <ClInclude Include="OldModelRenderer.h" />
     <ClInclude Include="ParticleEditor.h" />
     <ClInclude Include="ForwardParticleRenderer.h" />
     <ClInclude Include="ParticleRenderer.h" />
@@ -210,7 +211,6 @@
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="ShadowRenderer.h" />
     <ClInclude Include="Singleton.h" />
-    <ClInclude Include="StateDefines.h" />
     <ClInclude Include="StateENUM.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="stb_image.h" />

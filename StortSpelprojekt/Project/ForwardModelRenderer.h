@@ -25,7 +25,7 @@ public:
 	}
 
 	// Inherited via Renderer
-	virtual void Render() override
+	void Render()
 	{
 		//INPUT LAYOUT
 		Graphics::Inst().GetContext().IASetInputLayout(ShaderData::Inst().inputLayout);

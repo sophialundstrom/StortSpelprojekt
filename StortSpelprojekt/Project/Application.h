@@ -13,7 +13,6 @@ private:
 
 	//SINGLETONS
 	std::unique_ptr<Graphics> graphics;
-	std::unique_ptr<RenderGraph> renderGraph;
 	std::unique_ptr<Resources> resources;
 	std::unique_ptr<ShaderData> shaderData;
 
@@ -31,11 +30,9 @@ public:
 		UINT clientHeight = window.ClientHeight();
 
 		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window.GetHWND());
-
+		//shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
 
-		renderGraph = std::make_unique<RenderGraph>(shaderData, clientWidth, clientHeight);
-	
 		ImGUI::Initialize();
 
 		//STATES

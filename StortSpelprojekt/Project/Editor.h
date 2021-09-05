@@ -25,13 +25,12 @@ protected:
 	}
 
 	void ClearWindows() { windows.clear(); }
-private:
+
 	virtual void Save(const std::string& file) = 0;
 	virtual void Load(const std::string& file) = 0;
+	virtual void Update() = 0;
+	virtual void Render() = 0;
 public:
 	Editor() = default;
 	virtual ~Editor() = default;
-
-	virtual void Update() = 0;
-	virtual void Render() = 0;
 };

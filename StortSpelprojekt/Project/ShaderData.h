@@ -7,7 +7,7 @@
 
 class ShaderData : public Singleton<ShaderData>
 {
-	friend class ModelRenderer;
+	//friend class ModelRenderer;
 	friend class ShadowRenderer;
 	friend class DisplacementRenderer;
 	friend class ParticleRenderer;
