@@ -2,8 +2,9 @@
 #include "Editor.h"
 #include "Scene.h"
 #include "ForwardModelRenderer.h"
+#include "GameState.h"
 
-class LevelEditor : public Editor
+class LevelEditor : public Editor, public GameState
 {
 private:
 	Scene scene;
@@ -14,12 +15,12 @@ private:
 	// Inherited via Editor
 	virtual void Save(const std::string& file) override;
 	virtual void Load(const std::string& file) override;
-public:
-	LevelEditor() = default;
-
-	// Inherited via Editor
-	virtual void Initialize(UINT windowWidth, UINT windowHeight);
 	virtual void Update() override;
 	virtual void Render() override;
-	virtual void Reset() override;
+public:
+	LevelEditor(UINT windowWidth, UINT windowHeight);
+	~LevelEditor();
+	
+	// Inherited via GameState
+	State Run();
 };

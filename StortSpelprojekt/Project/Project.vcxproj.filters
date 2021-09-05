@@ -94,6 +94,9 @@
     <Filter Include="Header Files\OLD STUFF">
       <UniqueIdentifier>{5f9b2bb0-4775-4add-a94d-bb29400478e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application">
+      <UniqueIdentifier>{01609692-0484-4871-9d38-b2a287fd59f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -129,11 +132,11 @@
     <ClCompile Include="OldModel.cpp">
       <Filter>Header Files\OLD STUFF</Filter>
     </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Header Files\Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
@@ -277,6 +280,21 @@
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Header Files\Scene\Drawable\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="StateENUM.h">
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="States.h">
+      <Filter>Header Files\Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

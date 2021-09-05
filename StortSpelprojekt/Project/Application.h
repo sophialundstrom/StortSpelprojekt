@@ -3,25 +3,13 @@
 #include "RenderGraph.h"
 #include "Event.h"
 #include "Time.h"
-
-#include "DebugMainMenu.h"
-#include "DemoEditor.h"
-#include "LevelEditor.h"
-#include "ParticleEditor.h"
+#include "States.h"
 
 class Application
 {
 private:
 	//WINDOW
 	Window window;
-	UINT clientWidth, clientHeight;
-
-	//MAIN MENU
-	DebugMainMenu DBMainMenu;
-
-	//EDITORS
-	std::unique_ptr<LevelEditor> levelEditor;
-	std::unique_ptr<ParticleEditor> particleEditor;
 
 	//SINGLETONS
 	std::unique_ptr<Graphics> graphics;
@@ -29,33 +17,30 @@ private:
 	std::unique_ptr<Resources> resources;
 	std::unique_ptr<ShaderData> shaderData;
 
-	//STATE
-	AppState state = AppState::DB_MAIN;
+	//STATES
+	State currentState;
+	GameState* currentGameState;
 public:
 	Application(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 		:window(width, height, title, instance)
 	{
 		FileSystem::SetProjectDirectory();
 
-		//GET CLIENT RECT (BECAUSE OF TITLE BAR OFFSET)
-		RECT clientRect;
-		GetClientRect(window.HWnd(), &clientRect);
-
-		clientWidth = clientRect.right;
-		clientHeight = clientRect.bottom;
-
 		//INITIALIZATION
-		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window.HWnd());
+		UINT clientWidth = window.ClientWidth();
+		UINT clientHeight = window.ClientHeight();
+
+		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window.GetHWND());
 
 		resources = std::make_unique<Resources>();
 
 		renderGraph = std::make_unique<RenderGraph>(shaderData, clientWidth, clientHeight);
 	
-		levelEditor = std::make_unique<LevelEditor>();
-
-		particleEditor = std::make_unique<ParticleEditor>();
-
 		ImGUI::Initialize();
+
+		//STATES
+		currentState = State::MENU;
+		currentGameState = new DebugMainMenu(clientWidth, clientHeight);
 	}
 
 	~Application()
@@ -68,7 +53,8 @@ public:
 		Timer timer;
 
 		MSG msg = {};
-		while (!window.Exit())
+
+		while (currentState != State::EXIT)
 		{
 			timer.Start();
 
@@ -82,67 +68,41 @@ public:
 				window.ToggleCursor();
 
 			if (!window.CursorIsActive())
-				SetCursorPos(window.Width() / 2, window.Height() / 2);
+				SetCursorPos(window.ClientWidth() / 2, window.ClientHeight() / 2);
 
 			if (Event::KeyIsPressed(VK_RETURN))
 				break;
 			
-			switch (state)
+			currentState = currentGameState->Run();
+
+			switch (currentState)
 			{
-			case AppState::DB_MAIN:
-				DBMainMenu.Update();
-
-				if (DBMainMenu.GetState() != state)
-				{
-					state = DBMainMenu.GetState();
-					DBMainMenu.Reset();
-
-					if (state == AppState::DB_LEVEL)
-						levelEditor->Initialize(clientWidth, clientHeight);
-
-					if (state == AppState::DB_PARTICLE)
-						particleEditor->Initialize(clientWidth, clientHeight);
-
-					break;
-				}
-					
-				DBMainMenu.Render();
+			case State::NO_CHANGE:
 				break;
 
-			case AppState::DB_PLAY:
-				RenderGraph::Inst().Render();
-				Event::ClearRawDelta();
+			case State::MENU:
+				currentGameState->Delete();
+				currentGameState = new DebugMainMenu(window.ClientWidth(), window.ClientHeight());
 				break;
 
-			case AppState::DB_LEVEL:
-				levelEditor->Update();
-
-				if (levelEditor->IsDone())
-				{
-					state = AppState::DB_MAIN;
-					levelEditor->Reset();
-					break;
-				}
-					
-				Event::ClearRawDelta();
-				levelEditor->Render();
-				break;
-			
-			case AppState::DB_PARTICLE:
-				particleEditor->Update();
-
-				if (particleEditor->IsDone())
-				{
-					state = AppState::DB_MAIN;
-					particleEditor->Reset();
-					break;
-				}
-					
-				particleEditor->Render();
+			case State::GAME:
+				currentGameState->Delete();
+				currentGameState = new Game(window.ClientWidth(), window.ClientHeight());
 				break;
 
-			case AppState::DB_EXIT:
-				return;
+			case State::LEVEL:
+				currentGameState->Delete();
+				currentGameState = new LevelEditor(window.ClientWidth(), window.ClientHeight());
+				break;
+
+			case State::PARTICLE:
+				currentGameState->Delete();
+				currentGameState = new ParticleEditor(window.ClientWidth(), window.ClientHeight());
+				break;
+
+			case State::EXIT:
+				Print("CLOSING APPLICATION");
+				break;
 			}
 
 			Time::Update(timer.DeltaTime());

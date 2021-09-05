@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -178,6 +179,8 @@
     <ClInclude Include="Editor.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="ForwardModelRenderer.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="ImGuiWin.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Geometry.h" />
@@ -208,6 +211,8 @@
     <ClInclude Include="ShadowRenderer.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="StateDefines.h" />
+    <ClInclude Include="StateENUM.h" />
+    <ClInclude Include="States.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />

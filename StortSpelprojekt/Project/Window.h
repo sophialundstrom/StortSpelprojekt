@@ -26,8 +26,8 @@ public:
 	void ToggleCursor();
 	bool CursorIsActive() { return this->cursorEnabled; }
 
-	UINT Width() { return width; }
-	UINT Height() { return height; }
+	UINT ClientWidth() { return width; }
+	UINT ClientHeight() { return height; }
 	bool Exit() { return wantExit; }
-	HWND HWnd() { return hWnd; }
+	HWND GetHWND() { return hWnd; }
 };

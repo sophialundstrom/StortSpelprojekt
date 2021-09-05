@@ -63,9 +63,25 @@ void ParticleEditor::Load(const std::string& file)
 	window.SetValue<RadioButtonComponent, UINT>("EMITTER TYPES", (UINT)particleSystem->GetType());
 }
 
-void ParticleEditor::Initialize(UINT windowWidth, UINT windowHeight)
+void ParticleEditor::Update()
 {
-	camera = Camera(PI_DIV4, (float)windowWidth / (float)windowHeight, 0.1f, 20.0f, 0, 0, { -2.5f, 5.0f, -15.0f }, { -2.5f, 0.0f, 0.0f });
+	particleSystem->Update();
+
+	ShaderData::Inst().Update(camera);
+}
+
+void ParticleEditor::Render()
+{
+	BeginFrame();
+
+	renderer.Render(particleSystem);
+
+	EndFrame();
+}
+
+ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
+{
+	camera = Camera(PI_DIV4, (float)clientWidth / (float)clientWidth, 0.1f, 20.0f, 0, 0, { -2.5f, 5.0f, -15.0f }, { -2.5f, 0.0f, 0.0f });
 
 	AddWindow("PARTICLE SYSTEM EDITOR");
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
@@ -108,29 +124,27 @@ void ParticleEditor::Initialize(UINT windowWidth, UINT windowHeight)
 	window.AddButtonComponent("RETURN TO MENU", 120, 30);
 
 	Load("default.ps");
+	(void)Run();
 }
 
-void ParticleEditor::Update()
+State ParticleEditor::Run()
 {
-	if (firstFrame)
-		return;
+	Update();
+	Render();
 
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
 
 	if (window.GetValue<ButtonComponent>("LOAD"))
 	{
 		Load(FileSystem::LoadFile("ParticleSystems"));
-		return;
+		return State::NO_CHANGE;
 	}
 
 	else if (window.GetValue<ButtonComponent>("SAVE AS"))
 		Save(FileSystem::SaveFile("ParticleSystems"));
 
 	else if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
-	{
-		done = true;
-		return;
-	}
+		return State::MENU;
 
 	else if (window.Changed("MAX PARTICLES"))
 	{
@@ -223,29 +237,5 @@ void ParticleEditor::Update()
 	if (window.GetValue<ButtonComponent>("RESET"))
 		particleSystem->Reset();
 
-	particleSystem->Update();
-
-	ShaderData::Inst().Update(camera);
-}
-
-void ParticleEditor::Render()
-{
-	if (firstFrame)
-		firstFrame = false;
-
-	BeginFrame();
-
-	renderer.Render(particleSystem);
-
-	EndFrame();
-}
-
-void ParticleEditor::Reset()
-{
-	ClearWindows();
-	firstFrame = true;
-	done = false;
-	delete particleSystem;
-	particleSystem = nullptr;
-	loadedParticleSystem = "default.ps";
+	return State::NO_CHANGE;
 }

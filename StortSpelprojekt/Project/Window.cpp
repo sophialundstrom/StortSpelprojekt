@@ -94,7 +94,6 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 }
 
 Window::Window(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
-	:width(width), height(height)
 {
 	const wchar_t* className = L"Window Class";
 
@@ -124,6 +123,11 @@ Window::Window(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 
 	ActivateCursor();
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
+
+	RECT clientRect;
+	GetClientRect(hWnd, &clientRect);
+	this->width = clientRect.right;
+	this->height = clientRect.bottom;
 }
 
 void Window::ActivateCursor()

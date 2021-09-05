@@ -1,46 +1,16 @@
 #pragma once
 #include "ImGuiWin.h"
-#include "StateDefines.h"
+#include "GameState.h"
+#include "StateENUM.h"
 
-class DebugMainMenu
+class DebugMainMenu : public GameState
 {
 private:
 	bool firstFrame = true;
-	AppState state = AppState::DB_MAIN;
 	ImGuiWin window;
-public:
-	DebugMainMenu()
-		:window("DEBUG MAIN MENU")
-	{
-		window.AddButtonComponent("PLAY DEBUG MODE", 200, 100);
-		window.AddButtonComponent("LEVEL EDITOR", 200, 100);
-		window.AddButtonComponent("PARTICLE EDITOR", 200, 100);
-		window.AddButtonComponent("EXIT", 200, 100);
-	}
-
-	void Update()
-	{
-		if (firstFrame)
-			return;
-
-		if (window.GetValue<ButtonComponent>("PLAY DEBUG MODE"))
-			state = AppState::DB_PLAY;
-
-		else if (window.GetValue<ButtonComponent>("LEVEL EDITOR"))
-			state = AppState::DB_LEVEL;
-
-		else if (window.GetValue<ButtonComponent>("PARTICLE EDITOR"))
-			state = AppState::DB_PARTICLE;
-
-		else if (window.GetValue<ButtonComponent>("EXIT"))
-			state = AppState::DB_EXIT;
-	}
-
+private:
 	void Render()
 	{
-		if (firstFrame)
-			firstFrame = false;
-
 		Graphics::Inst().BeginFrame();
 		ImGUI::BeginFrame();
 
@@ -50,7 +20,37 @@ public:
 		Graphics::Inst().EndFrame();
 	}
 
-	AppState GetState() { return state; }
+public:
+	DebugMainMenu(UINT clientWidth, UINT clientHeight)
+		:window("DEBUG MAIN MENU")
+	{
+		scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 100.0f, 1.0f, 2.0f);
+		scene.SetDirectionalLight(40);
 
-	void Reset() { state = AppState::DB_MAIN; firstFrame = true; }
+		window.AddButtonComponent("PLAY DEBUG MODE", 200, 100);
+		window.AddButtonComponent("LEVEL EDITOR", 200, 100);
+		window.AddButtonComponent("PARTICLE EDITOR", 200, 100);
+		window.AddButtonComponent("EXIT", 200, 100);
+		(void)Run();
+	}
+
+	// Inherited via GameState
+	State Run()
+	{
+		Render();
+
+		if (window.GetValue<ButtonComponent>("PLAY DEBUG MODE"))
+			return State::GAME;
+
+		else if (window.GetValue<ButtonComponent>("LEVEL EDITOR"))
+			return State::LEVEL;
+
+		else if (window.GetValue<ButtonComponent>("PARTICLE EDITOR"))
+			return State::PARTICLE;
+
+		else if (window.GetValue<ButtonComponent>("EXIT"))
+			return State::EXIT;
+
+		return State::NO_CHANGE;
+	}
 };
