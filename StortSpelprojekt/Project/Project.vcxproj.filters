@@ -79,6 +79,9 @@
     <Filter Include="Resource Files\ForwardParticle">
       <UniqueIdentifier>{c7d26f10-53fa-45dc-8293-0b2d9fa16199}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Graphics\Editors\LevelEditor">
+      <UniqueIdentifier>{aaaec7a4-2872-40be-8b8d-73488dc6f3f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -110,6 +113,9 @@
     </ClCompile>
     <ClCompile Include="ParticleEditor.cpp">
       <Filter>Header Files\Graphics\Editors\ParticleEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelEditor.cpp">
+      <Filter>Header Files\Graphics\Editors\LevelEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -257,12 +263,6 @@
     <ClInclude Include="MaterialLoader.h">
       <Filter>Header Files\Graphics\Editors</Filter>
     </ClInclude>
-    <ClInclude Include="LevelEditor.h">
-      <Filter>Header Files\Graphics\Editors</Filter>
-    </ClInclude>
-    <ClInclude Include="ForwardModelRenderer.h">
-      <Filter>Header Files\Graphics\Renderers</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleEditor.h">
       <Filter>Header Files\Graphics\Editors\ParticleEditor</Filter>
     </ClInclude>
@@ -274,6 +274,12 @@
     </ClInclude>
     <ClInclude Include="FileSystem.h">
       <Filter>Header Files\Graphics\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelEditor.h">
+      <Filter>Header Files\Graphics\Editors\LevelEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="ForwardModelRenderer.h">
+      <Filter>Header Files\Graphics\Editors\LevelEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,9 +14,9 @@ class Application
 private:
 	//WINDOW
 	Window window;
+	UINT clientWidth, clientHeight;
 
 	DebugMainMenu DBMainMenu;
-	DemoEditor demoEditor;
 
 	//EDITORS
 	std::unique_ptr<LevelEditor> levelEditor;
@@ -34,23 +34,25 @@ public:
 	Application(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 		:window(width, height, title, instance)
 	{
+		FileSystem::SetProjectDirectory();
+
 		//GET CLIENT RECT (BECAUSE OF TITLE BAR OFFSET)
 		RECT clientRect;
 		GetClientRect(window.HWnd(), &clientRect);
 
-		UINT windowWidth = clientRect.right;
-		UINT windowHeight = clientRect.bottom;
+		clientWidth = clientRect.right;
+		clientHeight = clientRect.bottom;
 
 		//INITIALIZATION
-		graphics = std::make_unique<Graphics>(windowWidth, windowHeight, window.HWnd());
+		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window.HWnd());
 
 		resources = std::make_unique<TempResources>();
 
-		renderGraph = std::make_unique<RenderGraph>(shaderData, windowWidth, windowHeight);
+		renderGraph = std::make_unique<RenderGraph>(shaderData, clientWidth, clientHeight);
 	
-		levelEditor = std::make_unique<LevelEditor>(windowWidth, windowHeight);
+		levelEditor = std::make_unique<LevelEditor>();
 
-		particleEditor = std::make_unique<ParticleEditor>(windowWidth, windowHeight);
+		particleEditor = std::make_unique<ParticleEditor>();
 
 		ImGUI::Initialize();
 	}
@@ -90,21 +92,38 @@ public:
 				DBMainMenu.Update();
 
 				if (DBMainMenu.GetState() != state)
+				{
 					state = DBMainMenu.GetState();
+					DBMainMenu.Reset();
 
+					if (state == DB_LEVEL)
+						levelEditor->Initialize(clientWidth, clientHeight);
+
+					if (state == DB_PARTICLE)
+						particleEditor->Initialize(clientWidth, clientHeight);
+
+					break;
+				}
+					
 				DBMainMenu.Render();
 				break;
 
 			case DB_PLAY:
 				RenderGraph::Inst().Render();
+				Event::ClearRawDelta();
 				break;
 
 			case DB_LEVEL:
 				levelEditor->Update();
 
 				if (levelEditor->IsDone())
+				{
 					state = DB_MAIN;
-
+					levelEditor->Reset();
+					break;
+				}
+					
+				Event::ClearRawDelta();
 				levelEditor->Render();
 				break;
 			
@@ -112,13 +131,16 @@ public:
 				particleEditor->Update();
 
 				if (particleEditor->IsDone())
+				{
 					state = DB_MAIN;
-
+					particleEditor->Reset();
+					break;
+				}
+					
 				particleEditor->Render();
 				break;
 			}
 
-			Event::ClearRawDelta();
 			Time::Update(timer.DeltaTime());
 		}
 	}

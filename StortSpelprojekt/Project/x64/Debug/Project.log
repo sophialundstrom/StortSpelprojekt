@@ -1,3 +1,7 @@
-﻿  ParticleSystem.cpp
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\ParticleSystem.h(73,47): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+﻿  LevelEditor.cpp
+  Main.cpp
+  Model.cpp
+  ParticleSystem.cpp
+  Scene.cpp
+  Generating Code...
   Project.vcxproj -> C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\Project.exe

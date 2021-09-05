@@ -6,9 +6,10 @@ struct ImGuiWinComponent
 {
 	std::string name = "";
 	bool changed = false;
+	bool sameLine = false;
 
-	ImGuiWinComponent(const std::string& name)
-		:name(name) {}
+	ImGuiWinComponent(const std::string& name, bool sameLine)
+		:name(name), sameLine(sameLine) {}
 
 	virtual bool Changed() = 0;
 	virtual void Update() = 0;
@@ -17,8 +18,8 @@ struct ImGuiWinComponent
 struct TextComponent : public ImGuiWinComponent
 {
 	std::string value = "";
-	TextComponent(const std::string& name)
-		:ImGuiWinComponent(name), value(name) {}
+	TextComponent(const std::string& name, bool sameLine)
+		:ImGuiWinComponent(name, sameLine), value(name) {}
 
 	// Inherited via ImGuiWinComponent
 	virtual bool Changed() override
@@ -28,6 +29,8 @@ struct TextComponent : public ImGuiWinComponent
 
 	virtual void Update() override
 	{
+		if (sameLine)
+			ImGui::SameLine();
 		ImGui::Text(value.c_str());
 	}
 };
@@ -35,8 +38,8 @@ struct TextComponent : public ImGuiWinComponent
 struct SliderFloatComponent : public ImGuiWinComponent
 {
 	float value, minValue, maxValue;
-	SliderFloatComponent(const std::string& name, float min = 0.0f, float max = 1.0f, float value = 0.0f)
-		:ImGuiWinComponent(name), minValue(min), maxValue(max), value(value) {}
+	SliderFloatComponent(const std::string& name, bool sameLine = false, float min = 0.0f, float max = 1.0f, float value = 0.0f)
+		:ImGuiWinComponent(name, sameLine), minValue(min), maxValue(max), value(value) {}
 
 	// Inherited via ImGuiWinComponent
 	virtual bool Changed() override
@@ -46,6 +49,8 @@ struct SliderFloatComponent : public ImGuiWinComponent
 
 	virtual void Update() override
 	{
+		if (sameLine)
+			ImGui::SameLine();
 		changed = ImGui::SliderFloat(name.c_str(), &value, minValue, maxValue);
 	}
 };
@@ -53,8 +58,8 @@ struct SliderFloatComponent : public ImGuiWinComponent
 struct FloatComponent : public ImGuiWinComponent
 {
 	float value;
-	FloatComponent(const std::string& name, float value = 0.0f)
-		:ImGuiWinComponent(name), value(value) {}
+	FloatComponent(const std::string& name, bool sameLine, float value = 0.0f)
+		:ImGuiWinComponent(name, sameLine), value(value) {}
 
 	// Inherited via ImGuiWinComponent
 	virtual bool Changed() override
@@ -64,6 +69,8 @@ struct FloatComponent : public ImGuiWinComponent
 
 	virtual void Update() override
 	{
+		if (sameLine)
+			ImGui::SameLine();
 		changed = ImGui::InputFloat(name.c_str(), &value);
 	}
 };
@@ -71,8 +78,8 @@ struct FloatComponent : public ImGuiWinComponent
 struct CheckBoxComponent : public ImGuiWinComponent
 {
 	bool value;
-	CheckBoxComponent(const std::string& name, bool value = true)
-		:ImGuiWinComponent(name), value(value) {}
+	CheckBoxComponent(const std::string& name, bool sameLine = false, bool value = true)
+		:ImGuiWinComponent(name, sameLine), value(value) {}
 
 	// Inherited via ImGuiWinComponent
 	virtual bool Changed() override
@@ -82,6 +89,8 @@ struct CheckBoxComponent : public ImGuiWinComponent
 
 	virtual void Update() override
 	{
+		if (sameLine)
+			ImGui::SameLine();
 		changed = ImGui::Checkbox(name.c_str(), &value);
 	}
 };
@@ -89,8 +98,8 @@ struct CheckBoxComponent : public ImGuiWinComponent
 struct Vector3Component : public ImGuiWinComponent
 {
 	float value[3];
-	Vector3Component(const std::string& name, const Vector3& value = { 0.0f, 0.0f, 0.0f })
-		:ImGuiWinComponent(name) {
+	Vector3Component(const std::string& name, bool sameLine = false, const Vector3& value = { 0.0f, 0.0f, 0.0f })
+		:ImGuiWinComponent(name, sameLine) {
 		this->value[0] = value.x; this->value[1] = value.y; this->value[2] = value.z;
 	}
 
@@ -102,6 +111,8 @@ struct Vector3Component : public ImGuiWinComponent
 
 	virtual void Update() override
 	{
+		if (sameLine)
+			ImGui::SameLine();
 		changed = ImGui::InputFloat3(name.c_str(), value);
 	}
 };
@@ -110,8 +121,8 @@ struct SliderVector3Component : public ImGuiWinComponent
 {
 	float value[3];
 	float minValue, maxValue;
-	SliderVector3Component(const std::string& name, const Vector3& value = { 0.0f, 0.0f, 0.0f }, float min = -500.0f, float max = 500.0f)
-		:ImGuiWinComponent(name), minValue(min), maxValue(max) {
+	SliderVector3Component(const std::string& name, bool sameLine = false, const Vector3& value = { 0.0f, 0.0f, 0.0f }, float min = -500.0f, float max = 500.0f)
+		:ImGuiWinComponent(name, sameLine), minValue(min), maxValue(max) {
 		this->value[0] = value.x; this->value[1] = value.y; this->value[2] = value.z;
 	}
 
@@ -123,6 +134,8 @@ struct SliderVector3Component : public ImGuiWinComponent
 
 	virtual void Update() override
 	{
+		if (sameLine)
+			ImGui::SameLine();
 		changed = ImGui::SliderFloat3(name.c_str(), value, minValue, maxValue);
 	}
 };
@@ -130,8 +143,8 @@ struct SliderVector3Component : public ImGuiWinComponent
 struct IntComponent : public ImGuiWinComponent
 {
 	int value;
-	IntComponent(const std::string& name, int value = 0)
-		:ImGuiWinComponent(name), value(value) {}
+	IntComponent(const std::string& name, bool sameLine = false, int value = 0)
+		:ImGuiWinComponent(name, sameLine), value(value) {}
 
 	// Inherited via ImGuiWinComponent
 	virtual bool Changed() override
@@ -141,6 +154,8 @@ struct IntComponent : public ImGuiWinComponent
 
 	virtual void Update() override
 	{
+		if (sameLine)
+			ImGui::SameLine();
 		changed = ImGui::InputInt(name.c_str(), &value);
 	}
 };
@@ -148,8 +163,8 @@ struct IntComponent : public ImGuiWinComponent
 struct SliderIntComponent : public ImGuiWinComponent
 {
 	int value, minValue, maxValue;
-	SliderIntComponent(const std::string& name, int min = 0, int max = 1, int value = 0)
-		:ImGuiWinComponent(name), value(value), minValue(min), maxValue(max) {}
+	SliderIntComponent(const std::string& name, bool sameLine = false, int min = 0, int max = 1, int value = 0)
+		:ImGuiWinComponent(name, sameLine), value(value), minValue(min), maxValue(max) {}
 
 	// Inherited via ImGuiWinComponent
 	virtual bool Changed() override
@@ -159,6 +174,8 @@ struct SliderIntComponent : public ImGuiWinComponent
 
 	virtual void Update() override
 	{
+		if (sameLine)
+			ImGui::SameLine();
 		changed = ImGui::SliderInt(name.c_str(), &value, minValue, maxValue);
 	}
 };
@@ -167,8 +184,8 @@ struct ButtonComponent : public ImGuiWinComponent
 {
 	bool value = false;
 	int width, height;
-	ButtonComponent(const std::string& name, int width, int height)
-		:ImGuiWinComponent(name), width(width), height(height) {}
+	ButtonComponent(const std::string& name, int width, int height, bool sameLine = false)
+		:ImGuiWinComponent(name, sameLine), width(width), height(height) {}
 
 	// Inherited via ImGuiWinComponent
 	virtual bool Changed() override
@@ -178,6 +195,8 @@ struct ButtonComponent : public ImGuiWinComponent
 
 	virtual void Update() override
 	{
+		if (sameLine)
+			ImGui::SameLine();
 		value = ImGui::Button(name.c_str(), ImVec2((float)width, (float)height));
 	}
 };
@@ -188,8 +207,8 @@ struct RadioButtonComponent : public ImGuiWinComponent
 	UINT numButtons, value;
 	std::string names[MAX_BUTTONS] = { "" };
 
-	RadioButtonComponent(const std::string& name, UINT activeID, UINT numButtons, const std::string names[])
-		:ImGuiWinComponent(name), value(activeID) , numButtons(numButtons)
+	RadioButtonComponent(const std::string& name, UINT activeID, UINT numButtons, const std::string names[], bool sameLine = false)
+		:ImGuiWinComponent(name, sameLine), value(activeID) , numButtons(numButtons)
 	{
 		for (UINT i = 0; i < numButtons; ++i)
 			this->names[i] = names[i];
@@ -225,7 +244,7 @@ struct SeperatorComponent : public ImGuiWinComponent
 {
 	int value;
 	SeperatorComponent()
-		:ImGuiWinComponent(""), value(0) {}
+		:ImGuiWinComponent("", false), value(0) {}
 
 	// Inherited via ImGuiWinComponent
 	virtual bool Changed() override

@@ -56,12 +56,6 @@ void Scene::SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, flo
 	camera = Camera(FOV, aspectRatio, nearZ, farZ, rotationSpeed, moveSpeed, position, forward, up);
 }
 
-//SAVE FILE (EITHER DEFAULT OR SAVED GAME)
-void Scene::SaveFile(const std::string& file)
-{
-	//TO DO: CONVERT STORED DRAWABLE DATA TO READABLE FILE FORMAT
-}
-
 //OPEN FILE (EITHER DEFAULT OR SAVED GAME)
 Scene::Scene(const std::string& file)
 {

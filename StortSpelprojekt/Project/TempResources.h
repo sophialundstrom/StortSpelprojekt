@@ -13,13 +13,13 @@ private:
 	const UINT stride = sizeof(TempVertex);
 	const UINT offset = 0;
 
-	Material* currentMaterial = nullptr;
+	std::shared_ptr<Material> currentMaterial = nullptr;
 	ID3D11Buffer* materialBuffer = nullptr;
 
 	ID3D11Buffer* currentVertexBuffer = nullptr;
 	std::map<std::string, ID3D11Buffer*> vertexBuffers;
 
-	std::map<UINT, Material*> materials;
+	std::map<UINT, std::shared_ptr<Material>> materials;
 public:
 	TempResources()
 		:Singleton(this) { CreateBuffer(materialBuffer, sizeof(Material::Data)); }
@@ -27,9 +27,7 @@ public:
 	~TempResources()
 	{
 		materialBuffer->Release();
-
-		for (auto& [ID, material] : materials)
-			delete material;
+		materials.clear();
 
 		for (auto& [ID, buffer] : vertexBuffers)
 			buffer->Release();
@@ -82,7 +80,7 @@ public:
 	//BIND MATERIAL AT GIVEN INDEX
 	void BindMaterial(UINT materialID)
 	{
-		Material* material = materials[materialID];
+		std::shared_ptr<Material> material = materials[materialID];
 
 		if (currentMaterial != material)
 		{
@@ -103,5 +101,16 @@ public:
 			Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 
 		Graphics::Inst().GetContext().Draw(vertexCount, 0);
+	}
+
+	//CLEAR
+	void Clear()
+	{		
+		materials.clear();
+
+		for (auto& [ID, buffer] : vertexBuffers)
+			buffer->Release();
+
+		vertexBuffers.clear();
 	}
 };

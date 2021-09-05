@@ -3,13 +3,7 @@
 #include "ParticleSystem.h"
 #include "Player.h"
 #include "TempModel.h"
-
 #include <map>
-
-struct SceneComponents
-{
-
-};
 
 class Scene
 {
@@ -22,6 +16,7 @@ public:
 	Scene(const std::string& file);
 	Scene() = default;
 
+	void Clear() { drawables.clear(); pointLights.clear(); }
 	void Update();
 
 	Camera& GetCamera() { return this->camera; }
@@ -35,6 +30,4 @@ public:
 	
 	void SetDirectionalLight(float range, float startAngle = 0.0f, int startDir = 1);
 	void SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 forward = { 0.0f, 0.0f, 1.0f }, Vector3 up = { 0.0f, 1.0f, 0.0f });
-	
-	void SaveFile(const std::string& file);
 };

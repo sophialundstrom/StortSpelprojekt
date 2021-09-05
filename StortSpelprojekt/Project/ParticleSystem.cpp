@@ -1,19 +1,17 @@
 #include "ParticleSystem.h"
 
 #include "RenderGraph.h"
-#include <filesystem>
+#include "FileSystem.h"
 #include <fstream>
 
 ParticleSystem::ParticleSystem(const std::string& file, bool preview)
-	:timeSinceLastParticle(0), particleCount(0)
+	:maxParticles(0), timeBetweenParticles(0), particlesLifetime(0), minVelocity(0), maxVelocity(0), size(0), particleExtents(0,0), position(0,0,0), type(EmitterType::SPHERE), 
+	timeSinceLastParticle(0), particleCount(0)
 {
 	std::string path = file;
+
 	if (file == "default.ps")
-	{
-		std::filesystem::path p = std::filesystem::current_path();
-		p += "\\ParticleSystems\\" + file;
-		path = p.string();
-	}
+		path = FileSystem::ProjectDirectory::path + "\\ParticleSystems\\" + file;
 
 	std::ifstream reader;
 
@@ -24,7 +22,6 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 		return;
 	}
 
-	std::string str = "";
 	while (!reader.eof())
 	{
 		reader >> maxParticles;

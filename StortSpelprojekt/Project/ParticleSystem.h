@@ -49,7 +49,7 @@ private:
 	float timeSinceLastParticle;
 
 	std::vector<Particle> particles;
-	ID3D11Buffer* vertexBuffer;
+	ID3D11Buffer* vertexBuffer = nullptr;
 public:
 	const UINT ABSOLUTE_MAX_PARTICLES = 1000000u;
 
@@ -70,7 +70,7 @@ public:
 
 	//SET
 	void SetType(const EmitterType& type)				{ this->type = type; }
-	void SetSize(int size)								{ this->size = size; }
+	void SetSize(float size)							{ this->size = size; }
 	void SetParticleExtents(Vector2 extents)			{ this->particleExtents = extents; }
 	void SetParticleExtents(float width, float height)	{ this->particleExtents = Vector2(width, height); }
 	void SetParticleWidth(float value)					{ this->particleExtents.x = value; }

@@ -4,6 +4,7 @@
 class Editor
 {
 protected:
+	bool firstFrame = true;
 	bool done = false;
 	std::map<std::string, ImGuiWin> windows;
 
@@ -24,9 +25,18 @@ protected:
 		ImGUI::EndFrame();
 		Graphics::Inst().EndFrame();
 	}
+
+	void ClearWindows() { windows.clear(); }
+private:
+	virtual void Save(const std::string& file) = 0;
+	virtual void Load(const std::string& file) = 0;
 public:
 	Editor() = default;
+
+	virtual void Initialize(UINT windowWidth, UINT windowHeight) = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;
-	bool IsDone() { return done; }
+	virtual void Reset() = 0;
+
+	bool IsDone() const	{ return done; }
 };

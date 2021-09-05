@@ -6,10 +6,17 @@
 
 namespace FileSystem
 {
+	struct ProjectDirectory
+	{
+		static std::string path;
+	};
+	inline std::string ProjectDirectory::path = "";
+
+	inline void SetProjectDirectory() { ProjectDirectory::path = std::filesystem::current_path().string(); }
+
 	inline std::string LoadFile(std::string fileDirectory = "")
 	{
-		std::filesystem::path path = std::filesystem::current_path();
-		path += "\\" + fileDirectory;
+		std::string path = ProjectDirectory::path + "\\" + fileDirectory;
 		
 		//OPEN EXPORER AND RETURN SELECTED FILENAME
 		OPENFILENAMEA ofn;
@@ -38,8 +45,7 @@ namespace FileSystem
 
 	inline std::string SaveFile(std::string fileDirectory = "")
 	{
-		std::filesystem::path path = std::filesystem::current_path();
-		path += "\\" + fileDirectory;
+		std::string path = ProjectDirectory::path + "\\" + fileDirectory;
 
 		//OPEN EXPORER AND SAVE SELECTED FILENAME
 		OPENFILENAMEA ofn;
