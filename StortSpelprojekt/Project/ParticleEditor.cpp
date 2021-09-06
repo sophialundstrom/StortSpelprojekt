@@ -75,7 +75,7 @@ void ParticleEditor::Render()
 
 ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 {
-	camera = Camera(PI_DIV4, (float)clientWidth / (float)clientWidth, 0.1f, 20.0f, 0, 0, { -2.5f, 5.0f, -15.0f }, { -2.5f, 0.0f, 0.0f });
+	camera = Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 20.0f, 0, 0, { -2.5f, 5.0f, -15.0f }, { -2.5f, 0.0f, 0.0f });
 
 	AddWindow("PARTICLE SYSTEM EDITOR");
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
