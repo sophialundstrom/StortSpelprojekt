@@ -61,25 +61,33 @@ LevelEditor::LevelEditor(UINT windowWidth, UINT windowHeight)
 	scene.SetDirectionalLight(40);
 
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
-	//WHEN ADDING MODEL - EITHER OPEN DIRECTORY AND SELECT AN FBX OR MAKE A DYNAMIC ARRAY THAT STORES MESHES IN FOLDER TO CHOOSE FROM
+	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
 	scene.AddModel("world");
-	modelRenderer.Bind(scene.Get<Drawable>("world"));
+	scene.AddModel("testSphere");
 
+	modelRenderer.Bind(scene.Get<Model>("world"));
+	modelRenderer.Bind(scene.Get<Model>("testSphere"));
+	//scene.Get<Model>("testSphere")->SetPosition(0, 20, 0);
+	scene.Get<Model>("testSphere")->SetScale(0.2f);
+
+	//ADD BUTTONS FOR LIGHT/MODEL/PARTICLE SYSTEM & SHOW SCENE HIERARCHY
 	{
-		AddWindow("SCENE");
-		auto& window = windows["SCENE"]; //ADD BUTTONS FOR LIGHT/MODEL/PARTICLE SYSTEM & SHOW SCENE HIERARCHY
+		AddWindow("SCENE");	
+		auto& window = windows["SCENE"];				
 		window.AddTextComponent("Scene Name");
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
+	//MAKE INTERACTIVE WITH SELECTED OBJECT
 	{
 		AddWindow("GAME OBJECT");
-		auto& window = windows["GAME OBJECT"];	//MAKE INTERACTIVE WITH SELECTED OBJECT
+		auto& window = windows["GAME OBJECT"];	
 		window.AddTextComponent("Game Object Name");
 	}
 
+	//RENDER PREVIEW TO IMAGE TO SHOW IN WINDOW & MAKE INTERACTIVE WITH SELECTED OBJECTS MATERIAL (AND ADD "COPY MATERIAL" THING)
 	{
-		AddWindow("MATERIAL");		//RENDER PREVIEW TO IMAGE TO SHOW IN WINDOW & MAKE INTERACTIVE WITH SELECTED OBJECTS MATERIAL (AND ADD "COPY MATERIAL" THING)
+		AddWindow("MATERIAL");		
 		auto& window = windows["MATERIAL"];
 		window.AddTextComponent("Material Name");
 	}

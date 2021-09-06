@@ -21,8 +21,10 @@ public:
 
 	Camera& GetCamera() { return this->camera; }
 
+	//GET DRAWABLE BY SPECIFYING TYPE AND NAME
 	template <typename T>
 	auto Get(const std::string& name) { return std::dynamic_pointer_cast<T>(drawables[name]); }
+	const std::map<std::string, std::shared_ptr<Drawable>>& GetSortedMap() const;
 
 	void AddModel(const std::string& file);
 	void AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type);

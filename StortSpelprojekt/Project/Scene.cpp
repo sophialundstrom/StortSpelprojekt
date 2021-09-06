@@ -4,6 +4,18 @@
 
 #include <filesystem>
 
+const std::map<std::string, std::shared_ptr<Drawable>>& Scene::GetSortedMap() const
+{
+	std::map<std::string, std::shared_ptr<Drawable>> finalMap;
+
+	for (auto& [name, drawable] : drawables)
+	{
+
+	}
+
+	return finalMap;
+}
+
 void Scene::AddModel(const std::string& file)
 {
 	UINT numInstances = 0;

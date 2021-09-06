@@ -14,7 +14,7 @@ public:
 	Model(const std::string& fileName)
 	{
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile("AssimpModels/" + fileName + ".fbx", aiProcess_Triangulate | aiProcess_SortByPType);
+		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_Triangulate | aiProcess_SortByPType);
 		if (!scene)
 		{
 			Print("COULD NOT LOAD .FBX FILE");

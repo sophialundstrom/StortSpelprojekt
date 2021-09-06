@@ -35,7 +35,9 @@ void ParticleEditor::Load(const std::string& file)
 	if (file == "" || std::filesystem::path(file).extension() != ".ps")
 		return;
 
+	renderer.Clear();
 	particleSystem = std::make_shared<ParticleSystem>(file, true);
+	renderer.Bind(particleSystem);
 
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
 
@@ -118,8 +120,6 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	window.AddButtonComponent("RETURN TO MENU", 120, 30);
 
 	Load("default.ps");
-	renderer.Bind(particleSystem);
-
 	(void)Run();
 }
 
