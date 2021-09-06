@@ -13,180 +13,177 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Graphics">
-      <UniqueIdentifier>{a1615b81-80d3-4cf8-b69a-d9f2f374b402}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Graphics\Renderers">
-      <UniqueIdentifier>{20c5cf0f-f847-4e09-a639-da1c37ce0f83}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Utilities">
       <UniqueIdentifier>{fa7cfd21-3f7c-4c98-a727-287ef296e521}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Deferred">
-      <UniqueIdentifier>{b03f4c45-efc9-4aed-98e9-5214d1d21682}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Displacement">
-      <UniqueIdentifier>{526370f5-da8d-4e61-ac87-372fcd425fd1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Model">
-      <UniqueIdentifier>{8d93b321-f9b7-4293-a59b-1dcafcb9707d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Particle">
-      <UniqueIdentifier>{17241464-3c39-481d-9d56-381aa0919ade}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Shadow">
-      <UniqueIdentifier>{cd15c6a6-3cb8-4bd7-a640-9806b6741db7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\UVAnimation">
-      <UniqueIdentifier>{3e7eb5c7-a642-4a57-a011-17f65a06d2dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Graphics">
-      <UniqueIdentifier>{1461a57e-7d3e-43b2-b1c3-f9936f350776}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Scene">
-      <UniqueIdentifier>{d1229bcc-9c0b-4c0a-86b5-e639ef218c2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Scene\Drawable">
-      <UniqueIdentifier>{0426d72a-e3dc-4c75-9caf-6c9325196f17}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Scene">
-      <UniqueIdentifier>{bc321ab5-8fa1-47e8-85cf-30261f9fd5fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Scene\Drawable">
-      <UniqueIdentifier>{a634b05d-51af-4df2-a655-5e103a87df2b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Scene\Drawable\Model">
-      <UniqueIdentifier>{5d82c9b2-1d6f-4c9f-849a-92b2739271fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Scene\Game">
-      <UniqueIdentifier>{186acd6b-a652-4879-9118-37cf9ac0b21a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Scene\Terrain">
-      <UniqueIdentifier>{d73aeb48-8473-4c38-b404-c9cf9d6abf29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\ForwardModel">
-      <UniqueIdentifier>{c7ed6ca3-7ae9-4fc6-895e-6eec9dcbf313}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\ForwardParticle">
-      <UniqueIdentifier>{c7d26f10-53fa-45dc-8293-0b2d9fa16199}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Graphics\Debug">
-      <UniqueIdentifier>{7a1778c2-6760-46ba-923d-d17c2be09679}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Graphics\Debug\Editors">
-      <UniqueIdentifier>{4d9985e3-1487-4720-8877-ff32c953c028}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Graphics\Debug\Editors\ParticleEditor">
-      <UniqueIdentifier>{c6fd61be-2116-4a46-9df5-5e08f62a9657}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Graphics\Debug\Editors\LevelEditor">
-      <UniqueIdentifier>{aaaec7a4-2872-40be-8b8d-73488dc6f3f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Graphics\Debug\Editors\ImGuiWindow">
-      <UniqueIdentifier>{c4bed249-3e66-4e8c-a4e5-f7a35d7e23c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Scene\Drawable\Model\Resources">
-      <UniqueIdentifier>{3e81a81c-e1fb-4b39-8d2d-104ad05de87a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Scene\Drawable\Model\Resources\Material">
-      <UniqueIdentifier>{525143f9-5e9d-40f3-9b2d-d15a343014b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\OLD STUFF">
-      <UniqueIdentifier>{5f9b2bb0-4775-4add-a94d-bb29400478e0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Application">
       <UniqueIdentifier>{01609692-0484-4871-9d38-b2a287fd59f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics">
+      <UniqueIdentifier>{a1615b81-80d3-4cf8-b69a-d9f2f374b402}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers">
+      <UniqueIdentifier>{20c5cf0f-f847-4e09-a639-da1c37ce0f83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\ModelRenderer">
+      <UniqueIdentifier>{57d40355-9a41-4765-8a70-855b2484934c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders">
+      <UniqueIdentifier>{8ef6027c-e747-47bb-a90e-d8642ff0f6be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Lit">
+      <UniqueIdentifier>{72651256-7d99-4036-9de6-7747c6785899}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Unlit">
+      <UniqueIdentifier>{12516dee-9470-4750-9d24-c53270f161f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\ParticleRenderer">
+      <UniqueIdentifier>{b6090a1b-a225-4318-84fb-13f453562458}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\ParticleRenderer\Shaders">
+      <UniqueIdentifier>{410d8c6e-77d0-4575-9bd2-ca7cdbe76ad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\DeferredRenderer">
+      <UniqueIdentifier>{02b31700-0f13-4624-bd35-2da859184629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\DeferredRenderer\Shaders">
+      <UniqueIdentifier>{77fecad8-beb1-409d-bd8c-be69223cf3cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\TerrainRenderer">
+      <UniqueIdentifier>{be75707b-99a4-431c-a5cd-a09dac62f273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\ShadowRenderer">
+      <UniqueIdentifier>{4873b9e4-9a33-46a9-a392-80a4d482690a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\ShadowRenderer\Shaders">
+      <UniqueIdentifier>{98c4b0bd-119c-49c1-9c3b-431344b6c16e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene">
+      <UniqueIdentifier>{bc321ab5-8fa1-47e8-85cf-30261f9fd5fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Drawable">
+      <UniqueIdentifier>{a634b05d-51af-4df2-a655-5e103a87df2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Drawable\Model">
+      <UniqueIdentifier>{5d82c9b2-1d6f-4c9f-849a-92b2739271fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Drawable\Model\Resources">
+      <UniqueIdentifier>{3e81a81c-e1fb-4b39-8d2d-104ad05de87a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Drawable\Model\Resources\Material">
+      <UniqueIdentifier>{525143f9-5e9d-40f3-9b2d-d15a343014b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Drawable\Particle System">
+      <UniqueIdentifier>{c00abe99-b0c8-442c-bec8-4a791efdda75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Game">
+      <UniqueIdentifier>{186acd6b-a652-4879-9118-37cf9ac0b21a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Terrain">
+      <UniqueIdentifier>{d73aeb48-8473-4c38-b404-c9cf9d6abf29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Camera">
+      <UniqueIdentifier>{8e37f8ef-fcbe-4592-9f9c-630092af58f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\GameStates">
+      <UniqueIdentifier>{1bfd5d48-db46-44e4-8f7c-3cf555fdb145}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\GameStates\Game">
+      <UniqueIdentifier>{ccfbf19b-eb95-4144-ad10-decf149cafc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\GameStates\Debug">
+      <UniqueIdentifier>{7a1778c2-6760-46ba-923d-d17c2be09679}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\GameStates\Debug\Editors">
+      <UniqueIdentifier>{4d9985e3-1487-4720-8877-ff32c953c028}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\GameStates\Debug\Editors\ParticleEditor">
+      <UniqueIdentifier>{c6fd61be-2116-4a46-9df5-5e08f62a9657}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\GameStates\Debug\Editors\LevelEditor">
+      <UniqueIdentifier>{aaaec7a4-2872-40be-8b8d-73488dc6f3f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\GameStates\Debug\Editors\ImGuiWindow">
+      <UniqueIdentifier>{c4bed249-3e66-4e8c-a4e5-f7a35d7e23c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\OLD STUFF">
+      <UniqueIdentifier>{5f9b2bb0-4775-4add-a94d-bb29400478e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\OLD STUFF\UVAnimation">
+      <UniqueIdentifier>{3e7eb5c7-a642-4a57-a011-17f65a06d2dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\OLD STUFF\Displacement">
+      <UniqueIdentifier>{526370f5-da8d-4e61-ac87-372fcd425fd1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Source Files\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleSystem.cpp">
-      <Filter>Source Files\Scene\Drawable</Filter>
-    </ClCompile>
     <ClCompile Include="Terrain.cpp">
-      <Filter>Header Files\Scene\Terrain</Filter>
+      <Filter>Header Files\Application\Scene\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="ParticleEditor.cpp">
-      <Filter>Header Files\Graphics\Debug\Editors\ParticleEditor</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ParticleEditor</Filter>
     </ClCompile>
     <ClCompile Include="LevelEditor.cpp">
-      <Filter>Header Files\Graphics\Debug\Editors\LevelEditor</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors\LevelEditor</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>Header Files\Scene\Drawable\Model\Resources\Material</Filter>
+      <Filter>Header Files\Application\Scene\Drawable\Model\Resources\Material</Filter>
     </ClCompile>
     <ClCompile Include="OldModel.cpp">
-      <Filter>Header Files\OLD STUFF</Filter>
+      <Filter>Resource Files\OLD STUFF</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Header Files\Application\Scene\Drawable\Particle System</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Header Files\Application\Scene\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Header Files\Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Header Files\Application\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Header Files\Application\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Header Files\Application</Filter>
+      <Filter>Header Files\Application\GameStates\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderGraph.h">
-      <Filter>Header Files\Graphics</Filter>
+      <Filter>Header Files\Application\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="ShaderData.h">
-      <Filter>Header Files\Graphics</Filter>
+      <Filter>Header Files\Application\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>Header Files\Graphics</Filter>
+      <Filter>Header Files\Application\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="ShadowMap.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="DeferredRenderer.h">
-      <Filter>Header Files\Graphics\Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="DisplacementRenderer.h">
-      <Filter>Header Files\Graphics\Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleRenderer.h">
-      <Filter>Header Files\Graphics\Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="ShadowRenderer.h">
-      <Filter>Header Files\Graphics\Renderers</Filter>
+      <Filter>Header Files\Application\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
-      <Filter>Header Files\Graphics\Renderers</Filter>
+      <Filter>Header Files\Application\Graphics\Renderers</Filter>
     </ClInclude>
     <ClInclude Include="Drawable.h">
-      <Filter>Header Files\Scene\Drawable</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleSystem.h">
-      <Filter>Header Files\Scene\Drawable</Filter>
+      <Filter>Header Files\Application\Scene\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="Geometry.h">
-      <Filter>Header Files\Scene\Drawable\Model</Filter>
+      <Filter>Header Files\Application\Scene\Drawable\Model</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Header Files\Scene\Game</Filter>
+      <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Header Files\Scene</Filter>
+      <Filter>Header Files\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>Header Files\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files\Scene</Filter>
+      <Filter>Header Files\Application\Scene</Filter>
     </ClInclude>
     <ClInclude Include="DirectXHelp.h">
       <Filter>Header Files\Utilities</Filter>
@@ -213,34 +210,34 @@
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h">
-      <Filter>Header Files\Scene\Terrain</Filter>
+      <Filter>Header Files\Application\Scene\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="Editor.h">
-      <Filter>Header Files\Graphics\Debug\Editors</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors</Filter>
     </ClInclude>
     <ClInclude Include="DebugMainMenu.h">
-      <Filter>Header Files\Graphics\Debug\Editors</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
-      <Filter>Header Files\Scene\Drawable\Model</Filter>
+      <Filter>Header Files\Application\Scene\Drawable\Model</Filter>
     </ClInclude>
     <ClInclude Include="ParticleEditor.h">
-      <Filter>Header Files\Graphics\Debug\Editors\ParticleEditor</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ParticleEditor</Filter>
     </ClInclude>
     <ClInclude Include="ForwardParticleRenderer.h">
-      <Filter>Header Files\Graphics\Debug\Editors\ParticleEditor</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ParticleEditor</Filter>
     </ClInclude>
     <ClInclude Include="LevelEditor.h">
-      <Filter>Header Files\Graphics\Debug\Editors\LevelEditor</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors\LevelEditor</Filter>
     </ClInclude>
     <ClInclude Include="ForwardModelRenderer.h">
-      <Filter>Header Files\Graphics\Debug\Editors\LevelEditor</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors\LevelEditor</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiWin.h">
-      <Filter>Header Files\Graphics\Debug\Editors\ImGuiWindow</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGuiWindow</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiWinComponents.h">
-      <Filter>Header Files\Graphics\Debug\Editors\ImGuiWindow</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGuiWindow</Filter>
     </ClInclude>
     <ClInclude Include="FileSystem.h">
       <Filter>Header Files\Utilities</Filter>
@@ -252,114 +249,132 @@
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
-      <Filter>Header Files\Scene\Drawable\Model</Filter>
+      <Filter>Header Files\Application\Scene\Drawable\Model</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Header Files\Scene\Drawable\Model\Resources\Material</Filter>
+      <Filter>Header Files\Application\Scene\Drawable\Model\Resources\Material</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Header Files\Scene\Drawable\Model\Resources\Material</Filter>
+      <Filter>Header Files\Application\Scene\Drawable\Model\Resources\Material</Filter>
     </ClInclude>
     <ClInclude Include="OldMesh.h">
-      <Filter>Header Files\OLD STUFF</Filter>
+      <Filter>Resource Files\OLD STUFF</Filter>
     </ClInclude>
     <ClInclude Include="OldModel.h">
-      <Filter>Header Files\OLD STUFF</Filter>
+      <Filter>Resource Files\OLD STUFF</Filter>
     </ClInclude>
     <ClInclude Include="OldResources.h">
-      <Filter>Header Files\OLD STUFF</Filter>
+      <Filter>Resource Files\OLD STUFF</Filter>
     </ClInclude>
     <ClInclude Include="Resources.h">
-      <Filter>Header Files\Scene\Drawable\Model\Resources</Filter>
+      <Filter>Header Files\Application\Scene\Drawable\Model\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Header Files\Scene\Drawable\Model</Filter>
+      <Filter>Header Files\Application\Scene\Drawable\Model</Filter>
     </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Header Files\Application</Filter>
     </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>Header Files\Application</Filter>
+    <ClInclude Include="ModelRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="StateENUM.h">
-      <Filter>Header Files\Application</Filter>
+    <ClInclude Include="ParticleRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="States.h">
-      <Filter>Header Files\Application</Filter>
+    <ClInclude Include="DeferredRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\DeferredRenderer</Filter>
     </ClInclude>
     <ClInclude Include="OldModelRenderer.h">
-      <Filter>Header Files\Graphics\Renderers</Filter>
+      <Filter>Resource Files\OLD STUFF</Filter>
     </ClInclude>
-    <ClInclude Include="ModelRenderer.h">
-      <Filter>Header Files\Graphics\Renderers</Filter>
+    <ClInclude Include="DisplacementRenderer.h">
+      <Filter>Resource Files\OLD STUFF</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\ShadowRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Header Files\Application\Scene\Drawable\Particle System</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Application\Scene\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\Application\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\Application\GameStates\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="StateENUM.h">
+      <Filter>Header Files\Application\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="States.h">
+      <Filter>Header Files\Application\GameStates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="DeferredVertexShader.hlsl">
-      <Filter>Resource Files\Deferred</Filter>
-    </FxCompile>
-    <FxCompile Include="DeferredPixelShader.hlsl">
-      <Filter>Resource Files\Deferred</Filter>
-    </FxCompile>
     <FxCompile Include="DisplacementVertexShader.hlsl">
-      <Filter>Resource Files\Displacement</Filter>
+      <Filter>Resource Files\OLD STUFF\Displacement</Filter>
     </FxCompile>
     <FxCompile Include="DisplacementHullShader.hlsl">
-      <Filter>Resource Files\Displacement</Filter>
+      <Filter>Resource Files\OLD STUFF\Displacement</Filter>
     </FxCompile>
     <FxCompile Include="DisplacementDomainShader.hlsl">
-      <Filter>Resource Files\Displacement</Filter>
+      <Filter>Resource Files\OLD STUFF\Displacement</Filter>
     </FxCompile>
     <FxCompile Include="DisplacementGeometryShader.hlsl">
-      <Filter>Resource Files\Displacement</Filter>
+      <Filter>Resource Files\OLD STUFF\Displacement</Filter>
     </FxCompile>
     <FxCompile Include="DisplacementPixelShader.hlsl">
-      <Filter>Resource Files\Displacement</Filter>
-    </FxCompile>
-    <FxCompile Include="ModelVertexShader.hlsl">
-      <Filter>Resource Files\Model</Filter>
-    </FxCompile>
-    <FxCompile Include="ModelGeometryShader.hlsl">
-      <Filter>Resource Files\Model</Filter>
-    </FxCompile>
-    <FxCompile Include="ModelPixelShader.hlsl">
-      <Filter>Resource Files\Model</Filter>
+      <Filter>Resource Files\OLD STUFF\Displacement</Filter>
     </FxCompile>
     <FxCompile Include="UVAnimationVertexShader.hlsl">
-      <Filter>Resource Files\UVAnimation</Filter>
+      <Filter>Resource Files\OLD STUFF\UVAnimation</Filter>
     </FxCompile>
     <FxCompile Include="UVAnimationPixelShader.hlsl">
-      <Filter>Resource Files\UVAnimation</Filter>
-    </FxCompile>
-    <FxCompile Include="ShadowVertexShader.hlsl">
-      <Filter>Resource Files\Shadow</Filter>
-    </FxCompile>
-    <FxCompile Include="ShadowHullShader.hlsl">
-      <Filter>Resource Files\Shadow</Filter>
-    </FxCompile>
-    <FxCompile Include="ShadowDomainShader.hlsl">
-      <Filter>Resource Files\Shadow</Filter>
-    </FxCompile>
-    <FxCompile Include="ParticleVertexShader.hlsl">
-      <Filter>Resource Files\Particle</Filter>
+      <Filter>Resource Files\OLD STUFF\UVAnimation</Filter>
     </FxCompile>
     <FxCompile Include="ParticleGeometryShader.hlsl">
-      <Filter>Resource Files\Particle</Filter>
+      <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ParticlePixelShader.hlsl">
-      <Filter>Resource Files\Particle</Filter>
+    <FxCompile Include="ParticleVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ForwardModelVertexShader.hlsl">
-      <Filter>Resource Files\ForwardModel</Filter>
-    </FxCompile>
-    <FxCompile Include="ForwardModelPixelShader.hlsl">
-      <Filter>Resource Files\ForwardModel</Filter>
+    <FxCompile Include="DeferredParticlePixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ForwardParticlePixelShader.hlsl">
-      <Filter>Resource Files\ForwardParticle</Filter>
+      <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ModelVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Lit</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredModelPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Lit</Filter>
+    </FxCompile>
+    <FxCompile Include="ForwardModelPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Lit</Filter>
+    </FxCompile>
+    <FxCompile Include="UnlitModelVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Unlit</Filter>
+    </FxCompile>
+    <FxCompile Include="UnlitForwardModelPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Unlit</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\DeferredRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\DeferredRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\ShadowRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowDomainShader.hlsl">
+      <Filter>Resource Files\OLD STUFF</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowHullShader.hlsl">
+      <Filter>Resource Files\OLD STUFF</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

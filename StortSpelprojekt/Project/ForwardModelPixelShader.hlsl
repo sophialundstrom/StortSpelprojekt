@@ -4,9 +4,10 @@ SamplerState wrapSampler : register(s0);
 struct PS_INPUT
 {
     float4 position : SV_POSITION;
-    float4 worldPosition : WORLDPOSITION;
     float2 texCoords : TEXCOORDS;
     float3 normal : NORMAL;
+    float4 worldPosition : WORLDPOSITION;
+    float4 lightClipPosition : LIGHTPOSITION;
 };
 
 cbuffer MATERIAL : register(b0)

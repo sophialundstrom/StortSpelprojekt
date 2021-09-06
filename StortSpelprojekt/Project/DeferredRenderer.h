@@ -2,7 +2,7 @@
 #include "Renderer.h"
 #include "DirectXHelp.h"
 
-class DeferredRenderer : public Renderer
+class DeferredRenderer
 {
 private:
 	static const UINT numTargets = 7u;
@@ -31,11 +31,17 @@ private:
 	ID3D11Buffer* lights_buf;
 	ID3D11ShaderResourceView* lights_buf_srv;
 
-	//SHADERS
+	//SHADER PATHS
+#ifdef _DEBUG
 	const std::string vs_path = "../x64/Debug/DeferredVertexShader.cso";
-	ID3D11VertexShader* vertexShader = nullptr;
-
 	const std::string ps_path = "../x64/Debug/DeferredPixelShader.cso";
+#else
+	const std::string vs_path = "../x64/Release/DeferredVertexShader.cso";
+	const std::string ps_path = "../x64/Release/DeferredPixelShader.cso";
+#endif
+
+	//SHADERS
+	ID3D11VertexShader* vertexShader = nullptr;
 	ID3D11PixelShader* pixelShader = nullptr;
 
 	//INPUT LAYOUT
@@ -153,6 +159,7 @@ public:
 			rtvs[i]->Release();
 			srvs[i]->Release();
 		}
+
 		screenQuadBuffer->Release();
 		vertexShader->Release();
 		pixelShader->Release();

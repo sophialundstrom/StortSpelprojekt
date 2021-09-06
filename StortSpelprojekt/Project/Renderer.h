@@ -19,4 +19,5 @@ public:
 	void Bind(std::shared_ptr<Drawable> drawable) { drawables.push_back(drawable); }
 	RendererType Type() { return type; }
 	void Clear() { drawables.clear(); }
+	virtual void Render() = 0;
 };	

@@ -2,21 +2,29 @@
 #include "Renderer.h"
 #include "ParticleSystem.h"
 
+template <typename T>
 class ParticleRenderer : public Renderer
 {
 	//BUFFERS
-	ID3D11Buffer* camera_buf = nullptr;
-	ID3D11Buffer* extents_buf = nullptr;
-	ID3D11Buffer* matrix_buf = nullptr;
+	ID3D11Buffer* extentsBuf = nullptr;
+	ID3D11Buffer* matrixBuf = nullptr;
+
+	//SHADER PATHS
+#ifdef _DEBUG
+	const std::string vs_path = "../x64/Debug/ParticleVertexShader.cso";
+	const std::string gs_path = "../x64/Debug/ParticleGeometryShader.cso";
+	const std::string deferred_ps_path = "../x64/Debug/DeferredParticlePixelShader.cso";
+	const std::string forward_ps_path = "../x64/Debug/ForwardParticlePixelShader.cso";
+#else
+	const std::string vs_path = "../x64/Release/ParticleVertexShader.cso";
+	const std::string gs_path = "../x64/Release/ParticleGeometryShader.cso";
+	const std::string deferred_ps_path = "../x64/Release/DeferredParticlePixelShader.cso";
+	const std::string forward_ps_path = "../x64/Release/ForwardParticlePixelShader.cso";
+#endif
 
 	//SHADERS
-	const std::string vs_path = "../x64/Debug/ParticleVertexShader.cso";
 	ID3D11VertexShader* vertexShader = nullptr;
-
-	const std::string gs_path = "../x64/Debug/ParticleGeometryShader.cso";
 	ID3D11GeometryShader* geometryShader = nullptr;
-
-	const std::string ps_path = "../x64/Debug/ParticlePixelShader.cso";
 	ID3D11PixelShader* pixelShader = nullptr;
 
 	//INPUT LAYOUT
@@ -25,15 +33,18 @@ public:
 	ParticleRenderer()
 	{
 		//BUFFERS
-		CreateBuffer(camera_buf);
-		CreateBuffer(extents_buf);
-		CreateBuffer(matrix_buf, sizeof(Matrix));
+		CreateBuffer(extentsBuf);
+		CreateBuffer(matrixBuf, sizeof(Matrix));
 
 		//SHADERS
 		std::string byteCode;
 		LoadShader(vertexShader, vs_path, byteCode);
 		LoadShader(geometryShader, gs_path);
-		LoadShader(pixelShader, ps_path);
+
+		if constexpr (std::is_same_v<Forward, T>)
+			LoadShader(pixelShader, forward_ps_path);
+		else
+			LoadShader(pixelShader, deferred_ps_path);
 
 		//INPUT LAYOUT
 		D3D11_INPUT_ELEMENT_DESC inputDesc[] =
@@ -55,17 +66,11 @@ public:
 
 	~ParticleRenderer()
 	{
-		//BUFFERS
-		camera_buf->Release();
-		extents_buf->Release();
-		matrix_buf->Release();
-
-		//SHADERS
+		extentsBuf->Release();
+		matrixBuf->Release();
 		vertexShader->Release();
 		geometryShader->Release();
 		pixelShader->Release();
-
-		//INPUT LAYOUT
 		inputLayout->Release();
 	}
 
@@ -83,12 +88,14 @@ public:
 		//SHADERS
 		BindShaders(vertexShader, nullptr, nullptr, geometryShader, pixelShader);
 
-		//BUFFERS
-		UpdateBuffer(camera_buf, ShaderData::Inst().cameraPosition);
-		BindBuffer(camera_buf, Shader::GS);
+		//SAVE SHADER DATA INSTANCE
+		auto& shaderData = ShaderData::Inst();
 
-		UpdateBuffer(matrix_buf, ShaderData::Inst().cameraMatrix);
-		BindBuffer(matrix_buf, Shader::GS, 1);
+		//BUFFERS
+		BindBuffer(shaderData.cameraPosition_buf, Shader::GS);
+
+		UpdateBuffer(matrixBuf, shaderData.cameraMatrix);
+		BindBuffer(matrixBuf, Shader::GS, 1);
 
 		for (auto& drawable : drawables)
 		{
@@ -96,8 +103,8 @@ public:
 			if (!particleSystem)
 				continue;
 
-			UpdateBuffer(extents_buf, particleSystem->GetParticleExtents());
-			BindBuffer(extents_buf, Shader::GS, 2);
+			UpdateBuffer(extentsBuf, particleSystem->GetParticleExtents());
+			BindBuffer(extentsBuf, Shader::GS, 2);
 
 			particleSystem->Draw();
 		}

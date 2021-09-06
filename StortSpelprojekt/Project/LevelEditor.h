@@ -1,7 +1,7 @@
 #pragma once
 #include "Editor.h"
 #include "Scene.h"
-#include "ForwardModelRenderer.h"
+#include "ModelRenderer.h"
 #include "GameState.h"
 
 class LevelEditor : public Editor, public GameState
@@ -10,7 +10,7 @@ private:
 	Scene scene;
 
 	//ADD RENDERERS
-	ForwardModelRenderer modelRenderer;
+	ModelRenderer<Forward, false> modelRenderer;
 
 	// Inherited via Editor
 	virtual void Save(const std::string& file) override;

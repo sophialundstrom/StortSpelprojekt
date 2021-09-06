@@ -10,8 +10,10 @@ class ShaderData : public Singleton<ShaderData>
 	//friend class ModelRenderer;
 	friend class ShadowRenderer;
 	friend class DisplacementRenderer;
-	friend class ParticleRenderer;
 	friend class DeferredRenderer;
+
+	template<class, bool> friend class ModelRenderer;
+	template<class> friend class ParticleRenderer;
 
 	friend class ForwardParticleRenderer;
 	friend class ForwardModelRenderer;
@@ -54,20 +56,20 @@ public:
 
 		shadowMap = ShadowMap(4096);
 
-		//INPUT LAYOUT
-		D3D11_INPUT_ELEMENT_DESC inputDesc[] =
-		{
-			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"TEXTURECOORDS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
-		};
+		////INPUT LAYOUT
+		//D3D11_INPUT_ELEMENT_DESC inputDesc[] =
+		//{
+		//	{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		//	{"TEXTURECOORDS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		//	{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		//};
 
-		HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), layoutByteCode.c_str(), layoutByteCode.length(), &inputLayout);
-		if FAILED(hr)
-		{
-			Print("FAILED TO CREATE INPUT LAYOUT");
-			return;
-		}
+		//HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), layoutByteCode.c_str(), layoutByteCode.length(), &inputLayout);
+		//if FAILED(hr)
+		//{
+		//	Print("FAILED TO CREATE INPUT LAYOUT");
+		//	return;
+		//}
 
 		//SAMPLER
 		D3D11_SAMPLER_DESC samplerDesc = {};
@@ -81,7 +83,7 @@ public:
 		samplerDesc.MinLOD = 0;
 		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-		hr = Graphics::Inst().GetDevice().CreateSamplerState(&samplerDesc, &wrapSampler);
+		HRESULT hr = Graphics::Inst().GetDevice().CreateSamplerState(&samplerDesc, &wrapSampler);
 		if FAILED(hr)
 		{
 			Print("FAILED TO CREATE WRAP SAMPLER");
@@ -96,7 +98,7 @@ public:
 	{
 		cameraPosition_buf->Release();
 		matrices_buf->Release();
-		inputLayout->Release();
+		//inputLayout->Release();
 		wrapSampler->Release();
 		shadowMap.ShutDown();
 	}

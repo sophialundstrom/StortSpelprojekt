@@ -23,7 +23,7 @@ public:
 		//renderers.insert(std::make_pair(RendererType::MODEL, std::make_unique<ModelRenderer>(shaderData)));
 
 		//PARTICLE
-		renderers.insert(std::make_pair(RendererType::PARTICLE, std::make_unique<ParticleRenderer>()));
+		//renderers.insert(std::make_pair(RendererType::PARTICLE, std::make_unique<ParticleRenderer>()));
 
 		//SHADOW
 		renderers.insert(std::make_pair(RendererType::SHADOW, std::make_unique<ShadowRenderer>()));

@@ -78,16 +78,19 @@ public:
 	}
 
 	//BIND MATERIAL AT GIVEN INDEX
-	void BindMaterial(UINT materialID)
+	void BindMaterial(UINT materialID, bool useMaterial)
 	{
 		std::shared_ptr<Material> material = materials[materialID];
 
 		if (currentMaterial != material)
 		{
-			UpdateBuffer(materialBuffer, material->data);
-			Graphics::Inst().GetContext().PSSetConstantBuffers(0, 1, &materialBuffer);
+			if (useMaterial)
+			{
+				UpdateBuffer(materialBuffer, material->data);
+				Graphics::Inst().GetContext().PSSetConstantBuffers(0, 1, &materialBuffer);
+			}
+	
 			currentMaterial = material;
-
 			material->BindDiffuseTextures();
 		}
 	}

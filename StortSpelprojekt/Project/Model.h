@@ -34,7 +34,7 @@ public:
 		this->parent = other.parent;
 	}
 
-	void Draw(bool useMaterial = true) { if (useMaterial) Resources::Inst().BindMaterial(mesh.materialID); Resources::Inst().Draw(mesh.vertexCount, mesh.bufferID); }
+	void Draw(bool useTextures = true, bool useMaterial = true) { if (useTextures) Resources::Inst().BindMaterial(mesh.materialID, useMaterial); Resources::Inst().Draw(mesh.vertexCount, mesh.bufferID); }
 
 	void ApplyMaterial(const std::string& name)
 	{

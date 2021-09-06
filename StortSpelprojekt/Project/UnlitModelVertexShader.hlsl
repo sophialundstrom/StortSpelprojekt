@@ -8,9 +8,7 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 position : SV_POSITION;
-    float4 worldPosition : WORLDPOSITION;
-    float2 texCoords : TEXCOORDS;
-    float3 normal : NORMAL;
+    float2 texCoords : TEXTURECOORDS;
 };
 
 cbuffer MATRICES : register(b0)
@@ -22,15 +20,10 @@ cbuffer MATRICES : register(b0)
 VS_OUTPUT main(VS_INPUT input)
 {
     VS_OUTPUT output;
-    
-    float4 position = float4(input.position, 1.0f);
-    
-    output.worldPosition = mul(position, world);
-    output.position = mul(output.worldPosition, viewPerspective);
+
+    output.position = mul(mul(float4(input.position, 1.0f), world), viewPerspective);
     
     output.texCoords = input.texCoords;
-    
-    output.normal = mul(float4(input.normal, 0.0f), world);
 
     return output;
 }
