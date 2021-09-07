@@ -1,6 +1,5 @@
 #pragma once
-#include "Renderer.h"
-#include "DirectXHelp.h"
+#include "ShaderData.h"
 
 class DeferredRenderer
 {

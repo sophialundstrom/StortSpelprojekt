@@ -1,5 +1,5 @@
 #pragma once
-#include "Renderer.h"
+#include "ShaderData.h"
 #include "Model.h"
 
 //AVAILABLE COMBINATIONS
@@ -7,7 +7,7 @@
 //ModelRenderer<Forward, true>		<=> Lit forward rendering (only one directionallight & one pointlight, material preview reason)
 //ModelRenderer<Forward, false>		<=> Unlit forward (only textures)
 
-template <typename T, bool isLit>
+template <RenderMethod method, bool isLit>
 class ModelRenderer : public Renderer
 {
 private:
@@ -56,35 +56,22 @@ public:
 		{
 			LoadShader(vertexShader, vs_path, byteCode);
 
-			if constexpr (std::is_same_v<Forward, T>)
+			if (method == FORWARD)
 				LoadShader(pixelShader, forward_ps_path);
-
-			else if constexpr (std::is_same_v<Deferred, T>)
-				LoadShader(pixelShader, deferred_ps_path);
-
 			else
-			{
-				Print("TEMPLATE FIRST PARAM INVALID");
-				return;
-			}
+				LoadShader(pixelShader, deferred_ps_path);
 		}
 
 		else
 		{
 			LoadShader(vertexShader, unlit_vs_path, byteCode);
 
-			if constexpr (std::is_same_v<Forward, T>)
+			if (method == FORWARD)
 				LoadShader(pixelShader, unlit_forward_ps_path);
-
-			else if constexpr (std::is_same_v<Deferred, T>)
-			{
-				Print("UNLIT MODEL RENDERER ONLY AVALIABLE IN FORWARD");
-				return;
-			}
 
 			else
 			{
-				Print("TEMPLATE FIRST PARAM INVALID");
+				Print("UNLIT MODEL RENDERER ONLY AVALIABLE IN FORWARD");
 				return;
 			}
 		}

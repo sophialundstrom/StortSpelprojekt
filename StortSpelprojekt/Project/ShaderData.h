@@ -1,4 +1,5 @@
 #pragma once
+#include "Renderer.h"
 #include "DirectXHelp.h"
 #include "Camera.h"
 #include "Light.h"
@@ -7,21 +8,16 @@
 
 class ShaderData : public Singleton<ShaderData>
 {
-	//friend class ModelRenderer;
 	friend class ShadowRenderer;
-	friend class DisplacementRenderer;
 	friend class DeferredRenderer;
 
-	template<class, bool> friend class ModelRenderer;
-	template<class> friend class ParticleRenderer;
-
-	friend class ForwardParticleRenderer;
-	friend class ForwardModelRenderer;
+	template<RenderMethod, bool> friend class ModelRenderer;
+	template<RenderMethod> friend class ParticleRenderer;
 private:
 	//CAMERA
 	Matrix cameraMatrix;
 	Vector3 cameraPosition;
-	ID3D11Buffer* cameraPosition_buf;
+	ID3D11Buffer* cameraPositionBuf;
 
 	//DIRECTIONAL LIGHT
 	Matrix lightMatrix;
@@ -51,25 +47,10 @@ public:
 	ShaderData(std::string layoutByteCode)
 		:Singleton(this)
 	{
-		CreateBuffer(cameraPosition_buf);
+		CreateBuffer(cameraPositionBuf);
 		CreateBuffer(matrices_buf, sizeof(Matrices));
 
 		shadowMap = ShadowMap(4096);
-
-		////INPUT LAYOUT
-		//D3D11_INPUT_ELEMENT_DESC inputDesc[] =
-		//{
-		//	{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		//	{"TEXTURECOORDS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		//	{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
-		//};
-
-		//HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), layoutByteCode.c_str(), layoutByteCode.length(), &inputLayout);
-		//if FAILED(hr)
-		//{
-		//	Print("FAILED TO CREATE INPUT LAYOUT");
-		//	return;
-		//}
 
 		//SAMPLER
 		D3D11_SAMPLER_DESC samplerDesc = {};
@@ -96,9 +77,8 @@ public:
 
 	~ShaderData()
 	{
-		cameraPosition_buf->Release();
+		cameraPositionBuf->Release();
 		matrices_buf->Release();
-		//inputLayout->Release();
 		wrapSampler->Release();
 		shadowMap.ShutDown();
 	}
@@ -111,7 +91,7 @@ public:
 
 		matrices.viewPerspective = cameraMatrix;
 		
-		UpdateBuffer(cameraPosition_buf, cameraPosition);
+		UpdateBuffer(cameraPositionBuf, cameraPosition);
 
 		//DIRECTIONAL LIGHT
 		lightMatrix = directionalLight.GetMatrix();
@@ -128,6 +108,6 @@ public:
 
 		cameraPosition = camera.GetPosition();
 
-		UpdateBuffer(cameraPosition_buf, cameraPosition);
+		UpdateBuffer(cameraPositionBuf, cameraPosition);
 	}
 };

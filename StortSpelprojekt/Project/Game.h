@@ -1,13 +1,16 @@
 #pragma once
 #include "GameState.h"
-#include "RenderGraph.h"
+#include "ModelRenderer.h"
+#include "ParticleRenderer.h"
+#include "ShadowRenderer.h"
+#include "DeferredRenderer.h"
 
 // The state subclass for the level/game
 class Game : public GameState
 {
 private:
-    ParticleRenderer<Deferred> particleRenderer;
-    ModelRenderer<Deferred, true> modelRenderer;
+    ParticleRenderer<DEFERRED> particleRenderer;
+    ModelRenderer<DEFERRED, true> modelRenderer;
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
 

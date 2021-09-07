@@ -1,5 +1,5 @@
 #pragma once
-#include "Renderer.h"
+#include "ShaderData.h"
 #include "Model.h"
 
 class ShadowRenderer : public Renderer

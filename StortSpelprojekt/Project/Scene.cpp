@@ -37,10 +37,10 @@ void Scene::AddModel(const std::string& file)
 
 void Scene::AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type)
 {
-	std::string name = "Particle System";
+	std::string name = "ParticleSystem";
 	UINT numInstances = 0;
 	for (auto& [name, drawable] : drawables)
-		if (name.find("Particle System") != std::string::npos)
+		if (name.find("ParticleSystem") != std::string::npos)
 			numInstances++;
 
 	if (numInstances > 0)

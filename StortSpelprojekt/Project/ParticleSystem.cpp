@@ -2,6 +2,7 @@
 
 #include "RenderGraph.h"
 #include "FileSystem.h"
+#include "Time.h"
 #include <fstream>
 
 ParticleSystem::ParticleSystem(const std::string& file, bool preview)

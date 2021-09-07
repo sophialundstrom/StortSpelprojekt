@@ -5,11 +5,8 @@ C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\Displac
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DisplacementHullShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DisplacementPixelShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DisplacementVertexShader.cso
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ModelGeometryShader.cso
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ModelPixelShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ModelVertexShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ParticleGeometryShader.cso
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ParticlePixelShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ParticleVertexShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ShadowDomainShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ShadowHullShader.cso
@@ -17,5 +14,8 @@ C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ShadowV
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\UVAnimationPixelShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\UVAnimationVertexShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardModelPixelShader.cso
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardModelVertexShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardParticlePixelShader.cso
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredModelPixelShader.cso
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredParticlePixelShader.cso
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitForwardModelPixelShader.cso
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitModelVertexShader.cso

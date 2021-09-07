@@ -10,7 +10,7 @@ private:
 	Scene scene;
 
 	//ADD RENDERERS
-	ModelRenderer<Forward, false> modelRenderer;
+	ModelRenderer<FORWARD, false> modelRenderer;
 
 	// Inherited via Editor
 	virtual void Save(const std::string& file) override;

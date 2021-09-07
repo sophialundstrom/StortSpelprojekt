@@ -1,26 +1,26 @@
-﻿  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardModelPixelShader.cso
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\ForwardModelVertexShader.hlsl(33,5-58): warning X3206: implicit truncation of vector type
-  
-  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardModelVertexShader.cso
-  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardParticlePixelShader.cso
+﻿  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredPixelShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardModelPixelShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredModelPixelShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredParticlePixelShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitForwardModelPixelShader.cso
+  compilation object save succeeded; see C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitModelVertexShader.cso
   Camera.cpp
-  Graphics.cpp
+  Game.cpp
   LevelEditor.cpp
   Main.cpp
-  Model.cpp
+  OldModel.cpp
   ParticleEditor.cpp
   ParticleSystem.cpp
   Scene.cpp
   Terrain.cpp
   Texture.cpp
   Window.cpp
-C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\Window.cpp(60,25): warning C4390: ';': empty controlled statement found; is this the intent?
 ImGui.lib(imgui_impl_dx11.obj) : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' specification
 LINK : warning LNK4098: defaultlib 'LIBCMTD' conflicts with use of other libs; use /NODEFAULTLIB:library
   Generating code
-  1880 of 2472 functions (76.1%) were compiled, the rest were copied from previous compilation.
-    938 functions were new in current compilation
-    88 functions had inline decision re-evaluated but remain unchanged
+  1591 of 2045 functions (77.8%) were compiled, the rest were copied from previous compilation.
+    160 functions were new in current compilation
+    78 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
 ImGui.lib(imgui.obj) : warning LNK4099: PDB 'ImGui.pdb' was not found with 'ImGui.lib(imgui.obj)' or at 'C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ImGui.pdb'; linking object as if no debug info
 ImGui.lib(imgui_draw.obj) : warning LNK4099: PDB 'ImGui.pdb' was not found with 'ImGui.lib(imgui_draw.obj)' or at 'C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ImGui.pdb'; linking object as if no debug info

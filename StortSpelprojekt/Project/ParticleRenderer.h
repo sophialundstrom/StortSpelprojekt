@@ -1,8 +1,8 @@
 #pragma once
-#include "Renderer.h"
+#include "ShaderData.h"
 #include "ParticleSystem.h"
 
-template <typename T>
+template <RenderMethod method>
 class ParticleRenderer : public Renderer
 {
 	//BUFFERS
@@ -41,7 +41,7 @@ public:
 		LoadShader(vertexShader, vs_path, byteCode);
 		LoadShader(geometryShader, gs_path);
 
-		if constexpr (std::is_same_v<Forward, T>)
+		if (method == FORWARD)
 			LoadShader(pixelShader, forward_ps_path);
 		else
 			LoadShader(pixelShader, deferred_ps_path);
@@ -92,7 +92,7 @@ public:
 		auto& shaderData = ShaderData::Inst();
 
 		//BUFFERS
-		BindBuffer(shaderData.cameraPosition_buf, Shader::GS);
+		BindBuffer(shaderData.cameraPositionBuf, Shader::GS);
 
 		UpdateBuffer(matrixBuf, shaderData.cameraMatrix);
 		BindBuffer(matrixBuf, Shader::GS, 1);

@@ -311,6 +311,9 @@
     <ClInclude Include="States.h">
       <Filter>Header Files\Application\GameStates</Filter>
     </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\Application\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DisplacementVertexShader.hlsl">
