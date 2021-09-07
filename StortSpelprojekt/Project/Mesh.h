@@ -17,7 +17,7 @@ struct Mesh
 		:name(mesh->mName.C_Str())
 	{
 		auto& resources = Resources::Inst();
-		std::vector<TempVertex> vertices(mesh->mNumVertices);
+		std::vector<Vertex> vertices(mesh->mNumVertices);
 
 		for (UINT i = 0; i < mesh->mNumVertices; ++i)
 		{
@@ -40,7 +40,7 @@ struct Mesh
 		materialID = resources.NumMaterials();
 
 		ID3D11Buffer* buffer;
-		CreateVertexBuffer(buffer, sizeof(TempVertex), sizeof(TempVertex) * vertexCount, vertices.data());
+		CreateVertexBuffer(buffer, sizeof(Vertex), sizeof(Vertex) * vertexCount, vertices.data());
 
 		resources.AddVertexBuffer(mesh->mName.C_Str(), buffer);
 	}

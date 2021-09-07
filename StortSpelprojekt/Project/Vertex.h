@@ -1,7 +1,7 @@
 #pragma once
 #include "Math.h"
 
-struct TempVertex
+struct Vertex
 {
 	Vector3 position;
 	Vector2 texCoords;

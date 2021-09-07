@@ -1,20 +1,20 @@
 #pragma once
 #include "MaterialLoader.h"
 #include "Drawable.h"
-#include "Mesh.h"
+#include "AnimatedMesh.h"
 
 #include "assimp\Importer.hpp"
 #include "assimp\postprocess.h"
 #include "Time.h"
 
-class Model : public Drawable
+class AnimatedModel : public Drawable
 {
 private:
-	Mesh mesh;
+	AnimatedMesh mesh;
+	Skeleton skeleton;
 public:
-	Model(const std::string& fileName)
+	AnimatedModel(const std::string& fileName)
 	{
-		
 		Timer timer;
 		timer.Start();
 
@@ -27,23 +27,28 @@ public:
 		}
 
 		if (scene->HasMeshes())
-			mesh = Mesh(scene->mMeshes[0]);
-
+			mesh = AnimatedMesh(scene->mMeshes[0], skeleton);
 
 		if (scene->HasMaterials())
 			MaterialLoader::Load(scene->mMaterials[0]);
+
+		if (scene->HasAnimations())
 
 
 		Print(timer.DeltaTime());
 	}
 
-	Model(const Model& other)
-		:mesh(other.mesh) 
+	AnimatedModel(const AnimatedModel& other)
+		:mesh(other.mesh)
 	{
 		this->parent = other.parent;
 	}
 
-	void Draw(bool useTextures = true, bool useMaterial = true) { if (useTextures) Resources::Inst().BindMaterial(mesh.materialID, useMaterial); Resources::Inst().Draw(mesh.vertexCount, mesh.bufferID); }
+	void Draw(bool useTextures = true, bool useMaterial = true) 
+	{ 
+		if (useTextures) Resources::Inst().BindMaterial(mesh.materialID, useMaterial); 
+		Resources::Inst().Draw(mesh.vertexCount, mesh.bufferID); 
+	}
 
 	void ApplyMaterial(const std::string& name)
 	{

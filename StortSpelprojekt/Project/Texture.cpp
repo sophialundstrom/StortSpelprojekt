@@ -3,7 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION  
 #include "stb_image.h"
 
-Texture::Texture(std::string path, std::string file)
+Texture::Texture(const std::string& path, std::string file)
 	:file(file)
 {
 	int imgWidth, imgHeight;

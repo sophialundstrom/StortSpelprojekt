@@ -10,7 +10,7 @@ typedef enum { ID_INVALID = 9999 } ID_FLAG;
 class Resources : public Singleton<Resources>
 {
 private:
-	const UINT stride = sizeof(TempVertex);
+	const UINT stride = sizeof(Vertex);
 	const UINT offset = 0;
 
 	std::shared_ptr<Material> currentMaterial = nullptr;

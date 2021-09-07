@@ -10,7 +10,7 @@ private:
 public:
 	Texture() = default;
 	~Texture() { srv->Release(); }
-	Texture(std::string path, std::string file);
+	Texture(const std::string& path, std::string file);
 
 	void Bind(int slot = 0, Shader shader = Shader::PS)
 	{

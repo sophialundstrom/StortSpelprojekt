@@ -22,8 +22,8 @@ namespace MaterialLoader
 
 		aiString path;
 		UINT numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
-		for (UINT i = 0; i < numTextures; ++i)
-			if (material->GetTexture(aiTextureType_DIFFUSE, i, &path) == AI_SUCCESS)
+		if (numTextures > 0)
+			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS)
 			{
 				std::string fileName = std::string(path.C_Str()).substr(std::string(path.C_Str()).find_last_of("\\") + 1);
 				newMaterial->diffuseTextures.emplace_back(new Texture("Textures/" + fileName, fileName));

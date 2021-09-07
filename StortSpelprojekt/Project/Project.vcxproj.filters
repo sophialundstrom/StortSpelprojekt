@@ -115,6 +115,9 @@
     <Filter Include="Resource Files\OLD STUFF\Displacement">
       <UniqueIdentifier>{526370f5-da8d-4e61-ac87-372fcd425fd1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Scene\Drawable\AnimatedModel">
+      <UniqueIdentifier>{53cac745-6011-4dc6-926c-5a8ca3f94801}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -172,9 +175,6 @@
     </ClInclude>
     <ClInclude Include="Drawable.h">
       <Filter>Header Files\Application\Scene\Drawable</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry.h">
-      <Filter>Header Files\Application\Scene\Drawable\Model</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files\Application\Scene\Game</Filter>
@@ -310,6 +310,27 @@
     </ClInclude>
     <ClInclude Include="Transform.h">
       <Filter>Header Files\Application\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedVertex.h">
+      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedMesh.h">
+      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedModel.h">
+      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Skeleton.h">
+      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
+    </ClInclude>
+    <ClInclude Include="AssimpDirectXMathConverter.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
