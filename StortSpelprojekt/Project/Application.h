@@ -30,7 +30,7 @@ public:
 		UINT clientHeight = window.ClientHeight();
 
 		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window.GetHWND());
-		shaderData = std::make_unique<ShaderData>("");
+		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
 
 		ImGUI::Initialize();

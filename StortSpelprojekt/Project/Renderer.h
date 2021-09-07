@@ -1,8 +1,6 @@
 #pragma once
 #include "Drawable.h"
 #include "DirectXHelp.h"
-#include "Model.h"
-#include "ParticleSystem.h"
 #include <memory>
 #include <map>
 

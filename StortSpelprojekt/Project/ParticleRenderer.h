@@ -38,13 +38,19 @@ public:
 
 		//SHADERS
 		std::string byteCode;
-		LoadShader(vertexShader, vs_path, byteCode);
-		LoadShader(geometryShader, gs_path);
+		if (!LoadShader(vertexShader, vs_path, byteCode))
+			return;
+
+		if (!LoadShader(geometryShader, gs_path))
+			return;
 
 		if (method == FORWARD)
-			LoadShader(pixelShader, forward_ps_path);
+			if (!LoadShader(pixelShader, forward_ps_path))
+				return;
 		else
-			LoadShader(pixelShader, deferred_ps_path);
+			if (!LoadShader(pixelShader, deferred_ps_path))
+				return;
+		Print("SUCCEEDED LOADING SHADERS", "PARTICLE RENDERER");
 
 		//INPUT LAYOUT
 		D3D11_INPUT_ELEMENT_DESC inputDesc[] =
@@ -59,9 +65,11 @@ public:
 		HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
 		if FAILED(hr)
 		{
-			Print("FAILED TO CREATE INPUT LAYOUT");
+			Print("FAILED TO CREATE INPUT LAYOUT", "PARTICLE RENDERER");
 			return;
 		}
+
+		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "PARTICLE RENDERER");
 	}
 
 	~ParticleRenderer()

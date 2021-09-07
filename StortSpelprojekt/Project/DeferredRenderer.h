@@ -70,10 +70,11 @@ public:
 			hr = Graphics::Inst().GetDevice().CreateTexture2D(&textureDesc, nullptr, &textures[i]);
 			if FAILED(hr)
 			{
-				Print("FAILED TO CREATE TEXTURE2D");
+				Print("FAILED TO CREATE TEXTURE2D", "DEFERRED RENDERER");
 				return;
 			}
 		}
+		Print("SUCCEEDED TO CREATE TEXTURE2D", "DEFERRED RENDERER");
 
 		//RENDER TARGETS
 		D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
@@ -85,10 +86,11 @@ public:
 			hr = Graphics::Inst().GetDevice().CreateRenderTargetView(textures[i], &rtvDesc, &rtvs[i]);
 			if FAILED(hr)
 			{
-				Print("FAILED TO CREATE RENDER TARGET");
+				Print("FAILED TO CREATE RENDER TARGET", "DEFERRED RENDERER");
 				return;
 			}
 		}
+		Print("SUCCEEDED TO CREATE RENDER TARGETS", "DEFERRED RENDERER");
 
 		//SHADER RESOURCE VIEW
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -102,10 +104,11 @@ public:
 			hr = Graphics::Inst().GetDevice().CreateShaderResourceView(textures[i], &srvDesc, &srvs[i]);
 			if FAILED(hr)
 			{
-				Print("FAILED TO CREATE SHADER RESOURCE VIEW");
+				Print("FAILED TO CREATE SHADER RESOURCE VIEW", "DEFERRED RENDERER");
 				return;
 			}
 		}
+		Print("SUCCEEDED TO CREATE SHADER RESOURCE VIEW", "DEFERRED RENDERER");
 
 		//RELEASE TEXTURES
 		for (UINT i = 0; i < numTargets; ++i)
@@ -113,8 +116,11 @@ public:
 
 		//SHADERS
 		std::string byteCode;
-		LoadShader(vertexShader, vs_path, byteCode);
-		LoadShader(pixelShader, ps_path);
+		if (!LoadShader(vertexShader, vs_path, byteCode))
+			return;
+		if (!LoadShader(pixelShader, ps_path))
+			return;
+		Print("SUCCEEDED LOADING SHADERS", "DEFERRED RENDERER");
 
 		//INPUT LAYOUT
 		D3D11_INPUT_ELEMENT_DESC inputDesc[] =
@@ -126,9 +132,10 @@ public:
 		hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
 		if FAILED(hr)
 		{
-			Print("FAILED TO CREATE INPUT LAYOUT");
+			Print("FAILED TO CREATE INPUT LAYOUT", "DEFERRED RENDERER");
 			return;
 		}
+		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "DEFERRED RENDERER");
 
 		//SCREEN QUAD
 		DeferredVertex screenQuad[] =
@@ -149,6 +156,8 @@ public:
 		CreateBuffer(numLights_buf);
 		CreateBuffer(globalAmbient_buf);
 		CreateStructuredBuffer(lights_buf, lights_buf_srv, sizeof(PointLight), MAX_LIGHTS * sizeof(PointLight));
+
+		Print("SUCCEEDED TO INITIALIZE DEFERRED RENDERER");
 	}
 
 	~DeferredRenderer()

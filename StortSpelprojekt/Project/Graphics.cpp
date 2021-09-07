@@ -1,53 +1,49 @@
 #include "Graphics.h"
 
-Graphics::Graphics(UINT windowWidth, UINT windowHeight, HWND window)
+Graphics::Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd)
 	:Singleton(this)
 {
-	if FAILED(CreateDeviceSwapchain(windowWidth, windowHeight, window))
+	if FAILED(CreateDeviceSwapchain(clientWidth, clientHeight, hWnd))
 	{
-		Print("FAILED TO CREATE DEVICE AND SWAP CHAIN");
+		Print("FAILED TO CREATE DEVICE AND SWAP CHAIN", "GRAPHICS");
 		return;
 	}
+	Print("SUCCEEDED TO CREATE DEVICE AND SWAP CHAIN", "GRAPHICS");
 
 	if FAILED(CreateRenderTarget())
 	{
-		Print("FAILED TO CREATE RENDER TARGET");
+		Print("FAILED TO CREATE RENDER TARGET", "GRAPHICS");
 		return;
 	}
+	Print("SUCCEEDED TO CREATE RENDER TARGET", "GRAPHICS");
 
-	if FAILED(CreateDepthStencil(windowWidth, windowHeight))
+	if FAILED(CreateDepthStencil(clientWidth, clientHeight))
 	{
-		Print("FAILED TO CREATE DEPTH STENCIL");
+		Print("FAILED TO CREATE DEPTH STENCIL", "GRAPHICS");
 		return;
 	}
+	Print("SUCCEEDED TO CREATE DEPTH STENCIL", "GRAPHICS");
 
-	if FAILED(CreateRasterizerStates())
-	{
-		Print("FAILED TO CREATE RASTERIZER STATES");
-		return;
-	}
+	CreateViewport(clientWidth, clientHeight);
 
-	CreateViewport(windowWidth, windowHeight);
+	Print("SUCCEEDED TO INITIALIZE GRAPHICS");
 }
 
 Graphics::~Graphics()
 {
-	noCullState->Release();
-	noCullWireframeState->Release();
 	dsView->Release();
 	dsTexture->Release();
 	backBuffer->Release();
 	swapChain->Release();
-
 	context->Release();
 	device->Release();
 }
 
-HRESULT Graphics::CreateDeviceSwapchain(UINT windowWidth, UINT windowHeight, HWND window)
+HRESULT Graphics::CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-	swapChainDesc.BufferDesc.Width = windowWidth;
-	swapChainDesc.BufferDesc.Height = windowHeight;
+	swapChainDesc.BufferDesc.Width = clientWidth;
+	swapChainDesc.BufferDesc.Height = clientHeight;
 	swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
 	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -59,7 +55,7 @@ HRESULT Graphics::CreateDeviceSwapchain(UINT windowWidth, UINT windowHeight, HWN
 
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.BufferCount = 1;
-	swapChainDesc.OutputWindow = window;
+	swapChainDesc.OutputWindow = hWnd;
 	swapChainDesc.Windowed = false;
 
 #ifdef _DEBUG
@@ -101,13 +97,13 @@ HRESULT Graphics::CreateRenderTarget()
 	return hr;
 }
 
-HRESULT Graphics::CreateDepthStencil(UINT windowWidth, UINT windowHeight)
+HRESULT Graphics::CreateDepthStencil(UINT clientWidth, UINT clientHeight)
 {
 	HRESULT hr;
 	D3D11_TEXTURE2D_DESC textureDesc = {};
 	
-	textureDesc.Width = windowWidth;
-	textureDesc.Height = windowHeight;
+	textureDesc.Width = clientWidth;
+	textureDesc.Height = clientHeight;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -128,32 +124,10 @@ HRESULT Graphics::CreateDepthStencil(UINT windowWidth, UINT windowHeight)
 	return hr;
 }
 
-HRESULT Graphics::CreateRasterizerStates()
+void Graphics::CreateViewport(UINT clientWidth, UINT clientHeight)
 {
-	HRESULT hr;
-
-	D3D11_RASTERIZER_DESC desc = {};
-	desc.FillMode = D3D11_FILL_WIREFRAME;
-	desc.CullMode = D3D11_CULL_NONE;
-	desc.DepthBias = true;
-	hr = device->CreateRasterizerState(&desc, &noCullWireframeState);
-
-	if FAILED(hr)
-	{
-		Print("FAILED TO CREATE WIREFRAME RASTERIZER STATE");
-		return hr;
-	}
-
-	desc.FillMode = D3D11_FILL_SOLID;
-	hr = device->CreateRasterizerState(&desc, &noCullState);
-
-	return hr;
-}
-
-void Graphics::CreateViewport(UINT windowWidth, UINT windowHeight)
-{
-	viewport.Width = static_cast<float>(windowWidth);
-	viewport.Height = static_cast<float>(windowHeight);
+	viewport.Width = static_cast<float>(clientWidth);
+	viewport.Height = static_cast<float>(clientHeight);
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.MinDepth = 0;

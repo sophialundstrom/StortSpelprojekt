@@ -54,27 +54,40 @@ public:
 
 		if (isLit)
 		{
-			LoadShader(vertexShader, vs_path, byteCode);
+			if (!LoadShader(vertexShader, vs_path, byteCode))
+				return;
 
 			if (method == FORWARD)
-				LoadShader(pixelShader, forward_ps_path);
+			{
+				if (!LoadShader(pixelShader, forward_ps_path))
+					return;
+			}
+				
 			else
-				LoadShader(pixelShader, deferred_ps_path);
+			{
+				if (!LoadShader(pixelShader, deferred_ps_path))
+					return;
+			}
 		}
 
 		else
 		{
-			LoadShader(vertexShader, unlit_vs_path, byteCode);
+			if (!LoadShader(vertexShader, unlit_vs_path, byteCode))
+				return;
 
 			if (method == FORWARD)
-				LoadShader(pixelShader, unlit_forward_ps_path);
-
+			{
+				if (!LoadShader(pixelShader, unlit_forward_ps_path))
+					return;
+			}
+			
 			else
 			{
 				Print("UNLIT MODEL RENDERER ONLY AVALIABLE IN FORWARD");
 				return;
 			}
 		}
+		Print("SUCCEEDED LOADING SHADERS", "MODEL RENDERER");
 
 		//INPUT LAYOUT
 		D3D11_INPUT_ELEMENT_DESC inputDesc[] =
@@ -87,9 +100,12 @@ public:
 		HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
 		if FAILED(hr)
 		{
-			Print("FAILED TO CREATE INPUT LAYOUT");
+			Print("FAILED TO CREATE INPUT LAYOUT", "MODEL RENDERER");
 			return;
 		}
+		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "MODEL RENDERER");
+
+		Print("SUCCEEDED TO INITIALIZE MODEL RENDERER");
 	}
 
 	~ModelRenderer()

@@ -197,7 +197,6 @@
     <ClInclude Include="OldModel.h" />
     <ClInclude Include="OldModelRenderer.h" />
     <ClInclude Include="ParticleEditor.h" />
-    <ClInclude Include="ForwardParticleRenderer.h" />
     <ClInclude Include="ParticleRenderer.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Player.h" />

@@ -1,6 +1,5 @@
 #pragma once
 #include "Renderer.h"
-#include "DirectXHelp.h"
 #include "Camera.h"
 #include "Light.h"
 #include "ShadowMap.h"
@@ -44,13 +43,13 @@ private:
 	//SHADOW MAP
 	ShadowMap shadowMap;
 public:
-	ShaderData(std::string layoutByteCode)
+	ShaderData()
 		:Singleton(this)
 	{
 		CreateBuffer(cameraPositionBuf);
 		CreateBuffer(matrices_buf, sizeof(Matrices));
 
-		shadowMap = ShadowMap(4096);
+		shadowMap = ShadowMap(4096, 7);
 
 		//SAMPLER
 		D3D11_SAMPLER_DESC samplerDesc = {};
@@ -67,12 +66,15 @@ public:
 		HRESULT hr = Graphics::Inst().GetDevice().CreateSamplerState(&samplerDesc, &wrapSampler);
 		if FAILED(hr)
 		{
-			Print("FAILED TO CREATE WRAP SAMPLER");
+			Print("FAILED TO CREATE WRAP SAMPLER", "SHADER DATA");
 			return;
 		}
+		Print("SUCCEEDED TO CREATE WRAP SAMPLER", "SHADER DATA");
 
 		Graphics::Inst().GetContext().PSSetSamplers(0, 1, &wrapSampler);
 		Graphics::Inst().GetContext().DSSetSamplers(0, 1, &wrapSampler);
+
+		Print("SUCCEEDED TO INITIALIZE SHADER DATA");
 	}
 
 	~ShaderData()

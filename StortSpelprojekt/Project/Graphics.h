@@ -17,23 +17,17 @@ private:
 	ID3D11RenderTargetView* backBuffer;
 	ID3D11Texture2D* dsTexture;
 	ID3D11DepthStencilView* dsView;
-	ID3D11RasterizerState* noCullWireframeState;
-	ID3D11RasterizerState* noCullState;
-	ID3D11Debug* debug;
 
-	HRESULT CreateDeviceSwapchain(UINT windowWidth, UINT windowHeight, HWND window);
+	HRESULT CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd);
 	HRESULT CreateRenderTarget();
-	HRESULT CreateDepthStencil(UINT windowWidth, UINT windowHeight);
-	HRESULT CreateRasterizerStates();
-	void CreateViewport(UINT windowWidth, UINT windowHeight);
+	HRESULT CreateDepthStencil(UINT clientWidth, UINT clientHeight);
+	void CreateViewport(UINT clientWidth, UINT clientHeight);
 public:
-	Graphics(UINT windowWidth, UINT windowHeight, HWND window);
+	Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd);
 	~Graphics();
 
 	void BeginFrame();
 	void EndFrame() { swapChain->Present(0, 0); }
-	void EnableWireframe() { context->RSSetState(noCullWireframeState); }
-	void DisableWireframe() { context->RSSetState(noCullState); }
 
 	ID3D11Device& GetDevice() { return *device; };
 	ID3D11DeviceContext& GetContext() { return *context; };

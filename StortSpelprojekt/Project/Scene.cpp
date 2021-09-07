@@ -66,7 +66,7 @@ void Scene::SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, flo
 	camera = Camera(FOV, aspectRatio, nearZ, farZ, rotationSpeed, moveSpeed, position, forward, up);
 }
 
-//OPEN FILE (EITHER DEFAULT OR SAVED GAME)
+//OPEN FILE
 Scene::Scene(const std::string& file)
 {
 	//TO DO: READ FROM FILE TO CREATE SCENE FROM STORED DATA

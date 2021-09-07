@@ -224,9 +224,6 @@
     <ClInclude Include="ParticleEditor.h">
       <Filter>Header Files\Application\GameStates\Debug\Editors\ParticleEditor</Filter>
     </ClInclude>
-    <ClInclude Include="ForwardParticleRenderer.h">
-      <Filter>Header Files\Application\GameStates\Debug\Editors\ParticleEditor</Filter>
-    </ClInclude>
     <ClInclude Include="LevelEditor.h">
       <Filter>Header Files\Application\GameStates\Debug\Editors\LevelEditor</Filter>
     </ClInclude>

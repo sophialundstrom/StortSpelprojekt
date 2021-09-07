@@ -151,7 +151,7 @@ inline void UpdateDynamicVertexBuffer(ID3D11Buffer*& buffer, const int& size, co
 	Graphics::Inst().GetContext().Unmap(buffer, 0);
 }
 
-inline void LoadShader(ID3D11VertexShader*& vertexShader, std::string path, std::string& vertexShaderByteCode)
+inline bool LoadShader(ID3D11VertexShader*& vertexShader, std::string path, std::string& vertexShaderByteCode)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -161,7 +161,7 @@ inline void LoadShader(ID3D11VertexShader*& vertexShader, std::string path, std:
 	if (!reader.is_open())
 	{
 		Print("COULD NOT OPEN FILE: " + path);
-		return;
+		return false;
 	}
 
 	reader.seekg(0, std::ios::end);
@@ -173,15 +173,16 @@ inline void LoadShader(ID3D11VertexShader*& vertexShader, std::string path, std:
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE VERTEX SHADER");
-		return;
+		return false;
 	}
 
 	vertexShaderByteCode = shaderData;
 	shaderData.clear();
 	reader.close();
+	return true;
 }
 
-inline void LoadShader(ID3D11VertexShader*& vertexShader, std::string path)
+inline bool LoadShader(ID3D11VertexShader*& vertexShader, std::string path)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -191,7 +192,7 @@ inline void LoadShader(ID3D11VertexShader*& vertexShader, std::string path)
 	if (!reader.is_open())
 	{
 		Print("COULD NOT OPEN FILE: " + path);
-		return;
+		return false;
 	}
 
 	reader.seekg(0, std::ios::end);
@@ -203,14 +204,15 @@ inline void LoadShader(ID3D11VertexShader*& vertexShader, std::string path)
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE VERTEX SHADER");
-		return;
+		return false;
 	}
 
 	shaderData.clear();
 	reader.close();
+	return true;
 }
 
-inline void LoadShader(ID3D11PixelShader*& pixelShader, std::string path)
+inline bool LoadShader(ID3D11PixelShader*& pixelShader, std::string path)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -220,7 +222,7 @@ inline void LoadShader(ID3D11PixelShader*& pixelShader, std::string path)
 	if (!reader.is_open())
 	{
 		Print("COULD NOT OPEN FILE: " + path);
-		return;
+		return false;
 	}
 
 	reader.seekg(0, std::ios::end);
@@ -232,14 +234,15 @@ inline void LoadShader(ID3D11PixelShader*& pixelShader, std::string path)
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE PIXEL SHADER");
-		return;
+		return false;
 	}
 
 	shaderData.clear();
 	reader.close();
+	return true;
 }
 
-inline void LoadShader(ID3D11HullShader*& hullShader, std::string path)
+inline bool LoadShader(ID3D11HullShader*& hullShader, std::string path)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -249,7 +252,7 @@ inline void LoadShader(ID3D11HullShader*& hullShader, std::string path)
 	if (!reader.is_open())
 	{
 		Print("COULD NOT OPEN FILE: " + path);
-		return;
+		return false;
 	}
 
 	reader.seekg(0, std::ios::end);
@@ -261,14 +264,15 @@ inline void LoadShader(ID3D11HullShader*& hullShader, std::string path)
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE HULL SHADER");
-		return;
+		return false;
 	}
 
 	shaderData.clear();
 	reader.close();
+	return true;
 }
 
-inline void LoadShader(ID3D11DomainShader*& domainShader, std::string path)
+inline bool LoadShader(ID3D11DomainShader*& domainShader, std::string path)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -278,7 +282,7 @@ inline void LoadShader(ID3D11DomainShader*& domainShader, std::string path)
 	if (!reader.is_open())
 	{
 		Print("COULD NOT OPEN FILE: " + path);
-		return;
+		return false;
 	}
 
 	reader.seekg(0, std::ios::end);
@@ -290,14 +294,15 @@ inline void LoadShader(ID3D11DomainShader*& domainShader, std::string path)
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE DOMAIN SHADER");
-		return;
+		return false;
 	}
 
 	shaderData.clear();
 	reader.close();
+	return true;
 }
 
-inline void LoadShader(ID3D11GeometryShader*& geometryShader, std::string path)
+inline bool LoadShader(ID3D11GeometryShader*& geometryShader, std::string path)
 {
 	std::string shaderData;
 	std::ifstream reader;
@@ -307,7 +312,7 @@ inline void LoadShader(ID3D11GeometryShader*& geometryShader, std::string path)
 	if (!reader.is_open())
 	{
 		Print("COULD NOT OPEN FILE: " + path);
-		return;
+		return false;
 	}
 
 	reader.seekg(0, std::ios::end);
@@ -319,11 +324,12 @@ inline void LoadShader(ID3D11GeometryShader*& geometryShader, std::string path)
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE GEOMETRY SHADER");
-		return;
+		return false;
 	}
 
 	shaderData.clear();
 	reader.close();
+	return true;
 }
 
 inline void BindShaders(ID3D11VertexShader* vertexShader = nullptr, ID3D11HullShader* hullShader = nullptr, ID3D11DomainShader* domainShader = nullptr, ID3D11GeometryShader* geometryShader = nullptr, ID3D11PixelShader* pixelShader = nullptr)
