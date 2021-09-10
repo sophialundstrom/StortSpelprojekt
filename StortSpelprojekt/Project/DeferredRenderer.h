@@ -182,9 +182,6 @@ public:
 
 	void Render()
 	{
-		//START RENDERING TO BACK BUFFER
-		Graphics::Inst().BeginFrame();
-
 		//SHADERS
 		BindShaders(vertexShader, nullptr, nullptr, nullptr, pixelShader);
 
@@ -214,12 +211,6 @@ public:
 		//DRAW
 		Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &screenQuadBuffer, &stride, &offset);
 		Graphics::Inst().GetContext().Draw(4, 0);
-
-		//FINALLY RENDER TO BACK BUFFER
-		Graphics::Inst().EndFrame();
-
-		//RESET FOR NEXT FRAME
-		SetRenderTargets();
 	}
 
 	void SetRenderTargets()

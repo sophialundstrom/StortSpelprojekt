@@ -16,7 +16,13 @@ void Game::Render()
 
 	shadowRenderer.Render();
 
+	Graphics::Inst().BeginFrame();
+
 	deferredRenderer.Render();
+	
+	//RENDER UI PROBABLY
+
+	Graphics::Inst().EndFrame();
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight)
