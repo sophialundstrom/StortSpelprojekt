@@ -19,7 +19,7 @@ public:
 		timer.Start();
 
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_SortByPType);
+		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_ConvertToLeftHanded | aiProcess_SortByPType);
 		if (!scene)
 		{
 			Print("COULD NOT LOAD .FBX FILE");

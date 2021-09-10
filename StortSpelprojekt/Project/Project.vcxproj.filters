@@ -118,6 +118,12 @@
     <Filter Include="Header Files\Application\Scene\Drawable\AnimatedModel">
       <UniqueIdentifier>{53cac745-6011-4dc6-926c-5a8ca3f94801}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\AnimatedModelRenderer">
+      <UniqueIdentifier>{79e017bb-561b-47bd-a601-74ce75349ee9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\AnimatedModelRenderer\Shaders">
+      <UniqueIdentifier>{cc2343bc-5a8e-4247-8866-73102e301f2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -227,9 +233,6 @@
     <ClInclude Include="LevelEditor.h">
       <Filter>Header Files\Application\GameStates\Debug\Editors\LevelEditor</Filter>
     </ClInclude>
-    <ClInclude Include="ForwardModelRenderer.h">
-      <Filter>Header Files\Application\GameStates\Debug\Editors\LevelEditor</Filter>
-    </ClInclude>
     <ClInclude Include="ImGuiWin.h">
       <Filter>Header Files\Application\GameStates\Debug\Editors\ImGuiWindow</Filter>
     </ClInclude>
@@ -332,6 +335,9 @@
     <ClInclude Include="Animation.h">
       <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
     </ClInclude>
+    <ClInclude Include="AnimatedModelRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\AnimatedModelRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DisplacementVertexShader.hlsl">
@@ -396,6 +402,12 @@
     </FxCompile>
     <FxCompile Include="ShadowHullShader.hlsl">
       <Filter>Resource Files\OLD STUFF</Filter>
+    </FxCompile>
+    <FxCompile Include="AnimatedModelVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\AnimatedModelRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="UnlitAnimatedModelVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\AnimatedModelRenderer\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

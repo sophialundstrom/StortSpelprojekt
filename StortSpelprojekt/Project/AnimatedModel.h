@@ -2,6 +2,7 @@
 #include "MaterialLoader.h"
 #include "Drawable.h"
 #include "AnimatedMesh.h"
+#include "Animator.h"
 
 #include "assimp\Importer.hpp"
 #include "assimp\postprocess.h"
@@ -10,16 +11,22 @@
 class AnimatedModel : public Drawable
 {
 private:
+	Assimp::Importer importer;
+	const aiScene* scene;
+
 	AnimatedMesh mesh;
 	Skeleton skeleton;
+	Animator animator;
 public:
 	AnimatedModel(const std::string& fileName)
 	{
 		Timer timer;
 		timer.Start();
 
-		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_SortByPType);
+		importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
+
+		scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_ConvertToLeftHanded | aiProcess_SortByPType);
+
 		if (!scene)
 		{
 			Print("COULD NOT LOAD .FBX FILE");
@@ -33,9 +40,8 @@ public:
 			MaterialLoader::Load(scene->mMaterials[0]);
 
 		if (scene->HasAnimations())
-
-
-		Print(timer.DeltaTime());
+			for (UINT i = 0; i < scene->mNumAnimations; ++i)
+				animator.AddAnimation(scene->mAnimations[i]);
 	}
 
 	AnimatedModel(const AnimatedModel& other)
@@ -46,7 +52,10 @@ public:
 
 	void Draw(bool useTextures = true, bool useMaterial = true) 
 	{ 
-		if (useTextures) Resources::Inst().BindMaterial(mesh.materialID, useMaterial); 
+		animator.BindMatricesBuffer();
+
+		if (useTextures) 
+			Resources::Inst().BindMaterial(mesh.materialID, useMaterial); 
 		Resources::Inst().Draw(mesh.vertexCount, mesh.bufferID); 
 	}
 
@@ -64,9 +73,16 @@ public:
 			mesh.bufferID = ID;
 	}
 
+	void PlayAnimation(const std::string& animation)
+	{
+		animator.PlayAnimation(animation);
+	}
+
 	// Inherited via Drawable
 	virtual void Update() override
 	{
 		UpdateMatrix();
+
+		animator.Update(scene, skeleton);
 	}
 };

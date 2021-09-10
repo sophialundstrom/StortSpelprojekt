@@ -10,8 +10,9 @@ class ShaderData : public Singleton<ShaderData>
 	friend class ShadowRenderer;
 	friend class DeferredRenderer;
 
-	template<RenderMethod, bool> friend class ModelRenderer;
-	template<RenderMethod> friend class ParticleRenderer;
+	friend class AnimatedModelRenderer;
+    friend class ModelRenderer;
+    friend class ParticleRenderer;
 private:
 	//CAMERA
 	Matrix cameraMatrix;

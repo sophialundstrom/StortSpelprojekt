@@ -39,11 +39,12 @@ struct AnimatedMesh
 		{
 			aiBone* bone = mesh->mBones[i];
 
-			Joint joint;
+			Joint joint = 
+			{ 
+				bone->mName.C_Str(), 
+				AssimpToDX(bone->mOffsetMatrix) 
+			};
 
-			joint.name = bone->mName.C_Str();
-			joint.offsetMatrix = AssimpToDX(bone->mOffsetMatrix);
-			
 			skeleton.joints.emplace_back(joint);
 
 			for (UINT j = 0; j < bone->mNumWeights; ++j)

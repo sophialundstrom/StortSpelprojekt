@@ -7,6 +7,9 @@
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\AnimatedModelVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
@@ -56,6 +59,9 @@
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitAnimatedModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitForwardModelPixelShader.cso</FullPath>

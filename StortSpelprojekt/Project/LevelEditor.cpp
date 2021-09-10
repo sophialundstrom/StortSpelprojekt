@@ -4,10 +4,12 @@
 
 void LevelEditor::Save(const std::string& file)
 {
+
 }
 
 void LevelEditor::Load(const std::string& file)
 {
+
 }
 
 void LevelEditor::Update()
@@ -49,15 +51,19 @@ void LevelEditor::Render()
 	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
 	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
 
+	animatedModelRenderer.Render();
+
 	modelRenderer.Render();
 
 	EndFrame();
 }
 
-LevelEditor::LevelEditor(UINT windowWidth, UINT windowHeight)
+LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
+	:modelRenderer(FORWARD, false), 
+	animatedModelRenderer(FORWARD, false)
 {
 	//BOTH MUST BE SET (PERSPECTIVE MATRIX ISSUES OTHERWISE), OR WE JUS DO DEFAULT CONSTRUCTOR
-	scene.SetCamera(PI_DIV4, float(windowWidth) / float(windowHeight), 0.1f, 100.0f, 1.0f, 2.0f);
+	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 500.0f, 1.0f, 5.0f);
 	scene.SetDirectionalLight(40);
 
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
@@ -67,8 +73,8 @@ LevelEditor::LevelEditor(UINT windowWidth, UINT windowHeight)
 
 	modelRenderer.Bind(scene.Get<Model>("world"));
 	modelRenderer.Bind(scene.Get<Model>("testSphere"));
-	//scene.Get<Model>("testSphere")->SetPosition(0, 20, 0);
-	scene.Get<Model>("testSphere")->SetScale(0.2f);
+
+	scene.Get<Model>("testSphere")->SetScale(0.1f);
 
 	//ADD BUTTONS FOR LIGHT/MODEL/PARTICLE SYSTEM & SHOW SCENE HIERARCHY
 	{

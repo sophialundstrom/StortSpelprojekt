@@ -11,7 +11,7 @@ private:
 	std::string loadedParticleSystem = "default.ps";
 	std::shared_ptr<ParticleSystem> particleSystem;
 
-	ParticleRenderer<FORWARD> renderer;
+	ParticleRenderer renderer;
 
 	// Inherited via Editor
 	virtual void Save(const std::string& file) override;

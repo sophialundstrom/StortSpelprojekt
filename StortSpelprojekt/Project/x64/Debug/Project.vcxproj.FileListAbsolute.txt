@@ -19,3 +19,5 @@ C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredM
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredParticlePixelShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitForwardModelPixelShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitModelVertexShader.cso
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\AnimatedModelVertexShader.cso
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitAnimatedModelVertexShader.cso

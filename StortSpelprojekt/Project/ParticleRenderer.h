@@ -2,7 +2,6 @@
 #include "ShaderData.h"
 #include "ParticleSystem.h"
 
-template <RenderMethod method>
 class ParticleRenderer : public Renderer
 {
 	//BUFFERS
@@ -30,7 +29,7 @@ class ParticleRenderer : public Renderer
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	ParticleRenderer()
+	ParticleRenderer(RenderMethod method)
 	{
 		//BUFFERS
 		CreateBuffer(extentsBuf);
@@ -45,11 +44,16 @@ public:
 			return;
 
 		if (method == FORWARD)
+		{
 			if (!LoadShader(pixelShader, forward_ps_path))
 				return;
+		}
+			
 		else
+		{
 			if (!LoadShader(pixelShader, deferred_ps_path))
 				return;
+		}
 		Print("SUCCEEDED LOADING SHADERS", "PARTICLE RENDERER");
 
 		//INPUT LAYOUT

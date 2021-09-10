@@ -1,5 +1,6 @@
 #pragma once
 #include "GameState.h"
+#include "AnimatedModelRenderer.h"
 #include "ModelRenderer.h"
 #include "ParticleRenderer.h"
 #include "ShadowRenderer.h"
@@ -9,8 +10,8 @@
 class Game : public GameState
 {
 private:
-    ParticleRenderer<DEFERRED> particleRenderer;
-    ModelRenderer<DEFERRED, true> modelRenderer;
+    ParticleRenderer particleRenderer;
+    ModelRenderer modelRenderer;
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
 

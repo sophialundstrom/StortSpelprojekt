@@ -35,6 +35,25 @@ void Scene::AddModel(const std::string& file)
 		drawables[fileName] = std::make_shared<Model>(fileName);
 }
 
+void Scene::AddAnimatedModel(const std::string& file)
+{
+	UINT numInstances = 0;
+	std::string fileName = file;
+
+	for (auto& [name, drawable] : drawables)
+		if (name.find(file) != std::string::npos)
+			numInstances++;
+
+	if (numInstances > 0)
+	{
+		fileName = file + std::to_string(numInstances);
+		drawables[fileName] = std::make_shared<AnimatedModel>(*std::dynamic_pointer_cast<AnimatedModel>(drawables[file]));
+	}
+
+	else
+		drawables[fileName] = std::make_shared<AnimatedModel>(fileName);
+}
+
 void Scene::AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type)
 {
 	std::string name = "ParticleSystem";

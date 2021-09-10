@@ -1,6 +1,7 @@
 #pragma once
 #include "Editor.h"
 #include "Scene.h"
+#include "AnimatedModelRenderer.h"
 #include "ModelRenderer.h"
 #include "GameState.h"
 
@@ -10,7 +11,8 @@ private:
 	Scene scene;
 
 	//ADD RENDERERS
-	ModelRenderer<FORWARD, false> modelRenderer;
+	AnimatedModelRenderer animatedModelRenderer;
+	ModelRenderer modelRenderer;
 
 	// Inherited via Editor
 	virtual void Save(const std::string& file) override;
@@ -18,7 +20,7 @@ private:
 	virtual void Update() override;
 	virtual void Render() override;
 public:
-	LevelEditor(UINT windowWidth, UINT windowHeight);
+	LevelEditor(UINT clientWidth, UINT clientHeight);
 	~LevelEditor();
 	
 	// Inherited via GameState

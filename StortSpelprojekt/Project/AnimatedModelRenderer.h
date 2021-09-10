@@ -1,13 +1,8 @@
 #pragma once
 #include "ShaderData.h"
-#include "Model.h"
+#include "AnimatedModel.h"
 
-//AVAILABLE COMBINATIONS
-//ModelRenderer<Deferred, true>		<=> Lit deferred renderer with shadows, directionallight & X amount of pointlights
-//ModelRenderer<Forward, true>		<=> Lit forward rendering (only one directionallight & one pointlight, material preview reason)
-//ModelRenderer<Forward, false>		<=> Unlit forward (only textures)
-
-class ModelRenderer : public Renderer
+class AnimatedModelRenderer : public Renderer
 {
 private:
 	bool isLit;
@@ -23,18 +18,18 @@ private:
 
 	//SHADER PATHS
 #ifdef _DEBUG
-	const std::string vs_path = "../x64/Debug/ModelVertexShader.cso";
+	const std::string vs_path = "../x64/Debug/AnimatedModelVertexShader.cso";
 	const std::string deferred_ps_path = "../x64/Debug/DeferredModelPixelShader.cso";
 	const std::string forward_ps_path = "../x64/Debug/ForwardModelPixelShader.cso";
 
-	const std::string unlit_vs_path = "../x64/Debug/UnlitModelVertexShader.cso";
+	const std::string unlit_vs_path = "../x64/Debug/UnlitAnimatedModelVertexShader.cso";
 	const std::string unlit_forward_ps_path = "../x64/Debug/UnlitForwardModelPixelShader.cso";
 #else
-	const std::string vs_path = "../x64/Release/ModelVertexShader.cso";
+	const std::string vs_path = "../x64/Release/AnimatedModelVertexShader.cso";
 	const std::string deferred_ps_path = "../x64/Release/DeferredModelPixelShader.cso";
 	const std::string forward_ps_path = "../x64/Release/ForwardModelPixelShader.cso";
 
-	const std::string unlit_vs_path = "../x64/Release/UnlitModelVertexShader.cso";
+	const std::string unlit_vs_path = "../x64/Release/UnlitAnimatedModelVertexShader.cso";
 	const std::string unlit_forward_ps_path = "../x64/Release/UnlitForwardModelPixelShader.cso";
 #endif
 
@@ -45,7 +40,7 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	ModelRenderer(RenderMethod method, bool isLit)
+	AnimatedModelRenderer(RenderMethod method, bool isLit)
 		:isLit(isLit)
 	{
 		//BUFFER
@@ -64,7 +59,7 @@ public:
 				if (!LoadShader(pixelShader, forward_ps_path))
 					return;
 			}
-				
+
 			else
 			{
 				if (!LoadShader(pixelShader, deferred_ps_path))
@@ -82,7 +77,7 @@ public:
 				if (!LoadShader(pixelShader, unlit_forward_ps_path))
 					return;
 			}
-			
+
 			else
 			{
 				Print("UNLIT MODEL RENDERER ONLY AVALIABLE IN FORWARD");
@@ -96,7 +91,9 @@ public:
 		{
 			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"TEXTURECOORDS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+			{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"WEIGHTS", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"BONEIDS", 0, DXGI_FORMAT_R32G32B32A32_UINT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 		};
 
 		HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
@@ -105,12 +102,13 @@ public:
 			Print("FAILED TO CREATE INPUT LAYOUT", "MODEL RENDERER");
 			return;
 		}
+
 		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "MODEL RENDERER");
 
 		Print("SUCCEEDED TO INITIALIZE MODEL RENDERER");
 	}
 
-	~ModelRenderer()
+	~AnimatedModelRenderer()
 	{
 		matricesBuf->Release();
 		vertexShader->Release();
@@ -140,7 +138,7 @@ public:
 
 		for (auto& drawable : drawables)
 		{
-			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			auto model = std::dynamic_pointer_cast<AnimatedModel>(drawable);
 			if (!model)
 				continue;
 
