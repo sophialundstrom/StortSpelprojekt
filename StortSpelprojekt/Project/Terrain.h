@@ -1,12 +1,7 @@
 #pragma once
 #include "Graphics.h"
+#include "Texture.h"
 #include "Math.h"
-
-struct HeightMap
-{
-	UINT width, height;
-	Vector3* data;
-};
 
 class Terrain
 {
@@ -22,9 +17,11 @@ private:
 	UINT indexCount = 0;
 	ID3D11Buffer* indexBuffer = nullptr;
 	ID3D11Buffer* vertexBuffer = nullptr;
+
+	Texture heightMap;
 public:
 	Terrain(float size);
 	~Terrain();
 
-	void Draw();
+	void Draw() const;
 };

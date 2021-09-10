@@ -2,11 +2,6 @@
 #include "ShaderData.h"
 #include "Model.h"
 
-//AVAILABLE COMBINATIONS
-//ModelRenderer<Deferred, true>		<=> Lit deferred renderer with shadows, directionallight & X amount of pointlights
-//ModelRenderer<Forward, true>		<=> Lit forward rendering (only one directionallight & one pointlight, material preview reason)
-//ModelRenderer<Forward, false>		<=> Unlit forward (only textures)
-
 class ModelRenderer : public Renderer
 {
 private:

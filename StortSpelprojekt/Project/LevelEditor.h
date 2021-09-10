@@ -3,15 +3,18 @@
 #include "Scene.h"
 #include "AnimatedModelRenderer.h"
 #include "ModelRenderer.h"
+#include "TerrainRenderer.h"
 #include "GameState.h"
 
 class LevelEditor : public Editor, public GameState
 {
 private:
 	Scene scene;
+	Terrain terrain;
 
 	//ADD RENDERERS
 	AnimatedModelRenderer animatedModelRenderer;
+	TerrainRenderer terrainRenderer;
 	ModelRenderer modelRenderer;
 
 	// Inherited via Editor

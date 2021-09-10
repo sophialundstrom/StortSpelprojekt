@@ -51,16 +51,20 @@ void LevelEditor::Render()
 	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
 	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
 
-	animatedModelRenderer.Render();
+	//animatedModelRenderer.Render();
 
-	modelRenderer.Render();
+	//modelRenderer.Render();
+
+	terrainRenderer.Render(terrain);
 
 	EndFrame();
 }
 
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
-	:modelRenderer(FORWARD, false), 
-	animatedModelRenderer(FORWARD, false)
+	:modelRenderer(FORWARD, false),
+	terrainRenderer(FORWARD, 63),
+	animatedModelRenderer(FORWARD, false),
+	terrain(10)
 {
 	//BOTH MUST BE SET (PERSPECTIVE MATRIX ISSUES OTHERWISE), OR WE JUS DO DEFAULT CONSTRUCTOR
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 500.0f, 1.0f, 5.0f);

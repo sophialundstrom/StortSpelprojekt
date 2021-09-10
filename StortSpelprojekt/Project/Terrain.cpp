@@ -3,6 +3,7 @@
 #include "DirectXHelp.h"
 
 Terrain::Terrain(float size)
+	:heightMap("Textures/TerrainHeightMap.png")
 {
 	//VERTICES
 	Vertex vertices[] =
@@ -12,13 +13,15 @@ Terrain::Terrain(float size)
 		{ {-size, 0, size},		{0, 1} },
 		{ {size, 0, -size},		{1, 0} }
 	};
-	CreateVertexBuffer(vertexBuffer, sizeof(Vertex), ARRAYSIZE(vertices), &vertices);
+	CreateVertexBuffer(vertexBuffer, sizeof(Vertex), ARRAYSIZE(vertices) * sizeof(Vertex), &vertices);
 
 	//INDICES
-	UINT indices[]
-	{ 3, 1, 0, 2 };
+	UINT indices[] =
+	{ 0, 3, 1, 0, 1, 2 };
 	indexCount = ARRAYSIZE(indices);
 	CreateIndexBuffer(indexBuffer, ARRAYSIZE(indices), &indices);
+
+	heightMap.Bind(0, Shader::DS);
 }
 
 Terrain::~Terrain()
@@ -27,8 +30,10 @@ Terrain::~Terrain()
 	vertexBuffer->Release();
 }
 
-void Terrain::Draw()
+void Terrain::Draw() const
 {
+	heightMap.Bind();
+
 	Graphics::Inst().GetContext().IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 

@@ -84,7 +84,7 @@ public:
 				return;
 			}
 		}
-		Print("SUCCEEDED LOADING SHADERS", "MODEL RENDERER");
+		Print("SUCCEEDED LOADING SHADERS", "ANIMATED MODEL RENDERER");
 
 		//INPUT LAYOUT
 		D3D11_INPUT_ELEMENT_DESC inputDesc[] =
@@ -99,13 +99,13 @@ public:
 		HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
 		if FAILED(hr)
 		{
-			Print("FAILED TO CREATE INPUT LAYOUT", "MODEL RENDERER");
+			Print("FAILED TO CREATE INPUT LAYOUT", "ANIMATED MODEL RENDERER");
 			return;
 		}
 
-		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "MODEL RENDERER");
+		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "ANIMATED MODEL RENDERER");
 
-		Print("SUCCEEDED TO INITIALIZE MODEL RENDERER");
+		Print("SUCCEEDED TO INITIALIZE ANIMATED MODEL RENDERER");
 	}
 
 	~AnimatedModelRenderer()

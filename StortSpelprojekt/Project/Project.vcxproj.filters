@@ -124,6 +124,9 @@
     <Filter Include="Header Files\Application\Graphics\Renderers\AnimatedModelRenderer\Shaders">
       <UniqueIdentifier>{cc2343bc-5a8e-4247-8866-73102e301f2b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders">
+      <UniqueIdentifier>{7576a954-47cf-4814-aad7-8e2459cc2894}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -338,6 +341,9 @@
     <ClInclude Include="AnimatedModelRenderer.h">
       <Filter>Header Files\Application\Graphics\Renderers\AnimatedModelRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="TerrainRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DisplacementVertexShader.hlsl">
@@ -408,6 +414,18 @@
     </FxCompile>
     <FxCompile Include="UnlitAnimatedModelVertexShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\AnimatedModelRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="TerrainVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="TerrainHullShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="TerrainDomainShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ForwardTerrainPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
