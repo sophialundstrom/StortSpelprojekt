@@ -10,6 +10,12 @@
       <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\AnimatedModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ColliderPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\ColliderVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>

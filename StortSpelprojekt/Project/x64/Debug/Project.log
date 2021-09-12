@@ -2,4 +2,9 @@
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(28,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(29,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\Animator.h(68,1): warning C4267: 'argument': conversion from 'size_t' to 'const UINT', possible loss of data
+  Main.cpp
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(28,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(29,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\Project\Animator.h(68,1): warning C4267: 'argument': conversion from 'size_t' to 'const UINT', possible loss of data
+  Generating Code...
   Project.vcxproj -> C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Debug\Project.exe

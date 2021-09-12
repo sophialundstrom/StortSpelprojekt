@@ -39,6 +39,8 @@ void LevelEditor::Update()
 	if (Event::KeyIsPressed(16)) //SHIFT
 		scene.GetCamera().MoveUp(-1);
 
+	testCollider->Update();
+
 	scene.Update();
 }
 
@@ -50,6 +52,8 @@ void LevelEditor::Render()
 	//ADD RENDERER THAT RENDERS TO TEXTURE THAT CAN BE SHOWN AS "INGAME"-PREVIEW IN MATERIAL EDITOR 
 	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
 	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
+
+	colliderRenderer.Render();
 
 	animatedModelRenderer.Render();
 
@@ -66,7 +70,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 	animatedModelRenderer(FORWARD, false),
 	terrain(10)
 {
-	//BOTH MUST BE SET (PERSPECTIVE MATRIX ISSUES OTHERWISE), OR WE JUS DO DEFAULT CONSTRUCTOR
+	//BOTH MUST BE SET (PERSPECTIVE MATRIX ISSUES OTHERWISE), OR WE JUST DO DEFAULT CONSTRUCTOR
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 500.0f, 1.0f, 5.0f);
 	scene.SetDirectionalLight(40);
 
@@ -79,6 +83,9 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 	modelRenderer.Bind(scene.Get<Model>("testSphere"));
 
 	scene.Get<Model>("testSphere")->SetScale(0.1f);
+
+	testCollider = std::make_shared<BoundingBox>();
+	colliderRenderer.Bind(testCollider);
 
 	//ADD BUTTONS FOR LIGHT/MODEL/PARTICLE SYSTEM & SHOW SCENE HIERARCHY
 	{
@@ -114,6 +121,13 @@ State LevelEditor::Run()
 {
 	Update();
 	Render();
+
+	if (Event::KeyIsPressed('U'))
+	{
+		testCollider->SetPosition(2.0f, 3.0f, 1.0f);
+		testCollider->SetScale(1.0f, 5.0f, 2.0f);
+		testCollider->SetRotation(1.0f, PI_DIV2, PI_DIV4);
+	}
 
 	auto& window = windows["SCENE"];
 	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
