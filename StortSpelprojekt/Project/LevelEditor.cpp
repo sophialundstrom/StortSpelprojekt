@@ -51,9 +51,9 @@ void LevelEditor::Render()
 	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
 	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
 
-	//animatedModelRenderer.Render();
+	animatedModelRenderer.Render();
 
-	//modelRenderer.Render();
+	modelRenderer.Render();
 
 	terrainRenderer.Render(terrain);
 
