@@ -34,6 +34,10 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 5.0f, -10.0f });
 	scene.SetDirectionalLight(30);
 
+	scene.AddModel("testSphere");
+	modelRenderer.Bind(scene.Get<Model>("testSphere"));
+
+
 	deferredRenderer.SetRenderTargets();
 	(void)Run();
 }

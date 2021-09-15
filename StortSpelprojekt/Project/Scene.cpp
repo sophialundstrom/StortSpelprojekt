@@ -99,5 +99,5 @@ void Scene::Update()
 	for (auto& [name, drawable] : drawables)
 		drawable->Update();
 
-	ShaderData::Inst().Update(camera, directionalLight, (UINT)pointLights.size(), pointLights.data());
+	ShaderData::Inst().Update(camera, directionalLight, (UINT)pointLights.size(), nullptr);
 }
