@@ -4,6 +4,36 @@
 void Game::Update()
 {
 	scene.Update();
+
+	if (Event::KeyIsPressed(VK_RIGHT))
+		scene.GetCamera().Rotate(1, 0);
+
+	if (Event::KeyIsPressed(VK_LEFT))
+		scene.GetCamera().Rotate(-1, 0);
+
+	if (Event::KeyIsPressed(VK_DOWN))
+		scene.GetCamera().Rotate(0, 1);
+
+	if (Event::KeyIsPressed(VK_UP))
+		scene.GetCamera().Rotate(0, -1);
+
+	if (Event::KeyIsPressed('W'))
+		scene.GetCamera().MoveForward();
+
+	if (Event::KeyIsPressed('A'))
+		scene.GetCamera().MoveRight(-1);
+
+	if (Event::KeyIsPressed('S'))
+		scene.GetCamera().MoveForward(-1);
+
+	if (Event::KeyIsPressed('D'))
+		scene.GetCamera().MoveRight();
+
+	if (Event::KeyIsPressed(VK_SPACE)) //SPACE
+		scene.GetCamera().MoveUp();
+
+	if (Event::KeyIsPressed(VK_SHIFT)) //SHIFT
+		scene.GetCamera().MoveUp(-1);
 }
 
 void Game::Render()
@@ -34,8 +64,10 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 5.0f, -10.0f });
 	scene.SetDirectionalLight(30);
 
-	scene.AddModel("testSphere");
-	modelRenderer.Bind(scene.Get<Model>("testSphere"));
+	scene.AddModel("staff");
+	modelRenderer.Bind(scene.Get<Model>("staff"));
+	scene.Get<Model>("staff")->SetScale(2.0f);
+
 
 
 	deferredRenderer.SetRenderTargets();

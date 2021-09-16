@@ -14,6 +14,7 @@ private:
     ModelRenderer modelRenderer;
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
+    TerrainRenderer terrainRenderer;
 
     void Update();
     void Render();
