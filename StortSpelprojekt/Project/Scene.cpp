@@ -75,6 +75,7 @@ void Scene::AddPointLight(Vector3 position, float range, Vector3 attenuation, Ve
 		pointLights.push_back(PointLight(range, attenuation, color, position));
 }
 
+
 void Scene::SetDirectionalLight(float range, float startAngle, int startDir)
 {
 	directionalLight = DirectionalLight(range, startAngle, startDir);

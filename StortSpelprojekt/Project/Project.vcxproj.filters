@@ -427,7 +427,10 @@
     <FxCompile Include="ForwardTerrainPixelShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="DefereredTerrainPixelShader.hlsl">
+    <FxCompile Include="DeferredTerrainPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="TerrainGeometryShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

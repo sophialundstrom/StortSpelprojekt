@@ -27,7 +27,6 @@ cbuffer Material : register(b0)
     float4 ambient;
     float4 specular;
     float specularPower;
-
 };
 
 PS_OUTPUT main(PS_INPUT input)

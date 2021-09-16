@@ -20,7 +20,7 @@ private:
 	const std::string ds_path = "../x64/Debug/TerrainDomainShader.cso";
 	const std::string LOD_ds_path = "../x64/Debug/LODTerrainDomainShader.cso";
 
-	const std::string LOD_gs_path = "../x64/Debug/TerrainGeometryShader.cso";
+	const std::string gs_path = "../x64/Debug/TerrainGeometryShader.cso";
 
 	const std::string deferred_ps_path = "../x64/Debug/DeferredTerrainPixelShader.cso";
 	const std::string forward_ps_path = "../x64/Debug/ForwardTerrainPixelShader.cso";
@@ -48,7 +48,7 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	TerrainRenderer(RenderMethod method, float tesselationAmount = 1)
+	TerrainRenderer(RenderMethod method, float tesselationAmount = 10)
 	{
 		//BUFFER
 		CreateBuffer(matrixBuf, sizeof(Matrix));
@@ -77,16 +77,20 @@ public:
 				return;
 		}
 
-		//IN-GAME (LOD TESSELATION)
+		//IN-GAME
 		else
 		{
-			if (!LoadShader(hullShader, LOD_hs_path))
+			CreateBuffer(tesselationBuf);
+			UpdateBuffer(tesselationBuf, tesselationAmount);
+			BindBuffer(tesselationBuf, Shader::HS);
+
+			if (!LoadShader(hullShader, hs_path))
 				return;
 
-			if (!LoadShader(domainShader, LOD_ds_path))
+			if (!LoadShader(domainShader, ds_path))
 				return;
 
-			if (!LoadShader(geometryShader, LOD_gs_path))
+			if (!LoadShader(geometryShader, gs_path))
 				return;
 
 			if (!LoadShader(pixelShader, deferred_ps_path))
