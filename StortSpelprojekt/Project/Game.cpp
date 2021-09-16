@@ -61,7 +61,7 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	:deferredRenderer(clientWidth, clientHeight), 
 	modelRenderer(DEFERRED, true), 
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED), terrain(10.0f)
+	terrainRenderer(DEFERRED), terrain(50.0f)
 {
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 5.0f, -10.0f });

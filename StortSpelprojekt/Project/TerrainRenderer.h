@@ -48,7 +48,7 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	TerrainRenderer(RenderMethod method, float tesselationAmount = 10)
+	TerrainRenderer(RenderMethod method, float tesselationAmount = 63)
 	{
 		//BUFFER
 		CreateBuffer(matrixBuf, sizeof(Matrix));
