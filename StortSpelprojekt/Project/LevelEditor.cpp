@@ -51,11 +51,11 @@ void LevelEditor::Render()
 	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
 	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
 
+	terrainRenderer.Render(terrain);
+
 	animatedModelRenderer.Render();
 
 	modelRenderer.Render();
-
-	terrainRenderer.Render(terrain);
 
 	EndFrame();
 }
@@ -72,34 +72,32 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
 	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
-	scene.AddModel("world");
-	scene.AddModel("testSphere");
+	
+	scene.AddModel("boulder");
+	modelRenderer.Bind(scene.Get<Model>("boulder"));
+	
+	scene.AddModel("redCube");
+	modelRenderer.Bind(scene.Get<Model>("redCube"));
 
-	modelRenderer.Bind(scene.Get<Model>("world"));
-	modelRenderer.Bind(scene.Get<Model>("testSphere"));
-
-	scene.Get<Model>("testSphere")->SetScale(0.1f);
-
-	//ADD BUTTONS FOR LIGHT/MODEL/PARTICLE SYSTEM & SHOW SCENE HIERARCHY
 	{
-		AddWindow("SCENE");	
-		auto& window = windows["SCENE"];				
-		window.AddTextComponent("Scene Name");
+		AddWindow("TOOLS");
+		auto& window = windows["TOOLS"];				
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
-	//MAKE INTERACTIVE WITH SELECTED OBJECT
 	{
 		AddWindow("GAME OBJECT");
 		auto& window = windows["GAME OBJECT"];	
-		window.AddTextComponent("Game Object Name");
+		window.AddTextComponent("Name");
 	}
 
-	//RENDER PREVIEW TO IMAGE TO SHOW IN WINDOW & MAKE INTERACTIVE WITH SELECTED OBJECTS MATERIAL (AND ADD "COPY MATERIAL" THING)
 	{
-		AddWindow("MATERIAL");		
-		auto& window = windows["MATERIAL"];
-		window.AddTextComponent("Material Name");
+		AddWindow("SCENE COMPONENTS");
+		auto& window = windows["SCENE COMPONENTS"];
+		for(int i = 0; i < scene.GetObjectNames().size(); i++)
+		{
+			window.AddTextComponent(scene.GetObjectNames()[i]);
+		}
 	}
 
 	(void)Run();
@@ -115,7 +113,7 @@ State LevelEditor::Run()
 	Update();
 	Render();
 
-	auto& window = windows["SCENE"];
+	auto& window = windows["TOOLS"];
 	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
 		return State::MENU;
 

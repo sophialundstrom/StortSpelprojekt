@@ -13,6 +13,7 @@ private:
 	DirectionalLight directionalLight;
 	std::vector<PointLight> pointLights;
 	std::map<std::string, std::shared_ptr<Drawable>> drawables;
+	std::vector<std::string> objectNames;
 public:
 	Scene(const std::string& file);
 	Scene() = default;
@@ -26,6 +27,7 @@ public:
 	template <typename T>
 	auto Get(const std::string& name) { return std::dynamic_pointer_cast<T>(drawables[name]); }
 	const std::map<std::string, std::shared_ptr<Drawable>>& GetSortedMap() const;
+	std::vector<std::string> GetObjectNames();
 
 	void AddModel(const std::string& file);
 	void AddAnimatedModel(const std::string& file);
