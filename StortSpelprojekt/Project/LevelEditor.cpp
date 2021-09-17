@@ -47,7 +47,9 @@ void LevelEditor::Update()
 
 	if (Event::KeyIsPressed('Z')) //SHIFT
 		scene.GetCamera().MoveUp(-1);
-  
+	if (Event::KeyIsPressed('T')) //SHIFT
+		building->Upgrade();
+
 	if (Event::KeyIsPressed(16)) //SHIFT
 		scene.GetCamera().SetSpeedMultiplier(4);
 	else
@@ -87,11 +89,19 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
 	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
-	scene.AddModel("boulder");
-	modelRenderer.Bind(scene.Get<Model>("boulder"));
+	/*scene.AddModel("boulder");
+	modelRenderer.Bind(scene.Get<Model>("boulder"));*/
 	
 	scene.AddModel("redCube");
 	modelRenderer.Bind(scene.Get<Model>("redCube"));
+
+	std::string meshNames[] = { "Cube", "Pyramid" };
+	std::string materialNames[] = { "WaterTex", "SilverTex" };
+
+	building = std::make_shared <Building>(meshNames, materialNames, "Cube");
+	scene.AddModel("building", building);
+	modelRenderer.Bind(scene.Get<Model>("building"));
+	Model model = Model("Pyramid");
 
 	{
 		AddWindow("TOOLS");
