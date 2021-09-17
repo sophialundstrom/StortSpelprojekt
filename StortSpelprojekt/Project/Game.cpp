@@ -33,8 +33,16 @@ void Game::Update()
 	//KOLLA UPP ROLL PITCH
 	
 	Time::GetDelta;
+
+
+	scene.GetCamera().Rotate(Event::ReadRawData().x * mouseSensitivity, Event::ReadRawData().y * mouseSensitivity);
+	Event::ClearRawDelta();
+
+	Vector3 playerPos = scene.Get<Model>("PlayerArrow").get()->GetPosition();
+	Vector3 lookDirection = scene.GetCamera().GetDirection();
+	float camDistance = 10;
+
 	//Movement system
-	Vector3 playerPosLastFrame = scene.Get<Model>("PlayerArrow").get()->GetPosition();
 	Vector3 moveDirection = Vector3(0, 0, 0);
 
 	if (Event::KeyIsPressed(VK_UP))
@@ -51,18 +59,14 @@ void Game::Update()
 	
 	moveDirection.Normalize();
 	moveDirection = moveDirection * (playerMoveSpeed * Time::GetDelta());
+	Vector3 newPlayerPos = playerPos + moveDirection;
+	Vector3 newCameraPos = playerPos + (lookDirection * -camDistance);
 
-	//Rotation system
-
-	xRotationData += Event::ReadRawData().x;
-	yRotationData += Event::ReadRawData().y;
-	scene.Get<Model>("PlayerArrow")->SetRotation(0, xRotationData * mouseSensitivity, 0);
-
-
-	Event::ClearRawDelta();
 
 	
-	scene.Get<Model>("PlayerArrow")->SetPosition(playerPosLastFrame + moveDirection);
+	scene.Get<Model>("PlayerArrow")->SetPosition(newPlayerPos);
+	scene.GetCamera().SetPosition(newCameraPos);
+
 	scene.Update();
 
 

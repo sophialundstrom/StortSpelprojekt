@@ -20,9 +20,9 @@ private:
     //Player Variables
     float playerMoveSpeed = 4;
     float heightMapGroundLevel;
-    float mouseSensitivity = 0.001f;
-    float xRotationData = 0;
-    float yRotationData = 0;
+    float mouseSensitivity = 15.f;
+    float xRotationData = 0;    //Inaktiv
+    float yRotationData = 0;    //Inaktiv
     //Player Varaibles over
 
     void Update();
