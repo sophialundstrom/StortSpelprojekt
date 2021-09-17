@@ -2,6 +2,4 @@
 D:\Repository\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(28,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 D:\Repository\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(29,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 D:\Repository\StortSpelprojekt\StortSpelprojekt\Project\Animator.h(68,1): warning C4267: 'argument': conversion from 'size_t' to 'const UINT', possible loss of data
-D:\Repository\StortSpelprojekt\StortSpelprojekt\Project\LevelEditor.cpp(18,13): error C2039: 'KeyDown': is not a member of 'Event'
-D:\Repository\StortSpelprojekt\StortSpelprojekt\Project\Event.h(16): message : see declaration of 'Event'
-D:\Repository\StortSpelprojekt\StortSpelprojekt\Project\LevelEditor.cpp(18,5): error C3861: 'KeyDown': identifier not found
+  Project.vcxproj -> D:\Repository\StortSpelprojekt\StortSpelprojekt\x64\Debug\Project.exe

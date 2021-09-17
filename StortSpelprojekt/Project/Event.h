@@ -34,7 +34,7 @@ public:
 	static MouseCoords MousePosition() { return mc; }
 	static void OnRawDelta(int dx, int dy) { rd.x = dx; rd.y = dy; }
 	static void ClearRawDelta() { rd.x = 0; rd.y = 0; }
-	static RawDelta ReadRawData() { return rd; }
+	static RawDelta ReadRawDelta() { return rd; }
 
 	static bool LeftIsClicked() { return leftIsPressed; }
 	static void OnLeftClick(int x, int y) { leftIsPressed = true; mc = { x, y }; }
