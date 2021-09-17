@@ -45,8 +45,13 @@ void LevelEditor::Update()
 	if (Event::KeyIsPressed(32)) //SPACE
 		scene.GetCamera().MoveUp();
 
-	if (Event::KeyIsPressed(16)) //SHIFT
+	if (Event::KeyIsPressed('Z')) //SHIFT
 		scene.GetCamera().MoveUp(-1);
+
+	if (Event::KeyIsPressed(16)) //SHIFT
+		scene.GetCamera().SetSpeedMultiplier(4);
+	else
+		scene.GetCamera().SetSpeedMultiplier(1);
 
 	Event::ClearRawDelta();
 	scene.Update();
