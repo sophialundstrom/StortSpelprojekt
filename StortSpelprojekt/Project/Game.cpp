@@ -6,7 +6,7 @@ void Game::Update()
 	Time::GetDelta;
 
 	//Rotate camera by cursor movement 
-	scene.GetCamera().Rotate(Event::ReadRawData().x * mouseSensitivity, Event::ReadRawData().y * mouseSensitivity);
+	scene.GetCamera().Rotate(Event::ReadRawDelta().x * mouseSensitivity, Event::ReadRawDelta().y * mouseSensitivity);
 	Event::ClearRawDelta();
 
 	//Get players position last frame and cameras current look-direction
@@ -27,22 +27,24 @@ void Game::Update()
 
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
 	//Aligns the keyboardinputs by the camera direction afterwards via the radian.
-	float movementOfsetRadiant = get2dAngle({ lookDirection.x, lookDirection.z}, {0, 1});
-	if (lookDirection.x < 0)
-		movementOfsetRadiant *= -1;
+	
+	if (!Event::RightIsClicked())
+	{
+		movementOfsetRadiant = get2dAngle({ lookDirection.x, lookDirection.z }, { 0, 1 });
+		if (lookDirection.x < 0)
+			movementOfsetRadiant *= -1;
+	}
 	Matrix movementOfsetMatrix = Matrix::CreateRotationY(movementOfsetRadiant);
 	moveDirection = Vector3::Transform(moveDirection, movementOfsetMatrix);
 
 	//Only update what direction the player is facing when keyboardinput is detected by the moveDirection vector
 	if (moveDirection.Length() > 0 || moveDirection.Length() < 0)
-		scene.Get<Model>("PlayerArrow")->SetRotation({ 0, movementOfsetRadiant, 0 });
+		scene.Get<Model>("PlayerArrow")->SetRotation({ 0, movementOfsetRadiant + PI, 0 });
 
 	//Updates the player and cameras positions
 	moveDirection = moveDirection * (playerMoveSpeed * Time::GetDelta());
 	Vector3 newPlayerPos = playerPos + moveDirection;
 	Vector3 newCameraPos = playerPos + (lookDirection * -camDistance);
-
-	//scene.Get<Model>("PlayerArrow")->SetRotation(lookDirection);
 	scene.Get<Model>("PlayerArrow")->SetPosition(newPlayerPos);
 	scene.GetCamera().SetPosition(newCameraPos);
 
@@ -58,7 +60,7 @@ void Game::Render()
 
 	modelRenderer.Render();
 
-	terrainRenderer.Render(terrain);
+	//terrainRenderer.Render(terrain);
 
 	shadowRenderer.Render();
 
@@ -85,13 +87,13 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	//Player
 	scene.AddModel("PlayerArrow");
 	scene.Get<Model>("PlayerArrow")->SetPosition(0, 0, 0);
-	scene.Get<Model>("PlayerArrow")->SetRotation({ 0, 0, 0 });
+	scene.Get<Model>("PlayerArrow")->SetRotation({ 0, PI, 0 });
 	modelRenderer.Bind(scene.Get<Model>("PlayerArrow"));
 
 	//Plane in Enviroment
 	scene.AddModel("Plane");
 	scene.Get<Model>("Plane")->SetPosition(0, -1, 0);
-	scene.Get<Model>("Plane")->SetRotation(0, 0, PI);
+	scene.Get<Model>("Plane")->SetRotation(0, 0, 0);
 	modelRenderer.Bind(scene.Get<Model>("Plane"));
 
 

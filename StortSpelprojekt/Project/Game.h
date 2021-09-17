@@ -26,7 +26,7 @@ private:
 
 
     //Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
-
+    float movementOfsetRadiant = 0;
     float playerMoveSpeed = 4;
     float heightMapGroundLevel;
     float mouseSensitivity = 10.f;
