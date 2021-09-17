@@ -5,13 +5,14 @@
 #include "ModelRenderer.h"
 #include "TerrainRenderer.h"
 #include "GameState.h"
+#include "Building.h"
 
 class LevelEditor : public Editor, public GameState
 {
 private:
 	Scene scene;
 	Terrain terrain;
-
+	std::shared_ptr <Building> building;
 	//ADD RENDERERS
 	AnimatedModelRenderer animatedModelRenderer;
 	TerrainRenderer terrainRenderer;

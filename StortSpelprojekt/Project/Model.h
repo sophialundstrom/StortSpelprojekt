@@ -55,8 +55,12 @@ public:
 	void ApplyMesh(const std::string& name)
 	{
 		UINT ID = Resources::Inst().GetBufferIDFromName(name);
-		if (ID != ID_INVALID)
+		if (ID != ID_INVALID) 
+		{
 			mesh.bufferID = ID;
+			mesh.vertexCount = Resources::Inst().GetVertexCountFromID(ID);
+		}
+
 	}
 
 	// Inherited via Drawable

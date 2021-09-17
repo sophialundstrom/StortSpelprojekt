@@ -42,6 +42,11 @@ void Scene::AddModel(const std::string& file)
 	objectNames.push_back(fileName);
 }
 
+void Scene::AddModel(const std::string& name, std::shared_ptr <Drawable> drawable)
+{
+	drawables[name] = drawable;
+}
+
 void Scene::AddAnimatedModel(const std::string& file)
 {
 	UINT numInstances = 0;
