@@ -20,22 +20,25 @@ private:
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
 
-    //Player Variables      //TODO: MAKE THIS INTO A PLAYER CLASS!!!
+    //Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
+
     float playerMoveSpeed = 4;
     float heightMapGroundLevel;
     float mouseSensitivity = 10.f;
-    float xRotationData = 0;    //Inaktiv
-    float yRotationData = 0;    //Inaktiv
+    float camDistance = 10;//How far the camera is from the playerboject
 
     float get2dAngle(Vector2 a, Vector2 b)
     {
+        //MathExplanation
+        //https://stackoverflow.com/questions/42554960/get-xyz-angles-between-vectors
+
         a.Normalize();
         b.Normalize();
 
         return acos(a.x * b.x + a.y * b.y);
     };
 
-    //Player Varaibles over
+    //Player Varaibles and function(s) over
 
     void Update();
     void Render();
