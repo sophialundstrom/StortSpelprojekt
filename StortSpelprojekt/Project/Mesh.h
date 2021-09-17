@@ -35,13 +35,13 @@ struct Mesh
 
 		vertexCount = mesh->mNumVertices;
 
-		bufferID = resources.NumBuffers();
+		bufferID = Resources::Inst().NumBuffers();
 
-		materialID = resources.NumMaterials();
+		materialID = Resources::Inst().NumMaterials();
 
 		ID3D11Buffer* buffer;
 		CreateVertexBuffer(buffer, sizeof(Vertex), sizeof(Vertex) * vertexCount, vertices.data());
 
-		resources.AddVertexBuffer(mesh->mName.C_Str(), buffer, vertexCount);
+		Resources::Inst().AddVertexBuffer(mesh->mName.C_Str(), buffer, vertexCount);
 	}
 };

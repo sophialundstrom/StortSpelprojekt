@@ -17,7 +17,7 @@ namespace MaterialLoader
 			}
 
 		Material* newMaterial = new Material();
-
+		newMaterial->name = material->GetName().C_Str();
 		newMaterial->ID = Resources::Inst().NumMaterials();
 
 		aiString path;

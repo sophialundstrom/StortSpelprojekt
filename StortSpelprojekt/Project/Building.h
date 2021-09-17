@@ -15,12 +15,18 @@ public:
 	Building(std::string meshNames[], std::string materialNames[], const std::string &fileName)
 		:Model(fileName)
 	{
-		
+		for (UINT i = 0; i < stages; i++)
+		{
+			this->meshNames[i] = meshNames[i];
+			this->materialNames[i] = materialNames[i];
+		}
 	}
 
 	void Upgrade()
 	{
 		currState++;
+		if (currState >= stages)
+			return;
 		ApplyMesh(meshNames[currState]);
 		ApplyMaterial(materialNames[currState]);
 	}
