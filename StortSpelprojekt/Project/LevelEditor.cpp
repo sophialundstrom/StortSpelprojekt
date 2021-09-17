@@ -88,7 +88,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 	building = std::make_shared <Building>(meshNames, materialNames,"Cube");
 	scene.AddModel("building", building);
 	modelRenderer.Bind(scene.Get<Model>("building"));
-
+	Model model = Model("Pyramid");
 
 	//ADD BUTTONS FOR LIGHT/MODEL/PARTICLE SYSTEM & SHOW SCENE HIERARCHY
 	{
