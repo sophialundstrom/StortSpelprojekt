@@ -6,11 +6,17 @@ class TalkQuest : public Quest
 private:
 	unsigned int npcID;
 public:
-	TalkQuest(unsigned int ID, unsigned int npcID)
-		:Quest(ID), npcID(npcID) {}
+	TalkQuest(const std::string& name, unsigned int ID, unsigned int npcID)
+		:Quest(name, ID), npcID(npcID) {}
 
-	void AddProgress()
+	// Inherited via Quest
+	virtual void Update() override
 	{
 		Complete();
+	}
+
+	virtual void RenderUI() override
+	{
+		Print("", name);
 	}
 };

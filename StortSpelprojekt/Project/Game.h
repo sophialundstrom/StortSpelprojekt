@@ -6,7 +6,7 @@
 #include "ShadowRenderer.h"
 #include "DeferredRenderer.h"
 #include "TerrainRenderer.h"
-
+#include "QuestLog.h"
 
 #include "Time.h"
 
@@ -17,13 +17,15 @@
 class Game : public GameState
 {
 private:
+    std::unique_ptr<QuestLog> questLog;
+
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
 
-
+    Player player;
 
     //Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
     float movementOfsetRadiant = 0;

@@ -1,20 +1,26 @@
 #pragma once
 #include "Camera.h"
 
+struct Inventory { Inventory() = default; };
+
+struct GameStats
+{
+	//MOSTLY FOR QUEST PROGRESS BUT MAYBE FUN TO KNOW WHEN GAME IS OVER?
+	UINT barbariansKilled = 0;
+};
+
 class Player
 {
 private:
-	Camera camera;
+	struct Stats
+	{
+		float movementSpeed;
+		UINT health;
+		//OSV
+	} stats;
+
+	GameStats gameStats;
+	Inventory inventory;
 public:
 	Player() = default;
-	Player(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed,
-		Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 forward = { 0.0f, 0.0f, 1.0f }, Vector3 up = { 0.0f, 1.0f, 0.0f })
-		:camera(FOV, aspectRatio, nearZ, farZ, rotationSpeed, moveSpeed, position, forward, up) {}
-
-	void Update()
-	{
-		camera.Update();
-	}
-
-	Camera& GetCamera() { return camera; }
 };

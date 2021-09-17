@@ -1,40 +1,26 @@
 #pragma once
-#include <string>
 #include <memory>
 #include <vector>
+#include "Player.h"
 
 class Quest
 {
 private:
-	bool active = false;
+	unsigned int ID;
+protected:
+	std::string name;
 	bool done = false;
-
-	unsigned int ID = -1;
-	
-	unsigned int numTriggerQuests = 0;
-	std::vector<std::shared_ptr<Quest>> triggerQuests;
+	UINT numTriggerQuests;
+	std::vector<UINT> triggerQuests;
 public:
-	Quest(unsigned int ID)
-		:ID(ID) {}
-
-	void AddTriggerQuest(std::shared_ptr<Quest> quest)
-	{
-		triggerQuests.emplace_back(quest);
-		numTriggerQuests++;
-	}
+	Quest() = default;
 
 	void Complete()
 	{
-		active = false;
 		done = true;
-		for (auto& quest : triggerQuests)
-			quest->Activate();
 	}
 
-	void Activate()
-	{
-		active = true;
-	}
-
-	bool IsActive() { return active; }
+	virtual void Activate() = 0;
+	virtual void Update() = 0;
+	virtual void RenderUI() = 0;
 };

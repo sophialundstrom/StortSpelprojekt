@@ -49,7 +49,6 @@ void Game::Update()
 	scene.GetCamera().SetPosition(newCameraPos);
 
 	scene.Update();
-
 }
 
 void Game::Render()
@@ -79,6 +78,8 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	particleRenderer(DEFERRED),
 	terrainRenderer(DEFERRED), terrain(50.0f)
 {
+	questLog = std::make_unique<QuestLog>(nullptr);
+
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, {0, 1, 0});
 	

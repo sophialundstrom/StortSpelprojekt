@@ -213,7 +213,7 @@
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Print.h" />
-    <ClInclude Include="Quests.h" />
+    <ClInclude Include="QuestLog.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="OldResources.h" />
