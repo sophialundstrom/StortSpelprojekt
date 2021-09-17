@@ -16,7 +16,7 @@ Camera::Camera(float FOV, float aspectRatio, float nearZ, float farZ, float rota
 
 void Camera::MoveUp(int sign)
 {
-	position.y += moveSpeed * Time::GetDelta() * sign;
+	position.y += moveSpeed * Time::GetDelta() * sign * speedMultiplier;
 }
 
 void Camera::MoveRight(int sign)
@@ -27,7 +27,7 @@ void Camera::MoveRight(int sign)
 	Vector3 rightVec = up.Cross(forwardVec);
 	rightVec.Normalize();
 
-	position += rightVec * Time::GetDelta() * moveSpeed * (float)sign;
+	position += rightVec * Time::GetDelta() * moveSpeed * (float)sign * speedMultiplier;
 }
 
 void Camera::MoveForward(int sign)
@@ -36,7 +36,7 @@ void Camera::MoveForward(int sign)
 	Vector3::Transform(forward, Matrix::CreateFromYawPitchRoll(yaw, pitch, 0.0f), forwardVec);
 	forwardVec.Normalize();
 
-	position += forwardVec * Time::GetDelta() * moveSpeed * (float)sign;
+	position += forwardVec * Time::GetDelta() * moveSpeed * (float)sign * speedMultiplier;
 }
 
 void Camera::Rotate(float dx, float dy)
@@ -51,6 +51,11 @@ void Camera::Rotate(float dx, float dy)
 
 	//PITCH
 	pitch = std::clamp(pitch + dy * Time::GetDelta() * rotationSpeed, 0.995f * -PI_DIV2, 0.995f * PI_DIV2);
+}
+
+void Camera::SetSpeedMultiplier(float xSpeed)
+{
+	speedMultiplier = xSpeed;
 }
 
 void Camera::Update()

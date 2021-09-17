@@ -15,11 +15,20 @@ void LevelEditor::Load(const std::string& file)
 void LevelEditor::Update()
 {
 	//TO DO: FIGURE OUT A NICE MOVEMENT IN EDITOR
-	if (Event::KeyIsPressed('Q'))
-		scene.GetCamera().Rotate(0, 1);
+	if (Event::RightIsClicked())
+	{
+		if (Event::ReadRawDelta().y > 0)
+			scene.GetCamera().Rotate(0, 3);
 
-	if (Event::KeyIsPressed('E'))
-		scene.GetCamera().Rotate(0, -1);
+		if (Event::ReadRawDelta().y < 0)
+			scene.GetCamera().Rotate(0, -3);
+
+		if (Event::ReadRawDelta().x > 0)
+			scene.GetCamera().Rotate(3, 0);
+
+		if (Event::ReadRawDelta().x < 0)
+			scene.GetCamera().Rotate(-3, 0);
+	}
 
 	if (Event::KeyIsPressed('W'))
 		scene.GetCamera().MoveForward();
@@ -36,12 +45,15 @@ void LevelEditor::Update()
 	if (Event::KeyIsPressed(32)) //SPACE
 		scene.GetCamera().MoveUp();
 
-	if (Event::KeyIsPressed(16)) //SHIFT
+	if (Event::KeyIsPressed('Z')) //SHIFT
 		scene.GetCamera().MoveUp(-1);
+  
+	if (Event::KeyIsPressed(16)) //SHIFT
+		scene.GetCamera().SetSpeedMultiplier(4);
+	else
+		scene.GetCamera().SetSpeedMultiplier(1);
 
-	if (Event::KeyIsPressed('T'))
-		building->Upgrade();
-
+	Event::ClearRawDelta();
 	scene.Update();
 }
 
@@ -54,11 +66,11 @@ void LevelEditor::Render()
 	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
 	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
 
+	terrainRenderer.Render(terrain);
+
 	animatedModelRenderer.Render();
 
 	modelRenderer.Render();
-
-	terrainRenderer.Render(terrain);
 
 	EndFrame();
 }
@@ -75,41 +87,31 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
 	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
-	scene.AddModel("world");
-	scene.AddModel("testSphere");
+	scene.AddModel("boulder");
+	modelRenderer.Bind(scene.Get<Model>("boulder"));
+	
+	scene.AddModel("redCube");
+	modelRenderer.Bind(scene.Get<Model>("redCube"));
 
-	modelRenderer.Bind(scene.Get<Model>("world"));
-	modelRenderer.Bind(scene.Get<Model>("testSphere"));
-
-	scene.Get<Model>("testSphere")->SetScale(0.1f);
-	std::string meshNames[] = { "Cube", "Pyramid" };
-	std::string materialNames[] = { "WaterTex", "SilverTex" };
-
-	building = std::make_shared <Building>(meshNames, materialNames,"Cube");
-	scene.AddModel("building", building);
-	modelRenderer.Bind(scene.Get<Model>("building"));
-	Model model = Model("Pyramid");
-
-	//ADD BUTTONS FOR LIGHT/MODEL/PARTICLE SYSTEM & SHOW SCENE HIERARCHY
 	{
-		AddWindow("SCENE");	
-		auto& window = windows["SCENE"];				
-		window.AddTextComponent("Scene Name");
+		AddWindow("TOOLS");
+		auto& window = windows["TOOLS"];				
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
-	//MAKE INTERACTIVE WITH SELECTED OBJECT
 	{
 		AddWindow("GAME OBJECT");
 		auto& window = windows["GAME OBJECT"];	
-		window.AddTextComponent("Game Object Name");
+		window.AddTextComponent("Name");
 	}
 
-	//RENDER PREVIEW TO IMAGE TO SHOW IN WINDOW & MAKE INTERACTIVE WITH SELECTED OBJECTS MATERIAL (AND ADD "COPY MATERIAL" THING)
 	{
-		AddWindow("MATERIAL");		
-		auto& window = windows["MATERIAL"];
-		window.AddTextComponent("Material Name");
+		AddWindow("SCENE COMPONENTS");
+		auto& window = windows["SCENE COMPONENTS"];
+		for(int i = 0; i < scene.GetObjectNames().size(); i++)
+		{
+			window.AddTextComponent(scene.GetObjectNames()[i]);
+		}
 	}
 
 	(void)Run();
@@ -125,7 +127,7 @@ State LevelEditor::Run()
 	Update();
 	Render();
 
-	auto& window = windows["SCENE"];
+	auto& window = windows["TOOLS"];
 	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
 		return State::MENU;
 

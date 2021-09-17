@@ -16,6 +16,11 @@ const std::map<std::string, std::shared_ptr<Drawable>>& Scene::GetSortedMap() co
 	return finalMap;
 }
 
+std::vector<std::string> Scene::GetObjectNames()
+{
+	return objectNames;
+}
+
 void Scene::AddModel(const std::string& file)
 {
 	UINT numInstances = 0;
@@ -33,6 +38,8 @@ void Scene::AddModel(const std::string& file)
 
 	else
 		drawables[fileName] = std::make_shared<Model>(fileName);
+
+	objectNames.push_back(fileName);
 }
 
 void Scene::AddModel(const std::string& name, std::shared_ptr <Drawable> drawable)
