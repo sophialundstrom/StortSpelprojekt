@@ -29,6 +29,10 @@ void Game::Update()
 	moveDirection.Normalize();
 
 	float movementOfsetRadiant = get2dAngle({ lookDirection.x, lookDirection.z}, {0, 1});
+
+	if (lookDirection.x < 0)
+		movementOfsetRadiant *= -1;
+
 	Matrix movementOfsetMatrix = Matrix::CreateRotationY(movementOfsetRadiant);
 
 

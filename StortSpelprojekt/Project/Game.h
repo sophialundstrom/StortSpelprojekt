@@ -20,7 +20,7 @@ private:
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
 
-    //Player Variables
+    //Player Variables      //TODO: MAKE THIS INTO A PLAYER CLASS!!!
     float playerMoveSpeed = 4;
     float heightMapGroundLevel;
     float mouseSensitivity = 10.f;
