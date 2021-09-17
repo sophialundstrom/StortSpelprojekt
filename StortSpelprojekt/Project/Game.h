@@ -8,6 +8,9 @@
 
 #include "Time.h"
 
+//PlayerClassLib
+#include <math.h>
+
 // The state subclass for the level/game
 class Game : public GameState
 {
@@ -20,9 +23,18 @@ private:
     //Player Variables
     float playerMoveSpeed = 4;
     float heightMapGroundLevel;
-    float mouseSensitivity = 15.f;
+    float mouseSensitivity = 10.f;
     float xRotationData = 0;    //Inaktiv
     float yRotationData = 0;    //Inaktiv
+
+    float get2dAngle(Vector2 a, Vector2 b)
+    {
+        a.Normalize();
+        b.Normalize();
+
+        return acos(a.x * b.x + a.y * b.y);
+    };
+
     //Player Varaibles over
 
     void Update();

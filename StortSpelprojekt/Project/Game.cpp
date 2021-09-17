@@ -3,37 +3,7 @@
 
 void Game::Update()
 {
-	
-
-	//scene.GetCamera() Do whatever with this
-
-	//TO DO: FIGURE OUT A NICE MOVEMENT IN EDITOR
-	//scene.GetCamera().Rotate(Event::ReadRawData().x, Event::ReadRawData().y);
-	//Event::ClearRawDelta();
-	//	
-
-	//if (Event::KeyIsPressed('W'))
-	//	scene.GetCamera().MoveForward();
-
-	//if (Event::KeyIsPressed('A'))
-	//	scene.GetCamera().MoveRight(-1);
-
-	//if (Event::KeyIsPressed('S'))
-	//	scene.GetCamera().MoveForward(-1);
-
-	//if (Event::KeyIsPressed('D'))
-	//	scene.GetCamera().MoveRight();
-
-	//if (Event::KeyIsPressed(32)) //SPACE
-	//	scene.GetCamera().MoveUp();
-
-	//if (Event::KeyIsPressed(16)) //SHIFT
-	//	scene.GetCamera().MoveUp(-1);
-
-	//KOLLA UPP ROLL PITCH
-	
 	Time::GetDelta;
-
 
 	scene.GetCamera().Rotate(Event::ReadRawData().x * mouseSensitivity, Event::ReadRawData().y * mouseSensitivity);
 	Event::ClearRawDelta();
@@ -45,30 +15,38 @@ void Game::Update()
 	//Movement system
 	Vector3 moveDirection = Vector3(0, 0, 0);
 
-	if (Event::KeyIsPressed(VK_UP))
+	if (Event::KeyIsPressed('W'))
 		moveDirection += Vector3(0, 0, 1);
 
-	if (Event::KeyIsPressed(VK_DOWN))
+	if (Event::KeyIsPressed('S'))
 		moveDirection += Vector3(0, 0, -1);
 
-	if (Event::KeyIsPressed(VK_LEFT))
+	if (Event::KeyIsPressed('A'))
 		moveDirection += Vector3(-1, 0, 0);
 
-	if (Event::KeyIsPressed(VK_RIGHT))
+	if (Event::KeyIsPressed('D'))
 		moveDirection += Vector3(1, 0, 0);
-	
 	moveDirection.Normalize();
+
+	float movementOfsetRadiant = get2dAngle({ lookDirection.x, lookDirection.z}, {0, 1});
+	Matrix movementOfsetMatrix = Matrix::CreateRotationY(movementOfsetRadiant);
+
+
+	moveDirection = Vector3::Transform(moveDirection, movementOfsetMatrix);
+	if (moveDirection.Length() > 0 || moveDirection.Length() < 0)
+		scene.Get<Model>("PlayerArrow")->SetRotation({ 0, movementOfsetRadiant, 0 });
+
 	moveDirection = moveDirection * (playerMoveSpeed * Time::GetDelta());
 	Vector3 newPlayerPos = playerPos + moveDirection;
 	Vector3 newCameraPos = playerPos + (lookDirection * -camDistance);
 
 
-	
+
+	//scene.Get<Model>("PlayerArrow")->SetRotation(lookDirection);
 	scene.Get<Model>("PlayerArrow")->SetPosition(newPlayerPos);
 	scene.GetCamera().SetPosition(newCameraPos);
 
 	scene.Update();
-
 
 }
 
@@ -109,8 +87,8 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 
 	//Plane in Enviroment
 	scene.AddModel("Plane");
-	scene.Get<Model>("Plane")->SetPosition(0, 0, 0);
-	scene.Get<Model>("Plane")->SetRotation(0, 0, 90);
+	scene.Get<Model>("Plane")->SetPosition(0, -1, 0);
+	scene.Get<Model>("Plane")->SetRotation(0, 0, PI);
 	modelRenderer.Bind(scene.Get<Model>("Plane"));
 
 
