@@ -21,6 +21,7 @@ private:
 
 	static MouseCoords mc;
 	static bool leftIsPressed;
+	static bool rightIsPressed;
 
 	//KEYBOARD
 	static constexpr unsigned int keys = 256;
@@ -39,6 +40,10 @@ public:
 	static void OnLeftClick(int x, int y) { leftIsPressed = true; mc = { x, y }; }
 	static void OnLeftRelease() { leftIsPressed = false; }
 
+	static bool RightIsClicked() { return rightIsPressed; }
+	static void OnRightClick(int x, int y) { rightIsPressed = true; mc = { x, y }; }
+	static void OnRightRelease() { rightIsPressed = false; }
+
 	//KEYBOARD
 	static bool KeyIsPressed(unsigned char keycode) { return keystates[keycode]; }
 	static void OnKeyPressed(unsigned char keycode) { keystates.set(keycode, true); }
@@ -53,5 +58,6 @@ public:
 inline RawDelta Event::rd;
 inline MouseCoords Event::mc;
 inline bool Event::leftIsPressed;
+inline bool Event::rightIsPressed;
 inline std::bitset<Event::keys> Event::keystates;
 inline bool Event::movement;

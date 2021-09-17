@@ -15,11 +15,14 @@ void LevelEditor::Load(const std::string& file)
 void LevelEditor::Update()
 {
 	//TO DO: FIGURE OUT A NICE MOVEMENT IN EDITOR
-	if (Event::KeyIsPressed('Q'))
-		scene.GetCamera().Rotate(0, 1);
+	if (Event::KeyIsPressed(VK))
+	{
+		if (Event::KeyIsPressed('Q'))
+			scene.GetCamera().Rotate(0, 1);
 
-	if (Event::KeyIsPressed('E'))
-		scene.GetCamera().Rotate(0, -1);
+		if (Event::KeyIsPressed('E'))
+			scene.GetCamera().Rotate(0, -1);
+	}
 
 	if (Event::KeyIsPressed('W'))
 		scene.GetCamera().MoveForward();
