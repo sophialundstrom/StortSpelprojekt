@@ -19,7 +19,7 @@ public:
 		timer.Start();
 
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_ConvertToLeftHanded | aiProcess_SortByPType);
+		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_SortByPType);
 		if (!scene)
 		{
 			Print("COULD NOT LOAD .FBX FILE");
@@ -55,8 +55,12 @@ public:
 	void ApplyMesh(const std::string& name)
 	{
 		UINT ID = Resources::Inst().GetBufferIDFromName(name);
-		if (ID != ID_INVALID)
+		if (ID != ID_INVALID) 
+		{
 			mesh.bufferID = ID;
+			mesh.vertexCount = Resources::Inst().GetVertexCountFromID(ID);
+		}
+
 	}
 
 	// Inherited via Drawable

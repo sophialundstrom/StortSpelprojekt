@@ -12,6 +12,7 @@ private:
 	Vector3 up;
 	Vector3 forward;
 
+	float speedMultiplier = 1;
 	float moveSpeed;
 	float rotationSpeed;
 
@@ -26,9 +27,11 @@ public:
 	void MoveRight(int sign = 1);
 	void MoveForward(int sign = 1);
 	void Rotate(float dx, float dy);
+	void SetSpeedMultiplier(float xSpeed);
 
 	void Update();
 
+	void SetPosition(Vector3 newPosition) { position = newPosition; };
 	Vector3 GetDirection() const { return this->direction; }
 	Vector3 GetPosition() const { return this->position; }
 	Matrix GetMatrix() const { return (viewMatrix * perspectiveMatrix).Transpose(); }

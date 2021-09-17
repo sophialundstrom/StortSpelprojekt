@@ -27,7 +27,7 @@ private:
 
 	//POINT LIGHTS
 	UINT numPointLights = 0;
-	PointLight* pointLightsData = nullptr;
+	PointLight::Data* pointLightsData = nullptr;
 
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
@@ -88,7 +88,7 @@ public:
 		shadowMap.ShutDown();
 	}
 
-	void Update(const Camera& camera, const DirectionalLight& directionalLight, const UINT& numPointLights, PointLight* pointLightsData)
+	void Update(const Camera& camera, const DirectionalLight& directionalLight, const UINT& numPointLights, PointLight::Data* pointLightsData)
 	{
 		//CAMERA
 		cameraMatrix = camera.GetMatrix();

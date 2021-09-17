@@ -62,9 +62,23 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		break;
 	}
 
+	case WM_RBUTTONDOWN:
+	{
+		POINT pt;
+		if (GetCursorPos(&pt))
+			Event::OnRightClick(pt.x, pt.y);
+		break;
+	}
+
 	case WM_LBUTTONUP:
 	{
 		Event::OnLeftRelease();
+		break;
+	}
+
+	case WM_RBUTTONUP:
+	{
+		Event::OnRightRelease();
 		break;
 	}
 
