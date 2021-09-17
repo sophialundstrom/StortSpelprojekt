@@ -39,6 +39,9 @@ void LevelEditor::Update()
 	if (Event::KeyIsPressed(16)) //SHIFT
 		scene.GetCamera().MoveUp(-1);
 
+	if (Event::KeyIsPressed('T'))
+		building->Upgrade();
+
 	scene.Update();
 }
 
@@ -79,6 +82,13 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 	modelRenderer.Bind(scene.Get<Model>("testSphere"));
 
 	scene.Get<Model>("testSphere")->SetScale(0.1f);
+	std::string meshNames[] = { "Cube", "Pyramid" };
+	std::string materialNames[] = { "WaterTex", "SilverTex" };
+
+	building = std::make_shared <Building>(meshNames, materialNames,"Cube");
+	scene.AddModel("building", building);
+	modelRenderer.Bind(scene.Get<Model>("building"));
+
 
 	//ADD BUTTONS FOR LIGHT/MODEL/PARTICLE SYSTEM & SHOW SCENE HIERARCHY
 	{

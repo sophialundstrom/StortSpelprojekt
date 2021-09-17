@@ -344,6 +344,9 @@
     <ClInclude Include="TerrainRenderer.h">
       <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DisplacementVertexShader.hlsl">

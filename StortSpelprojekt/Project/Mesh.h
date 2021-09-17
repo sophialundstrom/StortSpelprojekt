@@ -42,6 +42,6 @@ struct Mesh
 		ID3D11Buffer* buffer;
 		CreateVertexBuffer(buffer, sizeof(Vertex), sizeof(Vertex) * vertexCount, vertices.data());
 
-		resources.AddVertexBuffer(mesh->mName.C_Str(), buffer);
+		resources.AddVertexBuffer(mesh->mName.C_Str(), buffer, vertexCount);
 	}
 };
