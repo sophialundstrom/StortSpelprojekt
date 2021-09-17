@@ -89,6 +89,7 @@ void Scene::SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, flo
 Scene::Scene(const std::string& file)
 {
 	//TO DO: READ FROM FILE TO CREATE SCENE FROM STORED DATA
+	npc = new NPC;
 }
 
 void Scene::Update()
@@ -96,6 +97,8 @@ void Scene::Update()
 	camera.Update();
 	directionalLight.Update();
 
+	npc->AddModel(drawables, "world");
+	
 	for (auto& [name, drawable] : drawables)
 		drawable->Update();
 

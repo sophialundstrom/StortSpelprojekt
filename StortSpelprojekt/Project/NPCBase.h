@@ -1,12 +1,16 @@
 #pragma once
 #include "Model.h"
-#include "Scene.h"
+#include <map>
 
 class NPC
 {
 protected:
-	NPC(const std::string& file);
+
 	//Transform t;
 	std::shared_ptr<Model> model;
-	void AddModel(Scene* scene, const std::string& file);
+public:
+	NPC(const std::string& file);
+	NPC();
+
+	void AddModel(std::map<std::string, std::shared_ptr<Drawable>> &drawables, const std::string& file);
 };

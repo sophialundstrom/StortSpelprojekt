@@ -127,6 +127,9 @@
     <Filter Include="Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders">
       <UniqueIdentifier>{7576a954-47cf-4814-aad7-8e2459cc2894}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Scene\Game\NPC">
+      <UniqueIdentifier>{4eddf0a6-8e71-4109-a5d8-2581b55ef211}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -164,6 +167,12 @@
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Header Files\Application\GameStates\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="NPCBase.cpp">
+      <Filter>Header Files\Application\Scene\Game\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="NPCHostile.cpp">
+      <Filter>Header Files\Application\Scene\Game\NPC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -343,6 +352,12 @@
     </ClInclude>
     <ClInclude Include="TerrainRenderer.h">
       <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="NPCBase.h">
+      <Filter>Header Files\Application\Scene\Game\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="NPCHostile.h">
+      <Filter>Header Files\Application\Scene\Game\NPC</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

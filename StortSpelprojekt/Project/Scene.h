@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Model.h"
 #include "AnimatedModel.h"
+#include "NPCBase.h"
 #include <map>
 
 class Scene
@@ -13,6 +14,8 @@ private:
 	DirectionalLight directionalLight;
 	std::vector<PointLight> pointLights;
 	std::map<std::string, std::shared_ptr<Drawable>> drawables;
+
+	NPC *npc;
 public:
 	Scene(const std::string& file);
 	Scene() = default;

@@ -1,12 +1,25 @@
-﻿  compilation object save succeeded; see D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredVertexShader.cso
-  compilation object save succeeded; see D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\ForwardModelPixelShader.cso
-  compilation object save succeeded; see D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\ForwardParticlePixelShader.cso
-  compilation object save succeeded; see D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\ForwardTerrainPixelShader.cso
-  compilation object save succeeded; see D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\ModelVertexShader.cso
-  compilation object save succeeded; see D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleGeometryShader.cso
-  compilation object save succeeded; see D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleVertexShader.cso
-  compilation object save succeeded; see D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowVertexShader.cso
-  compilation object save succeeded; see D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\TerrainVertexShader.cso
-  compilation object save succeeded; see D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitForwardModelPixelShader.cso
-  compilation object save succeeded; see D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitModelVertexShader.cso
+﻿  Game.cpp
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(28,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(29,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animator.h(68,1): warning C4267: 'argument': conversion from 'size_t' to 'const UINT', possible loss of data
+  LevelEditor.cpp
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(28,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(29,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animator.h(68,1): warning C4267: 'argument': conversion from 'size_t' to 'const UINT', possible loss of data
+  Main.cpp
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(28,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(29,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animator.h(68,1): warning C4267: 'argument': conversion from 'size_t' to 'const UINT', possible loss of data
+  NPCBase.cpp
+  ParticleEditor.cpp
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(28,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(29,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animator.h(68,1): warning C4267: 'argument': conversion from 'size_t' to 'const UINT', possible loss of data
+  Scene.cpp
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(28,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animation.h(29,23): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Animator.h(68,1): warning C4267: 'argument': conversion from 'size_t' to 'const UINT', possible loss of data
+  Generating Code...
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Scene.cpp(16): warning C4172: returning address of local variable or temporary: finalMap
+D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\Project\Skeleton.h(24): warning C4172: returning address of local variable or temporary
   Project.vcxproj -> D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\Project.exe
