@@ -22,8 +22,8 @@ protected:
 
 		this->matrix = s * r * t;
 
-		if (parent)
-			matrix *= parent->matrix;
+		/*if (parent)
+			matrix *= parent->matrix;*/
 	}
 public:
 	Vector3 GetPosition()	const { return this->position; }
