@@ -6,7 +6,10 @@ class ColliderRenderer : public Renderer
 {
 private:
 	//INDEX BUFFERS
+	const UINT SPHERE_INDICES = 48;
 	ID3D11Buffer* sphereIndices;
+
+	const UINT BOX_INDICES = 24;
 	ID3D11Buffer* boxIndices;
 
 	//BUFFER
@@ -33,9 +36,11 @@ public:
 		//INDEX BUFFERS
 		static const UINT sIndices[] =
 		{
-			1, 2
+			0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 0,
+			8, 9, 9, 10, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 8,
+			16, 17, 17, 18, 18, 19, 19, 20, 20, 21, 21, 22, 22, 23, 23, 16
 		};
-		CreateIndexBuffer(sphereIndices, ARRAYSIZE(sIndices), sIndices);
+		CreateIndexBuffer(sphereIndices, SPHERE_INDICES, sIndices);
 
 		static const UINT bIndices[] =
 		{
@@ -52,7 +57,7 @@ public:
 			2, 6,
 			3, 7
 		};
-		CreateIndexBuffer(boxIndices, ARRAYSIZE(bIndices), bIndices);
+		CreateIndexBuffer(boxIndices, BOX_INDICES, bIndices);
 
 		//BUFFER
 		CreateBuffer(matrixBuf, sizeof(Matrix));
@@ -84,6 +89,8 @@ public:
 
 	~ColliderRenderer()
 	{
+		sphereIndices->Release();
+		boxIndices->Release();
 		matrixBuf->Release();
 		vertexShader->Release();
 		pixelShader->Release();
@@ -113,19 +120,19 @@ public:
 			if (!collider)
 				continue;
 
+			collider->Bind();
+
 			if (collider->Type() == ColliderType::BOX)
 			{
-				collider->Bind();
 				Graphics::Inst().GetContext().IASetIndexBuffer(boxIndices, DXGI_FORMAT_R32_UINT, 0);
-				Graphics::Inst().GetContext().DrawIndexed(24, 0, 0);
+				Graphics::Inst().GetContext().DrawIndexed(BOX_INDICES, 0, 0);
 			}
 
 			else
 			{
-
+				Graphics::Inst().GetContext().IASetIndexBuffer(sphereIndices, DXGI_FORMAT_R32_UINT, 0);
+				Graphics::Inst().GetContext().DrawIndexed(SPHERE_INDICES, 0, 0);
 			}
-
-			
 		}
 	}
 };

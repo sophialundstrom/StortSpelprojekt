@@ -136,6 +136,12 @@
     <Filter Include="Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders">
       <UniqueIdentifier>{2ec7b7cf-001c-4d3f-8091-53ce310a792b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\GameStates\Game\Quest System">
+      <UniqueIdentifier>{8dc68156-9644-4ab9-a5bc-8d7086f4ca2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\GameStates\Game\NPCs">
+      <UniqueIdentifier>{340ec882-462a-40e6-bbea-29c4e55f1efd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -358,6 +364,24 @@
     </ClInclude>
     <ClInclude Include="ColliderRenderer.h">
       <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Quest.h">
+      <Filter>Header Files\Application\GameStates\Game\Quest System</Filter>
+    </ClInclude>
+    <ClInclude Include="FightQuest.h">
+      <Filter>Header Files\Application\GameStates\Game\Quest System</Filter>
+    </ClInclude>
+    <ClInclude Include="CollectQuest.h">
+      <Filter>Header Files\Application\GameStates\Game\Quest System</Filter>
+    </ClInclude>
+    <ClInclude Include="TalkQuest.h">
+      <Filter>Header Files\Application\GameStates\Game\Quest System</Filter>
+    </ClInclude>
+    <ClInclude Include="Villager.h">
+      <Filter>Header Files\Application\GameStates\Game\NPCs</Filter>
+    </ClInclude>
+    <ClInclude Include="Quests.h">
+      <Filter>Header Files\Application\GameStates\Game\Quest System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
