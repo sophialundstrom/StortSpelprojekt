@@ -5,10 +5,9 @@ class Building :public Model
 {
 private:
 	static const UINT stages = 2;
+	UINT currState = 0;
 	std::string meshNames[stages];
 	std::string materialNames[stages];
-	UINT currState = 0;
-
 public:
 	Building() = default;
 
@@ -21,7 +20,6 @@ public:
 			this->materialNames[i] = materialNames[i];
 		}
 	}
-
 	void Upgrade()
 	{
 		currState++;
@@ -29,6 +27,5 @@ public:
 			return;
 		ApplyMesh(meshNames[currState]);
 		ApplyMaterial(materialNames[currState]);
-	}
-
+	
 };
