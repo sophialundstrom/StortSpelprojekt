@@ -73,6 +73,6 @@ struct AnimatedMesh
 		ID3D11Buffer* buffer;
 		CreateVertexBuffer(buffer, sizeof(AnimatedVertex), sizeof(AnimatedVertex) * vertexCount, vertices.data());
 
-		resources.AddVertexBuffer(mesh->mName.C_Str(), buffer);
+		resources.AddVertexBuffer(mesh->mName.C_Str(), buffer, vertexCount);
 	}
 };

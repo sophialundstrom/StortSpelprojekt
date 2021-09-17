@@ -155,7 +155,7 @@ public:
 		CreateBuffer(camera_buf);
 		CreateBuffer(numLights_buf);
 		CreateBuffer(globalAmbient_buf);
-		CreateStructuredBuffer(lights_buf, lights_buf_srv, sizeof(PointLight), MAX_LIGHTS * sizeof(PointLight));
+		CreateStructuredBuffer(lights_buf, lights_buf_srv, sizeof(PointLight::Data), MAX_LIGHTS * sizeof(PointLight::Data));
 
 		Print("SUCCEEDED TO INITIALIZE DEFERRED RENDERER");
 	}

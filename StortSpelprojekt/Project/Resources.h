@@ -17,7 +17,12 @@ private:
 	ID3D11Buffer* materialBuffer = nullptr;
 
 	ID3D11Buffer* currentVertexBuffer = nullptr;
-	std::map<std::string, ID3D11Buffer*> vertexBuffers;
+
+	std::vector<std::string> bufferNames;
+
+	std::vector<UINT> vertexCounts;
+
+	std::map<UINT, ID3D11Buffer*> vertexBuffers;
 
 	std::map<UINT, std::shared_ptr<Material>> materials;
 public:
@@ -52,7 +57,12 @@ public:
 	void AddMaterial(Material* material) { materials.emplace(NumMaterials(), material); }
 
 	//ADD NEW VERTEX BUFFER
-	void AddVertexBuffer(const std::string& name, ID3D11Buffer* buffer) { vertexBuffers[name] = buffer; }
+	void AddVertexBuffer(const std::string& name, ID3D11Buffer* buffer, UINT vertexCount) { vertexBuffers.emplace(NumBuffers(), buffer); bufferNames.emplace_back(name); vertexCounts.emplace_back(vertexCount); }
+
+	UINT GetVertexCountFromID(UINT ID) 
+	{
+		return vertexCounts[ID];
+	}
 
 	//GET MATERIAL ID FROM NAME
 	UINT GetMaterialIDFromName(const std::string& name)
@@ -66,14 +76,11 @@ public:
 	//GET VERTEX BUFFER ID FROM NAME
 	UINT GetBufferIDFromName(const std::string& name)
 	{
-		UINT ID = 0;
-		for (auto& [n, buffer] : vertexBuffers)
+		for (int i = 0; i < bufferNames.size(); i++)
 		{
-			ID++;
-			if (n == name)
-				return ID;
-		}
-					
+			if (name == bufferNames[i])
+				return i;
+		}		
 		return ID_INVALID;
 	}
 

@@ -344,6 +344,9 @@
     <ClInclude Include="TerrainRenderer.h">
       <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DisplacementVertexShader.hlsl">
@@ -425,6 +428,12 @@
       <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ForwardTerrainPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredTerrainPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="TerrainGeometryShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

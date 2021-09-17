@@ -58,6 +58,8 @@ void Game::Render()
 
 	modelRenderer.Render();
 
+	terrainRenderer.Render(terrain);
+
 	shadowRenderer.Render();
 
 	Graphics::Inst().BeginFrame();
@@ -72,7 +74,8 @@ void Game::Render()
 Game::Game(UINT clientWidth, UINT clientHeight)
 	:deferredRenderer(clientWidth, clientHeight), 
 	modelRenderer(DEFERRED, true), 
-	particleRenderer(DEFERRED)
+	particleRenderer(DEFERRED),
+	terrainRenderer(DEFERRED), terrain(50.0f)
 {
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, {0, 1, 0});
@@ -92,6 +95,12 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	modelRenderer.Bind(scene.Get<Model>("Plane"));
 
 
+
+	//scene.AddModel("staff");
+	//modelRenderer.Bind(scene.Get<Model>("staff"));
+	//scene.Get<Model>("staff")->SetScale(2.0f);
+
+	//terrain.Draw();
 
 	deferredRenderer.SetRenderTargets();
 	(void)Run();

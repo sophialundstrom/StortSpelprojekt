@@ -5,6 +5,8 @@
 #include "ParticleRenderer.h"
 #include "ShadowRenderer.h"
 #include "DeferredRenderer.h"
+#include "TerrainRenderer.h"
+
 
 #include "Time.h"
 
@@ -19,6 +21,9 @@ private:
     ModelRenderer modelRenderer;
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
+    TerrainRenderer terrainRenderer;
+
+
 
     //Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
 
@@ -46,6 +51,8 @@ public:
     Game() = delete;
     Game(UINT clientWidth, UINT clientHeight);
     ~Game(); // Removes drawables and resources
+
+    Terrain terrain;
 
     // Inherited via GameState
     virtual State Run() override;
