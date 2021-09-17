@@ -12,6 +12,7 @@ private:
 	Vector3 up;
 	Vector3 forward;
 
+	float speedMultiplier = 1;
 	float moveSpeed;
 	float rotationSpeed;
 
@@ -26,6 +27,7 @@ public:
 	void MoveRight(int sign = 1);
 	void MoveForward(int sign = 1);
 	void Rotate(float dx, float dy);
+	void SetSpeedMultiplier(float xSpeed);
 
 	void Update();
 
