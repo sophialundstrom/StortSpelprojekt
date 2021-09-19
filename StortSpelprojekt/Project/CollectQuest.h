@@ -7,17 +7,21 @@ private:
 	unsigned int collectedItems = 0;
 	unsigned int numItems;
 public:
-	CollectQuest() = default;
+	CollectQuest(QuestType type, UINT ID, const std::string& name, bool active)
+		:Quest(type, ID, name, active)
+	{
+
+	}
 
 	// Inherited via Quest
 	virtual void Activate() override
 	{
 		collectedItems = 0;
 		numItems = 0;
-		done = false;
+		completed = false;
 	}
 
-	virtual void Update() override
+	virtual void Update(Player* player) override
 	{
 		collectedItems++;
 		if (collectedItems == numItems)

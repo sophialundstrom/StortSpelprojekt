@@ -1,3 +1,0 @@
-0 "A New Beginning" 1 NPC_NAME 2 1 2
-1 "Sub Quest" 0 NPC_NAME
-2 "Sub Quest 2" 0 NPC_NAME

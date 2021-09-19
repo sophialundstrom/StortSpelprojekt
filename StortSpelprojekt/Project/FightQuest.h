@@ -7,11 +7,19 @@ private:
 	unsigned int completedTargets = 0;
 	unsigned int numTargets;
 public:
-	FightQuest(const std::string& name, unsigned int ID, unsigned int numTargets)
-		:Quest(name, ID), numTargets(numTargets) {}
+	FightQuest(QuestType type, UINT ID, const std::string& name, bool active)
+		:Quest(type, ID, name, active)
+	{
+
+	}
 
 	// Inherited via Quest
-	virtual void Update() override
+	virtual void Activate() override
+	{
+
+	}
+
+	virtual void Update(Player* player) override
 	{
 		completedTargets++;
 		if (completedTargets == numTargets)

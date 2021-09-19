@@ -3,24 +3,48 @@
 #include <vector>
 #include "Player.h"
 
+enum class QuestType { TALK, COLLECT, FIGHT };
+
 class Quest
 {
 private:
-	unsigned int ID;
+	QuestType type;
+	UINT ID;
 protected:
 	std::string name;
-	bool done = false;
-	UINT numTriggerQuests;
+	bool active = false;
+	bool completed = false;
 	std::vector<UINT> triggerQuests;
 public:
-	Quest() = default;
+	Quest(QuestType type, UINT ID, const std::string& name, bool active)
+		:type(type), ID(ID), name(name), active(active)
+	{
+
+	}
+
+	UINT GetID()
+	{
+		return ID;
+	}
+
+	void AddTriggerQuest(UINT ID)
+	{
+		triggerQuests.emplace_back(ID);
+	}
+
+	const std::vector<UINT>& GetTriggerQuests()
+	{
+		return triggerQuests;
+	}
 
 	void Complete()
 	{
-		done = true;
+		completed = true;
 	}
 
+	bool IsCompleted() { return completed; }
+
 	virtual void Activate() = 0;
-	virtual void Update() = 0;
+	virtual void Update(Player* player) = 0;
 	virtual void RenderUI() = 0;
 };

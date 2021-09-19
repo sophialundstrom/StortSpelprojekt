@@ -4,13 +4,21 @@
 class TalkQuest : public Quest
 {
 private:
-	unsigned int npcID;
+
 public:
-	TalkQuest(const std::string& name, unsigned int ID, unsigned int npcID)
-		:Quest(name, ID), npcID(npcID) {}
+	TalkQuest(QuestType type, UINT ID, const std::string& name, bool active)
+		:Quest(type, ID, name, active)
+	{
+
+	}
 
 	// Inherited via Quest
-	virtual void Update() override
+	virtual void Activate() override
+	{
+
+	}
+
+	virtual void Update(Player* player) override
 	{
 		Complete();
 	}

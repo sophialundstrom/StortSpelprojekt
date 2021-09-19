@@ -121,6 +121,12 @@ State Game::Run()
 	Update();
 	Render();
 
+	if (Event::KeyIsPressed('T'))
+		QuestLog::Inst().Activate(0);
+
+	if (Event::KeyIsPressed('U'))
+		QuestLog::Inst().Complete(0);
+
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;
 

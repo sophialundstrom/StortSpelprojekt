@@ -1,46 +1,92 @@
 #pragma once
 #include "Singleton.h"
 #include "Player.h"
-#include "TalkQuest.h"
-#include "CollectQuest.h"
-#include "FightQuest.h"
+#include "QuestLogLoader.h"
 #include <map>
 
 class QuestLog : public Singleton<QuestLog>
 {
 private:
 	Player* player;
-	std::map<unsigned int, Quest*> quests;
+	std::map<UINT, Quest*> quests;
 	std::vector<Quest*> activeQuests;
+
+	void ActivateTriggerQuests(Quest* quest)
+	{
+		const auto& newQuests = quest->GetTriggerQuests();
+		for (auto& ID : newQuests)
+			Activate(ID);
+	}
+
+	void AppendQuest(Quest* quest)
+	{
+		auto found = std::find(activeQuests.begin(), activeQuests.end(), quest);
+		if (found == activeQuests.end())
+			activeQuests.emplace_back(quest);
+	}
+
+	void EraseQuest(Quest* quest)
+	{
+		for (UINT i = 0; i < activeQuests.size(); ++i)
+			if (activeQuests[i] == quest)
+				activeQuests.erase(activeQuests.begin() + i);
+	}
 public:
 	QuestLog(Player* player)
 		:Singleton(this), player(player)
 	{
-		//READ FILE WITH QUESTS ?
+		QuestLogLoader::Load("Default", quests);
+	}
+
+	~QuestLog()
+	{
+		for (auto& [ID, quest] : quests)
+			delete quest;
 	}
 
 	void Update()
 	{
 		for (auto* quest : activeQuests)
-			quest->Update();
+		{
+			quest->Update(player);
+
+			if (quest->IsCompleted())
+			{
+				ActivateTriggerQuests(quest);
+				EraseQuest(quest);
+			}
+		}
 	}
 
-	void Activate(unsigned int ID)
+	//TO BE ABLE TO START A QUEST FROM GAME
+	void Activate(UINT ID)
 	{
-		quests[ID]->Activate();
+		if (quests[ID]->IsCompleted() || quests.find(ID) == quests.end())
+			return;
+
+		else
+			AppendQuest(quests[ID]);
 	}
 
-	void Complete(unsigned int ID)
+	//TO BE ABLE TO COMPLETE A QUEST FROM GAME
+	void Complete(UINT ID)
 	{
-		quests[ID]->Complete();
-		activeQuests.erase(activeQuests.begin() + ID);
+		for (UINT i = 0; i < activeQuests.size(); ++i)
+		{
+			Quest* quest = activeQuests[i];
+
+			if (quest->GetID() == ID)
+			{
+				ActivateTriggerQuests(quest);
+				EraseQuest(quest);
+			}
+		}
 	}
 
 	void RenderUI()
 	{
 		//RENDER UI FOR ALL ACTIVE QUESTS (SHOWING PROGRESS AND SUCH)
 		for (auto& [ID, quest] : quests)
-			if (quest->IsActive())
-				quest->RenderUI();
+			quest->RenderUI();
 	}
 };
