@@ -24,11 +24,10 @@ void LevelEditor::Update()
 	if (Event::LeftIsClicked())
 	{
 		GetCursorPos(&cursor);
-		//cursor.x = cursor.x / wRatioX;
-		//cursor.y = cursor.y / wRatioY;
 		ScreenToClient(appWindow, &cursor);
-		screenSpaceCoordinates.x = (((2.0f * cursor.x) / wWidth) - 1) / scene.GetCamera().GetProjectionMatrix()._11;
 		screenSpaceCoordinates.y = (((-2.0f * cursor.y) / wHeight) + 1) / scene.GetCamera().GetProjectionMatrix()._22;
+		screenSpaceCoordinates.x = (((4.0f * cursor.x * wRatioX) / wWidth) - 2 * wRatioX) / scene.GetCamera().GetProjectionMatrix()._11;
+		screenSpaceCoordinates.y = (((-8.0f * cursor.y * wRatioY) / wHeight) + 4 * wRatioY) / scene.GetCamera().GetProjectionMatrix()._22;
 
 
 		std::cout << "xPos: " << screenSpaceCoordinates.x << " yPos " << screenSpaceCoordinates.y << std::endl;
@@ -108,8 +107,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	wHeight = clientHeight;
 
 	appWindow = window;
-	wRatioX = 1920 / (float)clientWidth;
-	wRatioY = 1080 / (float)clientHeight;
+	wRatioX = (float)clientWidth / GetSystemMetrics(SM_CXSCREEN);
+	wRatioY = (float)clientHeight / GetSystemMetrics(SM_CYSCREEN);
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
 	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
 	
