@@ -32,7 +32,7 @@ private:
     //Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
     float movementOfsetRadiant = 0;
     float playerMoveSpeed = 4;
-    float heightMapGroundLevel = 0;
+    float heightMapGroundLevel = 5;
     float mouseSensitivity = 10.f;
     float camDistance = 10;//How far the camera is from the playerboject
 

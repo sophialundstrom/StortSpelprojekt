@@ -26,15 +26,25 @@ void Game::Update()
 
 
 	//Calculate playerJumpVelocity
-	/*jumpVelocity = sqrtf(2 * gravity * maxJumpHeight);
+	jumpVelocity = sqrtf(2 * gravity * maxJumpHeight);
 
-	if (Event::KeyIsPressed(VK_SPACE) || playerPos.y > heightMapGroundLevel)
+	if (Event::KeyIsPressed(VK_SPACE))
 	{
 		airTime += Time::GetDelta();
 		playerVelocity = 0.5f * (-gravity) * powf(airTime, 2) + float(jumpVelocity) * airTime;
 	}
 
-	std::cout << playerVelocity << std::endl;*/
+	if (Event::KeyIsPressed(VK_BACK))
+	{
+		airTime = 0;
+	}
+
+	std::cout << playerVelocity << std::endl;
+
+
+
+
+
 
 
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
@@ -55,7 +65,7 @@ void Game::Update()
 
 	//Updates the player and cameras positions
 	moveDirection = moveDirection * (playerMoveSpeed * Time::GetDelta());
-	Vector3 newPlayerPos = playerPos + moveDirection;
+	Vector3 newPlayerPos = playerPos + moveDirection + Vector3(0, playerVelocity, 0);
 
 	if (newPlayerPos.y < heightMapGroundLevel)
 	{
