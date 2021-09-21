@@ -27,5 +27,6 @@ public:
 			return;
 		ApplyMesh(meshNames[currState]);
 		ApplyMaterial(materialNames[currState]);
-	
+	}
+
 };
