@@ -80,7 +80,7 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	terrainRenderer(DEFERRED), terrain(50.0f)
 {
 	player = new Player();
-	questLog = std::make_unique<QuestLog>(player);
+	questLog = std::make_unique<QuestLog>("Default", player);
 
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, {0, 1, 0});
@@ -92,6 +92,12 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	arrow->SetRotation({ 0, PI, 0 });
 	arrow->SetPosition(0, 5, 0);
 	modelRenderer.Bind(arrow);
+
+	//Junk
+	scene.AddModel("boulder");
+	auto boulder = scene.Get<Model>("boulder");
+	boulder->SetPosition(0, 5, 10);
+	modelRenderer.Bind(boulder);
 
 	(void)Run();
 }

@@ -42,6 +42,7 @@ public:
 	}
 
 	bool IsCompleted() { return completed; }
+	bool IsActive() { return active; }
 
 	virtual void Activate(Player* player) = 0;
 	virtual void Update(Player* player) = 0;
