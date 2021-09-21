@@ -89,7 +89,7 @@ public:
 
 			case State::LEVEL:
 				currentGameState->Delete();
-				currentGameState = new LevelEditor(window.ClientWidth(), window.ClientHeight());
+				currentGameState = new LevelEditor(window.ClientWidth(), window.ClientHeight(), window.GetHWND());
 				break;
 
 			case State::PARTICLE:

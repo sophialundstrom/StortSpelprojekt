@@ -22,6 +22,17 @@ void LevelEditor::Load(const std::string& file)
 void LevelEditor::Update()
 {
 	//TO DO: FIGURE OUT A NICE MOVEMENT IN EDITOR
+	if (Event::LeftIsClicked())
+	{
+		GetCursorPos(&cursor);
+		ScreenToClient(appWindow, &cursor);
+		screenSpaceCoordinates.x = (((2.0f * cursor.x) / wWidth) - 1) / scene.GetCamera().GetProjectionMatrix()._11;
+		screenSpaceCoordinates.y = (((-2.0f * cursor.y) / wHeight) + 1) / scene.GetCamera().GetProjectionMatrix()._22;
+
+
+		std::cout << "xPos: " << screenSpaceCoordinates.x << " yPos " << screenSpaceCoordinates.y << std::endl;
+	}
+
 	if (Event::RightIsClicked())
 	{
 		if (Event::ReadRawDelta().y > 0)
@@ -82,7 +93,7 @@ void LevelEditor::Render()
 	EndFrame();
 }
 
-LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
+LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(FORWARD, false),
 	terrainRenderer(FORWARD, 63),
 	animatedModelRenderer(FORWARD, false),
@@ -92,6 +103,10 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 500.0f, 1.0f, 5.0f);
 	scene.SetDirectionalLight(40);
 
+	wWidth = clientWidth;
+	wHeight = clientHeight;
+
+	appWindow = window;
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
 	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
 	
