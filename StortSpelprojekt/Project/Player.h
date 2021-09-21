@@ -1,20 +1,60 @@
 #pragma once
 #include "Camera.h"
+#include <map>
+
+struct Item
+{
+	UINT ID;
+};
+
+struct Inventory 
+{ 
+	std::map<UINT, UINT> items; //ID , NUM OF ITEM
+
+	Inventory() = default;
+
+	void AddItem(UINT ID)
+	{
+		items[ID]++;
+	}
+
+	void RemoveItem(UINT ID)
+	{	
+		if (items[ID] == 1)
+		{
+			items.erase(ID);
+			return;
+		}
+
+		items[ID]--;
+	}
+
+	UINT NumOf(UINT ID)
+	{
+		return items[ID];
+	}
+};
+
+struct GameStats
+{
+	//MOSTLY FOR QUEST PROGRESS BUT MAYBE FUN TO KNOW WHEN GAME IS OVER?
+	UINT barbariansKilled = 0;
+};
 
 class Player
 {
 private:
-	Camera camera;
+	struct Stats
+	{
+		float movementSpeed;
+		UINT health;
+		//OSV
+	} stats;
+
+	GameStats gameStats;
+	Inventory inventory;
 public:
 	Player() = default;
-	Player(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed,
-		Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 forward = { 0.0f, 0.0f, 1.0f }, Vector3 up = { 0.0f, 1.0f, 0.0f })
-		:camera(FOV, aspectRatio, nearZ, farZ, rotationSpeed, moveSpeed, position, forward, up) {}
-
-	void Update()
-	{
-		camera.Update();
-	}
-
-	Camera& GetCamera() { return camera; }
+	Inventory& Inventory() { return inventory; }
+	GameStats& GameStats() { return gameStats; }
 };
