@@ -6,7 +6,7 @@
 #include <fstream>
 #include <map>
 
-namespace QuestLogLoader
+namespace QuestLogFile
 {
 	inline std::string GetNthString(const std::string& line, UINT n)
 	{
