@@ -61,6 +61,11 @@ public:
 				DispatchMessage(&msg);
 			}
 
+			if (window.Exit()) {
+				delete currentGameState;
+				break;
+			}
+
 			if (Event::KeyIsPressed('C'))
 				window.ToggleCursor();
 
@@ -78,27 +83,28 @@ public:
 				break;
 
 			case State::MENU:
-				currentGameState->Delete();
+				delete currentGameState;
 				currentGameState = new DebugMainMenu(window.ClientWidth(), window.ClientHeight());
 				break;
 
 			case State::GAME:
-				currentGameState->Delete();
+				delete currentGameState;
 				currentGameState = new Game(window.ClientWidth(), window.ClientHeight());
 				break;
 
 			case State::LEVEL:
-				currentGameState->Delete();
+				delete currentGameState;
 				currentGameState = new LevelEditor(window.ClientWidth(), window.ClientHeight());
 				break;
 
 			case State::PARTICLE:
-				currentGameState->Delete();
+				delete currentGameState;
 				currentGameState = new ParticleEditor(window.ClientWidth(), window.ClientHeight());
 				break;
 
 			case State::EXIT:
 				Print("CLOSING APPLICATION");
+				delete currentGameState;
 				break;
 			}
 

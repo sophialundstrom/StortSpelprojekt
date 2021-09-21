@@ -9,7 +9,14 @@ void LevelEditor::Save(const std::string& file)
 
 void LevelEditor::Load(const std::string& file)
 {
+	std::filesystem::path path = std::filesystem::path(file);
+	if (file == "" || path.extension() != ".fbx")
+		return;
 
+	std::string fileName = path.stem().string();
+	scene.AddModel(fileName);
+	modelRenderer.Bind(scene.Get<Model>(fileName));
+	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size()-1]);
 }
 
 void LevelEditor::Update()
@@ -47,9 +54,7 @@ void LevelEditor::Update()
 
 	if (Event::KeyIsPressed('Z')) //SHIFT
 		scene.GetCamera().MoveUp(-1);
-	if (Event::KeyIsPressed('T')) //SHIFT
-		building->Upgrade();
-
+  
 	if (Event::KeyIsPressed(16)) //SHIFT
 		scene.GetCamera().SetSpeedMultiplier(4);
 	else
@@ -89,23 +94,13 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
 	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
-	/*scene.AddModel("boulder");
-	modelRenderer.Bind(scene.Get<Model>("boulder"));*/
 	
-	scene.AddModel("redCube");
-	modelRenderer.Bind(scene.Get<Model>("redCube"));
-
-	std::string meshNames[] = { "Cube", "Pyramid" };
-	std::string materialNames[] = { "WaterTex", "SilverTex" };
-
-	building = std::make_shared <Building>(meshNames, materialNames, "Cube");
-	scene.AddModel("building", building);
-	modelRenderer.Bind(scene.Get<Model>("building"));
-	Model model = Model("Pyramid");
 
 	{
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];				
+		window.AddButtonComponent("LOAD FBX", 120, 30);
+		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
@@ -138,6 +133,9 @@ State LevelEditor::Run()
 	Render();
 
 	auto& window = windows["TOOLS"];
+	if (window.GetValue<ButtonComponent>("LOAD FBX"))
+		Load(FileSystem::LoadFile("Models"));
+
 	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
 		return State::MENU;
 

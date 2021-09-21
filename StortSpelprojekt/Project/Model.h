@@ -6,6 +6,7 @@
 #include "assimp\Importer.hpp"
 #include "assimp\postprocess.h"
 #include "Time.h"
+#include "FileSystem.h"
 
 class Model : public Drawable
 {
@@ -19,6 +20,7 @@ public:
 		timer.Start();
 
 		Assimp::Importer importer;
+		std::filesystem::current_path(std::filesystem::path(FileSystem::ProjectDirectory::path));
 		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_SortByPType);
 		if (!scene)
 		{
