@@ -1,40 +1,49 @@
 #pragma once
-#include <string>
 #include <memory>
 #include <vector>
+#include "Player.h"
+
+enum class QuestType { TALK, COLLECT, FIGHT };
 
 class Quest
 {
 private:
+	QuestType type;
+	UINT ID;
+protected:
+	std::string name;
 	bool active = false;
-	bool done = false;
-
-	unsigned int ID = -1;
-	
-	unsigned int numTriggerQuests = 0;
-	std::vector<std::shared_ptr<Quest>> triggerQuests;
+	bool completed = false;
+	std::vector<UINT> triggerQuests;
 public:
-	Quest(unsigned int ID)
-		:ID(ID) {}
+	Quest(QuestType type, UINT ID, const std::string& name, bool active)
+		:type(type), ID(ID), name(name), active(active)
+	{}
 
-	void AddTriggerQuest(std::shared_ptr<Quest> quest)
+	UINT GetID()
 	{
-		triggerQuests.emplace_back(quest);
-		numTriggerQuests++;
+		return ID;
+	}
+
+	void AddTriggerQuest(UINT ID)
+	{
+		triggerQuests.emplace_back(ID);
+	}
+
+	const std::vector<UINT>& GetTriggerQuests()
+	{
+		return triggerQuests;
 	}
 
 	void Complete()
 	{
-		active = false;
-		done = true;
-		for (auto& quest : triggerQuests)
-			quest->Activate();
+		Print(name);
+		completed = true;
 	}
 
-	void Activate()
-	{
-		active = true;
-	}
+	bool IsCompleted() { return completed; }
 
-	bool IsActive() { return active; }
+	virtual void Activate(Player* player) = 0;
+	virtual void Update(Player* player) = 0;
+	virtual void RenderUI() = 0;
 };

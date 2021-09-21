@@ -371,14 +371,17 @@
     <ClInclude Include="Quest.h">
       <Filter>Header Files\Application\Scene\Game\Quests</Filter>
     </ClInclude>
-    <ClInclude Include="Quests.h">
-      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
-    </ClInclude>
     <ClInclude Include="TalkQuest.h">
       <Filter>Header Files\Application\Scene\Game\Quests</Filter>
     </ClInclude>
     <ClInclude Include="Villager.h">
       <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestLog.h">
+      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestLogFile.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
