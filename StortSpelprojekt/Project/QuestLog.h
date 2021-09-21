@@ -1,7 +1,7 @@
 #pragma once
 #include "Singleton.h"
 #include "Player.h"
-#include "QuestLogLoader.h"
+#include "QuestLogFile.h"
 #include <map>
 
 class QuestLog : public Singleton<QuestLog>
@@ -35,7 +35,7 @@ public:
 	QuestLog(Player* player)
 		:Singleton(this), player(player)
 	{
-		QuestLogLoader::Load("Default", quests);
+		QuestLogFile::Load("Default", quests);
 	}
 
 	~QuestLog()
