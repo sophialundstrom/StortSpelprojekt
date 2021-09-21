@@ -11,6 +11,8 @@ class LevelEditor : public Editor, public GameState
 {
 private:
 	HWND appWindow;
+	float wRatioX;
+	float wRatioY;
 	POINT cursor;
 	Vector3 screenSpaceCoordinates;
 	Scene scene;

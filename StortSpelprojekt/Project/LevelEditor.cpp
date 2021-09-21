@@ -1,5 +1,4 @@
 #include "LevelEditor.h"
-
 #include "Event.h"
 
 void LevelEditor::Save(const std::string& file)
@@ -25,6 +24,8 @@ void LevelEditor::Update()
 	if (Event::LeftIsClicked())
 	{
 		GetCursorPos(&cursor);
+		//cursor.x = cursor.x / wRatioX;
+		//cursor.y = cursor.y / wRatioY;
 		ScreenToClient(appWindow, &cursor);
 		screenSpaceCoordinates.x = (((2.0f * cursor.x) / wWidth) - 1) / scene.GetCamera().GetProjectionMatrix()._11;
 		screenSpaceCoordinates.y = (((-2.0f * cursor.y) / wHeight) + 1) / scene.GetCamera().GetProjectionMatrix()._22;
@@ -107,6 +108,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	wHeight = clientHeight;
 
 	appWindow = window;
+	wRatioX = 1920 / (float)clientWidth;
+	wRatioY = 1080 / (float)clientHeight;
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
 	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
 	
