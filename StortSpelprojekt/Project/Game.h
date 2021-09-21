@@ -27,7 +27,7 @@ private:
 
     Terrain terrain;
 
-    Player* player;
+    std::shared_ptr <Player> player;
 
     //Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
     float movementOfsetRadiant = 0;
