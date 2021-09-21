@@ -380,7 +380,7 @@
     <ClInclude Include="QuestLog.h">
       <Filter>Header Files\Application\Scene\Game\Quests</Filter>
     </ClInclude>
-    <ClInclude Include="QuestLogLoader.h">
+    <ClInclude Include="QuestLogFile.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
