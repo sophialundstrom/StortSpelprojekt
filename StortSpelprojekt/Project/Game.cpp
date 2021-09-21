@@ -77,7 +77,7 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	:deferredRenderer(clientWidth, clientHeight), 
 	modelRenderer(DEFERRED, true), 
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED), terrain(50.0f)
+	terrainRenderer(DEFERRED), terrain(50.0f, 0)
 {
 	player = new Player();
 	questLog = std::make_unique<QuestLog>("Default", player);
