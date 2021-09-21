@@ -3,8 +3,7 @@
 
 void Game::Update()
 {
-	Time::GetDelta;
-
+	
 	//Rotate camera by cursor movement 
 	scene.GetCamera().Rotate(Event::ReadRawDelta().x * mouseSensitivity, Event::ReadRawDelta().y * mouseSensitivity);
 	Event::ClearRawDelta();
@@ -25,6 +24,19 @@ void Game::Update()
 		moveDirection += Vector3(1, 0, 0);
 	moveDirection.Normalize();
 
+
+	//Calculate playerJumpVelocity
+	/*jumpVelocity = sqrtf(2 * gravity * maxJumpHeight);
+
+	if (Event::KeyIsPressed(VK_SPACE) || playerPos.y > heightMapGroundLevel)
+	{
+		airTime += Time::GetDelta();
+		playerVelocity = 0.5f * (-gravity) * powf(airTime, 2) + float(jumpVelocity) * airTime;
+	}
+
+	std::cout << playerVelocity << std::endl;*/
+
+
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
 	//Aligns the keyboardinputs by the camera direction afterwards via the radian.
 	
@@ -44,6 +56,12 @@ void Game::Update()
 	//Updates the player and cameras positions
 	moveDirection = moveDirection * (playerMoveSpeed * Time::GetDelta());
 	Vector3 newPlayerPos = playerPos + moveDirection;
+
+	if (newPlayerPos.y < heightMapGroundLevel)
+	{
+		newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
+	}
+
 	Vector3 newCameraPos = playerPos + (lookDirection * -camDistance);
 	scene.Get<Model>("PlayerArrow")->SetPosition(newPlayerPos);
 	scene.GetCamera().SetPosition(newCameraPos);

@@ -28,9 +28,19 @@ private:
     //Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
     float movementOfsetRadiant = 0;
     float playerMoveSpeed = 4;
-    float heightMapGroundLevel;
+    float heightMapGroundLevel = 0;
     float mouseSensitivity = 10.f;
     float camDistance = 10;//How far the camera is from the playerboject
+
+    float gravity = 9.82f;
+    float timePassed = 0;
+    
+  
+    
+    float maxJumpHeight = 1;
+    float jumpVelocity = 0;
+    float playerVelocity = 0;
+    float airTime = 0;
 
     float get2dAngle(Vector2 a, Vector2 b)
     {
