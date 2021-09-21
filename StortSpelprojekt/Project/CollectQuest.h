@@ -4,32 +4,29 @@
 class CollectQuest : public Quest
 {
 private:
-	unsigned int collectedItems = 0;
-	unsigned int numItems;
+	UINT collectedItems = 0;
+	UINT numItems;
+	UINT itemID;
 public:
-	CollectQuest(QuestType type, UINT ID, const std::string& name, bool active)
-		:Quest(type, ID, name, active)
-	{
-
-	}
+	CollectQuest(QuestType type, UINT ID, const std::string& name, bool active, UINT numItems, UINT itemID)
+		:Quest(type, ID, name, active), numItems(numItems), itemID(itemID)
+	{}
 
 	// Inherited via Quest
-	virtual void Activate() override
+	virtual void Activate(Player* player) override
 	{
-		collectedItems = 0;
-		numItems = 0;
-		completed = false;
+		Update(player);
 	}
 
 	virtual void Update(Player* player) override
 	{
-		collectedItems++;
+		collectedItems = player->Inventory().NumOf(itemID);
 		if (collectedItems == numItems)
 			Complete();
 	}
 
 	virtual void RenderUI() override
 	{
-		Print("", name);
+		Print(name);
 	}
 };

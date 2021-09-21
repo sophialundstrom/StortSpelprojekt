@@ -50,7 +50,7 @@ public:
 		{
 			quest->Update(player);
 
-			if (quest->IsCompleted())
+			if (quest->IsCompleted())		//IF COMPLETED BY AUTOMATIC REASON (COLLECTING/FIGHT)
 			{
 				ActivateTriggerQuests(quest);
 				EraseQuest(quest);
@@ -65,7 +65,10 @@ public:
 			return;
 
 		else
+		{
+			quests[ID]->Activate(player);
 			AppendQuest(quests[ID]);
+		}	
 	}
 
 	//TO BE ABLE TO COMPLETE A QUEST FROM GAME
@@ -77,6 +80,7 @@ public:
 
 			if (quest->GetID() == ID)
 			{
+				quest->Complete();
 				ActivateTriggerQuests(quest);
 				EraseQuest(quest);
 			}
@@ -88,5 +92,10 @@ public:
 		//RENDER UI FOR ALL ACTIVE QUESTS (SHOWING PROGRESS AND SUCH)
 		for (auto& [ID, quest] : quests)
 			quest->RenderUI();
+	}
+
+	bool QuestIsDone(UINT ID)
+	{
+		return quests[ID]->IsCompleted();
 	}
 };

@@ -50,23 +50,44 @@ namespace QuestLogLoader
 			for (UINT i = 0; i < numTriggerQuests; ++i)
 				reader >> triggerQuests[i];
 
-			std::getline(reader, line);
-
-			std::string name = GetNthString(line, 1);
-
 			switch ((QuestType)type)
 			{
+
 			case QuestType::TALK:
-				quest = new TalkQuest((QuestType)type, ID, name, active);
+			{
+				std::getline(reader, line);
+				std::string name = GetNthString(line, 1);
+				std::string NPC = GetNthString(line, 2);
+				quest = new TalkQuest((QuestType)type, ID, name, active, NPC);
 				break;
+			}
 
 			case QuestType::COLLECT:
-				quest = new CollectQuest((QuestType)type, ID, name, active);
-				break;
+			{
+				UINT numItems;
+				reader >> numItems;
 
-			case QuestType::FIGHT:
-				quest = new FightQuest((QuestType)type, ID, name, active);
+				UINT itemID;
+				reader >> itemID;
+
+				std::getline(reader, line);
+				std::string name = GetNthString(line, 1);
+
+				quest = new CollectQuest((QuestType)type, ID, name, active, numItems, itemID);
 				break;
+			}
+				
+			case QuestType::FIGHT:
+			{
+				UINT numTargets;
+				reader >> numTargets;
+
+				std::getline(reader, line);
+				std::string name = GetNthString(line, 1);
+
+				quest = new FightQuest((QuestType)type, ID, name, active, numTargets);
+				break;
+			}
 			}
 
 			for (UINT i = 0; i < numTriggerQuests; ++i)

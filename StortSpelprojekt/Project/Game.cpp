@@ -48,6 +48,7 @@ void Game::Update()
 	scene.Get<Model>("PlayerArrow")->SetPosition(newPlayerPos);
 	scene.GetCamera().SetPosition(newCameraPos);
 
+	QuestLog::Inst().Update();
 	scene.Update();
 }
 
@@ -59,7 +60,7 @@ void Game::Render()
 
 	modelRenderer.Render();
 
-	//terrainRenderer.Render(terrain);
+	terrainRenderer.Render(terrain);
 
 	shadowRenderer.Render();
 
@@ -78,42 +79,28 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	particleRenderer(DEFERRED),
 	terrainRenderer(DEFERRED), terrain(50.0f)
 {
-	questLog = std::make_unique<QuestLog>(nullptr);
+	player = new Player();
+	questLog = std::make_unique<QuestLog>(player);
 
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, {0, 1, 0});
-	
 	scene.SetDirectionalLight(30, 4, 4);
 
 	//Player
 	scene.AddModel("PlayerArrow");
-	scene.Get<Model>("PlayerArrow")->SetPosition(0, 0, 0);
-	scene.Get<Model>("PlayerArrow")->SetRotation({ 0, PI, 0 });
-	modelRenderer.Bind(scene.Get<Model>("PlayerArrow"));
+	auto arrow = scene.Get<Model>("PlayerArrow");
+	arrow->SetRotation({ 0, PI, 0 });
+	arrow->SetPosition(0, 5, 0);
+	modelRenderer.Bind(arrow);
 
-	//Plane in Enviroment
-	scene.AddModel("Plane");
-	scene.Get<Model>("Plane")->SetPosition(0, -1, 0);
-	scene.Get<Model>("Plane")->SetRotation(0, 0, 0);
-	modelRenderer.Bind(scene.Get<Model>("Plane"));
-
-
-
-	//scene.AddModel("staff");
-	//modelRenderer.Bind(scene.Get<Model>("staff"));
-	//scene.Get<Model>("staff")->SetScale(2.0f);
-
-	//terrain.Draw();
-
-	deferredRenderer.SetRenderTargets();
 	(void)Run();
 }
 
 Game::~Game()
 {
+	delete player;
 	scene.Clear();
 	Resources::Inst().Clear();
-	std::cout << "Game Deleted\n";
 }
 
 State Game::Run()
@@ -126,6 +113,12 @@ State Game::Run()
 
 	if (Event::KeyIsPressed('U'))
 		QuestLog::Inst().Complete(0);
+
+	if (Event::KeyIsPressed('B'))
+		player->GameStats().barbariansKilled++;
+
+	if (Event::KeyIsPressed('I'))
+		player->Inventory().AddItem(0);
 
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;

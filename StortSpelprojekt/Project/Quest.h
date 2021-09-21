@@ -18,9 +18,7 @@ protected:
 public:
 	Quest(QuestType type, UINT ID, const std::string& name, bool active)
 		:type(type), ID(ID), name(name), active(active)
-	{
-
-	}
+	{}
 
 	UINT GetID()
 	{
@@ -39,12 +37,13 @@ public:
 
 	void Complete()
 	{
+		Print(name);
 		completed = true;
 	}
 
 	bool IsCompleted() { return completed; }
 
-	virtual void Activate() = 0;
+	virtual void Activate(Player* player) = 0;
 	virtual void Update(Player* player) = 0;
 	virtual void RenderUI() = 0;
 };

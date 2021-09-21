@@ -25,7 +25,9 @@ private:
     DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
 
-    Player player;
+    Terrain terrain;
+
+    Player* player;
 
     //Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
     float movementOfsetRadiant = 0;
@@ -53,8 +55,6 @@ public:
     Game() = delete;
     Game(UINT clientWidth, UINT clientHeight);
     ~Game(); // Removes drawables and resources
-
-    Terrain terrain;
 
     // Inherited via GameState
     virtual State Run() override;

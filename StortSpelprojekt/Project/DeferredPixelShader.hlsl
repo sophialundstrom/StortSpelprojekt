@@ -132,7 +132,10 @@ float4 main(PS_INPUT input) : SV_TARGET
     const float globalAmbient = 0.5f;
     
     const float4 T = diffuseTextures.Sample(wrapSampler, input.texCoords);
-	
+    
+    //REMOVE WHEN LIGHTING IS OOKE
+    return T;
+    
     const float3 N = normals.Sample(wrapSampler, input.texCoords).xyz;
     if (length(N.xyz) == 0)
         return backgroundColor * globalAmbient; // IF NORMAL IS 0 THERE IS NO PRIMITIVE (BACKGROUND SHOULD NOT BE SHADED)
