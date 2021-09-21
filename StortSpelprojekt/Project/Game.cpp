@@ -93,6 +93,12 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	arrow->SetPosition(0, 5, 0);
 	modelRenderer.Bind(arrow);
 
+	//Junk
+	scene.AddModel("boulder");
+	auto boulder = scene.Get<Model>("boulder");
+	boulder->SetPosition(0, 5, 10);
+	modelRenderer.Bind(boulder);
+
 	(void)Run();
 }
 
