@@ -21,11 +21,14 @@ void Game::Render()
 	deferredRenderer.Render();
 	
 	//RENDER UI PROBABLY
+	userInterface.Render();
 
 	Graphics::Inst().EndFrame();
+
+
 }
 
-Game::Game(UINT clientWidth, UINT clientHeight)
+Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight), 
 	modelRenderer(DEFERRED, true), 
 	particleRenderer(DEFERRED)
@@ -35,6 +38,7 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	scene.SetDirectionalLight(30);
 
 	deferredRenderer.SetRenderTargets();
+	userInterface.Initialize(window);
 	(void)Run();
 }
 

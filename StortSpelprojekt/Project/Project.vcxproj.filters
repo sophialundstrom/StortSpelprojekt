@@ -127,6 +127,9 @@
     <Filter Include="Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders">
       <UniqueIdentifier>{7576a954-47cf-4814-aad7-8e2459cc2894}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\UI">
+      <UniqueIdentifier>{fc7fa5e9-8216-4869-96f1-498967d2aee2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -164,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Header Files\Application\GameStates\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Header Files\Application\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -343,6 +349,9 @@
     </ClInclude>
     <ClInclude Include="TerrainRenderer.h">
       <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files\Application\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

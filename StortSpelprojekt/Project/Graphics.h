@@ -17,6 +17,7 @@ private:
 	ID3D11RenderTargetView* backBuffer;
 	ID3D11Texture2D* dsTexture;
 	ID3D11DepthStencilView* dsView;
+	IDXGISurface* UISurface;
 
 	HRESULT CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd);
 	HRESULT CreateRenderTarget();
@@ -34,4 +35,5 @@ public:
 	ID3D11DepthStencilView& GetDSV() { return  *dsView; }
 	D3D11_VIEWPORT& GetViewport() { return  viewport; }
 	const float* GetBackgroundColor() { return backgroundColor; }
+	IDXGISurface* GetSurface() { return UISurface; }
 };

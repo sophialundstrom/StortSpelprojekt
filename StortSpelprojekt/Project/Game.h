@@ -5,6 +5,7 @@
 #include "ParticleRenderer.h"
 #include "ShadowRenderer.h"
 #include "DeferredRenderer.h"
+#include "UI.h"
 
 // The state subclass for the level/game
 class Game : public GameState
@@ -14,12 +15,13 @@ private:
     ModelRenderer modelRenderer;
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
+    UI userInterface;
 
     void Update();
     void Render();
 public:
     Game() = delete;
-    Game(UINT clientWidth, UINT clientHeight);
+    Game(UINT clientWidth, UINT clientHeight, HWND window);
     ~Game(); // Removes drawables and resources
 
     // Inherited via GameState
