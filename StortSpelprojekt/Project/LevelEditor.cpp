@@ -25,7 +25,6 @@ void LevelEditor::Update()
 	{
 		GetCursorPos(&cursor);
 		ScreenToClient(appWindow, &cursor);
-		screenSpaceCoordinates.y = (((-2.0f * cursor.y) / wHeight) + 1) / scene.GetCamera().GetProjectionMatrix()._22;
 		screenSpaceCoordinates.x = (((4.0f * cursor.x * wRatioX) / wWidth) - 2 * wRatioX) / scene.GetCamera().GetProjectionMatrix()._11;
 		screenSpaceCoordinates.y = (((-8.0f * cursor.y * wRatioY) / wHeight) + 4 * wRatioY) / scene.GetCamera().GetProjectionMatrix()._22;
 
