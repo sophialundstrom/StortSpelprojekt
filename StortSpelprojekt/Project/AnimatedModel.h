@@ -25,7 +25,7 @@ public:
 
 		importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
 
-		scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_ConvertToLeftHanded | aiProcess_SortByPType);
+		scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_SortByPType | aiProcess_FlipUVs);
 
 		if (!scene)
 		{
@@ -56,7 +56,7 @@ public:
 
 		if (useTextures) 
 			Resources::Inst().BindMaterial(mesh.materialID, useMaterial); 
-		Resources::Inst().Draw(mesh.vertexCount, mesh.bufferID); 
+		Resources::Inst().DrawAnimated(mesh.vertexCount, mesh.bufferID); 
 	}
 
 	void ApplyMaterial(const std::string& name)

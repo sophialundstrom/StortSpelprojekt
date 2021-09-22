@@ -76,9 +76,10 @@ void Game::Render()
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight), 
+	animatedModelRenderer(DEFERRED, true),
 	modelRenderer(DEFERRED, true), 
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED), terrain(50.0f, 0)
+	terrainRenderer(DEFERRED), terrain(0.0f, 0)
 {
 	player = new Player();
 	questLog = std::make_unique<QuestLog>("Default", player);
@@ -100,6 +101,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	auto boulder = scene.Get<Model>("boulder");
 	boulder->SetPosition(0, 5, 10);
 	modelRenderer.Bind(boulder);
+
+	//Animation
+	scene.AddAnimatedModel("Animation");
+	animatedModelRenderer.Bind(scene.Get<AnimatedModel>("Animation"));
 
 	(void)Run();
 }

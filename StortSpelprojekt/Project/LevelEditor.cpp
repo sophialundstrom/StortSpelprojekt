@@ -93,6 +93,9 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 
 	terrain = new Terrain(20, 0);
 
+	scene.AddAnimatedModel("Animation");
+	animatedModelRenderer.Bind(scene.Get<AnimatedModel>("Animation"));
+
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
 	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
 	
@@ -137,6 +140,9 @@ State LevelEditor::Run()
 	auto& window = windows["TOOLS"];
 	if (window.GetValue<ButtonComponent>("LOAD FBX"))
 		Load(FileSystem::LoadFile("Models"));
+
+	if (Event::KeyIsPressed('T'))
+		scene.Get<AnimatedModel>("Animation")->PlayAnimation("Take 001");
 
 	if (window.Changed("TERRAIN START SUBDIVISIONS"))
 	{

@@ -20,6 +20,7 @@ private:
     std::unique_ptr<QuestLog> questLog;
 
     ParticleRenderer particleRenderer;
+    AnimatedModelRenderer animatedModelRenderer;
     ModelRenderer modelRenderer;
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;

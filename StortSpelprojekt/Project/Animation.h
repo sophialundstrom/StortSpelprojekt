@@ -79,6 +79,8 @@ struct Animation
 			return;
 
 		timer += Time::GetDelta();
+		float timeInTicks = timer * ticksPerSecond;
+		float frameTime = fmod(timeInTicks, duration);
 
 		if (timer > duration)
 		{
@@ -91,7 +93,11 @@ struct Animation
 		if (map.empty())
 			return;
 
-		auto lower = map.lower_bound(timer);
+		auto lower = map.lower_bound(frameTime);
+		//std::cout << lower->first << std::endl;
+
+		//auto upper = map.upper_bound(timer);
+		//std::cout << upper->first << std::endl;
 
 		if (lower == map.end())
 			lower = map.begin();

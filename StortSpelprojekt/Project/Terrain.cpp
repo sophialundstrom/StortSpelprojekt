@@ -19,7 +19,7 @@ Terrain::Terrain(float size, UINT subdivisions)
 	{
 		for (UINT j = 0; j < cells + 1; ++j)
 		{
-			position = { triSize * i, 0, triSize * j };
+			position = { triSize * i - size / 2, 0, triSize * j - size / 2 };
 			texCoords = { texSize * i, texSize * j };
 
 			vertices.emplace_back(Vertex{ position, texCoords });

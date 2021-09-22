@@ -34,6 +34,9 @@ public:
 
 		Matrix localMatrix;
 		currentAnimation->Update(nodeName, localMatrix);
+		
+		//if (localMatrix == Matrix::Identity)
+		//	localMatrix = AssimpToDX(node->mTransformation);
 
 		const Matrix globalTransform = localMatrix * parentTransform;
 
@@ -54,12 +57,15 @@ public:
 		{
 			currentAnimation = nullptr;
 			jointMatrices = std::vector<Matrix>(MAX_JOINTS);
+			UpdateBuffer(structuredBuffer, jointMatrices.data(), jointMatrices.size() * sizeof(Matrix));
 			return;
 		}
 
 		jointMatrices.clear();
 
 		const aiNode* root = scene->mRootNode->FindNode(skeleton.joints[0].name.c_str());
+		if (!root)
+			return;
 
 		Matrix matrix = Matrix::Identity;
 

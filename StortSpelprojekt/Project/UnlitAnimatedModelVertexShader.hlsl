@@ -4,7 +4,7 @@ struct VS_INPUT
     float2 texCoords : TEXTURECOORDS;
     float3 normal : NORMAL;
     float4 weights : WEIGHTS;
-    uint4 boneIDs : BONEIDS;
+    int4 boneIDs : BONEIDS;
 };
 
 struct VS_OUTPUT
@@ -27,14 +27,20 @@ VS_OUTPUT main(VS_INPUT input)
 {
     VS_OUTPUT output;
 
-    float4x4 boneTransform;
+    float4x4 boneTransform = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
     
     for (uint i = 0; i < 4; ++i)
+    {
+        if (input.boneIDs[i] < 0)
+            break;
+        
         boneTransform += boneMatrices[input.boneIDs[i]] * input.weights[i];
-    
+    }
+       
     float4 position = float4(input.position, 1.0f);
     
     position = mul(position, boneTransform);
+    position.w = 1.0f;
     
     output.worldPosition = mul(position, world);
     

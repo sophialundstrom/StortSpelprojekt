@@ -29,7 +29,7 @@ VS_OUTPUT main(VS_INPUT input)
 {
     VS_OUTPUT output;
 
-    float4x4 boneTransform;
+    float4x4 boneTransform = { 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 };
     
     for (uint i = 0; i < 4; ++i)
         boneTransform += boneMatrices[input.boneIDs[i]] * input.weights[i];

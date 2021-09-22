@@ -21,7 +21,7 @@ public:
 
 		Assimp::Importer importer;
 		std::filesystem::current_path(std::filesystem::path(FileSystem::ProjectDirectory::path));
-		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_SortByPType);
+		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_SortByPType | aiProcess_FlipUVs);
 		if (!scene)
 		{
 			Print("COULD NOT LOAD .FBX FILE");
