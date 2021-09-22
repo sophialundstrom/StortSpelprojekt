@@ -29,10 +29,11 @@ void Scene::AddModel(const std::string& file)
 	{
 		fileName = file + std::to_string(numInstances);
 		drawables[fileName] = std::make_shared<Model>(*std::dynamic_pointer_cast<Model>(drawables[file]));
+	//	drawables[fileName] = std::make_shared<NPC>(*std::dynamic_pointer_cast<Model>(drawables[file]));
 	}
 
 	else
-		drawables[fileName] = std::make_shared<Model>(fileName);
+		drawables[fileName] = std::make_shared<NPC>(fileName);
 }
 
 void Scene::AddAnimatedModel(const std::string& file)
@@ -89,7 +90,7 @@ void Scene::SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, flo
 Scene::Scene(const std::string& file)
 {
 	//TO DO: READ FROM FILE TO CREATE SCENE FROM STORED DATA
-	npc = new NPC;
+	
 }
 
 void Scene::Update()
@@ -97,10 +98,17 @@ void Scene::Update()
 	camera.Update();
 	directionalLight.Update();
 
-	npc->AddModel(drawables, "world");
+	
 	
 	for (auto& [name, drawable] : drawables)
+	{
+		drawable->SetPosition(0, 0, 10);
+	
 		drawable->Update();
+	}
+	//auto a = (std::shared_ptr<Model>)drawables["world"];
+	//dynamic_cast<NPC&>(drawables["world"].get());
+	//std::dynamic_pointer_cast<NPC>(drawables["world"].get());
 
 	ShaderData::Inst().Update(camera, directionalLight, (UINT)pointLights.size(), pointLights.data());
 }

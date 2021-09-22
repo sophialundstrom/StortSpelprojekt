@@ -1,16 +1,16 @@
 #include "NPCBase.h"
 
-NPC::NPC(const std::string& file)
+
+void NPC::Update()
 {
+	//UpdateMatrix();
+	Model::Update();
+	//debugPrint();
+	this->position += Vector3(0.002f, 0, 0);
+	Print(position.x);
 }
 
-NPC::NPC()
+void NPC::debugPrint()
 {
+	Print("NPC action");
 }
-
-void NPC::AddModel(std::map<std::string, std::shared_ptr<Drawable>>& drawables, const std::string& file)
-{
-	model = std::dynamic_pointer_cast<Model>(drawables[file]);
-}
-
-
