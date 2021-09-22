@@ -39,11 +39,14 @@ namespace QuestLogFile
 		while (!reader.eof())
 		{
 			UINT type, ID, numTriggerQuests;
-			bool active;
+			bool completed, active;
 
 			reader >> type;
 			reader >> ID;
 			reader >> active;
+			reader >> completed;
+			if (completed)
+				std::getline(reader, line);
 			reader >> numTriggerQuests;
 
 			UINT* triggerQuests = new UINT[numTriggerQuests];
@@ -98,5 +101,10 @@ namespace QuestLogFile
 
 			quests.emplace(ID, quest);
 		}
+	}
+
+	inline void Save(const std::string& name, const std::map<UINT, Quest*>& quests)
+	{
+
 	}
 }

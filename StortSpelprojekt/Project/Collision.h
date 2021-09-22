@@ -123,3 +123,56 @@ public:
 		UpdateDynamicVertexBuffer(vertexBuffer, sizeof(Vector3) * NUM_VERTICES, vertices);
 	}
 };
+
+namespace Collision
+{
+	//SPHERE/SPHERE INTERSECTION
+	inline bool Intersection(const BoundingSphere& first, const BoundingSphere& second)
+	{
+		return first.GetBounds().Intersects(second.GetBounds());
+	}
+
+	//SPHERE/BOX INTERSECTION
+	inline bool Intersection(const BoundingSphere& first, const BoundingBox& second)
+	{
+		return first.GetBounds().Intersects(second.GetBounds());
+	}
+
+	//BOX/BOX INTERSECTION
+	inline bool Intersection(const BoundingBox& first, const BoundingBox& second)
+	{
+		return first.GetBounds().Intersects(second.GetBounds());
+	}
+
+	//RAY LENGTH = 0 WILL CHECK FOR INTERSECTION INFINITELY
+	inline bool Intersection(const BoundingBox& box, Vector3 rayOrigin, Vector3 rayDirection, float rayLength = 0)
+	{
+		float temp;
+
+		if (rayLength == 0)
+			return box.GetBounds().Intersects(rayOrigin, rayDirection, temp);
+
+		else
+		{
+			if ((box.GetPosition() - rayOrigin).Length() > rayLength)
+				return;
+			return box.GetBounds().Intersects(rayOrigin, rayDirection, temp);
+		}
+	}
+
+	//RAY LENGTH = 0 WILL CHECK FOR INTERSECTION INFINITELY
+	inline bool Intersection(const BoundingSphere& sphere, Vector3 rayOrigin, Vector3 rayDirection, float rayLength = 0)
+	{
+		float temp;
+
+		if (rayLength == 0)
+			return sphere.GetBounds().Intersects(rayOrigin, rayDirection, temp);
+
+		else
+		{
+			if ((sphere.GetPosition() - rayOrigin).Length() > rayLength)
+				return;
+			return sphere.GetBounds().Intersects(rayOrigin, rayDirection, temp);
+		}
+	}
+}
