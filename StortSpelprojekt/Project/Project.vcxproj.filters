@@ -127,8 +127,17 @@
     <Filter Include="Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders">
       <UniqueIdentifier>{7576a954-47cf-4814-aad7-8e2459cc2894}</UniqueIdentifier>
     </Filter>
+
     <Filter Include="Header Files\Application\Scene\Game\NPC">
       <UniqueIdentifier>{4eddf0a6-8e71-4109-a5d8-2581b55ef211}</UniqueIdentifier>
+    <Filter Include="Header Files\Application\Graphics\Renderers\ColliderRenderer">
+      <UniqueIdentifier>{924c5e1a-24b2-4585-878e-3e079165a539}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders">
+      <UniqueIdentifier>{c2237309-3c92-424a-839f-092aa3287d67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Game\Quests">
+      <UniqueIdentifier>{5c4e414d-8cc2-4eb5-8f12-488d61db7c69}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +185,8 @@
     </ClCompile>
     <ClCompile Include="NPCFriendly.cpp">
       <Filter>Header Files\Application\Scene\Game\NPC</Filter>
+    <ClCompile Include="UI.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -364,6 +375,38 @@
     </ClInclude>
     <ClInclude Include="NPCFriendly.h">
       <Filter>Header Files\Application\Scene\Game\NPC</Filter>
+    <ClInclude Include="Building.h">
+      <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="CollectQuest.h">
+      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="FightQuest.h">
+      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="Quest.h">
+      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="TalkQuest.h">
+      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="Villager.h">
+      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestLog.h">
+      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestLogFile.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -447,6 +490,18 @@
     </FxCompile>
     <FxCompile Include="ForwardTerrainPixelShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="DeferredTerrainPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="TerrainGeometryShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ColliderPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ColliderVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

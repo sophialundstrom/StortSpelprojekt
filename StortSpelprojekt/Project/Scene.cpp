@@ -16,6 +16,11 @@ const std::map<std::string, std::shared_ptr<Drawable>>& Scene::GetSortedMap() co
 	return finalMap;
 }
 
+std::vector<std::string> Scene::GetObjectNames()
+{
+	return objectNames;
+}
+
 void Scene::AddModel(const std::string& file)
 {
 	UINT numInstances = 0;
@@ -34,6 +39,14 @@ void Scene::AddModel(const std::string& file)
 
 	else
 		drawables[fileName] = std::make_shared<NPC>(fileName);
+		drawables[fileName] = std::make_shared<Model>(fileName);
+
+	objectNames.push_back(fileName);
+}
+
+void Scene::AddModel(const std::string& name, std::shared_ptr <Drawable> drawable)
+{
+	drawables[name] = drawable;
 }
 
 void Scene::AddAnimatedModel(const std::string& file)
@@ -76,6 +89,7 @@ void Scene::AddPointLight(Vector3 position, float range, Vector3 attenuation, Ve
 		pointLights.push_back(PointLight(range, attenuation, color, position));
 }
 
+
 void Scene::SetDirectionalLight(float range, float startAngle, int startDir)
 {
 	directionalLight = DirectionalLight(range, startAngle, startDir);
@@ -90,7 +104,6 @@ void Scene::SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, flo
 Scene::Scene(const std::string& file)
 {
 	//TO DO: READ FROM FILE TO CREATE SCENE FROM STORED DATA
-	
 }
 
 void Scene::Update()
@@ -98,17 +111,8 @@ void Scene::Update()
 	camera.Update();
 	directionalLight.Update();
 
-	
-	
 	for (auto& [name, drawable] : drawables)
-	{
-		drawable->SetPosition(0, 0, 10);
-	
 		drawable->Update();
-	}
-	//auto a = (std::shared_ptr<Model>)drawables["world"];
-	//dynamic_cast<NPC&>(drawables["world"].get());
-	//std::dynamic_pointer_cast<NPC>(drawables["world"].get());
 
-	ShaderData::Inst().Update(camera, directionalLight, (UINT)pointLights.size(), pointLights.data());
+	ShaderData::Inst().Update(camera, directionalLight, (UINT)pointLights.size(), nullptr);
 }

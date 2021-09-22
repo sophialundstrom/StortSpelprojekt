@@ -20,7 +20,7 @@ private:
 
 	Texture heightMap;
 public:
-	Terrain(float size);
+	Terrain(float size, UINT subdivisions = 1);
 	~Terrain();
 
 	void Draw() const;

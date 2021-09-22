@@ -6,6 +6,7 @@
 #include "assimp\Importer.hpp"
 #include "assimp\postprocess.h"
 #include "Time.h"
+#include "FileSystem.h"
 
 class Model : public Drawable
 {
@@ -19,7 +20,8 @@ public:
 		timer.Start();
 
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_ConvertToLeftHanded | aiProcess_SortByPType);
+		std::filesystem::current_path(std::filesystem::path(FileSystem::ProjectDirectory::path));
+		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_SortByPType);
 		if (!scene)
 		{
 			Print("COULD NOT LOAD .FBX FILE");
@@ -55,8 +57,12 @@ public:
 	void ApplyMesh(const std::string& name)
 	{
 		UINT ID = Resources::Inst().GetBufferIDFromName(name);
-		if (ID != ID_INVALID)
+		if (ID != ID_INVALID) 
+		{
 			mesh.bufferID = ID;
+			mesh.vertexCount = Resources::Inst().GetVertexCountFromID(ID);
+		}
+
 	}
 
 	// Inherited via Drawable

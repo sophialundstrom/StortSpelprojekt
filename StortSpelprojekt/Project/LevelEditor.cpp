@@ -9,17 +9,33 @@ void LevelEditor::Save(const std::string& file)
 
 void LevelEditor::Load(const std::string& file)
 {
+	std::filesystem::path path = std::filesystem::path(file);
+	if (file == "" || path.extension() != ".fbx")
+		return;
 
+	std::string fileName = path.stem().string();
+	scene.AddModel(fileName);
+	modelRenderer.Bind(scene.Get<Model>(fileName));
+	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size()-1]);
 }
 
 void LevelEditor::Update()
 {
 	//TO DO: FIGURE OUT A NICE MOVEMENT IN EDITOR
-	if (Event::KeyIsPressed('Q'))
-		scene.GetCamera().Rotate(0, 1);
+	if (Event::RightIsClicked())
+	{
+		if (Event::ReadRawDelta().y > 0)
+			scene.GetCamera().Rotate(0, 3);
 
-	if (Event::KeyIsPressed('E'))
-		scene.GetCamera().Rotate(0, -1);
+		if (Event::ReadRawDelta().y < 0)
+			scene.GetCamera().Rotate(0, -3);
+
+		if (Event::ReadRawDelta().x > 0)
+			scene.GetCamera().Rotate(3, 0);
+
+		if (Event::ReadRawDelta().x < 0)
+			scene.GetCamera().Rotate(-3, 0);
+	}
 
 	if (Event::KeyIsPressed('W'))
 		scene.GetCamera().MoveForward();
@@ -36,9 +52,15 @@ void LevelEditor::Update()
 	if (Event::KeyIsPressed(32)) //SPACE
 		scene.GetCamera().MoveUp();
 
-	if (Event::KeyIsPressed(16)) //SHIFT
+	if (Event::KeyIsPressed('Z')) //SHIFT
 		scene.GetCamera().MoveUp(-1);
+  
+	if (Event::KeyIsPressed(16)) //SHIFT
+		scene.GetCamera().SetSpeedMultiplier(4);
+	else
+		scene.GetCamera().SetSpeedMultiplier(1);
 
+	Event::ClearRawDelta();
 	scene.Update();
 }
 
@@ -51,55 +73,51 @@ void LevelEditor::Render()
 	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
 	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
 
+	terrainRenderer.Render(*terrain);
+
 	animatedModelRenderer.Render();
 
 	modelRenderer.Render();
-
-	terrainRenderer.Render(terrain);
 
 	EndFrame();
 }
 
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 	:modelRenderer(FORWARD, false),
-	terrainRenderer(FORWARD, 63),
-	animatedModelRenderer(FORWARD, false),
-	terrain(10)
+	terrainRenderer(FORWARD, 1),
+	animatedModelRenderer(FORWARD, false)
 {
 	//BOTH MUST BE SET (PERSPECTIVE MATRIX ISSUES OTHERWISE), OR WE JUS DO DEFAULT CONSTRUCTOR
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 500.0f, 1.0f, 5.0f);
 	scene.SetDirectionalLight(40);
 
+	terrain = new Terrain(20, 0);
+
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
 	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
-	scene.AddModel("world");
-	scene.AddModel("testSphere");
-
-	modelRenderer.Bind(scene.Get<Model>("world"));
-	modelRenderer.Bind(scene.Get<Model>("testSphere"));
-
-	scene.Get<Model>("testSphere")->SetScale(0.1f);
-
-	//ADD BUTTONS FOR LIGHT/MODEL/PARTICLE SYSTEM & SHOW SCENE HIERARCHY
+	
 	{
-		AddWindow("SCENE");	
-		auto& window = windows["SCENE"];				
-		window.AddTextComponent("Scene Name");
+		AddWindow("TOOLS");
+		auto& window = windows["TOOLS"];				
+		window.AddButtonComponent("LOAD FBX", 120, 30);
+		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
+		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
-	//MAKE INTERACTIVE WITH SELECTED OBJECT
 	{
 		AddWindow("GAME OBJECT");
 		auto& window = windows["GAME OBJECT"];	
-		window.AddTextComponent("Game Object Name");
+		window.AddTextComponent("Name");
 	}
 
-	//RENDER PREVIEW TO IMAGE TO SHOW IN WINDOW & MAKE INTERACTIVE WITH SELECTED OBJECTS MATERIAL (AND ADD "COPY MATERIAL" THING)
 	{
-		AddWindow("MATERIAL");		
-		auto& window = windows["MATERIAL"];
-		window.AddTextComponent("Material Name");
+		AddWindow("SCENE COMPONENTS");
+		auto& window = windows["SCENE COMPONENTS"];
+		for(int i = 0; i < scene.GetObjectNames().size(); i++)
+		{
+			window.AddTextComponent(scene.GetObjectNames()[i]);
+		}
 	}
 
 	(void)Run();
@@ -107,6 +125,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 
 LevelEditor::~LevelEditor()
 {
+	delete terrain;
 	Resources::Inst().Clear();
 }
 
@@ -115,7 +134,17 @@ State LevelEditor::Run()
 	Update();
 	Render();
 
-	auto& window = windows["SCENE"];
+	auto& window = windows["TOOLS"];
+	if (window.GetValue<ButtonComponent>("LOAD FBX"))
+		Load(FileSystem::LoadFile("Models"));
+
+	if (window.Changed("TERRAIN START SUBDIVISIONS"))
+	{
+		if (terrain)
+			delete terrain;
+		terrain = new Terrain(20.0f, window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
+	}
+		
 	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
 		return State::MENU;
 
