@@ -37,6 +37,7 @@ Graphics::~Graphics()
 	swapChain->Release();
 	context->Release();
 	device->Release();
+	UISurface->Release();
 }
 
 HRESULT Graphics::CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd)
@@ -65,10 +66,10 @@ HRESULT Graphics::CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWN
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;
 
-	UINT flags = 0;
+	UINT flags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 
 #ifdef _DEBUG
-	flags = D3D11_CREATE_DEVICE_DEBUG;
+	flags = D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #endif
 
 	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
@@ -88,6 +89,8 @@ HRESULT Graphics::CreateRenderTarget()
 		Print("FAILED TO GET BACK BUFFER");
 		return hr;
 	}
+
+	hr = buffer->QueryInterface<IDXGISurface>(&UISurface);
 
 	//RENDER TARGET VIEW AT BACK BUFFER
 	hr = device->CreateRenderTargetView(buffer, nullptr, &backBuffer);

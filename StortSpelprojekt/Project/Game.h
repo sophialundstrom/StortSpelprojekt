@@ -7,7 +7,7 @@
 #include "DeferredRenderer.h"
 #include "TerrainRenderer.h"
 #include "QuestLog.h"
-
+#include "UI.h"
 #include "Time.h"
 
 //PlayerClassLib
@@ -28,6 +28,8 @@ private:
     Terrain terrain;
 
     std::shared_ptr <Player> player;
+
+    UI userInterface;
 
     //Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
     float movementOfsetRadiant = 0;
@@ -63,7 +65,7 @@ private:
     void Render();
 public:
     Game() = delete;
-    Game(UINT clientWidth, UINT clientHeight);
+    Game(UINT clientWidth, UINT clientHeight, HWND window);
     ~Game(); // Removes drawables and resources
 
     // Inherited via GameState
