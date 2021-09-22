@@ -1,10 +1,8 @@
 #pragma once
 #include "Resources.h"
-
 #include "assimp\scene.h"
 #include "assimp\Importer.hpp"
 #include "assimp\postprocess.h"
-
 namespace MaterialLoader
 {
 	inline void Load(aiMaterial* material)
@@ -17,7 +15,7 @@ namespace MaterialLoader
 			}
 
 		Material* newMaterial = new Material();
-
+		newMaterial->name = material->GetName().C_Str();
 		newMaterial->ID = Resources::Inst().NumMaterials();
 
 		aiString path;
