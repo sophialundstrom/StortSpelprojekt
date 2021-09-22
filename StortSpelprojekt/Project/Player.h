@@ -4,11 +4,6 @@
 #include "Model.h"
 #include "Event.h"
 
-struct Item
-{
-	UINT ID;
-};
-
 struct Inventory 
 { 
 	std::map<UINT, UINT> items; //ID , NUM OF ITEM
@@ -46,13 +41,14 @@ struct GameStats
 class Player : public Model
 {
 private:
+	Camera* sceneCamera;
+
 	struct Stats
 	{
 		float movementSpeed;
 		UINT health;
 		//OSV
 	} stats;
-
 
 	//Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
 	float movementOfsetRadiant = 0;
@@ -63,8 +59,6 @@ private:
 
 	float gravity = 9.82f;
 	float timePassed = 0;
-
-
 
 	float maxJumpHeight = 1;
 	float jumpVelocity = 0;
@@ -82,21 +76,17 @@ private:
 		return acos(a.x * b.x + a.y * b.y);
 	};
 
-
 	GameStats gameStats;
 	Inventory inventory;
 public:
-	void Update(Camera* camera)
+	void Update()
 	{
-
-
 		//Rotate camera by cursor movement 
-		camera->Rotate(Event::ReadRawDelta().x * mouseSensitivity, Event::ReadRawDelta().y * mouseSensitivity);
-		Event::ClearRawDelta();
+		sceneCamera->Rotate(Event::ReadRawDelta().x * mouseSensitivity, Event::ReadRawDelta().y * mouseSensitivity);
 
 		//Get players position last frame and cameras current look-direction
 
-		Vector3 lookDirection = camera->GetDirection();
+		Vector3 lookDirection = sceneCamera->GetDirection();
 
 		//Vector that defines the direction the player move
 		Vector3 moveDirection = Vector3(0, 0, 0);
@@ -109,7 +99,6 @@ public:
 		if (Event::KeyIsPressed('D'))
 			moveDirection += Vector3(1, 0, 0);
 		moveDirection.Normalize();
-
 
 		//Calculate playerJumpVelocity
 		jumpVelocity = sqrtf(2 * gravity * maxJumpHeight);
@@ -124,9 +113,6 @@ public:
 		{
 			airTime = 0;
 		}
-
-		std::cout << playerVelocity << std::endl;
-
 
 		//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
 		//Aligns the keyboardinputs by the camera direction afterwards via the radian.
@@ -149,29 +135,20 @@ public:
 		Vector3 newPlayerPos = position + moveDirection + Vector3(0, playerVelocity, 0);
 
 		if (newPlayerPos.y < heightMapGroundLevel)
-		{
 			newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
-		}
 
 		Vector3 newCameraPos = position + (lookDirection * -camDistance);
 		position = newPlayerPos;
-		camera->SetPosition(newCameraPos);
+		sceneCamera->SetPosition(newCameraPos);
 
-		
-
-
+		Model::Update();
 	};
 
-
-	Player()
-		:Model("PlayerArrow")
+	Player(Camera* sceneCamera)
+		:Model("PlayerArrow"), sceneCamera(sceneCamera)
 	{
-
-		//Player
 		position = { 0, 5, 0 };
 		rotation = { 0, PI, 0 };
-		
-
 	}
 
 	Inventory& Inventory() { return inventory; }
