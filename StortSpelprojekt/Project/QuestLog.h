@@ -1,7 +1,7 @@
 #pragma once
 #include "Singleton.h"
 #include "Player.h"
-#include "QuestLogLoader.h"
+#include "QuestLogFile.h"
 #include <map>
 
 class QuestLog : public Singleton<QuestLog>
@@ -32,10 +32,19 @@ private:
 				activeQuests.erase(activeQuests.begin() + i);
 	}
 public:
-	QuestLog(Player* player)
+	QuestLog(const std::string& name, Player* player)
 		:Singleton(this), player(player)
 	{
-		QuestLogLoader::Load("Default", quests);
+		QuestLogFile::Load(name, quests);
+
+		for (auto& [ID, quest] : quests)
+			if (quest->IsActive())
+				AppendQuest(quest);
+	}
+
+	void Save(const std::string& name)
+	{
+		QuestLogFile::Save(name, quests);
 	}
 
 	~QuestLog()
