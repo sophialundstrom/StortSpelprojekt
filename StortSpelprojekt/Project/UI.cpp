@@ -101,16 +101,6 @@ void UI::Render()
 	int width = static_cast<int>(rtSize.width);
 	int height = static_cast<int>(rtSize.height);
 
-	//for (int x = 0; x < width; x += 10)
-	//{
-	//	UIRenderTarget->DrawLine(D2D1::Point2F(static_cast<FLOAT>(x), 0.0f), D2D1::Point2F(static_cast<FLOAT>(x), rtSize.height), lightSlateGrayBrush, 1.0f);
-	//}
-
-	//for (int y = 0; y < height; y += 10)
-	//{
-	//	UIRenderTarget->DrawLine(D2D1::Point2F(0.0f, static_cast<FLOAT>(y)), D2D1::Point2F(rtSize.width, static_cast<FLOAT>(y)), lightSlateGrayBrush, 1.0f);
-	//}
-
 	//Draw 2 rectangles
 	D2D1_RECT_F rectangle1 = D2D1::RectF(20.f, 20.f, rtSize.width / 8, rtSize.height - 20.f);
 	D2D1_RECT_F rectangle2 = D2D1::RectF(1, 1, rtSize.width / 8 + 20.0f, rtSize.height);

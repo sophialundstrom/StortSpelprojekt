@@ -51,6 +51,7 @@ public:
 	HRESULT Initialize(HWND window);
 	void RunMessageLoop(); //Does this already exist? And is there a way to access it?
 	void Render();
+	ID2D1RenderTarget& GetUIRenderTarget() { return *UIRenderTarget; }
 
 private:
 	//Device independent resources, unless device is easily accessible
