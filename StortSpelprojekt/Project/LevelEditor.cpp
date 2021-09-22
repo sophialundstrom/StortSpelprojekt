@@ -27,9 +27,30 @@ void LevelEditor::Update()
 		ScreenToClient(appWindow, &cursor);
 		screenSpaceCoordinates.x = (((4.0f * cursor.x * wRatioX) / wWidth) - 2 * wRatioX) / scene.GetCamera().GetProjectionMatrix()._11;
 		screenSpaceCoordinates.y = (((-8.0f * cursor.y * wRatioY) / wHeight) + 4 * wRatioY) / scene.GetCamera().GetProjectionMatrix()._22;
+		screenSpaceCoordinates.z = 0.0f;
+		if (screenSpaceCoordinates.x > 1)
+			screenSpaceCoordinates.x = 1;
+		if (screenSpaceCoordinates.x < -1)
+			screenSpaceCoordinates.x = -1;
+		if (screenSpaceCoordinates.y > 1)
+			screenSpaceCoordinates.y = 1;
+		if (screenSpaceCoordinates.y < -1)
+			screenSpaceCoordinates.y = -1;
+
+		pickRayVSPoint = DirectX::XMVector3Transform(screenSpaceCoordinates, scene.GetCamera().GetMatrix().Transpose().Invert()); //This is the point in view-space that gets clicked
 
 
-		std::cout << "xPos: " << screenSpaceCoordinates.x << " yPos " << screenSpaceCoordinates.y << std::endl;
+		pickRay.direction.x = pickRayVSPoint.x - scene.GetCamera().GetPosition().x;
+		pickRay.direction.y = pickRayVSPoint.y - scene.GetCamera().GetPosition().y;
+		pickRay.direction.z = pickRayVSPoint.z - scene.GetCamera().GetPosition().z;
+
+		pickRay.origin.x = scene.GetCamera().GetPosition().x;
+		pickRay.origin.y = scene.GetCamera().GetPosition().y;
+		pickRay.origin.z = scene.GetCamera().GetPosition().z;
+
+		//std::cout << "xPos: " << scene.GetCamera().GetPosition().x << " yPos: " << scene.GetCamera().GetPosition().y << " zPos: " << scene.GetCamera().GetPosition().z << std::endl;
+		//std::cout << "xPos: " << screenSpaceCoordinates.x << " yPos " << screenSpaceCoordinates.y << std::endl;
+		//std::cout << "xWorld: " << pickRayVSPoint.x << " yWorld: " << pickRayVSPoint.y << " zWorld: " << pickRayVSPoint.z << std::endl;
 	}
 
 	if (Event::RightIsClicked())

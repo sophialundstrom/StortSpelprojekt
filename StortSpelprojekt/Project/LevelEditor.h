@@ -6,6 +6,7 @@
 #include "TerrainRenderer.h"
 #include "GameState.h"
 #include "Building.h"
+#include "PRay.h"
 
 class LevelEditor : public Editor, public GameState
 {
@@ -15,6 +16,8 @@ private:
 	float wRatioY;
 	POINT cursor;
 	Vector3 screenSpaceCoordinates;
+	Vector3 pickRayVSPoint;
+	PRay pickRay;
 	Scene scene;
 	Terrain terrain;
 	std::shared_ptr <Building> building;
