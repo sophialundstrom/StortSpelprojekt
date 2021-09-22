@@ -14,7 +14,7 @@ Terrain::Terrain(float size, UINT subdivisions)
 	Vector3 position;
 	Vector2 texCoords;
 
-	std::vector<Vertex> tempVertices;
+	std::vector<Vertex> vertices;
 	for (UINT i = 0; i < cells + 1; ++i)
 	{
 		for (UINT j = 0; j < cells + 1; ++j)
@@ -22,31 +22,31 @@ Terrain::Terrain(float size, UINT subdivisions)
 			position = { triSize * i, 0, triSize * j };
 			texCoords = { texSize * i, texSize * j };
 
-			tempVertices.emplace_back(Vertex{ position, texCoords });
+			vertices.emplace_back(Vertex{ position, texCoords });
 		}
 	}
 
 	const UINT offset = cells + 1;
-	std::vector<UINT> tempIndex;
+	std::vector<UINT> Indices;
 	for (UINT i = 0; i < cells; ++i)
 	{
 		for (UINT j = 0; j < cells; ++j)
 		{
-			tempIndex.emplace_back(i * offset + j);
-			tempIndex.emplace_back(j + (i * offset) + 1);
-			tempIndex.emplace_back(j + 1 + offset + offset * i);
-			tempIndex.emplace_back(j + 1 + offset + offset * i);
-			tempIndex.emplace_back(offset + i * offset + j);
-			tempIndex.emplace_back(i * offset + j);
+			Indices.emplace_back(i * offset + j);
+			Indices.emplace_back(j + (i * offset) + 1);
+			Indices.emplace_back(j + 1 + offset + offset * i);
+			Indices.emplace_back(j + 1 + offset + offset * i);
+			Indices.emplace_back(offset + i * offset + j);
+			Indices.emplace_back(i * offset + j);
 		}
 	}
 
-	////VERTICES
-	CreateVertexBuffer(vertexBuffer, sizeof(Vertex), tempVertices.size()  * sizeof(Vertex), tempVertices.data());
+	//VERTICES
+	CreateVertexBuffer(vertexBuffer, sizeof(Vertex), vertices.size()  * sizeof(Vertex), vertices.data());
 
 	//INDICES
-	indexCount = tempIndex.size();
-	CreateIndexBuffer(indexBuffer, tempIndex.size(), tempIndex.data());
+	indexCount = Indices.size();
+	CreateIndexBuffer(indexBuffer, Indices.size(), Indices.data());
 
 	heightMap.Bind(0, Shader::DS);
 }
