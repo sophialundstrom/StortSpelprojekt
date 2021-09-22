@@ -69,11 +69,12 @@ void Game::Render()
 	deferredRenderer.Render();
 	
 	//RENDER UI PROBABLY
+	userInterface.Render();
 
 	Graphics::Inst().EndFrame();
 }
 
-Game::Game(UINT clientWidth, UINT clientHeight)
+Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight), 
 	modelRenderer(DEFERRED, true), 
 	particleRenderer(DEFERRED),
@@ -86,6 +87,7 @@ Game::Game(UINT clientWidth, UINT clientHeight)
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, {0, 1, 0});
 	scene.SetDirectionalLight(30, 4, 4);
 
+	userInterface.Initialize(window);
 	//Player
 	scene.AddModel("PlayerArrow");
 	auto arrow = scene.Get<Model>("PlayerArrow");
