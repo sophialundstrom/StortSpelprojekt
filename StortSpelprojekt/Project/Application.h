@@ -89,7 +89,7 @@ public:
 
 			case State::GAME:
 				delete currentGameState;
-				currentGameState = new Game(window.ClientWidth(), window.ClientHeight());
+				currentGameState = new Game(window.ClientWidth(), window.ClientHeight(), window.GetHWND());
 				break;
 
 			case State::LEVEL:
