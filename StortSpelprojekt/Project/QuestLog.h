@@ -7,7 +7,7 @@
 class QuestLog : public Singleton<QuestLog>
 {
 private:
-	Player* player;
+	std::shared_ptr<Player> player;
 	std::map<UINT, Quest*> quests;
 	std::vector<Quest*> activeQuests;
 
@@ -32,7 +32,7 @@ private:
 				activeQuests.erase(activeQuests.begin() + i);
 	}
 public:
-	QuestLog(const std::string& name, Player* player)
+	QuestLog(const std::string& name, std::shared_ptr<Player> player)
 		:Singleton(this), player(player)
 	{
 		QuestLogFile::Load(name, quests);
