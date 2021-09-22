@@ -11,7 +11,7 @@ class LevelEditor : public Editor, public GameState
 {
 private:
 	Scene scene;
-	Terrain terrain;
+	Terrain* terrain;
 	std::shared_ptr <Building> building;
 	//ADD RENDERERS
 	AnimatedModelRenderer animatedModelRenderer;

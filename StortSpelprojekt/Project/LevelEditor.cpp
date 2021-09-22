@@ -73,7 +73,7 @@ void LevelEditor::Render()
 	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
 	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
 
-	terrainRenderer.Render(terrain);
+	terrainRenderer.Render(*terrain);
 
 	animatedModelRenderer.Render();
 
@@ -84,23 +84,24 @@ void LevelEditor::Render()
 
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 	:modelRenderer(FORWARD, false),
-	terrainRenderer(FORWARD, 63),
-	animatedModelRenderer(FORWARD, false),
-	terrain(10)
+	terrainRenderer(FORWARD, 1),
+	animatedModelRenderer(FORWARD, false)
 {
 	//BOTH MUST BE SET (PERSPECTIVE MATRIX ISSUES OTHERWISE), OR WE JUS DO DEFAULT CONSTRUCTOR
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 500.0f, 1.0f, 5.0f);
 	scene.SetDirectionalLight(40);
 
+	terrain = new Terrain(20, 0);
+
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
 	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
 	
-
 	{
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];				
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
+		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
@@ -124,6 +125,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 
 LevelEditor::~LevelEditor()
 {
+	delete terrain;
 	Resources::Inst().Clear();
 }
 
@@ -136,6 +138,13 @@ State LevelEditor::Run()
 	if (window.GetValue<ButtonComponent>("LOAD FBX"))
 		Load(FileSystem::LoadFile("Models"));
 
+	if (window.Changed("TERRAIN START SUBDIVISIONS"))
+	{
+		if (terrain)
+			delete terrain;
+		terrain = new Terrain(20.0f, window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
+	}
+		
 	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
 		return State::MENU;
 
