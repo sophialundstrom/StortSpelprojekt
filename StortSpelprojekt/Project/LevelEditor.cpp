@@ -96,7 +96,6 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight)
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
 	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
 	
-
 	{
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];				
@@ -146,7 +145,6 @@ State LevelEditor::Run()
 		terrain = new Terrain(20.0f, window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
 	}
 		
-
 	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
 		return State::MENU;
 
