@@ -3,12 +3,19 @@
 
 void Game::Update()
 {
-	player->Update(&scene.GetCamera());
-
+	player->Update();
 
 	QuestLog::Inst().Update();
+
+	//ROTATING BOULDER AROUND PLAYER
+	auto boulder = scene.Get<Model>("boulder");
+	//const Vector3 newPosition = boulder->GetPosition() * boulder->GetRotation() * -boulder->GetPosition();
+	//boulder->SetPosition(newPosition);
+	boulder->SetRotation(0, boulder->GetRotation().y + 0.001, 0);
+
 	scene.Update();
 
+	Event::ClearRawDelta();
 }
 
 void Game::Render()
@@ -39,22 +46,26 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer(DEFERRED),
 	terrainRenderer(DEFERRED), terrain(50.0f, 0)
 {
-	player = std::make_shared<Player>();
-
-	scene.AddModel("Player", player);
-	modelRenderer.Bind(scene.Get<Model>("Player"));
-	questLog = std::make_unique<QuestLog>("Default", player);
-
 	//LOAD SCENE
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, {0, 1, 0});
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(30, 4, 4);
 
+	//PLAYER
+	player = std::make_shared<Player>(scene.GetCamera());
+	scene.AddModel("Player", player);
+	modelRenderer.Bind(scene.Get<Model>("Player"));
+
+	//QUEST LOG
+	questLog = std::make_unique<QuestLog>("Default", player);
+
+	//UI
 	userInterface.Initialize(window);
 
-	//Junk
+	//FILLERS
 	scene.AddModel("boulder");
 	auto boulder = scene.Get<Model>("boulder");
-	boulder->SetPosition(0, 5, 10);
+	boulder->SetParent(scene.Get<Model>("Player"));
+	boulder->SetPosition(5, 2, 0);
 	modelRenderer.Bind(boulder);
 
 	(void)Run();
