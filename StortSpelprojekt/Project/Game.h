@@ -26,10 +26,8 @@ private:
     TerrainRenderer terrainRenderer;
 
     Terrain terrain;
-
-    std::shared_ptr <Player> player;
-
     UI userInterface;
+    std::shared_ptr <Player> player;
 
     //Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
     float movementOfsetRadiant = 0;
@@ -40,9 +38,7 @@ private:
 
     float gravity = 9.82f;
     float timePassed = 0;
-    
-  
-    
+
     float maxJumpHeight = 1;
     float jumpVelocity = 0;
     float playerVelocity = 0;
