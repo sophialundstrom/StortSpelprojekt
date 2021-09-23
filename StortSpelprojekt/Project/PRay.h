@@ -4,5 +4,5 @@ struct PRay
 {
 	Vector3 origin;
 	Vector3 direction;
-	float length;
+	float length = 0;
 };

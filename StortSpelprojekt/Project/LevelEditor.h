@@ -7,6 +7,8 @@
 #include "GameState.h"
 #include "Building.h"
 #include "PRay.h"
+#include "Collision.h"
+#include "ColliderRenderer.h"
 
 class LevelEditor : public Editor, public GameState
 {
@@ -16,15 +18,16 @@ private:
 	float wRatioY;
 	POINT cursor;
 	Vector3 screenSpaceCoordinates;
-	Vector3 pickRayVSPoint;
 	PRay pickRay;
 	Scene scene;
+	std::map<std::string, std::shared_ptr<Drawable>> pickBoxes;
 	Terrain* terrain;
 	std::shared_ptr <Building> building;
 	//ADD RENDERERS
 	AnimatedModelRenderer animatedModelRenderer;
 	TerrainRenderer terrainRenderer;
 	ModelRenderer modelRenderer;
+	ColliderRenderer colliderRenderer;
 
 	float wWidth;
 	float wHeight;

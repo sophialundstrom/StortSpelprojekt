@@ -1,6 +1,8 @@
 #include "LevelEditor.h"
 #include "Event.h"
 
+
+
 void LevelEditor::Save(const std::string& file)
 {
 
@@ -12,10 +14,18 @@ void LevelEditor::Load(const std::string& file)
 	if (file == "" || path.extension() != ".fbx")
 		return;
 
+
 	std::string fileName = path.stem().string();
 	scene.AddModel(fileName);
 	modelRenderer.Bind(scene.Get<Model>(fileName));
 	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size()-1]);
+
+	auto boundingSphere = std::make_shared<BoundingSphere>();
+	pickBoxes.emplace(fileName, boundingSphere);
+	boundingSphere->SetParent(scene.Get<Model>(fileName));
+	boundingSphere->SetPosition(0, 2, 0);
+
+	colliderRenderer.Bind(boundingSphere);
 }
 
 void LevelEditor::Update()
@@ -25,9 +35,8 @@ void LevelEditor::Update()
 	{
 		GetCursorPos(&cursor);
 		ScreenToClient(appWindow, &cursor);
-		screenSpaceCoordinates.x = (((4.0f * cursor.x * wRatioX) / wWidth) - 2 * wRatioX) / scene.GetCamera().GetProjectionMatrix()._11;
-		screenSpaceCoordinates.y = (((-8.0f * cursor.y * wRatioY) / wHeight) + 4 * wRatioY) / scene.GetCamera().GetProjectionMatrix()._22;
-		screenSpaceCoordinates.z = 0.0f;
+		screenSpaceCoordinates.x = (((4.0f * cursor.x * wRatioX) / wWidth) - 2 * wRatioX) / scene.GetCamera()->GetProjectionMatrix()._11;
+		screenSpaceCoordinates.y = (((-4.0f * cursor.y * wRatioY) / wHeight) + 2 * wRatioY) / scene.GetCamera()->GetProjectionMatrix()._22;
 		if (screenSpaceCoordinates.x > 1)
 			screenSpaceCoordinates.x = 1;
 		if (screenSpaceCoordinates.x < -1)
@@ -37,20 +46,30 @@ void LevelEditor::Update()
 		if (screenSpaceCoordinates.y < -1)
 			screenSpaceCoordinates.y = -1;
 
-		pickRayVSPoint = DirectX::XMVector3Transform(screenSpaceCoordinates, scene.GetCamera().GetMatrix().Transpose().Invert()); //This is the point in view-space that gets clicked
+		Matrix inverseView = scene.GetCamera()->GetViewMatrix().Invert();
 
+		pickRay.direction.x = (screenSpaceCoordinates.x * inverseView._11) + (screenSpaceCoordinates.y * inverseView._21) + inverseView._31;
+		pickRay.direction.y = (screenSpaceCoordinates.x * inverseView._12) + (screenSpaceCoordinates.y * inverseView._22) + inverseView._32;
+		pickRay.direction.z = (screenSpaceCoordinates.x * inverseView._13) + (screenSpaceCoordinates.y * inverseView._23) + inverseView._33;
 
-		pickRay.direction.x = pickRayVSPoint.x - scene.GetCamera().GetPosition().x;
-		pickRay.direction.y = pickRayVSPoint.y - scene.GetCamera().GetPosition().y;
-		pickRay.direction.z = pickRayVSPoint.z - scene.GetCamera().GetPosition().z;
+		pickRay.origin = scene.GetCamera()->GetPosition();
 
-		pickRay.origin.x = scene.GetCamera().GetPosition().x;
-		pickRay.origin.y = scene.GetCamera().GetPosition().y;
-		pickRay.origin.z = scene.GetCamera().GetPosition().z;
+		std::cout << "xWorld: " << pickRay.direction.x << " yWorld: " << pickRay.direction.y << " zWorld: " << pickRay.direction.z << std::endl;
 
-		//std::cout << "xPos: " << scene.GetCamera().GetPosition().x << " yPos: " << scene.GetCamera().GetPosition().y << " zPos: " << scene.GetCamera().GetPosition().z << std::endl;
-		//std::cout << "xPos: " << screenSpaceCoordinates.x << " yPos " << screenSpaceCoordinates.y << std::endl;
-		//std::cout << "xWorld: " << pickRayVSPoint.x << " yWorld: " << pickRayVSPoint.y << " zWorld: " << pickRayVSPoint.z << std::endl;
+		for (auto& [name, boundingSphere] : pickBoxes)
+		{
+			Vector3::Transform(pickRay.origin, boundingSphere->GetMatrix().Invert());
+			Vector3::Transform(pickRay.direction, boundingSphere->GetMatrix().Invert());
+			pickRay.direction.Normalize();
+
+			if (Collision::Intersection(*std::dynamic_pointer_cast<BoundingSphere>(boundingSphere), pickRay.origin, pickRay.direction, pickRay.length) == true)
+			{
+				windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", name);
+				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("X", scene.Get<Model>(name)->GetPosition().x);
+				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Y", scene.Get<Model>(name)->GetPosition().y);
+				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Z", scene.Get<Model>(name)->GetPosition().z);
+			}
+		}
 	}
 
 	if (Event::RightIsClicked())
@@ -92,6 +111,9 @@ void LevelEditor::Update()
 		scene.GetCamera()->SetSpeedMultiplier(1);
 
 	Event::ClearRawDelta();
+
+	for(auto& [name, boundingSphere]:pickBoxes)
+		boundingSphere->Update();
 	scene.Update();
 }
 
@@ -109,6 +131,8 @@ void LevelEditor::Render()
 	animatedModelRenderer.Render();
 
 	modelRenderer.Render();
+
+	colliderRenderer.Render();
 
 	EndFrame();
 }
@@ -148,7 +172,11 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	{
 		AddWindow("GAME OBJECT");
 		auto& window = windows["GAME OBJECT"];	
-		window.AddTextComponent("Name");
+		window.AddTextComponent("ObjectName");
+		window.AddTextComponent("Position");
+		window.AddSliderFloatComponent("X", -500, 500, 0, false);
+		window.AddSliderFloatComponent("Y", -500, 500, 0, false);
+		window.AddSliderFloatComponent("Z", -500, 500, 0, false);
 	}
 
 	{
