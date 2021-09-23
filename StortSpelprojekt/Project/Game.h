@@ -26,6 +26,9 @@ private:
     TerrainRenderer terrainRenderer;
 
     Terrain terrain;
+
+    std::shared_ptr<Player> player;
+
     UI userInterface;
     std::shared_ptr <Player> player;
 
