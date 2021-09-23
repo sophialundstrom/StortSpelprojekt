@@ -45,6 +45,7 @@ void Scene::AddModel(const std::string& file)
 void Scene::AddModel(const std::string& name, std::shared_ptr <Drawable> drawable)
 {
 	drawables[name] = drawable;
+	objectNames.push_back(name);
 }
 
 void Scene::AddAnimatedModel(const std::string& file)
@@ -95,7 +96,7 @@ void Scene::SetDirectionalLight(float range, float startAngle, int startDir)
 
 void Scene::SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position, Vector3 forward, Vector3 up)
 {
-	camera = Camera(FOV, aspectRatio, nearZ, farZ, rotationSpeed, moveSpeed, position, forward, up);
+	camera = new Camera(FOV, aspectRatio, nearZ, farZ, rotationSpeed, moveSpeed, position, forward, up);
 }
 
 //OPEN FILE
@@ -106,11 +107,11 @@ Scene::Scene(const std::string& file)
 
 void Scene::Update()
 {
-	camera.Update();
+	camera->Update();
 	directionalLight.Update();
 
 	for (auto& [name, drawable] : drawables)
 		drawable->Update();
 
-	ShaderData::Inst().Update(camera, directionalLight, (UINT)pointLights.size(), nullptr);
+	ShaderData::Inst().Update(*camera, directionalLight, (UINT)pointLights.size(), nullptr);
 }
