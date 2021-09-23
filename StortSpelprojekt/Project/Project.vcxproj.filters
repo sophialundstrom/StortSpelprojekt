@@ -136,6 +136,9 @@
     <Filter Include="Header Files\Application\Scene\Game\Quests">
       <UniqueIdentifier>{5c4e414d-8cc2-4eb5-8f12-488d61db7c69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\UI">
+      <UniqueIdentifier>{10f518fb-59ea-4dcd-8983-0fe540445810}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -175,7 +178,10 @@
       <Filter>Header Files\Application\GameStates\Game</Filter>
     </ClCompile>
     <ClCompile Include="UI.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Application\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Header Files\Application\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -387,7 +393,10 @@
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Application\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\Application\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

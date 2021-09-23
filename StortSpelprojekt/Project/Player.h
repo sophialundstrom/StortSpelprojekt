@@ -46,6 +46,8 @@ struct GameStats
 class Player : public Model
 {
 private:
+	Camera* sceneCamera;
+
 	struct Stats
 	{
 		float movementSpeed;
@@ -86,15 +88,15 @@ private:
 	GameStats gameStats;
 	Inventory inventory;
 public:
-	void Update(Camera* camera)
+	void Update()
 	{
 		//Rotate camera by cursor movement 
-		camera->Rotate(Event::ReadRawDelta().x * mouseSensitivity, Event::ReadRawDelta().y * mouseSensitivity);
+		sceneCamera->Rotate(Event::ReadRawDelta().x * mouseSensitivity, Event::ReadRawDelta().y * mouseSensitivity);
 		Event::ClearRawDelta();
 
 		//Get players position last frame and cameras current look-direction
 
-		Vector3 lookDirection = camera->GetDirection();
+		Vector3 lookDirection = sceneCamera->GetDirection();
 
 		//Vector that defines the direction the player move
 		Vector3 moveDirection = Vector3(0, 0, 0);
@@ -165,17 +167,17 @@ public:
 
 		Vector3 newCameraPos = position + (lookDirection * -camDistance);
 		position = newPlayerPos;
-		camera->SetPosition(newCameraPos);
+		sceneCamera->SetPosition(newCameraPos);
 
 
 		std::cout << newPlayerPos.y << std::endl;
+		Model::Update();
 	};
 
 
-	Player()
-		:Model("PlayerArrow")
+	Player(Camera* camera)
+		:Model("PlayerArrow"), sceneCamera(camera)
 	{
-		//Player
 		position = { 0, 3.5f, 0 };
 		rotation = { 0, PI, 0 };
 	}

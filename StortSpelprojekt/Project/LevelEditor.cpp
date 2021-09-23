@@ -25,40 +25,40 @@ void LevelEditor::Update()
 	if (Event::RightIsClicked())
 	{
 		if (Event::ReadRawDelta().y > 0)
-			scene.GetCamera().Rotate(0, 3);
+			scene.GetCamera()->Rotate(0, 3);
 
 		if (Event::ReadRawDelta().y < 0)
-			scene.GetCamera().Rotate(0, -3);
+			scene.GetCamera()->Rotate(0, -3);
 
 		if (Event::ReadRawDelta().x > 0)
-			scene.GetCamera().Rotate(3, 0);
+			scene.GetCamera()->Rotate(3, 0);
 
 		if (Event::ReadRawDelta().x < 0)
-			scene.GetCamera().Rotate(-3, 0);
+			scene.GetCamera()->Rotate(-3, 0);
 	}
 
 	if (Event::KeyIsPressed('W'))
-		scene.GetCamera().MoveForward();
+		scene.GetCamera()->MoveForward();
 
 	if (Event::KeyIsPressed('A'))
-		scene.GetCamera().MoveRight(-1);
+		scene.GetCamera()->MoveRight(-1);
 
 	if (Event::KeyIsPressed('S'))
-		scene.GetCamera().MoveForward(-1);
+		scene.GetCamera()->MoveForward(-1);
 
 	if (Event::KeyIsPressed('D'))
-		scene.GetCamera().MoveRight();
+		scene.GetCamera()->MoveRight();
 
 	if (Event::KeyIsPressed(32)) //SPACE
-		scene.GetCamera().MoveUp();
+		scene.GetCamera()->MoveUp();
 
 	if (Event::KeyIsPressed('Z')) //SHIFT
-		scene.GetCamera().MoveUp(-1);
+		scene.GetCamera()->MoveUp(-1);
   
 	if (Event::KeyIsPressed(16)) //SHIFT
-		scene.GetCamera().SetSpeedMultiplier(4);
+		scene.GetCamera()->SetSpeedMultiplier(4);
 	else
-		scene.GetCamera().SetSpeedMultiplier(1);
+		scene.GetCamera()->SetSpeedMultiplier(1);
 
 	Event::ClearRawDelta();
 	scene.Update();
