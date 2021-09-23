@@ -127,9 +127,9 @@
     <Filter Include="Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders">
       <UniqueIdentifier>{7576a954-47cf-4814-aad7-8e2459cc2894}</UniqueIdentifier>
     </Filter>
-
     <Filter Include="Header Files\Application\Scene\Game\NPC">
       <UniqueIdentifier>{4eddf0a6-8e71-4109-a5d8-2581b55ef211}</UniqueIdentifier>
+	</Filter>  
     <Filter Include="Header Files\Application\Graphics\Renderers\ColliderRenderer">
       <UniqueIdentifier>{924c5e1a-24b2-4585-878e-3e079165a539}</UniqueIdentifier>
     </Filter>
@@ -185,6 +185,7 @@
     </ClCompile>
     <ClCompile Include="NPCFriendly.cpp">
       <Filter>Header Files\Application\Scene\Game\NPC</Filter>
+    </ClCompile>
     <ClCompile Include="UI.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
@@ -375,6 +376,7 @@
     </ClInclude>
     <ClInclude Include="NPCFriendly.h">
       <Filter>Header Files\Application\Scene\Game\NPC</Filter>
+    </ClInclude>
     <ClInclude Include="Building.h">
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
