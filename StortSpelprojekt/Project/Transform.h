@@ -14,35 +14,16 @@ protected:
 
 	void UpdateMatrix()
 	{
+		Matrix s = Matrix::CreateScale(scale);
+
+		Matrix t = Matrix::CreateTranslation(position);
+
+		Matrix r = Matrix::CreateFromYawPitchRoll(rotation.y, rotation.x, rotation.z);
+
+		this->matrix = s * r * t;
+
 		if (parent)
-		{
-	/*		Vector3 scale = this->scale * parent->scale;
-			Vector3 position = this->position + parent->position;
-			Vector3 rotation = this->rotation * parent->rotation;*/
-
-			Matrix sL = Matrix::CreateScale(scale);
-			Matrix tL = Matrix::CreateTranslation(position);
-			Matrix rL = Matrix::CreateFromYawPitchRoll(rotation.y, rotation.x, rotation.z);
-
-			//Matrix sP = Matrix::CreateScale(parent->scale);
-			//Matrix tP = Matrix::CreateTranslation(parent->scale);
-			//Matrix rP = Matrix::CreateFromYawPitchRoll(parent->rotation.y, parent->rotation.x, parent->rotation.z);
-
-			Matrix local = sL * rL * tL;
-
-			this->matrix = local * parent->matrix;
-		}
-
-		else
-		{
-			Matrix s = Matrix::CreateScale(scale);
-
-			Matrix t = Matrix::CreateTranslation(position);
-
-			Matrix r = Matrix::CreateFromYawPitchRoll(rotation.y, rotation.x, rotation.z);
-
-			this->matrix = s * r * t;
-		}
+			this->matrix *= parent->matrix;
 	}
 public:
 	Vector3 GetPosition()	const { return this->position; }
