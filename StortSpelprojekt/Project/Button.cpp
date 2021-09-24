@@ -10,6 +10,11 @@ Button::Button()
 	buttonBrush = 0;
 }
 
+Button::~Button()
+{
+	buttonBrush->Release();
+}
+
 Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrush* brush)
 {
 	bounds.left = pos.x - (width / 2);
@@ -18,6 +23,11 @@ Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrus
 	bounds.bottom = pos.y + (height / 2);
 
 	buttonBrush = brush;
+}
+
+void Button::setBrush(ID2D1SolidColorBrush* newBrush)
+{
+	buttonBrush = newBrush;
 }
 
 //Mouse coordinates as input
@@ -30,8 +40,9 @@ bool Button::isClicked(int xPos, int yPos)
 	return false;
 }
 
-void Button::DrawButton()
+void Button::DrawButton(ID2D1RenderTarget* UIRenderTarget)
 {
 	//Add a draw rectangle call from UI's rendertarget based on bounds and brush
 	//Figure out how to access rendertarget from here
+	UIRenderTarget->FillRectangle(&bounds, buttonBrush);
 }
