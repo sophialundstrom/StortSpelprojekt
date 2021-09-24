@@ -70,7 +70,6 @@ private:
 	bool pressed = false;
 	bool sprint= false;
 
-	float jumpVelocity = 0;
 	float airTime = 0;
 	float jumpHeight = 5.0f;
 
@@ -208,6 +207,7 @@ public:
 		}
 
 		position = newPlayerPos + Vector3(0, 1, 0);
+
 		Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance);
 
 		sceneCamera->MoveTowards(newCameraPos);
