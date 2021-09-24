@@ -8,15 +8,18 @@ UI::UI()
 
 UI::~UI()
 {
-	SafeRelease(&UIFactory);
-	SafeRelease(&UIRenderTarget);
-	SafeRelease(&lightSlateGrayBrush);
+	UIFactory->Release();// SafeRelease(&UIFactory);
+	UIRenderTarget->Release();//SafeRelease(&UIRenderTarget);
+	lightSlateGrayBrush->Release();//SafeRelease(&lightSlateGrayBrush);
+	cornflowerBlueBrush->Release();
+	crimsonBrush->Release();
 	delete testButton;
 }
 
 HRESULT UI::Initialize(HWND window)
 {
 	HRESULT hr;
+
 	hr = CreateDeviceIndependentResources();
 	hr = CreateDeviceResources(window);
 

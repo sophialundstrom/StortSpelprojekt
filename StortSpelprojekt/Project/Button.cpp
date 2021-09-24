@@ -12,7 +12,6 @@ Button::Button()
 
 Button::~Button()
 {
-	buttonBrush->Release();
 }
 
 Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrush* brush)
