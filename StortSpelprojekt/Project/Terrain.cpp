@@ -1,10 +1,42 @@
 #include "Terrain.h"
 
 #include "DirectXHelp.h"
+#include "stb_image.h"
+
+HeightMap::HeightMap(const std::string& texture)
+{
+	std::string path = "Textures/" + texture + ".jpg";
+
+	this->texture = new Texture(path, texture);
+
+	int channels = 3;
+	unsigned char* image = stbi_load(path.c_str(), &width, &height, &channels, channels);
+	if (!image)
+	{
+		Print("FAILED TO LOAD HEIGHT MAP");
+		return;
+	}
+
+	UINT k = 0;
+	for (int i = 0; i < width; ++i)
+	{
+		for (int j = 0; j < height; ++j)
+		{
+			unsigned char* pixelOffset = image + (i + width * j) * channels;
+
+			int value = pixelOffset[0];
+			float finalValue = (float)value * 0.2f;
+
+			data.emplace(Vector2(i - (width / 2) + 1, j - (height / 2) + 1), finalValue);
+		}
+	}
+}
 
 Terrain::Terrain(float size, UINT subdivisions)
-	:heightMap("Textures/TerrainHeightMap.png")
 {
+	heightMap = new HeightMap("heightMap");
+	size = heightMap->width;
+	
 	//TEST STUFF
 	const UINT cells = pow(2, subdivisions);
 	const UINT numTris = pow(2, subdivisions * 2 + 1);
@@ -48,18 +80,19 @@ Terrain::Terrain(float size, UINT subdivisions)
 	indexCount = Indices.size();
 	CreateIndexBuffer(indexBuffer, Indices.size(), Indices.data());
 
-	heightMap.Bind(0, Shader::DS);
+	heightMap->texture->Bind(0, Shader::DS);
 }
 
 Terrain::~Terrain()
 {
+	delete heightMap;
 	indexBuffer->Release();
 	vertexBuffer->Release();
 }
 
 void Terrain::Draw() const
 {
-	heightMap.Bind();
+	heightMap->texture->Bind();
 
 	Graphics::Inst().GetContext().IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
