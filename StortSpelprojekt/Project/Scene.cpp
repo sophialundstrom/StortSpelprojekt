@@ -38,7 +38,7 @@ void Scene::AddModel(const std::string& file)
 	}
 
 	else
-		drawables[fileName] = std::make_shared<NPC>(fileName);
+		//drawables[fileName] = std::make_shared<NPC>(fileName);
 		drawables[fileName] = std::make_shared<Model>(fileName);
 
 	objectNames.push_back(fileName);
