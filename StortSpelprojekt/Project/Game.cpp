@@ -92,30 +92,33 @@ State Game::Run()
 
 	static float lastClick = 0;
 
-	if (Event::KeyIsPressed('U'))
+	if (Time::Get() - lastClick > 0.5f)
 	{
-		QuestLog::Inst().Complete(0);
-		lastClick = Time::Get();
+		if (Event::KeyIsPressed('U'))
+		{
+			QuestLog::Inst().Complete(0);
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('B'))
+		{
+			player->GameStats().barbariansKilled++;
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('I'))
+		{
+			player->Inventory().AddItem(0);
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('R'))
+		{
+			building->Upgrade();
+			lastClick = Time::Get();
+		}
 	}
-		
-	if (Event::KeyIsPressed('B'))
-	{
-		player->GameStats().barbariansKilled++;
-		lastClick = Time::Get();
-	}
-		
-	if (Event::KeyIsPressed('I'))
-	{
-		player->Inventory().AddItem(0);
-		lastClick = Time::Get();
-	}
-		
-	if (Event::KeyIsPressed('R'))
-	{
-		building->Upgrade();
-		lastClick = Time::Get();
-	}
-		
+	
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;
 
