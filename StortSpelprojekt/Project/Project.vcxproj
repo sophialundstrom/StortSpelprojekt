@@ -175,6 +175,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="CollectQuest.h" />
     <ClInclude Include="FightQuest.h" />
+    <ClInclude Include="Inventory.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
     <ClInclude Include="AnimatedModel.h" />

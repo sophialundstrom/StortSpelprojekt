@@ -1,6 +1,11 @@
 #include "Game.h"
 #include "Event.h"
 
+void Game::Save()
+{
+	QuestLog::Inst().Save("Test");
+}
+
 void Game::Update()
 {
 	player->Update(terrain.GetHeightMap());
@@ -50,7 +55,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.SetDirectionalLight(30, 4, 4);
 
 	//PLAYER
-	player = std::make_shared<Player>(scene.GetCamera());
+	player = std::make_shared<Player>(scene.GetCamera(), "Default");
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
 
@@ -64,7 +69,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.Get<Model>("Building")->SetPosition(10, 25, 10);
 
 	//QUEST LOG
-	questLog = std::make_unique<QuestLog>("Default", player);
+	questLog = std::make_unique<QuestLog>("Test", player);
 
 	//UI
 	userInterface.Initialize(window);
@@ -81,6 +86,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 Game::~Game()
 {
+	QuestLog::Inst().Save("Test");
 	scene.Clear();
 	Resources::Inst().Clear();
 }
@@ -103,12 +109,14 @@ State Game::Run()
 		if (Event::KeyIsPressed('B'))
 		{
 			player->GameStats().barbariansKilled++;
+			Print("Killed barbarian");
 			lastClick = Time::Get();
 		}
 
 		if (Event::KeyIsPressed('I'))
 		{
 			player->Inventory().AddItem(0);
+			Print("Added item");
 			lastClick = Time::Get();
 		}
 

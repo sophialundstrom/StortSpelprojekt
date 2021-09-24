@@ -4,34 +4,7 @@
 #include "Model.h"
 #include "Event.h"
 #include "Terrain.h"
-
-struct Inventory 
-{ 
-	std::map<UINT, UINT> items; //ID , NUM OF ITEM
-
-	Inventory() = default;
-
-	void AddItem(UINT ID)
-	{
-		items[ID]++;
-	}
-
-	void RemoveItem(UINT ID)
-	{	
-		if (items[ID] == 1)
-		{
-			items.erase(ID);
-			return;
-		}
-
-		items[ID]--;
-	}
-
-	UINT NumOf(UINT ID)
-	{
-		return items[ID];
-	}
-};
+#include "Inventory.h"
 
 struct GameStats
 {
@@ -216,12 +189,65 @@ public:
 	};
 
 
-	Player(Camera* camera)
+	Player(Camera* camera, const std::string& name = "Default")
 		:Model("PlayerArrow"), sceneCamera(camera)
 	{
 		rotation = { 0, PI, 0 };
+
+		if (name != "Default")
+			Load(name);
 	}
 
 	Inventory& Inventory() { return inventory; }
 	GameStats& GameStats() { return gameStats; }
+
+	void Load(const std::string& name)
+	{
+		auto filePath = FileSystem::ProjectDirectory::path + "\\SaveData\\" + name + ".pl";
+
+		std::ifstream reader;
+
+		reader.open(filePath, std::ios::beg);
+		if (!reader.is_open())
+		{
+			Print("FAILED TO READ QUEST LOG FILE");
+			return;
+		}
+
+		reader >> gameStats.barbariansKilled;
+		
+		UINT numItems;
+		reader >> numItems;
+		for (UINT i = 0; i < numItems; ++i)
+		{
+			UINT ID, num;
+			reader >> ID >> num;
+			inventory.items[ID] = num;
+		}
+	}
+
+	void Save(const std::string& name)
+	{
+		auto filePath = FileSystem::ProjectDirectory::path + "\\SaveData\\" + name + ".pl";
+
+		std::ofstream writer;
+
+		writer.open(filePath, std::ios::beg);
+		if (!writer.is_open())
+		{
+			Print("FAILED TO READ QUEST LOG FILE");
+			return;
+		}
+
+		writer << gameStats.barbariansKilled << " ";
+		
+		writer << inventory.items.size() << " ";
+		for (auto& [ID, num] : inventory.items)
+			writer << ID << " " << num << " ";
+	}
+
+	~Player()
+	{
+		Save("Test");
+	}
 };

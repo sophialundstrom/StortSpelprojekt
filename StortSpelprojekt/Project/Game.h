@@ -62,6 +62,7 @@ private:
 
     //Player Varaibles and function(s) over
 
+    void Save();
     void Update();
     void Render();
 public:
