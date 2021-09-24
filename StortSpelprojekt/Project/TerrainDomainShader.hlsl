@@ -32,9 +32,9 @@ DS_ELEMENTS main(
     output.texCoords = patch[0].texCoords * domain.x + patch[1].texCoords * domain.y + patch[2].texCoords * domain.z;
     
 	//DISPLACEMENT
-    float h = displacementTexture.SampleLevel(wrapSampler, output.texCoords, 0).r;
+    float h = displacementTexture.SampleLevel(wrapSampler, output.texCoords, 0).r * 255 * 0.2f;
 
-    output.position.xyz += h * float3(0.0f, 3.0f, 0.0f);
+    output.position.y = h;
 
 	//TRANSFORM FINAL POSITION
     output.position = mul(output.position, viewPerspective);

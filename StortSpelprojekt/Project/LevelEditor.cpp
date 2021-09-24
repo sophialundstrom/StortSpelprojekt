@@ -139,11 +139,11 @@ void LevelEditor::Render()
 
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(FORWARD, false),
-	terrainRenderer(FORWARD, 1),
+	terrainRenderer(FORWARD),
 	animatedModelRenderer(FORWARD, false)
 {
 	//BOTH MUST BE SET (PERSPECTIVE MATRIX ISSUES OTHERWISE), OR WE JUS DO DEFAULT CONSTRUCTOR
-	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 500.0f, 1.0f, 5.0f);
+	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 500.0f, 1.0f, 15.0f, {0, 50, 0});
 	scene.SetDirectionalLight(40);
 
 

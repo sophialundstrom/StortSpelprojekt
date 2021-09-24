@@ -3,6 +3,7 @@
 UI::UI()
 	:UIFactory(NULL), UIRenderTarget(NULL), lightSlateGrayBrush(NULL), cornflowerBlueBrush(NULL)
 {
+
 }
 
 UI::~UI()
@@ -10,7 +11,7 @@ UI::~UI()
 	SafeRelease(&UIFactory);
 	SafeRelease(&UIRenderTarget);
 	SafeRelease(&lightSlateGrayBrush);
-	SafeRelease(&cornflowerBlueBrush);
+	delete testButton;
 }
 
 HRESULT UI::Initialize(HWND window)
@@ -19,17 +20,11 @@ HRESULT UI::Initialize(HWND window)
 	hr = CreateDeviceIndependentResources();
 	hr = CreateDeviceResources(window);
 
-	return hr;
-}
+	UIwindow = window;
 
-void UI::RunMessageLoop()
-{
-	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
+	testButton = new Button(buttonPos, 50, 50, cornflowerBlueBrush);
+
+	return hr;
 }
 
 HRESULT UI::CreateDeviceIndependentResources()
@@ -78,6 +73,12 @@ HRESULT UI::CreateDeviceResources(HWND window)
 		{
 			hr = UIRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::CornflowerBlue), &cornflowerBlueBrush);
 		}
+
+		//RED BRUSH
+		if(SUCCEEDED(hr))
+		{
+			hr = UIRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Crimson), &crimsonBrush);
+		}
 	}
 	return hr;
 }
@@ -110,12 +111,24 @@ void UI::Render()
 	//Outlined rectangle
 	UIRenderTarget->DrawRectangle(&rectangle2, cornflowerBlueBrush);
 
-	UIRenderTarget->EndDraw();
-}
+	testButton->DrawButton(UIRenderTarget);
 
-void UI::OnResize(UINT width, UINT height)
-{
-	if (UIRenderTarget)
+	if (Event::LeftIsClicked())
 	{
+		GetCursorPos(&mousePos);
+		ScreenToClient(UIwindow, &mousePos);
+		if(testButton->isClicked(mousePos.x, mousePos.y))
+		{
+			testButton->setBrush(crimsonBrush);
+		}
 	}
+	else
+	{
+		testButton->setBrush(cornflowerBlueBrush);
+	}
+	
+
+	//std::cout << Event::MousePosition().x << "	" << Event::MousePosition().y << std::endl;
+
+	UIRenderTarget->EndDraw();
 }

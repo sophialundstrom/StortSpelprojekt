@@ -1,5 +1,6 @@
 #pragma once
 #include "Math.h"
+#include "Time.h"
 
 class Camera
 {
@@ -30,6 +31,13 @@ public:
 	void SetSpeedMultiplier(float xSpeed);
 
 	void Update();
+
+
+	void MoveTowards(Vector3 position)
+	{
+		const Vector3 direction = position - this->position;
+		this->position += moveSpeed * direction * Time::GetDelta();
+	}
 
 	void SetPosition(Vector3 newPosition) { position = newPosition; };
 	Vector3 GetDirection() const { return this->direction; }

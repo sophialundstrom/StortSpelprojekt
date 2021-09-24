@@ -3,6 +3,7 @@
 #include <map>
 #include "Model.h"
 #include "Event.h"
+#include "Terrain.h"
 
 struct Inventory 
 { 
@@ -50,21 +51,32 @@ private:
 		//OSV
 	} stats;
 
-	//Player Variables and function(s)//TODO: MAKE THIS INTO A PLAYER CLASS!!!
 	float movementOfsetRadiant = 0;
-	float playerMoveSpeed = 4;
-	float heightMapGroundLevel = 5;
+
+	float walkSpeed = 5.0f;
+	float sprintSpeed = 10.0f;
+	float currentSpeed = walkSpeed;
+
+	float preJumpGroundLevel = 0;
+	float heightMapGroundLevel = 20.0f;
 	float mouseSensitivity = 10.f;
-	float camDistance = 10;//How far the camera is from the playerboject
+	//float camDistance = 10;//How far the camera is from the playerboject
 
 	float gravity = 9.82f;
 	float timePassed = 0;
 
-	float maxJumpHeight = 1;
-	float jumpVelocity = 0;
-	float playerVelocity = 0;
-	float airTime = 0;
+	bool jumping = false;
+	bool maxJumpHeight = false;
+	bool pressed = false;
+	bool sprint= false;
 
+	float airTime = 0;
+	float jumpHeight = 5.0f;
+
+	float defaultCameraDistance = 13.0f;
+	float currentCameraDistance = defaultCameraDistance;
+	float maxCameraDistance = defaultCameraDistance + 5.0f;
+	
 	float get2dAngle(Vector2 a, Vector2 b)
 	{
 		//MathExplanation
@@ -76,20 +88,40 @@ private:
 		return acos(a.x * b.x + a.y * b.y);
 	};
 
+	void CalcHeight(HeightMap* heightMap)
+	{
+		const int lowX = std::floor(position.x);
+		const int highX = std::ceil(position.x);
+		const float Xdecimal = position.x - lowX;
+
+		const int lowZ = std::floor(position.z);
+		const int highZ = std::ceil(position.z);
+		const float Zdecimal = position.z - lowZ;
+
+		const float H1 = heightMap->data.at(Vector2(lowX, lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+		const float H2 = heightMap->data.at(Vector2(highX, highZ)) * Xdecimal * Zdecimal;
+		const float H3 = heightMap->data.at(Vector2(lowX, highZ)) * (1 - Xdecimal) * Zdecimal;
+		const float H4 = heightMap->data.at(Vector2(highX, lowZ)) * Xdecimal * (1 - Zdecimal);
+
+		heightMapGroundLevel = position.y = H1 + H2 + H3 + H4;
+	}
+
 	GameStats gameStats;
 	Inventory inventory;
 public:
-	void Update()
+	void Update(HeightMap* heightMap)
 	{
+		CalcHeight(heightMap);
+
 		//Rotate camera by cursor movement 
 		sceneCamera->Rotate(Event::ReadRawDelta().x * mouseSensitivity, Event::ReadRawDelta().y * mouseSensitivity);
 
 		//Get players position last frame and cameras current look-direction
-
 		Vector3 lookDirection = sceneCamera->GetDirection();
 
-		//Vector that defines the direction the player move
-		Vector3 moveDirection = Vector3(0, 0, 0);
+		//MOVEMENT DIRECTION
+		Vector3 moveDirection;
+
 		if (Event::KeyIsPressed('W'))
 			moveDirection += Vector3(0, 0, 1);
 		if (Event::KeyIsPressed('S'))
@@ -98,22 +130,36 @@ public:
 			moveDirection += Vector3(-1, 0, 0);
 		if (Event::KeyIsPressed('D'))
 			moveDirection += Vector3(1, 0, 0);
+
 		moveDirection.Normalize();
 
+		//SPRINTING
+		if (Event::KeyIsPressed(VK_SHIFT))
+		{
+			currentSpeed += 5.0f * Time::GetDelta();
+			if (currentSpeed > sprintSpeed)
+				currentSpeed = sprintSpeed;
+
+			currentCameraDistance += Time::GetDelta() * 10.0f;
+			if (currentCameraDistance > maxCameraDistance)
+				currentCameraDistance = maxCameraDistance;
+		}
+			
+		else
+		{
+			currentSpeed -= 12.0f * Time::GetDelta();
+			if (currentSpeed < walkSpeed)
+				currentSpeed = walkSpeed;
+
+			currentCameraDistance -= Time::GetDelta() * 7.0f;
+			if (currentCameraDistance < defaultCameraDistance)
+				currentCameraDistance = defaultCameraDistance;
+		}
+			
+	
 		//Calculate playerJumpVelocity
-		jumpVelocity = sqrtf(2 * gravity * maxJumpHeight);
-
-		if (Event::KeyIsPressed(VK_SPACE))
-		{
-			airTime += Time::GetDelta();
-			playerVelocity = 0.5f * (-gravity) * powf(airTime, 2) + float(jumpVelocity) * airTime;
-		}
-
-		if (Event::KeyIsPressed(VK_BACK))
-		{
-			airTime = 0;
-		}
-
+		//jumpVelocity = sqrtf(2 * gravity * 1);
+		
 		//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
 		//Aligns the keyboardinputs by the camera direction afterwards via the radian.
 
@@ -123,6 +169,7 @@ public:
 			if (lookDirection.x < 0)
 				movementOfsetRadiant *= -1;
 		}
+
 		Matrix movementOfsetMatrix = Matrix::CreateRotationY(movementOfsetRadiant);
 		moveDirection = Vector3::Transform(moveDirection, movementOfsetMatrix);
 
@@ -131,23 +178,47 @@ public:
 			rotation = { 0, movementOfsetRadiant + PI, 0 };
 
 		//Updates the player and cameras positions
-		moveDirection = moveDirection * (playerMoveSpeed * Time::GetDelta());
-		Vector3 newPlayerPos = position + moveDirection + Vector3(0, playerVelocity, 0);
+		moveDirection = moveDirection * currentSpeed * Time::GetDelta();
+		Vector3 newPlayerPos = position + moveDirection;
 
+		// JUMPING 
+		if (!jumping)
+		{
+			if (Event::KeyIsPressed(VK_SPACE))
+			{
+				jumping = true;
+				preJumpGroundLevel = heightMapGroundLevel;
+			}
+		}
+		
+		if (jumping)
+		{
+			airTime += Time::GetDelta() * 5.0f;
+			newPlayerPos.y = -powf(airTime, 2) + jumpHeight * airTime + preJumpGroundLevel;
+		}
+
+		// RESET TO THE "GROUND"
 		if (newPlayerPos.y < heightMapGroundLevel)
+		{
+			airTime = 0;
+			pressed = false;
+			jumping = false;
 			newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
+		}
 
-		Vector3 newCameraPos = position + (lookDirection * -camDistance);
-		position = newPlayerPos;
-		sceneCamera->SetPosition(newCameraPos);
+		position = newPlayerPos + Vector3(0, 1, 0);
+
+		Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance);
+
+		sceneCamera->MoveTowards(newCameraPos);
 
 		Model::Update();
 	};
 
-	Player(Camera* sceneCamera)
-		:Model("PlayerArrow"), sceneCamera(sceneCamera)
+
+	Player(Camera* camera)
+		:Model("PlayerArrow"), sceneCamera(camera)
 	{
-		position = { 0, 5, 0 };
 		rotation = { 0, PI, 0 };
 	}
 
