@@ -92,7 +92,7 @@ State Game::Run()
 
 	static float lastClick = 0;
 
-	if (Time::Get() - lastClick > 0.5f)
+	if (Time::Get() - lastClick > 0.25f)
 	{
 		if (Event::KeyIsPressed('U'))
 		{
