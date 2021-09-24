@@ -61,7 +61,7 @@ public:
 				DispatchMessage(&msg);
 			}
 
-			if (Event::KeyIsPressed('C'))
+			if (Event::KeyIsPressed('K'))
 				window.ToggleCursor();
 
 			if (!window.CursorIsActive())
