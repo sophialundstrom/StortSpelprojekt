@@ -219,6 +219,7 @@
     <ClInclude Include="QuestLogFile.h" />
     <ClInclude Include="QuestLog.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="PRay.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="OldResources.h" />
     <ClInclude Include="Scene.h" />
