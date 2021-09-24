@@ -13,6 +13,7 @@
 class LevelEditor : public Editor, public GameState
 {
 private:
+	std::string selectedObject;
 	HWND appWindow;
 	float wRatioX;
 	float wRatioY;
@@ -20,7 +21,7 @@ private:
 	Vector3 screenSpaceCoordinates;
 	PRay pickRay;
 	Scene scene;
-	std::map<std::string, std::shared_ptr<Drawable>> pickBoxes;
+	std::map<std::string, std::shared_ptr<Collider>> pickBoxes;
 	Terrain* terrain;
 	std::shared_ptr <Building> building;
 	//ADD RENDERERS
