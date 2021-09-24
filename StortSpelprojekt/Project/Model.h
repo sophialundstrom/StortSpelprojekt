@@ -15,7 +15,6 @@ private:
 public:
 	Model(const std::string& fileName)
 	{
-		
 		Timer timer;
 		timer.Start();
 
@@ -30,7 +29,6 @@ public:
 
 		if (scene->HasMeshes())
 			mesh = Mesh(scene->mMeshes[0]);
-
 
 		if (scene->HasMaterials())
 			MaterialLoader::Load(scene->mMaterials[0]);
@@ -57,6 +55,7 @@ public:
 	void ApplyMesh(const std::string& name)
 	{
 		UINT ID = Resources::Inst().GetBufferIDFromName(name);
+
 		if (ID != ID_INVALID) 
 		{
 			mesh.bufferID = ID;

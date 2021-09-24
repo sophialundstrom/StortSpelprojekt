@@ -54,6 +54,15 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
 
+	//BUILDING
+	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
+	std::string meshNames[] = { "Pyramid", "Cube", "pSphere1" };
+	std::string materialNames[] = { "SilverTex", "WaterTex", "phong1" };
+	building = std::make_shared<Building>(meshNames, materialNames, "Staff");
+	scene.AddModel("Building", building);
+	modelRenderer.Bind(scene.Get<Model>("Building"));
+	scene.Get<Model>("Building")->SetPosition(10, 25, 10);
+
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>("Default", player);
 
@@ -81,18 +90,32 @@ State Game::Run()
 	Update();
 	Render();
 
-	if (Event::KeyIsPressed('T'))
-		QuestLog::Inst().Activate(0);
+	static float lastClick = 0;
 
 	if (Event::KeyIsPressed('U'))
+	{
 		QuestLog::Inst().Complete(0);
-
+		lastClick = Time::Get();
+	}
+		
 	if (Event::KeyIsPressed('B'))
+	{
 		player->GameStats().barbariansKilled++;
-
+		lastClick = Time::Get();
+	}
+		
 	if (Event::KeyIsPressed('I'))
+	{
 		player->Inventory().AddItem(0);
-
+		lastClick = Time::Get();
+	}
+		
+	if (Event::KeyIsPressed('R'))
+	{
+		building->Upgrade();
+		lastClick = Time::Get();
+	}
+		
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;
 
