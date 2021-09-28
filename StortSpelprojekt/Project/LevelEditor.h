@@ -21,7 +21,7 @@ private:
 	Vector3 screenSpaceCoordinates;
 	PRay pickRay;
 	Scene scene;
-	std::map<std::string, std::shared_ptr<Collider>> pickBoxes;
+	std::map<std::string, std::shared_ptr<BoundingSphere>> pickBoxes;
 	Terrain* terrain;
 	std::shared_ptr <Building> building;
 	//ADD RENDERERS
