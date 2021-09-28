@@ -30,8 +30,7 @@ private:
 	ModelRenderer modelRenderer;
 	ColliderRenderer colliderRenderer;
 
-	float wWidth;
-	float wHeight;
+	UINT wWidth, wHeight;
 
 	// Inherited via Editor
 	virtual void Save(const std::string& file) override;

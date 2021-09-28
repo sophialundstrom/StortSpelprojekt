@@ -85,6 +85,7 @@ public:
 		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "COLLIDER RENDERER");
 
 		Print("SUCCEEDED TO INITIALIZE COLLIDER RENDERER");
+		Print("=======================================");
 	}
 
 	~ColliderRenderer()
