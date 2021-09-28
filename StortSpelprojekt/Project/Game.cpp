@@ -79,7 +79,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddModel("lantern");
 	auto lantern = scene.Get<Model>("lantern");
 	lantern->SetRotation({ 0, 0, 0 });
-	lantern->SetPosition(2, 5, 0);
+	lantern->SetPosition(0, 30, 0);
 	modelRenderer.Bind(lantern);
 
 	(void)Run();
