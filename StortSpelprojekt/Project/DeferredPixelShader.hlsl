@@ -150,7 +150,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     L.xyz /= L.w; //PERSPECTIVE DIVIDE (NDC-COORDS)
     const float2 tx = float2(0.5f * L.x + 0.5f, -0.5f * L.y + 0.5f); // [-1,1] => [0, 1]
     const float sm = shadowMap.Sample(wrapSampler, tx).r;
-    const float shadow = (sm + 0.005 < L.z) ? 0.5f : 1.0f; //if closest depth (sample) < pixel-depth there is a primitive in front castings shadow.
+    const float shadow = (sm + 0.005 < L.z) ? 0.0f : 1.0f; //if closest depth (sample) < pixel-depth there is a primitive in front castings shadow.
 	
 	//LIGHT
     const LightResult dlResult = DirectionalLightCalculation(P, N, D, S);
