@@ -27,6 +27,7 @@ Graphics::Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd)
 	CreateViewport(clientWidth, clientHeight);
 
 	Print("SUCCEEDED TO INITIALIZE GRAPHICS");
+	Print("=======================================");
 }
 
 Graphics::~Graphics()

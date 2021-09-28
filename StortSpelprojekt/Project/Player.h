@@ -90,18 +90,18 @@ private:
 
 	void CalcHeight(HeightMap* heightMap)
 	{
-		const int lowX = std::floor(position.x);
-		const int highX = std::ceil(position.x);
+		const int lowX = (int)std::floor(position.x);
+		const int highX = (int)std::ceil(position.x);
 		const float Xdecimal = position.x - lowX;
 
-		const int lowZ = std::floor(position.z);
-		const int highZ = std::ceil(position.z);
+		const int lowZ = (int)std::floor(position.z);
+		const int highZ = (int)std::ceil(position.z);
 		const float Zdecimal = position.z - lowZ;
 
-		const float H1 = heightMap->data.at(Vector2(lowX, lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
-		const float H2 = heightMap->data.at(Vector2(highX, highZ)) * Xdecimal * Zdecimal;
-		const float H3 = heightMap->data.at(Vector2(lowX, highZ)) * (1 - Xdecimal) * Zdecimal;
-		const float H4 = heightMap->data.at(Vector2(highX, lowZ)) * Xdecimal * (1 - Zdecimal);
+		const float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+		const float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+		const float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+		const float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
 
 		heightMapGroundLevel = position.y = H1 + H2 + H3 + H4;
 	}

@@ -7,6 +7,7 @@ class TerrainRenderer
 private:
 	//BUFFERS
 	ID3D11Buffer* matrixBuf = nullptr;
+	ID3D11Buffer* lightBuf = nullptr;
 
 	ID3D11Buffer* tesselationBuf = nullptr;
 
@@ -52,6 +53,8 @@ public:
 	{
 		//BUFFER
 		CreateBuffer(matrixBuf, sizeof(Matrix));
+		CreateBuffer(lightBuf, sizeof(Matrix));
+
 		BindBuffer(matrixBuf, Shader::DS);
 
 		//SHADERS
@@ -114,6 +117,7 @@ public:
 		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "TERRAIN RENDERER");
 
 		Print("SUCCEEDED TO INITIALIZE TERRAIN RENDERER");
+		Print("=======================================");
 	}
 
 	~TerrainRenderer()
@@ -121,6 +125,7 @@ public:
 		if (tesselationBuf)
 			tesselationBuf->Release();
 		matrixBuf->Release();
+		lightBuf->Release();
 
 		vertexShader->Release();
 		hullShader->Release();
@@ -144,6 +149,9 @@ public:
 		BindShaders(vertexShader, hullShader, domainShader, geometryShader, pixelShader);
 
 		//BUFFER(S)
+		UpdateBuffer(lightBuf, ShaderData::Inst().lightMatrix);
+		BindBuffer(lightBuf, Shader::PS);
+
 		UpdateBuffer(matrixBuf, ShaderData::Inst().cameraMatrix);
 
 		//DRAW

@@ -5,6 +5,8 @@ struct PS_INPUT
 {
     float4 position : SV_POSITION;
     float2 texCoords : TEXTURECOORDS;
+    float3 normal : NORMAL;
+    float3 worldPosition : WORLDPOSITION;
 };
 
 float4 main(PS_INPUT input) : SV_TARGET

@@ -129,12 +129,9 @@ LightResult DirectionalLightCalculation(float4 P, float3 N, float4 D, float4 S)
 float4 main(PS_INPUT input) : SV_TARGET
 {
     const float4 backgroundColor = { 117.0f / 255.0f, 141.0f / 255.0f, 156.0f / 255.0f, 1.0f };
-    const float globalAmbient = 0.5f;
+    const float globalAmbient = 0.2f;
     
     const float4 T = diffuseTextures.Sample(wrapSampler, input.texCoords);
-    
-    //REMOVE WHEN LIGHTING IS OOKE
-    return T;
     
     const float3 N = normals.Sample(wrapSampler, input.texCoords).xyz;
     if (length(N.xyz) == 0)
@@ -159,10 +156,10 @@ float4 main(PS_INPUT input) : SV_TARGET
     const LightResult dlResult = DirectionalLightCalculation(P, N, D, S);
     const LightResult plResult = PointLightCalculation(P, N, D, S);
 
-    const float4 finalLighting = float4(dlResult.diffuse + dlResult.specular * dlResult.color) * shadow * globalAmbient
-                                + float4(plResult.diffuse + plResult.specular * plResult.color);
+    const float4 finalLighting = float4(dlResult.diffuse + dlResult.specular * dlResult.color) * shadow + globalAmbient + A
+                                /*+ float4(plResult.diffuse + plResult.specular * plResult.color)*/;
 	//RESULT
-    const float4 finalColor = T * (saturate(finalLighting) + A);
+    const float4 finalColor = T * (saturate(finalLighting));
 	
     return finalColor;
 }
