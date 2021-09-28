@@ -6,17 +6,32 @@
 #include "TerrainRenderer.h"
 #include "GameState.h"
 #include "Building.h"
+#include "PRay.h"
+#include "Collision.h"
+#include "ColliderRenderer.h"
 
 class LevelEditor : public Editor, public GameState
 {
 private:
+	std::string selectedObject;
+	HWND appWindow;
+	float wRatioX;
+	float wRatioY;
+	POINT cursor;
+	Vector3 screenSpaceCoordinates;
+	PRay pickRay;
 	Scene scene;
-	Terrain terrain;
+	std::map<std::string, std::shared_ptr<Collider>> pickBoxes;
+	Terrain* terrain;
 	std::shared_ptr <Building> building;
 	//ADD RENDERERS
 	AnimatedModelRenderer animatedModelRenderer;
 	TerrainRenderer terrainRenderer;
 	ModelRenderer modelRenderer;
+	ColliderRenderer colliderRenderer;
+
+	float wWidth;
+	float wHeight;
 
 	// Inherited via Editor
 	virtual void Save(const std::string& file) override;
@@ -24,9 +39,13 @@ private:
 	virtual void Update() override;
 	virtual void Render() override;
 public:
-	LevelEditor(UINT clientWidth, UINT clientHeight);
+	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 	~LevelEditor();
 	
 	// Inherited via GameState
 	State Run();
 };
+
+
+
+

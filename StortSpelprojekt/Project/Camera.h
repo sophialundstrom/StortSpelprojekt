@@ -1,5 +1,6 @@
 #pragma once
 #include "Math.h"
+#include "Time.h"
 
 class Camera
 {
@@ -31,8 +32,17 @@ public:
 
 	void Update();
 
+
+	void MoveTowards(Vector3 position)
+	{
+		const Vector3 direction = position - this->position;
+		this->position += moveSpeed * direction * Time::GetDelta();
+	}
+
 	void SetPosition(Vector3 newPosition) { position = newPosition; };
 	Vector3 GetDirection() const { return this->direction; }
 	Vector3 GetPosition() const { return this->position; }
 	Matrix GetMatrix() const { return (viewMatrix * perspectiveMatrix).Transpose(); }
+	Matrix GetProjectionMatrix() const { return perspectiveMatrix; }
+	Matrix GetViewMatrix() const { return viewMatrix; }
 };

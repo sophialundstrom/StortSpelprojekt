@@ -15,13 +15,12 @@ private:
 public:
 	Model(const std::string& fileName)
 	{
-		
 		Timer timer;
 		timer.Start();
 
 		Assimp::Importer importer;
 		std::filesystem::current_path(std::filesystem::path(FileSystem::ProjectDirectory::path));
-		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_SortByPType);
+		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_SortByPType | aiProcess_FlipUVs);
 		if (!scene)
 		{
 			Print("COULD NOT LOAD .FBX FILE");
@@ -30,7 +29,6 @@ public:
 
 		if (scene->HasMeshes())
 			mesh = Mesh(scene->mMeshes[0]);
-
 
 		if (scene->HasMaterials())
 			MaterialLoader::Load(scene->mMaterials[0]);
@@ -57,6 +55,7 @@ public:
 	void ApplyMesh(const std::string& name)
 	{
 		UINT ID = Resources::Inst().GetBufferIDFromName(name);
+
 		if (ID != ID_INVALID) 
 		{
 			mesh.bufferID = ID;
