@@ -76,6 +76,9 @@ public:
 			if (!LoadShader(domainShader, ds_path))
 				return;
 
+			if (!LoadShader(geometryShader, gs_path))
+				return;
+
 			if (!LoadShader(pixelShader, forward_ps_path))
 				return;
 		}

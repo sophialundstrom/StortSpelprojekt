@@ -1,5 +1,8 @@
-Texture2D diffuseTexture : register(t0);
-SamplerState wrapSampler : register(s0);
+Texture2D blendTexture : register(t0);
+
+Texture2D textures[3] : register(t1);
+
+sampler wrapSampler : register(s0);
 
 struct PS_INPUT
 {
@@ -11,5 +14,13 @@ struct PS_INPUT
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
-    return float4(input.texCoords, 0.0f, 1.0f); //diffuseTexture.Sample(wrapSampler, input.texCoords);
+    const float4 blendValue = blendTexture.Sample(wrapSampler, input.texCoords);
+    
+    const float2 newTex = input.texCoords * 30.0f;
+    
+    const float4 t1 = textures[0].Sample(wrapSampler, newTex) * blendValue.x;
+    const float4 t2 = textures[1].Sample(wrapSampler, newTex) * blendValue.y;
+    const float4 t3 = textures[2].Sample(wrapSampler, newTex) * blendValue.z;
+    
+    return t1 + t2 + t3;
 }

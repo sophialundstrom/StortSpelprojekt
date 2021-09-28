@@ -1,4 +1,3 @@
-// Array of textures since we are also blending based on the height value of the displacement
 Texture2D blendTexture : register(t0);
 
 Texture2D textures[3] : register(t1);
