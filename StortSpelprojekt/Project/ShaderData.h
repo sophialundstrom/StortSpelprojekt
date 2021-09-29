@@ -78,6 +78,7 @@ public:
 		Graphics::Inst().GetContext().DSSetSamplers(0, 1, &wrapSampler);
 
 		Print("SUCCEEDED TO INITIALIZE SHADER DATA");
+		Print("=======================================");
 	}
 
 	~ShaderData()

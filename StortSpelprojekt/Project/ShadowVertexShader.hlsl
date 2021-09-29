@@ -1,39 +1,16 @@
 struct VS_INPUT
 {
     float3 position : POSITION;
-    float2 texCoords : TEXTURECOORDS;
+    float2 textureCoords : TEXTURECOORDS;
     float3 normal : NORMAL;
 };
 
-struct VS_OUTPUT
+cbuffer MATRIX : register(b0)
 {
-    float4 position : SV_POSITION;
-    float2 texCoords : TEXTURECOORDS;
-    float3 normal : NORMAL;
-};
-
-cbuffer HAS_DISPLACEMENT : register(b0)
-{
-    bool hasDisplacement;
-};
-
-cbuffer MATRIX : register(b1)
-{
-    float4x4 world;
     float4x4 WVP;
 };
 
-VS_OUTPUT main(VS_INPUT input)
+float4 main(VS_INPUT input) : SV_POSITION
 {
-    VS_OUTPUT output;
-    
-    if (hasDisplacement)
-        output.position = float4(input.position, 1.0f);
-    else
-        output.position = mul(float4(input.position, 1.0f), WVP);
-    
-    output.texCoords = input.texCoords;
-    output.normal = input.normal;
-    
-    return output;
+    return mul(float4(input.position, 1.0f), WVP);
 }
