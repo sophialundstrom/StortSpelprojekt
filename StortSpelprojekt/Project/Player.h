@@ -5,18 +5,33 @@
 #include "Event.h"
 #include "Terrain.h"
 
+typedef enum RESOURCES
+{
+	WOOD,
+	STONE,
+	FOOD,
+	NONE
+};
+
 struct Inventory 
-{ 
-	std::map<UINT, UINT> items; //ID , NUM OF ITEM
+{
+	std::map<RESOURCES, UINT> items; //ID , NUM OF ITEM
+	std::map<RESOURCES, std::string> names;
 
-	Inventory() = default;
-
-	void AddItem(UINT ID)
+	Inventory()
+	{
+		names[RESOURCES::WOOD] = "Wood";
+		names[RESOURCES::STONE] = "Stone";
+		names[RESOURCES::FOOD] = "Food";
+		names[RESOURCES::NONE] = "NONE";
+	}
+	
+	void AddItem(enum RESOURCES ID)
 	{
 		items[ID]++;
 	}
 
-	void RemoveItem(UINT ID)
+	void RemoveItem(enum RESOURCES ID)
 	{	
 		if (items[ID] == 1)
 		{
@@ -27,16 +42,15 @@ struct Inventory
 		items[ID]--;
 	}
 
-	UINT NumOf(UINT ID)
+	UINT NumOf(enum RESOURCES ID)
 	{
 		return items[ID];
 	}
-};
 
-struct GameStats
-{
-	//MOSTLY FOR QUEST PROGRESS BUT MAYBE FUN TO KNOW WHEN GAME IS OVER?
-	UINT barbariansKilled = 0;
+	void GetResources(enum RESOURCES ID)
+	{
+		std::cout << names[ID] << " " << items[ID] << std::endl;
+	}
 };
 
 class Player : public Model
@@ -58,8 +72,12 @@ public:
 		UINT healthPoints = 0.0f;
 		UINT level = 1;
 		float currentSpeed = movementSpeed;
-		UINT SetMaxHealthPoints(UINT newMaxHealthPoints) { this->maxHealthPoints = newMaxHealthPoints; };
-		UINT setHealthPoints(UINT newHealthPoints) { this->healthPoints = newHealthPoints; };
+		void SetMaxHealthPoints(UINT newMaxHealthPoints) { this->maxHealthPoints = newMaxHealthPoints; }
+		void SetHealthPoints(UINT newHealthPoints) { this->healthPoints = newHealthPoints; }
+		void SetMovementSpeed(float newMovementSpeed) { this->movementSpeed = newMovementSpeed; }
+		void SetSprintSpeed(float newSprintSpeed) { this->sprintSpeed = newSprintSpeed; }
+		void IncreaseHealthPoints() { this->healthPoints++; };
+		void DecreaseHealthPoint() { this->healthPoints--; };
 		
 	} stats;
 
@@ -73,6 +91,7 @@ public:
 		std::cout << "CURRENT MOVEMENTSPEED " << stats.currentSpeed << std::endl;
 		std::cout << "BARBARIANS KILLED " << gameStats.barbariansKilled << std::endl;
 	}
+
 private:
 	Camera* sceneCamera;
 
