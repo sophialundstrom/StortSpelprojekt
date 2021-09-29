@@ -117,6 +117,13 @@ State Game::Run()
 			building->Upgrade();
 			lastClick = Time::Get();
 		}
+
+		if (Event::KeyIsPressed('P'))
+		{
+			player->GetStats();
+			lastClick = Time::Get();
+		}
+
 	}
 	
 	if (Event::KeyIsPressed('M'))

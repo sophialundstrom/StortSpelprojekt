@@ -41,21 +41,38 @@ struct GameStats
 
 class Player : public Model
 {
+public:
+	
+	struct Stats
+	{
+		UINT barbariansKilled = 0;
+		float movementSpeed = 5.0f;
+		float sprintSpeed = 10.0f;
+		UINT maxHealthPoints = 10.0f;
+		UINT healthPoints = 0.0f;
+		UINT level = 1;
+		float currentSpeed = movementSpeed;
+		UINT SetMaxHealthPoints(UINT newMaxHealthPoints) { this->maxHealthPoints = newMaxHealthPoints; };
+		UINT setHealthPoints(UINT newHealthPoints) { this->healthPoints = newHealthPoints; };
+		
+	} stats;
+
+	// TEMP STATS PRINT
+	void GetStats()
+	{
+		std::cout << "---------------------PLAYER STATS--------------------- " << stats.level << std::endl;
+		std::cout << "LEVEL " << stats.level << std::endl;
+		std::cout << "MAXHEALTH " << stats.maxHealthPoints << std::endl;
+		std::cout << "CURRENT HEALTH " << stats.healthPoints << std::endl;
+		std::cout << "CURRENT MOVEMENTSPEED " << stats.currentSpeed << std::endl;
+		//std::cout << "BARBARIANS KILLED " << barbariansKilled << std::endl;
+	}
 private:
 	Camera* sceneCamera;
 
-	struct Stats
-	{
-		float movementSpeed;
-		UINT health;
-		//OSV
-	} stats;
-
 	float movementOfsetRadiant = 0;
 
-	float walkSpeed = 5.0f;
-	float sprintSpeed = 10.0f;
-	float currentSpeed = walkSpeed;
+	
 
 	float preJumpGroundLevel = 0;
 	float heightMapGroundLevel = 20.0f;
@@ -136,9 +153,9 @@ public:
 		//SPRINTING
 		if (Event::KeyIsPressed(VK_SHIFT))
 		{
-			currentSpeed += 5.0f * Time::GetDelta();
-			if (currentSpeed > sprintSpeed)
-				currentSpeed = sprintSpeed;
+			stats.currentSpeed += 5.0f * Time::GetDelta();
+			if (stats.currentSpeed > stats.sprintSpeed)
+				stats.currentSpeed = stats.sprintSpeed;
 
 			currentCameraDistance += Time::GetDelta() * 10.0f;
 			if (currentCameraDistance > maxCameraDistance)
@@ -147,9 +164,9 @@ public:
 			
 		else
 		{
-			currentSpeed -= 12.0f * Time::GetDelta();
-			if (currentSpeed < walkSpeed)
-				currentSpeed = walkSpeed;
+			stats.currentSpeed -= 12.0f * Time::GetDelta();
+			if (stats.currentSpeed < stats.movementSpeed)
+				stats.currentSpeed = stats.movementSpeed;
 
 			currentCameraDistance -= Time::GetDelta() * 7.0f;
 			if (currentCameraDistance < defaultCameraDistance)
@@ -178,7 +195,7 @@ public:
 			rotation = { 0, movementOfsetRadiant + PI, 0 };
 
 		//Updates the player and cameras positions
-		moveDirection = moveDirection * currentSpeed * Time::GetDelta();
+		moveDirection = moveDirection * stats.currentSpeed * Time::GetDelta();
 		Vector3 newPlayerPos = position + moveDirection;
 
 		// JUMPING 
