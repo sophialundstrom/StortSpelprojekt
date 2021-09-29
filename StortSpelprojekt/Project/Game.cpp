@@ -120,7 +120,12 @@ State Game::Run()
 
 		if (Event::KeyIsPressed('I'))
 		{
-			player->Inventory().AddItem(0);
+			player->Inventory().GetResources(RESOURCES::WOOD);
+			player->Inventory().AddItem(RESOURCES::WOOD);
+			player->Inventory().GetResources(RESOURCES::STONE);
+			player->Inventory().AddItem(RESOURCES::STONE);
+			player->Inventory().GetResources(RESOURCES::FOOD);
+			player->Inventory().AddItem(RESOURCES::FOOD);
 			lastClick = Time::Get();
 		}
 
@@ -129,6 +134,13 @@ State Game::Run()
 			building->Upgrade();
 			lastClick = Time::Get();
 		}
+
+		if (Event::KeyIsPressed('P'))
+		{
+			player->GetStats();
+			lastClick = Time::Get();
+		}
+
 	}
 	
 	if (Event::KeyIsPressed('M'))
