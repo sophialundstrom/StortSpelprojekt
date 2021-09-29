@@ -155,7 +155,7 @@ namespace Collision
 		else
 		{
 			if ((box.GetPosition() - rayOrigin).Length() > rayLength)
-				return;
+				return false;
 			return box.GetBounds().Intersects(rayOrigin, rayDirection, temp);
 		}
 	}
@@ -171,7 +171,7 @@ namespace Collision
 		else
 		{
 			if ((sphere.GetPosition() - rayOrigin).Length() > rayLength)
-				return;
+				return false;
 			return sphere.GetBounds().Intersects(rayOrigin, rayDirection, temp);
 		}
 	}

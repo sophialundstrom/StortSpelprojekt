@@ -4,11 +4,11 @@
 #include <malloc.h>
 #include <wchar.h>
 #include <math.h>
-#include <d2d1.h>
-#include <d2d1helper.h>
 #include <dwrite.h>
 #include <wincodec.h>
 #include "Graphics.h"
+#include "Button.h"
+#include "Event.h"
 
 //Function to release interface
 template<class Interface>
@@ -43,13 +43,19 @@ private:
 	ID2D1Factory* UIFactory;
 	ID2D1RenderTarget* UIRenderTarget;
 	ID2D1SolidColorBrush* lightSlateGrayBrush;
-	ID2D1SolidColorBrush* cornflowerBlueBrush;
+	ID2D1SolidColorBrush* cornflowerBlueBrush;	
+	ID2D1SolidColorBrush* crimsonBrush;
+	HWND UIwindow;
+	POINT mousePos;
+
+	D2D_VECTOR_2F buttonPos = {50.f, 50.f};
+	Button* testButton;
+
 public:
 	UI();
 	~UI();
 
 	HRESULT Initialize(HWND window);
-	void RunMessageLoop(); //Does this already exist? And is there a way to access it?
 	void Render();
 
 private:
@@ -58,5 +64,4 @@ private:
 	HRESULT CreateDeviceResources(HWND window);
 	void DiscardDeviceResources();
 	
-	void OnResize(UINT width, UINT height);
 };

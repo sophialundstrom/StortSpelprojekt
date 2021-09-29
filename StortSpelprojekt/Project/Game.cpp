@@ -3,12 +3,19 @@
 
 void Game::Update()
 {
-	player->Update(&scene.GetCamera());
-
+	player->Update(terrain.GetHeightMap());
 
 	QuestLog::Inst().Update();
+
+	//ROTATING BOULDER AROUND PLAYER
+	auto boulder = scene.Get<Model>("boulder");
+	//const Vector3 newPosition = boulder->GetPosition() * boulder->GetRotation() * -boulder->GetPosition();
+	//boulder->SetPosition(newPosition);
+	boulder->SetRotation(0, boulder->GetRotation().y + 0.001, 0);
+
 	scene.Update();
 
+	Event::ClearRawDelta();
 }
 
 void Game::Render()
@@ -27,7 +34,6 @@ void Game::Render()
 
 	deferredRenderer.Render();
 	
-	//RENDER UI PROBABLY
 	userInterface.Render();
 
 	Graphics::Inst().EndFrame();
@@ -39,22 +45,35 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer(DEFERRED),
 	terrainRenderer(DEFERRED), terrain(50.0f, 0)
 {
-	player = std::make_shared<Player>();
-
-	scene.AddModel("Player", player);
-	modelRenderer.Bind(scene.Get<Model>("Player"));
-	questLog = std::make_unique<QuestLog>("Default", player);
-
 	//LOAD SCENE
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, {0, 1, 0});
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 1.0f, 20.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(30, 4, 4);
 
+	//PLAYER
+	player = std::make_shared<Player>(scene.GetCamera());
+	scene.AddModel("Player", player);
+	modelRenderer.Bind(scene.Get<Model>("Player"));
+
+	//BUILDING
+	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
+	std::string meshNames[] = { "Pyramid", "Cube", "pSphere1" };
+	std::string materialNames[] = { "SilverTex", "WaterTex", "phong1" };
+	building = std::make_shared<Building>(meshNames, materialNames, "Staff");
+	scene.AddModel("Building", building);
+	modelRenderer.Bind(scene.Get<Model>("Building"));
+	scene.Get<Model>("Building")->SetPosition(10, 25, 10);
+
+	//QUEST LOG
+	questLog = std::make_unique<QuestLog>("Default", player);
+
+	//UI
 	userInterface.Initialize(window);
 
-	//Junk
+	//FILLERS
 	scene.AddModel("boulder");
 	auto boulder = scene.Get<Model>("boulder");
-	boulder->SetPosition(0, 5, 10);
+	boulder->SetParent(scene.Get<Model>("Player"));
+	boulder->SetPosition(5, 2, 0);
 	modelRenderer.Bind(boulder);
 
 	(void)Run();
@@ -71,18 +90,35 @@ State Game::Run()
 	Update();
 	Render();
 
-	if (Event::KeyIsPressed('T'))
-		QuestLog::Inst().Activate(0);
+	static float lastClick = 0;
 
-	if (Event::KeyIsPressed('U'))
-		QuestLog::Inst().Complete(0);
+	if (Time::Get() - lastClick > 0.25f)
+	{
+		if (Event::KeyIsPressed('U'))
+		{
+			QuestLog::Inst().Complete(0);
+			lastClick = Time::Get();
+		}
 
-	if (Event::KeyIsPressed('B'))
-		player->GameStats().barbariansKilled++;
+		if (Event::KeyIsPressed('B'))
+		{
+			player->GameStats().barbariansKilled++;
+			lastClick = Time::Get();
+		}
 
-	if (Event::KeyIsPressed('I'))
-		player->Inventory().AddItem(0);
+		if (Event::KeyIsPressed('I'))
+		{
+			player->Inventory().AddItem(0);
+			lastClick = Time::Get();
+		}
 
+		if (Event::KeyIsPressed('R'))
+		{
+			building->Upgrade();
+			lastClick = Time::Get();
+		}
+	}
+	
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;
 

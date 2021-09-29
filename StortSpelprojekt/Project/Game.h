@@ -6,6 +6,7 @@
 #include "ShadowRenderer.h"
 #include "DeferredRenderer.h"
 #include "TerrainRenderer.h"
+#include "Building.h"
 #include "QuestLog.h"
 #include "UI.h"
 #include "Time.h"
@@ -27,7 +28,9 @@ private:
 
     Terrain terrain;
 
-    std::shared_ptr <Player> player;
+    std::shared_ptr<Player> player;
+
+    std::shared_ptr<Building> building;
 
     UI userInterface;
 
@@ -40,9 +43,7 @@ private:
 
     float gravity = 9.82f;
     float timePassed = 0;
-    
-  
-    
+
     float maxJumpHeight = 1;
     float jumpVelocity = 0;
     float playerVelocity = 0;

@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -173,6 +174,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Button.h" />
     <ClInclude Include="CollectQuest.h" />
     <ClInclude Include="FightQuest.h" />
     <ClInclude Include="Quest.h" />
@@ -221,6 +223,7 @@
     <ClInclude Include="QuestLogFile.h" />
     <ClInclude Include="QuestLog.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="PRay.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="OldResources.h" />
     <ClInclude Include="Scene.h" />

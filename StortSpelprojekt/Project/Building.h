@@ -4,11 +4,11 @@
 class Building :public Model
 {
 private:
-	static const UINT stages = 2;
+	static const UINT stages = 3;
 	std::string meshNames[stages];
 	std::string materialNames[stages];
 	UINT currState = 0;
-
+	float lastUpdate = 0;
 public:
 	Building() = default;
 
@@ -19,16 +19,24 @@ public:
 		{
 			this->meshNames[i] = meshNames[i];
 			this->materialNames[i] = materialNames[i];
+			Model init = Model(meshNames[i]);
 		}
 	}
 
 	void Upgrade()
 	{
-		currState++;
+		if (Time::Get() - lastUpdate < 3.0f)
+			return;
+
+		lastUpdate = Time::Get();
+
 		if (currState >= stages)
 			return;
-		ApplyMesh(meshNames[currState]);
-		ApplyMaterial(materialNames[currState]);
+
+		currState++;
+
+		ApplyMesh(meshNames[currState - 1]);
+		ApplyMaterial(materialNames[currState - 1]);
 	}
 
 };
