@@ -43,6 +43,12 @@ class Player : public Model
 {
 public:
 	
+	struct GameStats
+	{
+		//MOSTLY FOR QUEST PROGRESS BUT MAYBE FUN TO KNOW WHEN GAME IS OVER?
+		UINT barbariansKilled = 0;
+	}gameStats;
+
 	struct Stats
 	{
 		UINT barbariansKilled = 0;
@@ -60,19 +66,17 @@ public:
 	// TEMP STATS PRINT
 	void GetStats()
 	{
-		std::cout << "---------------------PLAYER STATS--------------------- " << stats.level << std::endl;
+		std::cout << "---------------------PLAYER STATS--------------------- " << std::endl;
 		std::cout << "LEVEL " << stats.level << std::endl;
 		std::cout << "MAXHEALTH " << stats.maxHealthPoints << std::endl;
 		std::cout << "CURRENT HEALTH " << stats.healthPoints << std::endl;
 		std::cout << "CURRENT MOVEMENTSPEED " << stats.currentSpeed << std::endl;
-		//std::cout << "BARBARIANS KILLED " << barbariansKilled << std::endl;
+		std::cout << "BARBARIANS KILLED " << gameStats.barbariansKilled << std::endl;
 	}
 private:
 	Camera* sceneCamera;
 
 	float movementOfsetRadiant = 0;
-
-	
 
 	float preJumpGroundLevel = 0;
 	float heightMapGroundLevel = 20.0f;
@@ -123,7 +127,6 @@ private:
 		heightMapGroundLevel = position.y = H1 + H2 + H3 + H4;
 	}
 
-	GameStats gameStats;
 	Inventory inventory;
 public:
 	void Update(HeightMap* heightMap)
