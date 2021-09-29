@@ -15,6 +15,8 @@ void Game::Update()
 
 	scene.Update();
 
+	scene.UpdateDirectionalLight(player->GetPosition());
+
 	Event::ClearRawDelta();
 }
 
@@ -53,6 +55,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	player = std::make_shared<Player>(scene.GetCamera());
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
+	shadowRenderer.Bind(scene.Get<Model>("Player"));
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA

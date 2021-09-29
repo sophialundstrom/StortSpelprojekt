@@ -51,7 +51,7 @@ PS_OUTPUT main(PS_INPUT input)
     
     output.ambient = float4(0.5f, 0.5f, 0.5f, 1.0f);
     
-    output.lightClipPosition = mul(float4(input.worldPosition, 1.0f), lightMatrix);
+    output.lightClipPosition = mul(output.worldPosition, lightMatrix);
     
 	return output;
 }
