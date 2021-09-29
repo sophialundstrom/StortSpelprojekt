@@ -56,12 +56,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	std::string meshNames[] = { "Pyramid", "Cube", "pSphere1" };
-	std::string materialNames[] = { "SilverTex", "WaterTex", "phong1" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Staff");
+	std::string meshNames[] = { "House", "Cube", "pSphere1" };
+	std::string materialNames[] = { "HouseTex", "WaterTex", "phong1" };
+	building = std::make_shared<Building>(meshNames, materialNames, "House");
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(scene.Get<Model>("Building"));
 	scene.Get<Model>("Building")->SetPosition(10, 25, 10);
+
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>("Default", player);
