@@ -174,9 +174,6 @@
     <ClCompile Include="Game.cpp">
       <Filter>Header Files\Application\GameStates\Game</Filter>
     </ClCompile>
-    <ClCompile Include="UI.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -386,8 +383,8 @@
     <ClInclude Include="QuestLogFile.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="UI.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="PRay.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

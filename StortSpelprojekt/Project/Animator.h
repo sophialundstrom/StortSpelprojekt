@@ -71,7 +71,7 @@ public:
 
 		ReadNodeHeriarchy(root, skeleton, matrix);
 
-		UpdateBuffer(structuredBuffer, jointMatrices.data(), jointMatrices.size() * sizeof(Matrix));
+		UpdateBuffer(structuredBuffer, jointMatrices.data(), (UINT)jointMatrices.size() * sizeof(Matrix));
 	}
 
 	void BindMatricesBuffer()

@@ -44,7 +44,7 @@ public:
 	bool IsCompleted() { return completed; }
 	bool IsActive() { return active; }
 
-	virtual void Activate(Player* player) = 0;
-	virtual void Update(Player* player) = 0;
+	virtual void Activate(std::shared_ptr<Player> player) = 0;
+	virtual void Update(std::shared_ptr<Player> player) = 0;
 	virtual void RenderUI() = 0;
 };

@@ -25,8 +25,8 @@ struct Animation
 	Animation(aiAnimation* animation)
 	{
 		name = animation->mName.C_Str();
-		ticksPerSecond = animation->mTicksPerSecond;
-		duration = animation->mDuration;
+		ticksPerSecond = (float)animation->mTicksPerSecond;
+		duration = (float)animation->mDuration;
 
 		for (UINT i = 0; i < animation->mNumChannels; ++i)
 		{

@@ -3,33 +3,31 @@
 UI::UI()
 	:UIFactory(NULL), UIRenderTarget(NULL), lightSlateGrayBrush(NULL), cornflowerBlueBrush(NULL)
 {
+
 }
 
 UI::~UI()
 {
-	SafeRelease(&UIFactory);
-	SafeRelease(&UIRenderTarget);
-	SafeRelease(&lightSlateGrayBrush);
-	SafeRelease(&cornflowerBlueBrush);
+	UIFactory->Release();// SafeRelease(&UIFactory);
+	UIRenderTarget->Release();//SafeRelease(&UIRenderTarget);
+	lightSlateGrayBrush->Release();//SafeRelease(&lightSlateGrayBrush);
+	cornflowerBlueBrush->Release();
+	crimsonBrush->Release();
+	delete testButton;
 }
 
 HRESULT UI::Initialize(HWND window)
 {
 	HRESULT hr;
+
 	hr = CreateDeviceIndependentResources();
 	hr = CreateDeviceResources(window);
 
-	return hr;
-}
+	UIwindow = window;
 
-void UI::RunMessageLoop()
-{
-	MSG msg;
-	while (GetMessage(&msg, NULL, 0, 0))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
+	testButton = new Button(buttonPos, 50, 50, cornflowerBlueBrush);
+
+	return hr;
 }
 
 HRESULT UI::CreateDeviceIndependentResources()
@@ -78,6 +76,12 @@ HRESULT UI::CreateDeviceResources(HWND window)
 		{
 			hr = UIRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::CornflowerBlue), &cornflowerBlueBrush);
 		}
+
+		//RED BRUSH
+		if(SUCCEEDED(hr))
+		{
+			hr = UIRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Crimson), &crimsonBrush);
+		}
 	}
 	return hr;
 }
@@ -101,16 +105,6 @@ void UI::Render()
 	int width = static_cast<int>(rtSize.width);
 	int height = static_cast<int>(rtSize.height);
 
-	//for (int x = 0; x < width; x += 10)
-	//{
-	//	UIRenderTarget->DrawLine(D2D1::Point2F(static_cast<FLOAT>(x), 0.0f), D2D1::Point2F(static_cast<FLOAT>(x), rtSize.height), lightSlateGrayBrush, 1.0f);
-	//}
-
-	//for (int y = 0; y < height; y += 10)
-	//{
-	//	UIRenderTarget->DrawLine(D2D1::Point2F(0.0f, static_cast<FLOAT>(y)), D2D1::Point2F(rtSize.width, static_cast<FLOAT>(y)), lightSlateGrayBrush, 1.0f);
-	//}
-
 	//Draw 2 rectangles
 	D2D1_RECT_F rectangle1 = D2D1::RectF(20.f, 20.f, rtSize.width / 8, rtSize.height - 20.f);
 	D2D1_RECT_F rectangle2 = D2D1::RectF(1, 1, rtSize.width / 8 + 20.0f, rtSize.height);
@@ -120,12 +114,24 @@ void UI::Render()
 	//Outlined rectangle
 	UIRenderTarget->DrawRectangle(&rectangle2, cornflowerBlueBrush);
 
-	UIRenderTarget->EndDraw();
-}
+	testButton->DrawButton(UIRenderTarget);
 
-void UI::OnResize(UINT width, UINT height)
-{
-	if (UIRenderTarget)
+	if (Event::LeftIsClicked())
 	{
+		GetCursorPos(&mousePos);
+		ScreenToClient(UIwindow, &mousePos);
+		if(testButton->isClicked(mousePos.x, mousePos.y))
+		{
+			testButton->setBrush(crimsonBrush);
+		}
 	}
+	else
+	{
+		testButton->setBrush(cornflowerBlueBrush);
+	}
+	
+
+	//std::cout << Event::MousePosition().x << "	" << Event::MousePosition().y << std::endl;
+
+	UIRenderTarget->EndDraw();
 }

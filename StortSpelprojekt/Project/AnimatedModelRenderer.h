@@ -106,6 +106,7 @@ public:
 		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "ANIMATED MODEL RENDERER");
 
 		Print("SUCCEEDED TO INITIALIZE ANIMATED MODEL RENDERER");
+		Print("=======================================");
 	}
 
 	~AnimatedModelRenderer()

@@ -11,12 +11,12 @@ public:
 	{}
 
 	// Inherited via Quest
-	virtual void Activate(Player* player) override
+	virtual void Activate(std::shared_ptr<Player> player) override
 	{
 
 	}
 
-	virtual void Update(Player* player) override
+	virtual void Update(std::shared_ptr<Player> player) override
 	{
 		Complete();
 	}

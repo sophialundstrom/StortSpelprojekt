@@ -3,53 +3,21 @@
 
 void Game::Update()
 {
-	Time::GetDelta;
-
-	//Rotate camera by cursor movement 
-	scene.GetCamera().Rotate(Event::ReadRawDelta().x * mouseSensitivity, Event::ReadRawDelta().y * mouseSensitivity);
-	Event::ClearRawDelta();
-
-	//Get players position last frame and cameras current look-direction
-	Vector3 playerPos = scene.Get<Model>("PlayerArrow").get()->GetPosition();
-	Vector3 lookDirection = scene.GetCamera().GetDirection();
-
-	//Vector that defines the direction the player move
-	Vector3 moveDirection = Vector3(0, 0, 0);
-	if (Event::KeyIsPressed('W'))
-		moveDirection += Vector3(0, 0, 1);
-	if (Event::KeyIsPressed('S'))
-		moveDirection += Vector3(0, 0, -1);
-	if (Event::KeyIsPressed('A'))
-		moveDirection += Vector3(-1, 0, 0);
-	if (Event::KeyIsPressed('D'))
-		moveDirection += Vector3(1, 0, 0);
-	moveDirection.Normalize();
-
-	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
-	//Aligns the keyboardinputs by the camera direction afterwards via the radian.
-	
-	if (!Event::RightIsClicked())
-	{
-		movementOfsetRadiant = get2dAngle({ lookDirection.x, lookDirection.z }, { 0, 1 });
-		if (lookDirection.x < 0)
-			movementOfsetRadiant *= -1;
-	}
-	Matrix movementOfsetMatrix = Matrix::CreateRotationY(movementOfsetRadiant);
-	moveDirection = Vector3::Transform(moveDirection, movementOfsetMatrix);
-
-	//Only update what direction the player is facing when keyboardinput is detected by the moveDirection vector
-	if (moveDirection.Length() > 0 || moveDirection.Length() < 0)
-		scene.Get<Model>("PlayerArrow")->SetRotation({ 0, movementOfsetRadiant + PI, 0 });
-
-	//Updates the player and cameras positions
-	moveDirection = moveDirection * (playerMoveSpeed * Time::GetDelta());
-	Vector3 newPlayerPos = playerPos + moveDirection;
-	Vector3 newCameraPos = playerPos + (lookDirection * -camDistance);
-	scene.Get<Model>("PlayerArrow")->SetPosition(newPlayerPos);
-	scene.GetCamera().SetPosition(newCameraPos);
+	player->Update(terrain.GetHeightMap());
 
 	QuestLog::Inst().Update();
+
+	//ROTATING BOULDER AROUND PLAYER
+	auto boulder = scene.Get<Model>("boulder");
+	//const Vector3 newPosition = boulder->GetPosition() * boulder->GetRotation() * -boulder->GetPosition();
+	//boulder->SetPosition(newPosition);
+	boulder->SetRotation(0, boulder->GetRotation().y + 0.001f, 0);
+
 	scene.Update();
+
+	scene.UpdateDirectionalLight(player->GetPosition());
+
+	Event::ClearRawDelta();
 }
 
 void Game::Render()
@@ -68,7 +36,6 @@ void Game::Render()
 
 	deferredRenderer.Render();
 	
-	//RENDER UI PROBABLY
 	userInterface.Render();
 
 	Graphics::Inst().EndFrame();
@@ -76,42 +43,56 @@ void Game::Render()
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight), 
-	animatedModelRenderer(DEFERRED, true),
 	modelRenderer(DEFERRED, true), 
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED), terrain(0.0f, 0)
+	terrainRenderer(DEFERRED), terrain(50.0f, 2)
 {
-	player = new Player();
+	//LOAD SCENE
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 1.0f, 20.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(50, 4, 4);
+
+	//PLAYER
+	player = std::make_shared<Player>(scene.GetCamera());
+	scene.AddModel("Player", player);
+	modelRenderer.Bind(scene.Get<Model>("Player"));
+	shadowRenderer.Bind(scene.Get<Model>("Player"));
+
+	//BUILDING
+	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
+	std::string meshNames[] = { "Pyramid", "Cube", "pSphere1" };
+	std::string materialNames[] = { "SilverTex", "WaterTex", "phong1" };
+	building = std::make_shared<Building>(meshNames, materialNames, "Staff");
+	scene.AddModel("Building", building);
+	modelRenderer.Bind(building);
+	shadowRenderer.Bind(building);
+	scene.Get<Model>("Building")->SetPosition(10, 25, 0);
+
+	//QUEST LOG
 	questLog = std::make_unique<QuestLog>("Default", player);
 
-	//LOAD SCENE
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, {0, 1, 0});
-	scene.SetDirectionalLight(30, 4, 4);
-
+	//UI
 	userInterface.Initialize(window);
-	//Player
-	scene.AddModel("PlayerArrow");
-	auto arrow = scene.Get<Model>("PlayerArrow");
-	arrow->SetRotation({ 0, PI, 0 });
-	arrow->SetPosition(0, 5, 0);
-	modelRenderer.Bind(arrow);
 
-	//Junk
+	//FILLERS
 	scene.AddModel("boulder");
 	auto boulder = scene.Get<Model>("boulder");
-	boulder->SetPosition(0, 5, 10);
+	boulder->SetParent(scene.Get<Model>("Player"));
+	boulder->SetPosition(5, 2, 0);
 	modelRenderer.Bind(boulder);
+	shadowRenderer.Bind(boulder);
 
-	//Animation
-	scene.AddAnimatedModel("Animation");
-	animatedModelRenderer.Bind(scene.Get<AnimatedModel>("Animation"));
+	scene.AddModel("lantern");
+	auto lantern = scene.Get<Model>("lantern");
+	lantern->SetRotation({ 0, 0, 0 });
+	lantern->SetPosition(0, 30, 0);
+	modelRenderer.Bind(lantern);
+	shadowRenderer.Bind(lantern);
 
 	(void)Run();
 }
 
 Game::~Game()
 {
-	delete player;
 	scene.Clear();
 	Resources::Inst().Clear();
 }
@@ -121,18 +102,35 @@ State Game::Run()
 	Update();
 	Render();
 
-	if (Event::KeyIsPressed('T'))
-		QuestLog::Inst().Activate(0);
+	static float lastClick = 0;
 
-	if (Event::KeyIsPressed('U'))
-		QuestLog::Inst().Complete(0);
+	if (Time::Get() - lastClick > 0.25f)
+	{
+		if (Event::KeyIsPressed('U'))
+		{
+			QuestLog::Inst().Complete(0);
+			lastClick = Time::Get();
+		}
 
-	if (Event::KeyIsPressed('B'))
-		player->GameStats().barbariansKilled++;
+		if (Event::KeyIsPressed('B'))
+		{
+			player->GameStats().barbariansKilled++;
+			lastClick = Time::Get();
+		}
 
-	if (Event::KeyIsPressed('I'))
-		player->Inventory().AddItem(0);
+		if (Event::KeyIsPressed('I'))
+		{
+			player->Inventory().AddItem(0);
+			lastClick = Time::Get();
+		}
 
+		if (Event::KeyIsPressed('R'))
+		{
+			building->Upgrade();
+			lastClick = Time::Get();
+		}
+	}
+	
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;
 

@@ -103,6 +103,7 @@ public:
 		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "MODEL RENDERER");
 
 		Print("SUCCEEDED TO INITIALIZE MODEL RENDERER");
+		Print("=======================================");
 	}
 
 	~ModelRenderer()
@@ -145,7 +146,7 @@ public:
 			BindBuffer(matricesBuf);
 
 			if (isLit)
-				model->Draw(true, false);
+				model->Draw();
 			else
 				model->Draw(true, false);
 		}
