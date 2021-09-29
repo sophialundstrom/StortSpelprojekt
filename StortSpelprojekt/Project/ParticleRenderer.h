@@ -72,8 +72,10 @@ public:
 			Print("FAILED TO CREATE INPUT LAYOUT", "PARTICLE RENDERER");
 			return;
 		}
-
 		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "PARTICLE RENDERER");
+
+		Print("SUCCEEDED TO INITIALIZE PARTICLE RENDERER");
+		Print("=======================================");
 	}
 
 	~ParticleRenderer()

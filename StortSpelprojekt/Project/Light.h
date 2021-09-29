@@ -24,7 +24,18 @@ public:
 	DirectionalLight(float range, float startAngle = 0.5f, int startDir = 1)
 		:range(range), dir(startDir), currentAngle(startAngle)
 	{
+		data.direction = { 1.0f, -1.0f, 0.0f };
+		data.direction.Normalize();
+
 		this->ortoMatrix = Matrix::CreateOrthographicOffCenter(-range, range, -range, range, 0.1f, range * 2);
+		this->viewMatrix = Matrix::CreateLookAt(position + -data.direction * range, position, { 0.0f, 1.0f, 0.0f });
+		this->matrix = (viewMatrix * ortoMatrix).Transpose();
+	}
+
+	void SetTargetPosition(const Vector3& position)
+	{
+		this->viewMatrix = Matrix::CreateLookAt(position + -data.direction * range, position, { 0.0f, 1.0f, 0.0f });
+		this->matrix = (viewMatrix * ortoMatrix).Transpose();
 	}
 
 	void Update()
