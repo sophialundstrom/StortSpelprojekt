@@ -21,19 +21,26 @@ private:
 	std::ofstream writer;
 
 	template <typename T>
-	void Write(T data, std::ofstream& stream)
+	void Write(T data)
 	{
-		//stream.write((const char*)&data, sizeof(data)));
+		writer.write((const char*)&data, sizeof(data));
 	}
 
-	void WriteName(const char* name)
+	template <typename T>
+	void Read(T &data)
+	{
+		reader.read((char*)&data, sizeof(data));
+		readLocation += sizeof(data);
+	}
+
+	void WriteStr(const char* name)
 	{
 		writer.write(name, MAX_STR);
 	}
 
-	void ReadName(char* name)
+	void ReadStr(char* name)
 	{
-		reader.read(name, readLocation + MAX_STR);
+		reader.read(name, MAX_STR);
 		readLocation += MAX_STR;
 	}
 

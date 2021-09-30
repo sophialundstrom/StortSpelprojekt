@@ -5,6 +5,7 @@ struct Transform
 {
 	friend class GameLoader;
 protected:
+	std::string name;
 	std::shared_ptr<Transform> parent;
 	Matrix matrix;
 	Vector3 position;
@@ -45,4 +46,5 @@ public:
 
 	void SetParent(std::shared_ptr<Transform> parent) { this->parent = parent; }
 	bool HasParent() const { if (parent) return true; return false; }
+	void SetName(const std::string& newName) { this->name = newName; }
 };

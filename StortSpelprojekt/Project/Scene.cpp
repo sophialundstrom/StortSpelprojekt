@@ -40,12 +40,16 @@ void Scene::AddModel(const std::string& file)
 		drawables[fileName] = std::make_shared<Model>(fileName);
 
 	objectNames.push_back(fileName);
+
+	drawables[fileName]->SetName(fileName);
+
 }
 
 void Scene::AddModel(const std::string& name, std::shared_ptr <Drawable> drawable)
 {
 	drawables[name] = drawable;
 	objectNames.push_back(name);
+	drawables[name]->SetName(name);
 }
 
 void Scene::AddAnimatedModel(const std::string& file)

@@ -84,6 +84,8 @@ void GameLoader::Save(const std::string& filename, const std::map<std::string, s
 			std::cout << "Writing parentName " << message << std::endl;
 		}
 
+		
+
 		strcpy_s(message, MAX_STR, model->mesh.name.c_str());
 		WriteStr(message);
 		std::cout << "Writing meshName: " << message << std::endl;

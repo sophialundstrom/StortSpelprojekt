@@ -85,7 +85,7 @@ Game::~Game()
 {
 	GameLoader loader;
 	loader.Save("TEST" , scene.GetDrawables() );
-	//loader.Load("TEST");
+	loader.Load("TEST");
 
 	scene.Clear();
 	Resources::Inst().Clear();
