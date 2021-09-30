@@ -10,6 +10,7 @@
 
 class Model : public Drawable
 {
+	friend class GameLoader;
 private:
 	Mesh mesh;
 public:

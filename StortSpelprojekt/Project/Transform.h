@@ -3,6 +3,7 @@
 
 struct Transform
 {
+	friend class GameLoader;
 protected:
 	std::shared_ptr<Transform> parent;
 	Matrix matrix;

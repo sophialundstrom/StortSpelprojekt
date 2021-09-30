@@ -3,6 +3,8 @@
 
 void Game::Update()
 {
+
+
 	player->Update(terrain.GetHeightMap());
 
 	QuestLog::Inst().Update();
@@ -81,6 +83,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 Game::~Game()
 {
+	GameLoader loader;
+	loader.Save("TEST" , scene.GetDrawables() );
+	//loader.Load("TEST");
+
 	scene.Clear();
 	Resources::Inst().Clear();
 }

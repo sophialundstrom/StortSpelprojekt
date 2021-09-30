@@ -19,6 +19,10 @@ public:
 	Scene() = default;
 	~Scene() { delete camera; }
 
+	std::map<std::string, std::shared_ptr<Drawable>> GetDrawables() {
+		return drawables;
+	}
+
 	void Clear() { drawables.clear(); pointLights.clear(); }
 	void Update();
 

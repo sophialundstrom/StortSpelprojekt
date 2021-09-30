@@ -11,6 +11,8 @@
 #include "UI.h"
 #include "Time.h"
 
+#include "GameLoader.h"
+
 //PlayerClassLib
 #include <math.h>
 
