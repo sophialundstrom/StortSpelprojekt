@@ -88,6 +88,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(lantern);
 	shadowRenderer.Bind(lantern);
 
+	scene.AddFriendly("SignsPost");
+	auto friendly = scene.Get<NPC>("SignsPost");
+	friendly->SetRotation({ 0, 0, 0 });
+	friendly->SetPosition(10, 13, 10);
+	modelRenderer.Bind(friendly);
+	shadowRenderer.Bind(friendly);
+
 	(void)Run();
 }
 

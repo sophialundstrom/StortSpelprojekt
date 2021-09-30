@@ -10,6 +10,7 @@
 #include "QuestLog.h"
 #include "UI.h"
 #include "Time.h"
+#include "NPCBase.h"
 
 //PlayerClassLib
 #include <math.h>

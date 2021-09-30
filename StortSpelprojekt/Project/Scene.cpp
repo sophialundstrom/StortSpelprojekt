@@ -50,6 +50,35 @@ void Scene::AddModel(const std::string& name, std::shared_ptr<Drawable> drawable
 	objectNames.push_back(name);
 }
 
+void Scene::AddFriendly(const std::string& file)
+{
+	UINT numInstances = 0;
+	std::string fileName = file;
+
+	for (auto& [name, drawable] : drawables)
+		if (name.find(file) != std::string::npos)
+			numInstances++;
+
+	if (numInstances > 0)
+	{
+		fileName = file + std::to_string(numInstances);
+		//drawables[fileName] = std::make_shared<Model>(*std::dynamic_pointer_cast<Model>(drawables[file]));
+		//drawables[fileName] = std::make_shared<NPC>(*std::dynamic_pointer_cast<Model>(drawables[file]));
+	}
+
+	else
+		drawables[fileName] = std::make_shared<NPC>(fileName);
+		//drawables[fileName] = std::make_shared<Model>(fileName);
+
+	objectNames.push_back(fileName);
+}
+
+void Scene::AddFriendly(const std::string& name, std::shared_ptr<Drawable> drawable)
+{
+	drawables[name] = drawable;
+	objectNames.push_back(name);
+}
+
 void Scene::AddAnimatedModel(const std::string& file)
 {
 	UINT numInstances = 0;

@@ -1,8 +1,8 @@
-#pragma once
-#include "NPCBase.h"
-
-class HostileNPC : NPC
-{
-public:
-	HostileNPC();
-};
+//#pragma once
+////#include "NPCBase.h"
+//
+//class HostileNPC : NPC
+//{
+//public:
+//	HostileNPC();
+//};

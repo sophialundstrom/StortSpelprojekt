@@ -1,5 +1,5 @@
-#include "NPCHostile.h"
-
-HostileNPC::HostileNPC() : NPC("")
-{
-}
+//#include "NPCHostile.h"
+//
+//HostileNPC::HostileNPC() : NPC("")
+//{
+//}
