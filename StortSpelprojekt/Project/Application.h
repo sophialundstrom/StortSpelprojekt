@@ -61,15 +61,12 @@ public:
 				DispatchMessage(&msg);
 			}
 
-			if (Event::KeyIsPressed('K'))
-				window.ToggleCursor();
-
-			if (!window.CursorIsActive())
-				SetCursorPos(window.ClientWidth() / 2, window.ClientHeight() / 2);
-
-			if (Event::KeyIsPressed(VK_RETURN))
+			if (window.Exit())
+			{
+				currentGameState->Delete();
 				break;
-			
+			}
+				
 			currentState = currentGameState->Run();
 
 			switch (currentState)
@@ -100,7 +97,7 @@ public:
 				break;
 
 			case State::EXIT:
-				Print("CLOSING APPLICATION");
+				currentGameState->Delete();
 				break;
 			}
 

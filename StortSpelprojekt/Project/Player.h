@@ -5,18 +5,33 @@
 #include "Event.h"
 #include "Terrain.h"
 
+typedef enum RESOURCES
+{
+	WOOD,
+	STONE,
+	FOOD,
+	NONE
+};
+
 struct Inventory 
-{ 
-	std::map<UINT, UINT> items; //ID , NUM OF ITEM
+{
+	std::map<RESOURCES, UINT> items; //ID , NUM OF ITEM
+	std::map<RESOURCES, std::string> names;
 
-	Inventory() = default;
-
-	void AddItem(UINT ID)
+	Inventory()
+	{
+		names[RESOURCES::WOOD] = "Wood";
+		names[RESOURCES::STONE] = "Stone";
+		names[RESOURCES::FOOD] = "Food";
+		names[RESOURCES::NONE] = "NONE";
+	}
+	
+	void AddItem(enum RESOURCES ID)
 	{
 		items[ID]++;
 	}
 
-	void RemoveItem(UINT ID)
+	void RemoveItem(enum RESOURCES ID)
 	{	
 		if (items[ID] == 1)
 		{
@@ -27,35 +42,60 @@ struct Inventory
 		items[ID]--;
 	}
 
-	UINT NumOf(UINT ID)
+	UINT NumOf(enum RESOURCES ID)
 	{
 		return items[ID];
 	}
-};
 
-struct GameStats
-{
-	//MOSTLY FOR QUEST PROGRESS BUT MAYBE FUN TO KNOW WHEN GAME IS OVER?
-	UINT barbariansKilled = 0;
+	void GetResources(enum RESOURCES ID)
+	{
+		std::cout << names[ID] << " " << items[ID] << std::endl;
+	}
 };
 
 class Player : public Model
 {
-private:
-	Camera* sceneCamera;
+public:
+	
+	struct GameStats
+	{
+		//MOSTLY FOR QUEST PROGRESS BUT MAYBE FUN TO KNOW WHEN GAME IS OVER?
+		UINT barbariansKilled = 0;
+	}gameStats;
 
 	struct Stats
 	{
-		float movementSpeed;
-		UINT health;
-		//OSV
+		UINT barbariansKilled = 0;
+		float movementSpeed = 5.0f;
+		float sprintSpeed = 10.0f;
+		UINT maxHealthPoints = 10.0f;
+		UINT healthPoints = 0.0f;
+		UINT level = 1;
+		float currentSpeed = movementSpeed;
+		void SetMaxHealthPoints(UINT newMaxHealthPoints) { this->maxHealthPoints = newMaxHealthPoints; }
+		void SetHealthPoints(UINT newHealthPoints) { this->healthPoints = newHealthPoints; }
+		void SetMovementSpeed(float newMovementSpeed) { this->movementSpeed = newMovementSpeed; }
+		void SetSprintSpeed(float newSprintSpeed) { this->sprintSpeed = newSprintSpeed; }
+		void IncreaseHealthPoints() { this->healthPoints++; };
+		void DecreaseHealthPoint() { this->healthPoints--; };
+		
 	} stats;
 
-	float movementOfsetRadiant = 0;
+	// TEMP STATS PRINT
+	void GetStats()
+	{
+		std::cout << "---------------------PLAYER STATS--------------------- " << std::endl;
+		std::cout << "LEVEL " << stats.level << std::endl;
+		std::cout << "MAXHEALTH " << stats.maxHealthPoints << std::endl;
+		std::cout << "CURRENT HEALTH " << stats.healthPoints << std::endl;
+		std::cout << "CURRENT MOVEMENTSPEED " << stats.currentSpeed << std::endl;
+		std::cout << "BARBARIANS KILLED " << gameStats.barbariansKilled << std::endl;
+	}
 
-	float walkSpeed = 5.0f;
-	float sprintSpeed = 10.0f;
-	float currentSpeed = walkSpeed;
+private:
+	Camera* sceneCamera;
+
+	float movementOfsetRadiant = 0;
 
 	float preJumpGroundLevel = 0;
 	float heightMapGroundLevel = 20.0f;
@@ -90,23 +130,22 @@ private:
 
 	void CalcHeight(HeightMap* heightMap)
 	{
-		const int lowX = std::floor(position.x);
-		const int highX = std::ceil(position.x);
+		const int lowX = (int)std::floor(position.x);
+		const int highX = (int)std::ceil(position.x);
 		const float Xdecimal = position.x - lowX;
 
-		const int lowZ = std::floor(position.z);
-		const int highZ = std::ceil(position.z);
+		const int lowZ = (int)std::floor(position.z);
+		const int highZ = (int)std::ceil(position.z);
 		const float Zdecimal = position.z - lowZ;
 
-		const float H1 = heightMap->data.at(Vector2(lowX, lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
-		const float H2 = heightMap->data.at(Vector2(highX, highZ)) * Xdecimal * Zdecimal;
-		const float H3 = heightMap->data.at(Vector2(lowX, highZ)) * (1 - Xdecimal) * Zdecimal;
-		const float H4 = heightMap->data.at(Vector2(highX, lowZ)) * Xdecimal * (1 - Zdecimal);
+		const float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+		const float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+		const float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+		const float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
 
 		heightMapGroundLevel = position.y = H1 + H2 + H3 + H4;
 	}
 
-	GameStats gameStats;
 	Inventory inventory;
 public:
 	void Update(HeightMap* heightMap)
@@ -136,9 +175,9 @@ public:
 		//SPRINTING
 		if (Event::KeyIsPressed(VK_SHIFT))
 		{
-			currentSpeed += 5.0f * Time::GetDelta();
-			if (currentSpeed > sprintSpeed)
-				currentSpeed = sprintSpeed;
+			stats.currentSpeed += 5.0f * Time::GetDelta();
+			if (stats.currentSpeed > stats.sprintSpeed)
+				stats.currentSpeed = stats.sprintSpeed;
 
 			currentCameraDistance += Time::GetDelta() * 10.0f;
 			if (currentCameraDistance > maxCameraDistance)
@@ -147,9 +186,9 @@ public:
 			
 		else
 		{
-			currentSpeed -= 12.0f * Time::GetDelta();
-			if (currentSpeed < walkSpeed)
-				currentSpeed = walkSpeed;
+			stats.currentSpeed -= 12.0f * Time::GetDelta();
+			if (stats.currentSpeed < stats.movementSpeed)
+				stats.currentSpeed = stats.movementSpeed;
 
 			currentCameraDistance -= Time::GetDelta() * 7.0f;
 			if (currentCameraDistance < defaultCameraDistance)
@@ -178,7 +217,7 @@ public:
 			rotation = { 0, movementOfsetRadiant + PI, 0 };
 
 		//Updates the player and cameras positions
-		moveDirection = moveDirection * currentSpeed * Time::GetDelta();
+		moveDirection = moveDirection * stats.currentSpeed * Time::GetDelta();
 		Vector3 newPlayerPos = position + moveDirection;
 
 		// JUMPING 

@@ -158,6 +158,7 @@ public:
 		CreateStructuredBuffer(lights_buf, lights_buf_srv, sizeof(PointLight::Data), MAX_LIGHTS * sizeof(PointLight::Data));
 
 		Print("SUCCEEDED TO INITIALIZE DEFERRED RENDERER");
+		Print("=======================================");
 	}
 
 	~DeferredRenderer()

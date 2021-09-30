@@ -45,7 +45,7 @@ void Scene::AddModel(const std::string& file)
 
 }
 
-void Scene::AddModel(const std::string& name, std::shared_ptr <Drawable> drawable)
+void Scene::AddModel(const std::string& name, std::shared_ptr<Drawable> drawable)
 {
 	drawables[name] = drawable;
 	objectNames.push_back(name);
@@ -112,7 +112,7 @@ Scene::Scene(const std::string& file)
 void Scene::Update()
 {
 	camera->Update();
-	directionalLight.Update();
+	//directionalLight.Update();
 
 	for (auto& [name, drawable] : drawables)
 		drawable->Update();

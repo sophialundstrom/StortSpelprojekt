@@ -79,6 +79,7 @@ public:
 		texture->Release();
 
 		Print("SUCCEEDED TO INITIALIZE SHADOW MAP");
+		Print("=======================================");
 	}
 
 	void BindAsRenderTarget()
