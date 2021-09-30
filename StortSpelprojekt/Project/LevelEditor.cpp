@@ -78,19 +78,6 @@ void LevelEditor::Update()
 				window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
 				window.SetValue<SliderFloatComponent, float>("Z-axis", model->GetScale().z);
 
-			/*	windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", name);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("X", scene.Get<Model>(name)->GetPosition().x);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Y", scene.Get<Model>(name)->GetPosition().y);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Z", scene.Get<Model>(name)->GetPosition().z);
-
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around X", scene.Get<Model>(name)->GetRotation().x);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around Y", scene.Get<Model>(name)->GetRotation().y);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around Z", scene.Get<Model>(name)->GetRotation().z);
-
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("X-axis", scene.Get<Model>(name)->GetScale().x);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Y-axis", scene.Get<Model>(name)->GetScale().y);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Z-axis", scene.Get<Model>(name)->GetScale().z);*/
-
 				selectedObject = name;
 			}
 		}
@@ -112,19 +99,6 @@ void LevelEditor::Update()
 		window.SetValue<SliderFloatComponent, float>("X-axis", 0.0f);
 		window.SetValue<SliderFloatComponent, float>("Y-axis", 0.0f);
 		window.SetValue<SliderFloatComponent, float>("Z-axis", 0.0f);
-
-		//windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", "");
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("X", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Y", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Z", 0.0f);
-
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around X", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around Y", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around Z", 0.0f);
-
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("X-axis", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Y-axis", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Z-axis", 0.0f);
 
 		selectedObject = "";
 	}
@@ -169,18 +143,6 @@ void LevelEditor::Update()
 
 	if (selectedObject != "") //CHECKS EVERY FRAME, USE CHANGED()?
 	{
-		//float newXPos = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("X");
-		//float newYPos = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Y");
-		//float newZPos = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Z");
-
-		//float newXRot = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Around X");
-		//float newYRot = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Around Y");
-		//float newZRot = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Around Z");
-
-		//float newXScale = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("X-axis");
-		//float newYScale = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Y-axis");
-		//float newZScale = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Z-axis");
-
 		auto& window = windows["GAME OBJECT"];
 		float newXPos = window.GetValue<SliderFloatComponent>("X");
 		float newYPos = window.GetValue<SliderFloatComponent>("Y");
@@ -198,9 +160,6 @@ void LevelEditor::Update()
 		model->SetPosition(newXPos, newYPos, newZPos);
 		model->SetRotation(newXRot * PI / 180, newYRot * PI / 180, newZRot * PI / 180);
 		model->SetScale(newXScale, newXScale, newXScale);
-
-		//scene.Get<Model>(selectedObject)->SetPosition(newXPos, newYPos, newZPos);
-		//scene.Get<Model>(selectedObject)->SetRotation(newXRot * PI/180, newYRot * PI/180, newZRot * PI/180);
 	}
 
 	for (auto& [name, boundingSphere] : pickBoxes)
