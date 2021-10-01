@@ -13,6 +13,10 @@ void Game::Update()
 	//boulder->SetPosition(newPosition);
 	boulder->SetRotation(0, boulder->GetRotation().y + 0.001f, 0);
 
+	auto friendly = scene.Get<NPC>("SignsPost");
+
+	friendly->Collided(*player);
+
 	scene.Update();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
@@ -87,6 +91,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	lantern->SetPosition(0, 30, 0);
 	modelRenderer.Bind(lantern);
 	shadowRenderer.Bind(lantern);
+
 
 	scene.AddFriendly("SignsPost");
 	auto friendly = scene.Get<NPC>("SignsPost");
