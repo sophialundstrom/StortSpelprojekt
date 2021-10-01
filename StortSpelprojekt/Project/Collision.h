@@ -78,13 +78,13 @@ private:
 			const float angle = angles[i % 8];
 			
 			if (i < 8)
-				vertices[i] = position + Vector3{ cos(angle), 0.0f, sin(angle) } * bounds.Radius;
+				vertices[i] = bounds.Center + Vector3{ cos(angle), 0.0f, sin(angle) } * bounds.Radius;
 
 			else if (i < 16)
-				vertices[i] = position + Vector3{ cos(angle), sin(angle), 0.0f } * bounds.Radius;
+				vertices[i] = bounds.Center + Vector3{ cos(angle), sin(angle), 0.0f } * bounds.Radius;
 
 			else
-				vertices[i] = position + Vector3{ 0.0f, sin(angle), cos(angle) } * bounds.Radius;
+				vertices[i] = bounds.Center + Vector3{ 0.0f, sin(angle), cos(angle) } * bounds.Radius;
 		}
 	}
 public:
@@ -155,7 +155,7 @@ namespace Collision
 		else
 		{
 			if ((box.GetPosition() - rayOrigin).Length() > rayLength)
-				return;
+				return false;
 			return box.GetBounds().Intersects(rayOrigin, rayDirection, temp);
 		}
 	}
@@ -171,7 +171,7 @@ namespace Collision
 		else
 		{
 			if ((sphere.GetPosition() - rayOrigin).Length() > rayLength)
-				return;
+				return false;
 			return sphere.GetBounds().Intersects(rayOrigin, rayDirection, temp);
 		}
 	}

@@ -3,7 +3,7 @@
 
 void Game::Update()
 {
-	player->Update();
+	player->Update(terrain.GetHeightMap());
 
 	QuestLog::Inst().Update();
 
@@ -11,9 +11,11 @@ void Game::Update()
 	auto boulder = scene.Get<Model>("boulder");
 	//const Vector3 newPosition = boulder->GetPosition() * boulder->GetRotation() * -boulder->GetPosition();
 	//boulder->SetPosition(newPosition);
-	boulder->SetRotation(0, boulder->GetRotation().y + 0.001, 0);
+	boulder->SetRotation(0, boulder->GetRotation().y + 0.001f, 0);
 
 	scene.Update();
+
+	scene.UpdateDirectionalLight(player->GetPosition());
 
 	Event::ClearRawDelta();
 }
@@ -34,7 +36,6 @@ void Game::Render()
 
 	deferredRenderer.Render();
 	
-	//RENDER UI PROBABLY
 	userInterface.Render();
 
 	Graphics::Inst().EndFrame();
@@ -44,16 +45,27 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight), 
 	modelRenderer(DEFERRED, true), 
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED), terrain(50.0f, 0)
+	terrainRenderer(DEFERRED), terrain(50.0f, 2)
 {
 	//LOAD SCENE
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 100.0f, 1.0f, 10.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(30, 4, 4);
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 1.0f, 20.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(50, 4, 4);
 
 	//PLAYER
 	player = std::make_shared<Player>(scene.GetCamera());
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
+	shadowRenderer.Bind(scene.Get<Model>("Player"));
+
+	//BUILDING
+	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
+	std::string meshNames[] = { "Pyramid", "Cube", "pSphere1" };
+	std::string materialNames[] = { "SilverTex", "WaterTex", "phong1" };
+	building = std::make_shared<Building>(meshNames, materialNames, "Staff");
+	scene.AddModel("Building", building);
+	modelRenderer.Bind(building);
+	shadowRenderer.Bind(building);
+	scene.Get<Model>("Building")->SetPosition(10, 25, 0);
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>("Default", player);
@@ -67,6 +79,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	boulder->SetParent(scene.Get<Model>("Player"));
 	boulder->SetPosition(5, 2, 0);
 	modelRenderer.Bind(boulder);
+	shadowRenderer.Bind(boulder);
+
+	scene.AddModel("lantern");
+	auto lantern = scene.Get<Model>("lantern");
+	lantern->SetRotation({ 0, 0, 0 });
+	lantern->SetPosition(0, 30, 0);
+	modelRenderer.Bind(lantern);
+	shadowRenderer.Bind(lantern);
 
 	(void)Run();
 }
@@ -82,18 +102,47 @@ State Game::Run()
 	Update();
 	Render();
 
-	if (Event::KeyIsPressed('T'))
-		QuestLog::Inst().Activate(0);
+	static float lastClick = 0;
 
-	if (Event::KeyIsPressed('U'))
-		QuestLog::Inst().Complete(0);
+	if (Time::Get() - lastClick > 0.25f)
+	{
+		if (Event::KeyIsPressed('U'))
+		{
+			QuestLog::Inst().Complete(0);
+			lastClick = Time::Get();
+		}
 
-	if (Event::KeyIsPressed('B'))
-		player->GameStats().barbariansKilled++;
+		if (Event::KeyIsPressed('B'))
+		{
+			player->GameStats().barbariansKilled++;
+			lastClick = Time::Get();
+		}
 
-	if (Event::KeyIsPressed('I'))
-		player->Inventory().AddItem(0);
+		if (Event::KeyIsPressed('I'))
+		{
+			player->Inventory().GetResources(RESOURCES::WOOD);
+			player->Inventory().AddItem(RESOURCES::WOOD);
+			player->Inventory().GetResources(RESOURCES::STONE);
+			player->Inventory().AddItem(RESOURCES::STONE);
+			player->Inventory().GetResources(RESOURCES::FOOD);
+			player->Inventory().AddItem(RESOURCES::FOOD);
+			lastClick = Time::Get();
+		}
 
+		if (Event::KeyIsPressed('R'))
+		{
+			building->Upgrade();
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('P'))
+		{
+			player->GetStats();
+			lastClick = Time::Get();
+		}
+
+	}
+	
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;
 
