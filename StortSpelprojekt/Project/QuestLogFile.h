@@ -76,7 +76,7 @@ namespace QuestLogFile
 				std::getline(reader, line);
 				std::string name = GetNthString(line, 1);
 
-				quest = new CollectQuest((QuestType)type, ID, name, active, numItems, itemID);
+				quest = new CollectQuest((QuestType)type, ID, name, active, numItems, (enum RESOURCES)itemID);
 				break;
 			}
 				

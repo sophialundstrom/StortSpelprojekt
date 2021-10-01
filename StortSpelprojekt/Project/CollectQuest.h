@@ -6,9 +6,9 @@ class CollectQuest : public Quest
 private:
 	UINT collectedItems = 0;
 	UINT numItems;
-	UINT itemID;
+	enum RESOURCES itemID;
 public:
-	CollectQuest(QuestType type, UINT ID, const std::string& name, bool active, UINT numItems, UINT itemID)
+	CollectQuest(QuestType type, UINT ID, const std::string& name, bool active, UINT numItems, enum RESOURCES itemID)
 		:Quest(type, ID, name, active), numItems(numItems), itemID(itemID)
 	{}
 
