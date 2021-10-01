@@ -136,6 +136,12 @@
     <Filter Include="Header Files\Application\Scene\Game\Quests">
       <UniqueIdentifier>{5c4e414d-8cc2-4eb5-8f12-488d61db7c69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\IDRenderer">
+      <UniqueIdentifier>{fe0e3285-5f1b-4347-bc40-f0472f4acb0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\IDRenderer\Shaders">
+      <UniqueIdentifier>{7a6c39e8-4d38-4cf0-a78f-6a0f7b04f79a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -173,6 +179,12 @@
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Header Files\Application\GameStates\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -386,6 +398,15 @@
     <ClInclude Include="PRay.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IDRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\IDRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DisplacementVertexShader.hlsl">
@@ -480,6 +501,12 @@
     </FxCompile>
     <FxCompile Include="ColliderVertexShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="IDVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\IDRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="IDPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\IDRenderer\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

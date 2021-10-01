@@ -64,6 +64,9 @@
       <FullPath>D:\Repository\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>D:\Repository\StortSpelprojekt\StortSpelprojekt\x64\Debug\IDPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>D:\Repository\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowDomainShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
@@ -98,6 +101,9 @@
     </ContentFile>
     <ContentFile>
       <FullPath>D:\Repository\StortSpelprojekt\StortSpelprojekt\x64\Debug\UVAnimationVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Repository\StortSpelprojekt\StortSpelprojekt\x64\Debug\IDVertexShader.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

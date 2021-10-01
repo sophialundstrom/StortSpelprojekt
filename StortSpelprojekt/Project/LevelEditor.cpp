@@ -16,13 +16,16 @@ void LevelEditor::Load(const std::string& file)
 
 	std::string fileName = path.stem().string();
 	scene.AddModel(fileName);
-	modelRenderer.Bind(scene.Get<Model>(fileName));
+	auto model = scene.Get<Model>(fileName);
+	idRenderer.Bind(model);
+	modelRenderer.Bind(model);
 	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
+	model->SetID(scene.GetObjectNames().size());
 
 	auto boundingSphere = std::make_shared<BoundingSphere>();
 	pickBoxes.emplace(fileName, boundingSphere);
 	boundingSphere->SetPosition(0, 2, 0);
-	boundingSphere->SetParent(scene.Get<Model>(fileName));
+	boundingSphere->SetParent(model);
 
 	colliderRenderer.Bind(boundingSphere);
 }
@@ -172,6 +175,8 @@ void LevelEditor::Update()
 
 void LevelEditor::Render()
 {
+	idRenderer.Render();
+
 	BeginFrame();
 
 	//TO DO: ADD PARTICLE RENDER PASS (IN OPEN WORLD)

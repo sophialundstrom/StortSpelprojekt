@@ -9,6 +9,7 @@
 #include "PRay.h"
 #include "Collision.h"
 #include "ColliderRenderer.h"
+#include "IDRenderer.h"
 
 class LevelEditor : public Editor, public GameState
 {
@@ -29,6 +30,7 @@ private:
 	TerrainRenderer terrainRenderer;
 	ModelRenderer modelRenderer;
 	ColliderRenderer colliderRenderer;
+	IDRenderer idRenderer;
 
 	UINT wWidth, wHeight;
 
