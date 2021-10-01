@@ -1,6 +1,7 @@
 #include "LevelEditor.h"
 #include "Event.h"
 #include "GameLoader.h"
+#include "FBXLoader.h"
 
 void LevelEditor::BindDrawables()
 {
@@ -30,7 +31,7 @@ void LevelEditor::Load(const std::string& file)
 		return;
 
 	std::string fileName = path.stem().string();
-	scene.AddModel(fileName, path.string());
+	fileName = scene.AddModel(fileName, path.string());
 	modelRenderer.Bind(scene.Get<Model>(fileName));
 	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
 
@@ -210,9 +211,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	animatedModelRenderer(FORWARD, false)
 {
 	//LOAD SCENE
-	std::string path = FileSystem::ProjectDirectory::path + "/Models";
-	for (const auto& file : std::filesystem::directory_iterator(path))
-		Model temp(file.path().string());
+	FBXLoader("Models");
 
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());

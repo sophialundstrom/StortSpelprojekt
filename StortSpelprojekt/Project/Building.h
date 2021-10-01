@@ -4,7 +4,7 @@
 class Building :public Model
 {
 private:
-	static const UINT stages = 3;
+	static const UINT stages = 4;
 	std::string meshNames[stages];
 	std::string materialNames[stages];
 	UINT currState = 0;
@@ -12,16 +12,9 @@ private:
 public:
 	Building() = default;
 
-	Building(std::string meshNames[], std::string materialNames[], const std::string &fileName)
-		:Model(fileName)
-	{
-		for (UINT i = 0; i < stages; i++)
-		{
-			this->meshNames[i] = meshNames[i];
-			this->materialNames[i] = materialNames[i];
-			Model init = Model(meshNames[i]);
-		}
-	}
+	Building(std::string meshNames[], std::string materialNames[], const std::string &name)
+		:Model(meshNames[0], name)
+	{}
 
 	void Upgrade()
 	{
@@ -38,5 +31,4 @@ public:
 		ApplyMesh(meshNames[currState - 1]);
 		ApplyMaterial(materialNames[currState - 1]);
 	}
-
 };

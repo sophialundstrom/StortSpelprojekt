@@ -1,5 +1,6 @@
 #pragma once
 #include "MaterialLoader.h"
+#include "FileSystem.h"
 
 struct TempMeshData
 {
@@ -17,30 +18,39 @@ private:
 public:
 	FBXLoader(const std::string& directory)
 	{
-		//EX
-		size_t numFBX = 10;
-		tempMeshData.reserve(numFBX);
-		tempMaterials.reserve(numFBX);
+		size_t numFiles = 0;
+		std::filesystem::path path = FileSystem::ProjectDirectory::path + "\\" + directory;
+		auto it = std::filesystem::directory_iterator(path);
+		
+		for (const auto& file : it)
+			numFiles++;
 
-		for (UINT i = 0; i < numFBX; ++i)
-			LoadFBX("FBX FILE (INCL .FBX)", i);
+		tempMeshData = std::vector<TempMeshData*>(numFiles);
+		tempMaterials = std::vector<Material*>(numFiles);
 
-		//CALL THINGY TO ACTUALLY CALL ALL RESOURCE INITS
-
+		UINT i = 0;
+		it = std::filesystem::directory_iterator(path);
+		for (const auto& file : it)
+		{
+			LoadFBX(file.path().string(), i);
+			++i;
+		}
+			
 		PassToResources();
 	}
+
 private:
-	void LoadFBX(const std::string& fbx, UINT ID)
+	void LoadFBX(const std::string& path, UINT ID)
 	{
-		const aiScene* scene = importer.ReadFile("Models/" + fbx, aiProcess_FlipUVs);
+		const aiScene* scene = importer.ReadFile(path, aiProcess_FlipUVs);
 		if (!scene)
 		{
-			Print("COULD NOT LOAD .FBX FILE: " + fbx);
+			Print("COULD NOT LOAD .FBX FILE");
 			return;
 		}
 
 		if (scene->HasMaterials())
-			tempMaterials[ID] = LoadMaterial(scene->mMaterials[0]);
+			tempMaterials[ID] = LoadMaterial(scene->mMeshes[0]->mName.C_Str(), scene->mMaterials[0]);
 
 		if (scene->HasMeshes())
 			tempMeshData[ID] = LoadMeshData(scene->mMeshes[0]);
@@ -51,27 +61,17 @@ private:
 		auto& resources = Resources::Inst();
 
 		for (auto* meshData : tempMeshData)
-		{
 			resources.AddVertexBuffer(meshData->name, meshData->buffer, meshData->vertexCount);
-			meshData->buffer = nullptr;
-			delete meshData;
-		}
 
 		for (auto* material : tempMaterials)
-		{
 			resources.AddMaterial(material);
-			material = nullptr;
-		}
-
-		tempMeshData.clear();
-		tempMaterials.clear();
 	}
 
-	Material* LoadMaterial(aiMaterial* material)
+	Material* LoadMaterial(const std::string& meshName, aiMaterial* material)
 	{
 		Material* newMaterial = new Material();
 
-		newMaterial->name = material->GetName().C_Str();
+		newMaterial->name = meshName + "_" + material->GetName().C_Str();
 
 		aiString path;
 		UINT numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);

@@ -15,30 +15,16 @@ private:
 	Mesh mesh;
 public:
 	Model() = default;
-	Model(const std::string& name, const std::string& path)
-		:name(name)
+	Model(const std::string& meshName, const std::string name)
 	{
-		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(path, aiProcess_FlipUVs);
-
-		if (!scene)
-		{
-			Print("COULD NOT LOAD .FBX FILE");
-			return;
-		}
-
-		if (scene->HasMeshes())
-			ApplyMesh(scene->mMeshes[0]->mName.C_Str());
-
-		if (scene->HasMaterials())
-			ApplyMaterial(scene->mMaterials[0]->GetName().C_Str()));
+		SetName(name);
+		ApplyMesh(meshName);	
+		ApplyMaterial(meshName);
 	}
 
-	Model(const Model& other)
+	Model(const std::string& name, const Model& other)
 		:mesh(other.mesh) 
-	{
-		this->parent = other.parent;
-	}
+	{}
 
 	void Draw(bool useTextures = true, bool useMaterial = true) 
 	{ 

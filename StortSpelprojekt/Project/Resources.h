@@ -64,7 +64,7 @@ public:
 	UINT GetMaterialIDFromName(const std::string& name)
 	{
 		for (auto& [ID, material] : materials)
-			if (material->name == name)
+			if (material->name == name || material->name.find(name) != std::string::npos)
 				return ID;
 		return ID_INVALID;
 	}

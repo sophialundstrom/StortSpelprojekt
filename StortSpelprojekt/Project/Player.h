@@ -256,7 +256,7 @@ public:
 
 
 	Player(Camera* camera)
-		:Model("PlayerArrow"), sceneCamera(camera)
+		:Model("PlayerArrow", "PlayerArrow"), sceneCamera(camera)
 	{
 		rotation = { 0, PI, 0 };
 	}

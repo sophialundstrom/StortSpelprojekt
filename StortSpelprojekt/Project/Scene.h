@@ -35,7 +35,7 @@ public:
 	const std::map<std::string, std::shared_ptr<Drawable>>& GetSortedMap() const;
 	std::vector<std::string> GetObjectNames();
 
-	void AddModel(const std::string& file, const std::string path);
+	std::string AddModel(const std::string& file, const std::string path);
 	void AddModel(const std::string& name,std::shared_ptr <Drawable> drawable);
 
 	void AddAnimatedModel(const std::string& file,  const std::string path);
