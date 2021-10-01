@@ -76,7 +76,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	userInterface.Initialize(window);
 
 	//FILLERS
-	scene.AddModel("boulder");
+	/*scene.AddModel("boulder");
 	auto boulder = scene.Get<Model>("boulder");
 	boulder->SetParent(scene.Get<Model>("Player"));
 	boulder->SetPosition(5, 2, 0);
@@ -88,16 +88,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	lantern->SetRotation({ 0, 0, 0 });
 	lantern->SetPosition(0, 30, 0);
 	modelRenderer.Bind(lantern);
-	shadowRenderer.Bind(lantern);
+	shadowRenderer.Bind(lantern);*/
 
 	(void)Run();
 }
 
 Game::~Game()
 {
-	GameLoader loader;
-	loader.Save("TEST" , scene.GetDrawables() );
-	loader.Load("TEST");
 
 	scene.Clear();
 	Resources::Inst().Clear();

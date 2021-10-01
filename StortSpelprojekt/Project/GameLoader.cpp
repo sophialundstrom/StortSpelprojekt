@@ -1,14 +1,13 @@
 #include "GameLoader.h"
 #include <algorithm>
 
-void GameLoader::Load(const std::string& filename)
+void GameLoader::Load(const std::string& filename, std::map<std::string, std::shared_ptr<Drawable>>& drawables)
 {
 
 	readLocation = 0;
-	std::string saveFileLocatoin = FileSystem::ProjectDirectory::path + "\\SaveData\\" + filename + ".map";
+	std::string path = FileSystem::ProjectDirectory::path + "\\SaveData\\" + filename + ".map";
 
-
-	reader.open(saveFileLocatoin, std::ios::beg | std::ios::binary);
+	reader.open(path, std::ios::beg | std::ios::binary);
 	if (!reader.is_open())
 	{
 		printf("FATAL ERROR READER IS NOT OPEN!");
@@ -19,32 +18,38 @@ void GameLoader::Load(const std::string& filename)
 	UINT fileLength = reader.tellg();
 	reader.seekg(0, reader.beg);
 
+	UINT header;
 	while (readLocation < fileLength)
 	{
-		char message[MAX_STR];
-		ReadStr(message);
-		std::cout<< "read from file: " << message << std::endl;
-		ReadStr(message);
-		std::cout << "read from file: " << message << std::endl;
-		ReadStr(message);
-		std::cout << "read from file: " << message << std::endl;
-		ReadStr(message);
-		std::cout << "read from file: " << message << std::endl;
-		ReadStr(message);
-		std::cout << "read from file: " << message << std::endl;
-		
-		Vector3 vec;
-		Read(vec);
-		std::cout << "PosData " << vec.x << " " << vec.y << " " << vec.z << std::endl;
+		Read(header);
 
-		Read(vec);
-		std::cout << "RotData " << vec.x << " " << vec.y << " " << vec.z << std::endl;
+		switch((TYPE)header)
+		{
+			case MODEL: 
+			{
+				auto model = ReadModel();
+				drawables.emplace(model->name, model);
+				break;
+			}
+			
+			case PARTICLE_SYSTEM:
+			{
+				break;
+			}
 
-		Read(vec);
-		std::cout << "ScalData " << vec.x << " " << vec.y << " " << vec.z << std::endl;
+			case PARENT:
+			{
+				char drawable[MAX_STR];
+				ReadStr(drawable);
 
-		std::cout << "\n";
+				char parent[MAX_STR];
+				ReadStr(parent);
+
+				drawables[drawable]->parent = drawables[parent];
+			}
+		}
 	}
+
 	std::cout << "Closing reader\n";
 	reader.close();
 
@@ -54,7 +59,6 @@ void GameLoader::Save(const std::string& filename, const std::map<std::string, s
 {
 	std::string saveFileLocatoin = FileSystem::ProjectDirectory::path + "\\SaveData\\" + filename + ".map";
 
-	
 	writer.open(saveFileLocatoin, std::ios::trunc | std::ios::binary);
 	if (!writer.is_open())
 	{
@@ -62,31 +66,19 @@ void GameLoader::Save(const std::string& filename, const std::map<std::string, s
 		return;
 	}
 
+	char message[MAX_STR];
+
 	for (auto& [name, drawable] : drawables)
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if (!model)
+			continue;
 
-
-		char message[MAX_STR];
+		Write(MODEL);
 
 		strcpy_s(message, MAX_STR, name.c_str());
 		WriteStr(message);
 		std::cout << "Writing modelName: " << message << std::endl;
-
-		if (!model->parent)
-		{
-			WriteStr("NO PARENT");
-		}
-		else
-		{
-			strcpy_s(message, MAX_STR, model->parent->name.c_str());
-			WriteStr(message);
-			std::cout << "Writing parentName " << message << std::endl;
-		}
-
-		strcpy_s(message, MAX_STR, model->mesh.name.c_str());
-		WriteStr(message);
-		std::cout << "Writing meshName: " << message << std::endl;
 
 		strcpy_s(message, MAX_STR, Resources::Inst().GetBufferNameFromID(model->mesh.bufferID).c_str());
 		WriteStr(message);
@@ -103,12 +95,62 @@ void GameLoader::Save(const std::string& filename, const std::map<std::string, s
 		std::cout << "RotData" << model->rotation.x << " " << model->rotation.y << " " << model->rotation.z << std::endl;
 
 		Write(model->scale);
-		std::cout << "ScalData" << model->scale.x << " " << model->scale.y << " " << model->scale.z << std::endl;
-
-		std::cout << "\n";
+		std::cout << "ScaleData" << model->scale.x << " " << model->scale.y << " " << model->scale.z << std::endl;
 	}
 
-	std::cout << "\n\n\n---\n\n\n";
+	for (auto& [name, drawable] : drawables)
+	{
+		if (!drawable->parent)
+			continue;
+
+		Write(PARENT);
+
+		Print("PARENT");
+
+		strcpy_s(message, MAX_STR, name.c_str());
+		WriteStr(message);
+
+		Print(message);
+
+		strcpy_s(message, MAX_STR, drawable->parent->name.c_str());
+		WriteStr(message);
+
+		Print(message);
+	}
+
+	std::cout << "\n\n\n-- SAVE DONE --\n\n\n";
 
 	writer.close();
+}
+
+std::shared_ptr<Model> GameLoader::ReadModel()
+{
+	auto model = std::make_shared<Model>();
+
+	char string[MAX_STR];
+
+	//ModelName
+	ReadStr(string);	
+	model->SetName(string);
+
+	//MeshName
+	ReadStr(string);	
+	model->ApplyMesh(string);
+
+	//Material
+	ReadStr(string);	
+	model->ApplyMaterial(string);
+
+	Vector3 vec;
+
+	Read(vec);	//PosData
+	model->SetPosition(vec);
+
+	Read(vec);  //RotData
+	model->SetRotation(vec);
+
+	Read(vec);  //ScaleData
+	model->SetScale(vec);
+
+	return model;
 }

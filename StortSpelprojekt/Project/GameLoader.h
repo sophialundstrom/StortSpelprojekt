@@ -9,12 +9,8 @@
 class GameLoader
 {
 public:
-	//GameLoader();
-	void Load(const std::string& filename);
+	void Load(const std::string& filename, std::map<std::string, std::shared_ptr<Drawable>>& drawables);
 	void Save(const std::string& filename, const std::map<std::string, std::shared_ptr<Drawable>>& drawables);
-	
-
-
 private:
 	size_t readLocation = 0;
 	std::ifstream reader;
@@ -46,9 +42,15 @@ private:
 
 	enum TYPE
 	{
-		MODEL
-		
+		MODEL,
+		PARTICLE_SYSTEM,
+		PARENT
 	};
 
+	void WriteModel(std::shared_ptr<Model> model);
+	void WriteParticleSystem(std::shared_ptr<ParticleSystem> particleSystem);
+	//void SaveBuilding(std::shared_ptr<Building> building);
 
+	std::shared_ptr<Model> ReadModel();
+	std::shared_ptr<ParticleSystem> ReadParticleSystem();
 };

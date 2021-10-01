@@ -19,7 +19,7 @@ public:
 	Scene() = default;
 	~Scene() { delete camera; }
 
-	std::map<std::string, std::shared_ptr<Drawable>> GetDrawables() {
+	std::map<std::string, std::shared_ptr<Drawable>>& GetDrawables() {
 		return drawables;
 	}
 
@@ -35,10 +35,10 @@ public:
 	const std::map<std::string, std::shared_ptr<Drawable>>& GetSortedMap() const;
 	std::vector<std::string> GetObjectNames();
 
-	void AddModel(const std::string& file);
-	void AddModel(const std::string &name,std::shared_ptr <Drawable> drawable);
+	void AddModel(const std::string& file, const std::string path);
+	void AddModel(const std::string& name,std::shared_ptr <Drawable> drawable);
 
-	void AddAnimatedModel(const std::string& file);
+	void AddAnimatedModel(const std::string& file,  const std::string path);
 	void AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type);
 	void AddPointLight(Vector3 position, float range, Vector3 attenuation = { 0.05f, 0.05f, 0.05f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 	

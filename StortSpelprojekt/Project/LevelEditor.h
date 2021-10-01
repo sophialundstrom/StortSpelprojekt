@@ -10,6 +10,7 @@
 #include "Collision.h"
 #include "ColliderRenderer.h"
 
+
 class LevelEditor : public Editor, public GameState
 {
 private:
@@ -31,6 +32,8 @@ private:
 	ColliderRenderer colliderRenderer;
 
 	UINT wWidth, wHeight;
+
+	void BindDrawables();
 
 	// Inherited via Editor
 	virtual void Save(const std::string& file) override;

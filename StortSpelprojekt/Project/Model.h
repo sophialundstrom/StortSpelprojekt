@@ -14,14 +14,13 @@ class Model : public Drawable
 private:
 	Mesh mesh;
 public:
-	Model(const std::string& fileName)
+	Model() = default;
+	Model(const std::string& name, const std::string& path)
+		:name(name)
 	{
-		Timer timer;
-		timer.Start();
-
 		Assimp::Importer importer;
-		std::filesystem::current_path(std::filesystem::path(FileSystem::ProjectDirectory::path));
-		const aiScene* scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_SortByPType | aiProcess_FlipUVs);
+		const aiScene* scene = importer.ReadFile(path, aiProcess_FlipUVs);
+
 		if (!scene)
 		{
 			Print("COULD NOT LOAD .FBX FILE");
@@ -29,13 +28,10 @@ public:
 		}
 
 		if (scene->HasMeshes())
-			mesh = Mesh(scene->mMeshes[0]);
+			ApplyMesh(scene->mMeshes[0]->mName.C_Str());
 
 		if (scene->HasMaterials())
-			MaterialLoader::Load(scene->mMaterials[0]);
-
-
-		Print(timer.DeltaTime());
+			ApplyMaterial(scene->mMaterials[0]->GetName().C_Str()));
 	}
 
 	Model(const Model& other)
@@ -44,7 +40,13 @@ public:
 		this->parent = other.parent;
 	}
 
-	void Draw(bool useTextures = true, bool useMaterial = true) { if (useTextures) Resources::Inst().BindMaterial(mesh.materialID, useMaterial); Resources::Inst().Draw(mesh.vertexCount, mesh.bufferID); }
+	void Draw(bool useTextures = true, bool useMaterial = true) 
+	{ 
+		if (useTextures) 
+			Resources::Inst().BindMaterial(mesh.materialID, useMaterial); 
+
+		Resources::Inst().Draw(mesh.vertexCount, mesh.bufferID); 
+	}
 
 	void ApplyMaterial(const std::string& name)
 	{
@@ -62,7 +64,6 @@ public:
 			mesh.bufferID = ID;
 			mesh.vertexCount = Resources::Inst().GetVertexCountFromID(ID);
 		}
-
 	}
 
 	// Inherited via Drawable
