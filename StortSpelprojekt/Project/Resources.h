@@ -38,15 +38,6 @@ public:
 			buffer->Release();
 	}
 
-	//CHECK IF MATERIAL ALREADY EXISTS
-	bool MaterialExists(const std::string& name)
-	{
-		for (auto& [ID, material] : materials)
-			if (material->name == name)
-				return true;
-		return false;
-	}
-
 	//NUM MATERIALS
 	UINT NumMaterials() const { return (UINT)materials.size(); }
 
@@ -57,7 +48,12 @@ public:
 	void AddMaterial(Material* material) { materials.emplace(NumMaterials(), material); }
 
 	//ADD NEW VERTEX BUFFER
-	void AddVertexBuffer(const std::string& name, ID3D11Buffer* buffer, UINT vertexCount) { vertexBuffers.emplace(NumBuffers(), buffer); bufferNames.emplace_back(name); vertexCounts.emplace_back(vertexCount); }
+	void AddVertexBuffer(const std::string& name, ID3D11Buffer* buffer, UINT vertexCount) 
+	{ 
+		vertexBuffers.emplace(NumBuffers(), buffer); 
+		bufferNames.emplace_back(name); 
+		vertexCounts.emplace_back(vertexCount); 
+	}
 
 	UINT GetVertexCountFromID(UINT ID) 
 	{

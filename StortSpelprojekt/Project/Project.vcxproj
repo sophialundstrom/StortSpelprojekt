@@ -175,6 +175,7 @@
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="CollectQuest.h" />
+    <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
     <ClInclude Include="GameLoader.h" />
     <ClInclude Include="Quest.h" />
