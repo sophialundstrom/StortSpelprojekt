@@ -183,6 +183,12 @@
     <ClCompile Include="Button.cpp">
       <Filter>Header Files\Application\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Header Files\Application\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Header Files\Application\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -396,6 +402,12 @@
       <Filter>Header Files\Application\UI</Filter>
     </ClInclude>
     <ClInclude Include="Button.h">
+      <Filter>Header Files\Application\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Header Files\Application\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
       <Filter>Header Files\Application\UI</Filter>
     </ClInclude>
   </ItemGroup>
