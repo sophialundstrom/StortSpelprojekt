@@ -203,6 +203,8 @@ void LevelEditor::Render()
 	colliderRenderer.Render();
 
 	EndFrame();
+
+	Resources::Inst().Reset();
 }
 
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)

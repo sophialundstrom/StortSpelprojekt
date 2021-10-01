@@ -125,6 +125,11 @@ public:
 		Graphics::Inst().GetContext().Draw(vertexCount, 0);
 	}
 
+	void Reset()
+	{
+		currentMaterial = nullptr;
+	}
+
 	//CLEAR
 	void Clear()
 	{		
