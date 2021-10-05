@@ -41,5 +41,7 @@ bool Button::isClicked(int xPos, int yPos)
 
 void Button::DrawButton(ID2D1RenderTarget* UIRenderTarget)
 {
+	//Add a draw rectangle call from UI's rendertarget based on bounds and brush
+	//Figure out how to access rendertarget from here
 	UIRenderTarget->FillRectangle(&bounds, buttonBrush);
 }

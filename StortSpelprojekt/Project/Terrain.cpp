@@ -32,10 +32,10 @@ HeightMap::HeightMap(const std::string& texture)
 	}
 }
 
-Terrain::Terrain(UINT subdivisions)
+Terrain::Terrain(float size, UINT subdivisions)
 {
 	heightMap = new HeightMap("heightMap");
-	UINT size = heightMap->width;
+	size = heightMap->width;
 	
 	//TEST STUFF
 	const UINT cells = pow(2, subdivisions);

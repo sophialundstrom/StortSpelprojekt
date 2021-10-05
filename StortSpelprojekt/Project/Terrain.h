@@ -40,7 +40,7 @@ private:
 	Texture* textures[3];
 	HeightMap* heightMap;
 public:
-	Terrain(UINT subdivisions = 0);
+	Terrain(float size, UINT subdivisions = 1);
 	~Terrain();
 
 	HeightMap* GetHeightMap() { return heightMap; }

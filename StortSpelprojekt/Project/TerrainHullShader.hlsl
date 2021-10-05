@@ -31,7 +31,7 @@ HS_CONSTANT_DATA_OUTPUT CalcHSPatchConstants(
 }
 
 [domain("tri")]
-[partitioning("integer")] //ROUNDS UP TO CLOSEST ODD NUMBER (TESSFACTORS)
+[partitioning("fractional_odd")] //ROUNDS UP TO CLOSEST ODD NUMBER (TESSFACTORS)
 [outputtopology("triangle_cw")] //CLOCKWISE TRIANGLE AS OUTPUT
 [outputcontrolpoints(3)]
 [patchconstantfunc("CalcHSPatchConstants")]

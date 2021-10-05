@@ -8,28 +8,24 @@ UI::UI()
 
 UI::~UI()
 {
-	SafeRelease(&UIFactory);
-	SafeRelease(&UIRenderTarget);
-	SafeRelease(&lightSlateGrayBrush);
-	SafeRelease(&cornflowerBlueBrush);
-	SafeRelease(&crimsonBrush);
+	UIFactory->Release();// SafeRelease(&UIFactory);
+	UIRenderTarget->Release();//SafeRelease(&UIRenderTarget);
+	lightSlateGrayBrush->Release();//SafeRelease(&lightSlateGrayBrush);
+	cornflowerBlueBrush->Release();
+	crimsonBrush->Release();
 	delete testButton;
-	delete testImage;
 }
 
 HRESULT UI::Initialize(HWND window)
 {
 	HRESULT hr;
+
 	hr = CreateDeviceIndependentResources();
 	hr = CreateDeviceResources(window);
-	hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(writeFactory), reinterpret_cast<IUnknown**>(&writeFactory));
 
 	UIwindow = window;
 
 	testButton = new Button(buttonPos, 50, 50, cornflowerBlueBrush);
-	testImage = new Image(L"./Images/Pepsi.jpeg", UIRenderTarget, imagePos, 0.25f, 1.0f);
-	testImage2 = new Image(L"./Images/Pepsi3.jpg", UIRenderTarget, image2Pos, 0.05f, 1.0f);
-	testText = new Text(writeFactory, L"I'm a text!", image2Pos, 50, 30, 20);
 
 	return hr;
 }
@@ -90,10 +86,16 @@ HRESULT UI::CreateDeviceResources(HWND window)
 	return hr;
 }
 
+void UI::DiscardDeviceResources()
+{
+	SafeRelease(&UIRenderTarget);
+	SafeRelease(&lightSlateGrayBrush);
+	SafeRelease(&cornflowerBlueBrush);
+}
+
 //DO UI STUFF HERE
 void UI::Render()
 {
-	IDWriteTextFormat* textFormat;
 	UIRenderTarget->BeginDraw();
 	UIRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 
@@ -113,9 +115,6 @@ void UI::Render()
 	UIRenderTarget->DrawRectangle(&rectangle2, cornflowerBlueBrush);
 
 	testButton->DrawButton(UIRenderTarget);
-	testImage->DrawImage(UIRenderTarget);
-	testImage2->DrawImage(UIRenderTarget);
-	testText->Draw(UIRenderTarget, lightSlateGrayBrush);
 
 	if (Event::LeftIsClicked())
 	{
@@ -130,6 +129,9 @@ void UI::Render()
 	{
 		testButton->setBrush(cornflowerBlueBrush);
 	}
+	
+
+	//std::cout << Event::MousePosition().x << "	" << Event::MousePosition().y << std::endl;
 
 	UIRenderTarget->EndDraw();
 }
