@@ -48,6 +48,10 @@ void LevelEditor::Update()
 		if (screenSpaceCoordinates.y < -1)
 			screenSpaceCoordinates.y = -1;
 
+		int id = idRenderer.GetObjectID(1,1);
+
+		Print(id);
+
 		Matrix inverseView = scene.GetCamera()->GetViewMatrix().Invert();
 
 		pickRay.direction.x = (screenSpaceCoordinates.x * inverseView._11) + (screenSpaceCoordinates.y * inverseView._21) + inverseView._31;

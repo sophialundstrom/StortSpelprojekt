@@ -29,6 +29,7 @@ private:
 	//RENDER TARGET
 	ID3D11RenderTargetView* idRTV;
 	ID3D11Texture2D* idTexture;
+	ID3D11Texture2D* idTextureData;
 
 public:
 	IDRenderer()
@@ -81,13 +82,19 @@ public:
 			Print("FAILED TO CREATE 2D TEXTURE", "ID RENDERER");
 		}
 
+		textDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+
+		hr = Graphics::Inst().GetDevice().CreateTexture2D(&textDesc, nullptr, &idTextureData);
+		if FAILED(hr)
+		{
+			Print("FAILED TO CREATE 2D TEXTURE", "ID RENDERER");
+		}
+
 		hr = Graphics::Inst().GetDevice().CreateRenderTargetView(idTexture, nullptr, &idRTV);
 		if FAILED(hr)
 		{
 			Print("FAILED TO CREATE RENDER TARGET VIEW", "ID RENDERER");
 		}
-
-
 
 
 		Print("SUCCEEDED TO INITIALIZE ID RENDERER");
@@ -149,5 +156,35 @@ public:
 		context.OMSetRenderTargets(1, &idRTV, &Graphics::Inst().GetDSV());
 		context.ClearRenderTargetView(idRTV, Graphics::Inst().GetBackgroundColor());
 		context.ClearDepthStencilView(&Graphics::Inst().GetDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	}
+
+	int GetObjectID(int xPix, int yPix)
+	{
+		D3D11_BOX pixel;
+		pixel.left = xPix;
+		pixel.right = xPix + 1;
+		pixel.top = yPix;
+		pixel.bottom = yPix + 1;
+
+		//Graphics::Inst().GetContext().CopyResource(idTextureData, idTexture);
+		//D3D11_TEXTURE2D_DESC textureDesc;
+		//idTextureData->GetDesc(&textureDesc);
+		//D3D11_MAPPED_SUBRESOURCE mappedResource;
+		//D3D11_SUBRESOURCE_DATA resourceData;
+
+		//HRESULT hr = Graphics::Inst().GetContext().Map(idTextureData, (0, 0, 0, 0) , D3D11_MAP_READ, 0, &mappedResource);
+		//if FAILED(hr)
+		//{
+		//	Print("FAILED TO MAP SUBRESOURCE", "ID RENDERER::COPYING TEXTURE");
+		//}
+
+		//resourceData.pSysMem = new BYTE[mappedResource.RowPitch * textureDesc.Height];
+		//memcpy(const_cast<void*>(resourceData.pSysMem), mappedResource.pData, mappedResource.RowPitch* textureDesc.Height);
+
+		//Graphics::Inst().GetContext().Unmap(idTextureData, 0);
+		////+(yPix * 4 * sizeof(UINT)) + (xPix * 4 * sizeof(UINT))
+
+		//int id = reinterpret_cast<int>(resourceData.pSysMem);
+		return 1;
 	}
 };
