@@ -212,7 +212,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	wRatioX = (float)clientWidth / GetSystemMetrics(SM_CXSCREEN);
 	wRatioY = (float)clientHeight / GetSystemMetrics(SM_CYSCREEN);
 
-	terrain = new Terrain(20, 0);
+	terrain = new Terrain();
 
 
 	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
@@ -224,6 +224,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
+		window.AddCheckBoxComponent("WIREFRAME", false);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
@@ -274,13 +275,16 @@ State LevelEditor::Run()
 	if (window.GetValue<ButtonComponent>("LOAD FBX"))
 		Load(FileSystem::LoadFile("Models"));
 
+	if (window.Changed("WIREFRAME"))
+		Graphics::Inst().ToggleWireframe();
+
 	if (window.Changed("TERRAIN START SUBDIVISIONS"))
 	{
 		if (terrain)
 			delete terrain;
-		terrain = new Terrain(20.0f, window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
+		terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
 	}
-		
+
 	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
 		return State::MENU;
 
