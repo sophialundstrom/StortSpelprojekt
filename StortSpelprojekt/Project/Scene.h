@@ -4,7 +4,8 @@
 #include "Player.h"
 #include "Model.h"
 #include "AnimatedModel.h"
-#include "NPCBase.h"
+#include "NPCHostile.h"
+#include "NPCFriendly.h"
 #include <map>
 
 class Scene
@@ -37,8 +38,11 @@ public:
 	void AddModel(const std::string& file);
 	void AddModel(const std::string &name,std::shared_ptr <Drawable> drawable);
 
-	void AddFriendly(const std::string& file);
-	void AddFriendly(const std::string& name, std::shared_ptr <Drawable> drawable);
+	void AddFriendlyNPC(const std::string& file);
+	void AddFriendlyNPC(const std::string& name, std::shared_ptr <Drawable> drawable);
+
+	void AddHostileNPC(const std::string& file);
+	void AddHostileNPC(const std::string& name, std::shared_ptr<Drawable> drawable);
 
 	void AddAnimatedModel(const std::string& file);
 	void AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type);

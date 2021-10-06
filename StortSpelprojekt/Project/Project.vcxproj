@@ -164,6 +164,7 @@
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="NPCBase.cpp" />
+    <ClCompile Include="NPCFriendly.cpp" />
     <ClCompile Include="NPCHostile.cpp" />
     <ClCompile Include="OldModel.cpp" />
     <ClCompile Include="ParticleEditor.cpp" />
@@ -180,6 +181,7 @@
     <ClInclude Include="CollectQuest.h" />
     <ClInclude Include="FightQuest.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
     <ClInclude Include="AnimatedModel.h" />

@@ -136,6 +136,15 @@
     <Filter Include="Header Files\Application\Scene\Game\Quests">
       <UniqueIdentifier>{5c4e414d-8cc2-4eb5-8f12-488d61db7c69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Scene\Game\NPC">
+      <UniqueIdentifier>{f0cace42-5caa-449e-a08d-f8a635830aad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Game\NPC\.h">
+      <UniqueIdentifier>{a043bc87-76fb-467b-8291-b792dcbcaf4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Game\NPC\.cpp">
+      <UniqueIdentifier>{8aeb864f-4e42-440e-b2d9-2c4f8546c352}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -173,6 +182,27 @@
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>Header Files\Application\GameStates\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NPCHostile.cpp">
+      <Filter>Header Files\Application\Scene\Game\NPC\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="NPCBase.cpp">
+      <Filter>Header Files\Application\Scene\Game\NPC\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="NPCFriendly.cpp">
+      <Filter>Header Files\Application\Scene\Game\NPC\.cpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -385,6 +415,27 @@
     </ClInclude>
     <ClInclude Include="PRay.h">
       <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NPCFriendly.h">
+      <Filter>Header Files\Application\Scene\Game\NPC\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="NPCHostile.h">
+      <Filter>Header Files\Application\Scene\Game\NPC\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="NPCBase.h">
+      <Filter>Header Files\Application\Scene\Game\NPC\.h</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -4,27 +4,26 @@
 NPC::NPC(const std::string& file)
 	:Model(file)
 {
+	// call bind here cause i think it binds the bounding volume to a useful place
+	boundingSphere.Bind();
+}
+
+NPC::NPC(const Model& model)
+	: Model(model)
+{
 	boundingSphere.Bind();
 }
 
 void NPC::Update()
 {
 	boundingSphere.SetPosition(position);
-	boundingSphere.Update();
-	//UpdateMatrix();
+	boundingSphere.Update(); // not sure what update does but it deos not seem to update the posiution of the boundingVolume
 	Model::Update();
-	//debugPrint();
-	//this->position += Vector3(0.002f, 0, 0);
-	//Print("x:");
-	//Print(boundingSphere.GetPosition().x);
-	//Print(", y:");
-	//Print(boundingSphere.GetPosition().y);
-	//Print(", z:");
-	//Print(boundingSphere.GetPosition().z);
 }
 
 bool NPC::Collided(Player& player)
 {
+	// use this function to prototype the player interacting with a NPC
 	if ((position - player.GetPosition()).Length() < 8.0f)
 	{
 		Print("collided");
