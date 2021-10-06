@@ -133,7 +133,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;ImGui.lib;DirectXTK.lib;assimp-vc142-mtd.lib;d2d1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;ImGui.lib;DirectXTK.lib;assimp-vc142-mtd.lib;d2d1.lib;windowscodecs.lib;Dwrite.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -160,13 +160,18 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="Image.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="NPCBase.cpp" />
+    <ClCompile Include="NPCFriendly.cpp" />
+    <ClCompile Include="NPCHostile.cpp" />
     <ClCompile Include="OldModel.cpp" />
     <ClCompile Include="ParticleEditor.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -175,7 +180,8 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="CollectQuest.h" />
     <ClInclude Include="FightQuest.h" />
-    <ClInclude Include="Inventory.h" />
+    <ClInclude Include="Image.h" />
+    <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
     <ClInclude Include="AnimatedModel.h" />
@@ -209,6 +215,8 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="ModelRenderer.h" />
+    <ClInclude Include="NPCBase.h" />
+    <ClInclude Include="NPCHostile.h" />
     <ClInclude Include="OldMesh.h" />
     <ClInclude Include="OldModel.h" />
     <ClInclude Include="OldModelRenderer.h" />
@@ -238,6 +246,7 @@
     <ClInclude Include="TalkQuest.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainRenderer.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />

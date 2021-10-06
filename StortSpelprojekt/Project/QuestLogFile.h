@@ -35,15 +35,6 @@ namespace QuestLogFile
 
 		Quest* quest = nullptr;
 
-		//TALK
-		//TYPE ID ACTIVE COMPLETED NUMTRIGGER TRIGGERID(S) NAME NPCNAME
-
-		//COLLECT
-		//TYPE ID ACTIVE COMPLETED NUMTRIGGER TRIGGERID(S) NUMITEMS ITEMID COLLECTEDITEMS NAME
-
-		//FIGHT
-		//TYPE ID ACTIVE COMPLETED NUMTRIGGER TRIGGERID(S) NUMBARBS COMPLETEDBARBS NAME
-
 		std::string line;
 		while (!reader.eof())
 		{
@@ -54,13 +45,8 @@ namespace QuestLogFile
 			reader >> ID;
 			reader >> active;
 			reader >> completed;
-
 			if (completed)
-			{
 				std::getline(reader, line);
-				continue;
-			}
-				
 			reader >> numTriggerQuests;
 
 			UINT* triggerQuests = new UINT[numTriggerQuests];
@@ -87,13 +73,10 @@ namespace QuestLogFile
 				UINT itemID;
 				reader >> itemID;
 
-				UINT collectedItems;
-				reader >> collectedItems;
-
 				std::getline(reader, line);
 				std::string name = GetNthString(line, 1);
 
-				quest = new CollectQuest((QuestType)type, ID, name, active, numItems, itemID, collectedItems);
+				quest = new CollectQuest((QuestType)type, ID, name, active, numItems, (enum RESOURCES)itemID);
 				break;
 			}
 				
@@ -102,13 +85,10 @@ namespace QuestLogFile
 				UINT numTargets;
 				reader >> numTargets;
 
-				UINT completedTargets;
-				reader >> completedTargets;
-
 				std::getline(reader, line);
 				std::string name = GetNthString(line, 1);
 
-				quest = new FightQuest((QuestType)type, ID, name, active, numTargets, completedTargets);
+				quest = new FightQuest((QuestType)type, ID, name, active, numTargets);
 				break;
 			}
 			}
@@ -123,83 +103,8 @@ namespace QuestLogFile
 		}
 	}
 
-	inline void Write(std::ofstream& writer, FightQuest* quest)
-	{
-		writer << quest->NumTargets() << " ";
-		writer << quest->CompletedTargets();
-
-		writer << " '";
-		writer << quest->Name();
-		writer << "' ";
-	}
-
-	inline void Write(std::ofstream& writer, CollectQuest* quest)
-	{
-		writer << quest->NumItems() << " ";
-		writer << quest->ItemID() << " ";
-		writer << quest->CollectedItems();
-
-		writer << " '";
-		writer << quest->Name();
-		writer << "' ";
-	}
-
-	inline void Write(std::ofstream& writer, TalkQuest* quest)
-	{
-		writer << "'";
-		writer << quest->Name();
-		writer << "'";
-
-		writer << " '";
-		writer << quest->NPCName();
-		writer << "' ";
-	}
-
 	inline void Save(const std::string& name, const std::map<UINT, Quest*>& quests)
 	{
-		auto filePath = FileSystem::ProjectDirectory::path + "\\SaveData\\" + name + ".qsl";
 
-		std::ofstream writer;
-
-		writer.open(filePath, std::ios::trunc);
-		if (!writer.is_open())
-		{
-			Print("FAILED TO CREATE QUEST LOG FILE");
-			return;
-		}
-
-		for (auto& [ID, quest] : quests)
-		{
-			if (quest->IsCompleted())
-				continue;
-
-			writer << (UINT)quest->Type() << " ";
-			writer << quest->GetID() << " ";
-			writer << quest->IsActive() << " ";
-			writer << quest->IsCompleted() << " ";
-			
-			const UINT numTriggerQuests = quest->GetTriggerQuests().size();
-
-			writer << numTriggerQuests << " ";
-			for (auto& questID : quest->GetTriggerQuests())
-				writer << questID << " ";
-
-			switch (quest->Type())
-			{
-			case QuestType::COLLECT:
-				Write(writer, (CollectQuest*)quest);
-				break;
-
-			case QuestType::FIGHT:
-				Write(writer, (FightQuest*)quest);
-				break;
-
-			case QuestType::TALK:
-				Write(writer, (TalkQuest*)quest);
-				break;
-			}
-
-			writer << "\n";
-		}
 	}
 }

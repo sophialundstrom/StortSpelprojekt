@@ -36,9 +36,11 @@ private:
 	ID3D11Buffer* indexBuffer = nullptr;
 	ID3D11Buffer* vertexBuffer = nullptr;
 
+	Texture* blendMap;
+	Texture* textures[3];
 	HeightMap* heightMap;
 public:
-	Terrain(float size, UINT subdivisions = 1);
+	Terrain(UINT subdivisions = 0);
 	~Terrain();
 
 	HeightMap* GetHeightMap() { return heightMap; }

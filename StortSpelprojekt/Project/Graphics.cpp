@@ -24,9 +24,17 @@ Graphics::Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd)
 	}
 	Print("SUCCEEDED TO CREATE DEPTH STENCIL", "GRAPHICS");
 
+	if FAILED(CreateRasterizerState())
+	{
+		Print("FAILED TO CREATE WIREFRAME RASTERIZER STATE", "GRAPHICS");
+		return;
+	}
+	Print("SUCCEEDED TO CREATE WIREFRAME RASTERIZER STATE", "GRAPHICS");
+
 	CreateViewport(clientWidth, clientHeight);
 
 	Print("SUCCEEDED TO INITIALIZE GRAPHICS");
+	Print("=======================================");
 }
 
 Graphics::~Graphics()
@@ -125,6 +133,15 @@ HRESULT Graphics::CreateDepthStencil(UINT clientWidth, UINT clientHeight)
 
 	hr = device->CreateDepthStencilView(dsTexture, nullptr, &dsView);
 	return hr;
+}
+
+HRESULT Graphics::CreateRasterizerState()
+{
+	D3D11_RASTERIZER_DESC desc = {};
+	desc.CullMode = D3D11_CULL_BACK;
+	desc.FillMode = D3D11_FILL_WIREFRAME;
+
+	return device->CreateRasterizerState(&desc, &wireframeState);
 }
 
 void Graphics::CreateViewport(UINT clientWidth, UINT clientHeight)

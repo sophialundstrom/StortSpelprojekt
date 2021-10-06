@@ -32,10 +32,10 @@ HeightMap::HeightMap(const std::string& texture)
 	}
 }
 
-Terrain::Terrain(float size, UINT subdivisions)
+Terrain::Terrain(UINT subdivisions)
 {
 	heightMap = new HeightMap("heightMap");
-	size = heightMap->width;
+	UINT size = heightMap->width;
 	
 	//TEST STUFF
 	const UINT cells = pow(2, subdivisions);
@@ -81,18 +81,29 @@ Terrain::Terrain(float size, UINT subdivisions)
 	CreateIndexBuffer(indexBuffer, Indices.size(), Indices.data());
 
 	heightMap->texture->Bind(0, Shader::DS);
+
+	blendMap = new Texture("Textures/BlendMap.jpg", "BlendMap");
+
+	const std::string tx[3] = { "Stone512.png", "water.png", "grass2seamless.png" };
+	for (UINT i = 0; i < 3; ++i)
+		textures[i] = new Texture("Textures/" + tx[i], tx[i]);
 }
 
 Terrain::~Terrain()
 {
 	delete heightMap;
+	delete blendMap;
+	for (UINT i = 0; i < 3; ++i)
+		delete textures[i];
 	indexBuffer->Release();
 	vertexBuffer->Release();
 }
 
 void Terrain::Draw() const
 {
-	heightMap->texture->Bind();
+	blendMap->Bind();
+	for (UINT i = 0; i < 3; ++i)
+		textures[i]->Bind(i + 1);
 
 	Graphics::Inst().GetContext().IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);

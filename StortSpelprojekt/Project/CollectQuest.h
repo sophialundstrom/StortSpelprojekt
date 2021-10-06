@@ -6,14 +6,11 @@ class CollectQuest : public Quest
 private:
 	UINT collectedItems = 0;
 	UINT numItems;
-	UINT itemID;
+	enum RESOURCES itemID;
 public:
-	CollectQuest(QuestType type, UINT ID, const std::string& name, bool active, UINT numItems, UINT itemID, UINT collectedItems)
-		:Quest(type, ID, name, active), numItems(numItems), itemID(itemID), collectedItems(collectedItems) {}
-
-	UINT CollectedItems() { return collectedItems; }
-	UINT NumItems() { return numItems; }
-	UINT ItemID() { return itemID; }
+	CollectQuest(QuestType type, UINT ID, const std::string& name, bool active, UINT numItems, enum RESOURCES itemID)
+		:Quest(type, ID, name, active), numItems(numItems), itemID(itemID)
+	{}
 
 	// Inherited via Quest
 	virtual void Activate(std::shared_ptr<Player> player) override
