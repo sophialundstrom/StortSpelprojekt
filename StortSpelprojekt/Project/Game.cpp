@@ -116,7 +116,6 @@ Game::~Game()
 {
 	scene.Clear();
 	Resources::Inst().Clear();
-	QuestLog::Inst().Save("Test");
 }
 
 State Game::Run()
