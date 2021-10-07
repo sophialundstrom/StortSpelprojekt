@@ -219,7 +219,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	gameLoader.Load("Default", scene.GetDrawables());
 	BindDrawables();
 
-	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 500.0f, 1.0f, 15.0f, {0, 50, 0});
+	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 1000.0f, 1.0f, 25.0f, {0, 90, 0});
 	scene.SetDirectionalLight(40);
 
 	//CLIENT INFORMATION (PICKING) TO BE REMOVED?

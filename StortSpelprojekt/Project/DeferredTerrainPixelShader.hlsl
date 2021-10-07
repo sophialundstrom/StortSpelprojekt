@@ -34,7 +34,7 @@ PS_OUTPUT main(PS_INPUT input)
 
     const float4 blendValue = blendTexture.Sample(wrapSampler, input.texCoords);
     
-    const float2 newTex = input.texCoords * 30.0f;
+    const float2 newTex = input.texCoords * 40.0f;
     
     const float4 t1 = textures[0].Sample(wrapSampler, newTex) * blendValue.x;
     const float4 t2 = textures[1].Sample(wrapSampler, newTex) * blendValue.y;

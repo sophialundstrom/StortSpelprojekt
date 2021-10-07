@@ -166,11 +166,8 @@ State Game::Run()
 
 		if (Event::KeyIsPressed('Y'))
 		{
-			if (file != "Default")
-			{
-				player->Save(file);
-				QuestLog::Inst().Save(file);
-			}
+			player->Save("Test");
+			QuestLog::Inst().Save("Test");
 
 			lastClick = Time::Get();
 		}

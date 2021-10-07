@@ -32,8 +32,6 @@ private:
 
     std::shared_ptr<Player> player;
 
-    std::shared_ptr<Player> npc;
-
     std::shared_ptr<Building> building;
 
     UI userInterface;
