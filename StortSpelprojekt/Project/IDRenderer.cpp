@@ -22,18 +22,20 @@ int IDRenderer::GetObjectID(int xPix, int yPix)
 	UINT32* data = static_cast<UINT32*>(mappedResource.pData);
 
 
-	UINT32* imageData = new UINT32[textureDesc.Width * textureDesc.Height];
+	UINT32* imageData = new UINT32[textureDesc.Width * textureDesc.Height * 3];
 	for (int w = 0; w < textureDesc.Width; w++)
 	{
 		for (int h = 0; h < textureDesc.Height; h++)
 		{
-			int currentPixel = h * textureDesc.Width + w;
-			imageData[currentPixel] = *data;
+			int currentPixel = (h * textureDesc.Width + w) * 3;
+			imageData[currentPixel] = *data * 255;
+			imageData[currentPixel + 1] = 0;
+			imageData[currentPixel + 2] = 0;
 			data += 1;
 		}
 	}
 
-	stbi_write_png("objectID", textureDesc.Width, textureDesc.Height, 1, imageData, textureDesc.Width);
+	stbi_write_png("objectID.png", textureDesc.Width, textureDesc.Height, 3, imageData, textureDesc.Width * 3);
 	delete[] imageData;
 
 	Print(textureDesc.Width);
