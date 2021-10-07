@@ -19,9 +19,12 @@ private:
 	ID3D11DepthStencilView* dsView;
 	IDXGISurface* UISurface;
 
+	ID3D11RasterizerState* wireframeState;
+
 	HRESULT CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd);
 	HRESULT CreateRenderTarget();
 	HRESULT CreateDepthStencil(UINT clientWidth, UINT clientHeight);
+	HRESULT CreateRasterizerState();
 	void CreateViewport(UINT clientWidth, UINT clientHeight);
 public:
 	Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd);
@@ -29,6 +32,10 @@ public:
 
 	void BeginFrame();
 	void EndFrame() { swapChain->Present(0, 0); }
+
+	void ActivateWireframe() { context->RSSetState(wireframeState); }
+	void DeactivateWireframe() { context->RSSetState(nullptr); }
+	void ToggleWireframe() { ID3D11RasterizerState* currentState = nullptr; context->RSGetState(&currentState); if (!currentState) context->RSSetState(wireframeState); else context->RSSetState(nullptr); }
 
 	ID3D11Device& GetDevice() { return *device; };
 	ID3D11DeviceContext& GetContext() { return *context; };

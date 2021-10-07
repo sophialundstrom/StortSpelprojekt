@@ -1,7 +1,23 @@
 #include "LevelEditor.h"
 #include "Event.h"
+#include "GameLoader.h"
+#include "FBXLoader.h"
 
+void LevelEditor::BindDrawables()
+{
+	for (auto& [name, drawable] : scene.GetDrawables())
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if (model)
+			modelRenderer.Bind(model);
 
+		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
+		if (particleSystem)
+		{
+			//SAME BUT PS->
+		}
+	}
+}
 
 void LevelEditor::Save(const std::string& file)
 {
@@ -15,7 +31,7 @@ void LevelEditor::Load(const std::string& file)
 		return;
 
 	std::string fileName = path.stem().string();
-	scene.AddModel(fileName);
+	fileName = scene.AddModel(fileName, path.string());
 	modelRenderer.Bind(scene.Get<Model>(fileName));
 	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
 
@@ -29,7 +45,6 @@ void LevelEditor::Load(const std::string& file)
 
 void LevelEditor::Update()
 {
-	//TO DO: FIGURE OUT A NICE MOVEMENT IN EDITOR
 	if (Event::LeftIsClicked())
 	{
 		GetCursorPos(&cursor);
@@ -78,19 +93,6 @@ void LevelEditor::Update()
 				window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
 				window.SetValue<SliderFloatComponent, float>("Z-axis", model->GetScale().z);
 
-			/*	windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", name);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("X", scene.Get<Model>(name)->GetPosition().x);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Y", scene.Get<Model>(name)->GetPosition().y);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Z", scene.Get<Model>(name)->GetPosition().z);
-
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around X", scene.Get<Model>(name)->GetRotation().x);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around Y", scene.Get<Model>(name)->GetRotation().y);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around Z", scene.Get<Model>(name)->GetRotation().z);
-
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("X-axis", scene.Get<Model>(name)->GetScale().x);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Y-axis", scene.Get<Model>(name)->GetScale().y);
-				windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Z-axis", scene.Get<Model>(name)->GetScale().z);*/
-
 				selectedObject = name;
 			}
 		}
@@ -112,19 +114,6 @@ void LevelEditor::Update()
 		window.SetValue<SliderFloatComponent, float>("X-axis", 0.0f);
 		window.SetValue<SliderFloatComponent, float>("Y-axis", 0.0f);
 		window.SetValue<SliderFloatComponent, float>("Z-axis", 0.0f);
-
-		//windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", "");
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("X", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Y", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Z", 0.0f);
-
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around X", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around Y", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Around Z", 0.0f);
-
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("X-axis", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Y-axis", 0.0f);
-		//windows["GAME OBJECT"].SetValue<SliderFloatComponent, float>("Z-axis", 0.0f);
 
 		selectedObject = "";
 	}
@@ -156,31 +145,19 @@ void LevelEditor::Update()
 	if (Event::KeyIsPressed('D'))
 		scene.GetCamera()->MoveRight();
 
-	if (Event::KeyIsPressed(32)) //SPACE
+	if (Event::KeyIsPressed(VK_SPACE))
 		scene.GetCamera()->MoveUp();
 
 	if (Event::KeyIsPressed('Z'))
 		scene.GetCamera()->MoveUp(-1);
   
-	if (Event::KeyIsPressed(16)) //SHIFT
+	if (Event::KeyIsPressed(VK_SHIFT))
 		scene.GetCamera()->SetSpeedMultiplier(4);
 	else
 		scene.GetCamera()->SetSpeedMultiplier(1);
 
 	if (selectedObject != "") //CHECKS EVERY FRAME, USE CHANGED()?
 	{
-		//float newXPos = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("X");
-		//float newYPos = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Y");
-		//float newZPos = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Z");
-
-		//float newXRot = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Around X");
-		//float newYRot = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Around Y");
-		//float newZRot = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Around Z");
-
-		//float newXScale = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("X-axis");
-		//float newYScale = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Y-axis");
-		//float newZScale = windows["GAME OBJECT"].GetValue<SliderFloatComponent>("Z-axis");
-
 		auto& window = windows["GAME OBJECT"];
 		float newXPos = window.GetValue<SliderFloatComponent>("X");
 		float newYPos = window.GetValue<SliderFloatComponent>("Y");
@@ -198,9 +175,6 @@ void LevelEditor::Update()
 		model->SetPosition(newXPos, newYPos, newZPos);
 		model->SetRotation(newXRot * PI / 180, newYRot * PI / 180, newZRot * PI / 180);
 		model->SetScale(newXScale, newXScale, newXScale);
-
-		//scene.Get<Model>(selectedObject)->SetPosition(newXPos, newYPos, newZPos);
-		//scene.Get<Model>(selectedObject)->SetRotation(newXRot * PI/180, newYRot * PI/180, newZRot * PI/180);
 	}
 
 	for (auto& [name, boundingSphere] : pickBoxes)
@@ -229,6 +203,8 @@ void LevelEditor::Render()
 	colliderRenderer.Render();
 
 	EndFrame();
+
+	Resources::Inst().Reset();
 }
 
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
@@ -236,11 +212,17 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(FORWARD),
 	animatedModelRenderer(FORWARD, false)
 {
-	//BOTH MUST BE SET (PERSPECTIVE MATRIX ISSUES OTHERWISE), OR WE JUS DO DEFAULT CONSTRUCTOR
+	//LOAD SCENE
+	FBXLoader levelLoader("Models");
+
+	GameLoader gameLoader;
+	gameLoader.Load("Default", scene.GetDrawables());
+	BindDrawables();
+
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 500.0f, 1.0f, 15.0f, {0, 50, 0});
 	scene.SetDirectionalLight(40);
 
-
+	//CLIENT INFORMATION (PICKING) TO BE REMOVED?
 	wWidth = clientWidth;
 	wHeight = clientHeight;
 
@@ -248,18 +230,16 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	wRatioX = (float)clientWidth / GetSystemMetrics(SM_CXSCREEN);
 	wRatioY = (float)clientHeight / GetSystemMetrics(SM_CYSCREEN);
 
-	terrain = new Terrain(20, 0);
+	terrain = new Terrain();
 
-
-	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
-	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
-	
+	//WINDOWS
 	{
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];				
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
+		window.AddCheckBoxComponent("WIREFRAME", false);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
@@ -310,13 +290,22 @@ State LevelEditor::Run()
 	if (window.GetValue<ButtonComponent>("LOAD FBX"))
 		Load(FileSystem::LoadFile("Models"));
 
+	if (window.Changed("WIREFRAME"))
+		Graphics::Inst().ToggleWireframe();
+
 	if (window.Changed("TERRAIN START SUBDIVISIONS"))
 	{
 		if (terrain)
 			delete terrain;
-		terrain = new Terrain(20.0f, window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
+		terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
 	}
-		
+	
+	if (window.GetValue<ButtonComponent>("SAVE WORLD"))
+	{
+		GameLoader loader;
+		loader.Save("Default", scene.GetDrawables());
+	}
+
 	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
 		return State::MENU;
 
