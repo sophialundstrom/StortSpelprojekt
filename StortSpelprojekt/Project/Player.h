@@ -257,9 +257,7 @@ public:
 
 	Player(Camera* camera)
 		:Model("PlayerArrow", "PlayerArrow"), sceneCamera(camera)
-	{
-		rotation = { 0, PI, 0 };
-	}
+	{}
 
 	Inventory& Inventory() { return inventory; }
 	GameStats& GameStats() { return gameStats; }

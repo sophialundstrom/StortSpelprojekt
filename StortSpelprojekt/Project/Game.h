@@ -36,9 +36,9 @@ private:
 
     UI userInterface;
 
-
     void Update();
     void Render();
+    void Initialize();
 public:
     Game() = delete;
     Game(UINT clientWidth, UINT clientHeight, HWND window);

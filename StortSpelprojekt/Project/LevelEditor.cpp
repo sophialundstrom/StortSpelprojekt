@@ -213,7 +213,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	animatedModelRenderer(FORWARD, false)
 {
 	//LOAD SCENE
-	FBXLoader("Models");
+	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());

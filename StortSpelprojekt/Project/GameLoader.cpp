@@ -3,9 +3,8 @@
 
 void GameLoader::Load(const std::string& filename, std::map<std::string, std::shared_ptr<Drawable>>& drawables)
 {
-
 	readLocation = 0;
-	std::string path = FileSystem::ProjectDirectory::path + "\\SaveData\\" + filename + ".map";
+	std::string path = FileSystem::ProjectDirectory::path + "\\SaveData\\" + filename + ".objs";
 
 	reader.open(path, std::ios::beg | std::ios::binary);
 	if (!reader.is_open())
@@ -52,12 +51,11 @@ void GameLoader::Load(const std::string& filename, std::map<std::string, std::sh
 
 	std::cout << "Closing reader\n";
 	reader.close();
-
 }
 
 void GameLoader::Save(const std::string& filename, const std::map<std::string, std::shared_ptr<Drawable>>& drawables)
 {
-	std::string saveFileLocatoin = FileSystem::ProjectDirectory::path + "\\SaveData\\" + filename + ".map";
+	std::string saveFileLocatoin = FileSystem::ProjectDirectory::path + "\\SaveData\\" + filename + ".objs";
 
 	writer.open(saveFileLocatoin, std::ios::trunc | std::ios::binary);
 	if (!writer.is_open())

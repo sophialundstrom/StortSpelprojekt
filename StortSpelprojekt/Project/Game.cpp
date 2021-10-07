@@ -1,19 +1,16 @@
 #include "Game.h"
 #include "Event.h"
+#include "FBXLoader.h"
+#include "GameLoader.h"
 
 void Game::Update()
 {
-
-
 	player->Update(terrain.GetHeightMap());
 
 	QuestLog::Inst().Update();
 
-	//ROTATING BOULDER AROUND PLAYER
-	auto boulder = scene.Get<Model>("boulder");
-	//const Vector3 newPosition = boulder->GetPosition() * boulder->GetRotation() * -boulder->GetPosition();
-	//boulder->SetPosition(newPosition);
-	boulder->SetRotation(0, boulder->GetRotation().y + 0.001f, 0);
+	//auto boulder = scene.Get<Model>("boulder");
+	//boulder->SetRotation(0, boulder->GetRotation().y + 0.001f, 0);
 
 	scene.Update();
 
@@ -43,12 +40,39 @@ void Game::Render()
 	Graphics::Inst().EndFrame();
 }
 
+void Game::Initialize()
+{
+	//LOAD SCENE
+	FBXLoader levelLoader("Models");
+
+	GameLoader gameLoader;
+	gameLoader.Load("Default", scene.GetDrawables());
+
+	for (auto& [name, drawable] : scene.GetDrawables())
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if (model)
+		{
+			modelRenderer.Bind(model);
+			shadowRenderer.Bind(model);
+		}
+			
+		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
+		if (particleSystem)
+		{
+			//SAME BUT PS->
+		}
+	}
+}
+
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight), 
 	modelRenderer(DEFERRED, true), 
 	particleRenderer(DEFERRED),
 	terrainRenderer(DEFERRED), terrain(50.0f, 2)
 {
+	Initialize();
+
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 1.0f, 20.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(50, 4, 4);
@@ -61,13 +85,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	//std::string meshNames[] = { "Pyramid", "Cube", "pSphere1" };
-	//std::string materialNames[] = { "SilverTex", "WaterTex", "phong1" };
-	//building = std::make_shared<Building>(meshNames, materialNames, "Staff");
-	//scene.AddModel("Building", building);
-	//modelRenderer.Bind(building);
-	//shadowRenderer.Bind(building);
-	//scene.Get<Model>("Building")->SetPosition(10, 25, 0);
+	std::string meshNames[] = { "ComBined", "Pyramid", "Cube" };
+	std::string materialNames[] = { "StaffTexture", "SilverTex", "WaterTex" };
+	building = std::make_shared<Building>(meshNames, materialNames, "Building");
+	scene.AddModel("Building", building);
+	modelRenderer.Bind(building);
+	shadowRenderer.Bind(building);
+	scene.Get<Model>("Building")->SetPosition(10, 25, 0);
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>("Default", player);
