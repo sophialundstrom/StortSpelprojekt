@@ -5,11 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
-
 class IDRenderer : public Renderer
 {
 private:
@@ -167,38 +162,5 @@ public:
 		context.ClearDepthStencilView(&Graphics::Inst().GetDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
 
-	int GetObjectID(int xPix, int yPix)
-	{
-
-		Graphics::Inst().GetContext().CopyResource(idTextureData, idTexture);
-
-		D3D11_TEXTURE2D_DESC textureDesc;
-		idTextureData->GetDesc(&textureDesc);
-		D3D11_MAPPED_SUBRESOURCE mappedResource;
-
-		HRESULT hr = Graphics::Inst().GetContext().Map(idTextureData, 0, D3D11_MAP_READ, 0, &mappedResource);
-		if FAILED(hr)
-		{
-			Print("FAILED TO MAP SUBRESOURCE", "ID RENDERER::COPYING TEXTURE");
-		}
-
-
-		int id; 
-		UINT32* data = static_cast<UINT32*>(mappedResource.pData);
-		data += yPix * textureDesc.Width + xPix;
-		memcpy(&id, data, sizeof(UINT32));
-
-
-		unsigned char* img;
-		stbi_write_jpg("objectID", textureDesc.Width, textureDesc.Height, 1, img, 100);
-
-		stbi_image_free(img);
-
-		Print(textureDesc.Width);
-		Print(xPix);
-		Print(yPix);
-
-		Graphics::Inst().GetContext().Unmap(idTextureData, 0);
-		return id;
-	}
+	int GetObjectID(int xPix, int yPix);
 };
