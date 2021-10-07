@@ -20,10 +20,11 @@ public:
 		:type(type), ID(ID), name(name), active(active)
 	{}
 
-	UINT GetID()
-	{
-		return ID;
-	}
+	UINT GetID() { return ID; }
+
+	std::string Name() { return name; }
+
+	QuestType Type() { return type; }
 
 	void AddTriggerQuest(UINT ID)
 	{
@@ -37,7 +38,7 @@ public:
 
 	void Complete()
 	{
-		Print(name);
+		Print(name, "Completed Quest");
 		completed = true;
 	}
 

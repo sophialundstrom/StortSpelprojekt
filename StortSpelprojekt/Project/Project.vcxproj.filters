@@ -207,6 +207,9 @@
     <ClCompile Include="GameLoader.cpp">
       <Filter>Header Files\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -405,9 +408,6 @@
       <Filter>Header Files\Application\Scene\Game\Quests</Filter>
     </ClInclude>
     <ClInclude Include="TalkQuest.h">
-      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="Villager.h">
       <Filter>Header Files\Application\Scene\Game\Quests</Filter>
     </ClInclude>
     <ClInclude Include="QuestLog.h">

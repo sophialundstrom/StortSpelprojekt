@@ -39,14 +39,11 @@ namespace QuestLogFile
 		while (!reader.eof())
 		{
 			UINT type, ID, numTriggerQuests;
-			bool completed, active;
+			bool active;
 
 			reader >> type;
 			reader >> ID;
 			reader >> active;
-			reader >> completed;
-			if (completed)
-				std::getline(reader, line);
 			reader >> numTriggerQuests;
 
 			UINT* triggerQuests = new UINT[numTriggerQuests];
@@ -76,7 +73,7 @@ namespace QuestLogFile
 				std::getline(reader, line);
 				std::string name = GetNthString(line, 1);
 
-				quest = new CollectQuest((QuestType)type, ID, name, active, numItems, (enum RESOURCES)itemID);
+				quest = new CollectQuest((QuestType)type, ID, name, active, numItems, (enum RESOURCE)itemID);
 				break;
 			}
 				
@@ -101,10 +98,68 @@ namespace QuestLogFile
 
 			quests.emplace(ID, quest);
 		}
+
+		reader.close();
+		Print("SUCCEEDED LOADING QUEST LOG");
 	}
 
-	inline void Save(const std::string& name, const std::map<UINT, Quest*>& quests)
+	inline void Save(const std::string& file, const std::map<UINT, Quest*>& quests)
 	{
+		auto filePath = FileSystem::ProjectDirectory::path + "\\SaveData\\" + file + ".qsl";
 
+		std::ofstream writer;
+
+		writer.open(filePath, std::ios::beg);
+		if (!writer.is_open())
+		{
+			Print("FAILED TO WRITE QUEST LOG FILE");
+			return;
+		}
+
+		const std::string space = " ";
+		for (auto& [ID, quest] : quests)
+		{
+			if (quest->IsCompleted())
+				continue;
+
+			writer << (UINT)quest->Type() << space;
+			writer << ID << space;
+			writer << quest->IsActive() << space;
+
+			UINT numTriggerQuests = (UINT)quest->GetTriggerQuests().size();
+			writer << numTriggerQuests << space;
+
+			for (UINT i = 0; i < numTriggerQuests; ++i)
+				writer << quest->GetTriggerQuests()[i] << space;
+
+			switch (quest->Type())
+			{
+				case QuestType::TALK:
+				{
+					auto talkQuest = dynamic_cast<TalkQuest*>(quest);
+					writer << "'" << talkQuest->Name() << "'" << space;
+					writer << "'" << talkQuest->NPCName() << "'\n";
+					break;
+				}
+				case QuestType::COLLECT:
+				{
+					auto collectQuest = dynamic_cast<CollectQuest*>(quest);
+					writer << collectQuest->GetTargetAmount() << space;
+					writer << (UINT)collectQuest->GetItemID() << space;
+					writer << "'" << collectQuest->Name() << "'\n";
+					break;
+				}
+				case QuestType::FIGHT:
+				{
+					auto fightQuest = dynamic_cast<FightQuest*>(quest);
+					writer << fightQuest->NumTargets() << space;
+					writer << "'" << fightQuest->Name() << "'\n";
+					break;
+				}
+			}
+		}
+
+		writer.close();
+		Print("SUCCEEDED SAVING QUEST LOG");
 	}
 }
