@@ -159,6 +159,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
@@ -179,7 +180,9 @@
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="CollectQuest.h" />
+    <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
+    <ClInclude Include="GameLoader.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Quest.h" />

@@ -10,7 +10,6 @@
 #include "Collision.h"
 #include "ColliderRenderer.h"
 
-
 class LevelEditor : public Editor, public GameState
 {
 private:

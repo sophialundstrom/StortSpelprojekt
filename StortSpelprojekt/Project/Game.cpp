@@ -12,7 +12,7 @@ void Game::Update()
 	//auto boulder = scene.Get<Model>("boulder");
 	//boulder->SetRotation(0, boulder->GetRotation().y + 0.001f, 0);
 
-	auto friendly = scene.Get<NPC>("SignsPost");
+	auto friendly = scene.Get<NPC>("ComBined1");
 
 	friendly->Collided(*player);
 
@@ -89,8 +89,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	std::string meshNames[] = { "ComBined", "Pyramid", "Cube" };
-	std::string materialNames[] = { "StaffTexture", "SilverTex", "WaterTex" };
+	std::string meshNames[] = { "Cube", "Pyramid", "Cube" };
+	std::string materialNames[] = { "WaterTex", "SilverTex", "WaterTex" };
 	building = std::make_shared<Building>(meshNames, materialNames, "Building");
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
@@ -118,9 +118,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(lantern);
 	shadowRenderer.Bind(lantern);*/
 
-
-	scene.AddFriendlyNPC("SignsPost");
-	auto friendly = scene.Get<NPC>("SignsPost");
+	scene.AddFriendlyNPC("ComBined");
+	auto friendly = scene.Get<NPC>("ComBined1");
 	friendly->SetRotation({ 0, 0, 0 });
 	friendly->SetPosition(10, 13, 10);
 	modelRenderer.Bind(friendly);
