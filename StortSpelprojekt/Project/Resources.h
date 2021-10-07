@@ -64,9 +64,17 @@ public:
 	UINT GetMaterialIDFromName(const std::string& name)
 	{
 		for (auto& [ID, material] : materials)
-			if (material->name == name)
+			if (material->name == name || material->name.find(name) != std::string::npos)
 				return ID;
 		return ID_INVALID;
+	}
+
+	std::string GetmaterialnamefromID(UINT ID)
+	{
+		if (materials.find(ID) != materials.end())
+			return materials[ID]->name;
+
+		return "";
 	}
 
 	//GET VERTEX BUFFER ID FROM NAME
@@ -78,6 +86,14 @@ public:
 				return i;
 		}		
 		return ID_INVALID;
+	}
+
+	std::string GetBufferNameFromID(UINT ID)
+	{
+		if (vertexBuffers.find(ID) != vertexBuffers.end())
+			return bufferNames[ID];
+
+		return "";
 	}
 
 	//BIND MATERIAL AT GIVEN INDEX
@@ -107,6 +123,11 @@ public:
 			Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 
 		Graphics::Inst().GetContext().Draw(vertexCount, 0);
+	}
+
+	void Reset()
+	{
+		currentMaterial = nullptr;
 	}
 
 	//CLEAR
