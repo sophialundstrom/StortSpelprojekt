@@ -12,6 +12,10 @@ void Game::Update()
 	//auto boulder = scene.Get<Model>("boulder");
 	//boulder->SetRotation(0, boulder->GetRotation().y + 0.001f, 0);
 
+	auto friendly = scene.Get<NPC>("SignsPost");
+
+	friendly->Collided(*player);
+
 	scene.Update();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
@@ -69,7 +73,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight), 
 	modelRenderer(DEFERRED, true), 
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED), terrain(50.0f, 2)
+	terrainRenderer(DEFERRED)
 {
 	Initialize();
 
@@ -113,6 +117,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	lantern->SetPosition(0, 30, 0);
 	modelRenderer.Bind(lantern);
 	shadowRenderer.Bind(lantern);*/
+
+
+	scene.AddFriendlyNPC("SignsPost");
+	auto friendly = scene.Get<NPC>("SignsPost");
+	friendly->SetRotation({ 0, 0, 0 });
+	friendly->SetPosition(10, 13, 10);
+	modelRenderer.Bind(friendly);
+	shadowRenderer.Bind(friendly);
 
 	(void)Run();
 }

@@ -10,7 +10,6 @@
 #include "QuestLog.h"
 #include "UI.h"
 #include "Time.h"
-
 #include "GameLoader.h"
 
 //PlayerClassLib
@@ -31,6 +30,8 @@ private:
     Terrain terrain;
 
     std::shared_ptr<Player> player;
+
+    std::shared_ptr<Player> npc;
 
     std::shared_ptr<Building> building;
 
