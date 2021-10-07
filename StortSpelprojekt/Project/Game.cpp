@@ -13,6 +13,10 @@ void Game::Update()
 	//boulder->SetPosition(newPosition);
 	boulder->SetRotation(0, boulder->GetRotation().y + 0.001f, 0);
 
+	auto friendly = scene.Get<NPC>("SignsPost");
+
+	friendly->Collided(*player);
+
 	scene.Update();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
@@ -45,7 +49,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight), 
 	modelRenderer(DEFERRED, true), 
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED), terrain(50.0f, 2)
+	terrainRenderer(DEFERRED)
 {
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 1.0f, 20.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
@@ -89,6 +93,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(lantern);
 	shadowRenderer.Bind(lantern);
 
+
+	scene.AddFriendlyNPC("SignsPost");
+	auto friendly = scene.Get<NPC>("SignsPost");
+	friendly->SetRotation({ 0, 0, 0 });
+	friendly->SetPosition(10, 13, 10);
+	modelRenderer.Bind(friendly);
+	shadowRenderer.Bind(friendly);
+
 	(void)Run();
 }
 
@@ -121,7 +133,12 @@ State Game::Run()
 
 		if (Event::KeyIsPressed('I'))
 		{
-			player->Inventory().AddItem(0);
+			player->Inventory().GetResources(RESOURCES::WOOD);
+			player->Inventory().AddItem(RESOURCES::WOOD);
+			player->Inventory().GetResources(RESOURCES::STONE);
+			player->Inventory().AddItem(RESOURCES::STONE);
+			player->Inventory().GetResources(RESOURCES::FOOD);
+			player->Inventory().AddItem(RESOURCES::FOOD);
 			lastClick = Time::Get();
 		}
 
@@ -130,6 +147,13 @@ State Game::Run()
 			building->Upgrade();
 			lastClick = Time::Get();
 		}
+
+		if (Event::KeyIsPressed('P'))
+		{
+			player->GetStats();
+			lastClick = Time::Get();
+		}
+
 	}
 	
 	if (Event::KeyIsPressed('M'))

@@ -7,8 +7,10 @@
 #include <dwrite.h>
 #include <wincodec.h>
 #include "Graphics.h"
-#include "Button.h"
 #include "Event.h"
+#include "Button.h"
+#include "Image.h"
+#include "Text.h"
 
 //Function to release interface
 template<class Interface>
@@ -42,14 +44,21 @@ class UI
 private:
 	ID2D1Factory* UIFactory;
 	ID2D1RenderTarget* UIRenderTarget;
+	IDWriteFactory* writeFactory;
 	ID2D1SolidColorBrush* lightSlateGrayBrush;
 	ID2D1SolidColorBrush* cornflowerBlueBrush;	
 	ID2D1SolidColorBrush* crimsonBrush;
 	HWND UIwindow;
 	POINT mousePos;
 
-	D2D_VECTOR_2F buttonPos = {50.f, 50.f};
+	D2D_VECTOR_2F buttonPos = { 50.f,50.f };
 	Button* testButton;
+	D2D_VECTOR_2F imagePos = { 87.f,600.f };
+	Image* testImage;
+	D2D_VECTOR_2F image2Pos = { 90.f,200.f };
+	Image* testImage2;
+	D2D_VECTOR_2F textPos = { 300.f,300.f };
+	Text* testText;
 
 public:
 	UI();
@@ -62,6 +71,4 @@ private:
 	//Device independent resources, unless device is easily accessible
 	HRESULT CreateDeviceIndependentResources();
 	HRESULT CreateDeviceResources(HWND window);
-	void DiscardDeviceResources();
-	
 };
