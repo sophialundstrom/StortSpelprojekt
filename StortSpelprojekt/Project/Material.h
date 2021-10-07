@@ -5,7 +5,6 @@
 struct Material
 {
 	std::string name;
-	UINT ID;
 
 	struct Data
 	{
@@ -18,8 +17,6 @@ struct Material
 
 	std::vector<Texture*> diffuseTextures;
 
-	Texture* displacementTexture = nullptr;
-
 	void BindDiffuseTextures(UINT startSlot = 0, Shader shader = Shader::PS)
 	{
 		UINT slot = startSlot;
@@ -31,15 +28,10 @@ struct Material
 		}
 	}
 
-	void BindDisplacementTexture(UINT slot = 0, Shader shader = Shader::DS) { displacementTexture->Bind(slot, shader); }
-
-	Material(UINT ID = 0, std::string mtllib = "") :ID(ID) {}
-
+	Material() = default;
 	~Material()
 	{
 		for (auto& texture : diffuseTextures)
 			delete texture;
-
-		if (displacementTexture) delete displacementTexture;
 	}
 };

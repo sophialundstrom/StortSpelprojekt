@@ -21,7 +21,7 @@ std::vector<std::string> Scene::GetObjectNames()
 	return objectNames;
 }
 
-void Scene::AddModel(const std::string& file)
+std::string Scene::AddModel(const std::string& file, const std::string path)
 {
 	UINT numInstances = 0;
 	std::string fileName = file;
@@ -33,18 +33,23 @@ void Scene::AddModel(const std::string& file)
 	if (numInstances > 0)
 	{
 		fileName = file + std::to_string(numInstances);
-		drawables[fileName] = std::make_shared<Model>(*std::dynamic_pointer_cast<Model>(drawables[file]));
+		drawables[fileName] = std::make_shared<Model>(fileName, *std::dynamic_pointer_cast<Model>(drawables[file]));
 	}
 	else
-		drawables[fileName] = std::make_shared<Model>(fileName);
-
+		drawables[fileName] = std::make_shared<Model>(file, fileName);
+		
 	objectNames.push_back(fileName);
+
+	drawables[fileName]->SetName(fileName);
+
+	return fileName;
 }
 
 void Scene::AddModel(const std::string& name, std::shared_ptr<Drawable> drawable)
 {
 	drawables[name] = drawable;
 	objectNames.push_back(name);
+	drawables[name]->SetName(name);
 }
 
 void Scene::AddFriendlyNPC(const std::string& file)
@@ -59,7 +64,7 @@ void Scene::AddFriendlyNPC(const std::string& file)
 	if (numInstances > 0)
 	{
 		fileName = file + std::to_string(numInstances);
-		//drawables[fileName] = std::make_shared<FriendlyNPC>(*std::dynamic_pointer_cast<Model>(drawables[file]));
+		drawables[fileName] = std::make_shared<FriendlyNPC>(*std::dynamic_pointer_cast<Model>(drawables[file]));
 	}
 
 	else
@@ -116,7 +121,7 @@ void Scene::AddAnimatedModel(const std::string& file)
 	}
 
 	else
-		drawables[fileName] = std::make_shared<AnimatedModel>(fileName);
+		drawables[fileName] = std::make_shared<AnimatedModel>(file);
 }
 
 void Scene::AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type)

@@ -3,20 +3,13 @@
 #include "assimp\scene.h"
 #include "assimp\Importer.hpp"
 #include "assimp\postprocess.h"
+
 namespace MaterialLoader
 {
 	inline void Load(aiMaterial* material)
 	{
-		if (Resources::Inst().NumMaterials() > 0)
-			if (Resources::Inst().MaterialExists(material->GetName().C_Str()))
-			{
-				Print("MATERIAL ALREADY EXISTS");
-				return;
-			}
-
 		Material* newMaterial = new Material();
 		newMaterial->name = material->GetName().C_Str();
-		newMaterial->ID = Resources::Inst().NumMaterials();
 
 		aiString path;
 		UINT numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
