@@ -18,6 +18,8 @@
 class Game : public GameState
 {
 private:
+    const std::string file = "Default"; //"Test"
+
     std::unique_ptr<QuestLog> questLog;
 
     ParticleRenderer particleRenderer;

@@ -4,18 +4,6 @@
 
 #include <filesystem>
 
-const std::map<std::string, std::shared_ptr<Drawable>>& Scene::GetSortedMap() const
-{
-	std::map<std::string, std::shared_ptr<Drawable>> finalMap;
-
-	for (auto& [name, drawable] : drawables)
-	{
-
-	}
-
-	return finalMap;
-}
-
 std::vector<std::string> Scene::GetObjectNames()
 {
 	return objectNames;

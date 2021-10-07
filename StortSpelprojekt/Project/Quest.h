@@ -38,7 +38,7 @@ public:
 
 	void Complete()
 	{
-		Print(name);
+		Print(name, "Completed Quest");
 		completed = true;
 	}
 

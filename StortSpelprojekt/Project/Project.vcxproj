@@ -170,6 +170,7 @@
     <ClCompile Include="OldModel.cpp" />
     <ClCompile Include="ParticleEditor.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -256,7 +257,6 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Vertex.h" />
-    <ClInclude Include="Villager.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

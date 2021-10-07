@@ -24,7 +24,7 @@ public:
 
 	void Upgrade()
 	{
-		if (Time::Get() - lastUpdate < 3.0f)
+		if (Time::Get() - lastUpdate < 1.0f)
 			return;
 
 		lastUpdate = Time::Get();
@@ -33,8 +33,7 @@ public:
 			return;
 
 		currState++;
-
-		ApplyMesh(meshNames[currState - 1]);
-		ApplyMaterial(materialNames[currState - 1]);
+		ApplyMesh(meshNames[currState]);
+		ApplyMaterial(materialNames[currState]);
 	}
 };

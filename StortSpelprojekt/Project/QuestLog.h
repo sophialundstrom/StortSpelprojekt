@@ -61,7 +61,6 @@ public:
 
 			if (quest->IsCompleted())		//IF COMPLETED BY AUTOMATIC REASON (COLLECTING/FIGHT)
 			{
-				Print(quest->Name(), "Completed quest!");
 				ActivateTriggerQuests(quest);
 				EraseQuest(quest);
 			}
@@ -90,7 +89,6 @@ public:
 
 			if (quest->GetID() == ID)
 			{
-				Print(quest->Name(), "Completed quest!");
 				quest->Complete();
 				ActivateTriggerQuests(quest);
 				EraseQuest(quest);

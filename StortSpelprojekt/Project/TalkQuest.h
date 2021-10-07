@@ -15,12 +15,12 @@ public:
 	// Inherited via Quest
 	virtual void Activate(std::shared_ptr<Player> player) override
 	{
-
+		active = true;
 	}
 
 	virtual void Update(std::shared_ptr<Player> player) override
 	{
-		Complete();
+		//Complete();
 	}
 
 	virtual void RenderUI() override
