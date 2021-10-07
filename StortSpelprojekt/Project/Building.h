@@ -12,14 +12,13 @@ private:
 public:
 	Building() = default;
 
-	Building(std::string meshNames[], std::string materialNames[], const std::string &fileName)
-		:Model(fileName)
+	Building(std::string meshNames[], std::string materialNames[], const std::string &name)
+		:Model(meshNames[0], name)
 	{
-		for (UINT i = 0; i < stages; i++)
+		for (UINT i = 0; i < stages; ++i)
 		{
 			this->meshNames[i] = meshNames[i];
 			this->materialNames[i] = materialNames[i];
-			Model init = Model(meshNames[i]);
 		}
 	}
 
@@ -38,5 +37,4 @@ public:
 		ApplyMesh(meshNames[currState - 1]);
 		ApplyMaterial(materialNames[currState - 1]);
 	}
-
 };

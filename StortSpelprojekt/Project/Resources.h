@@ -38,15 +38,6 @@ public:
 			buffer->Release();
 	}
 
-	//CHECK IF MATERIAL ALREADY EXISTS
-	bool MaterialExists(const std::string& name)
-	{
-		for (auto& [ID, material] : materials)
-			if (material->name == name)
-				return true;
-		return false;
-	}
-
 	//NUM MATERIALS
 	UINT NumMaterials() const { return (UINT)materials.size(); }
 
@@ -57,7 +48,12 @@ public:
 	void AddMaterial(Material* material) { materials.emplace(NumMaterials(), material); }
 
 	//ADD NEW VERTEX BUFFER
-	void AddVertexBuffer(const std::string& name, ID3D11Buffer* buffer, UINT vertexCount) { vertexBuffers.emplace(NumBuffers(), buffer); bufferNames.emplace_back(name); vertexCounts.emplace_back(vertexCount); }
+	void AddVertexBuffer(const std::string& name, ID3D11Buffer* buffer, UINT vertexCount) 
+	{ 
+		vertexBuffers.emplace(NumBuffers(), buffer); 
+		bufferNames.emplace_back(name); 
+		vertexCounts.emplace_back(vertexCount); 
+	}
 
 	UINT GetVertexCountFromID(UINT ID) 
 	{
@@ -68,9 +64,17 @@ public:
 	UINT GetMaterialIDFromName(const std::string& name)
 	{
 		for (auto& [ID, material] : materials)
-			if (material->name == name)
+			if (material->name == name || material->name.find(name) != std::string::npos)
 				return ID;
 		return ID_INVALID;
+	}
+
+	std::string GetmaterialnamefromID(UINT ID)
+	{
+		if (materials.find(ID) != materials.end())
+			return materials[ID]->name;
+
+		return "";
 	}
 
 	//GET VERTEX BUFFER ID FROM NAME
@@ -82,6 +86,14 @@ public:
 				return i;
 		}		
 		return ID_INVALID;
+	}
+
+	std::string GetBufferNameFromID(UINT ID)
+	{
+		if (vertexBuffers.find(ID) != vertexBuffers.end())
+			return bufferNames[ID];
+
+		return "";
 	}
 
 	//BIND MATERIAL AT GIVEN INDEX
@@ -111,6 +123,11 @@ public:
 			Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 
 		Graphics::Inst().GetContext().Draw(vertexCount, 0);
+	}
+
+	void Reset()
+	{
+		currentMaterial = nullptr;
 	}
 
 	//CLEAR

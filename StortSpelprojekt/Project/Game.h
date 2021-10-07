@@ -11,7 +11,6 @@
 #include "UI.h"
 #include "Time.h"
 
-
 //PlayerClassLib
 #include <math.h>
 
@@ -37,10 +36,9 @@ private:
 
     UI userInterface;
 
-
-    void Save();
     void Update();
     void Render();
+    void Initialize();
 public:
     Game() = delete;
     Game(UINT clientWidth, UINT clientHeight, HWND window);
