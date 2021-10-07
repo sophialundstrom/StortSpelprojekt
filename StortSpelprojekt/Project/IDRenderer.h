@@ -73,7 +73,7 @@ public:
 		textDesc.SampleDesc.Quality = 0;
 		textDesc.Usage = D3D11_USAGE_DEFAULT;
 		textDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
-		textDesc.CPUAccessFlags = 0;
+		textDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 		textDesc.MiscFlags = 0;
 
 		hr = Graphics::Inst().GetDevice().CreateTexture2D(&textDesc, nullptr, &idTexture);
@@ -82,7 +82,9 @@ public:
 			Print("FAILED TO CREATE 2D TEXTURE", "ID RENDERER");
 		}
 
-		textDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+		textDesc.BindFlags = 0;
+		textDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ, D3D11_CPU_ACCESS_WRITE;
+		textDesc.Usage = D3D11_USAGE_DEFAULT;
 
 		hr = Graphics::Inst().GetDevice().CreateTexture2D(&textDesc, nullptr, &idTextureData);
 		if FAILED(hr)
@@ -165,26 +167,25 @@ public:
 		pixel.right = xPix + 1;
 		pixel.top = yPix;
 		pixel.bottom = yPix + 1;
+		pixel.front = 0;
+		pixel.back = 1;
 
-		//Graphics::Inst().GetContext().CopyResource(idTextureData, idTexture);
-		//D3D11_TEXTURE2D_DESC textureDesc;
-		//idTextureData->GetDesc(&textureDesc);
-		//D3D11_MAPPED_SUBRESOURCE mappedResource;
-		//D3D11_SUBRESOURCE_DATA resourceData;
+		Graphics::Inst().GetContext().CopySubresourceRegion(idTextureData, 0, 0, 0, 0, idTexture, 0, &pixel);
 
-		//HRESULT hr = Graphics::Inst().GetContext().Map(idTextureData, (0, 0, 0, 0) , D3D11_MAP_READ, 0, &mappedResource);
-		//if FAILED(hr)
-		//{
-		//	Print("FAILED TO MAP SUBRESOURCE", "ID RENDERER::COPYING TEXTURE");
-		//}
+		D3D11_TEXTURE2D_DESC textureDesc;
+		idTextureData->GetDesc(&textureDesc);
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
 
-		//resourceData.pSysMem = new BYTE[mappedResource.RowPitch * textureDesc.Height];
-		//memcpy(const_cast<void*>(resourceData.pSysMem), mappedResource.pData, mappedResource.RowPitch* textureDesc.Height);
+		HRESULT hr = Graphics::Inst().GetContext().Map(idTextureData, (0, 0, 0, 0) , D3D11_MAP_READ_WRITE, 0, &mappedResource);
+		if FAILED(hr)
+		{
+			Print("FAILED TO MAP SUBRESOURCE", "ID RENDERER::COPYING TEXTURE");
+		}
 
-		//Graphics::Inst().GetContext().Unmap(idTextureData, 0);
-		////+(yPix * 4 * sizeof(UINT)) + (xPix * 4 * sizeof(UINT))
 
-		//int id = reinterpret_cast<int>(resourceData.pSysMem);
-		return 1;
+
+		int id; 
+		memcpy(&id, *&idTextureData, sizeof(UINT));
+		return id;
 	}
 };
