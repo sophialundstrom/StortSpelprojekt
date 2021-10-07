@@ -29,10 +29,10 @@ public:
 
 		lastUpdate = Time::Get();
 
+		currState++;
 		if (currState >= stages)
 			return;
 
-		currState++;
 		ApplyMesh(meshNames[currState]);
 		ApplyMaterial(materialNames[currState]);
 	}
