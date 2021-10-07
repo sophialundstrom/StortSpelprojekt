@@ -25,3 +25,7 @@ C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debu
 C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitModelVertexShader.cso
 C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\UVAnimationPixelShader.cso
 C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\UVAnimationVertexShader.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredTerrainPixelShader.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\ColliderPixelShader.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\ColliderVertexShader.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\TerrainGeometryShader.cso

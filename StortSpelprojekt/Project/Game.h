@@ -7,6 +7,7 @@
 #include "DeferredRenderer.h"
 #include "TerrainRenderer.h"
 #include "Building.h"
+#include "Item.h"
 #include "QuestLog.h"
 #include "UI.h"
 #include "Time.h"
@@ -30,7 +31,7 @@ private:
     Terrain terrain;
 
     std::shared_ptr<Player> player;
-
+    std::vector<std::shared_ptr <Item>> items;
     std::shared_ptr<Player> npc;
 
     std::shared_ptr<Building> building;
@@ -40,6 +41,7 @@ private:
 
     void Update();
     void Render();
+    void CheckItemCollision();
 public:
     Game() = delete;
     Game(UINT clientWidth, UINT clientHeight, HWND window);

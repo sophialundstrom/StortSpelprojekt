@@ -19,6 +19,8 @@ void Game::Update()
 
 	scene.Update();
 
+	CheckItemCollision();
+
 	scene.UpdateDirectionalLight(player->GetPosition());
 
 	Event::ClearRawDelta();
@@ -45,6 +47,18 @@ void Game::Render()
 	Graphics::Inst().EndFrame();
 }
 
+void Game::CheckItemCollision()
+{
+	for (auto &item : items)
+	{
+		item->Update();
+		if(item->Collision(&player->GetBounds()))
+		{
+			Print("HEJ");
+		}
+	}
+}
+
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight), 
 	modelRenderer(DEFERRED, true), 
@@ -60,6 +74,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
+	player->GetBounds().SetParent(player);
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
@@ -92,7 +107,17 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	lantern->SetPosition(0, 30, 0);
 	modelRenderer.Bind(lantern);
 	shadowRenderer.Bind(lantern);
-
+	
+	//Item testing(Items::WOOD);
+	std::shared_ptr<Item> test = std::make_shared<Item>(WOOD);
+	scene.AddModel("Pyramid", test);
+	//test->SetRotation({ 0, 0, 0 });
+	items.emplace_back(test);
+	test->GetBounds().SetPosition(0, 25, 0); //Parent matrix does not get the right values
+	test->SetPosition(0, 25, 0);
+	test->GetBounds().Update();
+	modelRenderer.Bind(test);
+	shadowRenderer.Bind(test);
 
 	scene.AddFriendlyNPC("SignsPost");
 	auto friendly = scene.Get<NPC>("SignsPost");

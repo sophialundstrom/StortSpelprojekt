@@ -181,6 +181,7 @@
     <ClInclude Include="CollectQuest.h" />
     <ClInclude Include="FightQuest.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />

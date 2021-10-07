@@ -4,17 +4,11 @@
 #include "Model.h"
 #include "Event.h"
 #include "Terrain.h"
-
-typedef enum RESOURCES
-{
-	WOOD,
-	STONE,
-	FOOD,
-	NONE
-};
+#include "Item.h"
 
 struct Inventory 
 {
+	//std::unordered_map here?
 	std::map<RESOURCES, UINT> items; //ID , NUM OF ITEM
 	std::map<RESOURCES, std::string> names;
 
@@ -41,6 +35,12 @@ struct Inventory
 
 		items[ID]--;
 	}
+
+	/*void PickUpItem(enum RESOURCES ID)
+	{
+		AddItem(ID);
+		items.emplace(names, items);
+	}*/
 
 	UINT NumOf(enum RESOURCES ID)
 	{
@@ -117,6 +117,8 @@ private:
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 5.0f;
 	
+	BoundingSphere bounds;
+
 	float get2dAngle(Vector2 a, Vector2 b)
 	{
 		//MathExplanation
@@ -252,6 +254,7 @@ public:
 		sceneCamera->MoveTowards(newCameraPos);
 
 		Model::Update();
+		bounds.Update();
 	};
 
 
@@ -260,6 +263,7 @@ public:
 	{
 		rotation = { 0, PI, 0 };
 	}
+	BoundingSphere &GetBounds(){ return bounds; }
 
 	Inventory& Inventory() { return inventory; }
 	GameStats& GameStats() { return gameStats; }

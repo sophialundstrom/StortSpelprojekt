@@ -1,9 +1,8 @@
 #pragma once
 #include "Collision.h"
-#include "Player.h"
 #include "Model.h"
 
-typedef enum Items 
+typedef enum RESOURCES 
 {
 	WOOD,
 	STONE,
@@ -14,22 +13,28 @@ typedef enum Items
 class Item :public Model
 {
 public:
+	Item(RESOURCES type)
+		:Model("Pyramid"), ID(type)
+	{
+		
+	}
+
 	bool Collision(const Collider *other)
 	{
 		switch (other->Type())
 		{
-		default:
-			return false;
 		case ColliderType::SPHERE:
-			return Collision::Intersection(*dynamic_cast<const BoundingSphere*>(other), bounds);
+		    return Collision::Intersection(*dynamic_cast<const BoundingSphere*>(other), bounds);
 		case ColliderType::BOX:
 			return Collision::Intersection(bounds,*dynamic_cast<const BoundingBox*>(other));
 		}
+		return false;
 	}
+	BoundingSphere& GetBounds() { return bounds; }
 
 private:
 
 	BoundingSphere bounds;
-	Items ID;
+	RESOURCES ID;
 };
 
