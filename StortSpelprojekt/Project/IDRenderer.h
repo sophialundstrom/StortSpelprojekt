@@ -2,6 +2,13 @@
 #pragma once
 #include "ShaderData.h"
 #include "Model.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
 
 class IDRenderer : public Renderer
 {
@@ -68,12 +75,12 @@ public:
 		textDesc.Height = Graphics::Inst().GetViewport().Height;
 		textDesc.MipLevels = 1;
 		textDesc.ArraySize = 1;
-		textDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT;
+		textDesc.Format = DXGI_FORMAT_R32_UINT;
 		textDesc.SampleDesc.Count = 1;
 		textDesc.SampleDesc.Quality = 0;
 		textDesc.Usage = D3D11_USAGE_DEFAULT;
 		textDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
-		textDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+		textDesc.CPUAccessFlags = 0;
 		textDesc.MiscFlags = 0;
 
 		hr = Graphics::Inst().GetDevice().CreateTexture2D(&textDesc, nullptr, &idTexture);
@@ -83,8 +90,8 @@ public:
 		}
 
 		textDesc.BindFlags = 0;
-		textDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ, D3D11_CPU_ACCESS_WRITE;
-		textDesc.Usage = D3D11_USAGE_DEFAULT;
+		textDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+		textDesc.Usage = D3D11_USAGE_STAGING;
 
 		hr = Graphics::Inst().GetDevice().CreateTexture2D(&textDesc, nullptr, &idTextureData);
 		if FAILED(hr)
@@ -162,30 +169,36 @@ public:
 
 	int GetObjectID(int xPix, int yPix)
 	{
-		D3D11_BOX pixel;
-		pixel.left = xPix;
-		pixel.right = xPix + 1;
-		pixel.top = yPix;
-		pixel.bottom = yPix + 1;
-		pixel.front = 0;
-		pixel.back = 1;
 
-		Graphics::Inst().GetContext().CopySubresourceRegion(idTextureData, 0, 0, 0, 0, idTexture, 0, &pixel);
+		Graphics::Inst().GetContext().CopyResource(idTextureData, idTexture);
 
 		D3D11_TEXTURE2D_DESC textureDesc;
 		idTextureData->GetDesc(&textureDesc);
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 
-		HRESULT hr = Graphics::Inst().GetContext().Map(idTextureData, (0, 0, 0, 0) , D3D11_MAP_READ_WRITE, 0, &mappedResource);
+		HRESULT hr = Graphics::Inst().GetContext().Map(idTextureData, 0, D3D11_MAP_READ, 0, &mappedResource);
 		if FAILED(hr)
 		{
 			Print("FAILED TO MAP SUBRESOURCE", "ID RENDERER::COPYING TEXTURE");
 		}
 
 
-
 		int id; 
-		memcpy(&id, *&idTextureData, sizeof(UINT));
+		UINT32* data = static_cast<UINT32*>(mappedResource.pData);
+		data += yPix * textureDesc.Width + xPix;
+		memcpy(&id, data, sizeof(UINT32));
+
+
+		unsigned char* img;
+		stbi_write_jpg("objectID", textureDesc.Width, textureDesc.Height, 1, img, 100);
+
+		stbi_image_free(img);
+
+		Print(textureDesc.Width);
+		Print(xPix);
+		Print(yPix);
+
+		Graphics::Inst().GetContext().Unmap(idTextureData, 0);
 		return id;
 	}
 };

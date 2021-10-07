@@ -48,9 +48,8 @@ void LevelEditor::Update()
 		if (screenSpaceCoordinates.y < -1)
 			screenSpaceCoordinates.y = -1;
 
-		/*int id = idRenderer.GetObjectID(1,1);*/
-
-		/*Print(id);*/
+		int id = idRenderer.GetObjectID(cursor.x, cursor.y);
+		Print(id);
 
 		Matrix inverseView = scene.GetCamera()->GetViewMatrix().Invert();
 

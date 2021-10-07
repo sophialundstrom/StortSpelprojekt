@@ -4,7 +4,7 @@ struct PS_INPUT
     uint id : ID;
 };
 
-uint4 main(PS_INPUT input) : SV_TARGET
+uint main(PS_INPUT input) : SV_TARGET
 {
-    return uint4(input.id, 0, 0, 1);
+    return uint(input.id);
 }
