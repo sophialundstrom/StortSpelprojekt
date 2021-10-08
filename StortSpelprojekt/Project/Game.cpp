@@ -9,7 +9,7 @@ void Game::Update()
 
 	QuestLog::Inst().Update();
 
-	auto friendly = scene.Get<NPC>("ComBined1");
+	auto friendly = scene.Get<NPC>("Staff");
 
 	friendly->Collided(*player);
 
@@ -102,8 +102,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//UI
 	userInterface.Initialize(window);
 
-	scene.AddFriendlyNPC("ComBined");
-	auto friendly = scene.Get<NPC>("ComBined1");
+	scene.AddFriendlyNPC("Staff");
+	auto friendly = scene.Get<NPC>("Staff");
 	friendly->SetRotation({ 0, 0, 0 });
 	friendly->SetPosition(10, 0, 10);
 	modelRenderer.Bind(friendly);
