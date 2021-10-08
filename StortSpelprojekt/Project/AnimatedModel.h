@@ -23,9 +23,7 @@ public:
 		Timer timer;
 		timer.Start();
 
-		importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
-
-		scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_ConvertToLeftHanded | aiProcess_SortByPType);
+		scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_FlipUVs);
 
 		if (!scene)
 		{

@@ -1,7 +1,23 @@
 #include "LevelEditor.h"
 #include "Event.h"
+#include "GameLoader.h"
+#include "FBXLoader.h"
 
+void LevelEditor::BindDrawables()
+{
+	for (auto& [name, drawable] : scene.GetDrawables())
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if (model)
+			modelRenderer.Bind(model);
 
+		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
+		if (particleSystem)
+		{
+			//SAME BUT PS->
+		}
+	}
+}
 
 void LevelEditor::Save(const std::string& file)
 {
@@ -15,8 +31,11 @@ void LevelEditor::Load(const std::string& file)
 		return;
 
 	std::string fileName = path.stem().string();
-	scene.AddModel(fileName);
-	modelRenderer.Bind(scene.Get<Model>(fileName));
+	fileName = scene.AddModel(fileName, path.string());
+	auto model = scene.Get<Model>(fileName);
+	model->SetID(scene.GetObjectNames().size());
+	idRenderer.Bind(model);
+	modelRenderer.Bind(model);
 	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
 
 	auto boundingSphere = std::make_shared<BoundingSphere>();
@@ -29,7 +48,6 @@ void LevelEditor::Load(const std::string& file)
 
 void LevelEditor::Update()
 {
-	//TO DO: FIGURE OUT A NICE MOVEMENT IN EDITOR
 	if (Event::LeftIsClicked())
 	{
 		GetCursorPos(&cursor);
@@ -44,6 +62,10 @@ void LevelEditor::Update()
 			screenSpaceCoordinates.y = 1;
 		if (screenSpaceCoordinates.y < -1)
 			screenSpaceCoordinates.y = -1;
+
+
+		int id = idRenderer.GetObjectID(cursor.x, cursor.y);
+		Print(id);
 
 		Matrix inverseView = scene.GetCamera()->GetViewMatrix().Invert();
 
@@ -130,13 +152,13 @@ void LevelEditor::Update()
 	if (Event::KeyIsPressed('D'))
 		scene.GetCamera()->MoveRight();
 
-	if (Event::KeyIsPressed(32)) //SPACE
+	if (Event::KeyIsPressed(VK_SPACE))
 		scene.GetCamera()->MoveUp();
 
 	if (Event::KeyIsPressed('Z'))
 		scene.GetCamera()->MoveUp(-1);
   
-	if (Event::KeyIsPressed(16)) //SHIFT
+	if (Event::KeyIsPressed(VK_SHIFT))
 		scene.GetCamera()->SetSpeedMultiplier(4);
 	else
 		scene.GetCamera()->SetSpeedMultiplier(1);
@@ -172,6 +194,8 @@ void LevelEditor::Update()
 
 void LevelEditor::Render()
 {
+	idRenderer.Render();
+
 	BeginFrame();
 
 	//TO DO: ADD PARTICLE RENDER PASS (IN OPEN WORLD)
@@ -188,6 +212,8 @@ void LevelEditor::Render()
 	colliderRenderer.Render();
 
 	EndFrame();
+
+	Resources::Inst().Reset();
 }
 
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
@@ -195,11 +221,17 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(FORWARD),
 	animatedModelRenderer(FORWARD, false)
 {
-	//BOTH MUST BE SET (PERSPECTIVE MATRIX ISSUES OTHERWISE), OR WE JUS DO DEFAULT CONSTRUCTOR
-	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 500.0f, 1.0f, 15.0f, {0, 50, 0});
+	//LOAD SCENE
+	FBXLoader levelLoader("Models");
+
+	GameLoader gameLoader;
+	gameLoader.Load("Default", scene.GetDrawables());
+	BindDrawables();
+
+	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 1000.0f, 1.0f, 25.0f, {0, 90, 0});
 	scene.SetDirectionalLight(40);
 
-
+	//CLIENT INFORMATION (PICKING) TO BE REMOVED?
 	wWidth = clientWidth;
 	wHeight = clientHeight;
 
@@ -209,10 +241,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 
 	terrain = new Terrain();
 
-
-	//DO THIS WHEN "ADD MODEL"-BUTTON IS PRESSED IN SCENE WINDOW, 
-	//OPEN DIRECTORY AND SELECT AN FBX (USING FILESYSTEM HEADER SAME AS PARTICLE SYSTEM)
-	
+	//WINDOWS
 	{
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];				
@@ -278,6 +307,12 @@ State LevelEditor::Run()
 		if (terrain)
 			delete terrain;
 		terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
+	}
+	
+	if (window.GetValue<ButtonComponent>("SAVE WORLD"))
+	{
+		GameLoader loader;
+		loader.Save("Default", scene.GetDrawables());
 	}
 
 	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))

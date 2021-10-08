@@ -2,7 +2,7 @@
 
 
 NPC::NPC(const std::string& file)
-	:Model(file)
+	:Model(file, file)
 {
 	// call bind here cause i think it binds the bounding volume to a useful place
 	boundingSphere.Bind();

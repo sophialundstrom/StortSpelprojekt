@@ -12,7 +12,6 @@
 #include "UI.h"
 #include "Time.h"
 
-
 //PlayerClassLib
 #include <math.h>
 
@@ -20,6 +19,9 @@
 class Game : public GameState
 {
 private:
+    bool gameIsRunning = true;
+    const std::string file = "Default"; //"Test"
+
     std::unique_ptr<QuestLog> questLog;
 
     ParticleRenderer particleRenderer;
@@ -31,17 +33,19 @@ private:
     Terrain terrain;
 
     std::shared_ptr<Player> player;
+
     std::vector<std::shared_ptr <Item>> items;
-    std::shared_ptr<Player> npc;
 
     std::shared_ptr<Building> building;
 
     UI userInterface;
 
-
     void Update();
     void Render();
+
     void CheckItemCollision();
+
+    void Initialize();
 public:
     Game() = delete;
     Game(UINT clientWidth, UINT clientHeight, HWND window);

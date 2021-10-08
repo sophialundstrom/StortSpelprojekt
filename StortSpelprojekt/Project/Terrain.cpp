@@ -5,11 +5,11 @@
 
 HeightMap::HeightMap(const std::string& texture)
 {
-	std::string path = "Textures/" + texture + ".jpg";
+	std::string path = "Textures/" + texture + ".png";
 
 	this->texture = new Texture(path, texture);
 
-	int channels = 3;
+	int channels = 4;
 	unsigned char* image = stbi_load(path.c_str(), &width, &height, &channels, channels);
 	if (!image)
 	{
@@ -25,7 +25,7 @@ HeightMap::HeightMap(const std::string& texture)
 			unsigned char* pixelOffset = image + (i + width * j) * channels;
 
 			int value = pixelOffset[0];
-			float finalValue = (float)value * 0.2f;
+			float finalValue = (float)value * 0.6f - 60.0f;
 
 			data.emplace(Vector2(i - (width / 2) + 1, j - (height / 2) + 1), finalValue);
 		}
@@ -34,7 +34,7 @@ HeightMap::HeightMap(const std::string& texture)
 
 Terrain::Terrain(UINT subdivisions)
 {
-	heightMap = new HeightMap("heightMap");
+	heightMap = new HeightMap("TerrainHeightMap");
 	UINT size = heightMap->width;
 	
 	//TEST STUFF
@@ -82,9 +82,9 @@ Terrain::Terrain(UINT subdivisions)
 
 	heightMap->texture->Bind(0, Shader::DS);
 
-	blendMap = new Texture("Textures/BlendMap.jpg", "BlendMap");
+	blendMap = new Texture("Textures/TerrainBlendMap.png", "BlendMap");
 
-	const std::string tx[3] = { "Stone512.png", "water.png", "grass2seamless.png" };
+	const std::string tx[3] = { "Rock.jpg", "Path.jpg", "GrassSeamless.jpg" };
 	for (UINT i = 0; i < 3; ++i)
 		textures[i] = new Texture("Textures/" + tx[i], tx[i]);
 }
