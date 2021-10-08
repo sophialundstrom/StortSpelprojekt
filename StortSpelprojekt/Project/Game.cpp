@@ -121,13 +121,34 @@ Game::~Game()
 
 State Game::Run()
 {
-	Update();
+	if (gameIsRunning == true)
+	{
+		Update();
+	}
+	
+
 	Render();
 
 	static float lastClick = 0;
 
 	if (Time::Get() - lastClick > 0.25f)
 	{
+		if (Event::KeyIsPressed(VK_TAB))
+		{
+			if (gameIsRunning == true)
+			{
+				gameIsRunning = false;
+				std::cout << "Paused\n";
+			}
+
+
+			else  if (gameIsRunning == false)
+			{
+				gameIsRunning = true;
+				std::cout << "UnPaused\n";
+			}
+		}
+
 		if (Event::KeyIsPressed('U'))
 		{
 			QuestLog::Inst().Complete(0);
