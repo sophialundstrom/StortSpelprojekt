@@ -9,10 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Header Files\Utilities">
       <UniqueIdentifier>{fa7cfd21-3f7c-4c98-a727-287ef296e521}</UniqueIdentifier>
     </Filter>
@@ -106,15 +102,6 @@
     <Filter Include="Header Files\Application\GameStates\Debug\Editors\ImGuiWindow">
       <UniqueIdentifier>{c4bed249-3e66-4e8c-a4e5-f7a35d7e23c0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\OLD STUFF">
-      <UniqueIdentifier>{5f9b2bb0-4775-4add-a94d-bb29400478e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\OLD STUFF\UVAnimation">
-      <UniqueIdentifier>{3e7eb5c7-a642-4a57-a011-17f65a06d2dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\OLD STUFF\Displacement">
-      <UniqueIdentifier>{526370f5-da8d-4e61-ac87-372fcd425fd1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Application\Scene\Drawable\AnimatedModel">
       <UniqueIdentifier>{53cac745-6011-4dc6-926c-5a8ca3f94801}</UniqueIdentifier>
     </Filter>
@@ -145,6 +132,21 @@
     <Filter Include="Header Files\Application\Scene\Game\NPC\.cpp">
       <UniqueIdentifier>{8aeb864f-4e42-440e-b2d9-2c4f8546c352}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\IDRenderer">
+      <UniqueIdentifier>{d891fbae-913f-40c7-82d2-2416583ab147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\IDRenderer\Shaders">
+      <UniqueIdentifier>{a15e2d1a-6e03-45e9-8bdb-79ced595b252}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{f4425efb-57b7-44c5-ab3a-513a649c0635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI\.h">
+      <UniqueIdentifier>{99782d8d-f9f6-4e54-8c9a-f0ec440c4201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI\.cpp">
+      <UniqueIdentifier>{ecb8c68c-124d-41d6-b7f2-7c26782e3573}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -161,9 +163,6 @@
     </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Header Files\Application\Scene\Drawable\Model\Resources\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="OldModel.cpp">
-      <Filter>Resource Files\OLD STUFF</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Header Files\Application\Scene\Drawable\Particle System</Filter>
@@ -183,18 +182,6 @@
     <ClCompile Include="Game.cpp">
       <Filter>Header Files\Application\GameStates\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="UI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="NPCHostile.cpp">
       <Filter>Header Files\Application\Scene\Game\NPC\.cpp</Filter>
     </ClCompile>
@@ -211,7 +198,19 @@
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClCompile>
     <ClCompile Include="IDRenderer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\Application\Graphics\Renderers\IDRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Header Files\UI\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Header Files\UI\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Header Files\UI\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Header Files\UI\.cpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -308,15 +307,6 @@
     <ClInclude Include="Material.h">
       <Filter>Header Files\Application\Scene\Drawable\Model\Resources\Material</Filter>
     </ClInclude>
-    <ClInclude Include="OldMesh.h">
-      <Filter>Resource Files\OLD STUFF</Filter>
-    </ClInclude>
-    <ClInclude Include="OldModel.h">
-      <Filter>Resource Files\OLD STUFF</Filter>
-    </ClInclude>
-    <ClInclude Include="OldResources.h">
-      <Filter>Resource Files\OLD STUFF</Filter>
-    </ClInclude>
     <ClInclude Include="Resources.h">
       <Filter>Header Files\Application\Scene\Drawable\Model\Resources</Filter>
     </ClInclude>
@@ -334,12 +324,6 @@
     </ClInclude>
     <ClInclude Include="DeferredRenderer.h">
       <Filter>Header Files\Application\Graphics\Renderers\DeferredRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="OldModelRenderer.h">
-      <Filter>Resource Files\OLD STUFF</Filter>
-    </ClInclude>
-    <ClInclude Include="DisplacementRenderer.h">
-      <Filter>Resource Files\OLD STUFF</Filter>
     </ClInclude>
     <ClInclude Include="ShadowRenderer.h">
       <Filter>Header Files\Application\Graphics\Renderers\ShadowRenderer</Filter>
@@ -401,9 +385,6 @@
     <ClInclude Include="CollectQuest.h">
       <Filter>Header Files\Application\Scene\Game\Quests</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
-    </ClInclude>
     <ClInclude Include="FightQuest.h">
       <Filter>Header Files\Application\Scene\Game\Quests</Filter>
     </ClInclude>
@@ -422,18 +403,6 @@
     <ClInclude Include="PRay.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="NPCFriendly.h">
       <Filter>Header Files\Application\Scene\Game\NPC\.h</Filter>
     </ClInclude>
@@ -449,38 +418,32 @@
     <ClInclude Include="GameLoader.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="ThreadPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IDRenderer.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\Application\Graphics\Renderers\IDRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\UI\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Header Files\UI\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\UI\.h</Filter>
     </ClInclude>
     <ClInclude Include="stb_image_write.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files\UI\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="DisplacementVertexShader.hlsl">
-      <Filter>Resource Files\OLD STUFF\Displacement</Filter>
-    </FxCompile>
-    <FxCompile Include="DisplacementHullShader.hlsl">
-      <Filter>Resource Files\OLD STUFF\Displacement</Filter>
-    </FxCompile>
-    <FxCompile Include="DisplacementDomainShader.hlsl">
-      <Filter>Resource Files\OLD STUFF\Displacement</Filter>
-    </FxCompile>
-    <FxCompile Include="DisplacementGeometryShader.hlsl">
-      <Filter>Resource Files\OLD STUFF\Displacement</Filter>
-    </FxCompile>
-    <FxCompile Include="DisplacementPixelShader.hlsl">
-      <Filter>Resource Files\OLD STUFF\Displacement</Filter>
-    </FxCompile>
-    <FxCompile Include="UVAnimationVertexShader.hlsl">
-      <Filter>Resource Files\OLD STUFF\UVAnimation</Filter>
-    </FxCompile>
-    <FxCompile Include="UVAnimationPixelShader.hlsl">
-      <Filter>Resource Files\OLD STUFF\UVAnimation</Filter>
-    </FxCompile>
     <FxCompile Include="ParticleGeometryShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
     </FxCompile>
@@ -517,12 +480,6 @@
     <FxCompile Include="ShadowVertexShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\ShadowRenderer\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="ShadowDomainShader.hlsl">
-      <Filter>Resource Files\OLD STUFF</Filter>
-    </FxCompile>
-    <FxCompile Include="ShadowHullShader.hlsl">
-      <Filter>Resource Files\OLD STUFF</Filter>
-    </FxCompile>
     <FxCompile Include="AnimatedModelVertexShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\AnimatedModelRenderer\Shaders</Filter>
     </FxCompile>
@@ -554,10 +511,10 @@
       <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="IDPixelShader.hlsl">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\Application\Graphics\Renderers\IDRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="IDVertexShader.hlsl">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\Application\Graphics\Renderers\IDRenderer\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
