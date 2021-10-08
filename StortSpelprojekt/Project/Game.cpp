@@ -5,12 +5,11 @@
 
 void Game::Update()
 {
-
 	player->Update(terrain.GetHeightMap());
 
 	QuestLog::Inst().Update();
 
-	auto friendly = scene.Get<NPC>("ComBined1");
+	auto friendly = scene.Get<NPC>("Staff");
 
 	friendly->Collided(*player);
 
@@ -89,13 +88,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	std::string meshNames[] = { "Oak", "Pyramid", "Cube" };
-	std::string materialNames[] = { "", "SilverTex", "WaterTex" };
+	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
+	std::string materialNames[] = { "", "HouseTexture"};
 	building = std::make_shared<Building>(meshNames, materialNames, "Building");
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
 	shadowRenderer.Bind(building);
-	scene.Get<Model>("Building")->SetPosition(10, 0, 20);
+	scene.Get<Model>("Building")->SetPosition(10, -3, 60);
+	scene.Get<Model>("Building")->SetRotation(0, -PI_DIV2, 0);
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player);
@@ -103,8 +103,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//UI
 	userInterface.Initialize(window);
 
-	scene.AddFriendlyNPC("ComBined");
-	auto friendly = scene.Get<NPC>("ComBined1");
+	scene.AddFriendlyNPC("Staff");
+	auto friendly = scene.Get<NPC>("Staff");
 	friendly->SetRotation({ 0, 0, 0 });
 	friendly->SetPosition(10, 0, 10);
 	modelRenderer.Bind(friendly);

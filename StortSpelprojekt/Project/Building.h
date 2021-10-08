@@ -4,7 +4,7 @@
 class Building :public Model
 {
 private:
-	static const UINT stages = 3;
+	static const UINT stages = 2;
 	std::string meshNames[stages];
 	std::string materialNames[stages];
 	UINT currState = 0;

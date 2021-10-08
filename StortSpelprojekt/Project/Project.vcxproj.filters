@@ -440,11 +440,6 @@
     <ClInclude Include="NPCBase.h">
       <Filter>Header Files\Application\Scene\Game\NPC\.h</Filter>
     </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="ObserverSystemBase.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-=======
     <ClInclude Include="FBXLoader.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
@@ -454,7 +449,6 @@
     <ClInclude Include="ThreadPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
->>>>>>> main
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DisplacementVertexShader.hlsl">
