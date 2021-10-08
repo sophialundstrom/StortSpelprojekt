@@ -30,6 +30,8 @@ void Game::Render()
 
 	modelRenderer.Render();
 
+	colliderRenderer.Render();
+
 	terrainRenderer.Render(terrain);
 
 	shadowRenderer.Render();
@@ -70,12 +72,26 @@ void Game::Initialize()
 	}
 }
 
+void Game::AddItem(RESOURCE resource, Vector3 position)
+{
+	const std::string name = "testItem";
+
+	auto item = std::make_shared<Item>(resource, name);
+	scene.AddModel(name, item);
+	items.emplace_back(item);
+	item->GetBounds()->SetParent(item);
+	item->SetPosition(position);
+	item->GetBounds()->Update();
+	modelRenderer.Bind(item);
+	shadowRenderer.Bind(item);
+	colliderRenderer.Bind(item->GetBounds());
+}
+
 void Game::CheckItemCollision()
 {
 	for (auto &item : items)
 	{
-		item->Update();
-		if(item->Collision(&player->GetBounds()))
+		if(item->Collision(player->GetBounds().get()))
 		{
 			Print("HEJ");
 		}
@@ -83,10 +99,11 @@ void Game::CheckItemCollision()
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
-	:deferredRenderer(clientWidth, clientHeight), 
-	modelRenderer(DEFERRED, true), 
+	:deferredRenderer(clientWidth, clientHeight),
+	modelRenderer(DEFERRED, true),
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED)
+	terrainRenderer(DEFERRED),
+	colliderRenderer(DEFERRED)
 {
 	Initialize();
 
@@ -99,7 +116,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
-	player->GetBounds().SetParent(player);
+	player->GetBounds()->SetParent(player);
+	colliderRenderer.Bind(player->GetBounds());
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
@@ -121,16 +139,18 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//UI
 	userInterface.Initialize(window);
 
-	//Item testing(Items::WOOD);
-	std::shared_ptr<Item> test = std::make_shared<Item>(WOOD);
-	scene.AddModel("Pyramid", test);
-	//test->SetRotation({ 0, 0, 0 });
-	items.emplace_back(test);
-	test->GetBounds().SetPosition(0, 25, 0); //Parent matrix does not get the right values
-	test->SetPosition(0, 25, 0);
-	test->GetBounds().Update();
-	modelRenderer.Bind(test);
-	shadowRenderer.Bind(test);
+	//Item
+	std::shared_ptr<Item> item = std::make_shared<Item>(WOOD, "testItem");
+	scene.AddModel("testItem", item);
+	items.emplace_back(item);
+	item->GetBounds()->SetParent(item);
+	item->SetPosition(-10, 1, 0);
+	item->SetScale(2);
+	item->Update();
+	item->GetBounds()->Update();
+	modelRenderer.Bind(item);
+	shadowRenderer.Bind(item);
+	colliderRenderer.Bind(item->GetBounds());
 
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");

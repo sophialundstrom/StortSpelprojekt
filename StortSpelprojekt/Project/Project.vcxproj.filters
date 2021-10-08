@@ -519,5 +519,8 @@
     <FxCompile Include="IDVertexShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\IDRenderer\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="DeferredColliderPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

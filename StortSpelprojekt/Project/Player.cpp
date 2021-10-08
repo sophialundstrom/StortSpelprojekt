@@ -128,6 +128,7 @@ void Player::Update(HeightMap* heightMap)
 	sceneCamera->MoveTowards(newCameraPos);
 
 	Model::Update();
+	bounds->Update();
 }
 
 void Player::Save(const std::string file)

@@ -96,7 +96,7 @@ private:
 	
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);
-
+	std::shared_ptr<BoundingSphere> bounds;
 	Inventory inventory;
 public:
 	void Update(HeightMap* heightMap);
@@ -104,8 +104,10 @@ public:
 	Player(const std::string file, Camera* camera)
 		:Model("Character", "Character"), sceneCamera(camera)
 	{
-		SetScale(0.02f);
+		bounds = std::make_shared<BoundingSphere>();
 
+		SetScale(0.02f);
+		bounds->SetScale(200);
 
 		Load(file);
 	}
@@ -120,7 +122,7 @@ public:
 		std::cout << "CURRENT MOVEMENTSPEED " << stats.currentSpeed << std::endl;
 		std::cout << "BARBARIANS KILLED " << stats.barbariansKilled << std::endl;
 	}
-	BoundingSphere &GetBounds(){ return bounds; }
+	std::shared_ptr<BoundingSphere> GetBounds(){ return bounds; }
 
 	Inventory& Inventory() { return inventory; }
 	Stats& Stats() { return stats; }

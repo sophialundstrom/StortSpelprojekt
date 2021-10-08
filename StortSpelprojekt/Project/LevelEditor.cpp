@@ -219,7 +219,8 @@ void LevelEditor::Render()
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(FORWARD, false),
 	terrainRenderer(FORWARD),
-	animatedModelRenderer(FORWARD, false)
+	animatedModelRenderer(FORWARD, false),
+	colliderRenderer(FORWARD)
 {
 	//LOAD SCENE
 	FBXLoader levelLoader("Models");

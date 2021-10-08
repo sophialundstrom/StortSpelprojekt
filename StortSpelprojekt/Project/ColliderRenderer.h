@@ -18,7 +18,8 @@ private:
 	//SHADER PATHS
 #ifdef _DEBUG
 	const std::string vs_path = "../x64/Debug/ColliderVertexShader.cso";
-	const std::string ps_path = "../x64/Debug/ColliderPixelShader.cso";
+	const std::string forward_ps_path = "../x64/Debug/ColliderPixelShader.cso";
+	const std::string deferred_ps_path ="../x64/Debug/DeferredColliderPixelShader.cso";
 #else
 	const std::string vs_path = "../x64/Release/ColliderVertexShader.cso";
 	const std::string ps_path = "../x64/Release/ColliderPixelShader.cso";
@@ -31,7 +32,7 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	ColliderRenderer()
+	ColliderRenderer(RenderMethod method)
 	{
 		//INDEX BUFFERS
 		static const UINT sIndices[] =
@@ -67,8 +68,20 @@ public:
 
 		if (!LoadShader(vertexShader, vs_path, byteCode))
 			return;
-		if (!LoadShader(pixelShader, ps_path))
-			return;
+
+		if (method == FORWARD)
+		{
+			if (!LoadShader(pixelShader, forward_ps_path))
+				return;
+		}
+
+		else
+		{
+			if (!LoadShader(pixelShader, deferred_ps_path))
+				return;
+		}
+
+		
 
 		Print("SUCCEEDED LOADING SHADERS", "COLLIDER RENDERER");
 

@@ -2,7 +2,7 @@
 #include "Collision.h"
 #include "Model.h"
 
-typedef enum RESOURCES 
+typedef enum RESOURCE 
 {
 	WOOD,
 	STONE,
@@ -13,10 +13,10 @@ typedef enum RESOURCES
 class Item :public Model
 {
 public:
-	Item(RESOURCES type)
-		:Model("Pyramid"), ID(type)
+	Item(RESOURCE type, const std::string& name)
+		:Model("Pyramid", name), ID(type)
 	{
-		
+		bounds = std::make_shared<BoundingSphere>();
 	}
 
 	bool Collision(const Collider *other)
@@ -24,17 +24,24 @@ public:
 		switch (other->Type())
 		{
 		case ColliderType::SPHERE:
-		    return Collision::Intersection(*dynamic_cast<const BoundingSphere*>(other), bounds);
+		    return Collision::Intersection(*dynamic_cast<const BoundingSphere*>(other), *bounds);
 		case ColliderType::BOX:
-			return Collision::Intersection(bounds,*dynamic_cast<const BoundingBox*>(other));
+			return Collision::Intersection(*bounds,*dynamic_cast<const BoundingBox*>(other));
 		}
 		return false;
 	}
-	BoundingSphere& GetBounds() { return bounds; }
+
+	void Update()
+	{
+		Model::Update();
+		bounds->Update();
+	}
+
+	std::shared_ptr<BoundingSphere> GetBounds() { return bounds; }
 
 private:
 
-	BoundingSphere bounds;
-	RESOURCES ID;
+	std::shared_ptr<BoundingSphere> bounds;
+	RESOURCE ID;
 };
 

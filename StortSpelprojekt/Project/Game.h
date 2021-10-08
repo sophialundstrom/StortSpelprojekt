@@ -5,6 +5,7 @@
 #include "ParticleRenderer.h"
 #include "ShadowRenderer.h"
 #include "DeferredRenderer.h"
+#include "ColliderRenderer.h"
 #include "TerrainRenderer.h"
 #include "Building.h"
 #include "Item.h"
@@ -29,6 +30,7 @@ private:
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
+    ColliderRenderer colliderRenderer;
 
     Terrain terrain;
 
@@ -43,6 +45,7 @@ private:
     void Update();
     void Render();
 
+    void AddItem(RESOURCE resource, Vector3 position);
     void CheckItemCollision();
 
     void Initialize();
