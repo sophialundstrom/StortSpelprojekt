@@ -33,6 +33,7 @@ void LevelEditor::Load(const std::string& file)
 	std::string fileName = path.stem().string();
 	fileName = scene.AddModel(fileName, path.string());
 	auto model = scene.Get<Model>(fileName);
+	model->SetID(scene.GetObjectNames().size());
 	idRenderer.Bind(model);
 	modelRenderer.Bind(model);
 	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);

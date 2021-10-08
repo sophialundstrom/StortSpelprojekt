@@ -52,6 +52,12 @@
       <FullPath>D:\Repository\StortSpelprojekt\x64\Debug\ForwardTerrainPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>D:\Repository\StortSpelprojekt\x64\Debug\IDPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Repository\StortSpelprojekt\x64\Debug\IDVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>D:\Repository\StortSpelprojekt\x64\Debug\ModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>

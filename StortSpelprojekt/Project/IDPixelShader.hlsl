@@ -6,5 +6,5 @@ struct PS_INPUT
 
 uint main(PS_INPUT input) : SV_TARGET
 {
-    return uint(input.id);
+    return input.id;
 }
