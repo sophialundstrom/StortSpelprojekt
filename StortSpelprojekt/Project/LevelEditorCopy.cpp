@@ -31,17 +31,19 @@ void LevelEditor::Load(const std::string& file)
 		return;
 
 	std::string fileName = path.stem().string();
+
 	fileName = scene.AddModel(fileName, path.string());
 	auto model = scene.Get<Model>(fileName);
-	model->SetID(scene.GetObjectNames().size());
 	idRenderer.Bind(model);
 	modelRenderer.Bind(model);
+
 	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
+	model->SetID(scene.GetObjectNames().size());
 
 	auto boundingSphere = std::make_shared<BoundingSphere>();
 	pickBoxes.emplace(fileName, boundingSphere);
 	boundingSphere->SetPosition(0, 2, 0);
-	boundingSphere->SetParent(scene.Get<Model>(fileName));
+	boundingSphere->SetParent(model);
 
 	colliderRenderer.Bind(boundingSphere);
 }
@@ -62,7 +64,6 @@ void LevelEditor::Update()
 			screenSpaceCoordinates.y = 1;
 		if (screenSpaceCoordinates.y < -1)
 			screenSpaceCoordinates.y = -1;
-
 
 		int id = idRenderer.GetObjectID(cursor.x, cursor.y);
 		Print(id);
@@ -239,7 +240,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	wRatioX = (float)clientWidth / GetSystemMetrics(SM_CXSCREEN);
 	wRatioY = (float)clientHeight / GetSystemMetrics(SM_CYSCREEN);
 
-	terrain = new Terrain();
+	terrain = new Terrain(20, 0);
 
 	//WINDOWS
 	{
@@ -248,7 +249,6 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
-		window.AddCheckBoxComponent("WIREFRAME", false);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
@@ -299,21 +299,20 @@ State LevelEditor::Run()
 	if (window.GetValue<ButtonComponent>("LOAD FBX"))
 		Load(FileSystem::LoadFile("Models"));
 
-	if (window.Changed("WIREFRAME"))
-		Graphics::Inst().ToggleWireframe();
-
 	if (window.Changed("TERRAIN START SUBDIVISIONS"))
 	{
 		if (terrain)
 			delete terrain;
-		terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
+		terrain = new Terrain(20.0f, window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
 	}
+
 	
 	if (window.GetValue<ButtonComponent>("SAVE WORLD"))
 	{
 		GameLoader loader;
 		loader.Save("Default", scene.GetDrawables());
 	}
+
 
 	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
 		return State::MENU;
