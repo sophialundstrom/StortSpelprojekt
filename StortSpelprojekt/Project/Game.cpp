@@ -126,7 +126,6 @@ State Game::Run()
 		Update();
 	}
 	
-
 	Render();
 
 	static float lastClick = 0;
