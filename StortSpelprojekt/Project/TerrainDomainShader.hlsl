@@ -39,7 +39,7 @@ DS_OUTPUT main(
     output.texCoords = patch[0].texCoords * domain.x + patch[1].texCoords * domain.y + patch[2].texCoords * domain.z;
     
 	//DISPLACEMENT
-    float h = displacementTexture.SampleLevel(wrapSampler, output.texCoords, 0).r * 255 * 0.2f;
+    float h = displacementTexture.SampleLevel(wrapSampler, output.texCoords, 0).r * 255 * 0.6f - 60.0f;
 
     output.position.y = h;
     

@@ -94,7 +94,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
 	shadowRenderer.Bind(building);
-	scene.Get<Model>("Building")->SetPosition(10, 25, 0);
+	scene.Get<Model>("Building")->SetPosition(10, 0, 20);
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player);
@@ -105,7 +105,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddFriendlyNPC("ComBined");
 	auto friendly = scene.Get<NPC>("ComBined1");
 	friendly->SetRotation({ 0, 0, 0 });
-	friendly->SetPosition(10, 13, 10);
+	friendly->SetPosition(10, 0, 10);
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
@@ -166,11 +166,8 @@ State Game::Run()
 
 		if (Event::KeyIsPressed('Y'))
 		{
-			if (file != "Default")
-			{
-				player->Save(file);
-				QuestLog::Inst().Save(file);
-			}
+			player->Save("Test");
+			QuestLog::Inst().Save("Test");
 
 			lastClick = Time::Get();
 		}
