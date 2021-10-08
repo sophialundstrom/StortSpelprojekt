@@ -27,10 +27,13 @@ public:
 
 	void Enqueue(Task task)
 	{
+		{
+			std::unique_lock<std::mutex>lock(eventMutex);
+			tasks.emplace(std::move(task));
+		}
 
-		tasks.emplace(std::move(task)); // Move means it doesn't send in by copy / value. It is sent in by reference ( type "rvalue-reference" / && )
+		// Move means it doesn't send in by copy / value. It is sent in by reference ( type "rvalue-reference" / && )
 		eventVar.notify_one(); // When a task has been added one of the threads gets notified and woken up.
-
 	}
 
 private:
@@ -87,7 +90,11 @@ private:
 
 	void Stop() noexcept
 	{
-		stopping = true;
+		{
+			std::unique_lock<std::mutex>lock(eventMutex);
+			stopping = true;
+		}
+
 		eventVar.notify_all(); // Notifies all threads waiting 
 
 		for (auto& thread : threads)
