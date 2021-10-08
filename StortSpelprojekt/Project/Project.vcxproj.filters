@@ -437,6 +437,9 @@
     <ClInclude Include="NPCBase.h">
       <Filter>Header Files\Application\Scene\Game\NPC\.h</Filter>
     </ClInclude>
+    <ClInclude Include="ObserverSystemBase.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DisplacementVertexShader.hlsl">

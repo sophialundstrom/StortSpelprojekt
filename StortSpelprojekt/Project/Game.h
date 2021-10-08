@@ -19,6 +19,8 @@
 class Game : public GameState
 {
 private:
+    bool gameIsRunning = true;
+
     std::unique_ptr<QuestLog> questLog;
 
     ParticleRenderer particleRenderer;
