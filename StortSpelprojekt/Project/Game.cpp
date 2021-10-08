@@ -5,7 +5,6 @@
 
 void Game::Update()
 {
-
 	player->Update(terrain.GetHeightMap());
 
 	QuestLog::Inst().Update();
@@ -122,30 +121,7 @@ Game::~Game()
 
 State Game::Run()
 {
-	if (Event::KeyIsPressed(VK_TAB))
-	{
-		if (gameIsRunning == true)
-		{
-			gameIsRunning = false;
-			std::cout << "Paused\n";
-		}
-			
-
-		else  if(gameIsRunning == false)
-		{
-			gameIsRunning = true;
-			std::cout << "UnPaused\n";
-		}
-			
-	}
-
-	if (gameIsRunning == true)
-	{
-		Update();
-	}
-	
-	
-	
+	Update();
 	Render();
 
 	static float lastClick = 0;

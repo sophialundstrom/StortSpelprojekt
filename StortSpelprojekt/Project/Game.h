@@ -18,7 +18,6 @@
 class Game : public GameState
 {
 private:
-    bool gameIsRunning = true;
     const std::string file = "Default"; //"Test"
 
     std::unique_ptr<QuestLog> questLog;

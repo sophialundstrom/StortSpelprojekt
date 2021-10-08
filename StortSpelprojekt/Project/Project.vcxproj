@@ -185,7 +185,6 @@
     <ClInclude Include="FightQuest.h" />
     <ClInclude Include="GameLoader.h" />
     <ClInclude Include="Image.h" />
-    <ClInclude Include="ObserverSystemBase.h" />
     <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
