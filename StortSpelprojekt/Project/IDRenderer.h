@@ -84,6 +84,8 @@ public:
 			Print("FAILED TO CREATE 2D TEXTURE", "ID RENDERER");
 		}
 
+		textDesc.Width = 1;
+		textDesc.Height = 1;
 		textDesc.BindFlags = 0;
 		textDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 		textDesc.Usage = D3D11_USAGE_STAGING;
