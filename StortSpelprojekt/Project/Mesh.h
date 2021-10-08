@@ -6,7 +6,7 @@
 
 struct Mesh
 {
-	std::string name = "";
+	//std::string name = "";
 
 	UINT bufferID = -1;
 	UINT materialID = -1;
@@ -14,7 +14,6 @@ struct Mesh
 
 	Mesh() = default;
 	Mesh(aiMesh* mesh)
-		:name(mesh->mName.C_Str())
 	{
 		auto& resources = Resources::Inst();
 		std::vector<Vertex> vertices(mesh->mNumVertices);

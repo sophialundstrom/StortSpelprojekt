@@ -12,31 +12,28 @@ private:
 public:
 	Building() = default;
 
-	Building(std::string meshNames[], std::string materialNames[], const std::string &fileName)
-		:Model(fileName)
+	Building(std::string meshNames[], std::string materialNames[], const std::string &name)
+		:Model(meshNames[0], name)
 	{
-		for (UINT i = 0; i < stages; i++)
+		for (UINT i = 0; i < stages; ++i)
 		{
 			this->meshNames[i] = meshNames[i];
 			this->materialNames[i] = materialNames[i];
-			Model init = Model(meshNames[i]);
 		}
 	}
 
 	void Upgrade()
 	{
-		if (Time::Get() - lastUpdate < 3.0f)
+		if (Time::Get() - lastUpdate < 1.0f)
 			return;
 
 		lastUpdate = Time::Get();
 
+		currState++;
 		if (currState >= stages)
 			return;
 
-		currState++;
-
-		ApplyMesh(meshNames[currState - 1]);
-		ApplyMaterial(materialNames[currState - 1]);
+		ApplyMesh(meshNames[currState]);
+		ApplyMaterial(materialNames[currState]);
 	}
-
 };

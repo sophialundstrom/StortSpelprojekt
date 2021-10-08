@@ -105,6 +105,12 @@ public:
 
 	bool QuestIsDone(UINT ID)
 	{
+		if (quests.find(ID) == quests.end())
+		{
+			Print("QUEST ID NOT FOUND");
+			return false;
+		}
+			
 		return quests[ID]->IsCompleted();
 	}
 };

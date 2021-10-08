@@ -204,6 +204,12 @@
     <ClCompile Include="NPCFriendly.cpp">
       <Filter>Header Files\Application\Scene\Game\NPC\.cpp</Filter>
     </ClCompile>
+    <ClCompile Include="GameLoader.cpp">
+      <Filter>Header Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -404,9 +410,6 @@
     <ClInclude Include="TalkQuest.h">
       <Filter>Header Files\Application\Scene\Game\Quests</Filter>
     </ClInclude>
-    <ClInclude Include="Villager.h">
-      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
-    </ClInclude>
     <ClInclude Include="QuestLog.h">
       <Filter>Header Files\Application\Scene\Game\Quests</Filter>
     </ClInclude>
@@ -437,9 +440,21 @@
     <ClInclude Include="NPCBase.h">
       <Filter>Header Files\Application\Scene\Game\NPC\.h</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="ObserverSystemBase.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
+=======
+    <ClInclude Include="FBXLoader.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLoader.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+>>>>>>> main
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DisplacementVertexShader.hlsl">

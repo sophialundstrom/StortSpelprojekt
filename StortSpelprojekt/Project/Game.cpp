@@ -1,5 +1,7 @@
 #include "Game.h"
 #include "Event.h"
+#include "FBXLoader.h"
+#include "GameLoader.h"
 
 void Game::Update()
 {
@@ -8,13 +10,7 @@ void Game::Update()
 
 	QuestLog::Inst().Update();
 
-	//ROTATING BOULDER AROUND PLAYER
-	auto boulder = scene.Get<Model>("boulder");
-	//const Vector3 newPosition = boulder->GetPosition() * boulder->GetRotation() * -boulder->GetPosition();
-	//boulder->SetPosition(newPosition);
-	boulder->SetRotation(0, boulder->GetRotation().y + 0.001f, 0);
-
-	auto friendly = scene.Get<NPC>("SignsPost");
+	auto friendly = scene.Get<NPC>("ComBined1");
 
 	friendly->Collided(*player);
 
@@ -44,6 +40,33 @@ void Game::Render()
 	userInterface.Render();
 
 	Graphics::Inst().EndFrame();
+
+	Resources::Inst().Reset();
+}
+
+void Game::Initialize()
+{
+	//LOAD SCENE
+	FBXLoader levelLoader("Models");
+
+	GameLoader gameLoader;
+	gameLoader.Load("Default", scene.GetDrawables());
+
+	for (auto& [name, drawable] : scene.GetDrawables())
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if (model)
+		{
+			modelRenderer.Bind(model);
+			shadowRenderer.Bind(model);
+		}
+			
+		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
+		if (particleSystem)
+		{
+			//SAME BUT PS->
+		}
+	}
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
@@ -52,52 +75,38 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer(DEFERRED),
 	terrainRenderer(DEFERRED)
 {
+	Initialize();
+
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 1.0f, 20.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(50, 4, 4);
 
 	//PLAYER
-	player = std::make_shared<Player>(scene.GetCamera());
+	player = std::make_shared<Player>(file, scene.GetCamera());
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	std::string meshNames[] = { "Pyramid", "Cube", "pSphere1" };
-	std::string materialNames[] = { "SilverTex", "WaterTex", "phong1" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Staff");
+	std::string meshNames[] = { "Oak", "Pyramid", "Cube" };
+	std::string materialNames[] = { "", "SilverTex", "WaterTex" };
+	building = std::make_shared<Building>(meshNames, materialNames, "Building");
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
 	shadowRenderer.Bind(building);
-	scene.Get<Model>("Building")->SetPosition(10, 25, 0);
+	scene.Get<Model>("Building")->SetPosition(10, 0, 20);
 
 	//QUEST LOG
-	questLog = std::make_unique<QuestLog>("Default", player);
+	questLog = std::make_unique<QuestLog>(file, player);
 
 	//UI
 	userInterface.Initialize(window);
 
-	//FILLERS
-	scene.AddModel("boulder");
-	auto boulder = scene.Get<Model>("boulder");
-	boulder->SetParent(scene.Get<Model>("Player"));
-	boulder->SetPosition(5, 2, 0);
-	modelRenderer.Bind(boulder);
-	shadowRenderer.Bind(boulder);
-
-	scene.AddModel("lantern");
-	auto lantern = scene.Get<Model>("lantern");
-	lantern->SetRotation({ 0, 0, 0 });
-	lantern->SetPosition(0, 30, 0);
-	modelRenderer.Bind(lantern);
-	shadowRenderer.Bind(lantern);
-
-
-	scene.AddFriendlyNPC("SignsPost");
-	auto friendly = scene.Get<NPC>("SignsPost");
+	scene.AddFriendlyNPC("ComBined");
+	auto friendly = scene.Get<NPC>("ComBined1");
 	friendly->SetRotation({ 0, 0, 0 });
-	friendly->SetPosition(10, 13, 10);
+	friendly->SetPosition(10, 0, 10);
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
@@ -150,18 +159,20 @@ State Game::Run()
 
 		if (Event::KeyIsPressed('B'))
 		{
-			player->GameStats().barbariansKilled++;
+			Print("Killed barbarian!");
+			player->Stats().barbariansKilled++;
 			lastClick = Time::Get();
 		}
 
 		if (Event::KeyIsPressed('I'))
 		{
-			player->Inventory().GetResources(RESOURCES::WOOD);
-			player->Inventory().AddItem(RESOURCES::WOOD);
-			player->Inventory().GetResources(RESOURCES::STONE);
-			player->Inventory().AddItem(RESOURCES::STONE);
-			player->Inventory().GetResources(RESOURCES::FOOD);
-			player->Inventory().AddItem(RESOURCES::FOOD);
+			Print("-Added Items-");
+			player->Inventory().AddItem(RESOURCE::WOOD);
+			player->Inventory().GetResources(RESOURCE::WOOD);
+			player->Inventory().AddItem(RESOURCE::STONE);
+			player->Inventory().GetResources(RESOURCE::STONE);
+			player->Inventory().AddItem(RESOURCE::FOOD);
+			player->Inventory().GetResources(RESOURCE::FOOD);
 			lastClick = Time::Get();
 		}
 
@@ -177,6 +188,13 @@ State Game::Run()
 			lastClick = Time::Get();
 		}
 
+		if (Event::KeyIsPressed('Y'))
+		{
+			player->Save("Test");
+			QuestLog::Inst().Save("Test");
+
+			lastClick = Time::Get();
+		}
 	}
 	
 	if (Event::KeyIsPressed('M'))

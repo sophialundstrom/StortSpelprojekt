@@ -8,13 +8,24 @@ UI::UI()
 
 UI::~UI()
 {
-	SafeRelease(&UIFactory);
-	SafeRelease(&UIRenderTarget);
-	SafeRelease(&lightSlateGrayBrush);
-	SafeRelease(&cornflowerBlueBrush);
-	SafeRelease(&crimsonBrush);
+	UIFactory->Release();
+	UIRenderTarget->Release();
+	writeFactory->Release();
+	lightSlateGrayBrush->Release();
+	cornflowerBlueBrush->Release();
+	crimsonBrush->Release();
+
+	//Not working?
+	//SafeRelease(&UIFactory);
+	//SafeRelease(&UIRenderTarget);
+	//SafeRelease(&lightSlateGrayBrush);
+	//SafeRelease(&cornflowerBlueBrush);
+	//SafeRelease(&crimsonBrush);
+
 	delete testButton;
 	delete testImage;
+	delete testImage2;
+	delete testText;
 }
 
 HRESULT UI::Initialize(HWND window)
@@ -58,8 +69,8 @@ HRESULT UI::CreateDeviceResources(HWND window)
 			D2D1::RenderTargetProperties(
 				D2D1_RENDER_TARGET_TYPE_DEFAULT,
 				D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
-				dpiX,
-				dpiY
+				(FLOAT)dpiX,
+				(FLOAT)dpiY
 			);
 		RECT rc;
 		GetClientRect(window, &rc);
@@ -93,7 +104,8 @@ HRESULT UI::CreateDeviceResources(HWND window)
 //DO UI STUFF HERE
 void UI::Render()
 {
-	IDWriteTextFormat* textFormat;
+	IDWriteTextFormat* textFormat = nullptr;
+
 	UIRenderTarget->BeginDraw();
 	UIRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 

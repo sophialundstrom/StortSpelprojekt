@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -159,6 +159,7 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="OldModel.cpp" />
     <ClCompile Include="ParticleEditor.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -179,7 +181,9 @@
   <ItemGroup>
     <ClInclude Include="Button.h" />
     <ClInclude Include="CollectQuest.h" />
+    <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
+    <ClInclude Include="GameLoader.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ObserverSystemBase.h" />
     <ClInclude Include="NPCFriendly.h" />
@@ -249,11 +253,11 @@
     <ClInclude Include="TerrainRenderer.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Vertex.h" />
-    <ClInclude Include="Villager.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
