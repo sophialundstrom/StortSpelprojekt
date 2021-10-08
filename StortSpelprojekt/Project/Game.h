@@ -45,7 +45,9 @@ private:
     void Update();
     void Render();
 
+    void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);
+
     void CheckItemCollision();
 
     void Initialize();

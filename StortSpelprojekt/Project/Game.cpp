@@ -72,6 +72,11 @@ void Game::Initialize()
 	}
 }
 
+void Game::RemoveItem(const std::string name)
+{
+	
+}
+
 void Game::AddItem(RESOURCE resource, Vector3 position)
 {
 	const std::string name = "testItem";
@@ -140,17 +145,18 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	userInterface.Initialize(window);
 
 	//Item
-	std::shared_ptr<Item> item = std::make_shared<Item>(WOOD, "testItem");
-	scene.AddModel("testItem", item);
-	items.emplace_back(item);
-	item->GetBounds()->SetParent(item);
-	item->SetPosition(-10, 1, 0);
-	item->SetScale(2);
-	item->Update();
-	item->GetBounds()->Update();
-	modelRenderer.Bind(item);
-	shadowRenderer.Bind(item);
-	colliderRenderer.Bind(item->GetBounds());
+	AddItem(WOOD, { -10, 1, 20 });
+	//std::shared_ptr<Item> item = std::make_shared<Item>(WOOD, "testItem");
+	//scene.AddModel("testItem", item);
+	//items.emplace_back(item);
+	//item->GetBounds()->SetParent(item);
+	//item->SetPosition(-10, 1, 0);
+	//item->SetScale(2);
+	//item->Update();
+	//item->GetBounds()->Update();
+	//modelRenderer.Bind(item);
+	//shadowRenderer.Bind(item);
+	//colliderRenderer.Bind(item->GetBounds());
 
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");
