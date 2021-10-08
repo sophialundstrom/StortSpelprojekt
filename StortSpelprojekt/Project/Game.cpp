@@ -152,7 +152,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.Get<Model>("Building")->SetPosition(10, -3, 60);
 	scene.Get<Model>("Building")->SetRotation(0, -PI_DIV2, 0);
 
-
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player);
 
@@ -161,25 +160,17 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//Item
 	AddItem(WOOD, { -10, 1, 20 });
-	//std::shared_ptr<Item> item = std::make_shared<Item>(WOOD, "testItem");
-	//scene.AddModel("testItem", item);
-	//items.emplace_back(item);
-	//item->GetBounds()->SetParent(item);
-	//item->SetPosition(-10, 1, 0);
-	//item->SetScale(2);
-	//item->Update();
-	//item->GetBounds()->Update();
-	//modelRenderer.Bind(item);
-	//shadowRenderer.Bind(item);
-	//colliderRenderer.Bind(item->GetBounds());
 
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");
 
-	friendly->SetRotation({ 0, 0, 0 });
 	friendly->SetPosition(10, 0, 10);
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
+
+	auto particleSystem = std::make_shared<ParticleSystem>("Eld.ps");
+	scene.AddParticleSystem("TestSystem", particleSystem);
+	particleRenderer.Bind(particleSystem);
 
 	(void)Run();
 }
@@ -193,9 +184,7 @@ Game::~Game()
 State Game::Run()
 {
 	if (gameIsRunning == true)
-	{
 		Update();
-	}
 	
 	Render();
 
@@ -210,7 +199,6 @@ State Game::Run()
 				gameIsRunning = false;
 				std::cout << "Paused\n";
 			}
-
 
 			else  if (gameIsRunning == false)
 			{
