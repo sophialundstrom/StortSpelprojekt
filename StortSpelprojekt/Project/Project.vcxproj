@@ -161,6 +161,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
     <ClInclude Include="GameLoader.h" />
+    <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Quest.h" />
@@ -247,6 +249,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Resources.h" />
+    <ClInclude Include="stb_image_write.h" />
     <ClInclude Include="TalkQuest.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainRenderer.h" />
@@ -378,6 +381,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="IDPixelShader.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="IDVertexShader.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="ModelVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

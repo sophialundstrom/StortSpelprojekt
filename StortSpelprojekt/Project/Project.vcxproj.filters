@@ -210,6 +210,9 @@
     <ClCompile Include="Player.cpp">
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClCompile>
+    <ClCompile Include="IDRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -449,6 +452,12 @@
     <ClInclude Include="ThreadPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IDRenderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image_write.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DisplacementVertexShader.hlsl">
@@ -543,6 +552,12 @@
     </FxCompile>
     <FxCompile Include="ColliderVertexShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="IDPixelShader.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <FxCompile Include="IDVertexShader.hlsl">
+      <Filter>Source Files</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
