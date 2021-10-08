@@ -90,7 +90,7 @@ void Player::Update(HeightMap* heightMap)
 
 	//Only update what direction the player is facing when keyboardinput is detected by the moveDirection vector
 	if (moveDirection.Length() > 0 || moveDirection.Length() < 0)
-		rotation = { 0, movementOfsetRadiant + PI, 0 };
+		rotation = { 0, movementOfsetRadiant, 0 };
 
 	//Updates the player and cameras positions
 	moveDirection = moveDirection * stats.currentSpeed * Time::GetDelta();
@@ -121,7 +121,7 @@ void Player::Update(HeightMap* heightMap)
 		newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
 	}
 
-	position = newPlayerPos + Vector3(0, 1, 0);
+	position = newPlayerPos + Vector3(0, 0.5f, 0);
 
 	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance);
 

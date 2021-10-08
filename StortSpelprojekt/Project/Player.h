@@ -107,8 +107,10 @@ public:
 	void Update(HeightMap* heightMap);
 	
 	Player(const std::string file, Camera* camera)
-		:Model("PlayerArrow", "PlayerArrow"), sceneCamera(camera)
+		:Model("Character", "Character"), sceneCamera(camera)
 	{
+		SetScale(0.02f);
+
 		Load(file);
 	}
 public:
