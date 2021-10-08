@@ -11,7 +11,7 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 {
 	std::string path = file;
 
-	if (file == "default.ps")
+	if (file == "default.ps" || file.find("\\") == std::string::npos)
 		path = FileSystem::ProjectDirectory::path + "\\ParticleSystems\\" + file;
 
 	std::ifstream reader;

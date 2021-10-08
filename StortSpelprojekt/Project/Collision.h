@@ -21,7 +21,7 @@ public:
 
 	void Bind() { Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset); }
 
-	ColliderType Type() { return type; }
+	ColliderType Type()const { return type; }
 
 	virtual void Update() = 0;
 };

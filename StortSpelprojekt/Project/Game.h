@@ -5,8 +5,10 @@
 #include "ParticleRenderer.h"
 #include "ShadowRenderer.h"
 #include "DeferredRenderer.h"
+#include "ColliderRenderer.h"
 #include "TerrainRenderer.h"
 #include "Building.h"
+#include "Item.h"
 #include "QuestLog.h"
 #include "UI.h"
 #include "Time.h"
@@ -28,10 +30,13 @@ private:
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
+    ColliderRenderer colliderRenderer;
 
     Terrain terrain;
 
     std::shared_ptr<Player> player;
+
+    std::vector<std::shared_ptr <Item>> items;
 
     std::shared_ptr<Building> building;
 
@@ -39,6 +44,12 @@ private:
 
     void Update();
     void Render();
+
+    void RemoveItem(const std::string name);
+    void AddItem(RESOURCE resource, Vector3 position);
+
+    void CheckItemCollision();
+
     void Initialize();
 public:
     Game() = delete;

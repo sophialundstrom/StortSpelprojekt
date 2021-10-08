@@ -42,6 +42,7 @@ public:
 	std::string AddModel(const std::string& file, const std::string path);
 	void AddModel(const std::string& name,std::shared_ptr <Drawable> drawable);
 
+	void DeleteDrawable(const std::string name) { drawables.erase(name); }
 
 	void AddAnimatedModel(const std::string& file,  const std::string path);
 
@@ -53,7 +54,9 @@ public:
 
 	void AddAnimatedModel(const std::string& file);
 
+	void AddParticleSystem(const std::string name, std::shared_ptr<ParticleSystem> system);
 	void AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type);
+	
 	void AddPointLight(Vector3 position, float range, Vector3 attenuation = { 0.05f, 0.05f, 0.05f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 	
 	void UpdateDirectionalLight(const Vector3& position) { directionalLight.SetTargetPosition(position); }

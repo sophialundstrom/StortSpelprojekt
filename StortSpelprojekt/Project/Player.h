@@ -4,17 +4,11 @@
 #include "Model.h"
 #include "Event.h"
 #include "Terrain.h"
-
-enum class RESOURCE
-{
-	WOOD,
-	STONE,
-	FOOD,
-	NONE
-};
+#include "Item.h"
 
 struct Inventory 
 {
+	//std::unordered_map here?
 	std::map<RESOURCE, UINT> items; //ID , NUM OF ITEM
 	std::map<RESOURCE, std::string> names;
 
@@ -43,6 +37,7 @@ struct Inventory
 	}
 
 	UINT NumOf(enum RESOURCE ID)
+
 	{
 		return items[ID];
 	}
@@ -101,7 +96,7 @@ private:
 	
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);
-
+	std::shared_ptr<BoundingSphere> bounds;
 	Inventory inventory;
 public:
 	void Update(HeightMap* heightMap);
@@ -109,7 +104,10 @@ public:
 	Player(const std::string file, Camera* camera)
 		:Model("Character", "Character"), sceneCamera(camera)
 	{
+		bounds = std::make_shared<BoundingSphere>();
+
 		SetScale(0.02f);
+		bounds->SetScale(200);
 
 		Load(file);
 	}
@@ -124,6 +122,7 @@ public:
 		std::cout << "CURRENT MOVEMENTSPEED " << stats.currentSpeed << std::endl;
 		std::cout << "BARBARIANS KILLED " << stats.barbariansKilled << std::endl;
 	}
+	std::shared_ptr<BoundingSphere> GetBounds(){ return bounds; }
 
 	Inventory& Inventory() { return inventory; }
 	Stats& Stats() { return stats; }

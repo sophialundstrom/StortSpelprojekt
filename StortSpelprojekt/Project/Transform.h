@@ -46,5 +46,7 @@ public:
 
 	void SetParent(std::shared_ptr<Transform> parent) { this->parent = parent; }
 	bool HasParent() const { if (parent) return true; return false; }
+
 	void SetName(const std::string& newName) { this->name = newName; }
+	const std::string GetName() { return this->name; }
 };
