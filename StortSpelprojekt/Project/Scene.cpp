@@ -4,7 +4,7 @@
 
 #include <filesystem>
 
-std::vector<std::string> Scene::GetObjectNames()
+std::vector<std::string> &Scene::GetObjectNames()
 {
 	return objectNames;
 }

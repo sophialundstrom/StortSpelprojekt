@@ -37,7 +37,7 @@ public:
 	auto Get(const std::string& name) { return std::dynamic_pointer_cast<T>(drawables[name]); }
 
 	const std::map<std::string, std::shared_ptr<Drawable>>& GetSortedMap() const;
-	std::vector<std::string> GetObjectNames();
+	std::vector<std::string> &GetObjectNames();
 
 	std::string AddModel(const std::string& file, const std::string path);
 	void AddModel(const std::string& name,std::shared_ptr <Drawable> drawable);
