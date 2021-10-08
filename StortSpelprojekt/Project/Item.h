@@ -37,6 +37,8 @@ public:
 		bounds->Update();
 	}
 
+	RESOURCE GetType() { return ID; }
+
 	std::shared_ptr<BoundingSphere> GetBounds() { return bounds; }
 
 private:

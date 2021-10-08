@@ -74,7 +74,20 @@ void Game::Initialize()
 
 void Game::RemoveItem(const std::string name)
 {
-	
+	for (UINT i = 0; i < items.size(); ++i)
+	{
+		if (items[i]->GetName() == name)
+		{
+			auto item = scene.Get<Item>(name);
+			modelRenderer.Unbind(item);
+			shadowRenderer.Unbind(item);
+			colliderRenderer.Unbind(item->GetBounds());
+			auto it = items.begin() + i;
+			items.erase(it);
+			scene.DeleteDrawable(name);
+			return;
+		}
+	}
 }
 
 void Game::AddItem(RESOURCE resource, Vector3 position)
@@ -99,6 +112,8 @@ void Game::CheckItemCollision()
 		if(item->Collision(player->GetBounds().get()))
 		{
 			Print("HEJ");
+			player->Inventory().AddItem(item->GetType());
+			RemoveItem(item->GetName());
 		}
 	}
 }
