@@ -9,7 +9,12 @@ void LevelEditor::BindDrawables()
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
+		{
+			scene.GetObjectNames().push_back(name);
+			model->SetID(scene.GetObjectNames().size());
 			modelRenderer.Bind(model);
+			idRenderer.Bind(model);
+		}
 
 		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
 		if (particleSystem)
@@ -37,13 +42,6 @@ void LevelEditor::Load(const std::string& file)
 	idRenderer.Bind(model);
 	modelRenderer.Bind(model);
 	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
-
-	auto boundingSphere = std::make_shared<BoundingSphere>();
-	pickBoxes.emplace(fileName, boundingSphere);
-	boundingSphere->SetPosition(0, 2, 0);
-	boundingSphere->SetParent(scene.Get<Model>(fileName));
-
-	colliderRenderer.Bind(boundingSphere);
 }
 
 void LevelEditor::Update()
@@ -67,41 +65,27 @@ void LevelEditor::Update()
 		int id = idRenderer.GetObjectID(cursor.x, cursor.y);
 		Print(id);
 
-		Matrix inverseView = scene.GetCamera()->GetViewMatrix().Invert();
-
-		pickRay.direction.x = (screenSpaceCoordinates.x * inverseView._11) + (screenSpaceCoordinates.y * inverseView._21) + inverseView._31;
-		pickRay.direction.y = (screenSpaceCoordinates.x * inverseView._12) + (screenSpaceCoordinates.y * inverseView._22) + inverseView._32;
-		pickRay.direction.z = (screenSpaceCoordinates.x * inverseView._13) + (screenSpaceCoordinates.y * inverseView._23) + inverseView._33;
-
-		pickRay.origin = scene.GetCamera()->GetPosition();
-
-		for (auto& [name, boundingSphere] : pickBoxes)
+		if (id > 0)
 		{
-			Vector3::Transform(pickRay.origin, boundingSphere->GetMatrix().Invert());
-			Vector3::Transform(pickRay.direction, boundingSphere->GetMatrix().Invert());
-			pickRay.direction.Normalize();
+			std::string name = scene.GetObjectNames()[id - 1];
+			auto model = scene.Get<Model>(name);
+			auto& window = windows["GAME OBJECT"];
 
-			if (Collision::Intersection(*std::dynamic_pointer_cast<BoundingSphere>(boundingSphere), pickRay.origin, pickRay.direction, pickRay.length) == true)
-			{
-				auto model = scene.Get<Model>(name);
-				auto& window = windows["GAME OBJECT"];
+			window.SetValue<TextComponent, std::string>("ObjectName", name);
 
-				window.SetValue<TextComponent, std::string>("ObjectName", name);
+			window.SetValue<SliderFloatComponent, float>("X", model->GetPosition().x);
+			window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
+			window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
 
-				window.SetValue<SliderFloatComponent, float>("X", model->GetPosition().x);
-				window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
-				window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
+			window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x);
+			window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y);
+			window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z);
 
-				window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x);
-				window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y);
-				window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z);
+			window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
+			window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
+			window.SetValue<SliderFloatComponent, float>("Z-axis", model->GetScale().z);
 
-				window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
-				window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
-				window.SetValue<SliderFloatComponent, float>("Z-axis", model->GetScale().z);
-
-				selectedObject = name;
-			}
+			selectedObject = name;
 		}
 	}
 
@@ -184,9 +168,6 @@ void LevelEditor::Update()
 		model->SetScale(newXScale, newXScale, newXScale);
 	}
 
-	for (auto& [name, boundingSphere] : pickBoxes)
-		boundingSphere->Update();
-
 	scene.Update();
 
 	Event::ClearRawDelta();
@@ -208,8 +189,6 @@ void LevelEditor::Render()
 	animatedModelRenderer.Render();
 
 	modelRenderer.Render();
-
-	colliderRenderer.Render();
 
 	EndFrame();
 
