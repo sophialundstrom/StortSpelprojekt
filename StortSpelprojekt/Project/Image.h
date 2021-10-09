@@ -2,6 +2,7 @@
 #include <d2d1.h>
 #include <d2d1helper.h>
 #include <wincodec.h>
+#include <string>
 
 class Image
 {
@@ -18,9 +19,9 @@ private:
 	float height;
 
 public:
-	Image();
+	Image() = default;
 	~Image();
-	Image(LPCWSTR filename, ID2D1RenderTarget* UIRenderTarget, D2D_VECTOR_2F position, float scale = 1.0f, float opacity = 1.0f);
+	Image(const std::string& filename, D2D_VECTOR_2F position, float scale = 1.0f, float opacity = 1.0f);
 
-	void DrawImage(ID2D1RenderTarget* UIRenderTarget);
+	void Draw();
 };

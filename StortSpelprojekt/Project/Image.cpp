@@ -1,20 +1,22 @@
 #include "Image.h"
-Image::Image()
-{
-	bounds.left = 0.0f;
-	bounds.top = 0.0f;
-	bounds.right = 50.0f;
-	bounds.bottom = 50.0f;
-	bitMap = 0;
-	scale = 1.0f;
-	opacity = 1.0f;
-	width = 0;
-	height = 0;
-	imageFactory = NULL;
-	decoder = NULL;
-	source = NULL;
-	converter = NULL;
-}
+#include "UI.h"
+#include "FileSystem.h"
+//Image::Image()
+//{
+//	bounds.left = 0.0f;
+//	bounds.top = 0.0f;
+//	bounds.right = 50.0f;
+//	bounds.bottom = 50.0f;
+//	bitMap = 0;
+//	scale = 1.0f;
+//	opacity = 1.0f;
+//	width = 0;
+//	height = 0;
+//	imageFactory = NULL;
+//	decoder = NULL;
+//	source = NULL;
+//	converter = NULL;
+//}
 
 Image::~Image()
 {
@@ -25,12 +27,13 @@ Image::~Image()
 	converter->Release();
 }
 
-Image::Image(LPCWSTR filename, ID2D1RenderTarget* UIRenderTarget, D2D_VECTOR_2F position, float scale, float opacity)
+Image::Image(const std::string& filename, D2D_VECTOR_2F position, float scale, float opacity)
 {
 	HRESULT hr;
 	hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&imageFactory);
 
-	hr = imageFactory->CreateDecoderFromFilename(filename, NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &decoder);
+	const std::wstring path = std::wstring(std::wstring(FileSystem::ProjectDirectory::path.begin(), FileSystem::ProjectDirectory::path.end()) + L"\\Images\\" + std::wstring(filename.begin(), filename.end())).c_str();
+	hr = imageFactory->CreateDecoderFromFilename(path.c_str(), NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &decoder);
 	//Retrieve frame from image and store it in frame decoder
 	if (SUCCEEDED(hr))
 	{
@@ -48,7 +51,7 @@ Image::Image(LPCWSTR filename, ID2D1RenderTarget* UIRenderTarget, D2D_VECTOR_2F 
 	//Create ID2D1Bitmap object
 	if (SUCCEEDED(hr))
 	{
-		hr = UIRenderTarget->CreateBitmapFromWicBitmap(converter, NULL, &bitMap);
+		hr = UI::Inst().GetRenderTarget()->CreateBitmapFromWicBitmap(converter, &bitMap);
 	}
 
 	this->scale = scale;
@@ -62,7 +65,7 @@ Image::Image(LPCWSTR filename, ID2D1RenderTarget* UIRenderTarget, D2D_VECTOR_2F 
 	};
 }
 
-void Image::DrawImage(ID2D1RenderTarget* UIRenderTarget)
+void Image::Draw()
 {
-	UIRenderTarget->DrawBitmap(bitMap, bounds, opacity, D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, D2D1::RectF(0.0f, 0.0f, bitMap->GetSize().width, bitMap->GetSize().height));
+	UI::Inst().GetRenderTarget()->DrawBitmap(bitMap, bounds, opacity, D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, D2D1::RectF(0.0f, 0.0f, bitMap->GetSize().width, bitMap->GetSize().height));
 }

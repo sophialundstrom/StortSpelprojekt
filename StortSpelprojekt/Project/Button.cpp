@@ -1,4 +1,5 @@
 #include "Button.h"
+#include "Canvas.h"
 
 Button::Button()
 {
@@ -12,6 +13,17 @@ Button::Button()
 
 Button::~Button()
 {
+}
+
+Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrush* brush, std::function<void()> function)
+	:function(function)
+{
+	bounds.left = pos.x - (width / 2);
+	bounds.top = pos.y - (height / 2);
+	bounds.right = pos.x + (width / 2);
+	bounds.bottom = pos.y + (height / 2);
+
+	buttonBrush = brush;
 }
 
 Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrush* brush)
@@ -29,6 +41,15 @@ void Button::setBrush(ID2D1SolidColorBrush* newBrush)
 	buttonBrush = newBrush;
 }
 
+bool Button::IsHovered(int x, int y)
+{
+	if (x > bounds.left && x < bounds.right && y < bounds.bottom && y > bounds.top)
+	{
+		return true;
+	}
+	return false;
+}
+
 //Mouse coordinates as input
 bool Button::isClicked(int xPos, int yPos)
 {
@@ -39,7 +60,7 @@ bool Button::isClicked(int xPos, int yPos)
 	return false;
 }
 
-void Button::DrawButton(ID2D1RenderTarget* UIRenderTarget)
+void Button::Draw()
 {
-	UIRenderTarget->FillRectangle(&bounds, buttonBrush);
+	UI::Inst().GetRenderTarget()->DrawRectangle(&bounds, buttonBrush);
 }

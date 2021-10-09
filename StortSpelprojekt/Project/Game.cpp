@@ -19,6 +19,8 @@ void Game::Update()
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
+	currentCanvas->Update();
+
 	Event::ClearRawDelta();
 }
 
@@ -40,7 +42,7 @@ void Game::Render()
 
 	deferredRenderer.Render();
 	
-	userInterface.Render();
+	currentCanvas->Render();
 
 	Graphics::Inst().EndFrame();
 
@@ -118,6 +120,11 @@ void Game::CheckItemCollision()
 	}
 }
 
+void TestFunc()
+{
+	Print("HEJHEJ");
+}
+
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
 	modelRenderer(DEFERRED, true),
@@ -156,7 +163,15 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	questLog = std::make_unique<QuestLog>(file, player);
 
 	//UI
-	userInterface.Initialize(window);
+	userInterface = std::make_unique<UI>(window);
+
+	auto ingameCanvas = new Canvas();
+	//ADD STUFF TO CANVAS
+	ingameCanvas->AddText({ 100, 20 }, "BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled), 200, 20, UI::COLOR::LIGHTSLATEGRAY, UI::TEXTFORMAT::DEFAULT);
+	ingameCanvas->AddButton({ 200, 200 }, "TestButton", 50, 50, UI::COLOR::RED, TestFunc);
+	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "Pepsi2.jpg", 0.1f, 1.0f);
+	canvases["INGAME"] = ingameCanvas;
+	currentCanvas = ingameCanvas;
 
 	//Item
 	AddItem(WOOD, { -10, 1, 20 });
@@ -217,6 +232,7 @@ State Game::Run()
 		{
 			Print("Killed barbarian!");
 			player->Stats().barbariansKilled++;
+			canvases["INGAME"]->UpdateText("BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled));
 			lastClick = Time::Get();
 		}
 
