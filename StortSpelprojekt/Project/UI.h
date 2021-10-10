@@ -88,6 +88,7 @@ private:
 	ID2D1Factory* UIFactory;
 	ID2D1RenderTarget* UIRenderTarget;
 	IDWriteFactory* writeFactory;
+	IWICImagingFactory* imageFactory;
 	//ID2D1SolidColorBrush* lightSlateGrayBrush;
 	//ID2D1SolidColorBrush* cornflowerBlueBrush;	
 	//ID2D1SolidColorBrush* crimsonBrush;
@@ -112,7 +113,7 @@ public:
 
 	void Render();
 
-	void BeginFrame() { UIRenderTarget->BeginDraw(); }
+	void BeginFrame() { UIRenderTarget->BeginDraw();  UIRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());}
 	void EndFrame() { UIRenderTarget->EndDraw(); }
 
 	ID2D1SolidColorBrush* GetBrush(COLOR color)
@@ -139,6 +140,7 @@ public:
 		return mp;
 	}
 
+	IWICImagingFactory* GetImageFactory() { return imageFactory; }
 	IDWriteFactory* GetWriteFactory() { return writeFactory; }
 	ID2D1RenderTarget* GetRenderTarget() { return UIRenderTarget; }
 private:

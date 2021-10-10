@@ -1,71 +1,64 @@
 #include "Image.h"
-#include "UI.h"
-#include "FileSystem.h"
-//Image::Image()
-//{
-//	bounds.left = 0.0f;
-//	bounds.top = 0.0f;
-//	bounds.right = 50.0f;
-//	bounds.bottom = 50.0f;
-//	bitMap = 0;
-//	scale = 1.0f;
-//	opacity = 1.0f;
-//	width = 0;
-//	height = 0;
-//	imageFactory = NULL;
-//	decoder = NULL;
-//	source = NULL;
-//	converter = NULL;
-//}
 
-Image::~Image()
-{
-	bitMap->Release();
-	imageFactory->Release();
-	decoder->Release();
-	source->Release();
-	converter->Release();
-}
+#include "FileSystem.h"
+#include "UI.h"
 
 Image::Image(const std::string& filename, D2D_VECTOR_2F position, float scale, float opacity)
+	:scale(1), opacity(1), width(0), height(0), sourceWidth(0), sourceHeight(0), bitMap(nullptr), bounds()
 {
 	HRESULT hr;
-	hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&imageFactory);
+	IWICBitmapDecoder* decoder = nullptr;
+	IWICBitmapFrameDecode* source = nullptr;
+	IWICFormatConverter* converter = nullptr;
+	IWICImagingFactory* factory = UI::Inst().GetImageFactory();
 
 	const std::wstring path = std::wstring(std::wstring(FileSystem::ProjectDirectory::path.begin(), FileSystem::ProjectDirectory::path.end()) + L"\\Images\\" + std::wstring(filename.begin(), filename.end())).c_str();
-	hr = imageFactory->CreateDecoderFromFilename(path.c_str(), NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &decoder);
+	hr = factory->CreateDecoderFromFilename(path.c_str(), NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &decoder);
+	if FAILED(hr)
+		return;
+
 	//Retrieve frame from image and store it in frame decoder
-	if (SUCCEEDED(hr))
-	{
-		hr = decoder->GetFrame(0, &source);
-	}
+	hr = decoder->GetFrame(0, &source);
+	if FAILED(hr)
+		return;
+
 	//Convert bitmap to D2D format (32bppPBGRA)
-	if (SUCCEEDED(hr))
-	{
-		hr = imageFactory->CreateFormatConverter(&converter);
-	}
-	if (SUCCEEDED(hr))
-	{
-		hr = converter->Initialize(source, GUID_WICPixelFormat32bppPBGRA, WICBitmapDitherTypeNone, NULL, 0.f, WICBitmapPaletteTypeMedianCut);
-	}
+	hr = factory->CreateFormatConverter(&converter);
+	if FAILED(hr)
+		return;
+
+	hr = converter->Initialize(source, GUID_WICPixelFormat32bppPBGRA, WICBitmapDitherTypeNone, NULL, 0.f, WICBitmapPaletteTypeMedianCut);
+	if FAILED(hr)
+		return;
+
 	//Create ID2D1Bitmap object
-	if (SUCCEEDED(hr))
-	{
-		hr = UI::Inst().GetRenderTarget()->CreateBitmapFromWicBitmap(converter, &bitMap);
-	}
+	hr = UI::Inst().GetRenderTarget()->CreateBitmapFromWicBitmap(converter, &bitMap);
+	if FAILED(hr)
+		return;
 
 	this->scale = scale;
-	this->width = scale * bitMap->GetSize().width;
-	this->height = scale * bitMap->GetSize().height;
+	this->sourceWidth = bitMap->GetSize().width;
+	this->sourceHeight = bitMap->GetSize().height;
+	this->width = scale * sourceWidth;
+	this->height = scale * sourceHeight;
 	this->bounds = {
 		position.x - width / 2,
 		position.y - height / 2,
 		position.x + width / 2,
 		position.y + height / 2
 	};
+
+	decoder->Release();
+	source->Release();
+	converter->Release();
+}
+
+Image::~Image()
+{
+	bitMap->Release();
 }
 
 void Image::Draw()
 {
-	UI::Inst().GetRenderTarget()->DrawBitmap(bitMap, bounds, opacity, D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, D2D1::RectF(0.0f, 0.0f, bitMap->GetSize().width, bitMap->GetSize().height));
+	UI::Inst().GetRenderTarget()->DrawBitmap(bitMap, bounds, opacity, D2D1_BITMAP_INTERPOLATION_MODE::D2D1_BITMAP_INTERPOLATION_MODE_NEAREST_NEIGHBOR, D2D1::RectF(0.0f, 0.0f, sourceWidth, sourceHeight));
 }

@@ -169,7 +169,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//ADD STUFF TO CANVAS
 	ingameCanvas->AddText({ 100, 20 }, "BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled), 200, 20, UI::COLOR::LIGHTSLATEGRAY, UI::TEXTFORMAT::DEFAULT);
 	ingameCanvas->AddButton({ 200, 200 }, "TestButton", 50, 50, UI::COLOR::RED, TestFunc);
-	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "Pepsi2.jpg", 0.1f, 1.0f);
+	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "CompassBase.png");
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 

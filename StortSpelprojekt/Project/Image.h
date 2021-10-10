@@ -9,19 +9,15 @@ class Image
 private:
 	D2D1_RECT_F bounds;
 	ID2D1Bitmap* bitMap;
-	IWICImagingFactory* imageFactory;
-	IWICBitmapDecoder* decoder;
-	IWICBitmapFrameDecode* source;
-	IWICFormatConverter* converter;
-	float scale = 1;
-	float opacity = 1;
+	float scale;
+	float opacity;
 	float width;
 	float height;
-
+	float sourceWidth;
+	float sourceHeight;
 public:
 	Image() = default;
-	~Image();
 	Image(const std::string& filename, D2D_VECTOR_2F position, float scale = 1.0f, float opacity = 1.0f);
-
+	~Image();
 	void Draw();
 };

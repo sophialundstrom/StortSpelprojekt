@@ -67,6 +67,13 @@ UI::UI(HWND window)
 		textFormats[desc.format] = format;
 	}
 
+	hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&imageFactory);
+	if FAILED(hr)
+	{
+		Print("FAILED TO CREATE IMAGE FACTORY", "UI");
+		return;
+	}
+
 	Print("SUCCEEDED TO INITIALIZE UI");
 }
 
@@ -75,27 +82,13 @@ UI::~UI()
 	UIFactory->Release();
 	UIRenderTarget->Release();
 	writeFactory->Release();
-	//lightSlateGrayBrush->Release();
-	//cornflowerBlueBrush->Release();
-	//crimsonBrush->Release();
+	imageFactory->Release();
 
 	for (auto& [color, brush] : brushes)
 		brush->Release();
 
 	for (auto& [name, format] : textFormats)
 		format->Release();
-
-	//Not working?
-	//SafeRelease(&UIFactory);
-	//SafeRelease(&UIRenderTarget);
-	//SafeRelease(&lightSlateGrayBrush);
-	//SafeRelease(&cornflowerBlueBrush);
-	//SafeRelease(&crimsonBrush);
-
-	//delete testButton;
-	//delete testImage;
-	//delete testImage2;
-	//delete testText;
 }
 
 //HRESULT UI::Initialize(HWND window)
