@@ -10,7 +10,7 @@
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
-#include "UI.h"
+#include "Canvas.h"
 #include "Time.h"
 
 //PlayerClassLib
@@ -20,10 +20,11 @@
 class Game : public GameState
 {
 private:
-    bool gameIsRunning = true;
+    bool paused = false;
     const std::string file = "Default"; //"Test"
 
     std::unique_ptr<QuestLog> questLog;
+    std::unique_ptr<UI> userInterface;
 
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
@@ -34,16 +35,20 @@ private:
 
     Terrain terrain;
 
+    Canvas* currentCanvas;
+    std::map<std::string, Canvas*> canvases;
+
     std::shared_ptr<Player> player;
 
     std::vector<std::shared_ptr <Item>> items;
 
     std::shared_ptr<Building> building;
 
-    UI userInterface;
-
     void Update();
     void Render();
+
+    void Pause();
+    void Resume();
 
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);

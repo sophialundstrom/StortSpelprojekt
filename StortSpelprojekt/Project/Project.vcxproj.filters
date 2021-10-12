@@ -445,6 +445,9 @@
     <ClInclude Include="Item.h">
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Canvas.h">
+      <Filter>Header Files\UI\.h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">

@@ -180,6 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Canvas.h" />
     <ClInclude Include="CollectQuest.h" />
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
