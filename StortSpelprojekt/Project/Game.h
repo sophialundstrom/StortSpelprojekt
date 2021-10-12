@@ -20,7 +20,7 @@
 class Game : public GameState
 {
 private:
-    bool gameIsRunning = true;
+    bool paused = false;
     const std::string file = "Default"; //"Test"
 
     std::unique_ptr<QuestLog> questLog;
@@ -46,6 +46,9 @@ private:
 
     void Update();
     void Render();
+
+    void Pause();
+    void Resume();
 
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);

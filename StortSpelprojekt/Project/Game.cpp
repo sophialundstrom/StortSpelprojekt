@@ -19,8 +19,6 @@ void Game::Update()
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
-	currentCanvas->Update();
-
 	Event::ClearRawDelta();
 }
 
@@ -47,6 +45,18 @@ void Game::Render()
 	Graphics::Inst().EndFrame();
 
 	Resources::Inst().Reset();
+}
+
+void Game::Pause()
+{
+	paused = true;
+	currentCanvas = canvases["PAUSED"];
+}
+
+void Game::Resume()
+{
+	paused = false;
+	currentCanvas = canvases["INGAME"];
 }
 
 void Game::Initialize()
@@ -122,7 +132,7 @@ void Game::CheckItemCollision()
 
 void TestFunc()
 {
-	Print("HEJHEJ");
+	Print("HOVERING");
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
@@ -165,13 +175,18 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//UI
 	userInterface = std::make_unique<UI>(window);
 
+	//INGAME
 	auto ingameCanvas = new Canvas();
-	//ADD STUFF TO CANVAS
 	ingameCanvas->AddText({ 100, 20 }, "BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled), 200, 20, UI::COLOR::LIGHTSLATEGRAY, UI::TEXTFORMAT::DEFAULT);
 	ingameCanvas->AddButton({ 200, 200 }, "TestButton", 50, 50, UI::COLOR::RED, TestFunc);
 	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "CompassBase.png");
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
+
+	//PAUSED
+	auto pauseCanvas = new Canvas();
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 150, 50, UI::COLOR::CORNFLOWERBLUE, [this]{ Resume(); }, TestFunc);
+	canvases["PAUSED"] = pauseCanvas;
 
 	//Item
 	AddItem(WOOD, { -10, 1, 20 });
@@ -194,32 +209,32 @@ Game::~Game()
 {
 	scene.Clear();
 	Resources::Inst().Clear();
+
+	for (auto& [name, canvas] : canvases)
+		delete canvas;
 }
 
 State Game::Run()
 {
-	if (gameIsRunning == true)
+	if (!paused)
 		Update();
 	
+	currentCanvas->Update();
+
 	Render();
 
 	static float lastClick = 0;
 
-	if (Time::Get() - lastClick > 0.25f)
+	if (Time::Get() - lastClick > 0.5f)
 	{
 		if (Event::KeyIsPressed(VK_TAB))
 		{
-			if (gameIsRunning == true)
-			{
-				gameIsRunning = false;
-				std::cout << "Paused\n";
-			}
+			if (paused)
+				Resume();
+			else
+				Pause();
 
-			else  if (gameIsRunning == false)
-			{
-				gameIsRunning = true;
-				std::cout << "UnPaused\n";
-			}
+			lastClick = Time::Get();
 		}
 
 		if (Event::KeyIsPressed('U'))

@@ -14,9 +14,6 @@ struct TempMeshData
 class FBXLoader
 {
 private:
-	
-	//std::vector<TempMeshData*> tempMeshData;
-	//std::vector<Material*> tempMaterials;
 public:
 	FBXLoader(const std::string& directory)
 	{
@@ -61,35 +58,16 @@ public:
 					});
 
 			}
-
 		}
-
 
 		// render to screen 
 
-			
 		PassToResources(tempMeshData, tempMaterials);
 
 		Print(timer.DeltaTime());
 	}
 
 private:
-	//void LoadFBX(const std::string& path, UINT ID)
-	//{
-	//	const aiScene* scene = importer.ReadFile(path, aiProcess_FlipUVs);
-	//	if (!scene)
-	//	{
-	//		Print("COULD NOT LOAD .FBX FILE");
-	//		return;
-	//	}
-	//
-	//	if (scene->HasMaterials())
-	//		tempMaterials[ID] = LoadMaterial(scene->mMeshes[0]->mName.C_Str(), scene->mMaterials[0]);
-	//
-	//	if (scene->HasMeshes())
-	//		tempMeshData[ID] = LoadMeshData(scene->mMeshes[0]);
-	//}
-
 	void PassToResources(const std::vector<TempMeshData*>& tempMeshData, const std::vector<Material*>& tempMaterials)
 	{
 		auto& resources = Resources::Inst();

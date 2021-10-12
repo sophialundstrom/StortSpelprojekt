@@ -15,8 +15,8 @@ Button::~Button()
 {
 }
 
-Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrush* brush, std::function<void()> function)
-	:function(function)
+Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrush* brush, std::function<void()> onClickFunction, std::function<void()> onHoverFunction)
+	:onClickFunction(onClickFunction), onHoverFunction(onHoverFunction)
 {
 	bounds.left = pos.x - (width / 2);
 	bounds.top = pos.y - (height / 2);
@@ -50,6 +50,7 @@ bool Button::IsHovered(int x, int y)
 	return false;
 }
 
+//Not needed..?
 //Mouse coordinates as input
 bool Button::isClicked(int xPos, int yPos)
 {
