@@ -50,17 +50,6 @@ void LevelEditor::Update()
 	{
 		GetCursorPos(&cursor);
 		ScreenToClient(appWindow, &cursor);
-		screenSpaceCoordinates.x = (((4.0f * cursor.x * wRatioX) / (float)wWidth) - 2 * wRatioX) / scene.GetCamera()->GetProjectionMatrix()._11;
-		screenSpaceCoordinates.y = (((-4.0f * cursor.y * wRatioY) / (float)wHeight) + 2 * wRatioY) / scene.GetCamera()->GetProjectionMatrix()._22;
-		if (screenSpaceCoordinates.x > 1)
-			screenSpaceCoordinates.x = 1;
-		if (screenSpaceCoordinates.x < -1)
-			screenSpaceCoordinates.x = -1;
-		if (screenSpaceCoordinates.y > 1)
-			screenSpaceCoordinates.y = 1;
-		if (screenSpaceCoordinates.y < -1)
-			screenSpaceCoordinates.y = -1;
-
 
 		int id = idRenderer.GetObjectID(cursor.x, cursor.y);
 		Print(id);
@@ -77,9 +66,9 @@ void LevelEditor::Update()
 			window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
 			window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
 
-			window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x);
-			window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y);
-			window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z);
+			window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x * 180 / PI);
+			window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y * 180 / PI);
+			window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z * 180 / PI);
 
 			window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
 			window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
@@ -165,7 +154,7 @@ void LevelEditor::Update()
 		auto model = scene.Get<Model>(selectedObject);
 		model->SetPosition(newXPos, newYPos, newZPos);
 		model->SetRotation(newXRot * PI / 180, newYRot * PI / 180, newZRot * PI / 180);
-		model->SetScale(newXScale, newXScale, newXScale);
+		model->SetScale(newXScale, newYScale, newZScale);
 	}
 
 	scene.Update();
