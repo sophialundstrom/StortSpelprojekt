@@ -155,6 +155,28 @@ void LevelEditor::Update()
 		model->SetPosition(newXPos, newYPos, newZPos);
 		model->SetRotation(newXRot * PI / 180, newYRot * PI / 180, newZRot * PI / 180);
 		model->SetScale(newXScale, newYScale, newZScale);
+		if (window.GetValue<CheckBoxComponent>("Uniform scaling") == true)
+		{
+			if (window.Changed("X-axis"))
+			{
+				model->SetScale(newXScale, newXScale, newXScale);
+				window.SetValue<SliderFloatComponent, float>("Y-axis", newXScale);
+				window.SetValue<SliderFloatComponent, float>("Z-axis", newXScale);
+			}
+			if (window.Changed("Y-axis"))
+			{
+				model->SetScale(newYScale, newYScale, newYScale);
+				window.SetValue<SliderFloatComponent, float>("X-axis", newYScale);
+				window.SetValue<SliderFloatComponent, float>("Z-axis", newYScale);
+			}
+			if (window.Changed("Z-axis"))
+			{
+				model->SetScale(newZScale, newZScale, newZScale);
+				window.SetValue<SliderFloatComponent, float>("Y-axis", newZScale);
+				window.SetValue<SliderFloatComponent, float>("X-axis", newZScale);
+			}
+		}
+
 	}
 
 	scene.Update();
@@ -239,6 +261,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("X-axis", -10, 10, 0, false);
 		window.AddSliderFloatComponent("Y-axis", -10, 10, 0, false);
 		window.AddSliderFloatComponent("Z-axis", -10, 10, 0, false);
+		window.AddCheckBoxComponent("Uniform scaling");
 	}
 
 	{
