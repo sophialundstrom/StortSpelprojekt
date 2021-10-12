@@ -139,7 +139,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
 	modelRenderer(DEFERRED, true),
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED),
+	terrainRenderer(DEFERRED, 40),
 	colliderRenderer(DEFERRED)
 {
 	Initialize();
@@ -177,7 +177,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//INGAME
 	auto ingameCanvas = new Canvas();
-	ingameCanvas->AddText({ 100, 20 }, "BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled), 200, 20, UI::COLOR::LIGHTSLATEGRAY, UI::TEXTFORMAT::DEFAULT);
+	ingameCanvas->AddText({ 100, 20 }, "BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled), 200, 20, UI::COLOR::RED, UI::TEXTFORMAT::DEFAULT);
 	ingameCanvas->AddButton({ 200, 200 }, "TestButton", 50, 50, UI::COLOR::RED, TestFunc);
 	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "CompassBase.png");
 	canvases["INGAME"] = ingameCanvas;
@@ -185,7 +185,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//PAUSED
 	auto pauseCanvas = new Canvas();
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 150, 50, UI::COLOR::CORNFLOWERBLUE, [this]{ Resume(); }, TestFunc);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::CORNFLOWERBLUE, [this]{ Resume(); }, TestFunc);
 	canvases["PAUSED"] = pauseCanvas;
 
 	//Item

@@ -11,14 +11,11 @@ private:
 	std::map<std::string, Image*> images;
 	std::map<std::string, Text> texts;
 public:
-	Canvas()
-	{
-
-	}
-
+	Canvas() = default;
 	~Canvas()
 	{
-
+		for (auto& [name, image] : images)
+			delete image;
 	}
 
 	void Update()

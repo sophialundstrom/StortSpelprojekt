@@ -51,7 +51,7 @@ public:
 
 	enum class TEXTFORMAT
 	{
-		DEFAULT, //Verdana, normal wright, normal font style, normal font stretch, 30 font size
+		DEFAULT,
 		TEST
 	};
 private:
