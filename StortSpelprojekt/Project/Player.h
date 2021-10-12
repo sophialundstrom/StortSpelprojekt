@@ -90,9 +90,9 @@ private:
 	float airTime = 0;
 	float jumpHeight = 5.0f;
 
-	float defaultCameraDistance = 13.0f;
+	float defaultCameraDistance = 17.0f;
 	float currentCameraDistance = defaultCameraDistance;
-	float maxCameraDistance = defaultCameraDistance + 5.0f;
+	float maxCameraDistance = defaultCameraDistance + 7.0f;
 	
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);
@@ -102,12 +102,11 @@ public:
 	void Update(HeightMap* heightMap);
 	
 	Player(const std::string file, Camera* camera)
-		:Model("Character", "Character"), sceneCamera(camera)
+		:Model("LowPolyCharacter", "Player"), sceneCamera(camera)
 	{
 		bounds = std::make_shared<BoundingSphere>();
 
-		SetScale(0.02f);
-		bounds->SetScale(200);
+		bounds->SetScale(3);
 
 		Load(file);
 	}
