@@ -10,6 +10,7 @@
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
+#include "SaveStation.h"
 #include "Canvas.h"
 #include "Time.h"
 
@@ -32,6 +33,8 @@ private:
     DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
+
+    SaveStation saveStations[2];
 
     Terrain terrain;
 

@@ -19,6 +19,9 @@ void Game::Update()
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
+	for (auto& saveStation : saveStations)
+		saveStation.Update();
+
 	Event::ClearRawDelta();
 }
 
@@ -66,6 +69,10 @@ void Game::Initialize()
 
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
+
+	//SAVE STATIONS
+	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
+	saveStations[1] = SaveStation({ 20, 0, -20 }, 1, scene.GetDrawables());
 
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
