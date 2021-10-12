@@ -3,6 +3,7 @@
 #include "DirectXHelp.h"
 #include "Math.h"
 #include "Random.h"
+#include "Texture.h"
 
 enum class EmitterType { SPHERE, CUBE, CONE };
 
@@ -16,7 +17,6 @@ private:
 	{
 		Vector3 position;
 		Vector3 direction;
-		Vector3 color;
 		float lifeTime;
 		float velocity;
 	};
@@ -50,6 +50,8 @@ private:
 
 	std::vector<Particle> particles;
 	ID3D11Buffer* vertexBuffer = nullptr;
+	Texture* texture;
+
 public:
 	static const UINT ABSOLUTE_MAX_PARTICLES = 1000000u;
 

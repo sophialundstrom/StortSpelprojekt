@@ -11,6 +11,8 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 {
 	std::string path = file;
 
+	texture = new Texture("Textures/Gatos.png", "Gatos.png");
+
 	if (file == "default.ps" || file.find("\\") == std::string::npos)
 		path = FileSystem::ProjectDirectory::path + "\\ParticleSystems\\" + file;
 
@@ -65,6 +67,7 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::Draw() const
 {
+	texture->Bind();
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 	Graphics::Inst().GetContext().Draw(particleCount, 0);
 }
@@ -96,7 +99,7 @@ void ParticleSystem::Update()
 			case EmitterType::CUBE:
 			{
 				newParticle.direction = { 0.0f, -1.0f, 0.0f };
-				newParticle.color = { 55.0f / 255.0f, 71.0f / 255.0f, 75.0f / 255.0f };
+				//newParticle.color = { 55.0f / 255.0f, 71.0f / 255.0f, 75.0f / 255.0f };
 
 				newParticle.position.x = Random::Real(position.x - size / 2.0f, position.x + size / 2.0f);
 				newParticle.position.z = Random::Real(position.z - size / 2.0f, position.z + size / 2.0f);
@@ -120,7 +123,7 @@ void ParticleSystem::Update()
 
 				newParticle.direction = direction;
 
-				newParticle.color = colors[Random::Integer(0, ARRAYSIZE(colors) - 1)];
+				//newParticle.color = colors[Random::Integer(0, ARRAYSIZE(colors) - 1)];
 				break;
 			}
 
@@ -140,7 +143,7 @@ void ParticleSystem::Update()
 
 				newParticle.direction = direction;
 
-				newParticle.color = colors[Random::Integer(0, ARRAYSIZE(colors) - 1)];
+				//newParticle.color = colors[Random::Integer(0, ARRAYSIZE(colors) - 1)];
 				break;
 			}
 			}
