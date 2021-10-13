@@ -39,6 +39,7 @@ public:
 
 		//LoadingScreen LS; // vector subscript out of range?!
 
+		//Sleep(2000);
 		{
 			std::atomic<int> fbxLeft;
 			fbxLeft = numFBX;
@@ -71,7 +72,7 @@ public:
 			// while loop here...
 			while (fbxLeft != 0)
 			{
-				std::cout << "LOADING...\n";
+				//std::cout << "LOADING...\n";
 				//Sleep(2000);
 			}
 

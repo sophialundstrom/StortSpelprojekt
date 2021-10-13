@@ -147,6 +147,9 @@
     <Filter Include="Header Files\UI\.cpp">
       <UniqueIdentifier>{ecb8c68c-124d-41d6-b7f2-7c26782e3573}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LoadingScreen">
+      <UniqueIdentifier>{5e3ead45-f7ba-4026-8fdd-63b5af297cd1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -213,7 +216,7 @@
       <Filter>Header Files\UI\.cpp</Filter>
     </ClCompile>
     <ClCompile Include="LoadingScreen.cpp">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>LoadingScreen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -449,7 +452,7 @@
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="LoadingScreen.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>LoadingScreen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -529,10 +532,10 @@
       <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="LoadingVS.hlsl">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>LoadingScreen</Filter>
     </FxCompile>
     <FxCompile Include="LoadingPS.hlsl">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>LoadingScreen</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

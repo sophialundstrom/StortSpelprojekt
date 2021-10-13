@@ -3,7 +3,10 @@
 
 LoadingScreen::LoadingScreen()
 {
-	std::string path = backgrounds[Random::Integer(0, backgrounds.size())];
+	int index = Random::Integer(0, backgrounds.capacity() - 1);
+	std::cout << index << std::endl;
+
+	std::string path = backgrounds[index];
 	texture = std::move(new Texture("Textures/" + path, ""));
 
 #ifdef _DEBUG
@@ -39,18 +42,7 @@ LoadingScreen::LoadingScreen()
 		std::cout << "FAILED TO CREATE INPUT LAYOUT FOR LOADING SCREEN\n";
 	}
 
-	D3D11_BUFFER_DESC vDesc;
-	vDesc.ByteWidth = sizeof(minVertex);
-	vDesc.Usage = D3D11_USAGE_IMMUTABLE;
-	vDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vDesc.CPUAccessFlags = 0;
-	vDesc.MiscFlags = 0;
-	vDesc.StructureByteStride = sizeof(minVertex);
-
-	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = &quad;
-
-	hr = Graphics::Inst().GetDevice().CreateBuffer(&vDesc, &data, &vBuffer);
+	CreateVertexBuffer(vBuffer, sizeof(minVertex), sizeof(minVertex) * ARRAYSIZE(quad), quad);
 
 	if (FAILED(hr))
 	{
@@ -70,6 +62,10 @@ LoadingScreen::LoadingScreen()
 
 	Graphics::Inst().GetDevice().CreateSamplerState(&samplerDesc, &sampler);
 
+}
+
+void LoadingScreen::Draw()
+{
 	Graphics::Inst().BeginFrame();
 	Graphics::Inst().GetContext().IASetInputLayout(layout);
 	Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -85,6 +81,12 @@ LoadingScreen::LoadingScreen()
 	Graphics::Inst().GetContext().PSSetSamplers(0, 1, &sampler);
 
 	Graphics::Inst().GetContext().Draw(4, 0);
+
 	Graphics::Inst().EndFrame();
-	// GET SWAP CHAIN AND PRESENT
+}
+
+void RunLoadingScreen()
+{
+	LoadingScreen LS;
+	LS.Draw();
 }

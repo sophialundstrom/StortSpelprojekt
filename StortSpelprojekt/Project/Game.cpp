@@ -125,6 +125,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(DEFERRED),
 	colliderRenderer(DEFERRED)
 {
+
 	Initialize();
 
 	//LOAD SCENE
