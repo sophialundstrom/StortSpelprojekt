@@ -5,13 +5,29 @@
 #include "Time.h"
 #include <fstream>
 
+std::string GetNthString(const std::string& line, UINT n)
+{
+	std::string temp = line;
+	for (UINT i = 0; i < (n * 2 - 1); ++i)
+	{
+		size_t location = temp.find_first_of(39); // " ' " ascii
+		temp = temp.substr(location + 1, temp.length());
+	}
+
+	return temp.substr(0, temp.find_first_of(39));
+}
+
 ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 	:maxParticles(0), timeBetweenParticles(0), particlesLifetime(0), minVelocity(0), maxVelocity(0), size(0), particleExtents(0,0), position(0,0,0), type(EmitterType::SPHERE), 
 	timeSinceLastParticle(0), particleCount(0)
 {
 	std::string path = file;
+	std::string line = "";
 
-	texture = new Texture("Textures/Gatos.png", "Gatos.png");
+
+	//texture = new Texture("ParticleTextures/Gatos.png", "Gatos.png");
+
+
 
 	if (file == "default.ps" || file.find("\\") == std::string::npos)
 		path = FileSystem::ProjectDirectory::path + "\\ParticleSystems\\" + file;
@@ -45,7 +61,14 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 		reader >> position.x;
 		reader >> position.y;
 		reader >> position.z;
+
+		std::getline(reader, line);
 	}
+
+	std::string imageFile = GetNthString(line, 1);
+	std::string imagePath = FileSystem::ProjectDirectory::path + "\\ParticleTextures\\" + imageFile;
+	texture = new Texture(imagePath, imageFile);
+
 
 	if (preview)
 		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Particle), sizeof(Particle) * ABSOLUTE_MAX_PARTICLES);
@@ -174,4 +197,12 @@ void ParticleSystem::Update()
 
 	//LASTLY UPDATE BUFFER
 	UpdateBuffer(vertexBuffer, particles.data(), sizeof(Particle) * particleCount);
+}
+
+void ParticleSystem::ChangeTexture(std::string path, std::string fileName)
+{
+	if (texture)
+		delete texture;
+
+	texture = new Texture(path, fileName);
 }
