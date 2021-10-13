@@ -131,13 +131,23 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 1.0f, 20.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(50, 4, 4);
 
+	arrow = std::make_shared<Arrow>(file);
+	scene.AddModel("Arrow", arrow);
+	modelRenderer.Bind(scene.Get<Model>("Arrow"));
+	shadowRenderer.Bind(scene.Get<Model>("Arrow"));
+	arrow->SetPosition(2, 3, 0);
+	arrow->SetScale(2);
+	//Bounding stuff?
+
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera());
+	player = std::make_shared<Player>(file, scene.GetCamera(), arrow.get());
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
+
+
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA

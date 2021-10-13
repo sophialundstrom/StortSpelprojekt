@@ -12,6 +12,7 @@
 #include "QuestLog.h"
 #include "UI.h"
 #include "Time.h"
+#include "Arrow.h"
 
 //PlayerClassLib
 #include <math.h>
@@ -35,6 +36,7 @@ private:
     Terrain terrain;
 
     std::shared_ptr<Player> player;
+    std::shared_ptr<Arrow> arrow;
 
     std::vector<std::shared_ptr <Item>> items;
 

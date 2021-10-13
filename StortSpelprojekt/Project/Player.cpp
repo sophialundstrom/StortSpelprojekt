@@ -130,11 +130,16 @@ void Player::Update(HeightMap* heightMap)
 	{
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
+		if (Event::LeftIsClicked())
+		{
+			arrow->Shoot(lookDirection, newPlayerPos + camSocketUpdate);
+		}
 	}
 	else
 	{
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 	}
+	arrow->Update();
 
 	sceneCamera->MoveTowards(newCameraPos);
 

@@ -5,6 +5,7 @@
 #include "Event.h"
 #include "Terrain.h"
 #include "Item.h"
+#include "Arrow.h"
 
 struct Inventory 
 {
@@ -72,12 +73,13 @@ private:
 	Stats stats;
 
 	Camera* sceneCamera;
+	Arrow* arrow;
 
 	float movementOfsetRadiant = 0;
 
 	float preJumpGroundLevel = 0;
 	float heightMapGroundLevel = 20.0f;
-	const float mouseDefaultSensitivity = 10.f;
+	const float mouseDefaultSensitivity = 2.f;
 	const float mouseAimSensitivity = 5.f;
 	float mouseCurrentSensitivity = mouseDefaultSensitivity;
 
@@ -105,9 +107,10 @@ private:
 public:
 	void Update(HeightMap* heightMap);
 	
-	Player(const std::string file, Camera* camera)
+	Player(const std::string file, Camera* camera, Arrow* arrow)
 		:Model("Character", "Character"), sceneCamera(camera)
 	{
+		this->arrow = arrow;
 		bounds = std::make_shared<BoundingSphere>();
 
 		SetScale(0.02f);
