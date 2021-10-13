@@ -34,7 +34,7 @@ void Player::Update(HeightMap* heightMap)
 	CalcHeight(heightMap);
 
 	//Rotate camera by cursor movement 
-	sceneCamera->Rotate(Event::ReadRawDelta().x * mouseSensitivity, Event::ReadRawDelta().y * mouseSensitivity);
+	sceneCamera->Rotate(Event::ReadRawDelta().x * mouseCurrentSensitivity, Event::ReadRawDelta().y * mouseCurrentSensitivity);
 
 	//Get players position last frame and cameras current look-direction
 	Vector3 lookDirection = sceneCamera->GetDirection();
@@ -129,6 +129,11 @@ void Player::Update(HeightMap* heightMap)
 	if(Event::RightIsClicked())
 	{
 		newCameraPos = position + camSocketUpdate;
+		mouseCurrentSensitivity = mouseAimSensitivity;
+	}
+	else
+	{
+		mouseCurrentSensitivity = mouseDefaultSensitivity;
 	}
 
 	sceneCamera->MoveTowards(newCameraPos);

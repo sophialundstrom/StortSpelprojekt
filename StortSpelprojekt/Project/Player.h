@@ -77,7 +77,9 @@ private:
 
 	float preJumpGroundLevel = 0;
 	float heightMapGroundLevel = 20.0f;
-	float mouseSensitivity = 10.f;
+	const float mouseDefaultSensitivity = 10.f;
+	const float mouseAimSensitivity = 5.f;
+	float mouseCurrentSensitivity = mouseDefaultSensitivity;
 
 	float gravity = 9.82f;
 	float timePassed = 0;
