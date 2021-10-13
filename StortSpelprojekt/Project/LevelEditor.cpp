@@ -57,44 +57,33 @@ void LevelEditor::Update()
 		if (id > 0)
 		{
 			std::string name = scene.GetObjectNames()[id - 1];
-			auto model = scene.Get<Model>(name);
-			auto& window = windows["GAME OBJECT"];
+			if (name != "")
+			{
+				auto model = scene.Get<Model>(name);
+				auto& window = windows["GAME OBJECT"];
 
-			window.SetValue<TextComponent, std::string>("ObjectName", name);
+				window.SetValue<TextComponent, std::string>("ObjectName", name);
 
-			window.SetValue<SliderFloatComponent, float>("X", model->GetPosition().x);
-			window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
-			window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
+				window.SetValue<SliderFloatComponent, float>("X", model->GetPosition().x);
+				window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
+				window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
 
-			window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x * 180 / PI);
-			window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y * 180 / PI);
-			window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z * 180 / PI);
+				window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x * 180 / PI);
+				window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y * 180 / PI);
+				window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z * 180 / PI);
 
-			window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
-			window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
-			window.SetValue<SliderFloatComponent, float>("Z-axis", model->GetScale().z);
+				window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
+				window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
+				window.SetValue<SliderFloatComponent, float>("Z-axis", model->GetScale().z);
 
-			selectedObject = name;
+				selectedObject = name;
+			}
 		}
 	}
 
 	if (Event::KeyIsPressed('C'))
 	{
-		auto& window = windows["GAME OBJECT"];
-
-		window.SetValue<TextComponent, std::string>("ObjectName", "");
-		window.SetValue<SliderFloatComponent, float>("X", 0.0f);
-		window.SetValue<SliderFloatComponent, float>("Y", 0.0f);
-		window.SetValue<SliderFloatComponent, float>("Z", 0.0f);
-
-		window.SetValue<SliderFloatComponent, float>("Around X", 0.0f);
-		window.SetValue<SliderFloatComponent, float>("Around Y", 0.0f);
-		window.SetValue<SliderFloatComponent, float>("Around Z", 0.0f);
-
-		window.SetValue<SliderFloatComponent, float>("X-axis", 0.0f);
-		window.SetValue<SliderFloatComponent, float>("Y-axis", 0.0f);
-		window.SetValue<SliderFloatComponent, float>("Z-axis", 0.0f);
-
+		ClearToolUI();
 		selectedObject = "";
 	}
 
@@ -176,7 +165,17 @@ void LevelEditor::Update()
 				window.SetValue<SliderFloatComponent, float>("X-axis", newZScale);
 			}
 		}
+	}
 
+	auto& window = windows["GAME OBJECT"];
+	if (window.GetValue<ButtonComponent>("Delete") || Event::KeyIsPressed(VK_DELETE))
+	{
+		if (selectedObject != "")
+		{
+			RemoveItem(selectedObject);
+			ClearToolUI();
+			selectedObject = "";
+		}
 	}
 
 	scene.Update();
@@ -262,6 +261,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("Y-axis", -10, 10, 0, false);
 		window.AddSliderFloatComponent("Z-axis", -10, 10, 0, false);
 		window.AddCheckBoxComponent("Uniform scaling");
+		window.AddButtonComponent("Delete", 120, 30);
 	}
 
 	{
@@ -274,6 +274,35 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	}
 
 	(void)Run();
+}
+
+void LevelEditor::RemoveItem(const std::string name)
+{
+	auto model = scene.Get<Model>(name);
+
+	modelRenderer.Unbind(model);
+	idRenderer.Unbind(model);
+
+	scene.DeleteDrawable(name);
+	scene.GetObjectNames()[model.get()->GetID() -1] = "";
+}
+
+void LevelEditor::ClearToolUI()
+{
+	auto& window = windows["GAME OBJECT"];
+
+	window.SetValue<TextComponent, std::string>("ObjectName", "");
+	window.SetValue<SliderFloatComponent, float>("X", 0.0f);
+	window.SetValue<SliderFloatComponent, float>("Y", 0.0f);
+	window.SetValue<SliderFloatComponent, float>("Z", 0.0f);
+
+	window.SetValue<SliderFloatComponent, float>("Around X", 0.0f);
+	window.SetValue<SliderFloatComponent, float>("Around Y", 0.0f);
+	window.SetValue<SliderFloatComponent, float>("Around Z", 0.0f);
+
+	window.SetValue<SliderFloatComponent, float>("X-axis", 0.0f);
+	window.SetValue<SliderFloatComponent, float>("Y-axis", 0.0f);
+	window.SetValue<SliderFloatComponent, float>("Z-axis", 0.0f);
 }
 
 LevelEditor::~LevelEditor()

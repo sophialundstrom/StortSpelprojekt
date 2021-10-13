@@ -41,8 +41,11 @@ private:
 	virtual void Load(const std::string& file) override;
 	virtual void Update() override;
 	virtual void Render() override;
+	void RemoveItem(const std::string name);
+	void ClearToolUI();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
+
 	~LevelEditor();
 	
 	// Inherited via GameState
