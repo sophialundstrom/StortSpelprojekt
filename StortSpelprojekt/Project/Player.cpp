@@ -90,7 +90,7 @@ void Player::Update(HeightMap* heightMap)
 	Vector3 camSocketUpdate = Vector3::Transform(cameraLocationSocket, movementOfsetMatrix);
 
 	//Only update what direction the player is facing when keyboardinput is detected by the moveDirection vector
-	if (moveDirection.Length() > 0 || moveDirection.Length() < 0)
+	if (moveDirection.Length() > 0 || moveDirection.Length() < 0 || Event::RightIsClicked())
 		rotation = { 0, movementOfsetRadiant, 0 };
 
 	//Updates the player and cameras positions
@@ -128,7 +128,7 @@ void Player::Update(HeightMap* heightMap)
 
 	if(Event::RightIsClicked())
 	{
-		newCameraPos = position + camSocketUpdate;// +(lookDirection * -currentCameraDistance);
+		newCameraPos = position + camSocketUpdate;
 	}
 
 	sceneCamera->MoveTowards(newCameraPos);
