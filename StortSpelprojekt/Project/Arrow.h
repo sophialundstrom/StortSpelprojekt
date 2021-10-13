@@ -13,6 +13,6 @@ public:
 	Arrow(const std::string file);
 	~Arrow();
 
-	bool Shoot(Vector3 direction, Vector3 startPos);
+	bool Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation);
 	void Update();
 };
