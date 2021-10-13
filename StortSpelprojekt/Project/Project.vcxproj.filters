@@ -212,6 +212,9 @@
     <ClCompile Include="Text.cpp">
       <Filter>Header Files\UI\.cpp</Filter>
     </ClCompile>
+    <ClCompile Include="LoadingScreen.cpp">
+      <Filter>Header Files\Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -445,6 +448,9 @@
     <ClInclude Include="Item.h">
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
+    <ClInclude Include="LoadingScreen.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -521,6 +527,12 @@
     </FxCompile>
     <FxCompile Include="DeferredColliderPixelShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LoadingVS.hlsl">
+      <Filter>Header Files\Utilities</Filter>
+    </FxCompile>
+    <FxCompile Include="LoadingPS.hlsl">
+      <Filter>Header Files\Utilities</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

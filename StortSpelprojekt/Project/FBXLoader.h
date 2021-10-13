@@ -3,6 +3,7 @@
 #include "FileSystem.h"
 #include "ThreadPool.h"
 #include "Time.h"
+#include "LoadingScreen.h"
 
 struct TempMeshData
 {
@@ -15,8 +16,6 @@ class FBXLoader
 {
 private:
 	
-	//std::vector<TempMeshData*> tempMeshData;
-	//std::vector<Material*> tempMaterials;
 public:
 	FBXLoader(const std::string& directory)
 	{
@@ -38,11 +37,16 @@ public:
 		std::vector<TempMeshData*> tempMeshData = std::vector<TempMeshData*>(numFBX);
 		std::vector<Material*> tempMaterials = std::vector<Material*>(numFBX);
 
+		//LoadingScreen LS; // vector subscript out of range?!
+
 		{
+			std::atomic<int> fbxLeft;
+			fbxLeft = numFBX;
+			
 			ThreadPool pool(10);
 			
 			for (UINT i = 0; i < numFBX; ++i) {
-				pool.Enqueue([=, &tempMaterials, &tempMeshData] {
+				pool.Enqueue([=, &tempMaterials, &tempMeshData, &fbxLeft] {
 
 					Assimp::Importer importer;
 					const aiScene* scene = importer.ReadFile(names[i], aiProcess_FlipUVs);
@@ -58,15 +62,20 @@ public:
 					if (scene->HasMeshes())
 						tempMeshData[i] = LoadMeshData(scene->mMeshes[0]);
 
+					fbxLeft.store(fbxLeft - 1);
+
 					});
 
 			}
+			
+			// while loop here...
+			while (fbxLeft != 0)
+			{
+				std::cout << "LOADING...\n";
+				//Sleep(2000);
+			}
 
-		}
-
-
-		// render to screen 
-
+		} // thread pool gets destroyed
 			
 		PassToResources(tempMeshData, tempMaterials);
 
@@ -74,21 +83,6 @@ public:
 	}
 
 private:
-	//void LoadFBX(const std::string& path, UINT ID)
-	//{
-	//	const aiScene* scene = importer.ReadFile(path, aiProcess_FlipUVs);
-	//	if (!scene)
-	//	{
-	//		Print("COULD NOT LOAD .FBX FILE");
-	//		return;
-	//	}
-	//
-	//	if (scene->HasMaterials())
-	//		tempMaterials[ID] = LoadMaterial(scene->mMeshes[0]->mName.C_Str(), scene->mMaterials[0]);
-	//
-	//	if (scene->HasMeshes())
-	//		tempMeshData[ID] = LoadMeshData(scene->mMeshes[0]);
-	//}
 
 	void PassToResources(const std::vector<TempMeshData*>& tempMeshData, const std::vector<Material*>& tempMaterials)
 	{

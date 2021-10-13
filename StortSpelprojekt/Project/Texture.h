@@ -6,8 +6,8 @@ class Texture
 {
 private:
 	std::string file;
-	ID3D11ShaderResourceView* srv = nullptr;
 public:
+	ID3D11ShaderResourceView* srv = nullptr; // changed to public to be able to reach it in LoadingScreen.cpp
 	Texture() = default;
 	~Texture() { srv->Release(); }
 	Texture(const std::string& path, std::string file = "");
