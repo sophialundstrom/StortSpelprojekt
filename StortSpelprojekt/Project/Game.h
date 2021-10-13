@@ -34,6 +34,7 @@ private:
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
 
+    float lastSave = 0;
     SaveStation saveStations[2];
 
     Terrain terrain;
