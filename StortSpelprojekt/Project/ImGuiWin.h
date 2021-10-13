@@ -62,6 +62,9 @@ public:
 	void AddSeperatorComponent()
 	{ components.emplace_back(new SeperatorComponent()); this->names.emplace_back(""); }
 
+	void AddImageComponent(const std::string& name, bool sameLine, ID3D11ShaderResourceView* srv, float width, float height)
+	{ components.emplace_back(new ImageComponent(name, sameLine, srv, width, height)); this->names.emplace_back(name); }
+
 	template <typename ComponentType>
 	auto GetValue(const std::string& name)
 	{
