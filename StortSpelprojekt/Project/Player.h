@@ -94,6 +94,8 @@ private:
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 5.0f;
 	
+	Vector3 cameraLocationSocket = { 1, 4, 0 };
+
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);
 	std::shared_ptr<BoundingSphere> bounds;

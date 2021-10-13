@@ -78,7 +78,7 @@ void Player::Update(HeightMap* heightMap)
 
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
 	//Aligns the keyboardinputs by the camera direction afterwards via the radian.
-	if (!Event::RightIsClicked())
+	if (!Event::KeyIsPressed('O')) //Actaully right click but the button is reserved for aiming
 	{
 		movementOfsetRadiant = Get2DAngle({ lookDirection.x, lookDirection.z }, { 0, 1 });
 		if (lookDirection.x < 0)
@@ -124,6 +124,20 @@ void Player::Update(HeightMap* heightMap)
 	position = newPlayerPos + Vector3(0, 0.5f, 0);
 
 	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance);
+
+	if(!Event::RightIsClicked())
+	{
+		//We need position of character and direction player is looking towards (Lookdirection) as well as the position we want the camera to move to.
+		//currentCameraDistance = 1;
+		
+		
+		
+		//cameraLocationSocket = Vector3::Transform(cameraLocationSocket, movementOfsetMatrix);
+		//newCameraPos = position + cameraLocationSocket;// +(lookDirection * -currentCameraDistance);
+
+
+		newCameraPos = position + cameraLocationSocket + (lookDirection * -currentCameraDistance);
+	}
 
 	sceneCamera->MoveTowards(newCameraPos);
 

@@ -164,13 +164,24 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");
 
-	friendly->SetPosition(10, 0, 10);
+	friendly->SetPosition(40, 150, -30);
+	friendly->SetScale(10);
+	//friendly->SetParent(player);
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
 	auto particleSystem = std::make_shared<ParticleSystem>("Eld.ps");
 	scene.AddParticleSystem("TestSystem", particleSystem);
 	particleRenderer.Bind(particleSystem);
+
+
+
+	//Temp DELETE WHEN DEBUG IS OVER
+
+	
+
+	//^		^		^		^		^
+
 
 	(void)Run();
 }
