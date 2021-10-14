@@ -41,6 +41,8 @@ private:
 	virtual void Load(const std::string& file) override;
 	virtual void Update() override;
 	virtual void Render() override;
+	void CreateBoundingBox();
+	void CreateBoundingSphere();
 	void RemoveItem(const std::string name);
 	void ClearToolUI();
 public:

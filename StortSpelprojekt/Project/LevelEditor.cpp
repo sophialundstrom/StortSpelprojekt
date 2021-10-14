@@ -44,6 +44,16 @@ void LevelEditor::Load(const std::string& file)
 	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
 }
 
+void LevelEditor::CreateBoundingBox()
+{
+	Print("BoundingBox Created!");
+}
+
+void LevelEditor::CreateBoundingSphere()
+{
+	Print("BoundingSphere Created!");
+}
+
 void LevelEditor::Update()
 {
 	if (Event::LeftIsClicked())
@@ -239,6 +249,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
 		window.AddCheckBoxComponent("WIREFRAME", false);
+		window.AddButtonComponent("CREATE BBOX", 120, 30);
+		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
@@ -247,9 +259,9 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		auto& window = windows["GAME OBJECT"];	
 		window.AddTextComponent("ObjectName");
 		window.AddTextComponent("Position");
-		window.AddSliderFloatComponent("X", -50, 50, 0, false);
-		window.AddSliderFloatComponent("Y", -50, 50, 0, false);
-		window.AddSliderFloatComponent("Z", -50, 50, 0, false);
+		window.AddSliderFloatComponent("X", -300, 300, 0, false);
+		window.AddSliderFloatComponent("Y", -300, 300, 0, false);
+		window.AddSliderFloatComponent("Z", -300, 300, 0, false);
 
 		window.AddTextComponent("Rotation");
 		window.AddSliderFloatComponent("Around X", -180, 180, 0, false);
@@ -257,9 +269,9 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("Around Z", -180, 180, 0, false);
 
 		window.AddTextComponent("Scale");
-		window.AddSliderFloatComponent("X-axis", -10, 10, 0, false);
-		window.AddSliderFloatComponent("Y-axis", -10, 10, 0, false);
-		window.AddSliderFloatComponent("Z-axis", -10, 10, 0, false);
+		window.AddSliderFloatComponent("X-axis", -30, 30, 0, false);
+		window.AddSliderFloatComponent("Y-axis", -30, 30, 0, false);
+		window.AddSliderFloatComponent("Z-axis", -30, 30, 0, false);
 		window.AddCheckBoxComponent("Uniform scaling");
 		window.AddButtonComponent("Delete", 120, 30);
 	}
@@ -319,6 +331,12 @@ State LevelEditor::Run()
 	auto& window = windows["TOOLS"];
 	if (window.GetValue<ButtonComponent>("LOAD FBX"))
 		Load(FileSystem::LoadFile("Models"));
+
+	if (window.GetValue<ButtonComponent>("CREATE BBOX"))
+		CreateBoundingBox();
+
+	if (window.GetValue<ButtonComponent>("CREATE BSPHERE"))
+		CreateBoundingSphere();
 
 	if (window.Changed("WIREFRAME"))
 		Graphics::Inst().ToggleWireframe();
