@@ -20,7 +20,6 @@ void Game::Update()
 	CheckSaveStationCollision();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
-
 		
 	Event::ClearRawDelta();
 }
@@ -203,26 +202,24 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.Get<Model>("Building")->SetPosition(10, -3, 60);
 	scene.Get<Model>("Building")->SetRotation(0, -PI_DIV2, 0);
 
-	//QUEST LOG
-	questLog = std::make_unique<QuestLog>(file, player);
-
 	//UI
 	userInterface = std::make_unique<UI>(window);
 
 	//INGAME
 	auto ingameCanvas = new Canvas();
-	//ingameCanvas->AddText({ 100, 20 }, "BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled), 200, 20, UI::COLOR::RED, UI::TEXTFORMAT::DEFAULT);
-	//ingameCanvas->AddButton({ 200, 200 }, "TestButton", 50, 50, UI::COLOR::RED, TestFunc);
 	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "CompassBase.png");
-	ingameCanvas->AddImage({ 200, 200 }, "QuestBorder", "QuestBorder.png");
-	ingameCanvas->AddImage({ 100, 100 }, "QuestBackground", "QuestBackground.png");
+	ingameCanvas->AddImage({ 250, 250 }, "QuestBorder", "QuestBorder.png");
+	ingameCanvas->AddText({ 200, 40 }, "AC", "Active Quests", 200, 20, UI::COLOR::GRAY, UI::TEXTFORMAT::TITLE);
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 
 	//PAUSED
 	auto pauseCanvas = new Canvas();
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::CORNFLOWERBLUE, [this]{ Resume(); }, TestFunc);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::GRAY, [this]{ Resume(); }, TestFunc);
 	canvases["PAUSED"] = pauseCanvas;
+
+	//QUEST LOG
+	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
 	//Item
 	AddItem(WOOD, { -10, 1, 20 });

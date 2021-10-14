@@ -1,8 +1,8 @@
 #include "Text.h"
 #include "UI.h"
 
-Text::Text(std::wstring string, D2D_VECTOR_2F position, float width, float height, IDWriteTextFormat* format, ID2D1SolidColorBrush* brush)
-	:string(string), format(format), brush(brush)
+Text::Text(std::wstring string, D2D_VECTOR_2F position, float width, float height, IDWriteTextFormat* format, ID2D1SolidColorBrush* brush, bool visible)
+	:string(string), format(format), brush(brush), visible(visible)
 {
 	//hr = UI::Inst().GetWriteFactory()->CreateTextFormat(fontName, NULL, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, fontSize, L"", &textFormat);
 	//textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);

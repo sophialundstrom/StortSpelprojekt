@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <wchar.h>
-#include <math.h>
+#include "Math.h"
 #include <dwrite.h>
 #include <wincodec.h>
 #include "Graphics.h"
@@ -43,32 +43,27 @@ class UI : public Singleton<UI>
 public:
 	enum class COLOR
 	{
-		LIGHTSLATEGRAY = D2D1::ColorF::LightSlateGray,
-		CORNFLOWERBLUE = D2D1::ColorF::CornflowerBlue,
-		CRIMSON = D2D1::ColorF::Crimson,
-		RED = D2D1::ColorF::Red
+		GRAY
 	};
 
 	enum class TEXTFORMAT
 	{
 		DEFAULT,
-		TEST
+		TITLE,
+		TITLE_SMALL
 	};
 private:
-	//BRUSHES
-	const COLOR brushColors[4] =
+	//BRUSH COLORS
+	const Vector3 brushColors[1]
 	{
-		COLOR::LIGHTSLATEGRAY,
-		COLOR::CORNFLOWERBLUE,
-		COLOR::CRIMSON,
-		COLOR::RED
+		{ 173, 174, 164 }
 	};
 
 	//TEXT FORMATS
 	struct TextFormatDesc
 	{
 		TEXTFORMAT format = TEXTFORMAT::DEFAULT;
-		const WCHAR* fontName				= L"Verdana";
+		const WCHAR* fontName				= L"Georgia";
 		IDWriteFontCollection* collection	= nullptr;
 		DWRITE_FONT_WEIGHT fontWeight		= DWRITE_FONT_WEIGHT_NORMAL;
 		DWRITE_FONT_STYLE fontStyle			= DWRITE_FONT_STYLE_NORMAL;
@@ -79,32 +74,20 @@ private:
 		//ALIGNTMENTS HERE ALSO
 	};
 
-	const TextFormatDesc textFormatDescs[2] =
+	const TextFormatDesc textFormatDescs[3] =
 	{
 		TextFormatDesc(),
-		{ TEXTFORMAT::TEST, L"Verdana", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 50 }
+		{ TEXTFORMAT::TITLE, L"Georgia", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 30 },
+		{ TEXTFORMAT::TITLE_SMALL, L"Georgia", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 20 }
 	};
 
 	ID2D1Factory* UIFactory;
 	ID2D1RenderTarget* UIRenderTarget;
 	IDWriteFactory* writeFactory;
 	IWICImagingFactory* imageFactory;
-	//ID2D1SolidColorBrush* lightSlateGrayBrush;
-	//ID2D1SolidColorBrush* cornflowerBlueBrush;	
-	//ID2D1SolidColorBrush* crimsonBrush;
-	
 	std::map<TEXTFORMAT, IDWriteTextFormat*> textFormats;
 	std::map<COLOR, ID2D1SolidColorBrush*> brushes;
 	HWND UIwindow;
-
-	//D2D_VECTOR_2F buttonPos = { 50.f,50.f };
-	//Button* testButton;
-	//D2D_VECTOR_2F imagePos = { 87.f,600.f };
-	//Image* testImage;
-	//D2D_VECTOR_2F image2Pos = { 90.f,200.f };
-	//Image* testImage2;
-	//D2D_VECTOR_2F textPos = { 300.f,300.f };
-	//Text* testText;
 public:
 	UI(HWND window);
 	~UI();
