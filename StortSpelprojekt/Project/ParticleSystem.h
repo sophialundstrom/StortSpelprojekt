@@ -57,6 +57,7 @@ public:
 
 	ParticleSystem() = default;
 	ParticleSystem(const std::string& file, bool preview = false);
+	ParticleSystem(const std::string& file, bool preview = false, Vector3 pos);
 	ParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type);
 	~ParticleSystem();
 
@@ -82,7 +83,7 @@ public:
 
 	ID3D11ShaderResourceView* GetTexture()			    { return texture->Get(); }
 	std::string GetTexturePath()						{ return texture->GetPath(); }
-	std::string GetTextureFile()						 { return texture->GetFile(); }
+	std::string GetTextureFile()						{ return texture->GetFile(); }
 
 	Vector2 GetParticleExtents() const		{ return this->particleExtents; }
 	EmitterType GetType() const				{ return this->type; }

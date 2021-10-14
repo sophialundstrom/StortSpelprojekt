@@ -17,6 +17,66 @@ std::string GetNthString(const std::string& line, UINT n)
 	return temp.substr(0, temp.find_first_of(39));
 }
 
+
+ParticleSystem::ParticleSystem(const std::string& file, bool preview, Vector3 pos)
+	:position(pos), maxParticles(0), timeBetweenParticles(0), particlesLifetime(0), minVelocity(0), maxVelocity(0), size(0), particleExtents(0, 0), position(0, 0, 0), type(EmitterType::SPHERE),
+	timeSinceLastParticle(0), particleCount(0)
+{
+	std::string path = file;
+	std::string line = "";
+
+
+	//texture = new Texture("ParticleTextures/Gatos.png", "Gatos.png");
+
+
+
+	if (file == "default.ps" || file.find("\\") == std::string::npos)
+		path = FileSystem::ProjectDirectory::path + "\\ParticleSystems\\" + file;
+
+	std::ifstream reader;
+
+	reader.open(path, std::ios::beg);
+	if (!reader.is_open())
+	{
+		Print("FAILED TO READ PARTICLE SYSTEM FILE");
+		return;
+	}
+
+	while (!reader.eof())
+	{
+		reader >> maxParticles;
+		reader >> timeBetweenParticles;
+		reader >> particlesLifetime;
+		reader >> size;
+
+		reader >> minVelocity;
+		reader >> maxVelocity;
+
+		reader >> particleExtents.x;
+		reader >> particleExtents.y;
+
+		UINT temp;
+		reader >> temp;
+		type = EmitterType(temp);
+
+		reader >> position.x;
+		reader >> position.y;
+		reader >> position.z;
+
+		std::getline(reader, line);
+	}
+
+	std::string imageFile = GetNthString(line, 1);
+	std::string imagePath = FileSystem::ProjectDirectory::path + "\\ParticleTextures\\" + imageFile;
+	texture = new Texture(imagePath, imageFile);
+
+
+	if (preview)
+		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Particle), sizeof(Particle) * ABSOLUTE_MAX_PARTICLES);
+	else
+		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Particle), sizeof(Particle) * maxParticles);
+}
+
 ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 	:maxParticles(0), timeBetweenParticles(0), particlesLifetime(0), minVelocity(0), maxVelocity(0), size(0), particleExtents(0,0), position(0,0,0), type(EmitterType::SPHERE), 
 	timeSinceLastParticle(0), particleCount(0)
