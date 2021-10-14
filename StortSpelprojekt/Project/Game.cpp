@@ -232,7 +232,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
-	auto particleSystem = std::make_shared<ParticleSystem>("Eld.ps");
+	auto particleSystem = std::make_shared<ParticleSystem>("default.ps");
 	scene.AddParticleSystem("TestSystem", particleSystem);
 	particleRenderer.Bind(particleSystem);
 
