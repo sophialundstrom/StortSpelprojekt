@@ -15,7 +15,6 @@ struct TempMeshData
 class FBXLoader
 {
 private:
-	
 public:
 	FBXLoader(const std::string& directory)
 	{
@@ -75,7 +74,6 @@ public:
 	}
 
 private:
-
 	void PassToResources(const std::vector<TempMeshData*>& tempMeshData, const std::vector<Material*>& tempMaterials)
 	{
 		auto& resources = Resources::Inst();

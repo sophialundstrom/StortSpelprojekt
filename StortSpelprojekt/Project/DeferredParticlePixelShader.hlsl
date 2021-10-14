@@ -1,7 +1,11 @@
+Texture2D diffuseTexture : register(t0);
+sampler wrapSampler : register(s0);
+
 struct PS_INPUT
 {
     float4 position : SV_POSITION;
-    float3 color : COLOR;
+    float2 texCoords : TEXTURECOORDS;
+    //float3 color : COLOR;
 };
 
 struct PS_OUTPUT
@@ -19,7 +23,7 @@ PS_OUTPUT main(PS_INPUT input)
 {
     PS_OUTPUT output;
 
-    output.diffuseTexture = float4(input.color, 1.0f);
+    output.diffuseTexture = diffuseTexture.Sample(wrapSampler, input.texCoords);
     
     const float4 UNDEF = float4(-1.0f, -1.0f, -1.0f, 1.0f);
     output.normal =

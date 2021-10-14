@@ -181,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Button.h" />
+    <ClInclude Include="Canvas.h" />
     <ClInclude Include="CollectQuest.h" />
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
@@ -234,6 +235,7 @@
     <ClInclude Include="Random.h" />
     <ClInclude Include="PRay.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="SaveStation.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderData.h" />
     <ClInclude Include="ShadowMap.h" />

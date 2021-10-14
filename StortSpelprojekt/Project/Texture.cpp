@@ -4,7 +4,7 @@
 #include "stb_image.h"
 
 Texture::Texture(const std::string& path, std::string file)
-	:file(file)
+	:file(file), path(path)
 {
 	int imgWidth, imgHeight;
 	unsigned char* image = stbi_load((path).c_str(), &imgWidth, &imgHeight, nullptr, STBI_rgb_alpha);
