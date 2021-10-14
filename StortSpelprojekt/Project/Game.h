@@ -10,6 +10,7 @@
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
+#include "SaveStation.h"
 #include "Canvas.h"
 #include "Time.h"
 
@@ -33,6 +34,9 @@ private:
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
 
+    float lastSave = 0;
+    SaveStation saveStations[2];
+
     Terrain terrain;
 
     Canvas* currentCanvas;
@@ -53,6 +57,7 @@ private:
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);
 
+    void CheckSaveStationCollision();
     void CheckItemCollision();
 
     void Initialize();
