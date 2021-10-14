@@ -75,7 +75,8 @@ private:
 	Camera* sceneCamera;
 	Arrow* arrow;
 
-	float movementOfsetRadiant = 0;
+	float movementYRadiant = 0;
+	float movementXRadiant = 0;
 
 	float preJumpGroundLevel = 0;
 	float heightMapGroundLevel = 20.0f;

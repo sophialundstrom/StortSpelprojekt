@@ -19,7 +19,6 @@ bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 	//float zRadian = Get2DAngle(rotReference.x, rotReference.y, direction.x, direction.y);
 
 	SetRotation({ rotation.x, rotation.y + PI, rotation.z});
-	std::cout << "Arrow shot" << std::endl;
 	this->direction = direction * speed;
 	SetPosition(startPos);
 
