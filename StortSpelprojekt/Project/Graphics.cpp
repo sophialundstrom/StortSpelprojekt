@@ -1,9 +1,9 @@
 #include "Graphics.h"
 
-Graphics::Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd)
+Graphics::Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed)
 	:Singleton(this)
 {
-	if FAILED(CreateDeviceSwapchain(clientWidth, clientHeight, hWnd))
+	if FAILED(CreateDeviceSwapchain(clientWidth, clientHeight, hWnd, windowed))
 	{
 		Print("FAILED TO CREATE DEVICE AND SWAP CHAIN", "GRAPHICS");
 		return;
@@ -48,7 +48,7 @@ Graphics::~Graphics()
 	UISurface->Release();
 }
 
-HRESULT Graphics::CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd)
+HRESULT Graphics::CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	swapChainDesc.BufferDesc.Width = clientWidth;
@@ -65,11 +65,7 @@ HRESULT Graphics::CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWN
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.BufferCount = 1;
 	swapChainDesc.OutputWindow = hWnd;
-	swapChainDesc.Windowed = false;
-
-#ifdef _DEBUG
 	swapChainDesc.Windowed = true;
-#endif
 
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;

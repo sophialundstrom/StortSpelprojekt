@@ -211,9 +211,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//INGAME
 	auto ingameCanvas = new Canvas();
-	ingameCanvas->AddText({ 100, 20 }, "BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled), 200, 20, UI::COLOR::RED, UI::TEXTFORMAT::DEFAULT);
-	ingameCanvas->AddButton({ 200, 200 }, "TestButton", 50, 50, UI::COLOR::RED, TestFunc);
+	//ingameCanvas->AddText({ 100, 20 }, "BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled), 200, 20, UI::COLOR::RED, UI::TEXTFORMAT::DEFAULT);
+	//ingameCanvas->AddButton({ 200, 200 }, "TestButton", 50, 50, UI::COLOR::RED, TestFunc);
 	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "CompassBase.png");
+	ingameCanvas->AddImage({ 200, 200 }, "QuestBorder", "QuestBorder.png");
+	ingameCanvas->AddImage({ 100, 100 }, "QuestBackground", "QuestBackground.png");
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 
