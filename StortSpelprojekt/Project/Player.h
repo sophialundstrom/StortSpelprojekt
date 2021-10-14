@@ -6,6 +6,8 @@
 #include "Terrain.h"
 #include "Item.h"
 
+#undef Ray
+
 struct Inventory 
 {
 	//std::unordered_map here?
@@ -77,7 +79,7 @@ private:
 
 	float preJumpGroundLevel = 0;
 	float heightMapGroundLevel = 20.0f;
-	float mouseSensitivity = 10.f;
+	float mouseSensitivity = 5.f;
 
 	float gravity = 9.82f;
 	float timePassed = 0;
@@ -96,7 +98,11 @@ private:
 	
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);
+
+	std::shared_ptr<RayCollider> ray;
 	std::shared_ptr<BoundingSphere> bounds;
+	std::shared_ptr<FrustumCollider> frustum;
+
 	Inventory inventory;
 public:
 	void Update(HeightMap* heightMap);
@@ -105,8 +111,12 @@ public:
 		:Model("LowPolyCharacter", "Player"), sceneCamera(camera)
 	{
 		bounds = std::make_shared<BoundingSphere>();
+		ray = std::make_shared<RayCollider>();
+		ray->length = 40;
 
 		bounds->SetScale(3);
+
+		frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
 
 		Load(file);
 	}
@@ -121,7 +131,10 @@ public:
 		std::cout << "CURRENT MOVEMENTSPEED " << stats.currentSpeed << std::endl;
 		std::cout << "BARBARIANS KILLED " << stats.barbariansKilled << std::endl;
 	}
+
 	std::shared_ptr<BoundingSphere> GetBounds(){ return bounds; }
+	std::shared_ptr<RayCollider> GetRay() { return ray; }
+	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 
 	Inventory& Inventory() { return inventory; }
 	Stats& Stats() { return stats; }
