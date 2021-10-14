@@ -77,7 +77,7 @@ void LoadingScreen::Draw()
 	Graphics::Inst().GetContext().VSSetShader(vShader, nullptr, 0);
 
 	Graphics::Inst().GetContext().PSSetShader(pShader, nullptr, 0);
-	Graphics::Inst().GetContext().PSSetShaderResources(0, 1, &texture->srv);
+	texture->Bind();
 	Graphics::Inst().GetContext().PSSetSamplers(0, 1, &sampler);
 
 	Graphics::Inst().GetContext().Draw(4, 0);
