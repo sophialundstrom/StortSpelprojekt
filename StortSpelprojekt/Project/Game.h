@@ -57,6 +57,7 @@ private:
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);
 
+    void CheckSaveStationCollision();
     void CheckItemCollision();
 
     void Initialize();

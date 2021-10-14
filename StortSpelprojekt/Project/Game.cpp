@@ -17,22 +17,10 @@ void Game::Update()
 
 	CheckItemCollision();
 
+	CheckSaveStationCollision();
+
 	scene.UpdateDirectionalLight(player->GetPosition());
 
-	for (auto& saveStation : saveStations)
-	{
-		saveStation.Update();
-		
-		if (Collision::Intersection(*saveStation.Collider(), *player->GetFrustum()))
-		{
-			Print("COLLIDING");
-			if (Time::Get() - lastSave > 5 && Event::KeyIsPressed('E'))
-			{
-				lastSave = Time::Get();
-				Print("SAVED");
-			}
-		}
-	}
 		
 	Event::ClearRawDelta();
 }
@@ -139,14 +127,31 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	colliderRenderer.Bind(item->GetBounds());
 }
 
+void Game::CheckSaveStationCollision()
+{
+	for (auto& saveStation : saveStations)
+	{
+		saveStation.Update();
+
+		if (Collision::Intersection(*saveStation.Collider(), *player->GetFrustum()))
+		{
+			if (Time::Get() - lastSave > 5 && Event::KeyIsPressed('E'))
+			{
+				Print("SAVED");
+				player->Save("Test");
+				QuestLog::Inst().Save("Test");
+				lastSave = Time::Get();
+			}
+		}
+	}
+}
+
 void Game::CheckItemCollision()
 {
 	for (auto &item : items)
 	{
 		if (Collision::Intersection(*item->GetBounds(), *player->GetFrustum()))
 		{
-			Print("AVAIABLE ITEM");
-
 			if (Event::KeyIsPressed('E'))
 			{
 				Print("PICKED UP ITEM");
@@ -301,14 +306,6 @@ State Game::Run()
 		if (Event::KeyIsPressed('P'))
 		{
 			player->GetStats();
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('Y'))
-		{
-			player->Save("Test");
-			QuestLog::Inst().Save("Test");
-
 			lastClick = Time::Get();
 		}
 	}
