@@ -19,8 +19,6 @@ private:
 public:
 	FBXLoader(const std::string& directory)
 	{
-		Timer timer;
-		timer.Start();
 		size_t numFBX = 0;
 		std::vector<std::string> names;
 
@@ -37,9 +35,6 @@ public:
 		std::vector<TempMeshData*> tempMeshData = std::vector<TempMeshData*>(numFBX);
 		std::vector<Material*> tempMaterials = std::vector<Material*>(numFBX);
 
-		//LoadingScreen LS; // vector subscript out of range?!
-
-		//Sleep(2000);
 		{
 			std::atomic<int> fbxLeft;
 			fbxLeft = numFBX;
@@ -63,24 +58,20 @@ public:
 					if (scene->HasMeshes())
 						tempMeshData[i] = LoadMeshData(scene->mMeshes[0]);
 
-					fbxLeft.store(fbxLeft - 1);
+					fbxLeft.fetch_sub(1);
 
 					});
 
 			}
-			
-			// while loop here...
+
 			while (fbxLeft != 0)
 			{
-				//std::cout << "LOADING...\n";
-				//Sleep(2000);
+
 			}
 
 		} // thread pool gets destroyed
 			
 		PassToResources(tempMeshData, tempMaterials);
-
-		Print(timer.DeltaTime());
 	}
 
 private:
