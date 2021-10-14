@@ -7,10 +7,16 @@ class ColliderRenderer : public Renderer
 private:
 	//INDEX BUFFERS
 	const UINT SPHERE_INDICES = 48;
-	ID3D11Buffer* sphereIndices;
+	ID3D11Buffer* sphereIndices = nullptr;
 
 	const UINT BOX_INDICES = 24;
-	ID3D11Buffer* boxIndices;
+	ID3D11Buffer* boxIndices = nullptr;
+
+	const UINT RAY_INDICES = 2;
+	ID3D11Buffer* rayIndices = nullptr;
+
+	const UINT FRUSTUM_INDICES = 24;
+	ID3D11Buffer* frustumIndices = nullptr;
 
 	//BUFFER
 	ID3D11Buffer* matrixBuf = nullptr;
@@ -60,6 +66,16 @@ public:
 		};
 		CreateIndexBuffer(boxIndices, BOX_INDICES, bIndices);
 
+		static const UINT rIndices[] =
+		{ 0, 1 };
+		CreateIndexBuffer(rayIndices, RAY_INDICES, rIndices);
+
+		static const UINT fIndices[] =
+		{
+			0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7
+		};
+		CreateIndexBuffer(frustumIndices, FRUSTUM_INDICES, fIndices);
+
 		//BUFFER
 		CreateBuffer(matrixBuf, sizeof(Matrix));
 
@@ -80,8 +96,6 @@ public:
 			if (!LoadShader(pixelShader, deferred_ps_path))
 				return;
 		}
-
-		
 
 		Print("SUCCEEDED LOADING SHADERS", "COLLIDER RENDERER");
 
@@ -136,16 +150,27 @@ public:
 
 			collider->Bind();
 
-			if (collider->Type() == ColliderType::BOX)
+			switch (collider->Type())
 			{
+			case ColliderType::BOX:
 				Graphics::Inst().GetContext().IASetIndexBuffer(boxIndices, DXGI_FORMAT_R32_UINT, 0);
 				Graphics::Inst().GetContext().DrawIndexed(BOX_INDICES, 0, 0);
-			}
+				break;
 
-			else
-			{
+			case ColliderType::SPHERE:
 				Graphics::Inst().GetContext().IASetIndexBuffer(sphereIndices, DXGI_FORMAT_R32_UINT, 0);
 				Graphics::Inst().GetContext().DrawIndexed(SPHERE_INDICES, 0, 0);
+				break;
+
+			case ColliderType::RAY:
+				Graphics::Inst().GetContext().IASetIndexBuffer(rayIndices, DXGI_FORMAT_R32_UINT, 0);
+				Graphics::Inst().GetContext().DrawIndexed(RAY_INDICES, 0, 0);
+				break;
+
+			case ColliderType::FRUSTUM:
+				Graphics::Inst().GetContext().IASetIndexBuffer(frustumIndices, DXGI_FORMAT_R32_UINT, 0);
+				Graphics::Inst().GetContext().DrawIndexed(FRUSTUM_INDICES, 0, 0);
+				break;
 			}
 		}
 	}

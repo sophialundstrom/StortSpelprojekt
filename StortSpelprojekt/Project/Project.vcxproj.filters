@@ -147,6 +147,9 @@
     <Filter Include="Header Files\UI\.cpp">
       <UniqueIdentifier>{ecb8c68c-124d-41d6-b7f2-7c26782e3573}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Scene\Game\SaveStation">
+      <UniqueIdentifier>{83465f75-34dd-401b-9242-706cec97dc2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -447,6 +450,9 @@
     </ClInclude>
     <ClInclude Include="Canvas.h">
       <Filter>Header Files\UI\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveStation.h">
+      <Filter>Header Files\Application\Scene\Game\SaveStation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
