@@ -2,11 +2,16 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
+<<<<<<< HEAD
       <FullPath>D:\Repository\StortSpelprojekt\x64\Debug\Project.exe</FullPath>
+=======
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\Project.exe</FullPath>
+>>>>>>> main
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
+<<<<<<< HEAD
       <FullPath>D:\Repository\StortSpelprojekt\x64\Debug\AnimatedModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
@@ -80,6 +85,81 @@
     </ContentFile>
     <ContentFile>
       <FullPath>D:\Repository\StortSpelprojekt\x64\Debug\UnlitModelVertexShader.cso</FullPath>
+=======
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\AnimatedModelVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\DeferredColliderPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\DeferredTerrainPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\ColliderPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\ColliderVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\DeferredPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\DeferredVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\ForwardModelPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\ForwardParticlePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\DeferredModelPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\ForwardTerrainPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\IDPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\IDVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\ModelVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\ParticleGeometryShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\DeferredParticlePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\ParticleVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\ShadowVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\TerrainDomainShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\TerrainGeometryShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\TerrainHullShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\TerrainVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\UnlitAnimatedModelVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\UnlitForwardModelPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>F:\Skola\GitDesktop\StoraSpel\StortSpelprojekt\x64\Debug\UnlitModelVertexShader.cso</FullPath>
+>>>>>>> main
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

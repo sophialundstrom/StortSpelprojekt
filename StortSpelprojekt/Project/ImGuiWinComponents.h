@@ -258,3 +258,32 @@ struct SeperatorComponent : public ImGuiWinComponent
 		ImGui::Separator();
 	}
 };
+
+
+struct ImageComponent : public ImGuiWinComponent
+{
+	ID3D11ShaderResourceView* value = nullptr;
+
+	float width, height;
+	ImageComponent(const std::string& name, bool sameLine, ID3D11ShaderResourceView* srv, float width, float height)
+		:ImGuiWinComponent(name, sameLine), width(width), height(height), value(srv)
+	{
+	}
+
+	// Inherited via ImGuiWinComponent
+	virtual bool Changed() override
+	{
+		return false;
+	}
+
+	virtual void Update() override
+	{
+		if (!value)
+			return;
+		if (sameLine)
+			ImGui::SameLine();
+
+		ImGui::Image(value, { width, height });
+	}
+
+};
