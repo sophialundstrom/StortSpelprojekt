@@ -198,8 +198,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
-	auto particleSystem = std::make_shared<ParticleSystem>("Eld.ps");
+	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
 	scene.AddParticleSystem("TestSystem", particleSystem);
+	particleSystem.get()->SetPosition(0, 100, 0);
 	particleRenderer.Bind(particleSystem);
 
 	(void)Run();
