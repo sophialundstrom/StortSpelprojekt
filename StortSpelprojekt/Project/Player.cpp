@@ -84,9 +84,12 @@ void Player::Update(HeightMap* heightMap)
 		if (lookDirection.x < 0)
 			movementYRadiant *= -1;
 
-		movementXRadiant = Get2DAngle({ lookDirection.y, lookDirection.z }, { 0, 1 });
-		if (lookDirection.y > 0)
-			movementXRadiant *= -1;
+		Vector2 camera2D = { lookDirection.y, lookDirection.z };
+		movementXRadiant = acos(lookDirection.Dot(Vector3(0, 1, 0)) / lookDirection.Length());
+		/*camera2D = { lookDirection.y, lookDirection.x };
+		float tempRad = acos(camera2D.Dot(Vector2(1, 0)) / camera2D.Length());
+		if (tempRad < movementXRadiant)
+			movementXRadiant = tempRad;*/
 	}
 
 	Matrix movementOfsetMatrix = Matrix::CreateRotationY(movementYRadiant);
@@ -136,7 +139,7 @@ void Player::Update(HeightMap* heightMap)
 		mouseCurrentSensitivity = mouseAimSensitivity;
 		if (Event::LeftIsClicked())
 		{
-			arrow->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { movementXRadiant, movementYRadiant, 0 });
+			arrow->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0});
 		}
 	}
 	else
