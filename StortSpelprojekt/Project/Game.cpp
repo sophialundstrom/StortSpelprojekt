@@ -126,17 +126,6 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	colliderRenderer.Bind(item->GetBounds());
 }
 
-void Game::AddArrow(const std::string fileName)
-{
-	auto arrow = std::make_shared<Arrow>(fileName);
-	scene.AddModel(fileName, arrow);
-	arrows.emplace_back(arrow);
-	modelRenderer.Bind(scene.Get<Model>(fileName));
-	shadowRenderer.Bind(scene.Get<Model>(fileName));
-	arrow->SetPosition(0, -100, 0);
-	arrow->SetScale(2);
-}
-
 void Game::CheckSaveStationCollision()
 {
 	for (auto& saveStation : saveStations)
@@ -184,25 +173,20 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(DEFERRED, 40),
 	colliderRenderer(DEFERRED)
 {
+
 	Initialize();
 
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(50, 4, 4);
 
-	for (int i = 0; i < 3; i++)
-	{
-		AddArrow("Arrow");
-	}
-
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera(), arrows);
+	player = std::make_shared<Player>(file, scene.GetCamera());
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
-
 	//colliderRenderer.Bind(player->GetRay());
 	colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
@@ -244,9 +228,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");
 
-	friendly->SetPosition(40, 150, -30);
-	friendly->SetScale(10);
-	//friendly->SetParent(player);
+	friendly->SetPosition(10, 0, 10);
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
@@ -325,11 +307,8 @@ State Game::Run()
 			player->GetStats();
 			lastClick = Time::Get();
 		}
-
-
-
 	}
-
+	
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;
 
