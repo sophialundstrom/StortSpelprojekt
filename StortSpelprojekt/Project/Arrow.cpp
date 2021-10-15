@@ -13,6 +13,8 @@ Arrow::~Arrow()
 
 bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 {
+	bool isArrowActivating = false;
+
 	if(isShot == false)
 	{
 		xRadius = rotation.x;
@@ -21,9 +23,10 @@ bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 		this->direction = direction;
 		SetPosition(startPos);
 		isShot = true;
+		isArrowActivating = true;
 	}
 	
-	return isShot;
+	return isArrowActivating;
 }
 
 void Arrow::Update()

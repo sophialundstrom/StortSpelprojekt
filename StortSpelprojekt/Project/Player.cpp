@@ -143,10 +143,15 @@ void Player::Update(HeightMap* heightMap)
 		{
 			if (Event::LeftIsClicked())
 			{
-				arrows.at(arrowIndex)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-				lastClick = Time::Get();
-				arrowIndex++;
-				arrowIndex = arrowIndex% arrows.size();
+				int currentIndex = 0;
+				bool isPlayerShootingArrow = false;
+				while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
+				{
+					isPlayerShootingArrow = arrows.at(currentIndex)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+					lastClick = Time::Get();
+					currentIndex++;
+				}
+				
 			}
 		}
 	}
