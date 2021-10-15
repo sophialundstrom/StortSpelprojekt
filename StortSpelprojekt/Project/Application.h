@@ -4,6 +4,7 @@
 #include "Event.h"
 #include "Time.h"
 #include "States.h"
+#include "LoadingScreen.h"
 
 class Application
 {
@@ -125,12 +126,14 @@ public:
 				break;
 
 			case State::MENU:
+
 				currentGameState->Delete();
 				InitWindowed();
 				currentGameState = new DebugMainMenu(window->ClientWidth(), window->ClientHeight());
 				break;
 
 			case State::GAME:
+				RunLoadingScreen();
 				delete currentGameState;
 				InitFullscreen();
 				currentGameState = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
@@ -138,11 +141,14 @@ public:
 				break;
 
 			case State::LEVEL:
+
+				RunLoadingScreen();
 				currentGameState->Delete();
 				currentGameState = new LevelEditor(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 				break;
 
 			case State::PARTICLE:
+
 				currentGameState->Delete();
 				currentGameState = new ParticleEditor(window->ClientWidth(), window->ClientHeight());
 				break;
