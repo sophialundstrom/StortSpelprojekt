@@ -61,6 +61,30 @@ void Game::Resume()
 	currentCanvas = canvases["INGAME"];
 }
 
+void Game::Options()
+{
+	paused = true;
+	currentCanvas = canvases["OPTIONS"];
+}
+
+void Game::HowToPlay()
+{
+	paused = true;
+	currentCanvas = canvases["HOWTOPLAY"];
+}
+
+void Game::BacktoPause()
+{
+	paused = true;
+	currentCanvas = canvases["PAUSED"];
+}
+
+void Game::MainMenu()
+{
+	paused = false;
+	mainMenu = true;
+}
+
 void Game::Initialize()
 {
 	//LOAD SCENE
@@ -161,9 +185,22 @@ void Game::CheckItemCollision()
 	}
 }
 
-void TestFunc()
+void TestFuncResume()
 {
-	Print("HOVERING");
+	Print("RESUME");
+}
+
+void TestFuncOptions()
+{
+	Print("OPTIONS");
+}
+void TestFuncHTP()
+{
+	Print("HOW TO PLAY");
+}
+void TestFuncMenu()
+{
+	Print("MENU");
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
@@ -190,6 +227,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//colliderRenderer.Bind(player->GetRay());
 	colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
+	mainMenu = false;
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
@@ -217,10 +255,21 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//PAUSED
 	auto pauseCanvas = new Canvas();
 	
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Pause.png", 1.0f, 0.9f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this]{ Resume(); }, TestFunc);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Z", "Pause.png", 1.0f, 1.0f);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this]{ Resume(); }, TestFuncResume);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.35f }, "B", 270, 100, UI::COLOR::GRAY, [this] { Options(); }, TestFuncOptions);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.2f }, "C", 250, 100, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncMenu);
+
 
 	canvases["PAUSED"] = pauseCanvas;
+
+
+	// OPTIONS
+	auto optionsCanvas = new Canvas();
+	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Options.png", 1.0f, 1.0f);
+	optionsCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "D", 200, 78, UI::COLOR::GRAY, [this] { Pause(); }, TestFuncResume);
+
+	canvases["OPTIONS"] = optionsCanvas;
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
@@ -310,8 +359,15 @@ State Game::Run()
 			player->GetStats();
 			lastClick = Time::Get();
 		}
+
+		
+
 	}
 	
+	if (mainMenu)
+		return State::MENU;
+	
+
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;
 
