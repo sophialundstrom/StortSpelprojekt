@@ -191,7 +191,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(50, 4, 4);
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		AddArrow("Arrow");
 		std::cout << arrows.size() << std::endl;
@@ -204,6 +204,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
+
 	//colliderRenderer.Bind(player->GetRay());
 	colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
@@ -257,11 +258,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 
 
-	//Temp DELETE WHEN DEBUG IS OVER
 
-	
-
-	//^		^		^		^		^
 
 
 	(void)Run();
@@ -341,8 +338,6 @@ State Game::Run()
 
 	}
 
-
-	
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;
 

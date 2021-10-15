@@ -75,7 +75,9 @@ private:
 	Stats stats;
 
 	Camera* sceneCamera;
+	//ARROW STUFF
 	std::vector<std::shared_ptr<Arrow>> arrows;
+	int arrowIndex = 0;
 
 	float movementYRadiant = 0;
 	float movementXRadiant = 0;

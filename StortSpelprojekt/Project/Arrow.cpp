@@ -20,10 +20,10 @@ bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 		SetRotation({ rotation.x, rotation.y + PI, rotation.z});
 		this->direction = direction;
 		SetPosition(startPos);
+		isShot = true;
 	}
 	
-	isShot = true;
-	return true;
+	return isShot;
 }
 
 void Arrow::Update()

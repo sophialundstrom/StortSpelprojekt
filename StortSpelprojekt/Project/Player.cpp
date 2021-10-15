@@ -132,16 +132,21 @@ void Player::Update(HeightMap* heightMap)
 
 	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 2.0f, 0.0f);
 
+	static float lastClick = 0;
+
 	if(Event::RightIsClicked())
 	{
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
-		if (Event::LeftIsClicked())
+		
+		if (Time::Get() - lastClick > 0.5f)
 		{
-			for (int i = 0; i < arrows.size(); i++)
+			if (Event::LeftIsClicked())
 			{
-				arrows.at(i)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-				std::cout << "SHOOT" << std::endl;
+				arrows.at(arrowIndex)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+				lastClick = Time::Get();
+				arrowIndex++;
+				arrowIndex = arrowIndex% arrows.size();
 			}
 		}
 	}
