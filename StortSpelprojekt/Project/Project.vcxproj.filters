@@ -463,11 +463,16 @@
     <ClInclude Include="SaveStation.h">
       <Filter>Header Files\Application\Scene\Game\SaveStation</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="LoadingScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Arrow.h">
       <Filter>Header Files\Application\Scene\Game\Combat</Filter>
+=======
+    <ClInclude Include="UIComponent.h">
+      <Filter>Header Files\UI\.h</Filter>
+>>>>>>> main
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
