@@ -454,6 +454,9 @@
     <ClInclude Include="SaveStation.h">
       <Filter>Header Files\Application\Scene\Game\SaveStation</Filter>
     </ClInclude>
+    <ClInclude Include="UIComponent.h">
+      <Filter>Header Files\UI\.h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">

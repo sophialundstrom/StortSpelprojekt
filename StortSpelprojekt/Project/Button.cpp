@@ -1,32 +1,8 @@
 #include "Button.h"
 #include "Canvas.h"
 
-Button::Button()
-{
-	bounds.left = 0.0f;
-	bounds.top = 0.0f;
-	bounds.right = 50.0f;
-	bounds.bottom = 50.0f;
-
-	buttonBrush = 0;
-}
-
-Button::~Button()
-{
-}
-
-Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrush* brush, std::function<void()> onClickFunction, std::function<void()> onHoverFunction)
-	:onClickFunction(onClickFunction), onHoverFunction(onHoverFunction)
-{
-	bounds.left = pos.x - (width / 2);
-	bounds.top = pos.y - (height / 2);
-	bounds.right = pos.x + (width / 2);
-	bounds.bottom = pos.y + (height / 2);
-
-	buttonBrush = brush;
-}
-
-Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrush* brush)
+Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrush* brush, std::function<void()> onClickFunction, std::function<void()> onHoverFunction, bool visible)
+	:onClickFunction(onClickFunction), onHoverFunction(onHoverFunction), UIComponent(width, height, visible)
 {
 	bounds.left = pos.x - (width / 2);
 	bounds.top = pos.y - (height / 2);

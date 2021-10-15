@@ -43,16 +43,17 @@ UI::UI(HWND window)
 		return;
 	}
 
-	for (auto& color : brushColors)
+	for (UINT i = 0; i < ARRAYSIZE(brushColors); ++i)
 	{
+		Vector3 color = brushColors[i] * (1.0f / 255.0f);
 		ID2D1SolidColorBrush* brush = nullptr;
-		hr = UIRenderTarget->CreateSolidColorBrush(D2D1::ColorF((UINT)color), &brush);
+		hr = UIRenderTarget->CreateSolidColorBrush(D2D1::ColorF(color.x, color.y, color.z), &brush);
 		if FAILED(hr)
 		{
 			Print("FAILED TO CREATE BRUSH", "UI");
 			return;
 		}
-		brushes[color] = brush;
+		brushes[(COLOR)i] = brush;
 	}
 
 	for (auto& desc : textFormatDescs)

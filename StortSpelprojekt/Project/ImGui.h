@@ -8,6 +8,8 @@
 #include <iostream>
 struct ImGUI
 {
+    static bool Initialized;
+
 	static void BeginFrame()
     {
 		ImGui_ImplDX11_NewFrame();
@@ -27,6 +29,8 @@ struct ImGUI
 
 	static void Initialize()
 	{
+        ImGUI::Initialized = true;
+
 		ImGui::CreateContext();
 		ImGui_ImplWin32_Init(GetActiveWindow());
 		ImGui_ImplDX11_Init(&Graphics::Inst().GetDevice(), &Graphics::Inst().GetContext());
@@ -91,8 +95,15 @@ struct ImGUI
 
 	static void ShutDown()
 	{
+        if (!ImGUI::Initialized)
+            return;
+
 		ImGui_ImplDX11_Shutdown();
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();
+
+        ImGUI::Initialized = false;
 	}
 };
+
+inline bool ImGUI::Initialized = false;
