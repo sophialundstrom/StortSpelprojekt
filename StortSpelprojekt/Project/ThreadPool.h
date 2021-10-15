@@ -63,7 +63,7 @@ private:
 
 						std::unique_lock<std::mutex> lock(eventMutex);
 
-						eventVar.wait(lock, [=] {return stopping || !tasks.empty(); });
+						eventVar.wait(lock, [=] { return stopping || !tasks.empty(); });
 						// each thread waits until it is notified or spatial wakup.
 						// lambda function control so spatial wakeup doesn't let the thread continue.
 						// if true the lock is reaquired and the thread continues.

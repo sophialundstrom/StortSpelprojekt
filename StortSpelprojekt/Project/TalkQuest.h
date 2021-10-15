@@ -23,8 +23,8 @@ public:
 		//Complete();
 	}
 
-	virtual void RenderUI() override
+	virtual void UpdateUI(std::string& string) override
 	{
-		Print(name);
+		string = "Talk to " + NPC + ".";
 	}
 };

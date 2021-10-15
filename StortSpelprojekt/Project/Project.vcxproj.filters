@@ -150,6 +150,9 @@
     <Filter Include="Header Files\Application\Scene\Game\Pathing">
       <UniqueIdentifier>{90e584c9-bff9-4123-894f-dabf62201477}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Scene\Game\SaveStation">
+      <UniqueIdentifier>{83465f75-34dd-401b-9242-706cec97dc2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -462,6 +465,12 @@
     </ClInclude>
     <ClInclude Include="Node.h">
       <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveStation.h">
+      <Filter>Header Files\Application\Scene\Game\SaveStation</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComponent.h">
+      <Filter>Header Files\UI\.h</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
