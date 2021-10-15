@@ -147,6 +147,9 @@
     <Filter Include="Header Files\UI\.cpp">
       <UniqueIdentifier>{ecb8c68c-124d-41d6-b7f2-7c26782e3573}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Scene\Game\Pathing">
+      <UniqueIdentifier>{90e584c9-bff9-4123-894f-dabf62201477}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -211,6 +214,12 @@
     </ClCompile>
     <ClCompile Include="Text.cpp">
       <Filter>Header Files\UI\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -447,6 +456,12 @@
     </ClInclude>
     <ClInclude Include="Canvas.h">
       <Filter>Header Files\UI\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
