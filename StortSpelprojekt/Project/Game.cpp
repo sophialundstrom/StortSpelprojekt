@@ -280,7 +280,6 @@ State Game::Run()
 		{
 			Print("Killed barbarian!");
 			player->Stats().barbariansKilled++;
-			canvases["INGAME"]->UpdateText("BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled));
 			lastClick = Time::Get();
 		}
 

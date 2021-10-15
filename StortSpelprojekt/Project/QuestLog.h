@@ -36,9 +36,9 @@ private:
 		for (UINT i = 0; i < activeQuests.size(); ++i)
 			if (activeQuests[i] == quest)
 			{
-				activeQuests.erase(activeQuests.begin() + i);
 				ingameCanvas->RemoveText(activeQuests[i]->Name() + "title");
 				ingameCanvas->RemoveText(activeQuests[i]->Name() + "text");
+				activeQuests.erase(activeQuests.begin() + i);
 			}	
 	}
 
@@ -50,10 +50,10 @@ private:
 
 			if (!ingameCanvas->Exists<Text>(quest->Name() + "title"))
 			{
-				ingameCanvas->AddText({ 150, titlePositions[i] }, quest->Name() + "title", quest->Name(), 250, 50, UI::COLOR::GRAY, UI::TEXTFORMAT::TITLE_SMALL);
+				ingameCanvas->AddText({ 170, titlePositions[i] }, quest->Name() + "title", quest->Name(), 250, 50, UI::COLOR::GRAY, UI::TEXTFORMAT::TITLE_SMALL);
 				std::string text;
 				quest->UpdateUI(text);
-				ingameCanvas->AddText({ 150, titlePositions[i] + 20 }, quest->Name() + "text", text, 250, 50, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
+				ingameCanvas->AddText({ 170, titlePositions[i] + 20 }, quest->Name() + "text", text, 250, 50, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
 			}
 
 			else
