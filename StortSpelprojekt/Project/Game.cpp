@@ -17,8 +17,11 @@ void Game::Update()
 
 	CheckItemCollision();
 
+	CheckSaveStationCollision();
+
 	scene.UpdateDirectionalLight(player->GetPosition());
 
+		
 	Event::ClearRawDelta();
 }
 
@@ -66,6 +69,13 @@ void Game::Initialize()
 
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
+
+	//SAVE STATIONS
+	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
+	colliderRenderer.Bind(saveStations[0].Collider());
+
+	saveStations[1] = SaveStation({ 20, 0, -20 }, 1, scene.GetDrawables());
+	colliderRenderer.Bind(saveStations[1].Collider());
 
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
@@ -117,15 +127,37 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	colliderRenderer.Bind(item->GetBounds());
 }
 
+void Game::CheckSaveStationCollision()
+{
+	for (auto& saveStation : saveStations)
+	{
+		saveStation.Update();
+
+		if (Collision::Intersection(*saveStation.Collider(), *player->GetFrustum()))
+		{
+			if (Time::Get() - lastSave > 5 && Event::KeyIsPressed('E'))
+			{
+				Print("SAVED");
+				player->Save("Test");
+				QuestLog::Inst().Save("Test");
+				lastSave = Time::Get();
+			}
+		}
+	}
+}
+
 void Game::CheckItemCollision()
 {
 	for (auto &item : items)
 	{
-		if(item->Collision(player->GetBounds().get()))
+		if (Collision::Intersection(*item->GetBounds(), *player->GetFrustum()))
 		{
-			Print("HEJ");
-			player->Inventory().AddItem(item->GetType());
-			RemoveItem(item->GetName());
+			if (Event::KeyIsPressed('E'))
+			{
+				Print("PICKED UP ITEM");
+				player->Inventory().AddItem(item->GetType());
+				RemoveItem(item->GetName());
+			}
 		}
 	}
 }
@@ -142,10 +174,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(DEFERRED, 40),
 	colliderRenderer(DEFERRED)
 {
+
 	Initialize();
 
 	//LOAD SCENE
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 1.0f, 20.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(50, 4, 4);
 
 	//PLAYER
@@ -155,10 +188,12 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
+	//colliderRenderer.Bind(player->GetRay());
+	colliderRenderer.Bind(player->GetFrustum());
+	player->GetFrustum()->SetParent(player);
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-
 	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "", "HouseTexture"};
 	building = std::make_shared<Building>(meshNames, materialNames, "Building");
@@ -198,8 +233,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
-	auto particleSystem = std::make_shared<ParticleSystem>("Eld.ps");
-	scene.AddParticleSystem("TestSystem", particleSystem);
+	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
+	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ 0,30,0 });
 	particleRenderer.Bind(particleSystem);
 
 	(void)Run();
@@ -272,14 +307,6 @@ State Game::Run()
 		if (Event::KeyIsPressed('P'))
 		{
 			player->GetStats();
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('Y'))
-		{
-			player->Save("Test");
-			QuestLog::Inst().Save("Test");
-
 			lastClick = Time::Get();
 		}
 	}
