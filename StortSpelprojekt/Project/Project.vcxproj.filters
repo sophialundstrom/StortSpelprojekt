@@ -150,9 +150,6 @@
     <Filter Include="Header Files\Application\Scene\Game\SaveStation">
       <UniqueIdentifier>{83465f75-34dd-401b-9242-706cec97dc2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Scene\Game\Combat">
-      <UniqueIdentifier>{8ce603ae-3547-49a1-91f0-b2d9460259d6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -222,7 +219,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Arrow.cpp">
-      <Filter>Header Files\Application\Scene\Game\Combat</Filter>
+      <Filter>Header Files\Application\Scene\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -463,16 +460,20 @@
     <ClInclude Include="SaveStation.h">
       <Filter>Header Files\Application\Scene\Game\SaveStation</Filter>
     </ClInclude>
-<<<<<<< HEAD
+    <ClInclude Include="UIComponent.h">
+      <Filter>Header Files\UI\.h</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingVolumes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="LoadingScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="VolumeRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Arrow.h">
-      <Filter>Header Files\Application\Scene\Game\Combat</Filter>
-=======
-    <ClInclude Include="UIComponent.h">
-      <Filter>Header Files\UI\.h</Filter>
->>>>>>> main
+      <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -553,5 +554,8 @@
     </FxCompile>
     <FxCompile Include="LoadingPS.hlsl" />
     <FxCompile Include="LoadingVS.hlsl" />
+    <FxCompile Include="VolumeIDVertexShader.hlsl" />
+    <FxCompile Include="VolumePixelShader.hlsl" />
+    <FxCompile Include="VolumeVertexShader.hlsl" />
   </ItemGroup>
 </Project>
