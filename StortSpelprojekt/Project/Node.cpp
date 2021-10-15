@@ -1,5 +1,9 @@
 #include "Node.h"
 
+Node::Node()
+{
+}
+
 Node::Node(bool walkable, Vector3 position)
 {
 	this->walkable = walkable;

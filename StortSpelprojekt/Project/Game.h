@@ -13,6 +13,7 @@
 #include "SaveStation.h"
 #include "Canvas.h"
 #include "Time.h"
+#include "Grid.h"
 
 //PlayerClassLib
 #include <math.h>
@@ -23,6 +24,9 @@ class Game : public GameState
 private:
     bool paused = false;
     const std::string file = "Default"; //"Test"
+
+    //-----TEMP-----//
+    Grid grid;
 
     std::unique_ptr<QuestLog> questLog;
     std::unique_ptr<UI> userInterface;

@@ -9,7 +9,7 @@ constexpr float PI_DIV4 = PI / 4.0f;
 
 inline int roundToInt(float number)
 {
-	int returnValue;
+	int returnValue = -1;
 	if (number - (int)number < 0.5f)
 	{
 		returnValue = (int)number;
