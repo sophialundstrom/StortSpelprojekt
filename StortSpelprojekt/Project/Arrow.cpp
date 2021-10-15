@@ -1,9 +1,9 @@
 #include "Arrow.h"
 
 Arrow::Arrow(const std::string file)
-	:Model("Arrow", "Arrow")
+	:Model(file, "Arrow")
 {
-	speed = 50.f;
+	speed = 10.f;
 	lifeTime = 5.0f;
 }
 
@@ -13,29 +13,40 @@ Arrow::~Arrow()
 
 bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 {
-	//Vector3 rotReference(0, 0, 1);
-	//float xRadian = Get2DAngle(rotReference.y, rotReference.z, direction.y, direction.z);
-	//float yRadian = Get2DAngle(rotReference.x, rotReference.z, direction.x, direction.z);
-	//float zRadian = Get2DAngle(rotReference.x, rotReference.y, direction.x, direction.y);
+	if(isShot == false)
+	{
+		xRadius = rotation.x;
 
-	SetRotation({ rotation.x, rotation.y + PI, rotation.z});
-	this->direction = direction * speed;
-	SetPosition(startPos);
-
+		SetRotation({ rotation.x, rotation.y + PI, rotation.z});
+		this->direction = direction;
+		SetPosition(startPos);
+	}
+	
+	isShot = true;
 	return true;
 }
 
 void Arrow::Update()
 {
-	SetPosition(GetPosition() + direction * Time::GetDelta());
+	if (isShot == true)
+	{
+		lifeLength += Time::GetDelta();
+	}
+
+	if (lifeLength <= lifeTime)
+	{
+		if(rotation.x > -PI_DIV4)
+		{
+			rotation.x -= 0.05f * Time::GetDelta();
+		}
+		direction.y -= 0.05f * Time::GetDelta();
+		SetPosition(GetPosition() + direction * speed * Time::GetDelta());
+	}
+	else
+	{
+		SetPosition(0, -100, 0);
+		isShot = false;
+		lifeLength = 0;
+	}
 	Model::Update();
 }
-
-//float Get2DAngle(float a1, float a2, float b1, float b2)
-//{
-//	//MathExplanation
-//	//https://stackoverflow.com/questions/42554960/get-xyz-angles-between-vectors
-//
-//
-//	return acos(a1 * b1 + a2 * b2);
-//};

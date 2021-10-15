@@ -44,7 +44,7 @@ private:
     std::map<std::string, Canvas*> canvases;
 
     std::shared_ptr<Player> player;
-    std::shared_ptr<Arrow> arrow;
+    std::vector<std::shared_ptr<Arrow>> arrows;
 
     std::vector<std::shared_ptr <Item>> items;
 
@@ -58,6 +58,8 @@ private:
 
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);
+
+    void AddArrow(const std::string fileName);
 
     void CheckSaveStationCollision();
     void CheckItemCollision();

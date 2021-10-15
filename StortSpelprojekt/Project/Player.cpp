@@ -138,14 +138,21 @@ void Player::Update(HeightMap* heightMap)
 		mouseCurrentSensitivity = mouseAimSensitivity;
 		if (Event::LeftIsClicked())
 		{
-			arrow->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0});
+			for (int i = 0; i < arrows.size(); i++)
+			{
+				arrows.at(i)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+				std::cout << "SHOOT" << std::endl;
+			}
 		}
 	}
 	else
 	{
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 	}
-	arrow->Update();
+	for (int i = 0; i < arrows.size(); i++)
+	{
+		arrows.at(i)->Update();
+	}
 
 	sceneCamera->MoveTowards(newCameraPos);
 

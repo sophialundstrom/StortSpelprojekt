@@ -127,6 +127,17 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	colliderRenderer.Bind(item->GetBounds());
 }
 
+void Game::AddArrow(const std::string fileName)
+{
+	auto arrow = std::make_shared<Arrow>(fileName);
+	scene.AddModel(fileName, arrow);
+	arrows.emplace_back(arrow);
+	modelRenderer.Bind(scene.Get<Model>(fileName));
+	shadowRenderer.Bind(scene.Get<Model>(fileName));
+	arrow->SetPosition(0, -100, 0);
+	arrow->SetScale(2);
+}
+
 void Game::CheckSaveStationCollision()
 {
 	for (auto& saveStation : saveStations)
@@ -174,23 +185,20 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(DEFERRED, 40),
 	colliderRenderer(DEFERRED)
 {
-
 	Initialize();
 
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(50, 4, 4);
 
-	arrow = std::make_shared<Arrow>(file);
-	scene.AddModel("Arrow", arrow);
-	modelRenderer.Bind(scene.Get<Model>("Arrow"));
-	shadowRenderer.Bind(scene.Get<Model>("Arrow"));
-	arrow->SetPosition(2, 3, 0);
-	arrow->SetScale(2);
-	//Bounding stuff?
+	for (int i = 0; i < 2; i++)
+	{
+		AddArrow("Arrow");
+		std::cout << arrows.size() << std::endl;
+	}
 
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera(), arrow.get());
+	player = std::make_shared<Player>(file, scene.GetCamera(), arrows);
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
@@ -199,8 +207,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//colliderRenderer.Bind(player->GetRay());
 	colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
-
-
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
@@ -330,7 +336,12 @@ State Game::Run()
 			player->GetStats();
 			lastClick = Time::Get();
 		}
+
+
+
 	}
+
+
 	
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;

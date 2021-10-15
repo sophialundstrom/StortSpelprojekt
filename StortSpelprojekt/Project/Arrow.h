@@ -6,8 +6,10 @@ class Arrow : public Model
 private:
 	float speed;
 	float lifeTime;
-	Vector3 direction;
+	float lifeLength = 0;
 	bool isShot = false;
+	Vector3 direction;
+	float xRadius = 0;
 
 public:
 	Arrow(const std::string file);

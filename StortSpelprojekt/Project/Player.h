@@ -75,7 +75,7 @@ private:
 	Stats stats;
 
 	Camera* sceneCamera;
-	Arrow* arrow;
+	std::vector<std::shared_ptr<Arrow>> arrows;
 
 	float movementYRadiant = 0;
 	float movementXRadiant = 0;
@@ -111,14 +111,20 @@ private:
 	std::shared_ptr<BoundingSphere> bounds;
 	std::shared_ptr<FrustumCollider> frustum;
 
+	bool isRightPressed;
+	bool isLeftPressed;
+
 	Inventory inventory;
 public:
 	void Update(HeightMap* heightMap);
 	
-	Player(const std::string file, Camera* camera, Arrow* arrow)
+	Player(const std::string file, Camera* camera, std::vector<std::shared_ptr<Arrow>> arrows)
 		:Model("LowPolyCharacter", "Player"), sceneCamera(camera)
 	{
-		this->arrow = arrow;
+		isRightPressed = false;
+		isLeftPressed = false;
+
+		this->arrows = arrows;
 		bounds = std::make_shared<BoundingSphere>();
 		ray = std::make_shared<RayCollider>();
 		ray->length = 40;
@@ -147,6 +153,9 @@ public:
 
 	Inventory& Inventory() { return inventory; }
 	Stats& Stats() { return stats; }
+
+
+
 
 	void Save(const std::string file);
 };
