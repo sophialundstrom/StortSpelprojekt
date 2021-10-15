@@ -41,6 +41,7 @@ public:
 
 	std::string AddModel(const std::string& file, const std::string path);
 	void AddModel(const std::string& name,std::shared_ptr <Drawable> drawable);
+	void AddBoundingVolume(const std::string& name, std::shared_ptr <Drawable> drawable);
 
 	void DeleteDrawable(const std::string name) { drawables.erase(name); }
 

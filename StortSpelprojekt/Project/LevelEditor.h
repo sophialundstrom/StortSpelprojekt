@@ -10,6 +10,7 @@
 #include "Collision.h"
 #include "ColliderRenderer.h"
 #include "IDRenderer.h"
+#include "VolumeRenderer.h"
 
 class LevelEditor : public Editor, public GameState
 {
@@ -30,6 +31,7 @@ private:
 	ModelRenderer modelRenderer;
 	ColliderRenderer colliderRenderer;
 	IDRenderer idRenderer;
+	VolumeRenderer volumeRenderer;
 
 	UINT wWidth, wHeight;
 

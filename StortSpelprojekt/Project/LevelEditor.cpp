@@ -46,11 +46,66 @@ void LevelEditor::Load(const std::string& file)
 
 void LevelEditor::CreateBoundingBox()
 {
+	if (selectedObject == "")
+		return;
+
+	auto selected = scene.Get<Drawable>(selectedObject);
+	auto box = std::make_shared<BoxVolume>();
+	int numInstances = 0;
+
+	box->SetPosition(selected->GetPosition());
+
+	for (auto name : scene.GetObjectNames())
+		if (name.find("BoxVolume") != std::string::npos)
+			numInstances++;
+	std::string name = "BoxVolume";
+	if (numInstances > 0)
+		name += std::to_string(numInstances);
+	
+	scene.AddBoundingVolume(name, box);
+	selectedObject = name;
+
+	box->SetID(scene.GetObjectNames().size());
+
+	windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", name);
+	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
+
+	volumeRenderer.Bind(box);
+	idRenderer.Bind(box);
+
 	Print("BoundingBox Created!");
 }
 
 void LevelEditor::CreateBoundingSphere()
 {
+
+	if (selectedObject == "")
+		return;
+
+	auto selected = scene.Get<Drawable>(selectedObject);
+	auto sphere = std::make_shared<SphereVolume>();
+	int numInstances = 0;
+
+	sphere->SetPosition(selected->GetPosition());
+
+	for (auto name : scene.GetObjectNames())
+		if (name.find("SphereVolume") != std::string::npos)
+			numInstances++;
+	std::string name = "SphereVolume";
+	if (numInstances > 0)
+		name += std::to_string(numInstances);
+
+	scene.AddBoundingVolume(name, sphere);
+	selectedObject = name;
+
+	sphere->SetID(scene.GetObjectNames().size());
+
+	windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", name);
+	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
+
+	volumeRenderer.Bind(sphere);
+	idRenderer.Bind(sphere);
+
 	Print("BoundingSphere Created!");
 }
 
@@ -69,7 +124,7 @@ void LevelEditor::Update()
 			std::string name = scene.GetObjectNames()[id - 1];
 			if (name != "")
 			{
-				auto model = scene.Get<Model>(name);
+				auto model = scene.Get<Drawable>(name);
 				auto& window = windows["GAME OBJECT"];
 
 				window.SetValue<TextComponent, std::string>("ObjectName", name);
@@ -150,7 +205,7 @@ void LevelEditor::Update()
 		float newYScale = window.GetValue<SliderFloatComponent>("Y-axis");
 		float newZScale = window.GetValue<SliderFloatComponent>("Z-axis");
 
-		auto model = scene.Get<Model>(selectedObject);
+		auto model = scene.Get<Drawable>(selectedObject);
 		model->SetPosition(newXPos, newYPos, newZPos);
 		model->SetRotation(newXRot * PI / 180, newYRot * PI / 180, newZRot * PI / 180);
 		model->SetScale(newXScale, newYScale, newZScale);
@@ -209,6 +264,8 @@ void LevelEditor::Render()
 	animatedModelRenderer.Render();
 
 	modelRenderer.Render();
+	
+	volumeRenderer.Render();
 
 	EndFrame();
 
@@ -290,8 +347,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 
 void LevelEditor::RemoveItem(const std::string name)
 {
-	auto model = scene.Get<Model>(name);
-
+	auto model = scene.Get<Drawable>(name);
+	volumeRenderer.Unbind(model);
 	modelRenderer.Unbind(model);
 	idRenderer.Unbind(model);
 
@@ -316,6 +373,7 @@ void LevelEditor::ClearToolUI()
 	window.SetValue<SliderFloatComponent, float>("Y-axis", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Z-axis", 0.0f);
 }
+
 
 LevelEditor::~LevelEditor()
 {

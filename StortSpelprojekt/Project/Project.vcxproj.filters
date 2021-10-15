@@ -215,6 +215,9 @@
     <ClCompile Include="Text.cpp">
       <Filter>Header Files\UI\.cpp</Filter>
     </ClCompile>
+    <ClCompile Include="LoadingScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -454,6 +457,15 @@
     <ClInclude Include="SaveStation.h">
       <Filter>Header Files\Application\Scene\Game\SaveStation</Filter>
     </ClInclude>
+    <ClInclude Include="LoadingScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumeRenderer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingVolumes.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -530,6 +542,17 @@
     </FxCompile>
     <FxCompile Include="DeferredColliderPixelShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LoadingPS.hlsl" />
+    <FxCompile Include="LoadingVS.hlsl" />
+    <FxCompile Include="VolumeVertexShader.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <FxCompile Include="VolumePixelShader.hlsl">
+      <Filter>Source Files</Filter>
+    </FxCompile>
+    <FxCompile Include="VolumeIDVertexShader.hlsl">
+      <Filter>Source Files</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
