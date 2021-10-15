@@ -194,7 +194,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	for (int i = 0; i < 3; i++)
 	{
 		AddArrow("Arrow");
-		std::cout << arrows.size() << std::endl;
 	}
 
 	//PLAYER
@@ -255,11 +254,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
 	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ 0,30,0 });
 	particleRenderer.Bind(particleSystem);
-
-
-
-
-
 
 	(void)Run();
 }

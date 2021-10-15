@@ -3,7 +3,7 @@
 Arrow::Arrow(const std::string file)
 	:Model(file, "Arrow")
 {
-	speed = 10.f;
+	speed = 100.f;
 	lifeTime = 5.0f;
 }
 

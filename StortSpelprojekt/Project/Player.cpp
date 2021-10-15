@@ -139,7 +139,7 @@ void Player::Update(HeightMap* heightMap)
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
 		
-		if (Time::Get() - lastClick > 0.5f)
+		if (Time::Get() - lastClick > 0.2f)
 		{
 			if (Event::LeftIsClicked())
 			{
