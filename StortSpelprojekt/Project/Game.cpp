@@ -217,8 +217,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//PAUSED
 	auto pauseCanvas = new Canvas();
 	
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "PauseMenu.png", 0.65f, 0.9f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "Z2", 100, 200, UI::COLOR::GRAY, [this]{ Resume(); }, TestFunc);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Pause.png", 1.0f, 0.9f);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this]{ Resume(); }, TestFunc);
 
 	canvases["PAUSED"] = pauseCanvas;
 
