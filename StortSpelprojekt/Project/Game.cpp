@@ -17,8 +17,11 @@ void Game::Update()
 
 	CheckItemCollision();
 
+	CheckSaveStationCollision();
+
 	scene.UpdateDirectionalLight(player->GetPosition());
 
+		
 	Event::ClearRawDelta();
 }
 
@@ -40,11 +43,23 @@ void Game::Render()
 
 	deferredRenderer.Render();
 	
-	userInterface.Render();
+	currentCanvas->Render();
 
 	Graphics::Inst().EndFrame();
 
 	Resources::Inst().Reset();
+}
+
+void Game::Pause()
+{
+	paused = true;
+	currentCanvas = canvases["PAUSED"];
+}
+
+void Game::Resume()
+{
+	paused = false;
+	currentCanvas = canvases["INGAME"];
 }
 
 void Game::Initialize()
@@ -54,6 +69,13 @@ void Game::Initialize()
 
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
+
+	//SAVE STATIONS
+	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
+	colliderRenderer.Bind(saveStations[0].Collider());
+
+	saveStations[1] = SaveStation({ 20, 0, -20 }, 1, scene.GetDrawables());
+	colliderRenderer.Bind(saveStations[1].Collider());
 
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
@@ -105,30 +127,58 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	colliderRenderer.Bind(item->GetBounds());
 }
 
+void Game::CheckSaveStationCollision()
+{
+	for (auto& saveStation : saveStations)
+	{
+		saveStation.Update();
+
+		if (Collision::Intersection(*saveStation.Collider(), *player->GetFrustum()))
+		{
+			if (Time::Get() - lastSave > 5 && Event::KeyIsPressed('E'))
+			{
+				Print("SAVED");
+				player->Save("Test");
+				QuestLog::Inst().Save("Test");
+				lastSave = Time::Get();
+			}
+		}
+	}
+}
+
 void Game::CheckItemCollision()
 {
 	for (auto &item : items)
 	{
-		if(item->Collision(player->GetBounds().get()))
+		if (Collision::Intersection(*item->GetBounds(), *player->GetFrustum()))
 		{
-			Print("HEJ");
-			player->Inventory().AddItem(item->GetType());
-			RemoveItem(item->GetName());
+			if (Event::KeyIsPressed('E'))
+			{
+				Print("PICKED UP ITEM");
+				player->Inventory().AddItem(item->GetType());
+				RemoveItem(item->GetName());
+			}
 		}
 	}
+}
+
+void TestFunc()
+{
+	Print("HOVERING");
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
 	modelRenderer(DEFERRED, true),
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED),
+	terrainRenderer(DEFERRED, 40),
 	colliderRenderer(DEFERRED)
 {
+
 	Initialize();
 
 	//LOAD SCENE
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 1.0f, 20.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(50, 4, 4);
 
 	arrow = std::make_shared<Arrow>(file);
@@ -146,12 +196,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
+	//colliderRenderer.Bind(player->GetRay());
+	colliderRenderer.Bind(player->GetFrustum());
+	player->GetFrustum()->SetParent(player);
 
 
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-
 	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "", "HouseTexture"};
 	building = std::make_shared<Building>(meshNames, materialNames, "Building");
@@ -166,7 +218,20 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	questLog = std::make_unique<QuestLog>(file, player);
 
 	//UI
-	userInterface.Initialize(window);
+	userInterface = std::make_unique<UI>(window);
+
+	//INGAME
+	auto ingameCanvas = new Canvas();
+	ingameCanvas->AddText({ 100, 20 }, "BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled), 200, 20, UI::COLOR::RED, UI::TEXTFORMAT::DEFAULT);
+	ingameCanvas->AddButton({ 200, 200 }, "TestButton", 50, 50, UI::COLOR::RED, TestFunc);
+	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "CompassBase.png");
+	canvases["INGAME"] = ingameCanvas;
+	currentCanvas = ingameCanvas;
+
+	//PAUSED
+	auto pauseCanvas = new Canvas();
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::CORNFLOWERBLUE, [this]{ Resume(); }, TestFunc);
+	canvases["PAUSED"] = pauseCanvas;
 
 	//Item
 	AddItem(WOOD, { -10, 1, 20 });
@@ -180,8 +245,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
-	auto particleSystem = std::make_shared<ParticleSystem>("Eld.ps");
-	scene.AddParticleSystem("TestSystem", particleSystem);
+	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
+	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ 0,30,0 });
 	particleRenderer.Bind(particleSystem);
 
 
@@ -200,32 +265,32 @@ Game::~Game()
 {
 	scene.Clear();
 	Resources::Inst().Clear();
+
+	for (auto& [name, canvas] : canvases)
+		delete canvas;
 }
 
 State Game::Run()
 {
-	if (gameIsRunning == true)
+	if (!paused)
 		Update();
 	
+	currentCanvas->Update();
+
 	Render();
 
 	static float lastClick = 0;
 
-	if (Time::Get() - lastClick > 0.25f)
+	if (Time::Get() - lastClick > 0.5f)
 	{
 		if (Event::KeyIsPressed(VK_TAB))
 		{
-			if (gameIsRunning == true)
-			{
-				gameIsRunning = false;
-				std::cout << "Paused\n";
-			}
+			if (paused)
+				Resume();
+			else
+				Pause();
 
-			else  if (gameIsRunning == false)
-			{
-				gameIsRunning = true;
-				std::cout << "UnPaused\n";
-			}
+			lastClick = Time::Get();
 		}
 
 		if (Event::KeyIsPressed('U'))
@@ -238,6 +303,7 @@ State Game::Run()
 		{
 			Print("Killed barbarian!");
 			player->Stats().barbariansKilled++;
+			canvases["INGAME"]->UpdateText("BK", "Barbarians Killed: " + std::to_string(player->Stats().barbariansKilled));
 			lastClick = Time::Get();
 		}
 
@@ -262,14 +328,6 @@ State Game::Run()
 		if (Event::KeyIsPressed('P'))
 		{
 			player->GetStats();
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('Y'))
-		{
-			player->Save("Test");
-			QuestLog::Inst().Save("Test");
-
 			lastClick = Time::Get();
 		}
 	}

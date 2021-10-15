@@ -9,13 +9,13 @@ class ShaderData : public Singleton<ShaderData>
 {
 	friend class ShadowRenderer;
 	friend class DeferredRenderer;
-
 	friend class ColliderRenderer;
 	friend class AnimatedModelRenderer;
     friend class ModelRenderer;
 	friend class TerrainRenderer;
     friend class ParticleRenderer;
 	friend class IDRenderer;
+
 private:
 	//CAMERA
 	Matrix cameraMatrix;

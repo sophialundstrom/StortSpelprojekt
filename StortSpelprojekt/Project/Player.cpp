@@ -101,8 +101,7 @@ void Player::Update(HeightMap* heightMap)
 		rotation = { 0, movementYRadiant, 0 };
 
 	//Updates the player and cameras positions
-	moveDirection = moveDirection * stats.currentSpeed * Time::GetDelta();
-	Vector3 newPlayerPos = position + moveDirection;
+	Vector3 newPlayerPos = position + (moveDirection * stats.currentSpeed * Time::GetDelta());
 
 	// JUMPING 
 	if (!jumping)
@@ -129,9 +128,9 @@ void Player::Update(HeightMap* heightMap)
 		newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
 	}
 
-	position = newPlayerPos + Vector3(0, 0.5f, 0);
+	position = newPlayerPos + Vector3(0, 3.5f, 0);
 
-	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance);
+	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 2.0f, 0.0f);
 
 	if(Event::RightIsClicked())
 	{
@@ -150,8 +149,16 @@ void Player::Update(HeightMap* heightMap)
 
 	sceneCamera->MoveTowards(newCameraPos);
 
+	ray->origin = position + Vector3(0, 3, 0);
+	Vector3 rayDirection = sceneCamera->GetDirection() + Vector3(0, 0.15, 0);
+	rayDirection.Normalize();
+	ray->direction = rayDirection;
+
 	Model::Update();
+
 	bounds->Update();
+	ray->Update();
+	frustum->Update();
 }
 
 void Player::Save(const std::string file)

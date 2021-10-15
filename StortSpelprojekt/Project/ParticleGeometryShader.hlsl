@@ -13,16 +13,23 @@ cbuffer EXTENTS : register(b2)
     float2 extents;
 }
 
-struct GS_ELEMENTS
+struct GS_INPUT
 {
     float4 position : SV_POSITION;
-    float3 color : COLOR;
+   // float3 color : COLOR;
+};
+
+struct GS_OUTPUT
+{
+    float4 position : SV_POSITION;
+    float2 texCoords : TEXTURECOORDS;
+   // float3 color : COLOR;
 };
 
 [maxvertexcount(4)]
 void main(
-    point GS_ELEMENTS input[1],
-    inout TriangleStream<GS_ELEMENTS> outputStream)
+    point GS_INPUT input[1],
+    inout TriangleStream<GS_OUTPUT> outputStream)
 {
     const float3 up = float3(0.0f, 1.0f, 0.0f);
     float3 lookAt = cameraPosition - input[0].position.xyz;
@@ -39,11 +46,29 @@ void main(
         { input[0].position.xyz - extents.x * right - extents.y * up, 1.0f }
     };
 
-    for (uint i = 0; i < 4; i++)
+    float2 texCoords[] =
     {
-        GS_ELEMENTS output;
+        { 0.0f, 0.0f },
+        { 0.0f, 1.0f },
+        { 1.0f, 0.0f },
+        { 1.0f, 1.0f }
+        
+    };
+
+    
+    for (int i = 0; i < 4; ++i)
+    {
+        GS_OUTPUT output;
         output.position = mul(corners[i], viewPerspective);
-        output.color = input[0].color;
+
+    //output.texCoords = mul(corners[0], texCoords[0]);
+        output.texCoords = texCoords[i];
+
+       // output.color = input[0].color;
         outputStream.Append(output);
     }
+    
+  
+    
+  
 }

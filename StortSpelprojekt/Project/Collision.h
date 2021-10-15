@@ -4,7 +4,7 @@
 #include "DirectXHelp.h"
 #include "Math.h"
 
-enum class ColliderType { SPHERE, BOX };
+enum class ColliderType { SPHERE, BOX, FRUSTUM, RAY };
 
 class Collider : public Drawable
 {
@@ -24,6 +24,67 @@ public:
 	ColliderType Type()const { return type; }
 
 	virtual void Update() = 0;
+};
+
+class FrustumCollider : public Collider
+{
+private:
+	DirectX::BoundingFrustum bounds;
+public:
+	FrustumCollider(float left, float right, float bottom, float top, float pNear, float pFar)
+		:Collider(ColliderType::FRUSTUM), bounds({0, 0, 0}, {0, 0, 0, 1}, right, left, top, bottom, pNear, pFar)
+	{
+		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Vector3), sizeof(Vector3) * DirectX::BoundingFrustum::CORNER_COUNT);
+	}
+
+	const DirectX::BoundingFrustum& GetBounds() const { return bounds; }
+
+	// Inherited via Collider
+	virtual void Update() override
+	{
+		const Matrix preMatrix = matrix;
+
+		bounds.Transform(bounds, matrix.Invert());
+
+		UpdateMatrix();
+
+		bounds.Transform(bounds, matrix);
+
+		if (preMatrix == matrix)
+			return;
+
+		Vector3 corners[DirectX::BoundingFrustum::CORNER_COUNT];
+		bounds.GetCorners(corners);
+
+		UpdateDynamicVertexBuffer(vertexBuffer, sizeof(Vector3) * DirectX::BoundingFrustum::CORNER_COUNT, corners);
+	}
+};
+
+struct RayCollider : public Collider
+{
+	Vector3 origin;
+	Vector3 direction;
+	float length = 0;
+
+	RayCollider()
+		:Collider(ColliderType::RAY) 
+	{
+		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Vector3), sizeof(Vector3) * 2);
+	}
+
+	// Inherited via Collider
+	virtual void Update() override
+	{
+		Vector3 points[2];
+
+		points[0] = origin;
+		if (length > 0)
+			points[1] = origin + direction * length;
+		else
+			points[1] = origin + direction * 1000;
+
+		UpdateDynamicVertexBuffer(vertexBuffer, sizeof(Vector3) * 2, points);
+	}
 };
 
 //========================================================BOX========================================================
@@ -111,7 +172,7 @@ public:
 		bounds.Transform(bounds, matrix.Invert());
 
 		UpdateMatrix();
-
+		
 		bounds.Transform(bounds, matrix);
 
 		if (preMatrix == matrix)
@@ -174,5 +235,47 @@ namespace Collision
 				return false;
 			return sphere.GetBounds().Intersects(rayOrigin, rayDirection, temp);
 		}
+	}
+
+	//RAY LENGTH = 0 WILL CHECK FOR INTERSECTION INFINITELY
+	inline bool Intersection(const BoundingSphere& sphere, const RayCollider& ray)
+	{
+		float temp;
+
+		if (ray.length == 0)
+			return sphere.GetBounds().Intersects(ray.origin, ray.direction, temp);
+
+		else
+		{
+			if ((sphere.GetPosition() - ray.origin).Length() > ray.length)
+				return false;
+			return sphere.GetBounds().Intersects(ray.origin, ray.direction, temp);
+		}
+	}
+
+	//RAY LENGTH = 0 WILL CHECK FOR INTERSECTION INFINITELY
+	inline bool Intersection(const BoundingBox& box, const RayCollider& ray)
+	{
+		float temp;
+
+		if (ray.length == 0)
+			return box.GetBounds().Intersects(ray.origin, ray.direction, temp);
+
+		else
+		{
+			if ((box.GetPosition() - ray.origin).Length() > ray.length)
+				return false;
+			return box.GetBounds().Intersects(ray.origin, ray.direction, temp);
+		}
+	}
+
+	inline bool Intersection(const BoundingBox& box, const FrustumCollider& frustum)
+	{
+		return box.GetBounds().Intersects(frustum.GetBounds());
+	}
+
+	inline bool Intersection(const BoundingSphere& sphere, const FrustumCollider& frustum)
+	{
+		return sphere.GetBounds().Intersects(frustum.GetBounds());
 	}
 }

@@ -127,7 +127,7 @@ void Scene::AddParticleSystem(unsigned int maxParticles, float timeBetweenPartic
 	drawables.emplace(name, particleSystem);
 }
 
-void Scene::AddParticleSystem(const std::string name, std::shared_ptr<ParticleSystem> particleSystem)
+void Scene::AddParticleSystem(const std::string name, std::shared_ptr<ParticleSystem> particleSystem, Vector3 pos)
 {
 	std::string uniqueName = name;
 	UINT numInstances = 0;
@@ -137,6 +137,8 @@ void Scene::AddParticleSystem(const std::string name, std::shared_ptr<ParticleSy
 
 	if (numInstances > 0)
 		uniqueName += std::to_string(numInstances);
+
+	particleSystem.get()->SetPosition(pos);
 
 	drawables.emplace(uniqueName, particleSystem);
 }
