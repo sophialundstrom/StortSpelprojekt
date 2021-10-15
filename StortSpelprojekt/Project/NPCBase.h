@@ -7,10 +7,8 @@
 class NPC : public Model
 {
 private:
-	
 
 protected:
-
 	BoundingSphere boundingSphere;
 public:
 	NPC(const std::string& file);
