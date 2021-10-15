@@ -85,6 +85,7 @@ private:
 	ID2D1RenderTarget* UIRenderTarget;
 	IDWriteFactory* writeFactory;
 	IWICImagingFactory* imageFactory;
+	
 	std::map<TEXTFORMAT, IDWriteTextFormat*> textFormats;
 	std::map<COLOR, ID2D1SolidColorBrush*> brushes;
 	HWND UIwindow;

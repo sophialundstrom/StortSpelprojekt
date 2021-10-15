@@ -70,7 +70,7 @@ void Game::Options()
 void Game::HowToPlay()
 {
 	paused = true;
-	currentCanvas = canvases["HOWTOPLAY"];
+	currentCanvas = canvases["CONTROLS"];
 }
 
 void Game::BacktoPause()
@@ -258,7 +258,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Z", "Pause.png", 1.0f, 1.0f);
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this]{ Resume(); }, TestFuncResume);
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.35f }, "B", 270, 100, UI::COLOR::GRAY, [this] { Options(); }, TestFuncOptions);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.2f }, "C", 250, 100, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncMenu);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.61f }, "C", 300, 120, UI::COLOR::GRAY, [this] { HowToPlay(); }, TestFuncHTP);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.188f }, "D", 230, 80, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncMenu);
 
 
 	canvases["PAUSED"] = pauseCanvas;
@@ -267,9 +268,16 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	// OPTIONS
 	auto optionsCanvas = new Canvas();
 	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Options.png", 1.0f, 1.0f);
-	optionsCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "D", 200, 78, UI::COLOR::GRAY, [this] { Pause(); }, TestFuncResume);
+	optionsCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "E", 200, 75, UI::COLOR::GRAY, [this] { Pause(); }, TestFuncResume);
 
 	canvases["OPTIONS"] = optionsCanvas;
+
+	// CONTORLS
+	auto controlCanvas = new Canvas();
+	controlCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Controls.png", 1.0f, 1.0f);
+	controlCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "F", 200, 75, UI::COLOR::GRAY, [this] { Pause(); }, TestFuncResume);
+
+	canvases["CONTROLS"] = controlCanvas;
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
