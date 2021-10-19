@@ -61,8 +61,7 @@ void Game::Resume()
 	currentCanvas = canvases["INGAME"];
 }
 
-<<<<<<< HEAD
-=======
+
 void Game::Options()
 {
 	paused = true;
@@ -87,7 +86,6 @@ void Game::MainMenu()
 	mainMenu = true;
 }
 
->>>>>>> parent of 6bfe0ea (Pause Menu "DONE")
 void Game::Initialize()
 {
 	//LOAD SCENE
@@ -199,10 +197,23 @@ void Game::CheckItemCollision()
 	}
 }
 
-void TestFunc()
+void TestFuncBack()
 {
-	Print("HOVERING");
+	Print("BACK");
 }
+void TestFuncResume()
+{
+	Print("RESUME");
+}
+void TestFuncOptions()
+{
+	Print("OPTIONS");
+}
+void TestFuncMenu()
+{
+	Print("MENU");
+}
+
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
@@ -259,11 +270,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//PAUSED
 	auto pauseCanvas = new Canvas();
-<<<<<<< HEAD
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::GRAY, [this]{ Resume(); }, TestFunc);
+
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::GRAY, [this]{ Resume(); }, TestFuncResume);
 	canvases["PAUSED"] = pauseCanvas;
 
-=======
+
 	
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Z", "Pause.png", 1.0f, 1.0f);
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this]{ Resume(); }, TestFuncResume);
@@ -281,7 +292,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["OPTIONS"] = optionsCanvas;
 
->>>>>>> parent of 6bfe0ea (Pause Menu "DONE")
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
@@ -376,6 +386,9 @@ State Game::Run()
 
 
 	}
+
+	if (mainMenu)
+		return State::MAIN_MENU;
 
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;
