@@ -183,6 +183,7 @@
   <ItemGroup>
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="BoundingVolumes.h" />
+    <ClInclude Include="BuildingEffect.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="CollectQuest.h" />

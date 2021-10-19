@@ -52,6 +52,9 @@ private:
 	ID3D11Buffer* vertexBuffer = nullptr;
 	Texture* texture;
 
+	bool done = false;
+	bool stopSpawn = false;
+
 public:
 	static const UINT ABSOLUTE_MAX_PARTICLES = 1000000u;
 
@@ -79,7 +82,9 @@ public:
 	void SetParticlesLifetime(float amount)				{ this->particlesLifetime = amount; }
 	void SetTimeBetweenPartilces(float amount)			{ this->timeBetweenParticles = amount; }
 	void SetPosition(Vector3 pos)					    { this->position = pos; }
-
+	void StartSpawn()									{ this->stopSpawn = false; this->done = false; }
+	void StopSpawn()									{ this->stopSpawn = true;  }
+	bool IsDone()										{ return this->done; }
 	void ChangeTexture(std::string path, std::string fileName);
 
 	ID3D11ShaderResourceView* GetTexture()			    { return texture->Get(); }
@@ -88,7 +93,7 @@ public:
 
 	Vector2 GetParticleExtents() const		{ return this->particleExtents; }
 	EmitterType GetType() const				{ return this->type; }
-	float GetSize() const						{ return this->size; }
+	float GetSize() const					{ return this->size; }
 	float GetParticleWidth() const			{ return this->particleExtents.x; }
 	float GetParticleHeight() const			{ return this->particleExtents.y; }
 	float GetMinVelocity() const			{ return this->minVelocity; }

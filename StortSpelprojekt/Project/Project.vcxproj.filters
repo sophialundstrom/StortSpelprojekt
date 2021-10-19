@@ -475,6 +475,9 @@
     <ClInclude Include="Arrow.h">
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
+    <ClInclude Include="BuildingEffect.h">
+      <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">

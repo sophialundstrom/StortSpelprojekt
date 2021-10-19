@@ -59,10 +59,12 @@ private:
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);
 
-    void AddArrow(const std::string fileName);
+    void AddArrow(const std::string fileName);  
 
     void CheckSaveStationCollision();
     void CheckItemCollision();
+
+    void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
 
     void Initialize();
 public:
