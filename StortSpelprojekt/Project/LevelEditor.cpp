@@ -111,8 +111,9 @@ void LevelEditor::CreateBoundingSphere()
 
 void LevelEditor::Update()
 {
-	if (Event::LeftIsClicked())
+	if (Event::LeftIsClicked() && !ImGui::GetIO().WantCaptureMouse)
 	{
+		idRenderer.Render();
 		GetCursorPos(&cursor);
 		ScreenToClient(appWindow, &cursor);
 
@@ -143,6 +144,11 @@ void LevelEditor::Update()
 
 				selectedObject = name;
 			}
+		}
+		if (id == 0)
+		{
+			ClearToolUI();
+			selectedObject = "";
 		}
 	}
 
@@ -250,8 +256,7 @@ void LevelEditor::Update()
 
 void LevelEditor::Render()
 {
-	idRenderer.Render();
-
+	
 	BeginFrame();
 
 	//TO DO: ADD PARTICLE RENDER PASS (IN OPEN WORLD)
