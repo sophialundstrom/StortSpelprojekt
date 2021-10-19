@@ -150,6 +150,9 @@
     <Filter Include="Header Files\Application\Scene\Game\SaveStation">
       <UniqueIdentifier>{83465f75-34dd-401b-9242-706cec97dc2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Scene\Game\Combat">
+      <UniqueIdentifier>{f7ac95ee-c9fe-476a-96e3-eb873123733a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -219,7 +222,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Arrow.cpp">
-      <Filter>Header Files\Application\Scene\Game</Filter>
+      <Filter>Header Files\Application\Scene\Game\Combat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -473,7 +476,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Arrow.h">
-      <Filter>Header Files\Application\Scene\Game</Filter>
+      <Filter>Header Files\Application\Scene\Game\Combat</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

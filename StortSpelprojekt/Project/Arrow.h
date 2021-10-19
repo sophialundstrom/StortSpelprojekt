@@ -1,5 +1,6 @@
 #pragma once
 #include "Model.h"
+#include "Collision.h"
 
 class Arrow : public Model
 {
@@ -10,11 +11,13 @@ private:
 	bool isShot = false;
 	Vector3 direction;
 	float xRadius = 0;
+	std::shared_ptr<BoundingBox> collider;
 
 public:
 	Arrow(const std::string file);
 	~Arrow();
 
 	bool Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation);
+	std::shared_ptr<BoundingBox> GetCollider() { return collider; }
 	void Update();
 };

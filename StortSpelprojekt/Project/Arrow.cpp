@@ -1,10 +1,9 @@
 #include "Arrow.h"
 
 Arrow::Arrow(const std::string file)
-	:Model(file, "Arrow")
+	:Model(file, "Arrow"), speed(10.f), lifeTime(5.0f)
 {
-	speed = 100.f;
-	lifeTime = 5.0f;
+	collider = std::make_shared<BoundingBox>();
 }
 
 Arrow::~Arrow()
@@ -18,7 +17,6 @@ bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 	if(isShot == false)
 	{
 		xRadius = rotation.x;
-
 		SetRotation({ rotation.x, rotation.y + PI, rotation.z});
 		this->direction = direction;
 		SetPosition(startPos);
@@ -40,8 +38,10 @@ void Arrow::Update()
 	{
 		if(rotation.x > -PI_DIV4)
 		{
+			//Rotate downwards
 			rotation.x -= 0.05f * Time::GetDelta();
 		}
+		//Gravitation
 		direction.y -= 0.05f * Time::GetDelta();
 		SetPosition(GetPosition() + direction * speed * Time::GetDelta());
 	}
@@ -52,4 +52,5 @@ void Arrow::Update()
 		lifeLength = 0;
 	}
 	Model::Update();
+	collider->Update();
 }

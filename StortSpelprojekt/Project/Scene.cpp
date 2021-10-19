@@ -86,7 +86,7 @@ void Scene::AddHostileNPC(const std::string& file)
 	if (numInstances > 0)
 	{
 		fileName = file + std::to_string(numInstances);
-		//drawables[fileName] = std::make_shared<HostileNPC>(*std::dynamic_pointer_cast<Model>(drawables[file]));
+		drawables[fileName] = std::make_shared<HostileNPC>(*std::dynamic_pointer_cast<Model>(drawables[file]));
 	}
 	else
 		drawables[fileName] = std::make_shared<HostileNPC>(fileName);

@@ -145,7 +145,7 @@ void Player::Update(HeightMap* heightMap)
 			{
 				int currentIndex = 0;
 				bool isPlayerShootingArrow = false;
-				while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
+				while(currentIndex < arrows.size() /* -1 /Remove last error for balanced speed but stupid*/ && isPlayerShootingArrow == false)
 				{
 					isPlayerShootingArrow = arrows.at(currentIndex)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 					lastClick = Time::Get();
