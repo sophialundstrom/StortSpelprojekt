@@ -53,8 +53,15 @@ private:
     void Update();
     void Render();
 
+    // PAUSE & UI
     void Pause();
     void Resume();
+    void Options();
+    void HowToPlay();
+    void BacktoPause();
+    void MainMenu();
+  
+    bool mainMenu = false;
 
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);

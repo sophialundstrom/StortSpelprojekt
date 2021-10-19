@@ -166,6 +166,7 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
+    <ClCompile Include="Main Menu.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="NPCBase.cpp" />
     <ClCompile Include="NPCFriendly.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Image.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="LoadingScreen.h" />
+    <ClInclude Include="Main Menu.h" />
     <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
