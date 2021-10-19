@@ -19,7 +19,7 @@ public:
 		:Model(meshNames[0], name)
 	{
 		this->position = position;
-		effect = std::make_unique<BuildingEffect>(position);
+		effect = std::make_unique<BuildingEffect>(Vector3{position.x, position.y + 5, position.z});
 		for (UINT i = 0; i < stages; ++i)
 		{
 			this->meshNames[i] = meshNames[i];

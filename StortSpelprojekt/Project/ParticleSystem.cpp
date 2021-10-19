@@ -189,7 +189,8 @@ void ParticleSystem::Update()
 		{
 			if(stopSpawn == true)
 			{
-				particles.erase(particles.begin()+ index - 1);
+				particles.erase(particles.begin() + index - 1);
+				particleCount--;
 				continue;
 			}
 			if (type == EmitterType::CUBE)

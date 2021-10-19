@@ -8,7 +8,7 @@ public:
 	
 	BuildingEffect(Vector3 position)
 	{
-		p1 = std::make_shared<ParticleSystem>("rain.ps");
+		p1 = std::make_shared<ParticleSystem>("smoke.ps");
 		p1->SetPosition(position);
 	}
 	void Unbind(Scene& scene, ParticleRenderer& renderer)
