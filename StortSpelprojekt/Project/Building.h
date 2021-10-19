@@ -36,7 +36,7 @@ public:
 				return;
 			//done.store(true);
 			effect->Start();
-			Sleep(3000);
+			Sleep(5000);
 			ApplyMesh(meshNames[currState]);
 			ApplyMaterial(materialNames[currState]);
 			effect->Stop();
