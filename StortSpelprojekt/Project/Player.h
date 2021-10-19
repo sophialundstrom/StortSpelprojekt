@@ -5,6 +5,7 @@
 #include "Event.h"
 #include "Terrain.h"
 #include "Item.h"
+#include "Arrow.h"
 
 #undef Ray
 
@@ -74,11 +75,17 @@ private:
 	Stats stats;
 
 	Camera* sceneCamera;
+	//ARROW STUFF
+	std::vector<std::shared_ptr<Arrow>> arrows;
 
-	float movementOfsetRadiant = 0;
+	float movementYRadiant = 0;
+	float movementXRadiant = 0;
 
 	float preJumpGroundLevel = 0;
 	float heightMapGroundLevel = 20.0f;
+	const float mouseDefaultSensitivity = 2.f;
+	const float mouseAimSensitivity = 5.f;
+	float mouseCurrentSensitivity = mouseDefaultSensitivity;
 	float mouseSensitivity = 5.f;
 
 	float gravity = 9.82f;
@@ -96,6 +103,8 @@ private:
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
 	
+	Vector3 cameraLocationSocket = { 1.3, 2.7f, -2.f };
+
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);
 
@@ -103,13 +112,20 @@ private:
 	std::shared_ptr<BoundingSphere> bounds;
 	std::shared_ptr<FrustumCollider> frustum;
 
+	bool isRightPressed;
+	bool isLeftPressed;
+
 	Inventory inventory;
 public:
 	void Update(HeightMap* heightMap);
 	
-	Player(const std::string file, Camera* camera)
+	Player(const std::string file, Camera* camera, std::vector<std::shared_ptr<Arrow>> arrows)
 		:Model("LowPolyCharacter", "Player"), sceneCamera(camera)
 	{
+		isRightPressed = false;
+		isLeftPressed = false;
+
+		this->arrows = arrows;
 		bounds = std::make_shared<BoundingSphere>();
 		ray = std::make_shared<RayCollider>();
 		ray->length = 40;
@@ -138,6 +154,9 @@ public:
 
 	Inventory& Inventory() { return inventory; }
 	Stats& Stats() { return stats; }
+
+
+
 
 	void Save(const std::string file);
 };

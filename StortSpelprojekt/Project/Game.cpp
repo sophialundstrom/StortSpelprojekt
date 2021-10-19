@@ -61,30 +61,6 @@ void Game::Resume()
 	currentCanvas = canvases["INGAME"];
 }
 
-void Game::Options()
-{
-	paused = true;
-	currentCanvas = canvases["OPTIONS"];
-}
-
-void Game::HowToPlay()
-{
-	paused = true;
-	currentCanvas = canvases["CONTROLS"];
-}
-
-void Game::BacktoPause()
-{
-	paused = true;
-	currentCanvas = canvases["PAUSED"];
-}
-
-void Game::MainMenu()
-{
-	paused = false;
-	mainMenu = true;
-}
-
 void Game::Initialize()
 {
 	//LOAD SCENE
@@ -150,6 +126,17 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	colliderRenderer.Bind(item->GetBounds());
 }
 
+void Game::AddArrow(const std::string fileName)
+{
+	auto arrow = std::make_shared<Arrow>(fileName);
+	scene.AddModel(fileName, arrow);
+	arrows.emplace_back(arrow);
+	modelRenderer.Bind(scene.Get<Model>(fileName));
+	shadowRenderer.Bind(scene.Get<Model>(fileName));
+	arrow->SetPosition(0, -100, 0);
+	arrow->SetScale(2);
+}
+
 void Game::CheckSaveStationCollision()
 {
 	for (auto& saveStation : saveStations)
@@ -185,22 +172,9 @@ void Game::CheckItemCollision()
 	}
 }
 
-void TestFuncResume()
+void TestFunc()
 {
-	Print("RESUME");
-}
-
-void TestFuncOptions()
-{
-	Print("OPTIONS");
-}
-void TestFuncHTP()
-{
-	Print("HOW TO PLAY");
-}
-void TestFuncMenu()
-{
-	Print("MENU");
+	Print("HOVERING");
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
@@ -210,24 +184,28 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(DEFERRED, 40),
 	colliderRenderer(DEFERRED)
 {
-
 	Initialize();
 
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(50, 4, 4);
 
+	for (int i = 0; i < 3; i++)
+	{
+		AddArrow("Arrow");
+	}
+
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera());
+	player = std::make_shared<Player>(file, scene.GetCamera(), arrows);
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
+
 	//colliderRenderer.Bind(player->GetRay());
 	colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
-	mainMenu = false;
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
@@ -254,30 +232,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//PAUSED
 	auto pauseCanvas = new Canvas();
-	
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Z", "Pause.png", 1.0f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this]{ Resume(); }, TestFuncResume);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.35f }, "B", 270, 100, UI::COLOR::GRAY, [this] { Options(); }, TestFuncOptions);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.61f }, "C", 300, 120, UI::COLOR::GRAY, [this] { HowToPlay(); }, TestFuncHTP);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.188f }, "D", 230, 80, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncMenu);
-
-
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::GRAY, [this]{ Resume(); }, TestFunc);
 	canvases["PAUSED"] = pauseCanvas;
-
-
-	// OPTIONS
-	auto optionsCanvas = new Canvas();
-	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Options.png", 1.0f, 1.0f);
-	optionsCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "E", 200, 75, UI::COLOR::GRAY, [this] { Pause(); }, TestFuncResume);
-
-	canvases["OPTIONS"] = optionsCanvas;
-
-	// CONTORLS
-	auto controlCanvas = new Canvas();
-	controlCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Controls.png", 1.0f, 1.0f);
-	controlCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "F", 200, 75, UI::COLOR::GRAY, [this] { Pause(); }, TestFuncResume);
-
-	canvases["CONTROLS"] = controlCanvas;
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
@@ -288,7 +244,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");
 
-	friendly->SetPosition(10, 0, 10);
+	friendly->SetPosition(40, 150, -30);
+	friendly->SetScale(10);
+	//friendly->SetParent(player);
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
@@ -368,13 +326,9 @@ State Game::Run()
 			lastClick = Time::Get();
 		}
 
-		
+
 
 	}
-	
-	if (mainMenu)
-		return State::MENU;
-	
 
 	if (Event::KeyIsPressed('M'))
 		return State::MENU;
