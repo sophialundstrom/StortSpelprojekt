@@ -61,6 +61,33 @@ void Game::Resume()
 	currentCanvas = canvases["INGAME"];
 }
 
+<<<<<<< HEAD
+=======
+void Game::Options()
+{
+	paused = true;
+	currentCanvas = canvases["OPTIONS"];
+}
+
+void Game::HowToPlay()
+{
+	paused = true;
+	currentCanvas = canvases["HOWTOPLAY"];
+}
+
+void Game::BacktoPause()
+{
+	paused = true;
+	currentCanvas = canvases["PAUSED"];
+}
+
+void Game::MainMenu()
+{
+	paused = false;
+	mainMenu = true;
+}
+
+>>>>>>> parent of 6bfe0ea (Pause Menu "DONE")
 void Game::Initialize()
 {
 	//LOAD SCENE
@@ -232,9 +259,29 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//PAUSED
 	auto pauseCanvas = new Canvas();
+<<<<<<< HEAD
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::GRAY, [this]{ Resume(); }, TestFunc);
 	canvases["PAUSED"] = pauseCanvas;
 
+=======
+	
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Z", "Pause.png", 1.0f, 1.0f);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this]{ Resume(); }, TestFuncResume);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.35f }, "B", 270, 100, UI::COLOR::GRAY, [this] { Options(); }, TestFuncOptions);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.2f }, "C", 250, 100, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncMenu);
+
+
+	canvases["PAUSED"] = pauseCanvas;
+
+
+	// OPTIONS
+	auto optionsCanvas = new Canvas();
+	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Options.png", 1.0f, 1.0f);
+	optionsCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "D", 200, 78, UI::COLOR::GRAY, [this] { Pause(); }, TestFuncResume);
+
+	canvases["OPTIONS"] = optionsCanvas;
+
+>>>>>>> parent of 6bfe0ea (Pause Menu "DONE")
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
