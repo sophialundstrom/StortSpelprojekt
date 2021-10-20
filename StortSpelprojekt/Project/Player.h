@@ -27,15 +27,15 @@ struct Inventory
 		items[ID]++;
 	}
 
-	void RemoveItem(enum RESOURCE ID)
+	void RemoveItem(enum RESOURCE ID, UINT amount = 1)
 	{	
-		if (items[ID] == 1)
+		if (items[ID] <= amount)
 		{
-			items.erase(ID);
+			items[ID] = 0;
 			return;
 		}
 
-		items[ID]--;
+		items[ID] -= amount;
 	}
 
 	UINT NumOf(enum RESOURCE ID)

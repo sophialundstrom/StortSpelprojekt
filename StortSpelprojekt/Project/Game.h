@@ -60,6 +60,8 @@ private:
     void CheckSaveStationCollision();
     void CheckItemCollision();
 
+    void UpdateInventoryUI();
+
     void Initialize();
 public:
     Game() = delete;

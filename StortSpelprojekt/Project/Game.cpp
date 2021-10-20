@@ -156,9 +156,18 @@ void Game::CheckItemCollision()
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
+				UpdateInventoryUI();
 			}
 		}
 	}
+}
+
+void Game::UpdateInventoryUI()
+{
+	auto canvas = canvases["INGAME"];
+	canvas->UpdateText("Wood", std::to_string(player->Inventory().NumOf(WOOD)));
+	canvas->UpdateText("Stone", std::to_string(player->Inventory().NumOf(STONE)));
+	canvas->UpdateText("Food", std::to_string(player->Inventory().NumOf(FOOD)));
 }
 
 void TestFunc()
@@ -211,6 +220,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "CompassBase.png");
 	ingameCanvas->AddImage({ 250, 250 }, "QuestBorder", "QuestBorder.png");
 	ingameCanvas->AddText({ 200, 40 }, "AC", "Active Quests", 200, 20, UI::COLOR::GRAY, UI::TEXTFORMAT::TITLE);
+	ingameCanvas->AddImage({ clientWidth - 200.0f, 70 }, "Resources", "Resources.png", 0.8);
+	ingameCanvas->AddText({ clientWidth - 302.0f, 70 }, "Wood", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
+	ingameCanvas->AddText({ clientWidth - 192.0f, 70 }, "Stone", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
+	ingameCanvas->AddText({ clientWidth - 82.0f, 70 }, "Food", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
+
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 
@@ -293,6 +307,7 @@ State Game::Run()
 			player->Inventory().GetResources(RESOURCE::STONE);
 			player->Inventory().AddItem(RESOURCE::FOOD);
 			player->Inventory().GetResources(RESOURCE::FOOD);
+			UpdateInventoryUI();
 			lastClick = Time::Get();
 		}
 
