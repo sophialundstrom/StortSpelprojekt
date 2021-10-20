@@ -14,6 +14,8 @@ void LevelEditor::BindDrawables()
 			model->SetID(scene.GetObjectNames().size());
 			modelRenderer.Bind(model);
 			idRenderer.Bind(model);
+			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+			component->AddName(name);
 		}
 
 		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
@@ -41,7 +43,8 @@ void LevelEditor::Load(const std::string& file)
 	model->SetID(scene.GetObjectNames().size());
 	idRenderer.Bind(model);
 	modelRenderer.Bind(model);
-	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
+	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+	component->AddName(fileName);
 }
 
 void LevelEditor::CreateBoundingBox()
@@ -68,7 +71,8 @@ void LevelEditor::CreateBoundingBox()
 	box->SetID(scene.GetObjectNames().size());
 
 	windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", name);
-	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
+	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+	component->AddName(name);
 
 	volumeRenderer.Bind(box);
 	idRenderer.Bind(box);
@@ -125,24 +129,7 @@ void LevelEditor::Update()
 			std::string name = scene.GetObjectNames()[id - 1];
 			if (name != "")
 			{
-				auto model = scene.Get<Drawable>(name);
-				auto& window = windows["GAME OBJECT"];
-
-				window.SetValue<TextComponent, std::string>("ObjectName", name);
-
-				window.SetValue<SliderFloatComponent, float>("X", model->GetPosition().x);
-				window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
-				window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
-
-				window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x * 180 / PI);
-				window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y * 180 / PI);
-				window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z * 180 / PI);
-
-				window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
-				window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
-				window.SetValue<SliderFloatComponent, float>("Z-axis", model->GetScale().z);
-
-				selectedObject = name;
+				UpdateToolUI(name);
 			}
 		}
 		if (id == 0)
@@ -188,7 +175,7 @@ void LevelEditor::Update()
 	if (Event::KeyIsPressed(VK_SPACE))
 		scene.GetCamera()->MoveUp();
 
-	if (Event::KeyIsPressed('Z'))
+	if (Event::KeyIsPressed(VK_CONTROL))
 		scene.GetCamera()->MoveUp(-1);
   
 	if (Event::KeyIsPressed(VK_SHIFT))
@@ -249,6 +236,12 @@ void LevelEditor::Update()
 		}
 	}
 
+	if (windows["SCENE COMPONENTS"].Changed("NameList"))
+	{
+		std::string name = windows["SCENE COMPONENTS"].GetValue<ListBoxComponent>("NameList");
+		UpdateToolUI(name);
+	}
+
 	scene.Update();
 
 	Event::ClearRawDelta();
@@ -283,30 +276,10 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	animatedModelRenderer(FORWARD, false),
 	colliderRenderer(FORWARD)
 {
-	//LOAD SCENE
-	FBXLoader levelLoader("Models");
-
-	GameLoader gameLoader;
-	gameLoader.Load("Default", scene.GetDrawables());
-	BindDrawables();
-
-	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 1000.0f, 1.0f, 25.0f, {0, 90, 0});
-	scene.SetDirectionalLight(40);
-
-	//CLIENT INFORMATION (PICKING) TO BE REMOVED?
-	wWidth = clientWidth;
-	wHeight = clientHeight;
-
-	appWindow = window;
-	wRatioX = (float)clientWidth / GetSystemMetrics(SM_CXSCREEN);
-	wRatioY = (float)clientHeight / GetSystemMetrics(SM_CYSCREEN);
-
-	terrain = new Terrain();
-
 	//WINDOWS
 	{
 		AddWindow("TOOLS");
-		auto& window = windows["TOOLS"];				
+		auto& window = windows["TOOLS"];
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
@@ -318,7 +291,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 
 	{
 		AddWindow("GAME OBJECT");
-		auto& window = windows["GAME OBJECT"];	
+		auto& window = windows["GAME OBJECT"];
 		window.AddTextComponent("ObjectName");
 		window.AddTextComponent("Position");
 		window.AddSliderFloatComponent("X", -300, 300, 0, false);
@@ -341,17 +314,36 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	{
 		AddWindow("SCENE COMPONENTS");
 		auto& window = windows["SCENE COMPONENTS"];
-		for(int i = 0; i < scene.GetObjectNames().size(); i++)
-		{
-			window.AddTextComponent(scene.GetObjectNames()[i]);
-		}
+		window.AddListBoxComponent("NameList", false);
 	}
+
+	//LOAD SCENE
+	FBXLoader levelLoader("Models");
+
+	GameLoader gameLoader;
+	gameLoader.Load("Default", scene.GetDrawables());
+	BindDrawables();
+
+	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 1000.0f, 1.0f, 25.0f, {0, 90, 0});
+	scene.SetDirectionalLight(40);
+
+	//CLIENT INFORMATION (PICKING) TO BE REMOVED?
+	wWidth = clientWidth;
+	wHeight = clientHeight;
+
+	appWindow = window;
+	wRatioX = (float)clientWidth / GetSystemMetrics(SM_CXSCREEN);
+	wRatioY = (float)clientHeight / GetSystemMetrics(SM_CYSCREEN);
+
+	terrain = new Terrain();
 
 	(void)Run();
 }
 
 void LevelEditor::RemoveItem(const std::string name)
 {
+	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+	component->RemoveName(name);
 	auto model = scene.Get<Drawable>(name);
 	volumeRenderer.Unbind(model);
 	modelRenderer.Unbind(model);
@@ -377,6 +369,28 @@ void LevelEditor::ClearToolUI()
 	window.SetValue<SliderFloatComponent, float>("X-axis", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Y-axis", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Z-axis", 0.0f);
+}
+
+void LevelEditor::UpdateToolUI(std::string name)
+{
+	auto model = scene.Get<Drawable>(name);
+	auto& window = windows["GAME OBJECT"];
+
+	window.SetValue<TextComponent, std::string>("ObjectName", name);
+
+	window.SetValue<SliderFloatComponent, float>("X", model->GetPosition().x);
+	window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
+	window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
+
+	window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x * 180 / PI);
+	window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y * 180 / PI);
+	window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z * 180 / PI);
+
+	window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
+	window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
+	window.SetValue<SliderFloatComponent, float>("Z-axis", model->GetScale().z);
+
+	selectedObject = name;
 }
 
 

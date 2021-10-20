@@ -287,3 +287,59 @@ struct ImageComponent : public ImGuiWinComponent
 	}
 
 };
+
+struct ListBoxComponent : public ImGuiWinComponent
+{
+	std::vector<std::string> names;
+
+	std::string value;
+	bool changed = false;
+
+
+	ListBoxComponent(const std::string& name, bool sameLine)
+		:ImGuiWinComponent(name, sameLine)
+	{
+	}
+
+	// Inherited via ImGuiWinComponent
+	virtual bool Changed() override
+	{
+		return changed;
+	}
+
+	virtual void Update() override
+	{
+		ImGui::BeginListBox(value.c_str(), {300, 280});
+		changed = false;
+		for (auto name : names)
+		{
+			std::string& item_name = name;
+			if (ImGui::Selectable(name.c_str()))
+			{
+				changed = true;
+				value = name;
+				ImGui::SetScrollHereY();
+			}
+
+		}
+
+		ImGui::EndListBox();
+	}
+
+	void AddName(const std::string& name)
+	{
+		names.emplace_back(name);
+	}
+
+	void RemoveName(const std::string& name)
+	{
+		for (UINT i = 0; i < names.size(); i++)
+		{
+			if (names[i] == name)
+			{
+				names.erase(names.begin() + i);
+				return;
+			}
+		}
+	}
+};
