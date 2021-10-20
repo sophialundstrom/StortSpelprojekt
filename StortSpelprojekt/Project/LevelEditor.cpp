@@ -146,6 +146,11 @@ void LevelEditor::Update()
 		selectedObject = "";
 	}
 
+	if (Event::KeyIsPressed('F'))
+	{
+		FocusObject();
+	}
+
 	if (Event::RightIsClicked())
 	{
 		if (Event::ReadRawDelta().y > 0)
@@ -392,6 +397,18 @@ void LevelEditor::UpdateToolUI(std::string name)
 	window.SetValue<SliderFloatComponent, float>("Z-axis", model->GetScale().z);
 
 	selectedObject = name;
+}
+
+void LevelEditor::FocusObject()
+{
+	if (selectedObject != "")
+	{
+		auto model = scene.Get<Drawable>(selectedObject);
+		Vector3 objPos = model.get()->GetPosition();
+		Vector3 camDir = scene.GetCamera()->GetDirection();
+
+		scene.GetCamera()->SetPosition(objPos - camDir * 10);
+	}
 }
 
 

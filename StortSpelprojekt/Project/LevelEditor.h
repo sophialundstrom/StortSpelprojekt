@@ -47,6 +47,7 @@ private:
 	void RemoveItem(const std::string name);
 	void ClearToolUI();
 	void UpdateToolUI(std::string name);
+	void FocusObject();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 
