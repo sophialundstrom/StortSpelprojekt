@@ -151,7 +151,6 @@ void Player::Update(HeightMap* heightMap)
 					lastClick = Time::Get();
 					currentIndex++;
 				}
-				
 			}
 		}
 	}

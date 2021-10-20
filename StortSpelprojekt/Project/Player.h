@@ -155,8 +155,5 @@ public:
 	Inventory& Inventory() { return inventory; }
 	Stats& Stats() { return stats; }
 
-
-
-
 	void Save(const std::string file);
 };

@@ -149,6 +149,23 @@ void Game::AddArrow(const std::string fileName)
 	colliderRenderer.Bind(arrow->GetCollider());
 }
 
+void Game::AddHostileArrow(const std::string fileName)
+{
+	auto arrow = std::make_shared<Arrow>(fileName);
+	scene.AddModel(fileName, arrow);
+	hostileArrows.emplace_back(arrow);
+	modelRenderer.Bind(scene.Get<Model>(fileName));
+	shadowRenderer.Bind(scene.Get<Model>(fileName));
+	arrow->SetPosition(0, -100, 0);
+	arrow->SetScale(2);
+	arrow->GetCollider()->SetParent(arrow);
+	arrow->GetCollider()->SetScale(0.15);
+	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z };
+	offset += {0, 0, -0.5};
+	arrow->GetCollider()->SetPosition(offset);
+	colliderRenderer.Bind(arrow->GetCollider());
+}
+
 void Game::CheckSaveStationCollision()
 {
 	for (auto& saveStation : saveStations)
@@ -207,6 +224,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 		AddArrow("Arrow");
 	}
 
+	for (int i = 0; i < 4; i++)
+	{
+		AddHostileArrow("Arrow");
+	}
+
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), arrows);
 	scene.AddModel("Player", player);
@@ -261,7 +283,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
-	scene.AddHostileNPC("HostileCube");
+	scene.AddHostileNPC("HostileCube", hostileArrows);
 	auto hostile = scene.Get<NPC>("HostileCube");
 	hostile->SetPosition(50, 0, 0);
 	hostile->SetScale(1);

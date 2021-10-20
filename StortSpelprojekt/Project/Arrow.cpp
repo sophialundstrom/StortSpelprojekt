@@ -21,7 +21,6 @@ bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 
 	if(isShot == false)
 	{
-		xRadius = rotation.x;
 		SetRotation({ rotation.x, rotation.y + PI, rotation.z});
 		this->direction = direction;
 		SetPosition(startPos);

@@ -45,8 +45,9 @@ private:
 
     std::shared_ptr<Player> player;
     std::vector<std::shared_ptr<Arrow>> arrows;
+    std::vector<std::shared_ptr<Arrow>> hostileArrows;
 
-    std::vector<std::shared_ptr <Item>> items;
+    std::vector<std::shared_ptr<Item>> items;
 
     std::shared_ptr<Building> building;
 
@@ -60,6 +61,7 @@ private:
     void AddItem(RESOURCE resource, Vector3 position);
 
     void AddArrow(const std::string fileName);
+    void AddHostileArrow(const std::string fileName);
 
     void CheckSaveStationCollision();
     void CheckItemCollision();
