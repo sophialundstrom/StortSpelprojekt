@@ -11,6 +11,7 @@
 class Model : public Drawable
 {
 	friend class GameLoader;
+	friend class LevelEditor;
 private:
 	Mesh mesh;
 public:
@@ -24,7 +25,12 @@ public:
 
 	Model(const std::string& name, const Model& other)
 		:mesh(other.mesh) 
-	{}
+	{
+		SetName(name);
+		position = other.position;
+		rotation = other.rotation;
+		scale = other.scale;
+	}
 
 	void Draw(bool useTextures = true, bool useMaterial = true) 
 	{ 

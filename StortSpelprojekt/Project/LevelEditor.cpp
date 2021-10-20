@@ -40,11 +40,45 @@ void LevelEditor::Load(const std::string& file)
 	std::string fileName = path.stem().string();
 	fileName = scene.AddModel(fileName, path.string());
 	auto model = scene.Get<Model>(fileName);
+	/*scene.GetObjectNames().push_back(model->GetName());*/
 	model->SetID(scene.GetObjectNames().size());
 	idRenderer.Bind(model);
 	modelRenderer.Bind(model);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(fileName);
+}
+
+void LevelEditor::DuplicateObject()
+{
+	if (selectedObject == "")
+		return;
+
+	auto originModel = scene.Get<Model>(selectedObject);
+	std::string meshName = Resources::Inst().GetBufferNameFromID(originModel->mesh.bufferID);
+
+	UINT instances = 0;
+	for (auto name : scene.GetObjectNames())
+	{
+		if (name.find(meshName) != std::string::npos)
+			instances++;
+	}
+
+	if (instances > 0)
+	{
+		auto model = std::make_shared<Model>(meshName + std::to_string(instances), *scene.Get<Model>(selectedObject));
+		std::string modelName = model->GetName();
+
+		scene.AddModel(modelName, model);
+		model->SetID(scene.GetObjectNames().size());
+		scene.GetObjectNames().push_back(modelName);
+		idRenderer.Bind(model);
+		modelRenderer.Bind(model);
+		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+		component->AddName(modelName);
+
+		selectedObject = modelName;
+	}
+		
 }
 
 void LevelEditor::CreateBoundingBox()
@@ -315,6 +349,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("Z-axis", -30, 30, 0, false);
 		window.AddCheckBoxComponent("Uniform scaling");
 		window.AddButtonComponent("Delete", 120, 30);
+		window.AddButtonComponent("Duplicate", 120, 30);
 	}
 
 	{
@@ -423,34 +458,42 @@ State LevelEditor::Run()
 	Update();
 	Render();
 
-	auto& window = windows["TOOLS"];
-	if (window.GetValue<ButtonComponent>("LOAD FBX"))
-		Load(FileSystem::LoadFile("Models"));
-
-	if (window.GetValue<ButtonComponent>("CREATE BBOX"))
-		CreateBoundingBox();
-
-	if (window.GetValue<ButtonComponent>("CREATE BSPHERE"))
-		CreateBoundingSphere();
-
-	if (window.Changed("WIREFRAME"))
-		Graphics::Inst().ToggleWireframe();
-
-	if (window.Changed("TERRAIN START SUBDIVISIONS"))
 	{
-		if (terrain)
-			delete terrain;
-		terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
-	}
-	
-	if (window.GetValue<ButtonComponent>("SAVE WORLD"))
-	{
-		GameLoader loader;
-		loader.Save("Default", scene.GetDrawables());
+		auto& window = windows["TOOLS"];
+		if (window.GetValue<ButtonComponent>("LOAD FBX"))
+			Load(FileSystem::LoadFile("Models"));
+
+		if (window.GetValue<ButtonComponent>("CREATE BBOX"))
+			CreateBoundingBox();
+
+		if (window.GetValue<ButtonComponent>("CREATE BSPHERE"))
+			CreateBoundingSphere();
+
+		if (window.Changed("WIREFRAME"))
+			Graphics::Inst().ToggleWireframe();
+
+		if (window.Changed("TERRAIN START SUBDIVISIONS"))
+		{
+			if (terrain)
+				delete terrain;
+			terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
+		}
+
+		if (window.GetValue<ButtonComponent>("SAVE WORLD"))
+		{
+			GameLoader loader;
+			loader.Save("Default", scene.GetDrawables());
+		}
+
+		if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
+			return State::MENU;
 	}
 
-	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
-		return State::MENU;
+	{
+		auto &window = windows["GAME OBJECT"];
+		if (window.GetValue<ButtonComponent>("Duplicate"))
+			DuplicateObject();
+	}
 
 	return State::NO_CHANGE;
 }
