@@ -18,7 +18,7 @@ void Grid::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable
 				{
 					int i = x * gridSizeY + y;
 
-					BoundingSphere tmpSphere = { {drawable->GetPosition()}, {1.0f} };
+					BoundingSphere tmpSphere = { {drawable->GetPosition()}, {1.0f} }; // tempporary solution to a colliding issue
 					if (grid[i].BSphere.GetBounds().Intersects(tmpSphere.GetBounds()))
 					{
 						if (name != "RainingGATOS")

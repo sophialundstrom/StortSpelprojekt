@@ -224,17 +224,17 @@
     <ClCompile Include="LoadingScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Node.cpp">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
-    </ClCompile>
-    <ClCompile Include="Grid.cpp">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
-    </ClCompile>
     <ClCompile Include="Arrow.cpp">
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClCompile>
     <ClCompile Include="Main Menu.cpp">
       <Filter>Header Files\Main Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -481,12 +481,6 @@
     <ClInclude Include="LoadingScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Node.h">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
-    </ClInclude>
-    <ClInclude Include="Grid.h">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
-    </ClInclude>
     <ClInclude Include="BoundingVolumes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -501,6 +495,12 @@
     </ClInclude>
     <ClInclude Include="Main Menu.h">
       <Filter>Header Files\Main Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
