@@ -40,6 +40,13 @@ void Scene::AddModel(const std::string& name, std::shared_ptr<Drawable> drawable
 	drawables[name]->SetName(name);
 }
 
+void Scene::AddBoundingVolume(const std::string& name, std::shared_ptr<Drawable> drawable)
+{
+	drawables[name] = drawable;
+	objectNames.push_back(name);
+	drawables[name]->SetName(name);
+}
+
 void Scene::AddFriendlyNPC(const std::string& file)
 {
 	UINT numInstances = 0;

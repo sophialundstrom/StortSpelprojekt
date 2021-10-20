@@ -34,7 +34,7 @@ void Player::Update(HeightMap* heightMap)
 	CalcHeight(heightMap);
 
 	//Rotate camera by cursor movement 
-	sceneCamera->Rotate(Event::ReadRawDelta().x * mouseSensitivity, Event::ReadRawDelta().y * mouseSensitivity);
+	sceneCamera->Rotate(Event::ReadRawDelta().x * mouseCurrentSensitivity, Event::ReadRawDelta().y * mouseCurrentSensitivity);
 
 	//Get players position last frame and cameras current look-direction
 	Vector3 lookDirection = sceneCamera->GetDirection();
@@ -78,19 +78,27 @@ void Player::Update(HeightMap* heightMap)
 
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
 	//Aligns the keyboardinputs by the camera direction afterwards via the radian.
-	if (!Event::RightIsClicked())
+	if (!Event::LeftIsClicked())
 	{
-		movementOfsetRadiant = Get2DAngle({ lookDirection.x, lookDirection.z }, { 0, 1 });
+		movementYRadiant = Get2DAngle({ lookDirection.x, lookDirection.z }, { 0, 1 });
 		if (lookDirection.x < 0)
-			movementOfsetRadiant *= -1;
+			movementYRadiant *= -1;
+
+		Vector2 camera2D = { lookDirection.y, lookDirection.z };
+		movementXRadiant = acos(lookDirection.Dot(Vector3(0, 1, 0)) / lookDirection.Length());
+		/*camera2D = { lookDirection.y, lookDirection.x };
+		float tempRad = acos(camera2D.Dot(Vector2(1, 0)) / camera2D.Length());
+		if (tempRad < movementXRadiant)
+			movementXRadiant = tempRad;*/
 	}
 
-	Matrix movementOfsetMatrix = Matrix::CreateRotationY(movementOfsetRadiant);
+	Matrix movementOfsetMatrix = Matrix::CreateRotationY(movementYRadiant);
 	moveDirection = Vector3::Transform(moveDirection, movementOfsetMatrix);
+	Vector3 camSocketUpdate = Vector3::Transform(cameraLocationSocket, movementOfsetMatrix);
 
 	//Only update what direction the player is facing when keyboardinput is detected by the moveDirection vector
-	if (moveDirection.Length() > 0 || moveDirection.Length() < 0)
-		rotation = { 0, movementOfsetRadiant, 0 };
+	if (moveDirection.Length() > 0 || moveDirection.Length() < 0 || Event::RightIsClicked())
+		rotation = { 0, movementYRadiant, 0 };
 
 	//Updates the player and cameras positions
 	Vector3 newPlayerPos = position + (moveDirection * stats.currentSpeed * Time::GetDelta());
@@ -123,6 +131,38 @@ void Player::Update(HeightMap* heightMap)
 	position = newPlayerPos + Vector3(0, 3.5f, 0);
 
 	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 2.0f, 0.0f);
+
+	static float lastClick = 0;
+
+	if(Event::RightIsClicked())
+	{
+		newCameraPos = position + camSocketUpdate;
+		mouseCurrentSensitivity = mouseAimSensitivity;
+		
+		if (Time::Get() - lastClick > 0.2f)
+		{
+			if (Event::LeftIsClicked())
+			{
+				int currentIndex = 0;
+				bool isPlayerShootingArrow = false;
+				while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
+				{
+					isPlayerShootingArrow = arrows.at(currentIndex)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+					lastClick = Time::Get();
+					currentIndex++;
+				}
+				
+			}
+		}
+	}
+	else
+	{
+		mouseCurrentSensitivity = mouseDefaultSensitivity;
+	}
+	for (int i = 0; i < arrows.size(); i++)
+	{
+		arrows.at(i)->Update();
+	}
 
 	sceneCamera->MoveTowards(newCameraPos);
 

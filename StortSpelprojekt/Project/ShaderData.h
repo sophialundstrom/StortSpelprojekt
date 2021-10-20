@@ -15,6 +15,7 @@ class ShaderData : public Singleton<ShaderData>
 	friend class TerrainRenderer;
     friend class ParticleRenderer;
 	friend class IDRenderer;
+	friend class VolumeRenderer;
 
 private:
 	//CAMERA
