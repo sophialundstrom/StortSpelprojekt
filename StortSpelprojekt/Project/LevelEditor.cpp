@@ -105,7 +105,8 @@ void LevelEditor::CreateBoundingSphere()
 	sphere->SetID(scene.GetObjectNames().size());
 
 	windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", name);
-	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
+	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+	component->AddName(name);
 
 	volumeRenderer.Bind(sphere);
 	idRenderer.Bind(sphere);

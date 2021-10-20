@@ -309,7 +309,7 @@ struct ListBoxComponent : public ImGuiWinComponent
 
 	virtual void Update() override
 	{
-		ImGui::BeginListBox(value.c_str(), {300, 280});
+		ImGui::BeginListBox(value.c_str(), {300, 450});
 		changed = false;
 		for (auto name : names)
 		{
