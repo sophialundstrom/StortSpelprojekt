@@ -5,6 +5,7 @@
 #include "Event.h"
 #include "Terrain.h"
 #include "Item.h"
+#include "Canvas.h"
 
 #undef Ray
 
@@ -56,7 +57,7 @@ struct Stats
 	float movementSpeed = 5.0f;
 	float sprintSpeed = 10.0f;
 	UINT maxHealthPoints = 10;
-	UINT healthPoints = 0;
+	UINT healthPoints = 10;
 	UINT level = 1;
 	float currentSpeed = movementSpeed;
 
@@ -64,8 +65,8 @@ struct Stats
 	void SetHealthPoints(UINT newHealthPoints) { this->healthPoints = newHealthPoints; }
 	void SetMovementSpeed(float newMovementSpeed) { this->movementSpeed = newMovementSpeed; }
 	void SetSprintSpeed(float newSprintSpeed) { this->sprintSpeed = newSprintSpeed; }
-	void IncreaseHealthPoints() { this->healthPoints++; };
-	void DecreaseHealthPoint() { this->healthPoints--; };
+	void IncreaseHealthPoints() { if (healthPoints < maxHealthPoints) this->healthPoints++; };
+	void DecreaseHealthPoint() { if (healthPoints != 0) this->healthPoints--; };
 };
 
 class Player : public Model
@@ -74,6 +75,7 @@ private:
 	Stats stats;
 
 	Camera* sceneCamera;
+	Canvas* ingameCanvas;
 
 	float movementOfsetRadiant = 0;
 
@@ -104,11 +106,39 @@ private:
 	std::shared_ptr<FrustumCollider> frustum;
 
 	Inventory inventory;
+
+	void UpdateHealthUI()
+	{
+		for (UINT i = 0; i < stats.maxHealthPoints; ++i)
+		{	
+			const std::string name = "hp" + std::to_string(i);
+			auto image = ingameCanvas->GetImage(name);
+
+			if (image->FileName() != "Heart.png" && stats.healthPoints > 0)
+			{
+				auto position = image->GetPosition();
+				ingameCanvas->RemoveImage(name);
+				ingameCanvas->AddImage(position, name, "Heart.png");
+			}
+
+			if (i == 0 && stats.healthPoints == 0)
+			{
+				auto position = image->GetPosition();
+				ingameCanvas->RemoveImage(name);
+				ingameCanvas->AddImage(position, name, "RedHeart.png");
+			}
+
+			if (i <= stats.healthPoints)
+				image->Show();
+			else
+				image->Hide();
+		}
+	}
 public:
 	void Update(HeightMap* heightMap);
 	
-	Player(const std::string file, Camera* camera)
-		:Model("LowPolyCharacter", "Player"), sceneCamera(camera)
+	Player(const std::string file, Camera* camera, Canvas* ingameCanvas)
+		:Model("LowPolyCharacter", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
 	{
 		bounds = std::make_shared<BoundingSphere>();
 		ray = std::make_shared<RayCollider>();
@@ -119,6 +149,7 @@ public:
 		frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
 
 		Load(file);
+		UpdateHealthUI();
 	}
 public:
 	// TEMP STATS PRINT
@@ -140,4 +171,7 @@ public:
 	Stats& Stats() { return stats; }
 
 	void Save(const std::string file);
+
+	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
+	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
 };
