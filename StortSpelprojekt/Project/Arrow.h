@@ -17,6 +17,7 @@ public:
 	Arrow(const std::string file);
 	~Arrow();
 
+	void DisableArrow();
 	bool Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation);
 	std::shared_ptr<BoundingBox> GetCollider() { return collider; }
 	void Update();

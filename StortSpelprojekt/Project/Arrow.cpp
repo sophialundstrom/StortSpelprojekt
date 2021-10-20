@@ -10,6 +10,11 @@ Arrow::~Arrow()
 {
 }
 
+void Arrow::DisableArrow()
+{
+	lifeLength = lifeTime * 2;
+}
+
 bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 {
 	bool isArrowActivating = false;

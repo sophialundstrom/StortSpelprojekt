@@ -8,6 +8,9 @@
 class NPC : public Model
 {
 private:
+	int hp;
+	bool playerCanHit;
+	bool enemyCanHit;
 
 protected:
 	std::shared_ptr<BoundingSphere> boundingSphere;
@@ -18,6 +21,7 @@ public:
 	virtual void Update() override;
 	bool Collided(Player &player);
 	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
+	void Die();
 	std::shared_ptr<BoundingSphere> GetCollider() { return boundingSphere; }
 	//void AddModel(std::map<std::string, std::shared_ptr<Drawable>> &drawables, const std::string& file);
 	void debugPrint();
