@@ -46,6 +46,9 @@ private:
 	void CreateBoundingSphere();
 	void RemoveItem(const std::string name);
 	void ClearToolUI();
+	void UpdateToolUI(std::string name);
+	void FocusObject();
+	void DuplicateObject();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 
