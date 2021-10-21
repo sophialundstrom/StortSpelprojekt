@@ -256,11 +256,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 
-	//PAUSED
-	auto pauseCanvas = new Canvas();
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::GRAY, [this] { Resume(); }, TestFunc);
-	canvases["PAUSED"] = pauseCanvas;
-
 	for (int i = 0; i < 3; i++)
 	{
 		AddArrow("Arrow");
@@ -289,14 +284,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	shadowRenderer.Bind(building);
 	scene.Get<Model>("Building")->SetPosition(10, -3, 60);
 	scene.Get<Model>("Building")->SetRotation(0, -PI_DIV2, 0);
-
-	//INGAME
-	auto ingameCanvas = new Canvas();
-	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "CompassBase.png");
-	ingameCanvas->AddImage({ 250, 250 }, "QuestBorder", "QuestBorder.png");
-	ingameCanvas->AddText({ 200, 40 }, "AC", "Active Quests", 200, 20, UI::COLOR::GRAY, UI::TEXTFORMAT::TITLE);
-	canvases["INGAME"] = ingameCanvas;
-	currentCanvas = ingameCanvas;
 
 	//PAUSED
 	auto pauseCanvas = new Canvas();
