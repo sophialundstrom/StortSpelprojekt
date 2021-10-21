@@ -13,6 +13,7 @@
 #include "SaveStation.h"
 #include "Canvas.h"
 #include "Time.h"
+#include "Arrow.h"
 
 //PlayerClassLib
 #include <math.h>
@@ -43,6 +44,7 @@ private:
     std::map<std::string, Canvas*> canvases;
 
     std::shared_ptr<Player> player;
+    std::vector<std::shared_ptr<Arrow>> arrows;
 
     std::vector<std::shared_ptr <Item>> items;
 
@@ -51,11 +53,20 @@ private:
     void Update();
     void Render();
 
+    // PAUSE & UI
     void Pause();
     void Resume();
+    void Options();
+    void HowToPlay();
+    void BacktoPause();
+    void MainMenu();
+  
+    bool mainMenu = false;
 
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);
+
+    void AddArrow(const std::string fileName);
 
     void CheckSaveStationCollision();
     void CheckItemCollision();

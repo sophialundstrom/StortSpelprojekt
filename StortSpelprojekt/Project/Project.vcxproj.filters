@@ -150,6 +150,9 @@
     <Filter Include="Header Files\Application\Scene\Game\SaveStation">
       <UniqueIdentifier>{83465f75-34dd-401b-9242-706cec97dc2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Main Menu">
+      <UniqueIdentifier>{101620f8-8f1f-41b5-be2e-1995c7f4a618}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -214,6 +217,15 @@
     </ClCompile>
     <ClCompile Include="Text.cpp">
       <Filter>Header Files\UI\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadingScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Arrow.cpp">
+      <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Main Menu.cpp">
+      <Filter>Header Files\Main Menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -457,6 +469,21 @@
     <ClInclude Include="UIComponent.h">
       <Filter>Header Files\UI\.h</Filter>
     </ClInclude>
+    <ClInclude Include="BoundingVolumes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumeRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Arrow.h">
+      <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Main Menu.h">
+      <Filter>Header Files\Main Menu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -534,5 +561,10 @@
     <FxCompile Include="DeferredColliderPixelShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="LoadingPS.hlsl" />
+    <FxCompile Include="LoadingVS.hlsl" />
+    <FxCompile Include="VolumeIDVertexShader.hlsl" />
+    <FxCompile Include="VolumePixelShader.hlsl" />
+    <FxCompile Include="VolumeVertexShader.hlsl" />
   </ItemGroup>
 </Project>
