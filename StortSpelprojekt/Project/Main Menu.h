@@ -6,6 +6,7 @@
 #include "FBXLoader.h"
 #include "GameLoader.h"
 #include "ParticleRenderer.h"
+#include "ShadowRenderer.h"
 
 class MainMenu : public GameState
 {

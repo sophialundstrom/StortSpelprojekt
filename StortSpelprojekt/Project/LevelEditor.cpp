@@ -14,6 +14,42 @@ void LevelEditor::BindDrawables()
 			model->SetID(scene.GetObjectNames().size());
 			modelRenderer.Bind(model);
 			idRenderer.Bind(model);
+			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+			component->AddName(name);
+		}
+
+		auto box = std::dynamic_pointer_cast<BoundingBox>(drawable);
+		if(box)
+		{
+			auto volume = std::make_shared<BoxVolume>();
+			volume->SetMatrix(box->GetMatrix());
+			volume->SetPosition(box->GetPosition());
+			volume->SetRotation(box->GetRotation());
+			volume->SetScale(box->GetScale());
+			scene.GetDrawables()[name] = volume;
+			scene.GetObjectNames().push_back(name);
+			volume->SetID(scene.GetObjectNames().size());
+			volumeRenderer.Bind(volume);
+			idRenderer.Bind(volume);
+			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+			component->AddName(name);
+		}
+
+		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(drawable);
+		if (sphere)
+		{
+			auto volume = std::make_shared<SphereVolume>();
+			volume->SetMatrix(sphere->GetMatrix());
+			volume->SetPosition(sphere->GetPosition());
+			volume->SetRotation(sphere->GetRotation());
+			volume->SetScale(sphere->GetScale());
+			scene.GetDrawables()[name] = volume;
+			scene.GetObjectNames().push_back(name);
+			volume->SetID(scene.GetObjectNames().size());
+			volumeRenderer.Bind(volume);
+			idRenderer.Bind(volume);
+			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+			component->AddName(name);
 		}
 
 		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
@@ -38,10 +74,45 @@ void LevelEditor::Load(const std::string& file)
 	std::string fileName = path.stem().string();
 	fileName = scene.AddModel(fileName, path.string());
 	auto model = scene.Get<Model>(fileName);
+	scene.GetObjectNames().push_back(model->GetName());
 	model->SetID(scene.GetObjectNames().size());
 	idRenderer.Bind(model);
 	modelRenderer.Bind(model);
-	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
+	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+	component->AddName(fileName);
+}
+
+void LevelEditor::DuplicateObject()
+{
+	if (selectedObject == "")
+		return;
+
+	auto originModel = scene.Get<Model>(selectedObject);
+	std::string meshName = Resources::Inst().GetBufferNameFromID(originModel->mesh.bufferID);
+
+	UINT instances = 0;
+	for (auto name : scene.GetObjectNames())
+	{
+		if (name.find(meshName) != std::string::npos)
+			instances++;
+	}
+
+	if (instances > 0)
+	{
+		auto model = std::make_shared<Model>(meshName + std::to_string(instances), *scene.Get<Model>(selectedObject));
+		std::string modelName = model->GetName();
+
+		scene.AddModel(modelName, model);
+		model->SetID(scene.GetObjectNames().size());
+		scene.GetObjectNames().push_back(modelName);
+		idRenderer.Bind(model);
+		modelRenderer.Bind(model);
+		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+		component->AddName(modelName);
+
+		selectedObject = modelName;
+	}
+		
 }
 
 void LevelEditor::CreateBoundingBox()
@@ -68,7 +139,8 @@ void LevelEditor::CreateBoundingBox()
 	box->SetID(scene.GetObjectNames().size());
 
 	windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", name);
-	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
+	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+	component->AddName(name);
 
 	volumeRenderer.Bind(box);
 	idRenderer.Bind(box);
@@ -101,7 +173,8 @@ void LevelEditor::CreateBoundingSphere()
 	sphere->SetID(scene.GetObjectNames().size());
 
 	windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", name);
-	windows["SCENE COMPONENTS"].AddTextComponent(scene.GetObjectNames()[scene.GetObjectNames().size() - 1]);
+	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+	component->AddName(name);
 
 	volumeRenderer.Bind(sphere);
 	idRenderer.Bind(sphere);
@@ -111,8 +184,9 @@ void LevelEditor::CreateBoundingSphere()
 
 void LevelEditor::Update()
 {
-	if (Event::LeftIsClicked())
+	if (Event::LeftIsClicked() && !ImGui::GetIO().WantCaptureMouse)
 	{
+		idRenderer.Render();
 		GetCursorPos(&cursor);
 		ScreenToClient(appWindow, &cursor);
 
@@ -124,25 +198,13 @@ void LevelEditor::Update()
 			std::string name = scene.GetObjectNames()[id - 1];
 			if (name != "")
 			{
-				auto model = scene.Get<Drawable>(name);
-				auto& window = windows["GAME OBJECT"];
-
-				window.SetValue<TextComponent, std::string>("ObjectName", name);
-
-				window.SetValue<SliderFloatComponent, float>("X", model->GetPosition().x);
-				window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
-				window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
-
-				window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x * 180 / PI);
-				window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y * 180 / PI);
-				window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z * 180 / PI);
-
-				window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
-				window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
-				window.SetValue<SliderFloatComponent, float>("Z-axis", model->GetScale().z);
-
-				selectedObject = name;
+				UpdateToolUI(name);
 			}
+		}
+		if (id == 0)
+		{
+			ClearToolUI();
+			selectedObject = "";
 		}
 	}
 
@@ -150,6 +212,11 @@ void LevelEditor::Update()
 	{
 		ClearToolUI();
 		selectedObject = "";
+	}
+
+	if (Event::KeyIsPressed('F'))
+	{
+		FocusObject();
 	}
 
 	if (Event::RightIsClicked())
@@ -182,7 +249,7 @@ void LevelEditor::Update()
 	if (Event::KeyIsPressed(VK_SPACE))
 		scene.GetCamera()->MoveUp();
 
-	if (Event::KeyIsPressed('Z'))
+	if (Event::KeyIsPressed(VK_CONTROL))
 		scene.GetCamera()->MoveUp(-1);
   
 	if (Event::KeyIsPressed(VK_SHIFT))
@@ -243,6 +310,12 @@ void LevelEditor::Update()
 		}
 	}
 
+	if (windows["SCENE COMPONENTS"].Changed("NameList"))
+	{
+		std::string name = windows["SCENE COMPONENTS"].GetValue<ListBoxComponent>("NameList");
+		UpdateToolUI(name);
+	}
+
 	scene.Update();
 
 	Event::ClearRawDelta();
@@ -250,8 +323,7 @@ void LevelEditor::Update()
 
 void LevelEditor::Render()
 {
-	idRenderer.Render();
-
+	
 	BeginFrame();
 
 	//TO DO: ADD PARTICLE RENDER PASS (IN OPEN WORLD)
@@ -278,6 +350,48 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	animatedModelRenderer(FORWARD, false),
 	colliderRenderer(FORWARD)
 {
+	//WINDOWS
+	{
+		AddWindow("TOOLS");
+		auto& window = windows["TOOLS"];
+		window.AddButtonComponent("LOAD FBX", 120, 30);
+		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
+		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
+		window.AddCheckBoxComponent("WIREFRAME", false);
+		window.AddButtonComponent("CREATE BBOX", 120, 30);
+		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
+		window.AddButtonComponent("RETURN TO MENU", 120, 30);
+	}
+
+	{
+		AddWindow("GAME OBJECT");
+		auto& window = windows["GAME OBJECT"];
+		window.AddTextComponent("ObjectName");
+		window.AddTextComponent("Position");
+		window.AddSliderFloatComponent("X", -300, 300, 0, false);
+		window.AddSliderFloatComponent("Y", -300, 300, 0, false);
+		window.AddSliderFloatComponent("Z", -300, 300, 0, false);
+
+		window.AddTextComponent("Rotation");
+		window.AddSliderFloatComponent("Around X", -180, 180, 0, false);
+		window.AddSliderFloatComponent("Around Y", -180, 180, 0, false);
+		window.AddSliderFloatComponent("Around Z", -180, 180, 0, false);
+
+		window.AddTextComponent("Scale");
+		window.AddSliderFloatComponent("X-axis", -30, 30, 0, false);
+		window.AddSliderFloatComponent("Y-axis", -30, 30, 0, false);
+		window.AddSliderFloatComponent("Z-axis", -30, 30, 0, false);
+		window.AddCheckBoxComponent("Uniform scaling");
+		window.AddButtonComponent("Delete", 120, 30);
+		window.AddButtonComponent("Duplicate", 120, 30);
+	}
+
+	{
+		AddWindow("SCENE COMPONENTS");
+		auto& window = windows["SCENE COMPONENTS"];
+		window.AddListBoxComponent("NameList", false);
+	}
+
 	//LOAD SCENE
 	FBXLoader levelLoader("Models");
 
@@ -298,55 +412,13 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 
 	terrain = new Terrain();
 
-	//WINDOWS
-	{
-		AddWindow("TOOLS");
-		auto& window = windows["TOOLS"];				
-		window.AddButtonComponent("LOAD FBX", 120, 30);
-		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
-		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
-		window.AddCheckBoxComponent("WIREFRAME", false);
-		window.AddButtonComponent("CREATE BBOX", 120, 30);
-		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
-		window.AddButtonComponent("RETURN TO MENU", 120, 30);
-	}
-
-	{
-		AddWindow("GAME OBJECT");
-		auto& window = windows["GAME OBJECT"];	
-		window.AddTextComponent("ObjectName");
-		window.AddTextComponent("Position");
-		window.AddSliderFloatComponent("X", -300, 300, 0, false);
-		window.AddSliderFloatComponent("Y", -300, 300, 0, false);
-		window.AddSliderFloatComponent("Z", -300, 300, 0, false);
-
-		window.AddTextComponent("Rotation");
-		window.AddSliderFloatComponent("Around X", -180, 180, 0, false);
-		window.AddSliderFloatComponent("Around Y", -180, 180, 0, false);
-		window.AddSliderFloatComponent("Around Z", -180, 180, 0, false);
-
-		window.AddTextComponent("Scale");
-		window.AddSliderFloatComponent("X-axis", -30, 30, 0, false);
-		window.AddSliderFloatComponent("Y-axis", -30, 30, 0, false);
-		window.AddSliderFloatComponent("Z-axis", -30, 30, 0, false);
-		window.AddCheckBoxComponent("Uniform scaling");
-		window.AddButtonComponent("Delete", 120, 30);
-	}
-
-	{
-		AddWindow("SCENE COMPONENTS");
-		auto& window = windows["SCENE COMPONENTS"];
-		for(int i = 0; i < scene.GetObjectNames().size(); i++)
-		{
-			window.AddTextComponent(scene.GetObjectNames()[i]);
-		}
-	}
-
 	(void)Run();
 }
 
 void LevelEditor::RemoveItem(const std::string name)
 {
+	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+	component->RemoveName(name);
 	auto model = scene.Get<Drawable>(name);
 	volumeRenderer.Unbind(model);
 	modelRenderer.Unbind(model);
@@ -374,6 +446,40 @@ void LevelEditor::ClearToolUI()
 	window.SetValue<SliderFloatComponent, float>("Z-axis", 0.0f);
 }
 
+void LevelEditor::UpdateToolUI(std::string name)
+{
+	auto model = scene.Get<Drawable>(name);
+	auto& window = windows["GAME OBJECT"];
+
+	window.SetValue<TextComponent, std::string>("ObjectName", name);
+
+	window.SetValue<SliderFloatComponent, float>("X", model->GetPosition().x);
+	window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
+	window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
+
+	window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x * 180 / PI);
+	window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y * 180 / PI);
+	window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z * 180 / PI);
+
+	window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
+	window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
+	window.SetValue<SliderFloatComponent, float>("Z-axis", model->GetScale().z);
+
+	selectedObject = name;
+}
+
+void LevelEditor::FocusObject()
+{
+	if (selectedObject != "")
+	{
+		auto model = scene.Get<Drawable>(selectedObject);
+		Vector3 objPos = model.get()->GetPosition();
+		Vector3 camDir = scene.GetCamera()->GetDirection();
+
+		scene.GetCamera()->SetPosition(objPos - camDir * 10);
+	}
+}
+
 
 LevelEditor::~LevelEditor()
 {
@@ -386,34 +492,42 @@ State LevelEditor::Run()
 	Update();
 	Render();
 
-	auto& window = windows["TOOLS"];
-	if (window.GetValue<ButtonComponent>("LOAD FBX"))
-		Load(FileSystem::LoadFile("Models"));
-
-	if (window.GetValue<ButtonComponent>("CREATE BBOX"))
-		CreateBoundingBox();
-
-	if (window.GetValue<ButtonComponent>("CREATE BSPHERE"))
-		CreateBoundingSphere();
-
-	if (window.Changed("WIREFRAME"))
-		Graphics::Inst().ToggleWireframe();
-
-	if (window.Changed("TERRAIN START SUBDIVISIONS"))
 	{
-		if (terrain)
-			delete terrain;
-		terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
-	}
-	
-	if (window.GetValue<ButtonComponent>("SAVE WORLD"))
-	{
-		GameLoader loader;
-		loader.Save("Default", scene.GetDrawables());
+		auto& window = windows["TOOLS"];
+		if (window.GetValue<ButtonComponent>("LOAD FBX"))
+			Load(FileSystem::LoadFile("Models"));
+
+		if (window.GetValue<ButtonComponent>("CREATE BBOX"))
+			CreateBoundingBox();
+
+		if (window.GetValue<ButtonComponent>("CREATE BSPHERE"))
+			CreateBoundingSphere();
+
+		if (window.Changed("WIREFRAME"))
+			Graphics::Inst().ToggleWireframe();
+
+		if (window.Changed("TERRAIN START SUBDIVISIONS"))
+		{
+			if (terrain)
+				delete terrain;
+			terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
+		}
+
+		if (window.GetValue<ButtonComponent>("SAVE WORLD"))
+		{
+			GameLoader loader;
+			loader.Save("Default", scene.GetDrawables());
+		}
+
+		if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
+			return State::MENU;
 	}
 
-	if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
-		return State::MENU;
+	{
+		auto &window = windows["GAME OBJECT"];
+		if (window.GetValue<ButtonComponent>("Duplicate"))
+			DuplicateObject();
+	}
 
 	return State::NO_CHANGE;
 }

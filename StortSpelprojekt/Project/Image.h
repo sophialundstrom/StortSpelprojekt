@@ -8,6 +8,7 @@ class Image : public UIComponent
 {
 private:
 	ID2D1Bitmap* bitMap;
+	std::string filename;
 	float scale;
 	float opacity;
 	float sourceWidth;
@@ -17,4 +18,5 @@ public:
 	Image(const std::string& filename, D2D_VECTOR_2F position, float scale = 1.0f, float opacity = 1.0f, bool visible = true);
 	~Image();
 	void Draw();
+	std::string FileName() { return filename; }
 };

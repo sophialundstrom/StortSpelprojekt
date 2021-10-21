@@ -72,6 +72,7 @@ private:
     void CheckItemCollision();
 
     void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
+    void UpdateInventoryUI();
 
     void Initialize();
 public:
