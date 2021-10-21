@@ -150,6 +150,9 @@
     <Filter Include="Header Files\Application\Scene\Game\SaveStation">
       <UniqueIdentifier>{83465f75-34dd-401b-9242-706cec97dc2e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Main Menu">
+      <UniqueIdentifier>{101620f8-8f1f-41b5-be2e-1995c7f4a618}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -220,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="Arrow.cpp">
       <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Main Menu.cpp">
+      <Filter>Header Files\Main Menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -475,8 +481,8 @@
     <ClInclude Include="Arrow.h">
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
-    <ClInclude Include="BuildingEffect.h">
-      <Filter>Header Files\Application\Scene\Game</Filter>
+    <ClInclude Include="Main Menu.h">
+      <Filter>Header Files\Main Menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

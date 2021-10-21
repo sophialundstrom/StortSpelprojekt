@@ -5,6 +5,7 @@
 #include "Time.h"
 #include "States.h"
 #include "LoadingScreen.h"
+#include "Main Menu.h"
 
 class Application
 {
@@ -148,6 +149,13 @@ public:
 
 				break;
 
+			case State::MAIN_MENU:
+				delete currentGameState;
+				RunLoadingScreen();
+				currentGameState = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+
+				break;
+
 			case State::LEVEL:
 				RunLoadingScreen();
 				currentGameState->Delete();
@@ -163,7 +171,6 @@ public:
 				currentGameState->Delete();
 				break;
 			}
-
 			Time::Update(timer.DeltaTime());
 		}
 	}
