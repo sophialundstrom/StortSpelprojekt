@@ -23,6 +23,9 @@ void LevelEditor::BindDrawables()
 		{
 			auto volume = std::make_shared<BoxVolume>();
 			volume->SetMatrix(box->GetMatrix());
+			volume->SetPosition(box->GetPosition());
+			volume->SetRotation(box->GetRotation());
+			volume->SetScale(box->GetScale());
 			scene.GetDrawables()[name] = volume;
 			scene.GetObjectNames().push_back(name);
 			volume->SetID(scene.GetObjectNames().size());
@@ -37,6 +40,9 @@ void LevelEditor::BindDrawables()
 		{
 			auto volume = std::make_shared<SphereVolume>();
 			volume->SetMatrix(sphere->GetMatrix());
+			volume->SetPosition(sphere->GetPosition());
+			volume->SetRotation(sphere->GetRotation());
+			volume->SetScale(sphere->GetScale());
 			scene.GetDrawables()[name] = volume;
 			scene.GetObjectNames().push_back(name);
 			volume->SetID(scene.GetObjectNames().size());

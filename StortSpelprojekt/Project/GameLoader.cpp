@@ -45,18 +45,21 @@ void GameLoader::Load(const std::string& filename, std::map<std::string, std::sh
 				ReadStr(parent);
 
 				drawables[drawable]->parent = drawables[parent];
+				break;
 			}
 
 			case VOLUMEBOX:
 			{
 				auto box = ReadBoxVolume();
 				drawables.emplace(box->GetName(), box);
+				break;
 			}
 
 			case VOLUMESPHERE:
 			{
 				auto sphere = ReadSphereVolume();
 				drawables.emplace(sphere->GetName(), sphere);
+				break;
 			}
 		}
 	}
@@ -120,6 +123,9 @@ void GameLoader::Save(const std::string& filename, const std::map<std::string, s
 			strcpy_s(message, MAX_STR, name.c_str());
 			WriteStr(message);
 			Write(boundingVolume->GetMatrix());
+			Write(boundingVolume->GetPosition());
+			Write(boundingVolume->GetRotation());
+			Write(boundingVolume->GetScale());
 		}
 
 	}
@@ -193,6 +199,14 @@ std::shared_ptr<BoundingBox> GameLoader::ReadBoxVolume()
 	auto box = std::make_shared<BoundingBox>(matrix);
 	box->SetName(string);
 
+	Vector3 vector;
+	Read(vector);
+	box->SetPosition(vector);
+	Read(vector);
+	box->SetRotation(vector);
+	Read(vector);
+	box->SetScale(vector);
+
 	return box;
 }
 
@@ -207,6 +221,14 @@ std::shared_ptr<BoundingSphere> GameLoader::ReadSphereVolume()
 
 	auto sphere = std::make_shared<BoundingSphere>(matrix);
 	sphere->SetName(string);
+
+	Vector3 vector;
+	Read(vector);
+	sphere->SetPosition(vector);
+	Read(vector);
+	sphere->SetRotation(vector);
+	Read(vector);
+	sphere->SetScale(vector);
 
 	return sphere;
 }
