@@ -16,14 +16,12 @@ private:
 
 	AnimatedMesh mesh;
 	Skeleton skeleton;
-	Animator animator;
+	Animator* animator = nullptr;
 public:
-	AnimatedModel(const std::string& fileName)
+	AnimatedModel(const std::string& fileName, const std::string& name)
 	{
-		Timer timer;
-		timer.Start();
-
-		scene = importer.ReadFile("Models/" + fileName + ".fbx", aiProcess_FlipUVs);
+		SetName(name);
+		scene = importer.ReadFile("Models/Animated/" + fileName + ".fbx", aiProcess_FlipUVs);
 
 		if (!scene)
 		{
@@ -31,30 +29,39 @@ public:
 			return;
 		}
 
-		if (scene->HasMeshes())
-			mesh = AnimatedMesh(scene->mMeshes[0], skeleton);
+		UINT foundID = Resources::Inst().GetBufferIDFromName(scene->mMeshes[0]->mName.C_Str());
+		if (foundID == ID_INVALID)
+			mesh = AnimatedMesh(scene->mMeshes[0], skeleton, scene);
+		else
+			ApplyMesh(scene->mMeshes[0]->mName.C_Str());
 
-		if (scene->HasMaterials())
-			MaterialLoader::Load(scene->mMaterials[0]);
+		const std::string materialName = std::string(scene->mMeshes[0]->mName.C_Str()) + "_" + std::string(scene->mMaterials[0]->GetName().C_Str());
+		foundID = Resources::Inst().GetMaterialIDFromName(materialName);
+		if (foundID == ID_INVALID)
+			MaterialLoader::Load(scene->mMeshes[0]->mName.C_Str(), scene->mMaterials[0]);
 
+		ApplyMaterial(materialName);
+		
+		animator = new Animator(scene, skeleton);
 		if (scene->HasAnimations())
 			for (UINT i = 0; i < scene->mNumAnimations; ++i)
-				animator.AddAnimation(scene->mAnimations[i]);
+				animator->AddAnimation(scene->mAnimations[i]);
 	}
-
-	AnimatedModel(const AnimatedModel& other)
-		:mesh(other.mesh)
-	{
-		this->parent = other.parent;
-	}
+	
+	~AnimatedModel() { delete animator; }
 
 	void Draw(bool useTextures = true, bool useMaterial = true) 
 	{ 
-		animator.BindMatricesBuffer();
+		animator->BindMatricesBuffer();
 
 		if (useTextures) 
 			Resources::Inst().BindMaterial(mesh.materialID, useMaterial); 
 		Resources::Inst().Draw(mesh.vertexCount, mesh.bufferID); 
+	}
+
+	void DrawSkeleton()
+	{
+		skeleton.BindBuffer();
 	}
 
 	void ApplyMaterial(const std::string& name)
@@ -73,14 +80,13 @@ public:
 
 	void PlayAnimation(const std::string& animation)
 	{
-		animator.PlayAnimation(animation);
+		animator->PlayAnimation(animation);
 	}
 
 	// Inherited via Drawable
 	virtual void Update() override
 	{
 		UpdateMatrix();
-
-		animator.Update(scene, skeleton);
+		animator->Update(scene, skeleton);
 	}
 };

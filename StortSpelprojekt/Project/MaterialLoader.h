@@ -6,10 +6,11 @@
 
 namespace MaterialLoader
 {
-	inline void Load(aiMaterial* material)
+	inline std::string Load(const std::string& meshName, aiMaterial* material)
 	{
 		Material* newMaterial = new Material();
-		newMaterial->name = material->GetName().C_Str();
+
+		newMaterial->name = meshName + "_" + material->GetName().C_Str();
 
 		aiString path;
 		UINT numTextures = material->GetTextureCount(aiTextureType_DIFFUSE);
@@ -36,5 +37,7 @@ namespace MaterialLoader
 		newMaterial->data.specularPower = specularPower;
 
 		Resources::Inst().AddMaterial(newMaterial);
+
+		return newMaterial->name;
 	}
 };

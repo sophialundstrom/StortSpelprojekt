@@ -32,9 +32,13 @@ void Game::Render()
 
 	modelRenderer.Render();
 
+	animatedModelRenderer.Render();
+
 	colliderRenderer.Render();
 
 	terrainRenderer.Render(terrain);
+
+	skeletonRenderer.Render();
 
 	shadowRenderer.Render();
 
@@ -89,7 +93,7 @@ void Game::MainMenu()
 void Game::Initialize()
 {
 	//LOAD SCENE
-	FBXLoader levelLoader("Models");
+	FBXLoader meshLoader("Models");
 
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
@@ -233,7 +237,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer(DEFERRED, true),
 	particleRenderer(DEFERRED),
 	terrainRenderer(DEFERRED, 40),
-	colliderRenderer(DEFERRED)
+	colliderRenderer(DEFERRED),
+	animatedModelRenderer(DEFERRED, true)
 {
 	Initialize();
 
@@ -325,6 +330,12 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ 0,30,0 });
 	particleRenderer.Bind(particleSystem);
 
+	//ANIMATION
+	auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
+	scene.AddDrawable("AnimatedModel", animated);
+	skeletonRenderer.Bind(animated);
+	animatedModelRenderer.Bind(animated);
+
 	(void)Run();
 }
 
@@ -396,6 +407,12 @@ State Game::Run()
 		if (Event::KeyIsPressed('T'))
 		{
 			player->TakeDamage();
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('O'))
+		{
+			scene.Get<AnimatedModel>("AnimatedModel")->PlayAnimation("Take 001");
 			lastClick = Time::Get();
 		}
 
