@@ -46,6 +46,18 @@ void GameLoader::Load(const std::string& filename, std::map<std::string, std::sh
 
 				drawables[drawable]->parent = drawables[parent];
 			}
+
+			case VOLUMEBOX:
+			{
+				auto box = ReadBoxVolume();
+				drawables.emplace(box->GetName(), box);
+			}
+
+			case VOLUMESPHERE:
+			{
+				auto sphere = ReadSphereVolume();
+				drawables.emplace(sphere->GetName(), sphere);
+			}
 		}
 	}
 
@@ -69,31 +81,47 @@ void GameLoader::Save(const std::string& filename, const std::map<std::string, s
 	for (auto& [name, drawable] : drawables)
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
-		if (!model)
+
+		if (model)
+		{
+			Write(MODEL);
+
+			strcpy_s(message, MAX_STR, name.c_str());
+			WriteStr(message);
+			std::cout << "Writing modelName: " << message << std::endl;
+
+			strcpy_s(message, MAX_STR, Resources::Inst().GetBufferNameFromID(model->mesh.bufferID).c_str());
+			WriteStr(message);
+			std::cout << "Writing Buffer: " << message << std::endl;
+
+			strcpy_s(message, MAX_STR, Resources::Inst().GetmaterialnamefromID(model->mesh.materialID).c_str());
+			WriteStr(message);
+			std::cout << "Writing material: " << message << std::endl;
+
+			Write(model->position);
+			std::cout << "PosData" << model->position.x << " " << model->position.y << " " << model->position.z << std::endl;
+
+			Write(model->rotation);
+			std::cout << "RotData" << model->rotation.x << " " << model->rotation.y << " " << model->rotation.z << std::endl;
+
+			Write(model->scale);
+			std::cout << "ScaleData" << model->scale.x << " " << model->scale.y << " " << model->scale.z << std::endl;
 			continue;
+		}
 
-		Write(MODEL);
+		auto boundingVolume = std::dynamic_pointer_cast<BoundingVolume>(drawable);
+		if (boundingVolume)
+		{
+			if (boundingVolume->type == VolumeType::BOX)
+				Write(VOLUMEBOX);
+			else
+				Write(VOLUMESPHERE);
 
-		strcpy_s(message, MAX_STR, name.c_str());
-		WriteStr(message);
-		std::cout << "Writing modelName: " << message << std::endl;
+			strcpy_s(message, MAX_STR, name.c_str());
+			WriteStr(message);
+			Write(boundingVolume->GetMatrix());
+		}
 
-		strcpy_s(message, MAX_STR, Resources::Inst().GetBufferNameFromID(model->mesh.bufferID).c_str());
-		WriteStr(message);
-		std::cout << "Writing Buffer: " << message << std::endl;
-
-		strcpy_s(message, MAX_STR, Resources::Inst().GetmaterialnamefromID(model->mesh.materialID).c_str());
-		WriteStr(message);
-		std::cout << "Writing material: " << message << std::endl;
-
-		Write(model->position);
-		std::cout << "PosData" << model->position.x << " " << model->position.y << " " << model->position.z << std::endl;
-
-		Write(model->rotation);
-		std::cout << "RotData" << model->rotation.x << " " << model->rotation.y << " " << model->rotation.z << std::endl;
-
-		Write(model->scale);
-		std::cout << "ScaleData" << model->scale.x << " " << model->scale.y << " " << model->scale.z << std::endl;
 	}
 
 	for (auto& [name, drawable] : drawables)
@@ -151,4 +179,34 @@ std::shared_ptr<Model> GameLoader::ReadModel()
 	model->SetScale(vec);
 
 	return model;
+}
+
+std::shared_ptr<BoundingBox> GameLoader::ReadBoxVolume()
+{
+	char string[MAX_STR];
+
+	//ModelName
+	ReadStr(string);
+	Matrix matrix;
+	Read(matrix);
+
+	auto box = std::make_shared<BoundingBox>(matrix);
+	box->SetName(string);
+
+	return box;
+}
+
+std::shared_ptr<BoundingSphere> GameLoader::ReadSphereVolume()
+{
+	char string[MAX_STR];
+
+	//ModelName
+	ReadStr(string);
+	Matrix matrix;
+	Read(matrix);
+
+	auto sphere = std::make_shared<BoundingSphere>(matrix);
+	sphere->SetName(string);
+
+	return sphere;
 }

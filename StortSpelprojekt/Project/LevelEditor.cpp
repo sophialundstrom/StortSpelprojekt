@@ -18,6 +18,34 @@ void LevelEditor::BindDrawables()
 			component->AddName(name);
 		}
 
+		auto box = std::dynamic_pointer_cast<BoundingBox>(drawable);
+		if(box)
+		{
+			auto volume = std::make_shared<BoxVolume>();
+			volume->SetMatrix(box->GetMatrix());
+			scene.GetDrawables()[name] = volume;
+			scene.GetObjectNames().push_back(name);
+			volume->SetID(scene.GetObjectNames().size());
+			volumeRenderer.Bind(volume);
+			idRenderer.Bind(volume);
+			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+			component->AddName(name);
+		}
+
+		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(drawable);
+		if (sphere)
+		{
+			auto volume = std::make_shared<SphereVolume>();
+			volume->SetMatrix(sphere->GetMatrix());
+			scene.GetDrawables()[name] = volume;
+			scene.GetObjectNames().push_back(name);
+			volume->SetID(scene.GetObjectNames().size());
+			volumeRenderer.Bind(volume);
+			idRenderer.Bind(volume);
+			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+			component->AddName(name);
+		}
+
 		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
 		if (particleSystem)
 		{
@@ -40,7 +68,7 @@ void LevelEditor::Load(const std::string& file)
 	std::string fileName = path.stem().string();
 	fileName = scene.AddModel(fileName, path.string());
 	auto model = scene.Get<Model>(fileName);
-	/*scene.GetObjectNames().push_back(model->GetName());*/
+	scene.GetObjectNames().push_back(model->GetName());
 	model->SetID(scene.GetObjectNames().size());
 	idRenderer.Bind(model);
 	modelRenderer.Bind(model);
