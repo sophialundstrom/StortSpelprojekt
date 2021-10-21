@@ -14,10 +14,16 @@ void Game::Update()
 
 	friendly->Collided(*player);
 
-	for(int i = 0; i < 4; i++)
+	for(int i = 0; i < arrows.size(); i++)
 	{
 		hostile->ProjectileCollided(arrows[i]);
 	}
+
+	for (int i = 0; i < hostileArrows.size(); i++)
+	{
+		player->ProjectileCollided(hostileArrows[i]);
+	}
+	
 
 	scene.Update();
 
@@ -224,10 +230,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 		AddArrow("Arrow");
 	}
 
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		AddHostileArrow("Arrow");
 	}
+;
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), arrows);
@@ -283,7 +290,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
-	scene.AddHostileNPC("HostileCube", hostileArrows);
+	scene.AddHostileNPC("HostileCube", hostileArrows, player);
 	auto hostile = scene.Get<NPC>("HostileCube");
 	hostile->SetPosition(50, 0, 0);
 	hostile->SetScale(1);
@@ -367,9 +374,6 @@ State Game::Run()
 			player->GetStats();
 			lastClick = Time::Get();
 		}
-
-
-
 	}
 
 	if (Event::KeyIsPressed('M'))

@@ -1,10 +1,11 @@
 #include "NPCHostile.h"
 
 
-HostileNPC::HostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows)
+HostileNPC::HostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player)
 	:NPC(file)
 {
 	this->arrows = hostileArrows;
+    this->player = player;
 }
 
 HostileNPC::HostileNPC(const Model& model)
@@ -17,20 +18,33 @@ void HostileNPC::Update()
 {
     float lastClick = 0;
 
-    if (Time::Get() - lastClick > 0.2f)
+    if (Event::KeyIsPressed('L'))
     {
-        if (Event::KeyIsPressed('L'))
+        if (Time::Get() - lastClick > 1.f)
         {
+            Vector3 aimDir = player->GetPosition() - position;
+            aimDir.Normalize();
+
+            movementYRadiant = acos(aimDir.x * 0 + aimDir.z * 1);
+	        if (aimDir.x < 0)
+		        movementYRadiant *= -1;
+
+            movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
+
             int currentIndex = 0;
-            bool isPlayerShootingArrow = false;
-            while (currentIndex < arrows.size() /* -1 /Remove last error for balanced speed but stupid*/ && isPlayerShootingArrow == false)
+            bool isEnemyShootingArrow = false;
+            while (currentIndex < arrows.size() -1 && isEnemyShootingArrow == false)
             {
-                isPlayerShootingArrow = arrows.at(currentIndex)->Shoot({ 0, 1, 0 }, position, {1, 0, 0});
+                isEnemyShootingArrow = arrows.at(currentIndex)->Shoot(aimDir, position, {PI_DIV2 - movementXRadiant, movementYRadiant, 0});
                 lastClick = Time::Get();
-                currentIndex++;
+                currentIndex++;            
             }
-            std::cout << "SHOT" << std::endl;
         }
+    }
+
+    for (int i = 0; i < arrows.size(); i++)
+    {
+        arrows.at(i)->Update();
     }
 	NPC::Update();
 }

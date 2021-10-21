@@ -26,6 +26,7 @@ bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 		SetPosition(startPos);
 		isShot = true;
 		isArrowActivating = true;
+		std::cout << "SHOT" << std::endl;
 	}
 	
 	return isArrowActivating;

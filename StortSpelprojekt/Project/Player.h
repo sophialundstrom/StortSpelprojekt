@@ -57,7 +57,7 @@ struct Stats
 	float movementSpeed = 5.0f;
 	float sprintSpeed = 10.0f;
 	UINT maxHealthPoints = 10;
-	UINT healthPoints = 0;
+	UINT healthPoints = 10;
 	UINT level = 1;
 	float currentSpeed = movementSpeed;
 
@@ -147,6 +147,8 @@ public:
 		std::cout << "CURRENT MOVEMENTSPEED " << stats.currentSpeed << std::endl;
 		std::cout << "BARBARIANS KILLED " << stats.barbariansKilled << std::endl;
 	}
+
+	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 
 	std::shared_ptr<BoundingSphere> GetBounds(){ return bounds; }
 	std::shared_ptr<RayCollider> GetRay() { return ray; }

@@ -49,10 +49,6 @@ bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 		}
 
 	}
-	else
-	{
-		Print("NOT HIT");
-	}
 
 	return collided;
 }

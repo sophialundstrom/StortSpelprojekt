@@ -86,10 +86,6 @@ void Player::Update(HeightMap* heightMap)
 
 		Vector2 camera2D = { lookDirection.y, lookDirection.z };
 		movementXRadiant = acos(lookDirection.Dot(Vector3(0, 1, 0)) / lookDirection.Length());
-		/*camera2D = { lookDirection.y, lookDirection.x };
-		float tempRad = acos(camera2D.Dot(Vector2(1, 0)) / camera2D.Length());
-		if (tempRad < movementXRadiant)
-			movementXRadiant = tempRad;*/
 	}
 
 	Matrix movementOfsetMatrix = Matrix::CreateRotationY(movementYRadiant);
@@ -158,6 +154,7 @@ void Player::Update(HeightMap* heightMap)
 	{
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 	}
+
 	for (int i = 0; i < arrows.size(); i++)
 	{
 		arrows.at(i)->Update();
@@ -175,6 +172,24 @@ void Player::Update(HeightMap* heightMap)
 	bounds->Update();
 	ray->Update();
 	frustum->Update();
+}
+
+bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
+{
+	bool collided = false;
+	if ((position - arrow->GetPosition()).Length() < 3.0f)
+	{
+		collided = true;
+		Print("ARROW HIT PLAYER");
+		arrow->DisableArrow();
+		stats.healthPoints--;
+		if (stats.healthPoints <= 0)
+		{
+			std::cout << "GAME OVER :\n";
+		}
+	}
+
+	return collided;
 }
 
 void Player::Save(const std::string file)
