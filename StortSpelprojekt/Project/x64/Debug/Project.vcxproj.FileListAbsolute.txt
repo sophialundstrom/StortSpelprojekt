@@ -23,3 +23,8 @@ C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debu
 C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\IDPixelShader.cso
 C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\IDVertexShader.cso
 C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredColliderPixelShader.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\LoadingPS.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\LoadingVS.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumeIDVertexShader.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumePixelShader.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumeVertexShader.cso

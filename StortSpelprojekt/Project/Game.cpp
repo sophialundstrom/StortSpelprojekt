@@ -198,6 +198,11 @@ void Game::CheckItemCollision()
 	}
 }
 
+void Game::UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect)
+{
+	effect->Unbind(scene, particleRenderer);
+}
+  
 void Game::UpdateInventoryUI()
 {
 	auto canvas = canvases["INGAME"];
@@ -222,7 +227,6 @@ void TestFuncMenu()
 {
 	Print("MENU");
 }
-
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
@@ -277,12 +281,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "", "HouseTexture"};
-	building = std::make_shared<Building>(meshNames, materialNames, "Building");
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ 10, -3, 60 });
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
 	shadowRenderer.Bind(building);
-	scene.Get<Model>("Building")->SetPosition(10, -3, 60);
 	scene.Get<Model>("Building")->SetRotation(0, -PI_DIV2, 0);
 
 	//PAUSED
@@ -385,6 +388,7 @@ State Game::Run()
 
 		if (Event::KeyIsPressed('R'))
 		{
+			building->effect->Bind(scene, particleRenderer);
 			building->Upgrade();
 			lastClick = Time::Get();
 		}
@@ -406,9 +410,6 @@ State Game::Run()
 			player->GetStats();
 			lastClick = Time::Get();
 		}
-
-
-
 	}
 
 	if (mainMenu)

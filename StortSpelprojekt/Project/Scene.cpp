@@ -150,6 +150,21 @@ void Scene::AddParticleSystem(const std::string name, std::shared_ptr<ParticleSy
 	drawables.emplace(uniqueName, particleSystem);
 }
 
+void Scene::AddParticleSystem(const std::string name, std::shared_ptr<ParticleSystem> system)
+{
+	std::string uniqueName = name;
+	UINT numInstances = 0;
+	for (auto& [name, drawable] : drawables)
+		if (name.find(uniqueName) != std::string::npos)
+			numInstances++;
+
+	if (numInstances > 0)
+		uniqueName += std::to_string(numInstances);
+
+
+	drawables.emplace(uniqueName, system);
+}
+
 void Scene::AddPointLight(Vector3 position, float range, Vector3 attenuation, Vector4 color)
 {
 	if (pointLights.size() < MAX_LIGHTS)
