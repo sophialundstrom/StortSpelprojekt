@@ -192,9 +192,18 @@ void Game::CheckItemCollision()
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
+				UpdateInventoryUI();
 			}
 		}
 	}
+}
+
+void Game::UpdateInventoryUI()
+{
+	auto canvas = canvases["INGAME"];
+	canvas->UpdateText("Wood", std::to_string(player->Inventory().NumOf(WOOD)));
+	canvas->UpdateText("Stone", std::to_string(player->Inventory().NumOf(STONE)));
+	canvas->UpdateText("Food", std::to_string(player->Inventory().NumOf(FOOD)));
 }
 
 void TestFuncBack()
@@ -228,13 +237,32 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(50, 4, 4);
 
+	//UI
+	userInterface = std::make_unique<UI>(window);
+
+	//INGAME
+	auto ingameCanvas = new Canvas();
+	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "CompassBase.png");
+	ingameCanvas->AddImage({ 250, 250 }, "QuestBorder", "QuestBorder.png");
+	ingameCanvas->AddText({ 200, 40 }, "AC", "Active Quests", 200, 20, UI::COLOR::GRAY, UI::TEXTFORMAT::TITLE);
+	ingameCanvas->AddImage({ clientWidth - 200.0f, 70 }, "Resources", "Resources.png", 0.8);
+	ingameCanvas->AddText({ clientWidth - 302.0f, 70 }, "Wood", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
+	ingameCanvas->AddText({ clientWidth - 192.0f, 70 }, "Stone", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
+	ingameCanvas->AddText({ clientWidth - 82.0f, 70 }, "Food", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
+	
+	for (UINT i = 0; i < 10; ++i)
+		ingameCanvas->AddImage({ 50.0f + 50 * i, clientHeight - 40.0f }, "hp" + std::to_string(i), "Heart.png");
+
+	canvases["INGAME"] = ingameCanvas;
+	currentCanvas = ingameCanvas;
+
 	for (int i = 0; i < 3; i++)
 	{
 		AddArrow("Arrow");
 	}
 
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera(), arrows);
+	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
@@ -257,24 +285,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.Get<Model>("Building")->SetPosition(10, -3, 60);
 	scene.Get<Model>("Building")->SetRotation(0, -PI_DIV2, 0);
 
-	//UI
-	userInterface = std::make_unique<UI>(window);
-
-	//INGAME
-	auto ingameCanvas = new Canvas();
-	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "CompassBase.png");
-	ingameCanvas->AddImage({ 250, 250 }, "QuestBorder", "QuestBorder.png");
-	ingameCanvas->AddText({ 200, 40 }, "AC", "Active Quests", 200, 20, UI::COLOR::GRAY, UI::TEXTFORMAT::TITLE);
-	canvases["INGAME"] = ingameCanvas;
-	currentCanvas = ingameCanvas;
-
 	//PAUSED
 	auto pauseCanvas = new Canvas();
-
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::GRAY, [this]{ Resume(); }, TestFuncResume);
-	canvases["PAUSED"] = pauseCanvas;
-
-
 	
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Z", "Pause.png", 1.0f, 1.0f);
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this]{ Resume(); }, TestFuncResume);
@@ -283,7 +295,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 
 	canvases["PAUSED"] = pauseCanvas;
-
 
 	// OPTIONS
 	auto optionsCanvas = new Canvas();
@@ -368,12 +379,25 @@ State Game::Run()
 			player->Inventory().GetResources(RESOURCE::STONE);
 			player->Inventory().AddItem(RESOURCE::FOOD);
 			player->Inventory().GetResources(RESOURCE::FOOD);
+			UpdateInventoryUI();
 			lastClick = Time::Get();
 		}
 
 		if (Event::KeyIsPressed('R'))
 		{
 			building->Upgrade();
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('T'))
+		{
+			player->TakeDamage();
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('Y'))
+		{
+			player->AddHealthPoint();
 			lastClick = Time::Get();
 		}
 
