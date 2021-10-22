@@ -39,13 +39,12 @@ public:
 	const std::map<std::string, std::shared_ptr<Drawable>>& GetSortedMap() const;
 	std::vector<std::string> &GetObjectNames();
 
+	std::string AddDrawable(const std::string& name, std::shared_ptr<Drawable> drawable);
 	std::string AddModel(const std::string& file, const std::string path);
 	void AddModel(const std::string& name,std::shared_ptr <Drawable> drawable);
 	void AddBoundingVolume(const std::string& name, std::shared_ptr <Drawable> drawable);
 
 	void DeleteDrawable(const std::string name) { drawables.erase(name); }
-
-	void AddAnimatedModel(const std::string& file,  const std::string path);
 
 	void AddFriendlyNPC(const std::string& file);
 	void AddFriendlyNPC(const std::string& name, std::shared_ptr <Drawable> drawable);

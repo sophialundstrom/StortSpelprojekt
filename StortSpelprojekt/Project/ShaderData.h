@@ -16,7 +16,7 @@ class ShaderData : public Singleton<ShaderData>
     friend class ParticleRenderer;
 	friend class IDRenderer;
 	friend class VolumeRenderer;
-
+	friend class SkeletonRenderer;
 private:
 	//CAMERA
 	Matrix cameraMatrix;

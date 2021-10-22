@@ -153,6 +153,12 @@
     <Filter Include="Header Files\Main Menu">
       <UniqueIdentifier>{101620f8-8f1f-41b5-be2e-1995c7f4a618}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\SkeletonRenderer">
+      <UniqueIdentifier>{8a8743c8-cfe1-4291-b669-104b517e9dc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\SkeletonRenderer\Shaders">
+      <UniqueIdentifier>{c31f0d83-859c-426f-9d60-75bab28e42f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -484,6 +490,12 @@
     <ClInclude Include="Main Menu.h">
       <Filter>Header Files\Main Menu</Filter>
     </ClInclude>
+    <ClInclude Include="BuildingEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\SkeletonRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -566,5 +578,11 @@
     <FxCompile Include="VolumeIDVertexShader.hlsl" />
     <FxCompile Include="VolumePixelShader.hlsl" />
     <FxCompile Include="VolumeVertexShader.hlsl" />
+    <FxCompile Include="SkeletonVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\SkeletonRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="SkeletonPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\SkeletonRenderer\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #include "DeferredRenderer.h"
 #include "ColliderRenderer.h"
 #include "TerrainRenderer.h"
+#include "SkeletonRenderer.h"
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
@@ -28,12 +29,14 @@ private:
     std::unique_ptr<QuestLog> questLog;
     std::unique_ptr<UI> userInterface;
 
+    AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
+    SkeletonRenderer skeletonRenderer;
 
     float lastSave = 0;
     SaveStation saveStations[2];
