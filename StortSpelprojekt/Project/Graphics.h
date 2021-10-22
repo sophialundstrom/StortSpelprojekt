@@ -21,13 +21,13 @@ private:
 
 	ID3D11RasterizerState* wireframeState;
 
-	HRESULT CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd);
+	HRESULT CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed);
 	HRESULT CreateRenderTarget();
 	HRESULT CreateDepthStencil(UINT clientWidth, UINT clientHeight);
 	HRESULT CreateRasterizerState();
 	void CreateViewport(UINT clientWidth, UINT clientHeight);
 public:
-	Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd);
+	Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed = true);
 	~Graphics();
 
 	void BeginFrame();

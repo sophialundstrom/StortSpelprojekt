@@ -47,5 +47,5 @@ public:
 
 	virtual void Activate(std::shared_ptr<Player> player) = 0;
 	virtual void Update(std::shared_ptr<Player> player) = 0;
-	virtual void RenderUI() = 0;
+	virtual void UpdateUI(std::string& string) = 0;
 };

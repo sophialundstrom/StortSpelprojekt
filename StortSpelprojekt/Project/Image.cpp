@@ -3,8 +3,8 @@
 #include "FileSystem.h"
 #include "UI.h"
 
-Image::Image(const std::string& filename, D2D_VECTOR_2F position, float scale, float opacity)
-	:scale(1), opacity(1), width(0), height(0), sourceWidth(0), sourceHeight(0), bitMap(nullptr), bounds()
+Image::Image(const std::string& filename, D2D_VECTOR_2F position, float scale, float opacity, bool visible)
+	:scale(1), opacity(1), sourceWidth(0), sourceHeight(0), bitMap(nullptr), UIComponent(0, 0, visible), filename(filename)
 {
 	HRESULT hr;
 	IWICBitmapDecoder* decoder = nullptr;

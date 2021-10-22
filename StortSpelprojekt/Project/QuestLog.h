@@ -2,12 +2,18 @@
 #include "Singleton.h"
 #include "Player.h"
 #include "QuestLogFile.h"
+#include "Canvas.h"
 #include <map>
 
 class QuestLog : public Singleton<QuestLog>
 {
 private:
 	std::shared_ptr<Player> player;
+
+	//CANVAS 
+	Canvas* ingameCanvas;
+	float titlePositions[5] = { 100.0f, 200.0f, 300.0f, 400.0f, 500.0f };
+
 	std::map<UINT, Quest*> quests;
 	std::vector<Quest*> activeQuests;
 
@@ -29,11 +35,38 @@ private:
 	{
 		for (UINT i = 0; i < activeQuests.size(); ++i)
 			if (activeQuests[i] == quest)
+			{
+				ingameCanvas->RemoveText(activeQuests[i]->Name() + "title");
+				ingameCanvas->RemoveText(activeQuests[i]->Name() + "text");
 				activeQuests.erase(activeQuests.begin() + i);
+			}	
+	}
+
+	void UpdateUI()
+	{
+		for (UINT i = 0; i < activeQuests.size(); ++i)
+		{
+			auto quest = activeQuests[i];
+
+			if (!ingameCanvas->Exists<Text>(quest->Name() + "title"))
+			{
+				ingameCanvas->AddText({ 170, titlePositions[i] }, quest->Name() + "title", quest->Name(), 250, 50, UI::COLOR::GRAY, UI::TEXTFORMAT::TITLE_SMALL);
+				std::string text;
+				quest->UpdateUI(text);
+				ingameCanvas->AddText({ 170, titlePositions[i] + 20 }, quest->Name() + "text", text, 250, 50, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
+			}
+
+			else
+			{
+				std::string text;
+				quest->UpdateUI(text);
+				ingameCanvas->UpdateText(quest->Name() + "text", text);
+			}
+		}
 	}
 public:
-	QuestLog(const std::string& name, std::shared_ptr<Player> player)
-		:Singleton(this), player(player)
+	QuestLog(const std::string& name, std::shared_ptr<Player> player, Canvas* ingameCanvas)
+		:Singleton(this), player(player), ingameCanvas(ingameCanvas)
 	{
 		QuestLogFile::Load(name, quests);
 
@@ -61,10 +94,15 @@ public:
 
 			if (quest->IsCompleted())		//IF COMPLETED BY AUTOMATIC REASON (COLLECTING/FIGHT)
 			{
+				ingameCanvas->UpdateText("Wood", std::to_string(player->Inventory().NumOf(WOOD)));
+				ingameCanvas->UpdateText("Stone", std::to_string(player->Inventory().NumOf(STONE)));
+				ingameCanvas->UpdateText("Food", std::to_string(player->Inventory().NumOf(FOOD)));
 				ActivateTriggerQuests(quest);
 				EraseQuest(quest);
 			}
 		}
+
+		UpdateUI();
 	}
 
 	//TO BE ABLE TO START A QUEST FROM GAME
@@ -94,13 +132,6 @@ public:
 				EraseQuest(quest);
 			}
 		}
-	}
-
-	void RenderUI()
-	{
-		//RENDER UI FOR ALL ACTIVE QUESTS (SHOWING PROGRESS AND SUCH)
-		for (auto& [ID, quest] : quests)
-			quest->RenderUI();
 	}
 
 	bool QuestIsDone(UINT ID)

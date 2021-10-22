@@ -13,13 +13,14 @@ private:
 	UINT width, height;
 	HWND hWnd;
 
-	bool cursorEnabled;
+	bool cursorEnabled = true;
 	void ActivateCursor();
 	void DeactivateCursor();
 
 	LRESULT MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 public:
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	Window() = default;
 	Window(UINT width, UINT height, LPCWSTR title, HINSTANCE instance);
 	~Window() { DestroyWindow(hWnd); }
 

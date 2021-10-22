@@ -25,11 +25,14 @@ public:
 	{
 		collectedItems = player->Inventory().NumOf(itemID);
 		if (collectedItems >= numItems)
+		{
+			player->Inventory().RemoveItem(itemID, numItems);
 			Complete();
+		}
 	}
 
-	virtual void RenderUI() override
+	virtual void UpdateUI(std::string& string) override
 	{
-		Print(name);
+		string = "Collected *INSERT ITEM NAME*: " + std::to_string(collectedItems) + "/" + std::to_string(numItems);
 	}
 };

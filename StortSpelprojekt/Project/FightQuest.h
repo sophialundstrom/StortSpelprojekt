@@ -29,8 +29,8 @@ public:
 			Complete();
 	}
 
-	virtual void RenderUI() override
+	virtual void UpdateUI(std::string& string) override
 	{
-		Print(name);
+		string = "Barbarians fought: " + std::to_string(numTargets - completedTargets) + "/" + std::to_string(numTargets);
 	}
 };

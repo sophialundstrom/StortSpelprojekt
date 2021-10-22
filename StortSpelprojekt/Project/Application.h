@@ -5,12 +5,13 @@
 #include "Time.h"
 #include "States.h"
 #include "LoadingScreen.h"
+#include "Main Menu.h"
 
 class Application
 {
 private:
 	//WINDOW
-	Window window;
+	Window* window;
 
 	//SINGLETONS
 	std::unique_ptr<Graphics> graphics;
@@ -20,23 +21,76 @@ private:
 	//STATES
 	State currentState;
 	GameState* currentGameState;
-public:
-	Application(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
-		:window(width, height, title, instance)
-	{
-		FileSystem::SetProjectDirectory();
 
-		//INITIALIZATION
-		UINT clientWidth = window.ClientWidth();
-		UINT clientHeight = window.ClientHeight();
+	const std::wstring title = L"Stort Spelprojekt";
+	bool isFullscreen = false;
+	const UINT width = 1280;
+	const UINT height = 720;
+	const UINT fullScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+	const UINT fullscreenHeight = GetSystemMetrics(SM_CYSCREEN);
+	HINSTANCE instance;
 
-		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window.GetHWND());
+	void InitFullscreen()
+	{ 
+		if (window)
+			delete window;
+
+		window = new Window(fullScreenWidth, fullscreenHeight, title.c_str(), instance);
+
+		isFullscreen = true;
+
+		UINT clientWidth = window->ClientWidth();
+		UINT clientHeight = window->ClientHeight();
+
+		graphics.reset();
+		shaderData.reset();
+		resources.reset();
+
+		ImGUI::ShutDown();
+
+		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window->GetHWND(), false);
+
+		RunLoadingScreen();
+
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
 
 		ImGUI::Initialize();
+	}
 
-		//STATES
+	void InitWindowed()
+	{
+		if (window)
+			delete window;
+
+		window = new Window(width, height, title.c_str(), instance);
+
+		isFullscreen = false;
+
+		UINT clientWidth = window->ClientWidth();
+		UINT clientHeight = window->ClientHeight();
+
+		graphics.reset();
+		shaderData.reset();
+		resources.reset();
+
+		ImGUI::ShutDown();
+
+		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window->GetHWND());
+		shaderData = std::make_unique<ShaderData>();
+		resources = std::make_unique<Resources>();
+
+		ImGUI::Initialize();
+	}
+public:
+	Application(HINSTANCE instance)
+	{
+		FileSystem::SetProjectDirectory();
+		InitWindowed();
+
+		UINT clientWidth = window->ClientWidth();
+		UINT clientHeight = window->ClientHeight();
+
 		currentState = State::MENU;
 		currentGameState = new DebugMainMenu(clientWidth, clientHeight);
 	}
@@ -62,12 +116,15 @@ public:
 				DispatchMessage(&msg);
 			}
 
-			if (window.Exit())
+			if (window->Exit())
 			{
 				currentGameState->Delete();
 				break;
 			}
 				
+			if (Event::KeyIsPressed(VK_TAB))
+				window->ToggleCursor();
+			
 			currentState = currentGameState->Run();
 
 			switch (currentState)
@@ -76,37 +133,44 @@ public:
 				break;
 
 			case State::MENU:
-
 				currentGameState->Delete();
-				currentGameState = new DebugMainMenu(window.ClientWidth(), window.ClientHeight());
+
+				if (isFullscreen)
+					InitWindowed();
+				
+				currentGameState = new DebugMainMenu(window->ClientWidth(), window->ClientHeight());
 				break;
 
 			case State::GAME:
-
-				RunLoadingScreen();
 				delete currentGameState;
-				currentGameState = new Game(window.ClientWidth(), window.ClientHeight(), window.GetHWND());
+				InitFullscreen();
+				RunLoadingScreen();
+				currentGameState = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+
+				break;
+
+			case State::MAIN_MENU:
+				delete currentGameState;
+				RunLoadingScreen();
+				currentGameState = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 
 				break;
 
 			case State::LEVEL:
-
 				RunLoadingScreen();
 				currentGameState->Delete();
-				currentGameState = new LevelEditor(window.ClientWidth(), window.ClientHeight(), window.GetHWND());
+				currentGameState = new LevelEditor(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 				break;
 
 			case State::PARTICLE:
-
 				currentGameState->Delete();
-				currentGameState = new ParticleEditor(window.ClientWidth(), window.ClientHeight());
+				currentGameState = new ParticleEditor(window->ClientWidth(), window->ClientHeight());
 				break;
 
 			case State::EXIT:
 				currentGameState->Delete();
 				break;
 			}
-
 			Time::Update(timer.DeltaTime());
 		}
 	}

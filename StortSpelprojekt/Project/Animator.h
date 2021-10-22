@@ -10,16 +10,40 @@ private:
 
 	ID3D11Buffer* structuredBuffer = nullptr;
 	ID3D11ShaderResourceView* bufferSRV = nullptr;
+
+	void SetBindPose(const aiScene* scene, Skeleton& skeleton)
+	{
+		jointMatrices = std::vector<Matrix>(MAX_JOINTS);
+
+		const aiNode* root = scene->mRootNode->FindNode(skeleton.joints[0].name.c_str());
+		if (!root)
+			return;
+
+		skeleton.transforms.clear();
+		skeleton.SetBindPose(root, Matrix::Identity);
+		skeleton.SetBuffer(root);
+
+		UpdateBuffer(structuredBuffer, jointMatrices.data(), jointMatrices.size() * sizeof(Matrix));
+	}
 public:
-	Animator()
+	Animator(const aiScene* scene, Skeleton& skeleton)
 	{
 		jointMatrices = std::vector<Matrix>(MAX_JOINTS);
 		CreateStructuredBuffer(structuredBuffer, bufferSRV, sizeof(Matrix), sizeof(Matrix) * MAX_JOINTS);
+		SetBindPose(scene, skeleton);
 	}
 
-	void AddAnimation(aiAnimation* animation) 
-	{ 
-		animations.emplace(animation->mName.C_Str(), new Animation(animation)); 
+	~Animator()
+	{
+		structuredBuffer->Release();
+		bufferSRV->Release();
+		for (auto& [name, animation] : animations)
+			delete animation;
+	}
+
+	void AddAnimation(aiAnimation* animation)
+	{
+		animations.emplace(animation->mName.C_Str(), new Animation(animation));
 	}
 
 	void PlayAnimation(const std::string& name)
@@ -28,24 +52,31 @@ public:
 		currentAnimation->Play();
 	}
 
-	void ReadNodeHeriarchy(const aiNode* node, const Skeleton& skeleton, const Matrix& parentTransform)
+	bool HasActiveAnimation() { if (currentAnimation) return true; return false; }
+
+	void ReadNodeHeriarchy(const aiNode* node, Skeleton& skeleton, const Matrix& parentTransform)
 	{
 		const std::string nodeName(node->mName.C_Str());
 
 		Matrix localMatrix;
+
 		currentAnimation->Update(nodeName, localMatrix);
+
+		if (localMatrix == Matrix::Identity)
+			localMatrix = AssimpToDX(node->mTransformation);
 
 		const Matrix globalTransform = localMatrix * parentTransform;
 
-		const Matrix finalMatrix = (globalTransform * skeleton.FindJoint(nodeName).offsetMatrix).Transpose();
+		const Matrix finalMatrix = (skeleton.FindJoint(nodeName).offsetMatrix * globalTransform).Transpose();
 
 		jointMatrices.emplace_back(finalMatrix);
+		skeleton.transforms.emplace_back(globalTransform);
 
 		for (UINT i = 0; i < node->mNumChildren; ++i)
 			ReadNodeHeriarchy(node->mChildren[i], skeleton, globalTransform);
 	}
 
-	void Update(const aiScene* scene, const Skeleton& skeleton)
+	void Update(const aiScene* scene, Skeleton& skeleton)
 	{
 		if (!currentAnimation)
 			return;
@@ -53,17 +84,22 @@ public:
 		if (currentAnimation->active == false)
 		{
 			currentAnimation = nullptr;
-			jointMatrices = std::vector<Matrix>(MAX_JOINTS);
+			SetBindPose(scene, skeleton);
 			return;
 		}
 
 		jointMatrices.clear();
+		skeleton.transforms.clear();
 
 		const aiNode* root = scene->mRootNode->FindNode(skeleton.joints[0].name.c_str());
+		if (!root)
+			return;
 
 		Matrix matrix = Matrix::Identity;
 
 		ReadNodeHeriarchy(root, skeleton, matrix);
+
+		skeleton.SetBuffer(root);
 
 		UpdateBuffer(structuredBuffer, jointMatrices.data(), (UINT)jointMatrices.size() * sizeof(Matrix));
 	}
