@@ -180,15 +180,14 @@ public:
 		std::cout << "BARBARIANS KILLED " << stats.barbariansKilled << std::endl;
 	}
 
+	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
+
 	std::shared_ptr<BoundingSphere> GetBounds(){ return bounds; }
 	std::shared_ptr<RayCollider> GetRay() { return ray; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 
 	Inventory& Inventory() { return inventory; }
 	Stats& Stats() { return stats; }
-
-
-
 
 	void Save(const std::string file);
 

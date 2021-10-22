@@ -10,8 +10,20 @@ void Game::Update()
 	QuestLog::Inst().Update();
 
 	auto friendly = scene.Get<NPC>("Staff");
+	auto hostile = scene.Get<NPC>("HostileCube");
 
 	friendly->Collided(*player);
+
+	for(int i = 0; i < arrows.size(); i++)
+	{
+		hostile->ProjectileCollided(arrows[i]);
+	}
+
+	for (int i = 0; i < hostileArrows.size(); i++)
+	{
+		player->ProjectileCollided(hostileArrows[i]);
+	}
+	
 
 	scene.Update();
 
@@ -164,6 +176,29 @@ void Game::AddArrow(const std::string fileName)
 	shadowRenderer.Bind(scene.Get<Model>(fileName));
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
+	arrow->GetCollider()->SetParent(arrow);
+	arrow->GetCollider()->SetScale(0.15);
+	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z };
+	offset += {0, 0, -0.5};
+	arrow->GetCollider()->SetPosition(offset);
+	colliderRenderer.Bind(arrow->GetCollider());
+}
+
+void Game::AddHostileArrow(const std::string fileName)
+{
+	auto arrow = std::make_shared<Arrow>(fileName);
+	scene.AddModel(fileName, arrow);
+	hostileArrows.emplace_back(arrow);
+	modelRenderer.Bind(scene.Get<Model>(fileName));
+	shadowRenderer.Bind(scene.Get<Model>(fileName));
+	arrow->SetPosition(0, -100, 0);
+	arrow->SetScale(2);
+	arrow->GetCollider()->SetParent(arrow);
+	arrow->GetCollider()->SetScale(0.15);
+	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z };
+	offset += {0, 0, -0.5};
+	arrow->GetCollider()->SetPosition(offset);
+	colliderRenderer.Bind(arrow->GetCollider());
 }
 
 void Game::CheckSaveStationCollision()
@@ -270,6 +305,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 		AddArrow("Arrow");
 	}
 
+	for (int i = 0; i < 3; i++)
+	{
+		AddHostileArrow("Arrow");
+	}
+
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
 	scene.AddModel("Player", player);
@@ -319,12 +359,20 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");
-
 	friendly->SetPosition(40, 150, -30);
 	friendly->SetScale(10);
 	//friendly->SetParent(player);
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
+
+	scene.AddHostileNPC("HostileCube", hostileArrows, player);
+	auto hostile = scene.Get<NPC>("HostileCube");
+	hostile->SetPosition(50, 0, 0);
+	hostile->SetScale(1);
+	//hostile->GetCollider()->SetParent(hostile);
+	modelRenderer.Bind(hostile);
+	shadowRenderer.Bind(hostile);
+	colliderRenderer.Bind(hostile->GetCollider());
 
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
 	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ 0,30,0 });
