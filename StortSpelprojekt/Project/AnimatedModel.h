@@ -56,7 +56,7 @@ public:
 
 		if (useTextures) 
 			Resources::Inst().BindMaterial(mesh.materialID, useMaterial); 
-		Resources::Inst().Draw(mesh.vertexCount, mesh.bufferID); 
+		Resources::Inst().DrawAnimated(mesh.vertexCount, mesh.bufferID); 
 	}
 
 	void DrawSkeleton()

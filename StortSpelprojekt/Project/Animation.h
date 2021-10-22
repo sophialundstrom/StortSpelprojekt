@@ -79,17 +79,17 @@ struct Animation
 			return;
 
 		timer += Time::GetDelta();
-		float timeInTicks = timer / 1000.0f * ticksPerSecond;
+		float timeInTicks = timer / 100.0f * ticksPerSecond;
 		float frameTime = fmod(timeInTicks, duration);
 
 		/*Print(ticksPerSecond);
 		Print(duration);*/
-		Print(Time::GetDelta());
+		//Print(Time::GetDelta());
 
 		if (timeInTicks > duration)
 		{
 			timer = 0;
-			active = false;
+			//active = false;
 			return;
 		}
 
