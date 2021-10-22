@@ -188,10 +188,13 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 		arrow->DisableArrow();
 		if (stats.healthPoints - 1 == 0)
 		{
+			stats.healthPoints--;
 			std::cout << "GAME OVER" << std::endl;
+			UpdateHealthUI();
 			return collided;
 		}
 		stats.healthPoints--;
+		UpdateHealthUI();
 	}
 
 	return collided;

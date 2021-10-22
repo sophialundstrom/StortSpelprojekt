@@ -134,14 +134,14 @@ private:
 				ingameCanvas->AddImage(position, name, "Heart.png");
 			}
 
-			if (i == 0 && stats.healthPoints == 0)
+			if (i == 0 && stats.healthPoints == 1)
 			{
 				auto position = image->GetPosition();
 				ingameCanvas->RemoveImage(name);
 				ingameCanvas->AddImage(position, name, "RedHeart.png");
 			}
 
-			if (i <= stats.healthPoints)
+			if (i < stats.healthPoints)
 				image->Show();
 			else
 				image->Hide();
