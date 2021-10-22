@@ -25,7 +25,10 @@ public:
 	{
 		collectedItems = player->Inventory().NumOf(itemID);
 		if (collectedItems >= numItems)
+		{
+			player->Inventory().RemoveItem(itemID, numItems);
 			Complete();
+		}
 	}
 
 	virtual void UpdateUI(std::string& string) override

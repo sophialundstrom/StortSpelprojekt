@@ -1,7 +1,7 @@
 #pragma once
 #include "Math.h"
 
-#define UNDEF 999
+#define UNDEF -1
 
 struct AnimatedVertex
 {
@@ -9,5 +9,5 @@ struct AnimatedVertex
 	Vector2 texCoords;
 	Vector3 normal;
 	FLOAT weights[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-	UINT boneIDs[4] = { UNDEF, UNDEF, UNDEF, UNDEF };
+	INT boneIDs[4] = { UNDEF, UNDEF, UNDEF, UNDEF };
 };

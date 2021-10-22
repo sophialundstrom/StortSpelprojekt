@@ -71,6 +71,27 @@ public:
 	void RemoveImage(const std::string& name) { if (images.find(name) != images.end()) images.erase(name); }
 	void RemoveText(const std::string& name) { if (texts.find(name) != texts.end()) texts.erase(name); }
 
+	Button* GetButton(const std::string& name)
+	{
+		if (buttons.find(name) != buttons.end())
+			return buttons[name];
+		return nullptr;
+	}
+
+	Image* GetImage(const std::string& name)
+	{
+		if (images.find(name) != images.end())
+			return images[name];
+		return nullptr;
+	}
+
+	Text* GetText(const std::string& name)
+	{
+		if (texts.find(name) != texts.end())
+			return texts[name];
+		return nullptr;
+	}
+
 	template <typename T>
 	bool Exists(const std::string& name) 
 	{ 

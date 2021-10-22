@@ -3,6 +3,7 @@
 #include<fstream>
 #include"Scene.h"
 #include"FileSystem.h"
+#include "BoundingVolumes.h"
 
 #define MAX_STR 64
 
@@ -44,7 +45,9 @@ private:
 	{
 		MODEL,
 		PARTICLE_SYSTEM,
-		PARENT
+		PARENT,
+		VOLUMEBOX,
+		VOLUMESPHERE
 	};
 
 	void WriteModel(std::shared_ptr<Model> model);
@@ -52,5 +55,7 @@ private:
 	//void SaveBuilding(std::shared_ptr<Building> building);
 
 	std::shared_ptr<Model> ReadModel();
+	std::shared_ptr<BoundingBox> ReadBoxVolume();
+	std::shared_ptr<BoundingSphere> ReadSphereVolume();
 	std::shared_ptr<ParticleSystem> ReadParticleSystem();
 };

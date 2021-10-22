@@ -27,7 +27,6 @@ struct Animation
 		name = animation->mName.C_Str();
 		ticksPerSecond = (float)animation->mTicksPerSecond;
 		duration = (float)animation->mDuration;
-
 		for (UINT i = 0; i < animation->mNumChannels; ++i)
 		{
 			aiNodeAnim* aiChannel = animation->mChannels[i];
@@ -37,10 +36,11 @@ struct Animation
 
 			for (UINT j = 0; j < aiChannel->mNumPositionKeys; ++j)
 			{
+
 				aiVectorKey key = aiChannel->mPositionKeys[j];
 				Vector3 value = AssimpToDX(key.mValue);
 				float keyFrame = (float)key.mTime;
-				
+
 				if (keyFrame < 0)
 					continue;
 
@@ -79,11 +79,17 @@ struct Animation
 			return;
 
 		timer += Time::GetDelta();
+		float timeInTicks = timer / 100.0f * ticksPerSecond;
+		float frameTime = fmod(timeInTicks, duration);
 
-		if (timer > duration)
+		/*Print(ticksPerSecond);
+		Print(duration);*/
+		//Print(Time::GetDelta());
+
+		if (timeInTicks > duration)
 		{
 			timer = 0;
-			active = false;
+			//active = false;
 			return;
 		}
 
@@ -91,19 +97,28 @@ struct Animation
 		if (map.empty())
 			return;
 
-		auto lower = map.lower_bound(timer);
+		auto lower = map.upper_bound(frameTime - 1);
+		auto higher = map.upper_bound(frameTime);
 
-		if (lower == map.end())
-			lower = map.begin();
-	
-		const Matrix translation = Matrix::CreateTranslation(channels[joint].positions[lower->first]);
-		const Matrix quaternion = Matrix::CreateFromQuaternion(channels[joint].quaternions[lower->first]);
-		const Matrix scaling = Matrix::CreateScale(channels[joint].scalings[lower->first]);
+		float lowerTimestamp = lower->first;
+		float higherTimestamp = higher->first;
+		float weight = (frameTime - lowerTimestamp) / (higherTimestamp - lowerTimestamp);
+
+		Quaternion Q = Quaternion::Slerp(channels[joint].quaternions[lowerTimestamp], channels[joint].quaternions[higherTimestamp], weight);
+		Vector3 T = Vector3::Lerp(channels[joint].positions[lowerTimestamp], channels[joint].positions[higherTimestamp], weight);
+		Vector3 S = Vector3::Lerp(channels[joint].scalings[lowerTimestamp], channels[joint].scalings[higherTimestamp], weight);
+
+		//if (lower == map.end())
+		//	lower = map.begin();
+
+		const Matrix translation = Matrix::CreateTranslation(T);
+		const Matrix quaternion = Matrix::CreateFromQuaternion(Q);
+		const Matrix scaling = Matrix::CreateScale(S);
 
 		localMatrix = scaling * quaternion * translation;
 	}
 
-	void Play() 
+	void Play()
 	{
 		active = true;
 	}

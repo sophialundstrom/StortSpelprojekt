@@ -9,6 +9,27 @@ std::vector<std::string> &Scene::GetObjectNames()
 	return objectNames;
 }
 
+std::string Scene::AddDrawable(const std::string& name, std::shared_ptr<Drawable> drawable)
+{
+	UINT numInstances = 0;
+	std::string finalName = name;
+
+	for (auto& [name, drawable] : drawables)
+		if (name.find(finalName) != std::string::npos)
+			numInstances++;
+
+	if (numInstances > 0)
+	{
+		finalName = finalName + std::to_string(numInstances);
+		drawable->SetName(finalName);
+	}
+		
+	drawables[finalName] = drawable;
+	objectNames.push_back(finalName);
+
+	return finalName;
+}
+
 std::string Scene::AddModel(const std::string& file, const std::string path)
 {
 	UINT numInstances = 0;
@@ -100,25 +121,6 @@ void Scene::AddHostileNPC(const std::string& name, std::shared_ptr<Drawable> dra
 	objectNames.push_back(name);
 }
 
-void Scene::AddAnimatedModel(const std::string& file)
-{
-	UINT numInstances = 0;
-	std::string fileName = file;
-
-	for (auto& [name, drawable] : drawables)
-		if (name.find(file) != std::string::npos)
-			numInstances++;
-
-	if (numInstances > 0)
-	{
-		fileName = file + std::to_string(numInstances);
-		drawables[fileName] = std::make_shared<AnimatedModel>(*std::dynamic_pointer_cast<AnimatedModel>(drawables[file]));
-	}
-
-	else
-		drawables[fileName] = std::make_shared<AnimatedModel>(file);
-}
-
 void Scene::AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type)
 {
 	std::string name = "ParticleSystem";
@@ -148,6 +150,21 @@ void Scene::AddParticleSystem(const std::string name, std::shared_ptr<ParticleSy
 	particleSystem.get()->SetPosition(pos);
 
 	drawables.emplace(uniqueName, particleSystem);
+}
+
+void Scene::AddParticleSystem(const std::string name, std::shared_ptr<ParticleSystem> system)
+{
+	std::string uniqueName = name;
+	UINT numInstances = 0;
+	for (auto& [name, drawable] : drawables)
+		if (name.find(uniqueName) != std::string::npos)
+			numInstances++;
+
+	if (numInstances > 0)
+		uniqueName += std::to_string(numInstances);
+
+
+	drawables.emplace(uniqueName, system);
 }
 
 void Scene::AddPointLight(Vector3 position, float range, Vector3 attenuation, Vector4 color)

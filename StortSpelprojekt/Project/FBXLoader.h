@@ -22,7 +22,7 @@ public:
 		std::vector<std::string> names;
 
 		using directory_iterator = std::filesystem::directory_iterator;
-		for (const auto& dirEntry : directory_iterator("Models/"))
+		for (const auto& dirEntry : directory_iterator(directory + "/"))
 		{
 			if (dirEntry.path().extension() == ".fbx")
 			{

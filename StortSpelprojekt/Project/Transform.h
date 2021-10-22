@@ -43,6 +43,7 @@ public:
 	void SetScale(float scale) { this->scale = Vector3(scale, scale, scale); }
 
 	Matrix GetMatrix() const { return this->matrix.Transpose(); }
+	void SetMatrix(const Matrix& matrix) { this->matrix = matrix; }
 
 	void SetParent(std::shared_ptr<Transform> parent) { this->parent = parent; }
 	bool HasParent() const { if (parent) return true; return false; }

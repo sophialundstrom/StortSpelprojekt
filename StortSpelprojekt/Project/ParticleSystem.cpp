@@ -105,7 +105,7 @@ void ParticleSystem::Reset()
 void ParticleSystem::Update()
 {
 	//IF THERE IS SPACE FOR MORE PARTICLES
-	if (particleCount < maxParticles)
+	if (particleCount < maxParticles && stopSpawn == false )
 	{
 		timeSinceLastParticle += Time::GetDelta();
 
@@ -177,15 +177,23 @@ void ParticleSystem::Update()
 			particleCount++;
 		}
 	}
-
+	UINT index = 0;
 	//UPDATE EXISTING PARTICLES
 	for (auto& particle : particles)
 	{
+		index++;
 		particle.position += particle.direction * Time::GetDelta() * particle.velocity;
 		particle.lifeTime += Time::GetDelta();
 
 		if (particle.lifeTime > particlesLifetime)
 		{
+			if(stopSpawn == true)
+			{
+				particles.erase(particles.begin() + index - 1);
+				particleCount--;
+				index--;
+				continue;
+			}
 			if (type == EmitterType::CUBE)
 				particle.position.y = position.y;
 			else
@@ -194,7 +202,8 @@ void ParticleSystem::Update()
 			particle.lifeTime = 0.0f;
 		}
 	}
-
+	if (particles.empty())
+		done = true;
 	//LASTLY UPDATE BUFFER
 	UpdateBuffer(vertexBuffer, particles.data(), sizeof(Particle) * particleCount);
 }

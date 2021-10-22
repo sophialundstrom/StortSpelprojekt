@@ -95,9 +95,10 @@ private:
 public:
 	static const UINT NUM_VERTICES = 8;
 
-	BoundingBox(Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 extents = { 1.0f, 1.0f, 1.0f }, Quaternion orientation = { 0.0f, 0.0f, 0.0f, 1.0f })
+	BoundingBox(Matrix matrix = Matrix::Identity, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 extents = { 1.0f, 1.0f, 1.0f }, Quaternion orientation = { 0.0f, 0.0f, 0.0f, 1.0f })
 		:Collider(ColliderType::BOX, position), bounds(position, extents, orientation) 
 	{
+		bounds.Transform(bounds, matrix);
 		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Vector3), sizeof(Vector3) * NUM_VERTICES);
 	}
 
@@ -151,9 +152,10 @@ private:
 public:
 	static const UINT NUM_VERTICES = 24;
 
-	BoundingSphere(Vector3 position = { 0.0f, 0.0f, 0.0f }, float radius = 1)
+	BoundingSphere(Matrix matrix = Matrix::Identity, Vector3 position = { 0.0f, 0.0f, 0.0f }, float radius = 1)
 		:Collider(ColliderType::SPHERE, position), bounds(position, radius) 
 	{
+		bounds.Transform(bounds, matrix);
 		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Vector3), sizeof(Vector3) * NUM_VERTICES);
 
 		Vector3 vertices[NUM_VERTICES];
