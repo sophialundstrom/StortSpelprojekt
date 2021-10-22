@@ -16,7 +16,7 @@ HostileNPC::HostileNPC(const Model& model)
 
 void HostileNPC::Update()
 {
-    float lastClick = 0;
+     static float lastClick = 0;
 
     if (Event::KeyIsPressed('L'))
     {
@@ -31,20 +31,22 @@ void HostileNPC::Update()
 
             movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
 
-            int currentIndex = 0;
-            bool isEnemyShootingArrow = false;
-            while (currentIndex < arrows.size() -1 && isEnemyShootingArrow == false)
+            for (int i = 0; i < arrows.size() -1; i++)
             {
-                isEnemyShootingArrow = arrows.at(currentIndex)->Shoot(aimDir, position, {PI_DIV2 - movementXRadiant, movementYRadiant, 0});
+                if (arrows[i]->IsShot())
+                    continue;
+
+                arrows.at(i)->Shoot(aimDir, position, {PI_DIV2 - movementXRadiant, movementYRadiant, 0});
                 lastClick = Time::Get();
-                currentIndex++;            
+                break;
             }
         }
     }
 
     for (int i = 0; i < arrows.size(); i++)
     {
-        arrows.at(i)->Update();
+        if (arrows[i]->IsShot())
+            arrows.at(i)->Update();
     }
 	NPC::Update();
 }

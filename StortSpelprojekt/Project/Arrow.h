@@ -20,5 +20,6 @@ public:
 	void DisableArrow();
 	bool Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation);
 	std::shared_ptr<BoundingBox> GetCollider() { return collider; }
+	bool IsShot() { return isShot; }
 	void Update();
 };

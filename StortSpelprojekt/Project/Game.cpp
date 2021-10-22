@@ -234,7 +234,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	{
 		AddHostileArrow("Arrow");
 	}
-;
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), arrows);

@@ -180,13 +180,18 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 	if ((position - arrow->GetPosition()).Length() < 3.0f)
 	{
 		collided = true;
+		if (stats.healthPoints == 0)
+		{
+			return collided;
+		}
 		Print("ARROW HIT PLAYER");
 		arrow->DisableArrow();
-		stats.healthPoints--;
-		if (stats.healthPoints <= 0)
+		if (stats.healthPoints - 1 == 0)
 		{
-			std::cout << "GAME OVER :\n";
+			std::cout << "GAME OVER" << std::endl;
+			return collided;
 		}
+		stats.healthPoints--;
 	}
 
 	return collided;
