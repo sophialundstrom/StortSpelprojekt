@@ -1,7 +1,7 @@
 #include "Arrow.h"
 
 Arrow::Arrow(const std::string file)
-	:Model(file, "Arrow"), speed(100.f), lifeTime(5.0f)
+	:Model(file, "Arrow"), speed(10.f), lifeTime(5.0f)
 {
 	collider = std::make_shared<BoundingBox>();
 }
@@ -50,12 +50,14 @@ void Arrow::Update()
 		direction.y -= 0.05f * Time::GetDelta();
 		SetPosition(GetPosition() + direction * speed * Time::GetDelta());
 	}
+
 	else
 	{
 		SetPosition(0, -100, 0);
 		isShot = false;
 		lifeLength = 0;
 	}
+
 	Model::Update();
 	collider->Update();
 }

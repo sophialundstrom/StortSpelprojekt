@@ -31,7 +31,7 @@ void HostileNPC::Update()
 
             movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
 
-            for (int i = 0; i < arrows.size() -1; i++)
+            for (int i = 0; i < arrows.size(); i++)
             {
                 if (arrows[i]->IsShot())
                     continue;
@@ -44,10 +44,8 @@ void HostileNPC::Update()
     }
 
     for (int i = 0; i < arrows.size(); i++)
-    {
-        if (arrows[i]->IsShot())
-            arrows.at(i)->Update();
-    }
+        arrows.at(i)->Update();
+
 	NPC::Update();
 }
 

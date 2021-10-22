@@ -24,7 +24,6 @@ void Game::Update()
 		player->ProjectileCollided(hostileArrows[i]);
 	}
 	
-
 	scene.Update();
 
 	CheckItemCollision();
@@ -170,10 +169,10 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 void Game::AddArrow(const std::string fileName)
 {
 	auto arrow = std::make_shared<Arrow>(fileName);
-	scene.AddModel(fileName, arrow);
+	//scene.AddModel(fileName, arrow);
 	arrows.emplace_back(arrow);
-	modelRenderer.Bind(scene.Get<Model>(fileName));
-	shadowRenderer.Bind(scene.Get<Model>(fileName));
+	modelRenderer.Bind(arrow);
+	shadowRenderer.Bind(arrow);
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
@@ -187,10 +186,10 @@ void Game::AddArrow(const std::string fileName)
 void Game::AddHostileArrow(const std::string fileName)
 {
 	auto arrow = std::make_shared<Arrow>(fileName);
-	scene.AddModel(fileName, arrow);
+	//scene.AddModel(fileName, arrow);
 	hostileArrows.emplace_back(arrow);
-	modelRenderer.Bind(scene.Get<Model>(fileName));
-	shadowRenderer.Bind(scene.Get<Model>(fileName));
+	modelRenderer.Bind(arrow);
+	shadowRenderer.Bind(arrow);
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
