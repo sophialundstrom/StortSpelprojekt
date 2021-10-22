@@ -63,10 +63,7 @@ public:
 
 			}
 
-			while (fbxLeft != 0)
-			{
-
-			}
+			while (fbxLeft.load() != 0);
 
 		} // thread pool gets destroyed
 			
