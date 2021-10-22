@@ -15,6 +15,7 @@
 #include "Time.h"
 #include "Grid.h"
 #include "Arrow.h"
+#include "Pathfinding.h"
 
 //PlayerClassLib
 #include <math.h>
@@ -27,7 +28,7 @@ private:
     const std::string file = "Default"; //"Test"
 
     //-----TEMP-----//
-    Grid grid;
+    Pathfinding pathing;
 
     std::unique_ptr<QuestLog> questLog;
     std::unique_ptr<UI> userInterface;

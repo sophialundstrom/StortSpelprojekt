@@ -20,40 +20,39 @@ public:
 	Node();
 	~Node();
 	Node(bool walkable, Vector3 position, int gridX, int gridY);
-	Node(Node&& n) noexcept {};
-	Node(const Node& n)
-		:Node(n.walkable, n.position, n.gridX, n.gridY)
+	//Node(Node&& n)  {}
+	//Node(const Node& n)
+	//	:Node(n.walkable, n.position, n.gridX, n.gridY)
+	//{}
+	Node& operator= ( Node n)// copy assignment
 	{
-	////BSphere = n.BSphere;
-	//	fCost = n.fCost;
-	//	gCost = n.gCost;
-	//	gridX = n.gridX;
-	//	gridY = n.gridY;
-	//	hCost = n.hCost;
-	//	parent = n.parent;
-	//	position = n.position;
-	//	walkable = n.walkable;
-	};
-	Node& operator= (Node n)// copy constructor
-	{
-		fCost = n.fCost;
-		gCost = n.gCost;
-		gridX = n.gridX;
-		gridY = n.gridY;
-		hCost = n.hCost;
-		parent = n.parent;
-		position = n.position;
-		walkable = n.walkable;
+		std::swap(gridX, n.gridX);
+		std::swap(gridY, n.gridY);
+		std::swap(gCost, n.gCost);
+		std::swap(hCost, n.hCost);
+		std::swap(fCost, n.fCost);
+		std::swap(parent, n.parent);
+		std::swap(walkable, n.walkable);
+		std::swap(position, n.position);
+		//fCost = n.fCost;
+		//gCost = n.gCost;
+		//gridX = n.gridX;
+		//gridY = n.gridY;
+		//hCost = n.hCost;
+		//parent = n.parent;
+		//position = n.position;
+		//walkable = n.walkable;
 		return *this;
-	};
+	}
 	bool operator == (const Node& n) const
 	{
 		return (gridX == n.gridX && gridY == n.gridY /*&& parent == n.parent*/);
 	}
+	bool operator != (const Node& n) const
+	{
+		return (gridX != n.gridX && gridY != n.gridY /*&& parent == n.parent*/);
+	}
 	Node& operator= (Node&& n) noexcept { return *this; }
-	//Node& operator= (Node&& n) noexcept { return *this; }
-
-	//std::hash<Node> h;
 
 	int getFCost();
 	void Update();
@@ -69,6 +68,15 @@ struct MyHash
 	}
 };
 
+inline float GetDistance(Node n1, Node n2)
+{
+	int dstX = abs(n1.gridX - n2.gridX);
+	int dstY = abs(n1.gridY - n2.gridY);
+
+	if (dstX > dstY)
+		return 14 * dstY + 10 * (dstX - dstY);
+	return 14 * dstX + 10 * (dstY - dstX);
+};
 //namespace std
 //{
 //	template<> struct hash<Node>

@@ -16,7 +16,7 @@ void Grid::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable
 	{
 		for (int y = 0; y < gridSizeY; y++)
 		{
-			Vector3 worldPoint = worldBottomLeft + Vector3::Right * (x * nodeDiameter * nodeRadius) + Vector3::Forward * (y * nodeDiameter * nodeRadius);
+			Vector3 worldPoint = worldBottomLeft + Vector3::Right * (x * nodeDiameter * nodeRadius) + Vector3(0,0,1) * (y * nodeDiameter * nodeRadius);
 			Vector3 right = Vector3::Right;
 			Vector3 forward = Vector3::Forward;
 			if (worldPoint == Vector3(1.5f, 0, 1.5f))
@@ -57,6 +57,46 @@ Node Grid::NodeFromWorldPoint(Vector3 worldPoint)
 	int x = rint((gridSizeX - 1) * percentX);
 	int y = rint((gridSizeY - 1) * percentY);
 	return grid[x][y];
+}
+
+std::vector<Node> Grid::GetNeighbours(Node node)
+{
+	std::vector<Node> neighbours;
+
+	for (int x = -1; x <= 1; x++) {
+		for (int y = -1; y <= 1; y++) {
+			if (x == 0 && y == 0)
+				continue;
+
+			int checkX = node.gridX + x;
+			int checkY = node.gridY + y;
+
+			if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) {
+				neighbours.emplace_back(grid[checkX, checkY]);
+			}
+		}
+	}
+
+	return neighbours;
+}
+
+void Grid::RetracePath(Node startNode, Node endNode)
+{
+	std::vector<Node> path;
+	Node currentNode = endNode;
+
+	while (currentNode != startNode)
+	{
+		path.emplace(path.begin(), currentNode);
+		currentNode = *currentNode.parent;
+	}
+
+	this->path = path;
+}
+
+std::vector<Node> Grid::GetPath()
+{
+	return path;
 }
 
 Grid::Grid()

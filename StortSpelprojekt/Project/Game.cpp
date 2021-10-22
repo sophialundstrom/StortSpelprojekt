@@ -21,7 +21,7 @@ void Game::Update()
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 		
-	grid.CreateGrid(scene.GetDrawables());
+	pathing.CreateGrid(scene.GetDrawables());
 
 	Event::ClearRawDelta();
 }
@@ -119,7 +119,7 @@ void Game::Initialize()
 		}
 	}
 
-	grid.CreateGrid(scene.GetDrawables());
+	pathing.CreateGrid(scene.GetDrawables());
 }
 
 void Game::RemoveItem(const std::string name)
