@@ -9,7 +9,7 @@ private:
 
 public:
 	BoundingSphere BSphere = { { 0,0,0}, {1.0f} };
-	bool walkable;
+	bool walkable = true;
 	Vector3 position;
 
 	int gridX, gridY, gCost = 0, hCost = 0;
@@ -20,10 +20,10 @@ public:
 	Node();
 	~Node();
 	Node(bool walkable, Vector3 position, int gridX, int gridY);
-	//Node(Node&& n)  {}
-	//Node(const Node& n)
-	//	:Node(n.walkable, n.position, n.gridX, n.gridY)
-	//{}
+	Node(Node&& n)  {}
+	Node(const Node& n)
+		:Node(n.walkable, n.position, n.gridX, n.gridY)
+	{}
 	Node& operator= ( Node n)// copy assignment
 	{
 		std::swap(gridX, n.gridX);
@@ -46,11 +46,18 @@ public:
 	}
 	bool operator == (const Node& n) const
 	{
-		return (gridX == n.gridX && gridY == n.gridY /*&& parent == n.parent*/);
+		return (position == n.position /*&& parent == n.parent*/);
 	}
 	bool operator != (const Node& n) const
 	{
 		return (gridX != n.gridX && gridY != n.gridY /*&& parent == n.parent*/);
+	}
+	bool operator()(Node const& n)
+	{
+		bool cond = false;
+		if (this->gridX == n.gridX && this->gridY == n.gridY)
+			cond = true;
+		return cond;
 	}
 	Node& operator= (Node&& n) noexcept { return *this; }
 

@@ -50,19 +50,19 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 		{
 			// check if the neighbour is in the closed set or is walkable
 			// would like to use .contains for the set but that is c++20 code
-			if (!neighbour.walkable || (std::none_of(closedSet.begin(), closedSet.end(), (neighbour)))) {
+			if (!neighbour.walkable || (std::none_of(closedSet.begin(), closedSet.end(), Node(neighbour)))) {
 				continue;
 			}
 
 			int newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
-			if (newCostToNeighbour < neighbour.gCost || std::none_of(openSet.begin(), openSet.end(), (neighbour))) 
+			if (newCostToNeighbour < neighbour.gCost || std::any_of(openSet.begin(), openSet.end(), Node(neighbour)))
 			{
 				neighbour.gCost = newCostToNeighbour;
 				neighbour.hCost = GetDistance(neighbour, targetNode);
 				neighbour.parent = &node;
 
 				//if openset contains "neighbour" node
-				if (std::none_of(openSet.begin(), openSet.end(), (neighbour)))
+				if (std::any_of(openSet.begin(), openSet.end(), Node(neighbour)))
 					openSet.emplace_back(neighbour);
 			}
 		}

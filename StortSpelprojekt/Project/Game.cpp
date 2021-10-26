@@ -23,6 +23,8 @@ void Game::Update()
 		
 	pathing.CreateGrid(scene.GetDrawables());
 
+	pathing.FindPath(Vector3(12, 0, 12), Vector3(4, 0, 6));
+
 	Event::ClearRawDelta();
 }
 

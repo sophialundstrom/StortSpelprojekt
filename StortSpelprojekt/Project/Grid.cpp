@@ -16,26 +16,31 @@ void Grid::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable
 	{
 		for (int y = 0; y < gridSizeY; y++)
 		{
-			Vector3 worldPoint = worldBottomLeft + Vector3::Right * (x * nodeDiameter * nodeRadius) + Vector3(0,0,1) * (y * nodeDiameter * nodeRadius);
+			Vector3 worldPoint = worldBottomLeft + Vector3::Right * (x * nodeDiameter + nodeRadius) + /*Vector3(0,0,1)*/Vector3::Forward * (y * nodeDiameter + nodeRadius);
 			Vector3 right = Vector3::Right;
 			Vector3 forward = Vector3::Forward;
-			if (worldPoint == Vector3(1.5f, 0, 1.5f))
+			if (worldPoint == Vector3(16.0f, 0, 16.0f))
 			{
 				Print("stop");
 			}
+			grid[x][y].position = worldPoint;
+			grid[x][y].gridX = x;
+			grid[x][y].gridY = y;
+
+							if (grid[x][y].gridX == 26 && grid[x][y].gridY == 26)
+							{
+								Print("debug");
+							}
 			for (auto& [name, drawable] : drawable)
 			{
 				if (Vector3::Distance(worldPoint, drawable->GetPosition()) < 4.0f)
 				{
-					int i = x * gridSizeY + y;
-
 					BoundingSphere tmpSphere = { {drawable->GetPosition()}, {1.0f} }; // tempporary solution to a colliding issue
 					if (grid[x][y].BSphere.GetBounds().Intersects(tmpSphere.GetBounds()))
 					{
 						if (name != "RainingGATOS")
 						{
-							grid[x][y].walkable = false;
-							grid[x][y].position = worldPoint;
+							grid[x][y].walkable = false; // this does happen sometimes 
 						//	Print(std::string("colliding: "));
 						}
 					}
@@ -43,12 +48,13 @@ void Grid::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable
 			}
 		}
 	}
+	Print("grid completed");
 }
 
 Node Grid::NodeFromWorldPoint(Vector3 worldPoint)
 {
-	float percentX = (position.x + gridWorldSize.x / 2) / gridWorldSize.x;
-	float percentY = (position.y + gridWorldSize.y / 2) / gridWorldSize.y;
+	float percentX = (worldPoint.x + gridWorldSize.x / 2) / gridWorldSize.x;
+	float percentY = (worldPoint.z + gridWorldSize.y / 2) / gridWorldSize.y;
 
 	std::clamp(percentX, 0.0f, 1.0f);
 	std::clamp(percentY, 0.0f, 1.0f);
@@ -72,7 +78,7 @@ std::vector<Node> Grid::GetNeighbours(Node node)
 			int checkY = node.gridY + y;
 
 			if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) {
-				neighbours.emplace_back(grid[checkX, checkY]);
+				neighbours.emplace_back(grid[checkX][checkY]);
 			}
 		}
 	}
@@ -87,7 +93,7 @@ void Grid::RetracePath(Node startNode, Node endNode)
 
 	while (currentNode != startNode)
 	{
-		path.emplace(path.begin(), currentNode);
+		path.emplace_back(currentNode);
 		currentNode = *currentNode.parent;
 	}
 
