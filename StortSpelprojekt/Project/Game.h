@@ -1,5 +1,5 @@
 #pragma once
-#include "GameState.h"
+#include "AppState.h"
 #include "AnimatedModelRenderer.h"
 #include "ModelRenderer.h"
 #include "ParticleRenderer.h"
@@ -20,7 +20,7 @@
 #include <math.h>
 
 // The state subclass for the level/game
-class Game : public GameState
+class Game : public AppState
 {
 private:
     bool paused = false;

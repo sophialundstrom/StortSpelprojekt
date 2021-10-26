@@ -55,8 +55,8 @@ struct Inventory
 struct Stats
 {
 	UINT barbariansKilled = 0;
-	float movementSpeed = 5.0f;
-	float sprintSpeed = 10.0f;
+	float movementSpeed = 30.0f;
+	float sprintSpeed = 50.0f;
 	UINT maxHealthPoints = 10;
 	UINT healthPoints = 10;
 	UINT level = 1;

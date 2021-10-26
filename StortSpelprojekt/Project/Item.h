@@ -13,6 +13,8 @@ typedef enum RESOURCE
 class Item :public Model
 {
 public:
+	static const std::string Names[];
+
 	Item(RESOURCE type, const std::string& name)
 		:Model("Pyramid", name), ID(type)
 	{
@@ -47,3 +49,4 @@ private:
 	RESOURCE ID;
 };
 
+inline const std::string Item::Names[] = { "WOOD", "STONE", "FOOD" };

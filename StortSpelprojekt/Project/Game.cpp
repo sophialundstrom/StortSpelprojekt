@@ -270,7 +270,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
 	modelRenderer(DEFERRED, true),
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED, 40),
+	terrainRenderer(DEFERRED),
 	colliderRenderer(DEFERRED),
 	animatedModelRenderer(DEFERRED, true)
 {

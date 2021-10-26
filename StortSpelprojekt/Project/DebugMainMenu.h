@@ -1,9 +1,9 @@
 #pragma once
 #include "ImGuiWin.h"
-#include "GameState.h"
+#include "AppState.h"
 #include "StateENUM.h"
 
-class DebugMainMenu : public GameState
+class DebugMainMenu : public AppState
 {
 private:
 	bool firstFrame = true;

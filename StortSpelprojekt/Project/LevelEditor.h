@@ -4,7 +4,7 @@
 #include "AnimatedModelRenderer.h"
 #include "ModelRenderer.h"
 #include "TerrainRenderer.h"
-#include "GameState.h"
+#include "AppState.h"
 #include "Building.h"
 #include "PRay.h"
 #include "Collision.h"
@@ -12,7 +12,7 @@
 #include "IDRenderer.h"
 #include "VolumeRenderer.h"
 
-class LevelEditor : public Editor, public GameState
+class LevelEditor : public Editor, public AppState
 {
 private:
 	std::string selectedObject;

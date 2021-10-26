@@ -2,9 +2,9 @@
 #include "ParticleRenderer.h"
 #include "Editor.h"
 #include "FileSystem.h"
-#include "GameState.h"
+#include "AppState.h"
 
-class ParticleEditor : public Editor, public GameState
+class ParticleEditor : public Editor, public AppState
 {
 private:
 	Camera camera;

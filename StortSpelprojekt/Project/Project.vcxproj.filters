@@ -153,6 +153,9 @@
     <Filter Include="Header Files\Application\Scene\Game\Combat">
       <UniqueIdentifier>{f7ac95ee-c9fe-476a-96e3-eb873123733a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TEMP FOLDER">
+      <UniqueIdentifier>{ffdb7d74-1785-4235-8445-d0c94734d554}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -223,6 +226,12 @@
     </ClCompile>
     <ClCompile Include="Arrow.cpp">
       <Filter>Header Files\Application\Scene\Game\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="Main Menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>TEMP FOLDER</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -325,7 +334,7 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files\Application\Scene\Drawable\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h">
+    <ClInclude Include="DebugApplication.h">
       <Filter>Header Files\Application</Filter>
     </ClInclude>
     <ClInclude Include="ModelRenderer.h">
@@ -346,7 +355,7 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Application\Scene\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="GameState.h">
+    <ClInclude Include="AppState.h">
       <Filter>Header Files\Application\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
@@ -478,6 +487,27 @@
     <ClInclude Include="Arrow.h">
       <Filter>Header Files\Application\Scene\Game\Combat</Filter>
     </ClInclude>
+    <ClInclude Include="BuildingEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Main Menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Header Files\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="AppStates.h">
+      <Filter>TEMP FOLDER</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationState.h">
+      <Filter>TEMP FOLDER</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>TEMP FOLDER</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -560,5 +590,7 @@
     <FxCompile Include="VolumeIDVertexShader.hlsl" />
     <FxCompile Include="VolumePixelShader.hlsl" />
     <FxCompile Include="VolumeVertexShader.hlsl" />
+    <FxCompile Include="SkeletonPixelShader.hlsl" />
+    <FxCompile Include="SkeletonVertexShader.hlsl" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 #pragma once
-#include "GameState.h"
+#include "AppState.h"
 #include "ParticleRenderer.h"
 #include "ModelRenderer.h"
 #include "Canvas.h"
@@ -8,7 +8,7 @@
 #include "ParticleRenderer.h"
 #include "ShadowRenderer.h"
 
-class MainMenu : public GameState
+class MainMenu : public AppState
 {
 private:
 	Canvas* currentCanvas;
