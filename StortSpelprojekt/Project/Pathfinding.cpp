@@ -16,13 +16,13 @@ void Pathfinding::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>>& d
 
 void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 {
-	Node startNode = grid.NodeFromWorldPoint(startPos);
-	Node targetNode = grid.NodeFromWorldPoint(TargetPos);
+	Node *startNode = grid.NodeFromWorldPoint(startPos);
+	Node *targetNode = grid.NodeFromWorldPoint(TargetPos);
 
 	std::vector<Node> openSet;
 	std::unordered_set<Node, MyHash> closedSet;
 
-	openSet.push_back(startNode); // add to the end of openset
+	openSet.push_back(*startNode); // add to the end of openset
 
 	// main loop for the path algorithm
 	while (openSet.size() > 0)
@@ -39,32 +39,39 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 		openSet.pop_back(); // remove the last element from the open set
 		closedSet.insert(node);
 
-		if (node == targetNode)
+		if (node == *targetNode)
 		{
 			//retrace path. fills up a path vector in Grid
-			grid.RetracePath(startNode, targetNode);
+			startNode = grid.NodeFromWorldPoint(startPos);
+			targetNode = grid.NodeFromWorldPoint(TargetPos);
+			grid.RetracePath(*startNode, *targetNode);
 			return;
 		}
 
-		for (Node neighbour : grid.GetNeighbours(node))
+		for (auto neighbour : grid.GetNeighbours(node))
 		{
 			// check if the neighbour is in the closed set or is walkable
 			// would like to use .contains for the set but that is c++20 code
-			if (!neighbour.walkable || (std::none_of(closedSet.begin(), closedSet.end(), Node(neighbour)))) {
+			if (!neighbour.walkable || !(std::none_of(closedSet.begin(), closedSet.end(), Node(neighbour)))) {
 				continue;
 			}
 
 			int newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
-			if (newCostToNeighbour < neighbour.gCost || std::any_of(openSet.begin(), openSet.end(), Node(neighbour)))
+			if (newCostToNeighbour < neighbour.gCost || !std::any_of(openSet.begin(), openSet.end(), Node(neighbour)))
 			{
 				neighbour.gCost = newCostToNeighbour;
-				neighbour.hCost = GetDistance(neighbour, targetNode);
+				neighbour.hCost = GetDistance(neighbour, *targetNode);
+				if (openSet.size() == 7)
+				{
+					Print("Debug");
+				}
 				neighbour.parent = &node;
 
 				//if openset contains "neighbour" node
-				if (std::any_of(openSet.begin(), openSet.end(), Node(neighbour)))
+				if (!std::any_of(openSet.begin(), openSet.end(), Node(neighbour)))
 					openSet.emplace_back(neighbour);
 			}
+			grid.SetGridNode(neighbour.gridX, neighbour.gridY, neighbour);
 		}
 	}
 }

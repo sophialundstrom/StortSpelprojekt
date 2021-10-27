@@ -6,7 +6,7 @@ Node::Node()
 
 Node::~Node()
 {
-	delete parent;
+	//delete parent;
 }
 
 Node::Node(bool walkable, Vector3 position, int gridX, int gridY)
@@ -16,6 +16,29 @@ Node::Node(bool walkable, Vector3 position, int gridX, int gridY)
 	this->BSphere.SetPosition(position);
 	this->gridX = gridX;
 	this->gridY = gridY;
+}
+
+Node::Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost)
+{
+	this->walkable = walkable;
+	this->position = position;
+	this->BSphere.SetPosition(position);
+	this->gridX = gridX;
+	this->gridY = gridY;
+	this->hCost = hCost;
+	this->gCost = gCost;
+}
+
+Node::Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost, Node* parent)
+{
+	this->walkable = walkable;
+	this->position = position;
+	this->BSphere.SetPosition(position);
+	this->gridX = gridX;
+	this->gridY = gridY;
+	this->hCost = hCost;
+	this->gCost = gCost;
+	this->parent = parent;
 }
 
 int Node::getFCost()

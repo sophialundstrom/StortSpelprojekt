@@ -20,9 +20,14 @@ public:
 	Node();
 	~Node();
 	Node(bool walkable, Vector3 position, int gridX, int gridY);
-	Node(Node&& n)  {}
+	Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost);
+	Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost, Node* parent);
+
+	template<typename _Ty>
+	Node(_Ty)  {}
+
 	Node(const Node& n)
-		:Node(n.walkable, n.position, n.gridX, n.gridY)
+		:Node(n.walkable, n.position, n.gridX, n.gridY, n.hCost, n.gCost, n.parent)
 	{}
 	Node& operator= ( Node n)// copy assignment
 	{

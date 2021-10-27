@@ -51,7 +51,7 @@ void Grid::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable
 	Print("grid completed");
 }
 
-Node Grid::NodeFromWorldPoint(Vector3 worldPoint)
+Node* Grid::NodeFromWorldPoint(Vector3 worldPoint)
 {
 	float percentX = (worldPoint.x + gridWorldSize.x / 2) / gridWorldSize.x;
 	float percentY = (worldPoint.z + gridWorldSize.y / 2) / gridWorldSize.y;
@@ -62,7 +62,7 @@ Node Grid::NodeFromWorldPoint(Vector3 worldPoint)
 
 	int x = rint((gridSizeX - 1) * percentX);
 	int y = rint((gridSizeY - 1) * percentY);
-	return grid[x][y];
+	return &grid[x][y];
 }
 
 std::vector<Node> Grid::GetNeighbours(Node node)
@@ -78,7 +78,7 @@ std::vector<Node> Grid::GetNeighbours(Node node)
 			int checkY = node.gridY + y;
 
 			if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) {
-				neighbours.emplace_back(grid[checkX][checkY]);
+				neighbours.push_back(grid[checkX][checkY]);
 			}
 		}
 	}
@@ -98,6 +98,11 @@ void Grid::RetracePath(Node startNode, Node endNode)
 	}
 
 	this->path = path;
+}
+
+void Grid::SetGridNode(int x, int y, Node &node)
+{
+	grid[x][y] = node;
 }
 
 std::vector<Node> Grid::GetPath()
