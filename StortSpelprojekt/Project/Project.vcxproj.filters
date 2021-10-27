@@ -233,6 +233,9 @@
     <ClCompile Include="Audio.cpp">
       <Filter>Header Files\Application\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="AudioChunks.cpp">
+      <Filter>Header Files\Application\Audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -497,6 +500,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Audio.h">
+      <Filter>Header Files\Application\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioChunks.h">
       <Filter>Header Files\Application\Audio</Filter>
     </ClInclude>
   </ItemGroup>

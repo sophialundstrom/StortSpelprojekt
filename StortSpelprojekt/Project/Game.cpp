@@ -382,6 +382,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	skeletonRenderer.Bind(animated);
 	animatedModelRenderer.Bind(animated);
 
+	//SOUND
+	Audio::AddAudio(L"Audio/Rain.wav");
+	Audio::StartAudio();
+
 	(void)Run();
 }
 
