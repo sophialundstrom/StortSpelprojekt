@@ -9,6 +9,7 @@ private:
 	ID3D11Buffer* matrixBuf = nullptr;
 	ID3D11Buffer* lightBuf = nullptr;
 	ID3D11Buffer* tesselationBuf = nullptr;
+	ID3D11Buffer* timeBuf = nullptr;
 
 	//SHADER PATHS
 #ifdef _DEBUG
@@ -45,14 +46,13 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	WaterRenderer(float tesselationAmount = 63)
+	WaterRenderer(float tesselationAmount = 50)
 	{
 		//BUFFERS
 		CreateBuffer(matrixBuf, sizeof(Matrix));
 		CreateBuffer(lightBuf, sizeof(Matrix));
-
-		BindBuffer(matrixBuf, Shader::DS);
-
+		CreateBuffer(timeBuf);
+	
 		//SHADERS
 		std::string byteCode;
 		if (!LoadShader(vertexShader, vs_path, byteCode))
@@ -128,6 +128,9 @@ public:
 		BindBuffer(matrixBuf, Shader::DS);
 
 		BindBuffer(tesselationBuf, Shader::HS);
+
+		UpdateBuffer(timeBuf, Time::Get());
+		BindBuffer(timeBuf, Shader::DS, 1);
 
 		//DRAW
 		water.Draw();

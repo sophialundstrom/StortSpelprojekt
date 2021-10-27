@@ -25,6 +25,11 @@ cbuffer MATRIX : register(b0)
     float4x4 viewPerspective;
 }
 
+cbuffer TIME : register(b1)
+{
+    float time;
+}
+
 #define NUM_CONTROL_POINTS 3
 [domain("tri")]
 DS_OUTPUT main(
@@ -37,11 +42,14 @@ DS_OUTPUT main(
     //BARYCENTRIC COORDINATES
     output.position = patch[0].position * domain.x + patch[1].position * domain.y + patch[2].position * domain.z;
     output.texCoords = patch[0].texCoords * domain.x + patch[1].texCoords * domain.y + patch[2].texCoords * domain.z;
-
-    output.worldPosition = output.position;
+    
+	if (output.texCoords.y * 100 % 10 < 5 || output.texCoords.x * 100 % 10 < 5)
+		output.position.y += 10;
+        
+	output.worldPosition = output.position;
 
     //TRANSFORM FINAL POSITION
-    output.position = mul(output.position, viewPerspective);
+	output.position = mul(output.position, viewPerspective);
 
-    return output;
+	return output;
 }

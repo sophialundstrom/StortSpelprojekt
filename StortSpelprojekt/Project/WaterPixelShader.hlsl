@@ -30,7 +30,7 @@ PS_OUTPUT main(PS_INPUT input)
 {
     PS_OUTPUT output;
 
-    const float2 newTex = input.texCoords * 40.0f;
+    const float2 newTex = input.texCoords * 20.0f;
 
     output.diffuseTexture = diffuseTexture.Sample(wrapSampler, newTex);
 
