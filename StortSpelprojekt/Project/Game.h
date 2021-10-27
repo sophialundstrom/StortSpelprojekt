@@ -8,6 +8,7 @@
 #include "ColliderRenderer.h"
 #include "TerrainRenderer.h"
 #include "SkeletonRenderer.h"
+#include "WaterRenderer.h"
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
@@ -37,11 +38,13 @@ private:
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
     SkeletonRenderer skeletonRenderer;
+    WaterRenderer waterRenderer;
 
     float lastSave = 0;
     SaveStation saveStations[2];
 
     Terrain terrain;
+    Water water;
 
     Canvas* currentCanvas;
     std::map<std::string, Canvas*> canvases;

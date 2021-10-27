@@ -49,6 +49,8 @@ void Game::Render()
 
 	terrainRenderer.Render(terrain);
 
+	waterRenderer.Render(water);
+
 	skeletonRenderer.Render();
 
 	shadowRenderer.Render();
@@ -272,7 +274,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer(DEFERRED),
 	terrainRenderer(DEFERRED),
 	colliderRenderer(DEFERRED),
-	animatedModelRenderer(DEFERRED, true)
+	animatedModelRenderer(DEFERRED, true),
+	water(5000)
 {
 	Initialize();
 

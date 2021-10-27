@@ -156,6 +156,12 @@
     <Filter Include="TEMP FOLDER">
       <UniqueIdentifier>{ffdb7d74-1785-4235-8445-d0c94734d554}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\WaterRenderer">
+      <UniqueIdentifier>{ba6611da-1f6b-4b10-9f7a-3052957fedc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\WaterRenderer\Shaders">
+      <UniqueIdentifier>{7bc48d1b-6dc9-4930-8261-cbcbff144b62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -508,6 +514,15 @@
     <ClInclude Include="GameState.h">
       <Filter>TEMP FOLDER</Filter>
     </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>Header Files\Application\Scene\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicPlane.h">
+      <Filter>Header Files\Application\Scene\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\WaterRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -592,5 +607,11 @@
     <FxCompile Include="VolumeVertexShader.hlsl" />
     <FxCompile Include="SkeletonPixelShader.hlsl" />
     <FxCompile Include="SkeletonVertexShader.hlsl" />
+    <FxCompile Include="WaterDomainShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\WaterRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\WaterRenderer\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

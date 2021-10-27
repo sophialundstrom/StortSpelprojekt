@@ -102,6 +102,12 @@
     <ContentFile>
       <FullPath>C:\Users\sophi\OneDrive\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumeVertexShader.cso</FullPath>
     </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\OneDrive\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterDomainShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\OneDrive\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterPixelShader.cso</FullPath>
+    </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
