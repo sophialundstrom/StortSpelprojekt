@@ -153,6 +153,9 @@
     <Filter Include="Header Files\Application\Scene\Game\Combat">
       <UniqueIdentifier>{f7ac95ee-c9fe-476a-96e3-eb873123733a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Audio">
+      <UniqueIdentifier>{70728d1d-be0b-4400-be63-775ea488aed7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -223,6 +226,12 @@
     </ClCompile>
     <ClCompile Include="Arrow.cpp">
       <Filter>Header Files\Application\Scene\Game\Combat</Filter>
+    </ClCompile>
+    <ClCompile Include="Main Menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Header Files\Application\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -478,6 +487,18 @@
     <ClInclude Include="Arrow.h">
       <Filter>Header Files\Application\Scene\Game\Combat</Filter>
     </ClInclude>
+    <ClInclude Include="BuildingEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Main Menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Header Files\Application\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -560,5 +581,7 @@
     <FxCompile Include="VolumeIDVertexShader.hlsl" />
     <FxCompile Include="VolumePixelShader.hlsl" />
     <FxCompile Include="VolumeVertexShader.hlsl" />
+    <FxCompile Include="SkeletonPixelShader.hlsl" />
+    <FxCompile Include="SkeletonVertexShader.hlsl" />
   </ItemGroup>
 </Project>
