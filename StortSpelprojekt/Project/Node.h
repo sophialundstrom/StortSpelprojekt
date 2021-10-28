@@ -8,7 +8,7 @@ class Node
 private:
 
 public:
-	BoundingSphere BSphere = { { 0,0,0}, {1.0f} };
+	BoundingSphere BSphere;
 	bool walkable = true;
 	Vector3 position;
 
