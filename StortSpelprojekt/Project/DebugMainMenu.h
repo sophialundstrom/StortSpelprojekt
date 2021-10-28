@@ -1,9 +1,8 @@
 #pragma once
 #include "ImGuiWin.h"
-#include "AppState.h"
-#include "StateENUM.h"
+#include "ApplicationState.h"
 
-class DebugMainMenu : public AppState
+class DebugMainMenu : public ApplicationState
 {
 private:
 	bool firstFrame = true;
@@ -35,22 +34,22 @@ public:
 	}
 
 	// Inherited via GameState
-	State Run()
+	APPSTATE Run()
 	{
 		Render();
 
 		if (window.GetValue<ButtonComponent>("PLAY DEBUG MODE"))
-			return State::GAME;
+			return APPSTATE::GAME;
 
 		else if (window.GetValue<ButtonComponent>("LEVEL EDITOR"))
-			return State::LEVEL;
+			return APPSTATE::LEVEL;
 
 		else if (window.GetValue<ButtonComponent>("PARTICLE EDITOR"))
-			return State::PARTICLE;
+			return APPSTATE::PARTICLE;
 
 		else if (window.GetValue<ButtonComponent>("EXIT"))
-			return State::EXIT;
+			return APPSTATE::EXIT;
 
-		return State::NO_CHANGE;
+		return APPSTATE::NO_CHANGE;
 	}
 };

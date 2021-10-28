@@ -161,5 +161,5 @@ float4 main(PS_INPUT input) : SV_TARGET
 	//RESULT
     const float4 finalColor = T * (saturate(finalLighting));
 	
-    return T;
+    return finalColor;
 }

@@ -153,9 +153,6 @@
     <Filter Include="Header Files\Application\Scene\Game\Combat">
       <UniqueIdentifier>{f7ac95ee-c9fe-476a-96e3-eb873123733a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TEMP FOLDER">
-      <UniqueIdentifier>{ffdb7d74-1785-4235-8445-d0c94734d554}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Application\Graphics\Renderers\WaterRenderer">
       <UniqueIdentifier>{ba6611da-1f6b-4b10-9f7a-3052957fedc7}</UniqueIdentifier>
     </Filter>
@@ -235,9 +232,6 @@
     </ClCompile>
     <ClCompile Include="Main Menu.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameState.cpp">
-      <Filter>TEMP FOLDER</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -361,14 +355,11 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Application\Scene\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="AppState.h">
+    <ClInclude Include="ApplicationState.h">
       <Filter>Header Files\Application\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files\Application\GameStates\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="StateENUM.h">
-      <Filter>Header Files\Application\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="States.h">
       <Filter>Header Files\Application\GameStates</Filter>
@@ -504,15 +495,6 @@
     </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Header Files\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="AppStates.h">
-      <Filter>TEMP FOLDER</Filter>
-    </ClInclude>
-    <ClInclude Include="ApplicationState.h">
-      <Filter>TEMP FOLDER</Filter>
-    </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>TEMP FOLDER</Filter>
     </ClInclude>
     <ClInclude Include="Water.h">
       <Filter>Header Files\Application\Scene\Terrain</Filter>

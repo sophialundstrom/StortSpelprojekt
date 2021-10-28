@@ -1,13 +1,20 @@
 #pragma once
-#include "AppStates.h"
 #include "Scene.h"
+#include "ShaderData.h"
 
-class ApplicationState
+#include <map>
+
+enum class APPSTATE { NO_CHANGE, MAIN_MENU, GAME, LEVEL, PARTICLE, EXIT };
+
+class ApplicationState 
 {
 protected:
-	Scene scene;
+    Scene scene;
 public:
-	ApplicationState() = default;
-	virtual ~ApplicationState() = default;
-	virtual APPSTATE Run() = 0;
+    ApplicationState() = default;
+    virtual ~ApplicationState() = default;
+
+    void Delete() { delete this; };
+
+    virtual APPSTATE Run() = 0;
 };

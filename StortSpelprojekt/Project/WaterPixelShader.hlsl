@@ -30,16 +30,16 @@ PS_OUTPUT main(PS_INPUT input)
 {
     PS_OUTPUT output;
 
-    const float2 newTex = input.texCoords * 20.0f;
+    const float2 newTex = input.texCoords * 30.0f;
 
-    output.diffuseTexture = diffuseTexture.Sample(wrapSampler, newTex);
+    output.diffuseTexture = diffuseTexture.Sample(wrapSampler, newTex) * 0.8;
 
     output.normal = float4(input.normal, 1.0f);
 
     output.worldPosition = float4(input.worldPosition, 1.0f);
 
-    const float4 UNDEF = float4(0.0f, 0.0f, 0.0f, 1.0f);
-    output.diffuse = output.specular = UNDEF;
+    output.diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    output.specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
     output.ambient = float4(0.5f, 0.5f, 0.5f, 1.0f);
 

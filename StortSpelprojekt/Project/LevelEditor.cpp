@@ -487,7 +487,7 @@ LevelEditor::~LevelEditor()
 	Resources::Inst().Clear();
 }
 
-State LevelEditor::Run()
+APPSTATE LevelEditor::Run()
 {
 	Update();
 	Render();
@@ -520,7 +520,7 @@ State LevelEditor::Run()
 		}
 
 		if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
-			return State::MENU;
+			return APPSTATE::MAIN_MENU;
 	}
 
 	{
@@ -529,5 +529,5 @@ State LevelEditor::Run()
 			DuplicateObject();
 	}
 
-	return State::NO_CHANGE;
+	return APPSTATE::NO_CHANGE;
 }

@@ -16,10 +16,11 @@ private:
 	std::unique_ptr<Graphics> graphics;
 	std::unique_ptr<Resources> resources;
 	std::unique_ptr<ShaderData> shaderData;
+	std::unique_ptr<UI> ui;
 
 	//STATES
-	State currentState;
-	AppState* currentGameState;
+	APPSTATE currentState;
+	ApplicationState* currentGameState;
 
 	const std::wstring title = L"Stort Spelprojekt";
 	bool isFullscreen = false;
@@ -44,6 +45,7 @@ private:
 		graphics.reset();
 		shaderData.reset();
 		resources.reset();
+		ui.reset();
 
 		ImGUI::ShutDown();
 
@@ -53,6 +55,7 @@ private:
 
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
+		ui = std::make_unique<UI>(window->GetHWND());
 
 		ImGUI::Initialize();
 	}
@@ -72,12 +75,14 @@ private:
 		graphics.reset();
 		shaderData.reset();
 		resources.reset();
+		ui.reset();
 
 		ImGUI::ShutDown();
 
 		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window->GetHWND());
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
+		ui = std::make_unique<UI>(window->GetHWND());
 
 		ImGUI::Initialize();
 	}
@@ -90,7 +95,7 @@ public:
 		UINT clientWidth = window->ClientWidth();
 		UINT clientHeight = window->ClientHeight();
 
-		currentState = State::MENU;
+		currentState = APPSTATE::MAIN_MENU;
 		currentGameState = new DebugMainMenu(clientWidth, clientHeight);
 	}
 
@@ -99,13 +104,13 @@ public:
 		ImGUI::ShutDown();
 	}
 
-	void Run()
+	int Run()
 	{
 		Timer timer;
 
 		MSG msg = {};
 
-		while (currentState != State::EXIT)
+		while (currentState != APPSTATE::EXIT)
 		{
 			timer.Start();
 
@@ -128,10 +133,10 @@ public:
 
 			switch (currentState)
 			{
-			case State::NO_CHANGE:
+			case APPSTATE::NO_CHANGE:
 				break;
 
-			case State::MENU:
+			case APPSTATE::MAIN_MENU:
 				currentGameState->Delete();
 
 				if (isFullscreen)
@@ -140,37 +145,29 @@ public:
 				currentGameState = new DebugMainMenu(window->ClientWidth(), window->ClientHeight());
 				break;
 
-			case State::GAME:
+			case APPSTATE::GAME:
 				delete currentGameState;
-				InitFullscreen();
-				RunLoadingScreen();
-				currentGameState = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
-
+				return 1;
 				break;
 
-			case State::MAIN_MENU:
-				delete currentGameState;
-				RunLoadingScreen();
-				currentGameState = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
-
-				break;
-
-			case State::LEVEL:
+			case APPSTATE::LEVEL:
 				RunLoadingScreen();
 				currentGameState->Delete();
 				currentGameState = new LevelEditor(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 				break;
 
-			case State::PARTICLE:
+			case APPSTATE::PARTICLE:
 				currentGameState->Delete();
 				currentGameState = new ParticleEditor(window->ClientWidth(), window->ClientHeight());
 				break;
 
-			case State::EXIT:
+			case APPSTATE::EXIT:
 				currentGameState->Delete();
 				break;
 			}
 			Time::Update(timer.DeltaTime());
 		}
+
+		return 0;
 	}
 };

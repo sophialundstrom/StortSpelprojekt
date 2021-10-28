@@ -43,9 +43,19 @@ DS_OUTPUT main(
     output.position = patch[0].position * domain.x + patch[1].position * domain.y + patch[2].position * domain.z;
     output.texCoords = patch[0].texCoords * domain.x + patch[1].texCoords * domain.y + patch[2].texCoords * domain.z;
     
-	if (output.texCoords.y * 100 % 10 < 5 || output.texCoords.x * 100 % 10 < 5)
-		output.position.y += 10;
-        
+    const int amplitude = 6;
+    const float multiplier = 2.0f;
+    const float PI = 3.14159265359f;
+    
+    if (round(output.position.x) % 2 == 0 && round(output.position.z) % 3 == 0)
+        output.position.y += sin(time * multiplier) * amplitude;
+    
+    else if (round(output.position.x) % 3 == 0 && round(output.position.z) % 2 == 0)
+        output.position.y += sin(time * multiplier + PI) * amplitude;
+    
+    else
+        output.position.y += sin(time * multiplier + PI / 2.0f) * amplitude / 2.0f;
+
 	output.worldPosition = output.position;
 
     //TRANSFORM FINAL POSITION

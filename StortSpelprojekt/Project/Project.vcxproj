@@ -161,7 +161,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLoader.cpp" />
-    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="Image.cpp" />
@@ -184,8 +183,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="ApplicationState.h" />
-    <ClInclude Include="AppStates.h" />
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="BoundingVolumes.h" />
     <ClInclude Include="BuildingEffect.h" />
@@ -196,7 +193,6 @@
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
     <ClInclude Include="GameLoader.h" />
-    <ClInclude Include="GameState.h" />
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Item.h" />
@@ -223,7 +219,7 @@
     <ClInclude Include="Editor.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="AppState.h" />
+    <ClInclude Include="ApplicationState.h" />
     <ClInclude Include="ImGuiWin.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Graphics.h" />
@@ -255,7 +251,6 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonRenderer.h" />
-    <ClInclude Include="StateENUM.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Mesh.h" />

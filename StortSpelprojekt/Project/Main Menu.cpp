@@ -4,7 +4,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(DEFERRED, true),
 	particleRenderer(DEFERRED)
 {
-	auto currentCanvas = new Canvas();
+	currentCanvas = new Canvas();
 	currentCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "juan.png", "CompassBase.png");
 	
 }
@@ -16,7 +16,6 @@ MainMenu::~MainMenu()
 
 void MainMenu::Initialize()
 {
-
 	//LOAD SCENE
 	FBXLoader levelLoader("Models");
 
@@ -41,17 +40,19 @@ void MainMenu::Initialize()
 
 }
 
-State MainMenu::Run()
+APPSTATE MainMenu::Run()
 {
+	Graphics::Inst().BeginFrame();
 
-	//if ("asd")
-	//	return State::MENU;
+	currentCanvas->Render();
 
-	if (Event::KeyIsPressed('M'))
-		return State::MENU;
+	Graphics::Inst().EndFrame();
+
+	if (Event::KeyIsPressed('G'))
+		return APPSTATE::GAME;
 
 	if (Event::KeyIsPressed(VK_ESCAPE))
-		return State::EXIT;
+		return APPSTATE::EXIT;
 
-	return State::NO_CHANGE;
+	return APPSTATE::NO_CHANGE;
 }

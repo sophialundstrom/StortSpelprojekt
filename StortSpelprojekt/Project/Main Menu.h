@@ -1,5 +1,5 @@
 #pragma once
-#include "AppState.h"
+#include "ApplicationState.h"
 #include "ParticleRenderer.h"
 #include "ModelRenderer.h"
 #include "Canvas.h"
@@ -8,7 +8,7 @@
 #include "ParticleRenderer.h"
 #include "ShadowRenderer.h"
 
-class MainMenu : public AppState
+class MainMenu : public ApplicationState
 {
 private:
 	Canvas* currentCanvas;
@@ -26,6 +26,6 @@ public:
 	void Initialize();
 
 
-	virtual State Run() override;
+	virtual APPSTATE Run() override;
 
 };

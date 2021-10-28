@@ -137,7 +137,7 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	(void)Run();
 }
 
-State ParticleEditor::Run()
+APPSTATE ParticleEditor::Run()
 {
 	Update();
 	Render();
@@ -147,14 +147,14 @@ State ParticleEditor::Run()
 	if (window.GetValue<ButtonComponent>("LOAD"))
 	{
 		Load(FileSystem::LoadFile("ParticleSystems"));
-		return State::NO_CHANGE;
+		return APPSTATE::NO_CHANGE;
 	}
 
 	else if (window.GetValue<ButtonComponent>("SAVE AS"))
 		Save(FileSystem::SaveFile("ParticleSystems"));
 
 	else if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
-		return State::MENU;
+		return APPSTATE::MAIN_MENU;
 
 	// CHANGE TEXTURE
 	else if (window.GetValue<ButtonComponent>("CHANGE IMAGE"))
@@ -165,7 +165,7 @@ State ParticleEditor::Run()
 
 		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Image", particleSystem->GetTexture());
 		
-		return State::NO_CHANGE;
+		return APPSTATE::NO_CHANGE;
 	}
 
 	else if (window.Changed("MAX PARTICLES"))
@@ -259,5 +259,5 @@ State ParticleEditor::Run()
 	if (window.GetValue<ButtonComponent>("RESET"))
 		particleSystem->Reset();
 
-	return State::NO_CHANGE;
+	return APPSTATE::NO_CHANGE;
 }

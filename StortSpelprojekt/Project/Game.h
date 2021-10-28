@@ -1,5 +1,5 @@
 #pragma once
-#include "AppState.h"
+#include "ApplicationState.h"
 #include "AnimatedModelRenderer.h"
 #include "ModelRenderer.h"
 #include "ParticleRenderer.h"
@@ -21,7 +21,7 @@
 #include <math.h>
 
 // The state subclass for the level/game
-class Game : public AppState
+class Game : public ApplicationState
 {
 private:
     bool paused = false;
@@ -89,5 +89,5 @@ public:
     ~Game(); // Removes drawables and resources
 
     // Inherited via GameState
-    virtual State Run() override;
+    virtual APPSTATE Run() override;
 };

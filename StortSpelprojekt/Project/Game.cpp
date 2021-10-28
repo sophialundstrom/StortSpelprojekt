@@ -49,7 +49,9 @@ void Game::Render()
 
 	terrainRenderer.Render(terrain);
 
+	//Graphics::Inst().ToggleWireframe();
 	waterRenderer.Render(water);
+	//Graphics::Inst().ToggleWireframe();
 
 	skeletonRenderer.Render();
 
@@ -398,7 +400,7 @@ Game::~Game()
 		delete canvas;
 }
 
-State Game::Run()
+APPSTATE Game::Run()
 {
 	if (!paused)
 		Update();
@@ -480,13 +482,13 @@ State Game::Run()
 	}
 
 	if (mainMenu)
-		return State::MAIN_MENU;
+		return APPSTATE::MAIN_MENU;
 
 	if (Event::KeyIsPressed('M'))
-		return State::MENU;
+		return APPSTATE::MAIN_MENU;
 
 	if (Event::KeyIsPressed(VK_ESCAPE))
-		return State::EXIT;
+		return APPSTATE::EXIT;
 
-	return State::NO_CHANGE;
+	return APPSTATE::NO_CHANGE;
 }

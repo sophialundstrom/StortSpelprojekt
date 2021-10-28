@@ -9,30 +9,37 @@
 class Application
 {
 private:
-	Window window;
+	Window* window;
 
 	std::unique_ptr<Graphics> graphics;
 	std::unique_ptr<Resources> resources;
 	std::unique_ptr<ShaderData> shaderData;
+	std::unique_ptr<UI> ui;
 
-	APPSTATE currentState = APPSTATE::MAIN_MENU;
+	APPSTATE currentState;
 	ApplicationState* state = nullptr;
 public:
 	Application(HINSTANCE instance)
 	{
 		FileSystem::SetProjectDirectory();
 
-		window = Window(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"Arcus", instance);
+		window = new Window(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
 
-		graphics = std::make_unique<Graphics>(window.ClientWidth(), window.ClientHeight(), window.GetHWND(), false);
-
-		RunLoadingScreen();
+		graphics = std::make_unique<Graphics>(window->ClientWidth(), window->ClientHeight(), window->GetHWND(), false);
 
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
+		ui = std::make_unique<UI>(window->GetHWND());
+
+		state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 	}
 
-	void Run()
+	~Application()
+	{
+		delete window;
+	}
+
+	int Run()
 	{
 		Timer timer;
 		MSG msg = {};
@@ -47,7 +54,7 @@ public:
 				DispatchMessage(&msg);
 			}
 
-			if (window.Exit())
+			if (window->Exit())
 			{
 				delete state;
 				break;
@@ -63,11 +70,13 @@ public:
 			case APPSTATE::MAIN_MENU:
 				RunLoadingScreen();
 				delete state;
+				state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 				break;
 
-			case APPSTATE::IN_GAME:
+			case APPSTATE::GAME:
 				RunLoadingScreen();
 				delete state;
+				state = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 				break;
 
 			case APPSTATE::EXIT:
@@ -78,6 +87,6 @@ public:
 			Time::Update(timer.DeltaTime());
 		}
 
-		MSG msg = {};
+		return 0;
 	}
 };
