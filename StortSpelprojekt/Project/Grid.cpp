@@ -65,20 +65,20 @@ Node* Grid::NodeFromWorldPoint(Vector3 worldPoint)
 	return &grid[x][y];
 }
 
-std::vector<Node> Grid::GetNeighbours(Node node)
+std::vector<Node*> Grid::GetNeighbours(Node *node)
 {
-	std::vector<Node> neighbours;
+	std::vector<Node*> neighbours;
 
 	for (int x = -1; x <= 1; x++) {
 		for (int y = -1; y <= 1; y++) {
 			if (x == 0 && y == 0)
 				continue;
 
-			int checkX = node.gridX + x;
-			int checkY = node.gridY + y;
+			int checkX = node->gridX + x;
+			int checkY = node->gridY + y;
 
 			if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) {
-				neighbours.push_back(grid[checkX][checkY]);
+				neighbours.push_back(&grid[checkX][checkY]);
 			}
 		}
 	}
@@ -86,26 +86,28 @@ std::vector<Node> Grid::GetNeighbours(Node node)
 	return neighbours;
 }
 
-void Grid::RetracePath(Node startNode, Node endNode)
+void Grid::RetracePath(Node *startNode, Node *endNode)
 {
-	std::vector<Node> path;
-	Node currentNode = endNode;
+	std::vector<Node*> path;
+	Node *currentNode = endNode;
 
 	while (currentNode != startNode)
 	{
 		path.emplace_back(currentNode);
-		currentNode = *currentNode.parent;
+		currentNode = currentNode->parent;
 	}
 
 	this->path = path;
 }
 
-void Grid::SetGridNode(int x, int y, Node &node)
-{
-	grid[x][y] = node;
-}
+//void Grid::SetGridNode(int x, int y, Node *node)
+//{
+//	grid[x][y].gCost = node->gCost;
+//	grid[x][y].hCost = node->hCost;
+//	grid[x][y].gCost = node->gCost;
+//}
 
-std::vector<Node> Grid::GetPath()
+std::vector<Node*> Grid::GetPath()
 {
 	return path;
 }
@@ -113,6 +115,10 @@ std::vector<Node> Grid::GetPath()
 Grid::Grid()
 	:Transform(Vector3::Zero, Vector3::Zero, Vector3::Zero)
 {
+	for (int i = 0; i < 32; i++)
+	{
+		grid[i] = new Node[32];
+	}
 	nodeRadius = 0.5f;
 	gridWorldSize = Vector2(32,32);
 	nodeDiameter = nodeRadius * 2;
