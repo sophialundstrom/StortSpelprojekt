@@ -3,13 +3,6 @@ const int size = 32;
 
 void Grid::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable)
 {
-	//const int p = gridSizeX * gridSizeY;
-	//if (grid != nullptr)
-	//{
-	//	delete[] grid;
-	//}
-
-	//grid = new Node[gridSizeX * gridSizeY];
 	Vector3 worldBottomLeft = position - (Vector3::Right * gridWorldSize.x / 2) - (Vector3::Forward * gridWorldSize.y / 2); // check values of up and right
 
 	for (int x = 0; x < gridSizeX; x++)
@@ -17,31 +10,22 @@ void Grid::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable
 		for (int y = 0; y < gridSizeY; y++)
 		{
 			Vector3 worldPoint = worldBottomLeft + Vector3::Right * (x * nodeDiameter + nodeRadius) + /*Vector3(0,0,1)*/Vector3::Forward * (y * nodeDiameter + nodeRadius);
-			Vector3 right = Vector3::Right;
-			Vector3 forward = Vector3::Forward;
-			if (worldPoint == Vector3(16.0f, 0, 16.0f))
-			{
-				Print("stop");
-			}
+
 			grid[x][y].position = worldPoint;
 			grid[x][y].gridX = x;
 			grid[x][y].gridY = y;
 
-							if (grid[x][y].gridX == 26 && grid[x][y].gridY == 26)
-							{
-								Print("debug");
-							}
 			for (auto& [name, drawable] : drawable)
 			{
 				if (Vector3::Distance(worldPoint, drawable->GetPosition()) < 4.0f)
 				{
-					BoundingSphere tmpSphere = { {drawable->GetPosition()}, {1.0f} }; // tempporary solution to a colliding issue
+					BoundingSphere tmpSphere = { {drawable->GetPosition()}, {6.0f} }; // tempporary solution to a colliding issue
 					if (grid[x][y].BSphere.GetBounds().Intersects(tmpSphere.GetBounds()))
 					{
 						if (name != "RainingGATOS")
 						{
 							grid[x][y].walkable = false; // this does happen sometimes 
-						//	Print(std::string("colliding: "));
+
 						}
 					}
 				}
@@ -96,16 +80,9 @@ void Grid::RetracePath(Node *startNode, Node *endNode)
 		path.emplace_back(currentNode);
 		currentNode = currentNode->parent;
 	}
-
+	std::reverse(path.begin(), path.end());
 	this->path = path;
 }
-
-//void Grid::SetGridNode(int x, int y, Node *node)
-//{
-//	grid[x][y].gCost = node->gCost;
-//	grid[x][y].hCost = node->hCost;
-//	grid[x][y].gCost = node->gCost;
-//}
 
 std::vector<Node*> Grid::GetPath()
 {

@@ -42,8 +42,6 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 		if (node == targetNode)
 		{
 			//retrace path. fills up a path vector in Grid
-			startNode = grid.NodeFromWorldPoint(startPos);
-			targetNode = grid.NodeFromWorldPoint(TargetPos);
 			grid.RetracePath(startNode, targetNode);
 			return;
 		}
@@ -62,10 +60,6 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 			{
 				neighbour->gCost = newCostToNeighbour;
 				neighbour->hCost = GetDistance(neighbour, targetNode);
-				if (openSet.size() == 7)
-				{
-					Print("Debug");
-				}
 				neighbour->parent = node;
 
 				//if openset contains "neighbour" node
