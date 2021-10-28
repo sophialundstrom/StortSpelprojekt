@@ -65,6 +65,9 @@ public:
 	void AddImageComponent(const std::string& name, bool sameLine, ID3D11ShaderResourceView* srv, float width, float height)
 	{ components.emplace_back(new ImageComponent(name, sameLine, srv, width, height)); this->names.emplace_back(name); }
 
+	void AddListBoxComponent(const std::string& name, bool sameLine)
+	{ components.emplace_back(new ListBoxComponent(name, sameLine));  this->names.emplace_back(name);	}
+
 	template <typename ComponentType>
 	auto GetValue(const std::string& name)
 	{
@@ -85,6 +88,18 @@ public:
 		ImGuiWinComponent* component = components.at(index);
 
 		dynamic_cast<ComponentType*>(component)->value = value;
+	}
+
+	template <typename ComponentType>
+	auto Get(const std::string& name)
+	{
+		for (UINT i = 0; i < names.size(); i++)
+		{
+			if (name == names[i])
+			{
+				return dynamic_cast<ComponentType*>(components[i]);
+			}
+		}
 	}
 
 	bool Changed(const std::string& name)

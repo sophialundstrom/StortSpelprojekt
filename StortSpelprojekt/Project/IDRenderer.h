@@ -147,12 +147,20 @@ public:
 
 	~IDRenderer()
 	{
+		idBuffer->Release();
 		matricesBuf->Release();
+		volumeVertexShader->Release();
 		vertexShader->Release();
 		pixelShader->Release();
+		volumeInputLayout->Release();
 		inputLayout->Release();
 		idRTV->Release();
 		idTexture->Release();
+		sphereIndices->Release();
+		sphereVertexBuffer->Release();
+		boxIndices->Release();
+		boxVertexBuffer->Release();
+		idTextureData->Release();
 	}
 
 	virtual void Render() override

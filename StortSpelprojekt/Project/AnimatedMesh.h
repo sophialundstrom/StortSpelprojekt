@@ -15,7 +15,7 @@ struct AnimatedMesh
 	UINT vertexCount = -1;
 
 	AnimatedMesh() = default;
-	AnimatedMesh(aiMesh* mesh, Skeleton& skeleton)
+	AnimatedMesh(aiMesh* mesh, Skeleton& skeleton, const aiScene* scene)
 		:name(mesh->mName.C_Str())
 	{
 		auto& resources = Resources::Inst();
@@ -39,10 +39,10 @@ struct AnimatedMesh
 		{
 			aiBone* bone = mesh->mBones[i];
 
-			Joint joint = 
-			{ 
-				bone->mName.C_Str(), 
-				AssimpToDX(bone->mOffsetMatrix) 
+			Joint joint =
+			{
+				bone->mName.C_Str(),
+				AssimpToDX(bone->mOffsetMatrix)
 			};
 
 			skeleton.joints.emplace_back(joint);
@@ -64,11 +64,9 @@ struct AnimatedMesh
 			}
 		}
 
-		vertexCount = mesh->mNumVertices;
+		vertexCount = vertices.size();
 
-		bufferID = resources.NumBuffers();
-
-		materialID = resources.NumMaterials();
+		bufferID = Resources::Inst().NumBuffers();
 
 		ID3D11Buffer* buffer;
 		CreateVertexBuffer(buffer, sizeof(AnimatedVertex), sizeof(AnimatedVertex) * vertexCount, vertices.data());

@@ -153,8 +153,8 @@
     <Filter Include="Header Files\Application\Scene\Game\SaveStation">
       <UniqueIdentifier>{83465f75-34dd-401b-9242-706cec97dc2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Main Menu">
-      <UniqueIdentifier>{101620f8-8f1f-41b5-be2e-1995c7f4a618}</UniqueIdentifier>
+    <Filter Include="Header Files\Application\Scene\Game\Combat">
+      <UniqueIdentifier>{f7ac95ee-c9fe-476a-96e3-eb873123733a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -225,10 +225,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Arrow.cpp">
-      <Filter>Header Files\Application\Scene\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Main Menu.cpp">
-      <Filter>Header Files\Main Menu</Filter>
+      <Filter>Header Files\Application\Scene\Game\Combat</Filter>
     </ClCompile>
     <ClCompile Include="Grid.cpp">
       <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
@@ -494,10 +491,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Arrow.h">
-      <Filter>Header Files\Application\Scene\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Main Menu.h">
-      <Filter>Header Files\Main Menu</Filter>
+      <Filter>Header Files\Application\Scene\Game\Combat</Filter>
     </ClInclude>
     <ClInclude Include="Grid.h">
       <Filter>Header Files\Application\Scene\Game\Pathing</Filter>

@@ -19,8 +19,13 @@ public:
 		bounds.bottom = y - (height / 2);
 	}
 
+	D2D_VECTOR_2F GetPosition()
+	{
+		return { bounds.right - (width / 2), bounds.bottom - (height / 2) };
+	}
+
 	bool IsVisible() { return visible; }
-	bool Hide() { visible = false; }
-	bool Show() { visible = true; }
-	bool ToggleVisibility() { (visible == true) ? visible = false : visible = true; }
+	void Hide() { visible = false; }
+	void Show() { visible = true; }
+	void ToggleVisibility() { (visible == true) ? visible = false : visible = true; }
 };

@@ -3,6 +3,7 @@
 #include "Print.h"
 #include "Material.h"
 #include "Vertex.h"
+#include "AnimatedVertex.h"
 #include <map>
 
 typedef enum { ID_INVALID = 9999 } ID_FLAG;
@@ -10,6 +11,7 @@ typedef enum { ID_INVALID = 9999 } ID_FLAG;
 class Resources : public Singleton<Resources>
 {
 private:
+	const UINT animatedStride = sizeof(AnimatedVertex);
 	const UINT stride = sizeof(Vertex);
 	const UINT offset = 0;
 
@@ -121,6 +123,16 @@ public:
 
 		if (currentVertexBuffer != vertexBuffer)
 			Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+
+		Graphics::Inst().GetContext().Draw(vertexCount, 0);
+	}
+
+	void DrawAnimated(UINT vertexCount, UINT bufferID)
+	{
+		ID3D11Buffer* vertexBuffer = std::next(vertexBuffers.begin(), bufferID)->second;
+
+		if (currentVertexBuffer != vertexBuffer)
+			Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &animatedStride, &offset);
 
 		Graphics::Inst().GetContext().Draw(vertexCount, 0);
 	}

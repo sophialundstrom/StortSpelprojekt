@@ -7,6 +7,7 @@
 #include "DeferredRenderer.h"
 #include "ColliderRenderer.h"
 #include "TerrainRenderer.h"
+#include "SkeletonRenderer.h"
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
@@ -33,12 +34,14 @@ private:
     std::unique_ptr<QuestLog> questLog;
     std::unique_ptr<UI> userInterface;
 
+    AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
+    SkeletonRenderer skeletonRenderer;
 
     float lastSave = 0;
     SaveStation saveStations[2];
@@ -50,8 +53,9 @@ private:
 
     std::shared_ptr<Player> player;
     std::vector<std::shared_ptr<Arrow>> arrows;
+    std::vector<std::shared_ptr<Arrow>> hostileArrows;
 
-    std::vector<std::shared_ptr <Item>> items;
+    std::vector<std::shared_ptr<Item>> items;
 
     std::shared_ptr<Building> building;
 
@@ -72,9 +76,13 @@ private:
     void AddItem(RESOURCE resource, Vector3 position);
 
     void AddArrow(const std::string fileName);
+    void AddHostileArrow(const std::string fileName);
 
     void CheckSaveStationCollision();
     void CheckItemCollision();
+
+    void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
+    void UpdateInventoryUI();
 
     void Initialize();
 public:
