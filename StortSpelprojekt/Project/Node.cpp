@@ -41,6 +41,22 @@ Node::Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int
 	this->parent = parent;
 }
 
+int Node::Compare(const Node* n)
+{
+	if (this->getFCost() > n->gCost + n->hCost)
+	{
+		return 1;
+	}
+	else if(this->getFCost() == n->gCost + n->hCost)
+	{
+		return 0;
+	}
+	else if (this->getFCost() < n->gCost + n->hCost)
+	{
+		return -1;
+	}
+}
+
 int Node::getFCost()
 {
 	return gCost + hCost;

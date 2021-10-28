@@ -11,6 +11,7 @@ public:
 	BoundingSphere BSphere;
 	bool walkable = true;
 	Vector3 position;
+	int heapIndex;
 
 	int gridX, gridY, gCost = 0, hCost = 0;
 	Node* parent = nullptr;
@@ -23,32 +24,6 @@ public:
 	Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost);
 	Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost, Node* parent);
 
-	//template<typename _Ty>
-	//Node(_Ty)  {}
-
-	//Node(const Node& n)
-	//	:Node(n.walkable, n.position, n.gridX, n.gridY, n.hCost, n.gCost, n.parent)
-	//{}
-	//Node& operator= ( Node n)// copy assignment
-	//{
-	//	std::swap(gridX, n.gridX);
-	//	std::swap(gridY, n.gridY);
-	//	std::swap(gCost, n.gCost);
-	//	std::swap(hCost, n.hCost);
-	//	std::swap(fCost, n.fCost);
-	//	std::swap(parent, n.parent);
-	//	std::swap(walkable, n.walkable);
-	//	std::swap(position, n.position);
-	////	//fCost = n.fCost;
-	////	//gCost = n.gCost;
-	////	//gridX = n.gridX;
-	////	//gridY = n.gridY;
-	////	//hCost = n.hCost;
-	////	//parent = n.parent;
-	////	//position = n.position;
-	////	//walkable = n.walkable;
-	////	return *this;
-	//}
 	bool operator == (const Node& n) const
 	{
 		return (position == n.position /*&& parent == n.parent*/);
@@ -67,6 +42,7 @@ public:
 	Node& operator= (Node&& n) noexcept { return *this; }
 
 	int getFCost();
+	int Compare(const Node* n);
 	void Update();
 };
 
