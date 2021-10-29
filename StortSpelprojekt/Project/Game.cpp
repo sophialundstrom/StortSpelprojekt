@@ -49,6 +49,10 @@ void Game::Render()
 
 	terrainRenderer.Render(terrain);
 
+	//Graphics::Inst().ToggleWireframe();
+	waterRenderer.Render(water);
+	//Graphics::Inst().ToggleWireframe();
+
 	skeletonRenderer.Render();
 
 	shadowRenderer.Render();
@@ -269,18 +273,16 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
 	modelRenderer(DEFERRED, true),
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED, 40),
+	terrainRenderer(DEFERRED),
 	colliderRenderer(DEFERRED),
-	animatedModelRenderer(DEFERRED, true)
+	animatedModelRenderer(DEFERRED, true),
+	water(5000)
 {
 	Initialize();
 
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(50, 4, 4);
-
-	//UI
-	userInterface = std::make_unique<UI>(window);
 
 	//INGAME
 	auto ingameCanvas = new Canvas();
@@ -398,7 +400,7 @@ Game::~Game()
 		delete canvas;
 }
 
-State Game::Run()
+APPSTATE Game::Run()
 {
 	if (!paused)
 		Update();
@@ -480,13 +482,13 @@ State Game::Run()
 	}
 
 	if (mainMenu)
-		return State::MAIN_MENU;
+		return APPSTATE::MAIN_MENU;
 
 	if (Event::KeyIsPressed('M'))
-		return State::MENU;
+		return APPSTATE::MAIN_MENU;
 
 	if (Event::KeyIsPressed(VK_ESCAPE))
-		return State::EXIT;
+		return APPSTATE::EXIT;
 
-	return State::NO_CHANGE;
+	return APPSTATE::NO_CHANGE;
 }

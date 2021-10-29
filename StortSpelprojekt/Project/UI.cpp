@@ -80,10 +80,14 @@ UI::UI(HWND window)
 
 UI::~UI()
 {
-	UIFactory->Release();
-	UIRenderTarget->Release();
-	writeFactory->Release();
-	imageFactory->Release();
+	if (UIFactory)
+		UIFactory->Release();
+	if (UIRenderTarget)
+		UIRenderTarget->Release();
+	if (writeFactory)
+		writeFactory->Release();
+	if (imageFactory)
+		imageFactory->Release();
 
 	for (auto& [color, brush] : brushes)
 		brush->Release();

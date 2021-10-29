@@ -25,28 +25,41 @@ cbuffer MATRIX : register(b0)
     float4x4 viewPerspective;
 }
 
+cbuffer TIME : register(b1)
+{
+    float time;
+}
+
 #define NUM_CONTROL_POINTS 3
 [domain("tri")]
 DS_OUTPUT main(
-	HS_CONSTANT_DATA_OUTPUT input,
-	float3 domain : SV_DomainLocation,
-	const OutputPatch<DS_INPUT, NUM_CONTROL_POINTS> patch)
+    HS_CONSTANT_DATA_OUTPUT input,
+    float3 domain : SV_DomainLocation,
+    const OutputPatch<DS_INPUT, NUM_CONTROL_POINTS> patch)
 {
     DS_OUTPUT output;
-	
+
     //BARYCENTRIC COORDINATES
     output.position = patch[0].position * domain.x + patch[1].position * domain.y + patch[2].position * domain.z;
     output.texCoords = patch[0].texCoords * domain.x + patch[1].texCoords * domain.y + patch[2].texCoords * domain.z;
     
-	//DISPLACEMENT
-    float h = displacementTexture.SampleLevel(wrapSampler, output.texCoords, 0).r * 255 * 2.0f - 100.0f;
-
-    output.position.y = h;
+    const int amplitude = 6;
+    const float multiplier = 2.0f;
+    const float PI = 3.14159265359f;
     
-    output.worldPosition = output.position;
+    if (round(output.position.x) % 2 == 0 && round(output.position.z) % 3 == 0)
+        output.position.y += sin(time * multiplier) * amplitude;
+    
+    else if (round(output.position.x) % 3 == 0 && round(output.position.z) % 2 == 0)
+        output.position.y += sin(time * multiplier + PI) * amplitude;
+    
+    else
+        output.position.y += sin(time * multiplier + PI / 2.0f) * amplitude / 2.0f;
 
-	//TRANSFORM FINAL POSITION
-    output.position = mul(output.position, viewPerspective);
+	output.worldPosition = output.position;
 
-    return output;
+    //TRANSFORM FINAL POSITION
+	output.position = mul(output.position, viewPerspective);
+
+	return output;
 }
