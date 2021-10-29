@@ -31,6 +31,8 @@ float Get2DAngle(Vector2 a, Vector2 b)
 
 void Player::Update(HeightMap* heightMap)
 {
+	lastPosition = position;
+
 	CalcHeight(heightMap);
 
 	//Rotate camera by cursor movement 

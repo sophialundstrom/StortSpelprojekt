@@ -57,6 +57,8 @@ private:
 
     std::shared_ptr<Building> building;
 
+    std::vector<std::shared_ptr<Collider>> colliders;
+
     void Update();
     void Render();
 
@@ -76,6 +78,7 @@ private:
     void AddArrow(const std::string fileName);
     void AddHostileArrow(const std::string fileName);
 
+    void CheckNearbyCollision();
     void CheckSaveStationCollision();
     void CheckItemCollision();
 
