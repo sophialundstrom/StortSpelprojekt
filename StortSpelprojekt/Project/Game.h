@@ -78,6 +78,7 @@ private:
     void AddArrow(const std::string fileName);
     void AddHostileArrow(const std::string fileName);
 
+    void CheckNearbyCollision();
     void CheckSaveStationCollision();
     void CheckItemCollision();
 

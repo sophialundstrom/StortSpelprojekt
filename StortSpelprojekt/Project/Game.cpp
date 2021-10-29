@@ -17,6 +17,8 @@ void Game::Update()
 
 	CheckItemCollision();
 
+	CheckNearbyCollision();
+
 	CheckSaveStationCollision();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
@@ -114,14 +116,34 @@ void Game::Initialize()
 		{
 			modelRenderer.Bind(model);
 			shadowRenderer.Bind(model);
+			continue;
 		}
 			
 		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
 		if (particleSystem)
 		{
-			//SAME BUT PS->
+			continue;
+		}
+
+		auto boundingBox = std::dynamic_pointer_cast<BoundingBox>(drawable);
+		if (boundingBox)
+		{
+			colliders.emplace_back(boundingBox);
+			colliderRenderer.Bind(boundingBox);
+			continue;
+		}
+
+		auto boundingSphere = std::dynamic_pointer_cast<BoundingSphere>(drawable);
+		if (boundingSphere)
+		{
+			colliders.emplace_back(boundingSphere);
+			colliderRenderer.Bind(boundingSphere);
+			continue;
 		}
 	}
+
+	for (auto& collider : colliders)
+		scene.DeleteDrawable(collider->GetName());
 }
 
 void Game::RemoveItem(const std::string name)
@@ -166,6 +188,48 @@ void Game::AddArrow(const std::string fileName)
 	shadowRenderer.Bind(scene.Get<Model>(fileName));
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
+}
+
+void Game::CheckNearbyCollision()
+{
+	auto playerCollider = player->GetBounds();
+
+	bool collided = false;
+	UINT numCollided = 0;
+	const UINT numColliders = 3;
+
+	for (auto& collider : colliders)
+	{
+		if (numCollided >= numColliders)
+			break;
+
+		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+		if (box)
+		{
+			if (Collision::Intersection(box, playerCollider))
+			{
+				collided = true;
+				numCollided++;
+			}
+
+			continue;
+		};
+		
+		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
+		if (sphere)
+		{
+			if (Collision::Intersection(sphere, playerCollider))
+			{
+				collided = true;
+				numCollided++;
+			}
+
+			continue;
+		};
+	}
+
+	if (collided)
+		player->ResetToLastPosition();
 }
 
 void Game::CheckSaveStationCollision()
