@@ -103,7 +103,17 @@ public:
 		:Collider(ColliderType::BOX, position), bounds(position, extents, orientation) 
 	{
 		bounds.Transform(bounds, matrix);
+
 		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Vector3), sizeof(Vector3) * NUM_VERTICES);
+
+		Quaternion quat = bounds.Orientation;
+		quat.Normalize();
+		bounds.Orientation = quat;
+
+		Vector3 corners[NUM_VERTICES];
+		bounds.GetCorners(corners);
+
+		UpdateDynamicVertexBuffer(vertexBuffer, sizeof(Vector3) * NUM_VERTICES, corners);
 	}
 
 	const DirectX::BoundingOrientedBox& GetBounds() const { return bounds; }
@@ -164,6 +174,7 @@ public:
 		:Collider(ColliderType::SPHERE, position), bounds(position, radius) 
 	{
 		bounds.Transform(bounds, matrix);
+
 		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Vector3), sizeof(Vector3) * NUM_VERTICES);
 
 		Vector3 vertices[NUM_VERTICES];
@@ -287,5 +298,25 @@ namespace Collision
 	inline bool Intersection(const BoundingSphere& sphere, const FrustumCollider& frustum)
 	{
 		return sphere.GetBounds().Intersects(frustum.GetBounds());
+	}
+
+	inline bool Intersection(std::shared_ptr<BoundingBox> box, std::shared_ptr<BoundingSphere> sphere)
+	{
+		return box->GetBounds().Intersects(sphere->GetBounds());
+	}
+
+	inline bool Intersection(std::shared_ptr<BoundingSphere> sphere, std::shared_ptr<BoundingBox> box)
+	{
+		return box->GetBounds().Intersects(sphere->GetBounds());
+	}
+
+	inline bool Intersection(std::shared_ptr<BoundingSphere> sphere, std::shared_ptr<BoundingSphere> otherSphere)
+	{
+		return otherSphere->GetBounds().Intersects(sphere->GetBounds());
+	}
+
+	inline bool Intersection(std::shared_ptr<BoundingBox> box, std::shared_ptr<BoundingBox> otherBox)
+	{
+		return otherBox->GetBounds().Intersects(box->GetBounds());
 	}
 }

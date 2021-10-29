@@ -111,6 +111,8 @@ private:
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);
 
+	Vector3 lastPosition;
+
 	std::shared_ptr<RayCollider> ray;
 	std::shared_ptr<BoundingSphere> bounds;
 	std::shared_ptr<FrustumCollider> frustum;
@@ -191,6 +193,7 @@ public:
 
 	void Save(const std::string file);
 
+	void ResetToLastPosition() { position = lastPosition; }
 	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
 	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
 };
