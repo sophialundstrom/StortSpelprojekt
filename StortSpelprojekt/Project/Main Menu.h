@@ -1,29 +1,54 @@
 #pragma once
 #include "GameState.h"
 #include "ParticleRenderer.h"
+#include "ShadowRenderer.h"
 #include "ModelRenderer.h"
 #include "Canvas.h"
 #include "FBXLoader.h"
 #include "GameLoader.h"
 #include "ParticleRenderer.h"
-#include "ShadowRenderer.h"
+#include "Building.h"
+#include "UI.h"
+#include "TerrainRenderer.h"
+#include "Terrain.h"
+#include "DeferredRenderer.h"
 
 class MainMenu : public GameState
 {
 private:
 	Canvas* currentCanvas;
+	std::map<std::string, Canvas*> canvases;
+	std::unique_ptr<UI> ui;
 
+	Terrain terrain;
+
+	TerrainRenderer terrainRenderer;
 	ParticleRenderer particleRenderer;
 	ModelRenderer modelRenderer;
 	ShadowRenderer shadowRenderer;
+	DeferredRenderer deferredRenderer;
+	std::shared_ptr<Building> building;
+
+	void Initialize();
+	void Render();
+
+	bool quit;
+	bool play;
+
+
+	void Options();
+	void HowToPlay();
+	void BacktoMenu();
+	void Play();
+	void Quit();
+
+
 
 public:
 
 	MainMenu() = default;
 	MainMenu(UINT clientWidth, UINT clientHeight, HWND window);
 	~MainMenu();
-
-	void Initialize();
 
 
 	virtual State Run() override;

@@ -28,7 +28,8 @@ void ParticleEditor::Save(const std::string& file)
 	writer << particleSystem->GetPosition().z << space;
 
 	//writer << "'" << particleSystem->GetTexturePath() <<"'" << space;
-	writer << "'" << particleSystem->GetTextureFile() << "'";
+	writer << "'" << particleSystem->GetFirstTextureFile() << "'" << space;
+	writer << "'" << particleSystem->GetSecondTextureFile() << "'";
 
 	writer.close();
 }
@@ -51,7 +52,7 @@ void ParticleEditor::Load(const std::string& file)
 	window.SetValue<SliderFloatComponent, float>("SYSTEM SIZE", particleSystem->GetSize());
 	window.SetValue<SliderFloatComponent, float>("MIN VELOCITY", particleSystem->GetMinVelocity());
 	window.SetValue<SliderFloatComponent, float>("MAX VELOCITY", particleSystem->GetMaxVelocity());
-	
+
 
 
 	if (particleSystem->GetParticleWidth() == particleSystem->GetParticleHeight())
@@ -63,7 +64,8 @@ void ParticleEditor::Load(const std::string& file)
 	window.SetValue<SliderFloatComponent, float>("PARTICLE HEIGHT", particleSystem->GetParticleHeight());
 	window.SetValue<RadioButtonComponent, UINT>("EMITTER TYPES", (UINT)particleSystem->GetType());
 
-	window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Image", particleSystem->GetTexture());
+	window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("First Image", particleSystem->GetFirstTexture());
+	window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Second Image", particleSystem->GetSecondTexture());
 }
 
 void ParticleEditor::Update()
@@ -119,11 +121,17 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	window.AddTextComponent("IN CASE OF DELTA TIME BUG");
 	window.AddButtonComponent("RESET", 50, 20);
 	window.AddSeperatorComponent();
-	
+
 	// CHANGE TEXTURE BUTTON
-	window.AddButtonComponent("CHANGE IMAGE", 100, 50);
+	window.AddButtonComponent("CHANGE FIRST IMAGE", 100, 50);
 	window.AddTextComponent("\t\t\t\t\t", true);
-	window.AddImageComponent("Image", true, nullptr, 75, 75);
+	window.AddImageComponent("First Image", true, nullptr, 75, 75);
+	window.AddSeperatorComponent();
+
+	// CHANGE TEXTURE BUTTON
+	window.AddButtonComponent("CHANGE SECOND IMAGE", 100, 50);
+	window.AddTextComponent("\t\t\t\t\t", true);
+	window.AddImageComponent("Second Image", true, nullptr, 75, 75);
 	window.AddSeperatorComponent();
 
 	window.AddButtonComponent("LOAD", 100, 50);
@@ -157,14 +165,25 @@ State ParticleEditor::Run()
 		return State::MENU;
 
 	// CHANGE TEXTURE
-	else if (window.GetValue<ButtonComponent>("CHANGE IMAGE"))
+	else if (window.GetValue<ButtonComponent>("CHANGE FIRST IMAGE"))
 	{
 		std::filesystem::path filePath = FileSystem::LoadFile("ParticleTextures");
 
-		particleSystem->ChangeTexture(filePath.string(), filePath.filename().string());
+		particleSystem->ChangeFirstTexture(filePath.string(), filePath.filename().string());
 
-		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Image", particleSystem->GetTexture());
-		
+		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("First Image", particleSystem->GetFirstTexture());
+
+		return State::NO_CHANGE;
+	}
+
+	else if (window.GetValue<ButtonComponent>("CHANGE SECOND IMAGE"))
+	{
+		std::filesystem::path filePath = FileSystem::LoadFile("ParticleTextures");
+
+		particleSystem->ChangeSecondTexture(filePath.string(), filePath.filename().string());
+
+		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Second Image", particleSystem->GetSecondTexture());
+
 		return State::NO_CHANGE;
 	}
 
