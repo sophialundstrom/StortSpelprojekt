@@ -153,11 +153,8 @@
     <Filter Include="Header Files\Application\Scene\Game\Combat">
       <UniqueIdentifier>{f7ac95ee-c9fe-476a-96e3-eb873123733a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\WaterRenderer">
-      <UniqueIdentifier>{ba6611da-1f6b-4b10-9f7a-3052957fedc7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\WaterRenderer\Shaders">
-      <UniqueIdentifier>{7bc48d1b-6dc9-4930-8261-cbcbff144b62}</UniqueIdentifier>
+    <Filter Include="Header Files\Application\Audio">
+      <UniqueIdentifier>{70728d1d-be0b-4400-be63-775ea488aed7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +229,12 @@
     </ClCompile>
     <ClCompile Include="Main Menu.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Header Files\Application\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioChunks.cpp">
+      <Filter>Header Files\Application\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -334,7 +337,7 @@
     <ClInclude Include="Mesh.h">
       <Filter>Header Files\Application\Scene\Drawable\Model</Filter>
     </ClInclude>
-    <ClInclude Include="DebugApplication.h">
+    <ClInclude Include="Application.h">
       <Filter>Header Files\Application</Filter>
     </ClInclude>
     <ClInclude Include="ModelRenderer.h">
@@ -355,11 +358,14 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Application\Scene\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="ApplicationState.h">
+    <ClInclude Include="GameState.h">
       <Filter>Header Files\Application\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files\Application\GameStates\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="StateENUM.h">
+      <Filter>Header Files\Application\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="States.h">
       <Filter>Header Files\Application\GameStates</Filter>
@@ -493,17 +499,11 @@
     <ClInclude Include="SkeletonRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>Header Files\Application</Filter>
+    <ClInclude Include="Audio.h">
+      <Filter>Header Files\Application\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="Water.h">
-      <Filter>Header Files\Application\Scene\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="DynamicPlane.h">
-      <Filter>Header Files\Application\Scene\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="WaterRenderer.h">
-      <Filter>Header Files\Application\Graphics\Renderers\WaterRenderer</Filter>
+    <ClInclude Include="AudioChunks.h">
+      <Filter>Header Files\Application\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -589,11 +589,5 @@
     <FxCompile Include="VolumeVertexShader.hlsl" />
     <FxCompile Include="SkeletonPixelShader.hlsl" />
     <FxCompile Include="SkeletonVertexShader.hlsl" />
-    <FxCompile Include="WaterDomainShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\WaterRenderer\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="WaterPixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\WaterRenderer\Shaders</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>
