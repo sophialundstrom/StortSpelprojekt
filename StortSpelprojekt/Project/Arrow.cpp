@@ -1,7 +1,7 @@
 #include "Arrow.h"
 
 Arrow::Arrow(const std::string file)
-	:Model(file, "Arrow"), speed(10.f), lifeTime(5.0f)
+	:Model(file, "Arrow"), speed(100.0f), lifeTime(5.0f)
 {
 	collider = std::make_shared<BoundingBox>();
 }
@@ -58,6 +58,7 @@ void Arrow::Update()
 		lifeLength = 0;
 	}
 
-	Model::Update();
 	collider->Update();
+	Model::Update();
+
 }
