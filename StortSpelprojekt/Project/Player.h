@@ -106,7 +106,7 @@ private:
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
 	
-	Vector3 cameraLocationSocket = { 1.3, 2.7f, -2.f };
+	Vector3 cameraLocationSocket = { 1.3f, 2.7f, -2.f };
 
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);

@@ -165,7 +165,7 @@ void Player::Update(HeightMap* heightMap)
 	sceneCamera->MoveTowards(newCameraPos);
 
 	ray->origin = position + Vector3(0, 3, 0);
-	Vector3 rayDirection = sceneCamera->GetDirection() + Vector3(0, 0.15, 0);
+	Vector3 rayDirection = sceneCamera->GetDirection() + Vector3(0, 0.15f, 0);
 	rayDirection.Normalize();
 	ray->direction = rayDirection;
 

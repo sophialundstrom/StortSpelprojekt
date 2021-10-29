@@ -202,7 +202,7 @@ void Game::AddArrow(const std::string fileName)
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetScale(0.15);
+	arrow->GetCollider()->SetScale(0.15f);
 	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z -0.5f };
 	arrow->GetCollider()->SetPosition(offset);
 	colliderRenderer.Bind(arrow->GetCollider());
@@ -218,7 +218,7 @@ void Game::AddHostileArrow(const std::string fileName)
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetScale(0.15);
+	arrow->GetCollider()->SetScale(0.15f);
 	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z };
 	offset += {0, 0, -0.5};
 	arrow->GetCollider()->SetPosition(offset);
@@ -311,9 +311,9 @@ void Game::UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect)
 void Game::UpdateInventoryUI()
 {
 	auto canvas = canvases["INGAME"];
-	canvas->UpdateText("Wood", std::to_string(player->Inventory().NumOf(WOOD)));
-	canvas->UpdateText("Stone", std::to_string(player->Inventory().NumOf(STONE)));
-	canvas->UpdateText("Food", std::to_string(player->Inventory().NumOf(FOOD)));
+	canvas->UpdateText("Wood", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
+	canvas->UpdateText("Stone", std::to_string(player->Inventory().NumOf(RESOURCE::STONE)));
+	canvas->UpdateText("Food", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));
 }
 
 void TestFuncBack()
@@ -353,7 +353,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ingameCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "TestImage", "CompassBase.png");
 	ingameCanvas->AddImage({ 250, 250 }, "QuestBorder", "QuestBorder.png");
 	ingameCanvas->AddText({ 200, 40 }, "AC", "Active Quests", 200, 20, UI::COLOR::GRAY, UI::TEXTFORMAT::TITLE);
-	ingameCanvas->AddImage({ clientWidth - 200.0f, 70 }, "Resources", "Resources.png", 0.8);
+	ingameCanvas->AddImage({ clientWidth - 200.0f, 70 }, "Resources", "Resources.png", 0.8f);
 	ingameCanvas->AddText({ clientWidth - 302.0f, 70 }, "Wood", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
 	ingameCanvas->AddText({ clientWidth - 192.0f, 70 }, "Stone", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
 	ingameCanvas->AddText({ clientWidth - 82.0f, 70 }, "Food", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
@@ -419,7 +419,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
 	//Item
-	AddItem(WOOD, { -10, 1, 20 });
+	AddItem(RESOURCE::WOOD, { -10, 1, 20 });
 
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");

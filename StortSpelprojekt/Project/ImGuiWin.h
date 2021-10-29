@@ -100,6 +100,8 @@ public:
 				return dynamic_cast<ComponentType*>(components[i]);
 			}
 		}
+
+		return dynamic_cast<ComponentType*>(components[0]);
 	}
 
 	bool Changed(const std::string& name)
