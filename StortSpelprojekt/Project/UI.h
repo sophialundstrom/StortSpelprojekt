@@ -11,33 +11,6 @@
 #include <d2d1.h>
 #include <map>
 
-//Function to release interface
-template<class Interface>
-inline void SafeRelease(Interface** interfaceToRelease)
-{
-	if (*interfaceToRelease == NULL)
-	{
-		(*interfaceToRelease)->Release();
-
-		(*interfaceToRelease) = 0;
-	}
-}
-
-//Macros for error handling
-#ifndef Assert
-#if defined( DEBUG ) || defined( _DEBUG )
-#define Assert(b) do {if (!(b)){OutputDebugStringA("Assert: " #b "\n");}} while(0)
-#else
-#define Assert(b)
-#endif
-#endif Assert
-
-//Module's base address
-#ifndef HINST_THISCOMPONENT
-EXTERN_C IMAGE_DOS_HEADER __ImageBase;
-#define HINST_THISCOMPONENT ((HINSTANCE)&__ImageBase)
-#endif
-
 class UI : public Singleton<UI>
 {
 public:
@@ -81,10 +54,10 @@ private:
 		{ TEXTFORMAT::TITLE_SMALL, L"Georgia", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 20 }
 	};
 
-	ID2D1Factory* UIFactory;
-	ID2D1RenderTarget* UIRenderTarget;
-	IDWriteFactory* writeFactory;
-	IWICImagingFactory* imageFactory;
+	ID2D1Factory* UIFactory = nullptr;
+	ID2D1RenderTarget* UIRenderTarget = nullptr;
+	IDWriteFactory* writeFactory = nullptr;
+	IWICImagingFactory* imageFactory = nullptr;
 	std::map<TEXTFORMAT, IDWriteTextFormat*> textFormats;
 	std::map<COLOR, ID2D1SolidColorBrush*> brushes;
 	HWND UIwindow;

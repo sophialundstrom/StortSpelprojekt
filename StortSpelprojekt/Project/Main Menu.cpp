@@ -37,6 +37,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(DEFERRED, 40),
 	deferredRenderer(clientWidth, clientHeight)
 {
+<<<<<<< HEAD
 	ui = std::make_unique<UI>(window);
 
 	auto menuCanvas = new Canvas();
@@ -78,6 +79,11 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer.Bind(fireSystem);
 
 	(void)Run();
+=======
+	currentCanvas = new Canvas();
+	currentCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "juan.png", "CompassBase.png");
+	
+>>>>>>> main
 }
 
 
@@ -91,7 +97,6 @@ MainMenu::~MainMenu()
 
 void MainMenu::Initialize()
 {
-
 	//LOAD SCENE
 	FBXLoader levelLoader("Models");
 
@@ -116,6 +121,7 @@ void MainMenu::Initialize()
 
 }
 
+<<<<<<< HEAD
 void MainMenu::Render()
 {
 	deferredRenderer.SetRenderTargets();
@@ -138,12 +144,24 @@ State MainMenu::Run()
 	
 	if (play)
 		return State::GAME;
+=======
+APPSTATE MainMenu::Run()
+{
+	Graphics::Inst().BeginFrame();
+
+	currentCanvas->Render();
+
+	Graphics::Inst().EndFrame();
+
+	if (Event::KeyIsPressed('G'))
+		return APPSTATE::GAME;
+>>>>>>> main
 
 	if (quit)
 		return State::EXIT;
 	
 	if (Event::KeyIsPressed(VK_ESCAPE))
-		return State::EXIT;
+		return APPSTATE::EXIT;
 
-	return State::NO_CHANGE;
+	return APPSTATE::NO_CHANGE;
 }

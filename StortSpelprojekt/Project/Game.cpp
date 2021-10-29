@@ -36,6 +36,15 @@ void Game::Render()
 
 	terrainRenderer.Render(terrain);
 
+<<<<<<< HEAD
+=======
+	//Graphics::Inst().ToggleWireframe();
+	waterRenderer.Render(water);
+	//Graphics::Inst().ToggleWireframe();
+
+	skeletonRenderer.Render();
+
+>>>>>>> main
 	shadowRenderer.Render();
 
 	Graphics::Inst().BeginFrame();
@@ -219,6 +228,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
 	modelRenderer(DEFERRED, true),
 	particleRenderer(DEFERRED),
+<<<<<<< HEAD
 	terrainRenderer(DEFERRED, 40),
 	colliderRenderer(DEFERRED)
 {
@@ -226,6 +236,18 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//UI
 	userInterface = std::make_unique<UI>(window);
+=======
+	terrainRenderer(DEFERRED),
+	colliderRenderer(DEFERRED),
+	animatedModelRenderer(DEFERRED, true),
+	water(5000)
+{
+	Initialize();
+
+	//LOAD SCENE
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(50, 4, 4);
+>>>>>>> main
 
 	//INGAME
 	auto ingameCanvas = new Canvas();
@@ -319,6 +341,19 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ 0,30,0 });
 	particleRenderer.Bind(particleSystem);
 
+<<<<<<< HEAD
+=======
+	//ANIMATION
+	auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
+	scene.AddDrawable("AnimatedModel", animated);
+	skeletonRenderer.Bind(animated);
+	animatedModelRenderer.Bind(animated);
+
+	//SOUND
+	Audio::AddAudio(L"Audio/Rain.wav");
+	Audio::StartAudio();
+
+>>>>>>> main
 	(void)Run();
 }
 
@@ -331,7 +366,7 @@ Game::~Game()
 		delete canvas;
 }
 
-State Game::Run()
+APPSTATE Game::Run()
 {
 	if (!paused)
 		Update();
@@ -396,13 +431,13 @@ State Game::Run()
 	}
 
 	if (mainMenu)
-		return State::MAIN_MENU;
+		return APPSTATE::MAIN_MENU;
 
 	if (Event::KeyIsPressed('M'))
-		return State::MENU;
+		return APPSTATE::MAIN_MENU;
 
 	if (Event::KeyIsPressed(VK_ESCAPE))
-		return State::EXIT;
+		return APPSTATE::EXIT;
 
-	return State::NO_CHANGE;
+	return APPSTATE::NO_CHANGE;
 }

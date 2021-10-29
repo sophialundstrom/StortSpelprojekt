@@ -88,7 +88,6 @@ public:
 		{
 			CreateBuffer(tesselationBuf);
 			UpdateBuffer(tesselationBuf, tesselationAmount);
-			BindBuffer(tesselationBuf, Shader::HS);
 
 			if (!LoadShader(hullShader, hs_path))
 				return;
@@ -156,6 +155,9 @@ public:
 		BindBuffer(lightBuf, Shader::PS);
 
 		UpdateBuffer(matrixBuf, ShaderData::Inst().cameraMatrix);
+		BindBuffer(matrixBuf, Shader::DS);
+
+		BindBuffer(tesselationBuf, Shader::HS);
 
 		//DRAW
 		terrain.Draw();

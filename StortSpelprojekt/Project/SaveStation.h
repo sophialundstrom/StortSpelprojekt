@@ -18,9 +18,12 @@ private:
 	std::shared_ptr<Model> base;
 	std::shared_ptr<Crystal> crystals[numCrystals];
 	std::shared_ptr<BoundingBox> collider;
+
+	float lastSave;
 public:
 	SaveStation() = default;
 	SaveStation(Vector3 position, UINT ID, std::map<std::string, std::shared_ptr<Drawable>>& drawables)
+		:lastSave(0)
 	{
 		base = std::make_shared<Model>("SaveStationBase", "SaveStationBase" + std::to_string(ID));
 		base->SetPosition(position);
@@ -77,4 +80,7 @@ public:
 			crystal->Update();
 		}
 	}
+
+	void LastSave(float time) { lastSave = time; }
+	float LastSave() { return lastSave; }
 };

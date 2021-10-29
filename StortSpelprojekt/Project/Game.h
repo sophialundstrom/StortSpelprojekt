@@ -1,5 +1,5 @@
 #pragma once
-#include "GameState.h"
+#include "ApplicationState.h"
 #include "AnimatedModelRenderer.h"
 #include "ModelRenderer.h"
 #include "ParticleRenderer.h"
@@ -7,6 +7,11 @@
 #include "DeferredRenderer.h"
 #include "ColliderRenderer.h"
 #include "TerrainRenderer.h"
+<<<<<<< HEAD
+=======
+#include "SkeletonRenderer.h"
+#include "WaterRenderer.h"
+>>>>>>> main
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
@@ -14,19 +19,19 @@
 #include "Canvas.h"
 #include "Time.h"
 #include "Arrow.h"
+#include "Audio.h"
 
 //PlayerClassLib
 #include <math.h>
 
 // The state subclass for the level/game
-class Game : public GameState
+class Game : public ApplicationState
 {
 private:
     bool paused = false;
     const std::string file = "Default"; //"Test"
 
     std::unique_ptr<QuestLog> questLog;
-    std::unique_ptr<UI> userInterface;
 
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
@@ -34,11 +39,17 @@ private:
     DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
+<<<<<<< HEAD
+=======
+    SkeletonRenderer skeletonRenderer;
+    WaterRenderer waterRenderer;
+>>>>>>> main
 
     float lastSave = 0;
     SaveStation saveStations[2];
 
     Terrain terrain;
+    Water water;
 
     Canvas* currentCanvas;
     std::map<std::string, Canvas*> canvases;
@@ -78,5 +89,5 @@ public:
     ~Game(); // Removes drawables and resources
 
     // Inherited via GameState
-    virtual State Run() override;
+    virtual APPSTATE Run() override;
 };
