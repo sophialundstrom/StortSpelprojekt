@@ -57,6 +57,8 @@ private:
 
     std::shared_ptr<Building> building;
 
+    std::vector<std::shared_ptr<Collider>> colliders;
+
     void Update();
     void Render();
 

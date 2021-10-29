@@ -134,6 +134,19 @@ void Game::Initialize()
 		{
 			//SAME BUT PS->
 		}
+
+		auto boundingBox = std::dynamic_pointer_cast<BoundingBox>(drawable);
+		if (boundingBox)
+		{
+			scene.DeleteDrawable(boundingBox->GetName());
+			colliderRenderer.Bind(boundingBox);
+		}
+
+		auto boundingSphere = std::dynamic_pointer_cast<BoundingSphere>(drawable);
+		if (boundingSphere)
+		{
+			colliderRenderer.Bind(boundingSphere);
+		}
 	}
 }
 

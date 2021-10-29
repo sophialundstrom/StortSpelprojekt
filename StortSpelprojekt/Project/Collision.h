@@ -53,6 +53,10 @@ public:
 		if (preMatrix == matrix)
 			return;
 
+		Quaternion quat = bounds.Orientation;
+		quat.Normalize();
+		bounds.Orientation = quat;
+
 		Vector3 corners[DirectX::BoundingFrustum::CORNER_COUNT];
 		bounds.GetCorners(corners);
 
@@ -117,6 +121,10 @@ public:
 
 		if (preMatrix == matrix)
 			return;
+
+		Quaternion quat = bounds.Orientation;
+		quat.Normalize();
+		bounds.Orientation = quat;
 
 		Vector3 corners[NUM_VERTICES];
 		bounds.GetCorners(corners);
