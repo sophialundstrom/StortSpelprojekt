@@ -101,6 +101,8 @@ public:
 
 	~DebugApplication()
 	{
+		ui.reset();
+		delete window;
 		ImGUI::ShutDown();
 	}
 
@@ -165,6 +167,7 @@ public:
 				currentGameState->Delete();
 				break;
 			}
+
 			Time::Update(timer.DeltaTime());
 		}
 

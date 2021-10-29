@@ -28,7 +28,6 @@ private:
     const std::string file = "Default"; //"Test"
 
     std::unique_ptr<QuestLog> questLog;
-    std::unique_ptr<UI> userInterface;
 
     AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;

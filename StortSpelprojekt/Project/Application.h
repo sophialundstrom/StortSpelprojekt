@@ -36,6 +36,7 @@ public:
 
 	~Application()
 	{
+		ui.reset();
 		delete window;
 	}
 
