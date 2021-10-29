@@ -32,6 +32,7 @@ private:
 
 	void InitFullscreen()
 	{ 
+		ui.reset();
 		if (window)
 			delete window;
 
@@ -45,7 +46,6 @@ private:
 		graphics.reset();
 		shaderData.reset();
 		resources.reset();
-		ui.reset();
 
 		ImGUI::ShutDown();
 
@@ -62,6 +62,7 @@ private:
 
 	void InitWindowed()
 	{
+		ui.reset();
 		if (window)
 			delete window;
 
@@ -75,7 +76,6 @@ private:
 		graphics.reset();
 		shaderData.reset();
 		resources.reset();
-		ui.reset();
 
 		ImGUI::ShutDown();
 
@@ -140,10 +140,7 @@ public:
 
 			case APPSTATE::MAIN_MENU:
 				currentGameState->Delete();
-
-				if (isFullscreen)
-					InitWindowed();
-				
+				InitWindowed();
 				currentGameState = new DebugMainMenu(window->ClientWidth(), window->ClientHeight());
 				break;
 
@@ -155,11 +152,13 @@ public:
 			case APPSTATE::LEVEL:
 				RunLoadingScreen();
 				currentGameState->Delete();
+				InitFullscreen();
 				currentGameState = new LevelEditor(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 				break;
 
 			case APPSTATE::PARTICLE:
 				currentGameState->Delete();
+				InitFullscreen();
 				currentGameState = new ParticleEditor(window->ClientWidth(), window->ClientHeight());
 				break;
 
