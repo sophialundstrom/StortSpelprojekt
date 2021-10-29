@@ -10,20 +10,9 @@ void Game::Update()
 	QuestLog::Inst().Update();
 
 	auto friendly = scene.Get<NPC>("Staff");
-	auto hostile = scene.Get<NPC>("HostileCube");
 
 	friendly->Collided(*player);
 
-	for(int i = 0; i < arrows.size(); i++)
-	{
-		hostile->ProjectileCollided(arrows[i]);
-	}
-
-	for (int i = 0; i < hostileArrows.size(); i++)
-	{
-		player->ProjectileCollided(hostileArrows[i]);
-	}
-	
 	scene.Update();
 
 	CheckItemCollision();
@@ -45,17 +34,15 @@ void Game::Render()
 
 	modelRenderer.Render();
 
-	animatedModelRenderer.Render();
-
 	colliderRenderer.Render();
 
 	terrainRenderer.Render(terrain);
-
 	//Graphics::Inst().ToggleWireframe();
 	waterRenderer.Render(water);
 	//Graphics::Inst().ToggleWireframe();
 
 	skeletonRenderer.Render();
+
 
 	shadowRenderer.Render();
 
@@ -110,7 +97,7 @@ void Game::MainMenu()
 void Game::Initialize()
 {
 	//LOAD SCENE
-	FBXLoader meshLoader("Models");
+	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
@@ -195,34 +182,12 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 void Game::AddArrow(const std::string fileName)
 {
 	auto arrow = std::make_shared<Arrow>(fileName);
-	//scene.AddModel(fileName, arrow);
+	scene.AddModel(fileName, arrow);
 	arrows.emplace_back(arrow);
-	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
+	modelRenderer.Bind(scene.Get<Model>(fileName));
+	shadowRenderer.Bind(scene.Get<Model>(fileName));
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
-	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetScale(0.15);
-	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z -0.5f };
-	arrow->GetCollider()->SetPosition(offset);
-	colliderRenderer.Bind(arrow->GetCollider());
-}
-
-void Game::AddHostileArrow(const std::string fileName)
-{
-	auto arrow = std::make_shared<Arrow>(fileName);
-	//scene.AddModel(fileName, arrow);
-	hostileArrows.emplace_back(arrow);
-	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
-	arrow->SetPosition(0, -100, 0);
-	arrow->SetScale(2);
-	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetScale(0.15);
-	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z };
-	offset += {0, 0, -0.5};
-	arrow->GetCollider()->SetPosition(offset);
-	colliderRenderer.Bind(arrow->GetCollider());
 }
 
 void Game::CheckNearbyCollision()
@@ -297,23 +262,9 @@ void Game::CheckItemCollision()
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
-				UpdateInventoryUI();
 			}
 		}
 	}
-}
-
-void Game::UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect)
-{
-	effect->Unbind(scene, particleRenderer);
-}
-  
-void Game::UpdateInventoryUI()
-{
-	auto canvas = canvases["INGAME"];
-	canvas->UpdateText("Wood", std::to_string(player->Inventory().NumOf(WOOD)));
-	canvas->UpdateText("Stone", std::to_string(player->Inventory().NumOf(STONE)));
-	canvas->UpdateText("Food", std::to_string(player->Inventory().NumOf(FOOD)));
 }
 
 void TestFuncBack()
@@ -333,16 +284,18 @@ void TestFuncMenu()
 	Print("MENU");
 }
 
+
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
 	modelRenderer(DEFERRED, true),
 	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED),
 	colliderRenderer(DEFERRED),
+	terrainRenderer(DEFERRED),
 	animatedModelRenderer(DEFERRED, true),
 	water(5000)
 {
 	Initialize();
+	//UI
 
 	//LOAD SCENE
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
@@ -357,25 +310,44 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ingameCanvas->AddText({ clientWidth - 302.0f, 70 }, "Wood", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
 	ingameCanvas->AddText({ clientWidth - 192.0f, 70 }, "Stone", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
 	ingameCanvas->AddText({ clientWidth - 82.0f, 70 }, "Food", "0", 30, 15, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
-	
+
 	for (UINT i = 0; i < 10; ++i)
 		ingameCanvas->AddImage({ 50.0f + 50 * i, clientHeight - 40.0f }, "hp" + std::to_string(i), "Heart.png");
 
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 
+	//PAUSED
+	auto pauseCanvas = new Canvas();
+
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::GRAY, [this] { Resume(); }, TestFuncResume);
+	canvases["PAUSED"] = pauseCanvas;
+
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Z", "Pause.png", 1.0f, 1.0f);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this] { Resume(); }, TestFuncResume);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.35f }, "B", 270, 100, UI::COLOR::GRAY, [this] { Options(); }, TestFuncOptions);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.2f }, "C", 250, 100, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncMenu);
+
+	canvases["PAUSED"] = pauseCanvas;
+
+	// OPTIONS
+	auto optionsCanvas = new Canvas();
+	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Options.png", 1.0f, 1.0f);
+	optionsCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "D", 200, 78, UI::COLOR::GRAY, [this] { Pause(); }, TestFuncResume);
+
+	canvases["OPTIONS"] = optionsCanvas;
+
+	//LOAD SCENE
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(50, 4, 4);
+
 	for (int i = 0; i < 3; i++)
 	{
 		AddArrow("Arrow");
 	}
 
-	for (int i = 0; i < 3; i++)
-	{
-		AddHostileArrow("Arrow");
-	}
-
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
+	player = std::make_shared<Player>(file, scene.GetCamera(), canvases["INGAME"], arrows);
 	scene.AddModel("Player", player);
 	modelRenderer.Bind(scene.Get<Model>("Player"));
 	shadowRenderer.Bind(scene.Get<Model>("Player"));
@@ -390,30 +362,17 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "", "HouseTexture"};
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ 10, -3, 60 });
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3(5,5,5));
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
 	shadowRenderer.Bind(building);
+	scene.Get<Model>("Building")->SetPosition(10, -3, 60);
 	scene.Get<Model>("Building")->SetRotation(0, -PI_DIV2, 0);
 
-	//PAUSED
-	auto pauseCanvas = new Canvas();
+
+
 	
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Z", "Pause.png", 1.0f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this]{ Resume(); }, TestFuncResume);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.35f }, "B", 270, 100, UI::COLOR::GRAY, [this] { Options(); }, TestFuncOptions);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.2f }, "C", 250, 100, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncMenu);
-
-
-	canvases["PAUSED"] = pauseCanvas;
-
-	// OPTIONS
-	auto optionsCanvas = new Canvas();
-	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Options.png", 1.0f, 1.0f);
-	optionsCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "D", 200, 78, UI::COLOR::GRAY, [this] { Pause(); }, TestFuncResume);
-
-	canvases["OPTIONS"] = optionsCanvas;
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
@@ -423,24 +382,17 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");
+
 	friendly->SetPosition(40, 150, -30);
 	friendly->SetScale(10);
 	//friendly->SetParent(player);
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
-	scene.AddHostileNPC("HostileCube", hostileArrows, player);
-	auto hostile = scene.Get<NPC>("HostileCube");
-	hostile->SetPosition(50, 0, 0);
-	hostile->SetScale(1);
-	//hostile->GetCollider()->SetParent(hostile);
-	modelRenderer.Bind(hostile);
-	shadowRenderer.Bind(hostile);
-	colliderRenderer.Bind(hostile->GetCollider());
-
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
 	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ 0,30,0 });
 	particleRenderer.Bind(particleSystem);
+
 
 	//ANIMATION
 	auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
@@ -509,32 +461,12 @@ APPSTATE Game::Run()
 			player->Inventory().GetResources(RESOURCE::STONE);
 			player->Inventory().AddItem(RESOURCE::FOOD);
 			player->Inventory().GetResources(RESOURCE::FOOD);
-			UpdateInventoryUI();
 			lastClick = Time::Get();
 		}
 
 		if (Event::KeyIsPressed('R'))
 		{
-			building->effect->Bind(scene, particleRenderer);
 			building->Upgrade();
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('T'))
-		{
-			player->TakeDamage();
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('O'))
-		{
-			scene.Get<AnimatedModel>("AnimatedModel")->PlayAnimation("Take 001");
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('Y'))
-		{
-			player->AddHealthPoint();
 			lastClick = Time::Get();
 		}
 
@@ -543,6 +475,9 @@ APPSTATE Game::Run()
 			player->GetStats();
 			lastClick = Time::Get();
 		}
+
+
+
 	}
 
 	if (mainMenu)

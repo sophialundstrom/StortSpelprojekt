@@ -1,10 +1,13 @@
-Texture2D diffuseTexture : register(t0);
+//Texture2D diffuseTexture : register(t0);
+Texture2D diffuseTexture[2] : register(t0);
+
 sampler wrapSampler : register(s0);
 
 struct PS_INPUT
 {
     float4 position : SV_POSITION;
     float2 texCoords : TEXTURECOORDS;
+    float lifetime : LIFETIME;
     //float3 color : COLOR;
 };
 
@@ -19,11 +22,20 @@ struct PS_OUTPUT
     float4 lightClipPosition : SV_TARGET6;
 };
 
+cbuffer ParticleLifeTime
+{
+    float maxLifeTime;
+};
+
 PS_OUTPUT main(PS_INPUT input)
 {
     PS_OUTPUT output;
 
-    output.diffuseTexture = diffuseTexture.Sample(wrapSampler, input.texCoords);
+    float4 color1 = diffuseTexture[0].Sample(wrapSampler, input.texCoords);
+    float4 color2 = diffuseTexture[1].Sample(wrapSampler, input.texCoords);
+    float4 finalColor = lerp(color1, color2, input.lifetime);
+    
+    output.diffuseTexture = finalColor;
     
     const float4 UNDEF = float4(-1.0f, -1.0f, -1.0f, 1.0f);
     output.normal =
