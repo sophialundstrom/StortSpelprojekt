@@ -31,13 +31,6 @@ int IDRenderer::GetObjectID(int xPix, int yPix)
 	int id = 0;
 	UINT32* data = static_cast<UINT32*>(mappedResource.pData);
 
-	D3D11_MAPPED_SUBRESOURCE pixelResource;
-
-	//Print(textureDesc.Width);
-	//Print(xPix);
-	//Print(yPix);
-
-	/*data += (yCord * textureDesc.Width) + xCord;*/
 	memcpy(&id, data, sizeof(UINT32));
 
 	Graphics::Inst().GetContext().Unmap(idTextureData, 0);

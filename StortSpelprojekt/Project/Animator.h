@@ -23,7 +23,7 @@ private:
 		skeleton.SetBindPose(root, Matrix::Identity);
 		skeleton.SetBuffer(root);
 
-		UpdateBuffer(structuredBuffer, jointMatrices.data(), jointMatrices.size() * sizeof(Matrix));
+		UpdateBuffer(structuredBuffer, jointMatrices.data(), (UINT)jointMatrices.size() * sizeof(Matrix));
 	}
 public:
 	Animator(const aiScene* scene, Skeleton& skeleton)
