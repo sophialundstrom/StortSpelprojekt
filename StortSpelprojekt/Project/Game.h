@@ -7,11 +7,8 @@
 #include "DeferredRenderer.h"
 #include "ColliderRenderer.h"
 #include "TerrainRenderer.h"
-<<<<<<< HEAD
-=======
 #include "SkeletonRenderer.h"
 #include "WaterRenderer.h"
->>>>>>> main
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
@@ -33,17 +30,15 @@ private:
 
     std::unique_ptr<QuestLog> questLog;
 
+    AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
     ShadowRenderer shadowRenderer;
     DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
-<<<<<<< HEAD
-=======
     SkeletonRenderer skeletonRenderer;
     WaterRenderer waterRenderer;
->>>>>>> main
 
     float lastSave = 0;
     SaveStation saveStations[2];
@@ -56,10 +51,13 @@ private:
 
     std::shared_ptr<Player> player;
     std::vector<std::shared_ptr<Arrow>> arrows;
+    std::vector<std::shared_ptr<Arrow>> hostileArrows;
 
-    std::vector<std::shared_ptr <Item>> items;
+    std::vector<std::shared_ptr<Item>> items;
 
     std::shared_ptr<Building> building;
+
+    std::vector<std::shared_ptr<Collider>> colliders;
 
     void Update();
     void Render();
@@ -71,16 +69,20 @@ private:
     void HowToPlay();
     void BacktoPause();
     void MainMenu();
-  
+
     bool mainMenu = false;
 
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);
 
     void AddArrow(const std::string fileName);
+    void AddHostileArrow(const std::string fileName);
 
     void CheckSaveStationCollision();
     void CheckItemCollision();
+
+    void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
+    void UpdateInventoryUI();
 
     void Initialize();
 public:

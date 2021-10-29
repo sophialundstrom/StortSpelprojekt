@@ -37,8 +37,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(DEFERRED, 40),
 	deferredRenderer(clientWidth, clientHeight)
 {
-<<<<<<< HEAD
-	ui = std::make_unique<UI>(window);
+
 
 	auto menuCanvas = new Canvas();
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "K", "Arcus logo.png", 0.75f, 1.0f);
@@ -79,11 +78,11 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer.Bind(fireSystem);
 
 	(void)Run();
-=======
+
 	currentCanvas = new Canvas();
 	currentCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "juan.png", "CompassBase.png");
 	
->>>>>>> main
+
 }
 
 
@@ -121,7 +120,6 @@ void MainMenu::Initialize()
 
 }
 
-<<<<<<< HEAD
 void MainMenu::Render()
 {
 	deferredRenderer.SetRenderTargets();
@@ -136,29 +134,20 @@ void MainMenu::Render()
 	Resources::Inst().Reset();
 }
 
-State MainMenu::Run()
-{
-	scene.Update();
-	currentCanvas->Update();
-	Render();
-	
-	if (play)
-		return State::GAME;
-=======
 APPSTATE MainMenu::Run()
 {
 	Graphics::Inst().BeginFrame();
-
+	scene.Update();
 	currentCanvas->Render();
 
 	Graphics::Inst().EndFrame();
 
 	if (Event::KeyIsPressed('G'))
 		return APPSTATE::GAME;
->>>>>>> main
+
 
 	if (quit)
-		return State::EXIT;
+		return APPSTATE::EXIT;
 	
 	if (Event::KeyIsPressed(VK_ESCAPE))
 		return APPSTATE::EXIT;

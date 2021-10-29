@@ -27,6 +27,8 @@ void ParticleEditor::Save(const std::string& file)
 	writer << particleSystem->GetPosition().y << space;
 	writer << particleSystem->GetPosition().z << space;
 
+	
+
 	//writer << "'" << particleSystem->GetTexturePath() <<"'" << space;
 	writer << "'" << particleSystem->GetFirstTextureFile() << "'" << space;
 	writer << "'" << particleSystem->GetSecondTextureFile() << "'";
@@ -66,28 +68,52 @@ void ParticleEditor::Load(const std::string& file)
 
 	window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("First Image", particleSystem->GetFirstTexture());
 	window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Second Image", particleSystem->GetSecondTexture());
+
+	source->SetPosition(particleSystem->GetPosition());
+
+	source->Update();
+
 }
 
 void ParticleEditor::Update()
 {
-	particleSystem->Update();
+	if (Event::ScrolledUp())
+	{
+		Vector3 newPos = { camera.GetPosition().x + 1, camera.GetPosition().y, camera.GetPosition().z};
+		camera.SetPosition(newPos);
+	}
+	else if (Event::ScrolledDown())
+	{
+		Vector3 newPos = { camera.GetPosition().x - 1, camera.GetPosition().y, camera.GetPosition().z};
 
+		camera.SetPosition(newPos);
+	}
+
+
+	particleSystem->Update();
+	camera.UpdatePosOnly(); 
 	ShaderData::Inst().Update(camera);
+
+
 }
 
 void ParticleEditor::Render()
 {
 	BeginFrame();
-
+	colliderRenderer.Render();
 	renderer.Render();
 
 	EndFrame();
 }
 
 ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
-	:renderer(FORWARD)
+	:renderer(FORWARD), colliderRenderer(FORWARD)
 {
-	camera = Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 20.0f, 0, 0, { -2.5f, 5.0f, -15.0f }, { -2.5f, 0.0f, 0.0f });
+	camera = Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0, 0, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
+
+	source = std::make_shared<BoundingSphere>();
+	source->SetScale(0.5f);
+	colliderRenderer.Bind(source);
 
 	AddWindow("PARTICLE SYSTEM EDITOR");
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
@@ -96,15 +122,15 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("SYSTEM");
-	window.AddSliderIntComponent("MAX PARTICLES", 1, 5000 /*ParticleSystem::ABSOLUTE_MAX_PARTICLES*/);
+	window.AddSliderIntComponent("MAX PARTICLES", 1, 1500 /*ParticleSystem::ABSOLUTE_MAX_PARTICLES*/);
 	window.AddSliderFloatComponent("DELTA SPAWN");
 	window.AddSliderFloatComponent("LIFETIME", 0.0f, 10.0f);
 	window.AddSliderFloatComponent("SYSTEM SIZE", 0.0f, 50.0f);
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("VELOCITY");
-	window.AddSliderFloatComponent("MIN VELOCITY", 0.0f, 100.0f);
-	window.AddSliderFloatComponent("MAX VELOCITY", 0.0f, 100.0f);
+	window.AddSliderFloatComponent("MIN VELOCITY", 0.0f, 50.0f);
+	window.AddSliderFloatComponent("MAX VELOCITY", 0.0f, 50.0f);
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("DIMENSIONS");
@@ -145,7 +171,7 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	(void)Run();
 }
 
-State ParticleEditor::Run()
+APPSTATE ParticleEditor::Run()
 {
 	Update();
 	Render();
@@ -155,14 +181,14 @@ State ParticleEditor::Run()
 	if (window.GetValue<ButtonComponent>("LOAD"))
 	{
 		Load(FileSystem::LoadFile("ParticleSystems"));
-		return State::NO_CHANGE;
+		return APPSTATE::NO_CHANGE;
 	}
 
 	else if (window.GetValue<ButtonComponent>("SAVE AS"))
 		Save(FileSystem::SaveFile("ParticleSystems"));
 
 	else if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
-		return State::MENU;
+		return APPSTATE::MAIN_MENU;
 
 	// CHANGE TEXTURE
 	else if (window.GetValue<ButtonComponent>("CHANGE FIRST IMAGE"))
@@ -173,7 +199,7 @@ State ParticleEditor::Run()
 
 		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("First Image", particleSystem->GetFirstTexture());
 
-		return State::NO_CHANGE;
+		return APPSTATE::NO_CHANGE;
 	}
 
 	else if (window.GetValue<ButtonComponent>("CHANGE SECOND IMAGE"))
@@ -184,7 +210,7 @@ State ParticleEditor::Run()
 
 		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Second Image", particleSystem->GetSecondTexture());
 
-		return State::NO_CHANGE;
+		return APPSTATE::NO_CHANGE;
 	}
 
 	else if (window.Changed("MAX PARTICLES"))
@@ -278,5 +304,5 @@ State ParticleEditor::Run()
 	if (window.GetValue<ButtonComponent>("RESET"))
 		particleSystem->Reset();
 
-	return State::NO_CHANGE;
+	return APPSTATE::NO_CHANGE;
 }

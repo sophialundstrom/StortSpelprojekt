@@ -58,6 +58,13 @@ void Camera::SetSpeedMultiplier(float xSpeed)
 	speedMultiplier = xSpeed;
 }
 
+void Camera::UpdatePosOnly()
+{
+	const Vector3 target = position + direction;
+
+	viewMatrix = Matrix::CreateLookAt(position, target, up);
+}
+
 void Camera::Update()
 {
 	Vector3 lookAt;
