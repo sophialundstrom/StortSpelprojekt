@@ -18,7 +18,7 @@ std::string GetNthString(const std::string& line, UINT n)
 }
 
 ParticleSystem::ParticleSystem(const std::string& file, bool preview)
-	:maxParticles(0), timeBetweenParticles(0), particlesLifetime(0), minVelocity(0), maxVelocity(0), size(0), particleExtents(0,0), position(0,0,0), type(EmitterType::SPHERE), 
+	:maxParticles(0), timeBetweenParticles(0), particlesLifetime(0), minVelocity(0), maxVelocity(0), size(0), particleExtents(0, 0), position(0, 0, 0), type(EmitterType::SPHERE),
 	timeSinceLastParticle(0), particleCount(0)
 {
 	std::string path = file;
@@ -65,9 +65,13 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 		std::getline(reader, line);
 	}
 
-	std::string imageFile = GetNthString(line, 1);
-	std::string imagePath = FileSystem::ProjectDirectory::path + "\\ParticleTextures\\" + imageFile;
-	texture = new Texture(imagePath, imageFile);
+	std::string firstImageFile = GetNthString(line, 1);
+	std::string firstImagePath = FileSystem::ProjectDirectory::path + "\\ParticleTextures\\" + firstImageFile;
+	firstTexture = new Texture(firstImagePath, firstImageFile);
+
+	std::string secondImageFile = GetNthString(line, 2);
+	std::string secondImagePath = FileSystem::ProjectDirectory::path + "\\ParticleTextures\\" + secondImageFile;
+	secondTexture = new Texture(secondImagePath, secondImageFile);
 
 
 	if (preview)
@@ -90,7 +94,8 @@ ParticleSystem::~ParticleSystem()
 
 void ParticleSystem::Draw() const
 {
-	texture->Bind();
+	firstTexture->Bind();
+	secondTexture->Bind(1);
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 	Graphics::Inst().GetContext().Draw(particleCount, 0);
 }
@@ -105,7 +110,7 @@ void ParticleSystem::Reset()
 void ParticleSystem::Update()
 {
 	//IF THERE IS SPACE FOR MORE PARTICLES
-	if (particleCount < maxParticles && stopSpawn == false )
+	if (particleCount < maxParticles && stopSpawn == false)
 	{
 		timeSinceLastParticle += Time::GetDelta();
 
@@ -187,7 +192,7 @@ void ParticleSystem::Update()
 
 		if (particle.lifeTime > particlesLifetime)
 		{
-			if(stopSpawn == true)
+			if (stopSpawn == true)
 			{
 				particles.erase(particles.begin() + index - 1);
 				particleCount--;
@@ -208,10 +213,18 @@ void ParticleSystem::Update()
 	UpdateBuffer(vertexBuffer, particles.data(), sizeof(Particle) * particleCount);
 }
 
-void ParticleSystem::ChangeTexture(std::string path, std::string fileName)
+void ParticleSystem::ChangeSecondTexture(std::string path, std::string fileName)
 {
-	if (texture)
-		delete texture;
+	if (secondTexture)
+		delete secondTexture;
 
-	texture = new Texture(path, fileName);
+	secondTexture = new Texture(path, fileName);
+}
+
+void ParticleSystem::ChangeFirstTexture(std::string path, std::string fileName)
+{
+	if (firstTexture)
+		delete firstTexture;
+
+	firstTexture = new Texture(path, fileName);
 }
