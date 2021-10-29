@@ -44,6 +44,7 @@ public:
 	int getFCost();
 	int Compare(const Node* n);
 	void Update();
+	int CompareF(Node* node);
 };
 
 struct MyHash
