@@ -157,6 +157,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Arrow.cpp" />
+    <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="AudioChunks.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -183,6 +185,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arrow.h" />
+    <ClInclude Include="Audio.h" />
+    <ClInclude Include="AudioChunks.h" />
     <ClInclude Include="BoundingVolumes.h" />
     <ClInclude Include="BuildingEffect.h" />
     <ClInclude Include="Button.h" />

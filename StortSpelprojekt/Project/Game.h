@@ -15,6 +15,7 @@
 #include "Canvas.h"
 #include "Time.h"
 #include "Arrow.h"
+#include "Audio.h"
 
 //PlayerClassLib
 #include <math.h>
