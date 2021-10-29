@@ -390,7 +390,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "", "HouseTexture"};
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ 10, -3, 60 });
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -72, 20.5f, -566 });
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
@@ -419,11 +419,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
 	//Item
-	AddItem(WOOD, { -10, 1, 20 });
+	AddItem(WOOD, { -62, 23, -580 });
 
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");
-	friendly->SetPosition(40, 150, -30);
+	friendly->SetPosition(-50, 23, -580);
 	friendly->SetScale(10);
 	//friendly->SetParent(player);
 	modelRenderer.Bind(friendly);
@@ -431,7 +431,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	scene.AddHostileNPC("HostileCube", hostileArrows, player);
 	auto hostile = scene.Get<NPC>("HostileCube");
-	hostile->SetPosition(50, 0, 0);
+	hostile->SetPosition(-40, 23, -580);
 	hostile->SetScale(1);
 	//hostile->GetCollider()->SetParent(hostile);
 	modelRenderer.Bind(hostile);
@@ -439,11 +439,12 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	colliderRenderer.Bind(hostile->GetCollider());
 
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
-	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ 0,30,0 });
+	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ -70,70,-580 });
 	particleRenderer.Bind(particleSystem);
 
 	//ANIMATION
 	auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
+	animated->SetPosition(-30, 25, -580);
 	scene.AddDrawable("AnimatedModel", animated);
 	skeletonRenderer.Bind(animated);
 	animatedModelRenderer.Bind(animated);
