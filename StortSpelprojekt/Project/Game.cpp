@@ -391,6 +391,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "", "HouseTexture"};
 	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -72, 20.5f, -566 });
+	building->SetScale(1.7f, 1.7f, 1.7f);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);

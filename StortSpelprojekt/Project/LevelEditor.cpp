@@ -381,7 +381,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("X-axis", -30, 30, 0, false);
 		window.AddSliderFloatComponent("Y-axis", -30, 30, 0, false);
 		window.AddSliderFloatComponent("Z-axis", -30, 30, 0, false);
-		window.AddCheckBoxComponent("Uniform scaling");
+		window.AddCheckBoxComponent("Uniform scaling", false);
 		window.AddButtonComponent("Delete", 120, 30);
 		window.AddButtonComponent("Duplicate", 120, 30);
 	}
