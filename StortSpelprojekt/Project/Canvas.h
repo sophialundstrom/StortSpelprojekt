@@ -15,13 +15,25 @@ public:
 	~Canvas()
 	{
 		for (auto& [name, button] : buttons)
-			delete button;
-
+			if (button)
+			{
+				delete button;
+				button = nullptr;
+			}
+				
 		for (auto& [name, image] : images)
-			delete image;
-
+			if (image)
+			{
+				delete image;
+				image = nullptr;
+			}
+			
 		for (auto& [name, text] : texts)
-			delete text;
+			if (text)
+			{
+				delete text;
+				text = nullptr;
+			}
 	}
 
 	void Update()

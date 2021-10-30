@@ -55,7 +55,11 @@ Image::Image(const std::string& filename, D2D_VECTOR_2F position, float scale, f
 
 Image::~Image()
 {
-	bitMap->Release();
+	if (bitMap)
+	{
+		bitMap->Release();
+		bitMap = nullptr;
+	}
 }
 
 void Image::Draw()

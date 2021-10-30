@@ -16,7 +16,8 @@ class UI : public Singleton<UI>
 public:
 	enum class COLOR
 	{
-		GRAY
+		GRAY,
+		YELLOW
 	};
 
 	enum class TEXTFORMAT
@@ -27,9 +28,10 @@ public:
 	};
 private:
 	//BRUSH COLORS
-	const Vector3 brushColors[1]
+	const Vector3 brushColors[2]
 	{
-		{ 173, 174, 164 }
+		{ 173, 174, 164 },
+		{ 211, 184, 96 }
 	};
 
 	//TEXT FORMATS
@@ -50,7 +52,7 @@ private:
 	const TextFormatDesc textFormatDescs[3] =
 	{
 		TextFormatDesc(),
-		{ TEXTFORMAT::TITLE, L"Georgia", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 30 },
+		{ TEXTFORMAT::TITLE, L"Georgia", nullptr, DWRITE_FONT_WEIGHT_HEAVY, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 30 },
 		{ TEXTFORMAT::TITLE_SMALL, L"Georgia", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 20 }
 	};
 
@@ -65,11 +67,8 @@ public:
 	UI(HWND window);
 	~UI();
 
-	//HRESULT Initialize(HWND window);
-
 	void Render();
-
-	void BeginFrame() { UIRenderTarget->BeginDraw();  UIRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());}
+	void BeginFrame() { UIRenderTarget->BeginDraw(); UIRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());}
 	void EndFrame() { UIRenderTarget->EndDraw(); }
 
 	ID2D1SolidColorBrush* GetBrush(COLOR color)
@@ -99,8 +98,4 @@ public:
 	IWICImagingFactory* GetImageFactory() { return imageFactory; }
 	IDWriteFactory* GetWriteFactory() { return writeFactory; }
 	ID2D1RenderTarget* GetRenderTarget() { return UIRenderTarget; }
-private:
-	//Device independent resources, unless device is easily accessible
-	//HRESULT CreateDeviceIndependentResources();
-	//HRESULT CreateDeviceResources(HWND window);
 };
