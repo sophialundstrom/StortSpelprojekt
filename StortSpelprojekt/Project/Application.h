@@ -27,6 +27,8 @@ public:
 
 		graphics = std::make_unique<Graphics>(window->ClientWidth(), window->ClientHeight(), window->GetHWND(), false);
 
+		RunLoadingScreen();
+
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
 		ui = std::make_unique<UI>(window->GetHWND());

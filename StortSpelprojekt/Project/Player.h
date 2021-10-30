@@ -112,7 +112,6 @@ private:
 
 	Vector3 lastPosition;
 
-	std::shared_ptr<RayCollider> ray;
 	std::shared_ptr<BoundingSphere> bounds;
 	std::shared_ptr<FrustumCollider> frustum;
 
@@ -159,8 +158,6 @@ public:
 
 		this->arrows = arrows;
 		bounds = std::make_shared<BoundingSphere>();
-		ray = std::make_shared<RayCollider>();
-		ray->length = 40;
 
 		bounds->SetScale(3);
 
@@ -184,7 +181,6 @@ public:
 	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 
 	std::shared_ptr<BoundingSphere> GetBounds() { return bounds; }
-	std::shared_ptr<RayCollider> GetRay() { return ray; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 
 	Inventory& Inventory() { return inventory; }
@@ -192,6 +188,7 @@ public:
 
 	void Save(const std::string file);
 
+	void MoveTowards(const Vector3& position);
 	void ResetToLastPosition() { position = lastPosition; }
 	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
 	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }

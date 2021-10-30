@@ -37,8 +37,6 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(DEFERRED, 40),
 	deferredRenderer(clientWidth, clientHeight)
 {
-
-
 	auto menuCanvas = new Canvas();
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "K", "Arcus logo.png", 0.75f, 1.0f);
 	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.10f }, "O", 360, 100, UI::COLOR::GRAY, [this] { Play(); }, Hovering);
@@ -77,17 +75,11 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("fire", fireSystem, Vector3{ 0,-3,0 });
 	particleRenderer.Bind(fireSystem);
 
-	(void)Run();
-
 	currentCanvas = new Canvas();
 	currentCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight }, "juan.png", "CompassBase.png");
-	
 
+	(void)Run();
 }
-
-
-
-
 
 MainMenu::~MainMenu()
 {
@@ -123,28 +115,33 @@ void MainMenu::Initialize()
 void MainMenu::Render()
 {
 	deferredRenderer.SetRenderTargets();
+
 	modelRenderer.Render();
+
 	particleRenderer.Render();
+
 	terrainRenderer.Render(terrain);
+
 	shadowRenderer.Render();
+
 	Graphics::Inst().BeginFrame();
+
 	deferredRenderer.Render();
+
 	currentCanvas->Render();
+
 	Graphics::Inst().EndFrame();
+
 	Resources::Inst().Reset();
 }
 
 APPSTATE MainMenu::Run()
 {
-	Graphics::Inst().BeginFrame();
 	scene.Update();
-	currentCanvas->Render();
-
-	Graphics::Inst().EndFrame();
+	Render();
 
 	if (Event::KeyIsPressed('G'))
 		return APPSTATE::GAME;
-
 
 	if (quit)
 		return APPSTATE::EXIT;

@@ -35,22 +35,15 @@ private:
 	bool quit;
 	bool play;
 
-
 	void Options();
 	void HowToPlay();
 	void BacktoMenu();
 	void Play();
 	void Quit();
-
-
-
 public:
-
 	MainMenu() = default;
 	MainMenu(UINT clientWidth, UINT clientHeight, HWND window);
 	~MainMenu();
 
-
 	virtual APPSTATE Run() override;
-
 };

@@ -37,12 +37,10 @@ void Game::Render()
 	colliderRenderer.Render();
 
 	terrainRenderer.Render(terrain);
-	//Graphics::Inst().ToggleWireframe();
+
 	waterRenderer.Render(water);
-	//Graphics::Inst().ToggleWireframe();
 
 	skeletonRenderer.Render();
-
 
 	shadowRenderer.Render();
 
@@ -109,6 +107,7 @@ void Game::Initialize()
 	saveStations[1] = SaveStation({ 20, 0, -20 }, 1, scene.GetDrawables());
 	colliderRenderer.Bind(saveStations[1].Collider());
 
+	//MODELS & COLLIDERS
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
@@ -262,12 +261,12 @@ void Game::CheckSaveStationCollision()
 
 		if (Collision::Intersection(*saveStation.Collider(), *player->GetFrustum()))
 		{
-			if (Time::Get() - lastSave > 5 && Event::KeyIsPressed('E'))
+			if (Time::Get() - saveStation.LastSave() > 5 && Event::KeyIsPressed('E'))
 			{
 				Print("SAVED");
 				player->Save("Test");
 				QuestLog::Inst().Save("Test");
-				lastSave = Time::Get();
+				saveStation.LastSave(Time::Get());
 			}
 		}
 	}
@@ -329,12 +328,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	animatedModelRenderer(DEFERRED, true),
 	water(5000)
 {
-	Initialize();
-	//UI
-
 	//LOAD SCENE
+	Initialize();
+
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(50, 4, 4);
+	scene.SetDirectionalLight(100, 4, 4);
 
 	//INGAME
 	auto ingameCanvas = new Canvas();
@@ -354,32 +352,21 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//PAUSED
 	auto pauseCanvas = new Canvas();
-
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::GRAY, [this] { Resume(); }, TestFuncResume);
-	canvases["PAUSED"] = pauseCanvas;
-
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Z", "Pause.png", 1.0f, 1.0f);
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this] { Resume(); }, TestFuncResume);
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.35f }, "B", 270, 100, UI::COLOR::GRAY, [this] { Options(); }, TestFuncOptions);
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.2f }, "C", 250, 100, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncMenu);
-
 	canvases["PAUSED"] = pauseCanvas;
 
-	// OPTIONS
+	//OPTIONS
 	auto optionsCanvas = new Canvas();
 	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Options.png", 1.0f, 1.0f);
 	optionsCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "D", 200, 78, UI::COLOR::GRAY, [this] { Pause(); }, TestFuncResume);
-
 	canvases["OPTIONS"] = optionsCanvas;
 
-	//LOAD SCENE
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(50, 4, 4);
-
 	for (int i = 0; i < 3; i++)
-	{
 		AddArrow("Arrow");
-	}
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), canvases["INGAME"], arrows);
@@ -405,10 +392,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.Get<Model>("Building")->SetPosition(10, -3, 60);
 	scene.Get<Model>("Building")->SetRotation(0, -PI_DIV2, 0);
 
-
-
-	
-
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
@@ -417,10 +400,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");
-
 	friendly->SetPosition(40, 150, -30);
 	friendly->SetScale(10);
-	//friendly->SetParent(player);
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
@@ -510,9 +491,6 @@ APPSTATE Game::Run()
 			player->GetStats();
 			lastClick = Time::Get();
 		}
-
-
-
 	}
 
 	if (mainMenu)
