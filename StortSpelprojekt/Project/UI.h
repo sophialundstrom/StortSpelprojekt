@@ -41,11 +41,11 @@ private:
 	struct TextFormatDesc
 	{
 		TEXTFORMAT format = TEXTFORMAT::DEFAULT;
-		const WCHAR* fontName				= L"Georgia";
+		const WCHAR* fontName				= L"HighLevel";
 		IDWriteFontCollection* collection	= nullptr;
-		DWRITE_FONT_WEIGHT fontWeight		= DWRITE_FONT_WEIGHT_NORMAL;
+		DWRITE_FONT_WEIGHT fontWeight		= DWRITE_FONT_WEIGHT_SEMI_BOLD;
 		DWRITE_FONT_STYLE fontStyle			= DWRITE_FONT_STYLE_NORMAL;
-		DWRITE_FONT_STRETCH fontStretch		= DWRITE_FONT_STRETCH_NORMAL;
+		DWRITE_FONT_STRETCH fontStretch		= DWRITE_FONT_STRETCH_SEMI_EXPANDED;
 		FLOAT fontSize						= 15;
 		DWRITE_TEXT_ALIGNMENT alignment		= DWRITE_TEXT_ALIGNMENT_LEADING;
 		const WCHAR* localeName				= L"";
@@ -54,15 +54,17 @@ private:
 	const TextFormatDesc textFormatDescs[4] =
 	{
 		TextFormatDesc(),
-		{ TEXTFORMAT::TITLE, L"Georgia", nullptr, DWRITE_FONT_WEIGHT_SEMI_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_SEMI_EXPANDED, 30 },
-		{ TEXTFORMAT::TITLE_SMALL, L"Georgia", nullptr, DWRITE_FONT_WEIGHT_ULTRA_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 20 },
-		{ TEXTFORMAT::TITLE_CENTERED, L"Georgia", nullptr, DWRITE_FONT_WEIGHT_SEMI_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_SEMI_EXPANDED, 30, DWRITE_TEXT_ALIGNMENT_CENTER }
+		{ TEXTFORMAT::TITLE, L"HighLevel", nullptr, DWRITE_FONT_WEIGHT_ULTRA_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_SEMI_EXPANDED, 30 },
+		{ TEXTFORMAT::TITLE_SMALL, L"HighLevel", nullptr, DWRITE_FONT_WEIGHT_ULTRA_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 20 },
+		{ TEXTFORMAT::TITLE_CENTERED, L"HighLevel", nullptr, DWRITE_FONT_WEIGHT_ULTRA_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_SEMI_EXPANDED, 30, DWRITE_TEXT_ALIGNMENT_CENTER }
 	};
 
+	IDWriteFontCollection* fontCollection = nullptr;
 	ID2D1Factory* UIFactory = nullptr;
 	ID2D1RenderTarget* UIRenderTarget = nullptr;
 	IDWriteFactory* writeFactory = nullptr;
 	IWICImagingFactory* imageFactory = nullptr;
+	
 	std::map<TEXTFORMAT, IDWriteTextFormat*> textFormats;
 	std::map<COLOR, ID2D1SolidColorBrush*> brushes;
 	HWND UIwindow;

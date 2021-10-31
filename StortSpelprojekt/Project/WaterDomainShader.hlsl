@@ -56,7 +56,7 @@ DS_OUTPUT main(
     else
         output.position.y += sin(time * multiplier + PI / 2.0f) * amplitude / 2.0f;
 
-	output.worldPosition = output.position;
+	output.worldPosition = output.position.xyz;
 
     //TRANSFORM FINAL POSITION
 	output.position = mul(output.position, viewPerspective);

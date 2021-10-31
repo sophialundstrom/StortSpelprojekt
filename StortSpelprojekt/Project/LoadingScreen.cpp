@@ -3,7 +3,7 @@
 
 LoadingScreen::LoadingScreen()
 {
-	int index = Random::Integer(0, backgrounds.capacity() - 1);
+	int index = Random::Integer(0, (int)backgrounds.capacity() - 1);
 	std::cout << index << std::endl;
 
 	std::string path = backgrounds[index];

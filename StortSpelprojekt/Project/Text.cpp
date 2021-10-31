@@ -36,14 +36,14 @@ void Text::SetString(const std::string newString)
 	{
 		const auto lastPosition = GetLeftSidePosition();
 		SetWidth();
-		SetLeftSidePosition(lastPosition.x, lastPosition.y);
+		SetLeftSidePosition((int)lastPosition.x, (int)lastPosition.y);
 	}
 		
 	else
 	{
 		const auto lastPosition = GetPosition();
 		SetWidth();
-		SetPosition(lastPosition.x, lastPosition.y);
+		SetPosition((int)lastPosition.x, (int)lastPosition.y);
 	}
 		
 }

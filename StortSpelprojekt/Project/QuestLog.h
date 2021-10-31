@@ -78,7 +78,7 @@ private:
 			}
 		}
 
-		numQuests = activeQuests.size();
+		numQuests = (UINT)activeQuests.size();
 	}
 public:
 	QuestLog(const std::string& name, std::shared_ptr<Player> player, Canvas* ingameCanvas)

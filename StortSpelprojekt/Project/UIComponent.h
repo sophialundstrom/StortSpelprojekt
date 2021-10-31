@@ -21,8 +21,8 @@ public:
 
 	void SetLeftSidePosition(int x, int y)
 	{
-		bounds.left = x;
-		bounds.top = y;
+		bounds.left = (FLOAT)x;
+		bounds.top = (FLOAT)y;
 		bounds.right = x + width;
 		bounds.bottom = y + height;
 	}
