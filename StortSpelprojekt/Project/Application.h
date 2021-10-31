@@ -33,6 +33,7 @@ public:
 		resources = std::make_unique<Resources>();
 		ui = std::make_unique<UI>(window->GetHWND());
 
+		//SWAP TO MAINMENU TO NOT SKIP IT
 		state = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 	}
 

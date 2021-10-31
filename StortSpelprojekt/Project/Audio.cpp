@@ -85,5 +85,5 @@ void Audio::AddAudio(std::wstring fileName)
 	if(FAILED(hr = pSourceVoice->SubmitSourceBuffer(&audioBuffer)))
 		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
 
-	pSourceVoice->SetVolume(5);
+	pSourceVoice->SetVolume(1);
 }

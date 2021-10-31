@@ -335,7 +335,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//INGAME CANVAS
 	auto ingameCanvas = new Canvas();
 	ingameCanvas->AddImage({ 250, 365 }, "QuestBorder", "QuestBorder.png");
-	ingameCanvas->AddText({ 250, 65 }, "AB", "Active Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
+	ingameCanvas->AddText({ 250, 65 }, "AQ", "Active Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
 	const UINT offset = 162;
 	for (UINT i = 0; i < ARRAYSIZE(Item::Names); ++i)
@@ -457,6 +457,12 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('U'))
 		{
 			QuestLog::Inst().Complete(0);
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('Y'))
+		{
+			QuestLog::Inst().Complete(3);
 			lastClick = Time::Get();
 		}
 

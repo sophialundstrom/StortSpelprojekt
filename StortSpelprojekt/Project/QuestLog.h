@@ -12,7 +12,7 @@ private:
 
 	//CANVAS 
 	Canvas* ingameCanvas;
-	const UINT UIOffset = 100u;
+	const UINT UIOffset = 80u;
 	float titlePositions[5] = { 100.0f, 200.0f, 300.0f, 400.0f, 500.0f };
 	struct UISlot
 	{
@@ -47,30 +47,45 @@ private:
 
 	void UpdateUI()
 	{
-		D2D_VECTOR_2F openPosition = { 0,0 };
+		D2D_VECTOR_2F openPosition = { 70, 100u };
 		bool startOffset = false;
+
 		for (UINT i = 0; i < activeQuests.size(); ++i)
 		{
 			auto quest = activeQuests[i];
 			if (quest->IsCompleted())
 			{
-				openPosition = ingameCanvas->GetText(activeQuests[i]->Name() + "title")->GetLeftSidePosition();
-				ingameCanvas->RemoveText(activeQuests[i]->Name() + "title");
-				ingameCanvas->RemoveText(activeQuests[i]->Name() + "text");
+				openPosition = ingameCanvas->GetText(quest->Name() + "title")->GetLeftSidePosition();
+				ingameCanvas->RemoveText(quest->Name() + "title");
+				ingameCanvas->RemoveText(quest->Name() + "text");
 				startOffset = true;
+				continue;
 			}
 
-			if (!ingameCanvas->Exists<Text>(quest->Name() + "title") && openPosition.x == 0 && openPosition.y == 0)
+			if (!ingameCanvas->Exists<Text>(quest->Name() + "title") && !startOffset)
 			{
-				ingameCanvas->AddText({ 70, (float)i * UIOffset }, quest->Name() + "title", quest->Name(), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_SMALL);
+				ingameCanvas->AddText({ openPosition.x, openPosition.y + (float)i * UIOffset }, quest->Name() + "title", quest->Name(), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_SMALL);
 				std::string text;
 				quest->UpdateUI(text);
-				ingameCanvas->AddText({ 70, (float)i * UIOffset + 30 }, quest->Name() + "text", text, UI::COLOR::YELLOW, UI::TEXTFORMAT::DEFAULT);
+				ingameCanvas->AddText({ openPosition.x, openPosition.y + (float)i * UIOffset + 30 }, quest->Name() + "text", text, UI::COLOR::YELLOW, UI::TEXTFORMAT::DEFAULT);
 			}
 
-			else if (!ingameCanvas->Exists<Text>(quest->Name() + "title"))
+			else if (!ingameCanvas->Exists<Text>(quest->Name() + "title") && startOffset)
 			{
+				ingameCanvas->AddText(openPosition, quest->Name() + "title", quest->Name(), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_SMALL);
+				std::string text;
+				quest->UpdateUI(text);
+				ingameCanvas->AddText({ openPosition.x, openPosition.y + 30 }, quest->Name() + "text", text, UI::COLOR::YELLOW, UI::TEXTFORMAT::DEFAULT);
+				openPosition.y += UIOffset;
+			}
 
+			else if (startOffset)
+			{
+				std::string text;
+				quest->UpdateUI(text);
+				ingameCanvas->UpdateText(quest->Name() + "text", text);
+				ingameCanvas->GetText(quest->Name() + "title")->SetLeftSidePosition(openPosition.x, (UIOffset * activeQuests.size() - i));
+				ingameCanvas->GetText(quest->Name() + "text")->SetLeftSidePosition(openPosition.x, (UIOffset * activeQuests.size() - i) + 30);
 			}
 
 			else
