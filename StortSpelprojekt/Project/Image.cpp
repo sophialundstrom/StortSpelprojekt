@@ -13,6 +13,7 @@ Image::Image(const std::string& filename, D2D_VECTOR_2F position, float scale, f
 	IWICImagingFactory* factory = UI::Inst().GetImageFactory();
 
 	const std::wstring path = std::wstring(std::wstring(FileSystem::ProjectDirectory::path.begin(), FileSystem::ProjectDirectory::path.end()) + L"\\Images\\" + std::wstring(filename.begin(), filename.end())).c_str();
+	
 	hr = factory->CreateDecoderFromFilename(path.c_str(), NULL, GENERIC_READ, WICDecodeMetadataCacheOnLoad, &decoder);
 	if FAILED(hr)
 		return;

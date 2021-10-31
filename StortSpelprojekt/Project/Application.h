@@ -33,7 +33,7 @@ public:
 		resources = std::make_unique<Resources>();
 		ui = std::make_unique<UI>(window->GetHWND());
 
-		state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+		state = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 	}
 
 	~Application()

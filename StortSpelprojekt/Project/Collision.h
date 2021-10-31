@@ -42,6 +42,10 @@ public:
 	// Inherited via Collider
 	virtual void Update() override
 	{
+		Quaternion quat = bounds.Orientation;
+		quat.Normalize();
+		bounds.Orientation = quat;
+
 		const Matrix preMatrix = matrix;
 
 		bounds.Transform(bounds, matrix.Invert());
@@ -52,10 +56,6 @@ public:
 
 		if (preMatrix == matrix)
 			return;
-
-		Quaternion quat = bounds.Orientation;
-		quat.Normalize();
-		bounds.Orientation = quat;
 
 		Vector3 corners[DirectX::BoundingFrustum::CORNER_COUNT];
 		bounds.GetCorners(corners);

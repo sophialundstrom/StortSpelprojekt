@@ -18,7 +18,6 @@ class MainMenu : public ApplicationState
 private:
 	Canvas* currentCanvas;
 	std::map<std::string, Canvas*> canvases;
-	std::unique_ptr<UI> ui;
 
 	Terrain terrain;
 

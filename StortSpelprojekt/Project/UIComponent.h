@@ -14,14 +14,27 @@ public:
 	void SetPosition(int x, int y)
 	{
 		bounds.left = x - (width / 2);
+		bounds.top = y - (height / 2);
 		bounds.right = x + (width / 2);
-		bounds.top = y + (height / 2);
-		bounds.bottom = y - (height / 2);
+		bounds.bottom = y + (height / 2);
+	}
+
+	void SetLeftSidePosition(int x, int y)
+	{
+		bounds.left = x;
+		bounds.top = y;
+		bounds.right = x + width;
+		bounds.bottom = y + height;
 	}
 
 	D2D_VECTOR_2F GetPosition()
 	{
 		return { bounds.right - (width / 2), bounds.bottom - (height / 2) };
+	}
+
+	D2D_VECTOR_2F GetLeftSidePosition()
+	{
+		return { bounds.left, bounds.top };
 	}
 
 	bool IsVisible() { return visible; }

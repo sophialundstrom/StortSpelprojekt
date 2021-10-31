@@ -1,19 +1,55 @@
 #include "Text.h"
 #include "UI.h"
 
-Text::Text(std::wstring string, D2D_VECTOR_2F position, float width, float height, IDWriteTextFormat* format, ID2D1SolidColorBrush* brush, bool visible)
-	:string(string), format(format), brush(brush), UIComponent(width, height, visible)
+void Text::SetWidth()
 {
-	//textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-	//textFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+	width = format->GetFontSize() * string.length();
+}
 
-	bounds = D2D1::RectF(position.x - (width / 2),
-		position.y - (height / 2),
-		position.x + (width / 2),
-		position.y + (height / 2));
+Text::Text(std::wstring string, D2D_VECTOR_2F position, IDWriteTextFormat* format, ID2D1SolidColorBrush* brush, bool visible)
+	:string(string), format(format), brush(brush), UIComponent(0, format->GetFontSize(), visible)
+{
+	SetWidth();
+	if (format->GetTextAlignment() == DWRITE_TEXT_ALIGNMENT_LEADING)
+	{
+		bounds = D2D1::RectF(position.x,
+			position.y,
+			position.x + width,
+			position.y + width);
+	}
+
+	else
+	{
+		bounds = D2D1::RectF(position.x - (width / 2),
+			position.y - (height / 2),
+			position.x + (width / 2),
+			position.y + (height / 2));
+	}
+
+}
+
+void Text::SetString(const std::string newString)
+{
+	this->string = to_wstr(newString);
+
+	if (format->GetTextAlignment() == DWRITE_TEXT_ALIGNMENT_LEADING)
+	{
+		const auto lastPosition = GetLeftSidePosition();
+		SetWidth();
+		SetLeftSidePosition(lastPosition.x, lastPosition.y);
+	}
+		
+	else
+	{
+		const auto lastPosition = GetPosition();
+		SetWidth();
+		SetPosition(lastPosition.x, lastPosition.y);
+	}
+		
 }
 
 void Text::Draw()
 {
+	UI::Inst().GetRenderTarget()->DrawRectangle(bounds, brush);
 	UI::Inst().GetRenderTarget()->DrawTextW(string.c_str(), (UINT32)string.size(), format, bounds, brush);
 }

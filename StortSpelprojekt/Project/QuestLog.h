@@ -12,7 +12,14 @@ private:
 
 	//CANVAS 
 	Canvas* ingameCanvas;
+	const UINT UIOffset = 100u;
 	float titlePositions[5] = { 100.0f, 200.0f, 300.0f, 400.0f, 500.0f };
+	struct UISlot
+	{
+		D2D_VECTOR_2F position;
+		Quest* quest;
+	};
+	std::map<UINT, UISlot> UISlots;
 
 	std::map<UINT, Quest*> quests;
 	std::vector<Quest*> activeQuests;
@@ -35,25 +42,35 @@ private:
 	{
 		for (UINT i = 0; i < activeQuests.size(); ++i)
 			if (activeQuests[i] == quest)
-			{
-				ingameCanvas->RemoveText(activeQuests[i]->Name() + "title");
-				ingameCanvas->RemoveText(activeQuests[i]->Name() + "text");
-				activeQuests.erase(activeQuests.begin() + i);
-			}	
+				activeQuests.erase(activeQuests.begin() + i);	
 	}
 
 	void UpdateUI()
 	{
+		D2D_VECTOR_2F openPosition = { 0,0 };
+		bool startOffset = false;
 		for (UINT i = 0; i < activeQuests.size(); ++i)
 		{
 			auto quest = activeQuests[i];
-
-			if (!ingameCanvas->Exists<Text>(quest->Name() + "title"))
+			if (quest->IsCompleted())
 			{
-				ingameCanvas->AddText({ 170, titlePositions[i] }, quest->Name() + "title", quest->Name(), 250, 50, UI::COLOR::GRAY, UI::TEXTFORMAT::TITLE_SMALL);
+				openPosition = ingameCanvas->GetText(activeQuests[i]->Name() + "title")->GetLeftSidePosition();
+				ingameCanvas->RemoveText(activeQuests[i]->Name() + "title");
+				ingameCanvas->RemoveText(activeQuests[i]->Name() + "text");
+				startOffset = true;
+			}
+
+			if (!ingameCanvas->Exists<Text>(quest->Name() + "title") && openPosition.x == 0 && openPosition.y == 0)
+			{
+				ingameCanvas->AddText({ 70, (float)i * UIOffset }, quest->Name() + "title", quest->Name(), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_SMALL);
 				std::string text;
 				quest->UpdateUI(text);
-				ingameCanvas->AddText({ 170, titlePositions[i] + 20 }, quest->Name() + "text", text, 250, 50, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
+				ingameCanvas->AddText({ 70, (float)i * UIOffset + 30 }, quest->Name() + "text", text, UI::COLOR::YELLOW, UI::TEXTFORMAT::DEFAULT);
+			}
+
+			else if (!ingameCanvas->Exists<Text>(quest->Name() + "title"))
+			{
+
 			}
 
 			else
@@ -94,10 +111,11 @@ public:
 
 			if (quest->IsCompleted())		//IF COMPLETED BY AUTOMATIC REASON (COLLECTING/FIGHT)
 			{
-				ingameCanvas->UpdateText("Wood", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
-				ingameCanvas->UpdateText("Stone", std::to_string(player->Inventory().NumOf(RESOURCE::STONE)));
-				ingameCanvas->UpdateText("Food", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));
+				ingameCanvas->UpdateText("WOOD", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
+				ingameCanvas->UpdateText("STONE", std::to_string(player->Inventory().NumOf(RESOURCE::STONE)));
+				ingameCanvas->UpdateText("FOOD", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));
 				ActivateTriggerQuests(quest);
+				UpdateUI();
 				EraseQuest(quest);
 			}
 		}
@@ -129,6 +147,7 @@ public:
 			{
 				quest->Complete();
 				ActivateTriggerQuests(quest);
+				UpdateUI();
 				EraseQuest(quest);
 			}
 		}

@@ -64,6 +64,7 @@ UI::UI(HWND window)
 			Print("FAILED TO CREATE TEXT FORMAT", "UI");
 			return;
 		}
+		format->SetTextAlignment(desc.alignment);
 		textFormats[desc.format] = format;
 	}
 

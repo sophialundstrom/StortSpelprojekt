@@ -77,7 +77,7 @@ public:
 
 	void AddButton(D2D_VECTOR_2F position, const std::string name, float width, float height, UI::COLOR color, std::function<void()> onClickFunction = NULL, std::function<void()> onHoverFunction = NULL, bool visible = true) { buttons.emplace(name, new Button(position, width, height, UI::Inst().GetBrush(color), onClickFunction, onHoverFunction, visible)); }
 	void AddImage(D2D_VECTOR_2F position, const std::string name, const std::string fileName, float scale = 1.0f, float opacity = 1.0f, bool visible = true) { images[name] = new Image(fileName, position, scale, opacity, visible); }
-	void AddText(D2D_VECTOR_2F position, const std::string name, const std::string string, float width, float height, UI::COLOR color, UI::TEXTFORMAT format, bool visible = true) { texts.emplace(name, new Text(to_wstr(string), position, width, height, UI::Inst().GetTextFormat(format), UI::Inst().GetBrush(color), visible)); }
+	void AddText(D2D_VECTOR_2F position, const std::string name, const std::string string, UI::COLOR color, UI::TEXTFORMAT format, bool visible = true) { texts.emplace(name, new Text(to_wstr(string), position, UI::Inst().GetTextFormat(format), UI::Inst().GetBrush(color), visible)); }
 
 	void RemoveButton(const std::string& name) { if (buttons.find(name) != buttons.end()) buttons.erase(name); }
 	void RemoveImage(const std::string& name) { if (images.find(name) != images.end()) images.erase(name); }

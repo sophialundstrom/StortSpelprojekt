@@ -122,30 +122,13 @@ private:
 
 	void UpdateHealthUI()
 	{
-		for (UINT i = 0; i < stats.maxHealthPoints; ++i)
-		{
-			const std::string name = "hp" + std::to_string(i);
-			auto image = ingameCanvas->GetImage(name);
+		auto image = ingameCanvas->GetImage("hp");
+		if (image->FileName() == "HP" + std::to_string(stats.healthPoints) + ".png")
+			return;
 
-			if (image->FileName() != "Heart.png" && stats.healthPoints > 0)
-			{
-				auto position = image->GetPosition();
-				ingameCanvas->RemoveImage(name);
-				ingameCanvas->AddImage(position, name, "Heart.png");
-			}
-
-			if (i == 0 && stats.healthPoints == 1)
-			{
-				auto position = image->GetPosition();
-				ingameCanvas->RemoveImage(name);
-				ingameCanvas->AddImage(position, name, "RedHeart.png");
-			}
-
-			if (i < stats.healthPoints)
-				image->Show();
-			else
-				image->Hide();
-		}
+		auto position = image->GetPosition();
+		ingameCanvas->RemoveImage("hp");
+		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
 	}
 public:
 	void Update(HeightMap* heightMap);
