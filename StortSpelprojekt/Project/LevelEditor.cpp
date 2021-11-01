@@ -381,7 +381,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("X-axis", -30, 30, 0, false);
 		window.AddSliderFloatComponent("Y-axis", -30, 30, 0, false);
 		window.AddSliderFloatComponent("Z-axis", -30, 30, 0, false);
-		window.AddCheckBoxComponent("Uniform scaling");
+		window.AddCheckBoxComponent("Uniform scaling", false);
 		window.AddButtonComponent("Delete", 120, 30);
 		window.AddButtonComponent("Duplicate", 120, 30);
 	}
@@ -399,7 +399,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	gameLoader.Load("Default", scene.GetDrawables());
 	BindDrawables();
 
-	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 1000.0f, 1.0f, 25.0f, {0, 90, 0});
+	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 1.0f, 25.0f, {0, 90, 0});
 	scene.SetDirectionalLight(40);
 
 	//CLIENT INFORMATION (PICKING) TO BE REMOVED?
@@ -487,7 +487,7 @@ LevelEditor::~LevelEditor()
 	Resources::Inst().Clear();
 }
 
-State LevelEditor::Run()
+APPSTATE LevelEditor::Run()
 {
 	Update();
 	Render();
@@ -520,7 +520,7 @@ State LevelEditor::Run()
 		}
 
 		if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
-			return State::MENU;
+			return APPSTATE::MAIN_MENU;
 	}
 
 	{
@@ -529,5 +529,5 @@ State LevelEditor::Run()
 			DuplicateObject();
 	}
 
-	return State::NO_CHANGE;
+	return APPSTATE::NO_CHANGE;
 }

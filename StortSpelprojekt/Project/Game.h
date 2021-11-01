@@ -1,5 +1,5 @@
 #pragma once
-#include "GameState.h"
+#include "ApplicationState.h"
 #include "AnimatedModelRenderer.h"
 #include "ModelRenderer.h"
 #include "ParticleRenderer.h"
@@ -8,6 +8,7 @@
 #include "ColliderRenderer.h"
 #include "TerrainRenderer.h"
 #include "SkeletonRenderer.h"
+#include "WaterRenderer.h"
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
@@ -17,12 +18,13 @@
 #include "Grid.h"
 #include "Arrow.h"
 #include "Pathfinding.h"
+#include "Audio.h"
 
 //PlayerClassLib
 #include <math.h>
 
 // The state subclass for the level/game
-class Game : public GameState
+class Game : public ApplicationState
 {
 private:
     bool paused = false;
@@ -32,7 +34,6 @@ private:
     Pathfinding pathing;
 
     std::unique_ptr<QuestLog> questLog;
-    std::unique_ptr<UI> userInterface;
 
     AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;
@@ -42,11 +43,12 @@ private:
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
     SkeletonRenderer skeletonRenderer;
+    WaterRenderer waterRenderer;
 
-    float lastSave = 0;
     SaveStation saveStations[2];
 
     Terrain terrain;
+    Water water;
 
     Canvas* currentCanvas;
     std::map<std::string, Canvas*> canvases;
@@ -58,6 +60,8 @@ private:
     std::vector<std::shared_ptr<Item>> items;
 
     std::shared_ptr<Building> building;
+
+    std::vector<std::shared_ptr<Collider>> colliders;
 
     void Update();
     void Render();
@@ -78,6 +82,7 @@ private:
     void AddArrow(const std::string fileName);
     void AddHostileArrow(const std::string fileName);
 
+    void CheckNearbyCollision();
     void CheckSaveStationCollision();
     void CheckItemCollision();
 
@@ -91,5 +96,5 @@ public:
     ~Game(); // Removes drawables and resources
 
     // Inherited via GameState
-    virtual State Run() override;
+    virtual APPSTATE Run() override;
 };

@@ -2,9 +2,9 @@
 #include "ParticleRenderer.h"
 #include "Editor.h"
 #include "FileSystem.h"
-#include "GameState.h"
+#include "ApplicationState.h"
 
-class ParticleEditor : public Editor, public GameState
+class ParticleEditor : public Editor, public ApplicationState
 {
 private:
 	Camera camera;
@@ -22,5 +22,5 @@ public:
 	ParticleEditor(UINT clientWidth, UINT clientHeight);
 
 	// Inherited via GameState
-	State Run();
+	APPSTATE Run();
 };

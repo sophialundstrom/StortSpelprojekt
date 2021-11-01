@@ -31,6 +31,8 @@ float Get2DAngle(Vector2 a, Vector2 b)
 
 void Player::Update(HeightMap* heightMap)
 {
+	lastPosition = position;
+
 	CalcHeight(heightMap);
 
 	//Rotate camera by cursor movement 
@@ -141,7 +143,7 @@ void Player::Update(HeightMap* heightMap)
 			{
 				int currentIndex = 0;
 				bool isPlayerShootingArrow = false;
-				while(currentIndex < arrows.size() /* -1 /Remove last error for balanced speed but stupid*/ && isPlayerShootingArrow == false)
+				while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
 				{
 					isPlayerShootingArrow = arrows.at(currentIndex)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 					lastClick = Time::Get();
@@ -150,27 +152,18 @@ void Player::Update(HeightMap* heightMap)
 			}
 		}
 	}
+
 	else
-	{
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
-	}
 
 	for (int i = 0; i < arrows.size(); i++)
-	{
 		arrows.at(i)->Update();
-	}
 
 	sceneCamera->MoveTowards(newCameraPos);
-
-	ray->origin = position + Vector3(0, 3, 0);
-	Vector3 rayDirection = sceneCamera->GetDirection() + Vector3(0, 0.15, 0);
-	rayDirection.Normalize();
-	ray->direction = rayDirection;
 
 	Model::Update();
 
 	bounds->Update();
-	ray->Update();
 	frustum->Update();
 }
 

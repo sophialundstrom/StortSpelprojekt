@@ -10,7 +10,7 @@
 
 #undef Ray
 
-struct Inventory 
+struct Inventory
 {
 	//std::unordered_map here?
 	std::map<RESOURCE, UINT> items; //ID , NUM OF ITEM
@@ -23,14 +23,14 @@ struct Inventory
 		names[RESOURCE::FOOD] = "Food";
 		names[RESOURCE::NONE] = "NONE";
 	}
-	
+
 	void AddItem(enum RESOURCE ID)
 	{
 		items[ID]++;
 	}
 
 	void RemoveItem(enum RESOURCE ID, UINT amount = 1)
-	{	
+	{
 		if (items[ID] <= amount)
 		{
 			items[ID] = 0;
@@ -55,8 +55,8 @@ struct Inventory
 struct Stats
 {
 	UINT barbariansKilled = 0;
-	float movementSpeed = 5.0f;
-	float sprintSpeed = 10.0f;
+	float movementSpeed = 30.0f;
+	float sprintSpeed = 50.0f;
 	UINT maxHealthPoints = 10;
 	UINT healthPoints = 10;
 	UINT level = 1;
@@ -76,7 +76,7 @@ private:
 	Stats stats;
 
 	Camera* sceneCamera;
-	
+
 	Canvas* ingameCanvas;
 	//ARROW STUFF
 	std::vector<std::shared_ptr<Arrow>> arrows;
@@ -105,13 +105,13 @@ private:
 	float defaultCameraDistance = 17.0f;
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
-	
-	Vector3 cameraLocationSocket = { 1.3, 2.7f, -2.f };
+	Vector3 cameraLocationSocket = { 1.3f, 2.7f, -2.f };
 
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);
 
-	std::shared_ptr<RayCollider> ray;
+	Vector3 lastPosition;
+
 	std::shared_ptr<BoundingSphere> bounds;
 	std::shared_ptr<FrustumCollider> frustum;
 
@@ -122,34 +122,17 @@ private:
 
 	void UpdateHealthUI()
 	{
-		for (UINT i = 0; i < stats.maxHealthPoints; ++i)
-		{	
-			const std::string name = "hp" + std::to_string(i);
-			auto image = ingameCanvas->GetImage(name);
+		auto image = ingameCanvas->GetImage("hp");
+		if (image->FileName() == "HP" + std::to_string(stats.healthPoints) + ".png")
+			return;
 
-			if (image->FileName() != "Heart.png" && stats.healthPoints > 0)
-			{
-				auto position = image->GetPosition();
-				ingameCanvas->RemoveImage(name);
-				ingameCanvas->AddImage(position, name, "Heart.png");
-			}
-
-			if (i == 0 && stats.healthPoints == 1)
-			{
-				auto position = image->GetPosition();
-				ingameCanvas->RemoveImage(name);
-				ingameCanvas->AddImage(position, name, "RedHeart.png");
-			}
-
-			if (i < stats.healthPoints)
-				image->Show();
-			else
-				image->Hide();
-		}
+		auto position = image->GetPosition();
+		ingameCanvas->RemoveImage("hp");
+		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
 	}
 public:
 	void Update(HeightMap* heightMap);
-	
+
 	Player(const std::string file, Camera* camera, Canvas* ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows)
 		:Model("LowPolyCharacter", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
 	{
@@ -158,8 +141,6 @@ public:
 
 		this->arrows = arrows;
 		bounds = std::make_shared<BoundingSphere>();
-		ray = std::make_shared<RayCollider>();
-		ray->length = 40;
 
 		bounds->SetScale(3);
 
@@ -182,8 +163,7 @@ public:
 
 	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 
-	std::shared_ptr<BoundingSphere> GetBounds(){ return bounds; }
-	std::shared_ptr<RayCollider> GetRay() { return ray; }
+	std::shared_ptr<BoundingSphere> GetBounds() { return bounds; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 
 	Inventory& Inventory() { return inventory; }
@@ -191,6 +171,8 @@ public:
 
 	void Save(const std::string file);
 
+	void MoveTowards(const Vector3& position);
+	void ResetToLastPosition() { position = lastPosition; }
 	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
 	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
 };

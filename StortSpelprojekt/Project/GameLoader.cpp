@@ -195,8 +195,7 @@ std::shared_ptr<BoundingBox> GameLoader::ReadBoxVolume()
 	ReadStr(string);
 	Matrix matrix;
 	Read(matrix);
-
-	auto box = std::make_shared<BoundingBox>(matrix);
+	auto box = std::make_shared<BoundingBox>(matrix.Transpose());
 	box->SetName(string);
 
 	Vector3 vector;
@@ -219,7 +218,7 @@ std::shared_ptr<BoundingSphere> GameLoader::ReadSphereVolume()
 	Matrix matrix;
 	Read(matrix);
 
-	auto sphere = std::make_shared<BoundingSphere>(matrix);
+	auto sphere = std::make_shared<BoundingSphere>(matrix.Transpose());
 	sphere->SetName(string);
 
 	Vector3 vector;

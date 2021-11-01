@@ -11,21 +11,17 @@
 class Scene
 {
 private:
-	Camera* camera;
+	Camera* camera = nullptr;
 	DirectionalLight directionalLight;
 	std::vector<PointLight> pointLights;
 	std::map<std::string, std::shared_ptr<Drawable>> drawables;
-
-	NPC *npc;
 	std::vector<std::string> objectNames;
 public:
 	Scene(const std::string& file);
 	Scene() = default;
 	~Scene() { delete camera; }
 
-	std::map<std::string, std::shared_ptr<Drawable>>& GetDrawables() {
-		return drawables;
-	}
+	std::map<std::string, std::shared_ptr<Drawable>>& GetDrawables() { return drawables; }
 
 	void Clear() { drawables.clear(); pointLights.clear(); }
 	void Update();
