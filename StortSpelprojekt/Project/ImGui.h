@@ -10,7 +10,6 @@
 struct ImGUI
 {
     static bool Initialized;
-
 	static void BeginFrame()
     {
 		ImGui_ImplDX11_NewFrame();
@@ -18,7 +17,7 @@ struct ImGUI
 		ImGui::NewFrame();
         ImGuizmo::BeginFrame();
 	}
-
+    
 	static void EndFrame()
 	{
         std::filesystem::current_path(std::filesystem::path(FileSystem::ProjectDirectory::path));

@@ -3,6 +3,8 @@
 #include "GameLoader.h"
 #include "FBXLoader.h"
 
+static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+
 void LevelEditor::BindDrawables()
 {
 	for (auto& [name, drawable] : scene.GetDrawables())
@@ -115,6 +117,7 @@ void LevelEditor::DuplicateObject()
 		
 }
 
+
 void LevelEditor::CreateBoundingBox()
 {
 	if (selectedObject == "")
@@ -180,6 +183,36 @@ void LevelEditor::CreateBoundingSphere()
 	idRenderer.Bind(sphere);
 
 	Print("BoundingSphere Created!");
+}
+
+void LevelEditor::GizmoEdit(std::string object)
+{
+	ImGuizmo::SetID(1);
+
+	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
+	static bool useSnap = false;
+	static float snap[3] = { 1.f, 1.f, 1.f };
+	static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
+	static float boundsSnap[] = { 0.1f, 0.1f, 0.1f };
+	static bool boundSizing = false;
+	static bool boundSizingSnap = false;
+	auto model = scene.Get<Drawable>(object);
+
+	if (ImGui::IsKeyPressed(1))
+		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	if (ImGui::IsKeyPressed(2))
+		mCurrentGizmoOperation = ImGuizmo::ROTATE;
+	if (ImGui::IsKeyPressed(3))
+		mCurrentGizmoOperation = ImGuizmo::SCALE;
+
+	ImGuiIO& io = ImGui::GetIO();
+	float viewManipulateTop = 0;
+	float viewManipulateRight = io.DisplaySize.x;
+
+	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+	ImGuizmo::Manipulate(*scene.GetCamera()->GetViewMatrix().m, *scene.GetCamera()->GetProjectionMatrix().m, mCurrentGizmoOperation, mCurrentGizmoMode, *model->GetMatrix().m, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
+	ImGuizmo::ViewManipulate(*scene.GetCamera()->GetViewMatrix().m, **scene.GetCamera()->GetProjectionMatrix().m, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+	ImGuizmo::DrawGrid(*scene.GetCamera()->GetViewMatrix().m, *scene.GetCamera()->GetProjectionMatrix().m, *Matrix::Identity.m, 100.f);
 }
 
 void LevelEditor::Update()
@@ -259,6 +292,7 @@ void LevelEditor::Update()
 
 	if (selectedObject != "") //CHECKS EVERY FRAME, USE CHANGED()?
 	{
+		GizmoEdit(selectedObject);
 		auto& window = windows["GAME OBJECT"];
 		float newXPos = window.GetValue<SliderFloatComponent>("X");
 		float newYPos = window.GetValue<SliderFloatComponent>("Y");
@@ -316,6 +350,7 @@ void LevelEditor::Update()
 		UpdateToolUI(name);
 	}
 
+
 	scene.Update();
 
 	Event::ClearRawDelta();
@@ -330,7 +365,6 @@ void LevelEditor::Render()
 	//ADD RENDERER THAT RENDERS TO TEXTURE THAT CAN BE SHOWN AS "INGAME"-PREVIEW IN MATERIAL EDITOR 
 	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
 	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
-	ImGuizmo::DrawGrid(*scene.GetCamera()->GetViewMatrix().m, *scene.GetCamera()->GetProjectionMatrix().m, *Matrix::Identity.m, 5000);
 
 	terrainRenderer.Render(*terrain);
 
@@ -369,9 +403,9 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		auto& window = windows["GAME OBJECT"];
 		window.AddTextComponent("ObjectName");
 		window.AddTextComponent("Position");
-		window.AddSliderFloatComponent("X", -300, 300, 0, false);
-		window.AddSliderFloatComponent("Y", -300, 300, 0, false);
-		window.AddSliderFloatComponent("Z", -300, 300, 0, false);
+		window.AddSliderFloatComponent("X", -700, 700, 0, false);
+		window.AddSliderFloatComponent("Y", -50, 200, 0, false);
+		window.AddSliderFloatComponent("Z", -700, 700, 0, false);
 
 		window.AddTextComponent("Rotation");
 		window.AddSliderFloatComponent("Around X", -180, 180, 0, false);
@@ -379,9 +413,9 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("Around Z", -180, 180, 0, false);
 
 		window.AddTextComponent("Scale");
-		window.AddSliderFloatComponent("X-axis", -30, 30, 0, false);
-		window.AddSliderFloatComponent("Y-axis", -30, 30, 0, false);
-		window.AddSliderFloatComponent("Z-axis", -30, 30, 0, false);
+		window.AddSliderFloatComponent("X-axis", -1, 50, 0, false);
+		window.AddSliderFloatComponent("Y-axis", -1, 50, 0, false);
+		window.AddSliderFloatComponent("Z-axis", -1, 50, 0, false);
 		window.AddCheckBoxComponent("Uniform scaling", false);
 		window.AddButtonComponent("Delete", 120, 30);
 		window.AddButtonComponent("Duplicate", 120, 30);
