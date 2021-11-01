@@ -59,12 +59,12 @@ void GameOver::Initialize()
 
 void GameOver::MainMenu()
 {
-	gameStateStatus = APPSTATE::MAIN_MENU;
+	backToMenu = true;
 }
 
 void GameOver::QuitGame()
 {
-	gameStateStatus = APPSTATE::EXIT;
+	quit = true;
 }
 
 void GameOver::Render()
@@ -76,11 +76,20 @@ void GameOver::Render()
 
 APPSTATE GameOver::Run()
 {
-	//scene.Update();
+	/*scene.Update();*/
+
+	currentCanvas->Update();
 	Render();
+	
 
 	if (Event::KeyIsPressed('M'))
 		gameStateStatus = APPSTATE::MAIN_MENU;
+
+	if (quit)
+		return APPSTATE::EXIT;
+
+	if (backToMenu)
+		return APPSTATE::MAIN_MENU;
 
 	if (Event::KeyIsPressed(VK_ESCAPE))
 		gameStateStatus = APPSTATE::EXIT;

@@ -13,6 +13,8 @@ class GameOver : public ApplicationState
 {
 private:
 	Canvas* currentCanvas;
+	std::map<std::string, Canvas*> canvases;
+
 	ParticleRenderer particleRenderer;
 	ModelRenderer modelRenderer;
 	ShadowRenderer shadowRenderer;
@@ -23,6 +25,9 @@ public:
 	GameOver() = default;
 	GameOver(UINT clientWidth, UINT clientHeight, HWND window);
 	~GameOver();
+
+	bool quit;
+	bool backToMenu;
 
 	void Render();
 	void Initialize();
