@@ -32,9 +32,6 @@ void Audio::StartAudio()
 void Audio::Initialize()
 {	
 	HRESULT hr;
-	hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-	if (FAILED(hr))
-		std::cout << "COULD NOT COINITIALIZE" << std::endl;
 
 	if(FAILED(hr = XAudio2Create(&pXAudio2, 0 , XAUDIO2_DEFAULT_PROCESSOR)))
 		std::cout << "COULD NOT CREATE AUDIO ENGINE" << std::endl;
@@ -84,5 +81,5 @@ void Audio::AddAudio(std::wstring fileName)
 	if(FAILED(hr = pSourceVoice->SubmitSourceBuffer(&audioBuffer)))
 		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
 
-	pSourceVoice->SetVolume(5);
+	pSourceVoice->SetVolume(1);
 }

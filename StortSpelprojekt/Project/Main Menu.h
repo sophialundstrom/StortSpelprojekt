@@ -18,7 +18,6 @@ class MainMenu : public ApplicationState
 private:
 	Canvas* currentCanvas;
 	std::map<std::string, Canvas*> canvases;
-	std::unique_ptr<UI> ui;
 
 	Terrain terrain;
 
@@ -35,22 +34,15 @@ private:
 	bool quit;
 	bool play;
 
-
 	void Options();
 	void HowToPlay();
 	void BacktoMenu();
 	void Play();
 	void Quit();
-
-
-
 public:
-
 	MainMenu() = default;
 	MainMenu(UINT clientWidth, UINT clientHeight, HWND window);
 	~MainMenu();
 
-
 	virtual APPSTATE Run() override;
-
 };

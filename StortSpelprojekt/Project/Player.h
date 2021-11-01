@@ -112,7 +112,6 @@ private:
 
 	Vector3 lastPosition;
 
-	std::shared_ptr<RayCollider> ray;
 	std::shared_ptr<BoundingSphere> bounds;
 	std::shared_ptr<FrustumCollider> frustum;
 
@@ -123,30 +122,13 @@ private:
 
 	void UpdateHealthUI()
 	{
-		for (UINT i = 0; i < stats.maxHealthPoints; ++i)
-		{
-			const std::string name = "hp" + std::to_string(i);
-			auto image = ingameCanvas->GetImage(name);
+		auto image = ingameCanvas->GetImage("hp");
+		if (image->FileName() == "HP" + std::to_string(stats.healthPoints) + ".png")
+			return;
 
-			if (image->FileName() != "Heart.png" && stats.healthPoints > 0)
-			{
-				auto position = image->GetPosition();
-				ingameCanvas->RemoveImage(name);
-				ingameCanvas->AddImage(position, name, "Heart.png");
-			}
-
-			if (i == 0 && stats.healthPoints == 1)
-			{
-				auto position = image->GetPosition();
-				ingameCanvas->RemoveImage(name);
-				ingameCanvas->AddImage(position, name, "RedHeart.png");
-			}
-
-			if (i < stats.healthPoints)
-				image->Show();
-			else
-				image->Hide();
-		}
+		auto position = image->GetPosition();
+		ingameCanvas->RemoveImage("hp");
+		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
 	}
 public:
 	void Update(HeightMap* heightMap);
@@ -159,8 +141,6 @@ public:
 
 		this->arrows = arrows;
 		bounds = std::make_shared<BoundingSphere>();
-		ray = std::make_shared<RayCollider>();
-		ray->length = 40;
 
 		bounds->SetScale(3);
 
@@ -184,7 +164,6 @@ public:
 	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 
 	std::shared_ptr<BoundingSphere> GetBounds() { return bounds; }
-	std::shared_ptr<RayCollider> GetRay() { return ray; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 
 	Inventory& Inventory() { return inventory; }
@@ -192,6 +171,7 @@ public:
 
 	void Save(const std::string file);
 
+	void MoveTowards(const Vector3& position);
 	void ResetToLastPosition() { position = lastPosition; }
 	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
 	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }

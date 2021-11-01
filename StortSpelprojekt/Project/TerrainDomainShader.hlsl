@@ -43,7 +43,7 @@ DS_OUTPUT main(
 
     output.position.y = h;
     
-    output.worldPosition = output.position;
+    output.worldPosition = output.position.xyz;
 
 	//TRANSFORM FINAL POSITION
     output.position = mul(output.position, viewPerspective);

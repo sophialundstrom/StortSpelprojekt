@@ -26,7 +26,7 @@ HeightMap::HeightMap(const std::string& texture)
 			int value = pixelOffset[0];
 			float finalValue = (float)value * 2.0f - 100.0f;
 
-			data.emplace(Vector2(i - (width / 2) + 1, j - (height / 2) + 1), finalValue);
+			data.emplace(Vector2((float)i - (width / 2) + 1, (float)j - (height / 2) + 1), finalValue);
 		}
 	}
 }

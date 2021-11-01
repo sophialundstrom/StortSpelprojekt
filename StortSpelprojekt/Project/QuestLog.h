@@ -12,7 +12,9 @@ private:
 
 	//CANVAS 
 	Canvas* ingameCanvas;
-	float titlePositions[5] = { 100.0f, 200.0f, 300.0f, 400.0f, 500.0f };
+	const UINT UIStartOffset = 100u;
+	const UINT UILeftOffset = 70u;
+	const UINT UIOffset = 80u;
 
 	std::map<UINT, Quest*> quests;
 	std::vector<Quest*> activeQuests;
@@ -36,33 +38,47 @@ private:
 		for (UINT i = 0; i < activeQuests.size(); ++i)
 			if (activeQuests[i] == quest)
 			{
-				ingameCanvas->RemoveText(activeQuests[i]->Name() + "title");
-				ingameCanvas->RemoveText(activeQuests[i]->Name() + "text");
+				ingameCanvas->RemoveText(quest->Name() + "title");
+				ingameCanvas->RemoveText(quest->Name() + "text");
 				activeQuests.erase(activeQuests.begin() + i);
-			}	
+			}
+				
 	}
 
 	void UpdateUI()
 	{
+		static UINT numQuests = 0;
+
 		for (UINT i = 0; i < activeQuests.size(); ++i)
 		{
 			auto quest = activeQuests[i];
 
-			if (!ingameCanvas->Exists<Text>(quest->Name() + "title"))
+			if (!ingameCanvas->Exists<Text>(quest->Name() + "title")) // ADDING NEW QUEST (NO OTHER REMOVED)
 			{
-				ingameCanvas->AddText({ 170, titlePositions[i] }, quest->Name() + "title", quest->Name(), 250, 50, UI::COLOR::GRAY, UI::TEXTFORMAT::TITLE_SMALL);
+				ingameCanvas->AddText({ (float)UILeftOffset, (float)UIStartOffset + (UIOffset * i) }, quest->Name() + "title", quest->Name(), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_SMALL);
 				std::string text;
 				quest->UpdateUI(text);
-				ingameCanvas->AddText({ 170, titlePositions[i] + 20 }, quest->Name() + "text", text, 250, 50, UI::COLOR::GRAY, UI::TEXTFORMAT::DEFAULT);
+				ingameCanvas->AddText({ (float)UILeftOffset, (float)UIStartOffset +(UIOffset * i) + 30 }, quest->Name() + "text", text, UI::COLOR::YELLOW, UI::TEXTFORMAT::DEFAULT);
 			}
 
-			else
+			else if (numQuests != activeQuests.size()) //OFFSET EXISTING QUEST IF ONE IS REMOVED
+			{
+				std::string text;
+				quest->UpdateUI(text);
+				ingameCanvas->UpdateText(quest->Name() + "text", text);
+				ingameCanvas->GetText(quest->Name() + "title")->SetLeftSidePosition(UILeftOffset, UIStartOffset + (UIOffset * i));
+				ingameCanvas->GetText(quest->Name() + "text")->SetLeftSidePosition(UILeftOffset, UIStartOffset + (UIOffset * i) + 30);
+			}
+
+			else //UPDATE QUEST STRING
 			{
 				std::string text;
 				quest->UpdateUI(text);
 				ingameCanvas->UpdateText(quest->Name() + "text", text);
 			}
 		}
+
+		numQuests = (UINT)activeQuests.size();
 	}
 public:
 	QuestLog(const std::string& name, std::shared_ptr<Player> player, Canvas* ingameCanvas)
@@ -94,9 +110,9 @@ public:
 
 			if (quest->IsCompleted())		//IF COMPLETED BY AUTOMATIC REASON (COLLECTING/FIGHT)
 			{
-				ingameCanvas->UpdateText("Wood", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
-				ingameCanvas->UpdateText("Stone", std::to_string(player->Inventory().NumOf(RESOURCE::STONE)));
-				ingameCanvas->UpdateText("Food", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));
+				ingameCanvas->UpdateText("WOOD", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
+				ingameCanvas->UpdateText("STONE", std::to_string(player->Inventory().NumOf(RESOURCE::STONE)));
+				ingameCanvas->UpdateText("FOOD", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));
 				ActivateTriggerQuests(quest);
 				EraseQuest(quest);
 			}
@@ -129,6 +145,7 @@ public:
 			{
 				quest->Complete();
 				ActivateTriggerQuests(quest);
+				UpdateUI();
 				EraseQuest(quest);
 			}
 		}

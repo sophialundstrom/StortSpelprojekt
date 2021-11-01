@@ -27,11 +27,14 @@ public:
 
 		graphics = std::make_unique<Graphics>(window->ClientWidth(), window->ClientHeight(), window->GetHWND(), false);
 
+		RunLoadingScreen();
+
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
 		ui = std::make_unique<UI>(window->GetHWND());
 
-		state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+		//SWAP TO MAINMENU TO NOT SKIP IT
+		state = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 	}
 
 	~Application()

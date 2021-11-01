@@ -36,8 +36,8 @@ VS_OUTPUT main(VS_INPUT input)
         if (input.boneIDs[i] == -1)
             continue;
         
-        p += mul(float4(input.position, 1.0), boneMatrices[input.boneIDs[i]] * input.weights[i]);
-        n += mul(float4(input.normal, 0.0f), boneMatrices[input.boneIDs[i]] * input.weights[i]);
+        p += mul(float4(input.position, 1.0), boneMatrices[input.boneIDs[i]] * input.weights[i]).xyz;
+        n += mul(float4(input.normal, 0.0f), boneMatrices[input.boneIDs[i]] * input.weights[i]).xyz;
     }
          
     float4 position = float4(p, 1.0f);

@@ -26,10 +26,11 @@ private:
 	ID2D1SolidColorBrush* brush = nullptr;
 	IDWriteTextFormat* format = nullptr;
 	std::wstring string;
+	void SetWidth();
 public:
 	Text() = default;
-	Text(std::wstring string, D2D_VECTOR_2F position, float width, float height, IDWriteTextFormat* format, ID2D1SolidColorBrush* brush, bool visible = true);
-	void SetString(const std::string newString) { this->string = to_wstr(newString); }
+	Text(std::wstring string, D2D_VECTOR_2F position, IDWriteTextFormat* format, ID2D1SolidColorBrush* brush, bool visible = true);
+	void SetString(const std::string newString);
 	std::string GetString() { return to_str(string); }
 	void Draw();
 };
