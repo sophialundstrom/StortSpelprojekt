@@ -8,7 +8,7 @@
 Camera::Camera() : moveSpeed(0), rotationSpeed(0), pitch(0), yaw(0) {}
 
 Camera::Camera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position, Vector3 forward, Vector3 up)
-	:position(position), forward(forward), direction(forward), up(up), moveSpeed(moveSpeed), rotationSpeed(rotationSpeed), pitch(0), yaw(0)
+	: position(position), forward(forward), direction(forward), up(up), moveSpeed(moveSpeed), rotationSpeed(rotationSpeed), pitch(0), yaw(0)
 {
 	this->viewMatrix = Matrix::CreateLookAt(position, forward, up);
 	this->perspectiveMatrix = Matrix::CreatePerspectiveFieldOfView(FOV, aspectRatio, nearZ, farZ);
@@ -56,6 +56,13 @@ void Camera::Rotate(float dx, float dy)
 void Camera::SetSpeedMultiplier(float xSpeed)
 {
 	speedMultiplier = xSpeed;
+}
+
+void Camera::UpdatePosOnly()
+{
+	const Vector3 target = position + direction;
+
+	viewMatrix = Matrix::CreateLookAt(position, target, up);
 }
 
 void Camera::Update()
