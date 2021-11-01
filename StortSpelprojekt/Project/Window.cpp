@@ -58,7 +58,6 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	case WM_MOUSEWHEEL:
 	{
 		Event::Scrolled(static_cast<int>(wParam));
-		Print((int)wParam);
 		break;
 	}
 
