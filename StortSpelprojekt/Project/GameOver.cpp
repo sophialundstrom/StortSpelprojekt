@@ -17,8 +17,8 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 	//ui = std::make_unique<UI>(window);
 	currentCanvas = new Canvas();
 	//currentCanvas->AddImage({ (float)clientWidth /2.f, (float)clientHeight / 2.f }, "GameOver", "GameOver.png", 2.f, true);
-	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "MainMenuButton", "MainMenuButton.png", 2.f, true);
-	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 4.f }, "Quit", "Quit.png", 2.f, true);
+	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "MainMenuButton", "MainMenuButton.png", 1.f, true);
+	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 4.f }, "Quit", "Quit.png", 1.f, true);
 
 	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "Name", 400, 150, UI::COLOR::GRAY, [this] { MainMenu(); }, hovering);
 	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 4.f }, "Quit", 400, 150, UI::COLOR::GRAY, [this] { QuitGame(); }, hovering2);
