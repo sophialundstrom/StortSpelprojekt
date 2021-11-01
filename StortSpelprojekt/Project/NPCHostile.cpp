@@ -44,7 +44,11 @@ void HostileNPC::Update()
     }
 
     for (int i = 0; i < arrows.size(); i++)
+    {
         arrows.at(i)->Update();
+        arrows.at(i)->GetCollider()->Update();
+    }
+
 
 	NPC::Update();
 }

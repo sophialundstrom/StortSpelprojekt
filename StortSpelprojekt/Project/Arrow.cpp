@@ -48,17 +48,16 @@ void Arrow::Update()
 		}
 		//Gravitation
 		direction.y -= 0.05f * Time::GetDelta();
-		SetPosition(GetPosition() + direction * speed * Time::GetDelta());
+		SetPosition(GetPosition() + (direction * speed * Time::GetDelta()));
 	}
-
 	else
 	{
 		SetPosition(0, -100, 0);
+		collider->SetPosition(collider->GetPosition().x, collider->GetPosition().y, collider->GetPosition().z - 0.5f);
 		isShot = false;
 		lifeLength = 0;
 	}
 
 	collider->Update();
 	Model::Update();
-
 }

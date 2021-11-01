@@ -197,16 +197,15 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 void Game::AddArrow(const std::string fileName)
 {
 	auto arrow = std::make_shared<Arrow>(fileName);
-	//scene.AddModel(fileName, arrow);
 	arrows.emplace_back(arrow);
-	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
 	arrow->GetCollider()->SetScale(0.15);
-	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z -0.5f };
-	arrow->GetCollider()->SetPosition(offset);
+	//arrow->GetCollider()->SetPosition(arrow->GetPosition().x, arrow->GetPosition().y, arrow->GetPosition().z - 0.5f);
+	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
+	modelRenderer.Bind(arrow);
+	shadowRenderer.Bind(arrow);
 	colliderRenderer.Bind(arrow->GetCollider());
 }
 
@@ -215,15 +214,15 @@ void Game::AddHostileArrow(const std::string fileName)
 	auto arrow = std::make_shared<Arrow>(fileName);
 	//scene.AddModel(fileName, arrow);
 	hostileArrows.emplace_back(arrow);
-	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
+
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
+	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	arrow->GetCollider()->SetScale(0.15);
-	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z };
-	offset += {0, 0, -0.5};
-	arrow->GetCollider()->SetPosition(offset);
+	
+	modelRenderer.Bind(arrow);
+	shadowRenderer.Bind(arrow);
 	colliderRenderer.Bind(arrow->GetCollider());
 }
 
@@ -418,7 +417,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
-
 	//Item
 	AddItem(WOOD, { -62, 23, -580 });
 
@@ -433,7 +431,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddHostileNPC("HostileCube", hostileArrows, player);
 	auto hostile = scene.Get<NPC>("HostileCube");
 	hostile->SetPosition(-40, 23, -580);
-	hostile->SetScale(1);
+	hostile->SetScale(2);
 	//hostile->GetCollider()->SetParent(hostile);
 	modelRenderer.Bind(hostile);
 	shadowRenderer.Bind(hostile);

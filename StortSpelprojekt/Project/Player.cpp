@@ -157,7 +157,10 @@ void Player::Update(HeightMap* heightMap)
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 
 	for (int i = 0; i < arrows.size(); i++)
+	{
 		arrows.at(i)->Update();
+		arrows.at(i)->GetCollider()->Update();
+	}
 
 	sceneCamera->MoveTowards(newCameraPos);
 
@@ -170,7 +173,7 @@ void Player::Update(HeightMap* heightMap)
 bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 {
 	bool collided = false;
-	if ((position - arrow->GetPosition()).Length() < 3.0f)
+	if ((position - arrow->GetCollider()->GetPosition()).Length() < 3.0f)
 	{
 		collided = true;
 		if (stats.healthPoints == 0)
