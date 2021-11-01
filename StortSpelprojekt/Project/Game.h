@@ -40,7 +40,6 @@ private:
     SkeletonRenderer skeletonRenderer;
     WaterRenderer waterRenderer;
 
-    float lastSave = 0;
     SaveStation saveStations[2];
 
     Terrain terrain;
