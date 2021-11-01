@@ -2,6 +2,7 @@
 #include "ImGuiWin.h"
 #include "DockSpacePanel.h"
 #include "ViewportPanel.h"
+#include "Camera.h"
 
 class Editor
 {
@@ -59,7 +60,7 @@ private:
 		dsTextureDesc.SampleDesc.Count = 1;
 		dsTextureDesc.SampleDesc.Quality = 0;
 		dsTextureDesc.Usage = D3D11_USAGE_DEFAULT;
-		dsTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+		dsTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 		dsTextureDesc.CPUAccessFlags = 0;
 		dsTextureDesc.MiscFlags = 0;
 
@@ -109,12 +110,17 @@ private:
 		Print("=======================================");
 
 		viewportPanel.SetResource(srv);
+
+		if (camera)
+			camera->SetPerspectiveMatrix(viewport.Width, viewport.Height);
 	}
 protected:
 	ID3D11RenderTargetView* rtv = nullptr;
 	ID3D11DepthStencilView* dsv = nullptr;
 	ID3D11ShaderResourceView* srv = nullptr;
 	D3D11_VIEWPORT viewport = {};
+
+	Camera* camera;
 
 	std::map<std::string, ImGuiWin> windows;
 
@@ -162,6 +168,8 @@ public:
 		viewportPanel.SetResizeCallback([this](float width, float height) { UpdateViewport(width, height); });
 		UpdateViewport(5, 5);
 	}
+
+	void InitCamera(Camera* camera) { this->camera = camera; }
 
 	virtual ~Editor() = default;
 };

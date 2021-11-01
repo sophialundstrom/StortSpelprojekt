@@ -7,11 +7,13 @@
 
 class ViewportPanel
 {
-private:
+public:
 	std::optional<std::function<void(float, float)>> resizeCallback;
 	Vector2 topLeft, bottomRight;
 	Vector2 viewportSize;
 	ID3D11ShaderResourceView* srv = nullptr;
+	bool focused = false;
+	bool hovered = false;
 public:
 	void SetResource(ID3D11ShaderResourceView* srv)
 	{
@@ -21,20 +23,35 @@ public:
 	float GetWidth() { return bottomRight.x - topLeft.x; }
 	float GetHeight() { return bottomRight.y - topLeft.y; }
 
+	bool Hovered() { return hovered; }
+	bool Focused() { return focused; }
+
 	Vector2 GetMousePosition()
 	{
-		POINT cursor;
-		GetCursorPos(&cursor);
-		ScreenToClient(GetActiveWindow(), &cursor);
+		auto cursor = ImGui::GetMousePos();
 
-		return Vector2(cursor.x - topLeft.x, cursor.y - topLeft.y);
+		std::cout << "=====================\n";
+
+		std::cout << "CURSOR: " << cursor.x << " " << cursor.y << std::endl;
+
+		std::cout << "TOP LEFT: " << topLeft.x << " " << topLeft.y << std::endl;
+
+		auto temp = Vector2(cursor.x - topLeft.x, cursor.y - topLeft.y);
+
+		std::cout << "WINDOW RELATIVE: " << temp.x << " " << temp.y << std::endl;
+
+		return temp;
 	}
 
 	void SetResizeCallback(const std::function<void(float, float)>& callback) { resizeCallback = callback; }
 
 	void Render()
 	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 		ImGui::Begin("Viewport");
+
+		focused = ImGui::IsWindowFocused();
+		hovered = ImGui::IsWindowHovered();
 
 		const auto viewportOffset = ImGui::GetCursorPos(); // Include tab bar
 		ImVec2 minBound = ImGui::GetWindowPos();
@@ -59,7 +76,5 @@ public:
 
 		if (srv)
 			ImGui::Image(srv, { viewportSize.x, viewportSize.y });
-
-		ImGui::End();
 	}
 };

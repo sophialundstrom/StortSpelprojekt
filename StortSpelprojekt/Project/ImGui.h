@@ -30,10 +30,10 @@ struct ImGUI
 		ImGui::RenderPlatformWindowsDefault();
 	}
 
-    static void BeginGizmo()
+    static void BeginGizmo(float width, float height)
     {
         ImGuizmo::SetDrawlist();
-        ImGuizmo::SetRect(0, 0, Graphics::Inst().GetViewport().Width, Graphics::Inst().GetViewport().Height);
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, width, height);
     }
 
     static void Gizmo(Matrix& matrix, const Matrix& viewMatrix, const Matrix& perspectiveMatrix, ImGuizmo::OPERATION operation)
