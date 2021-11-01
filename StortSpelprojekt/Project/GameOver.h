@@ -16,7 +16,6 @@ private:
 	ParticleRenderer particleRenderer;
 	ModelRenderer modelRenderer;
 	ShadowRenderer shadowRenderer;
-	std::unique_ptr<UI> ui;
 	APPSTATE gameStateStatus = APPSTATE::NO_CHANGE;
 	bool goToMenu = false;
 public:
