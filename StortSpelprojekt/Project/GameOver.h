@@ -25,6 +25,7 @@ public:
 	GameOver(UINT clientWidth, UINT clientHeight, HWND window);
 	~GameOver();
 
+	void Render();
 	void Initialize();
 	void MainMenu();
 	void QuitGame();

@@ -14,7 +14,7 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer(DEFERRED)
 {
 	//{ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "C", 250, 250, UI::COLOR::GRAY, [this] { Test(); }, TestFuncOptions
-	ui = std::make_unique<UI>(window);
+	//ui = std::make_unique<UI>(window);
 	currentCanvas = new Canvas();
 	//currentCanvas->AddImage({ (float)clientWidth /2.f, (float)clientHeight / 2.f }, "GameOver", "GameOver.png", 2.f, true);
 	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "MainMenuButton", "MainMenuButton.png", 2.f, true);
@@ -22,6 +22,8 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 
 	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "Name", 400, 150, UI::COLOR::GRAY, [this] { MainMenu(); }, hovering);
 	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 4.f }, "Quit", 400, 150, UI::COLOR::GRAY, [this] { QuitGame(); }, hovering2);
+
+	(void)Run();
 }
 
 GameOver::~GameOver()
@@ -65,15 +67,17 @@ void GameOver::QuitGame()
 	gameStateStatus = APPSTATE::EXIT;
 }
 
-
-
-APPSTATE GameOver::Run()
+void GameOver::Render()
 {
 	Graphics::Inst().BeginFrame();
 	currentCanvas->Render();
 	Graphics::Inst().EndFrame();
+}
 
-	currentCanvas->Update();
+APPSTATE GameOver::Run()
+{
+	//scene.Update();
+	Render();
 
 	if (Event::KeyIsPressed('M'))
 		gameStateStatus = APPSTATE::MAIN_MENU;
