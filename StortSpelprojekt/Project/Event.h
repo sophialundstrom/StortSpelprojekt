@@ -27,6 +27,9 @@ private:
 	static constexpr unsigned int keys = 256;
 	static std::bitset<keys> keystates;
 
+	static bool scrolledUp;
+	static bool scrolledDown;
+
 	//STATE
 	static bool movement;
 public:
@@ -44,6 +47,15 @@ public:
 	static void OnRightClick(int x, int y) { rightIsPressed = true; mc = { x, y }; }
 	static void OnRightRelease() { rightIsPressed = false; }
 
+	static void OnMouseScrollUp() { scrolledUp = true; }
+	static void OnMouseScrollDown() { scrolledDown = true; }
+	static bool ScrolledUp() { return scrolledUp; }
+	static bool ScrolledDown() { return scrolledDown; }
+
+	static void Scrolled(int wParam) { if (wParam < 0) OnMouseScrollDown(); else if (wParam > 0) OnMouseScrollUp(); }
+	static void ResetScroll() { scrolledDown = false; scrolledUp = false; }
+
+
 	//KEYBOARD
 	static bool KeyIsPressed(unsigned char keycode) { return keystates[keycode]; }
 	static void OnKeyPressed(unsigned char keycode) { keystates.set(keycode, true); }
@@ -54,7 +66,8 @@ public:
 	static void DisableMovement() { movement = false; }
 	static void EnableMovement() { movement = true; }
 };
-
+inline bool Event::scrolledDown;
+inline bool Event::scrolledUp;
 inline RawDelta Event::rd;
 inline MouseCoords Event::mc;
 inline bool Event::leftIsPressed;

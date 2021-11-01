@@ -50,7 +50,8 @@ private:
 
 	std::vector<Particle> particles;
 	ID3D11Buffer* vertexBuffer = nullptr;
-	Texture* texture;
+	Texture* firstTexture;
+	Texture* secondTexture;
 
 	bool done = false;
 	bool stopSpawn = false;
@@ -70,35 +71,40 @@ public:
 	void Update();
 
 	//SET
-	void SetType(const EmitterType& type)				{ this->type = type; }
-	void SetSize(float size)							{ this->size = size; }
-	void SetParticleExtents(Vector2 extents)			{ this->particleExtents = extents; }
-	void SetParticleExtents(float width, float height)	{ this->particleExtents = Vector2(width, height); }
-	void SetParticleWidth(float value)					{ this->particleExtents.x = value; }
-	void SetParticleHeight(float value)					{ this->particleExtents.y = value; }
-	void SetMinVelocity(float value)					{ this->minVelocity = value; }
-	void SetMaxVelocity(float value)					{ this->maxVelocity = value; }
-	void SetMaxParticles(unsigned int amount)			{ this->maxParticles = amount; }
-	void SetParticlesLifetime(float amount)				{ this->particlesLifetime = amount; }
-	void SetTimeBetweenPartilces(float amount)			{ this->timeBetweenParticles = amount; }
-	void SetPosition(Vector3 pos)					    { this->position = pos; }
-	void StartSpawn()									{ this->stopSpawn = false; this->done = false; }
-	void StopSpawn()									{ this->stopSpawn = true;  }
-	bool IsDone()										{ return this->done; }
-	void ChangeTexture(std::string path, std::string fileName);
+	void SetType(const EmitterType& type) { this->type = type; }
+	void SetSize(float size) { this->size = size; }
+	void SetParticleExtents(Vector2 extents) { this->particleExtents = extents; }
+	void SetParticleExtents(float width, float height) { this->particleExtents = Vector2(width, height); }
+	void SetParticleWidth(float value) { this->particleExtents.x = value; }
+	void SetParticleHeight(float value) { this->particleExtents.y = value; }
+	void SetMinVelocity(float value) { this->minVelocity = value; }
+	void SetMaxVelocity(float value) { this->maxVelocity = value; }
+	void SetMaxParticles(unsigned int amount) { this->maxParticles = amount; }
+	void SetParticlesLifetime(float amount) { this->particlesLifetime = amount; }
+	void SetTimeBetweenPartilces(float amount) { this->timeBetweenParticles = amount; }
+	void SetPosition(Vector3 pos) { this->position = pos; }
+	void StartSpawn() { this->stopSpawn = false; this->done = false; }
+	void StopSpawn() { this->stopSpawn = true; }
+	bool IsDone() { return this->done; }
+	void ChangeFirstTexture(std::string path, std::string fileName);
+	void ChangeSecondTexture(std::string path, std::string fileName);
 
-	ID3D11ShaderResourceView* GetTexture()			    { return texture->Get(); }
-	std::string GetTexturePath()						{ return texture->GetPath(); }
-	std::string GetTextureFile()						{ return texture->GetFile(); }
+	ID3D11ShaderResourceView* GetFirstTexture() { return firstTexture->Get(); }
+	std::string GetFirstTexturePath() { return firstTexture->GetPath(); }
+	std::string GetFirstTextureFile() { return firstTexture->GetFile(); }
 
-	Vector2 GetParticleExtents() const		{ return this->particleExtents; }
-	EmitterType GetType() const				{ return this->type; }
-	float GetSize() const					{ return this->size; }
-	float GetParticleWidth() const			{ return this->particleExtents.x; }
-	float GetParticleHeight() const			{ return this->particleExtents.y; }
-	float GetMinVelocity() const			{ return this->minVelocity; }
-	float GetMaxVelocity() const			{ return this->maxVelocity; }
-	unsigned int GetMaxParticles() const	{ return this->maxParticles; }
-	float GetParticlesLifetime() const		{ return this->particlesLifetime; }
-	float GetTimeBetweenParticles() const	{ return this->timeBetweenParticles; }
+	ID3D11ShaderResourceView* GetSecondTexture() { return secondTexture->Get(); }
+	std::string GetSecondTexturePath() { return secondTexture->GetPath(); }
+	std::string GetSecondTextureFile() { return secondTexture->GetFile(); }
+
+	Vector2 GetParticleExtents() const { return this->particleExtents; }
+	EmitterType GetType() const { return this->type; }
+	float GetSize() const { return this->size; }
+	float GetParticleWidth() const { return this->particleExtents.x; }
+	float GetParticleHeight() const { return this->particleExtents.y; }
+	float GetMinVelocity() const { return this->minVelocity; }
+	float GetMaxVelocity() const { return this->maxVelocity; }
+	unsigned int GetMaxParticles() const { return this->maxParticles; }
+	float GetParticlesLifetime() const { return this->particlesLifetime; }
+	float GetTimeBetweenParticles() const { return this->timeBetweenParticles; }
 };
