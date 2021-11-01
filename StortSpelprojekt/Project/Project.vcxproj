@@ -163,6 +163,7 @@
     <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Grid.cpp" />
+    <ClCompile Include="Heap.cpp" />
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="FightQuest.h" />
     <ClInclude Include="GameLoader.h" />
     <ClInclude Include="Grid.h" />
+    <ClInclude Include="Heap.h" />
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Item.h" />
