@@ -20,10 +20,10 @@ struct DynamicPlane
 
 	DynamicPlane(UINT subdivisions, UINT size)
 	{
-		const UINT cells = (UINT)pow(2, subdivisions);
-		const UINT numTris = (UINT)pow(2, subdivisions * 2 + 1);
+		const UINT cells = pow(2, subdivisions);
+		const UINT numTris = pow(2, subdivisions * 2 + 1);
 		const float triSize = (float)size / cells;
-		const float texSize = 1.0f / cells;
+		const float texSize = 1.0 / cells;
 
 		Vector3 position;
 		Vector2 texCoords;
@@ -56,11 +56,11 @@ struct DynamicPlane
 		}
 
 		//VERTICES
-		CreateVertexBuffer(vertexBuffer, (UINT)sizeof(Vertex), (UINT)vertices.size() * sizeof(Vertex), vertices.data());
+		CreateVertexBuffer(vertexBuffer, sizeof(Vertex), vertices.size() * sizeof(Vertex), vertices.data());
 
 		//INDICES
-		indexCount = (UINT)Indices.size();
-		CreateIndexBuffer(indexBuffer, (UINT)Indices.size(), Indices.data());
+		indexCount = Indices.size();
+		CreateIndexBuffer(indexBuffer, Indices.size(), Indices.data());
 	}
 
 	~DynamicPlane()

@@ -25,9 +25,6 @@ class ParticleRenderer : public Renderer
 	ID3D11VertexShader* vertexShader = nullptr;
 	ID3D11GeometryShader* geometryShader = nullptr;
 	ID3D11PixelShader* pixelShader = nullptr;
-	ID3D11Buffer* lifeTimeBuffer = nullptr;
-
-
 
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
@@ -37,7 +34,7 @@ public:
 		//BUFFERS
 		CreateBuffer(extentsBuf);
 		CreateBuffer(matrixBuf, sizeof(Matrix));
-		CreateBuffer(lifeTimeBuffer);
+		
 
 		//SHADERS
 		std::string byteCode;
@@ -52,7 +49,7 @@ public:
 			if (!LoadShader(pixelShader, forward_ps_path))
 				return;
 		}
-
+			
 		else
 		{
 			if (!LoadShader(pixelShader, deferred_ps_path))
@@ -65,6 +62,8 @@ public:
 		{
 			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"DIRECTION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"TEXTURECOORDS", 0,DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			/*{"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},*/
 			{"LIFETIME", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			{"VELOCITY", 0, DXGI_FORMAT_R32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 		};
@@ -122,9 +121,6 @@ public:
 
 			UpdateBuffer(extentsBuf, particleSystem->GetParticleExtents());
 			BindBuffer(extentsBuf, Shader::GS, 2);
-
-			UpdateBuffer(lifeTimeBuffer, particleSystem->GetParticlesLifetime());
-			BindBuffer(lifeTimeBuffer, Shader::VS);
 
 			particleSystem->Draw();
 		}

@@ -68,7 +68,7 @@ private:
     void HowToPlay();
     void BacktoPause();
     void MainMenu();
-
+  
     bool mainMenu = false;
 
     void RemoveItem(const std::string name);

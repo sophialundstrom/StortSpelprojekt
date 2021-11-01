@@ -27,7 +27,7 @@ struct Skeleton
 			if (joint.name == name)
 				return joint;
 
-		return joints[0];
+		return Joint();
 	}
 
 	void SetVertex(const aiNode* node, std::vector<Vector3>& vertices)
@@ -67,9 +67,9 @@ struct Skeleton
 
 		std::vector<Vector3> vertices;
 		SetVertex(root, vertices);
-		UpdateDynamicVertexBuffer(jointBuffer, (UINT)vertices.size() * sizeof(Vector3), vertices.data());
+		UpdateDynamicVertexBuffer(jointBuffer, vertices.size() * sizeof(Vector3), vertices.data());
 
-		vertexCount = (UINT)vertices.size();
+		vertexCount = vertices.size();
 
 		tempIndex = -1;
 	}

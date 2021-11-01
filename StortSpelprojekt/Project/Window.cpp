@@ -32,7 +32,6 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM l
 
 LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	Event::ResetScroll();
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
 		return true;
 
@@ -52,13 +51,6 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	case WM_KEYUP:
 	{
 		Event::OnKeyReleased(static_cast<unsigned char>(wParam));
-		break;
-	}
-
-	case WM_MOUSEWHEEL:
-	{
-		Event::Scrolled(static_cast<int>(wParam));
-		Print((int)wParam);
 		break;
 	}
 

@@ -30,8 +30,6 @@ public:
 	void Rotate(float dx, float dy);
 	void SetSpeedMultiplier(float xSpeed);
 
-	void UpdatePosOnly();
-
 	void Update();
 
 

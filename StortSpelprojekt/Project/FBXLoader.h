@@ -36,7 +36,7 @@ public:
 
 		{
 			std::atomic<int> fbxLeft;
-			fbxLeft = (int)numFBX;
+			fbxLeft = numFBX;
 			
 			ThreadPool pool(10);
 			

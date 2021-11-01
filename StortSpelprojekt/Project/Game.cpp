@@ -10,9 +10,20 @@ void Game::Update()
 	QuestLog::Inst().Update();
 
 	auto friendly = scene.Get<NPC>("Staff");
+	auto hostile = scene.Get<NPC>("HostileCube");
 
 	friendly->Collided(*player);
 
+	for(int i = 0; i < arrows.size(); i++)
+	{
+		hostile->ProjectileCollided(arrows[i]);
+	}
+
+	for (int i = 0; i < hostileArrows.size(); i++)
+	{
+		player->ProjectileCollided(hostileArrows[i]);
+	}
+	
 	scene.Update();
 
 	CheckItemCollision();
@@ -33,6 +44,8 @@ void Game::Render()
 	particleRenderer.Render();
 
 	modelRenderer.Render();
+
+	animatedModelRenderer.Render();
 
 	colliderRenderer.Render();
 
@@ -94,7 +107,7 @@ void Game::MainMenu()
 void Game::Initialize()
 {
 	//LOAD SCENE
-	FBXLoader levelLoader("Models");
+	FBXLoader meshLoader("Models");
 
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
@@ -180,14 +193,14 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 void Game::AddArrow(const std::string fileName)
 {
 	auto arrow = std::make_shared<Arrow>(fileName);
-	scene.AddModel(fileName, arrow);
+	//scene.AddModel(fileName, arrow);
 	arrows.emplace_back(arrow);
-	modelRenderer.Bind(scene.Get<Model>(fileName));
-	shadowRenderer.Bind(scene.Get<Model>(fileName));
+	modelRenderer.Bind(arrow);
+	shadowRenderer.Bind(arrow);
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetScale(0.15f);
+	arrow->GetCollider()->SetScale(0.15);
 	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z -0.5f };
 	arrow->GetCollider()->SetPosition(offset);
 	colliderRenderer.Bind(arrow->GetCollider());
@@ -203,7 +216,7 @@ void Game::AddHostileArrow(const std::string fileName)
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetScale(0.15f);
+	arrow->GetCollider()->SetScale(0.15);
 	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z };
 	offset += {0, 0, -0.5};
 	arrow->GetCollider()->SetPosition(offset);
@@ -282,6 +295,7 @@ void Game::CheckItemCollision()
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
+				UpdateInventoryUI();
 			}
 		}
 	}
@@ -295,6 +309,7 @@ void Game::UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect)
 void Game::UpdateInventoryUI()
 {
 	auto canvas = canvases["INGAME"];
+
 	canvas->UpdateText("WOOD", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
 	canvas->UpdateText("STONE", std::to_string(player->Inventory().NumOf(RESOURCE::STONE)));
 	canvas->UpdateText("FOOD", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));
@@ -321,8 +336,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
 	modelRenderer(DEFERRED, true),
 	particleRenderer(DEFERRED),
-	colliderRenderer(DEFERRED),
 	terrainRenderer(DEFERRED),
+	colliderRenderer(DEFERRED),
 	animatedModelRenderer(DEFERRED, true),
 	water(5000)
 {
@@ -334,6 +349,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//INGAME CANVAS
 	auto ingameCanvas = new Canvas();
+
 	ingameCanvas->AddImage({ 250, 365 }, "QuestBorder", "QuestBorder.png");
 	ingameCanvas->AddText({ 250, 65 }, "AQ", "Active Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
@@ -369,6 +385,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	for (int i = 0; i < 3; i++)
 		AddArrow("Arrow");
 
+	for (int i = 0; i < 3; i++)
+	{
+		AddHostileArrow("Arrow");
+	}
+
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
 	scene.AddModel("Player", player);
@@ -383,34 +404,45 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "", "HouseTexture"};
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3(5,5,5));
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -72, 20.5f, -566 });
+	building->SetScale(1.7f, 1.7f, 1.7f);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
 	shadowRenderer.Bind(building);
-	building->SetPosition(10, -3, 60);
-	building->SetRotation(0, -PI_DIV2, 0);
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
 
 	//Item
-	AddItem(RESOURCE::WOOD, { -10, 1, 20 });
+	AddItem(WOOD, { -62, 23, -580 });
 
 	scene.AddFriendlyNPC("Staff");
 	auto friendly = scene.Get<NPC>("Staff");
-	friendly->SetPosition(40, 150, -30);
+
+	friendly->SetPosition(-50, 23, -580);
+
 	friendly->SetScale(10);
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
+	scene.AddHostileNPC("HostileCube", hostileArrows, player);
+	auto hostile = scene.Get<NPC>("HostileCube");
+	hostile->SetPosition(-40, 23, -580);
+	hostile->SetScale(1);
+	//hostile->GetCollider()->SetParent(hostile);
+	modelRenderer.Bind(hostile);
+	shadowRenderer.Bind(hostile);
+	colliderRenderer.Bind(hostile->GetCollider());
+
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
-	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ 0,30,0 });
+	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ -70,70,-580 });
 	particleRenderer.Bind(particleSystem);
 
 	//ANIMATION
 	auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
+	animated->SetPosition(-30, 25, -580);
 	scene.AddDrawable("AnimatedModel", animated);
 	skeletonRenderer.Bind(animated);
 	animatedModelRenderer.Bind(animated);
@@ -489,7 +521,26 @@ APPSTATE Game::Run()
 
 		if (Event::KeyIsPressed('R'))
 		{
+			building->effect->Bind(scene, particleRenderer);
 			building->Upgrade();
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('T'))
+		{
+			player->TakeDamage();
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('O'))
+		{
+			scene.Get<AnimatedModel>("AnimatedModel")->PlayAnimation("Take 001");
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('Y'))
+		{
+			player->AddHealthPoint();
 			lastClick = Time::Get();
 		}
 
@@ -499,6 +550,7 @@ APPSTATE Game::Run()
 			player->AddHealthPoint();
 			lastClick = Time::Get();
 		}
+
 	}
 
 	if (mainMenu)

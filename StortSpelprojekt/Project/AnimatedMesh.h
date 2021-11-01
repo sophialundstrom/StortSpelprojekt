@@ -64,7 +64,7 @@ struct AnimatedMesh
 			}
 		}
 
-		vertexCount = (UINT)vertices.size();
+		vertexCount = vertices.size();
 
 		bufferID = Resources::Inst().NumBuffers();
 

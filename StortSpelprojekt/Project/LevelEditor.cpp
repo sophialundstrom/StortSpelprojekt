@@ -11,7 +11,7 @@ void LevelEditor::BindDrawables()
 		if (model)
 		{
 			scene.GetObjectNames().push_back(name);
-			model->SetID((int)scene.GetObjectNames().size());
+			model->SetID(scene.GetObjectNames().size());
 			modelRenderer.Bind(model);
 			idRenderer.Bind(model);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
@@ -28,7 +28,7 @@ void LevelEditor::BindDrawables()
 			volume->SetScale(box->GetScale());
 			scene.GetDrawables()[name] = volume;
 			scene.GetObjectNames().push_back(name);
-			volume->SetID((int)scene.GetObjectNames().size());
+			volume->SetID(scene.GetObjectNames().size());
 			volumeRenderer.Bind(volume);
 			idRenderer.Bind(volume);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
@@ -45,7 +45,7 @@ void LevelEditor::BindDrawables()
 			volume->SetScale(sphere->GetScale());
 			scene.GetDrawables()[name] = volume;
 			scene.GetObjectNames().push_back(name);
-			volume->SetID((int)scene.GetObjectNames().size());
+			volume->SetID(scene.GetObjectNames().size());
 			volumeRenderer.Bind(volume);
 			idRenderer.Bind(volume);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
@@ -75,7 +75,7 @@ void LevelEditor::Load(const std::string& file)
 	fileName = scene.AddModel(fileName, path.string());
 	auto model = scene.Get<Model>(fileName);
 	scene.GetObjectNames().push_back(model->GetName());
-	model->SetID((int)scene.GetObjectNames().size());
+	model->SetID(scene.GetObjectNames().size());
 	idRenderer.Bind(model);
 	modelRenderer.Bind(model);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
@@ -103,7 +103,7 @@ void LevelEditor::DuplicateObject()
 		std::string modelName = model->GetName();
 
 		scene.AddModel(modelName, model);
-		model->SetID((int)scene.GetObjectNames().size());
+		model->SetID(scene.GetObjectNames().size());
 		scene.GetObjectNames().push_back(modelName);
 		idRenderer.Bind(model);
 		modelRenderer.Bind(model);
@@ -136,7 +136,7 @@ void LevelEditor::CreateBoundingBox()
 	scene.AddBoundingVolume(name, box);
 	selectedObject = name;
 
-	box->SetID((int)scene.GetObjectNames().size());
+	box->SetID(scene.GetObjectNames().size());
 
 	windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", name);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
@@ -170,7 +170,7 @@ void LevelEditor::CreateBoundingSphere()
 	scene.AddBoundingVolume(name, sphere);
 	selectedObject = name;
 
-	sphere->SetID((int)scene.GetObjectNames().size());
+	sphere->SetID(scene.GetObjectNames().size());
 
 	windows["GAME OBJECT"].SetValue<TextComponent, std::string>("ObjectName", name);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
@@ -381,7 +381,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("X-axis", -30, 30, 0, false);
 		window.AddSliderFloatComponent("Y-axis", -30, 30, 0, false);
 		window.AddSliderFloatComponent("Z-axis", -30, 30, 0, false);
-		window.AddCheckBoxComponent("Uniform scaling");
+		window.AddCheckBoxComponent("Uniform scaling", false);
 		window.AddButtonComponent("Delete", 120, 30);
 		window.AddButtonComponent("Duplicate", 120, 30);
 	}
