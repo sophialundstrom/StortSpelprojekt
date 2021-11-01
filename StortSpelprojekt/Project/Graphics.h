@@ -31,6 +31,7 @@ public:
 	~Graphics();
 
 	void BeginFrame();
+	void BeginFrame(ID3D11RenderTargetView* rtv, ID3D11DepthStencilView* dsv, D3D11_VIEWPORT viewport);
 	void EndFrame() { swapChain->Present(0, 0); }
 
 	void ActivateWireframe() { context->RSSetState(wireframeState); }

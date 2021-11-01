@@ -182,6 +182,34 @@ void LevelEditor::CreateBoundingSphere()
 	Print("BoundingSphere Created!");
 }
 
+<<<<<<< Updated upstream
+=======
+void LevelEditor::GizmoEdit(std::string object)
+{
+	ImGuizmo::SetID(1);
+
+	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
+	static bool useSnap = false;
+	static float snap[3] = { 1.f, 1.f, 1.f };
+	static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
+	static float boundsSnap[] = { 0.1f, 0.1f, 0.1f };
+	static bool boundSizing = false;
+	static bool boundSizingSnap = false;
+	auto model = scene.Get<Drawable>(object);
+
+	if (ImGui::IsKeyPressed(1))
+		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+	if (ImGui::IsKeyPressed(2))
+		mCurrentGizmoOperation = ImGuizmo::ROTATE;
+	if (ImGui::IsKeyPressed(3))
+		mCurrentGizmoOperation = ImGuizmo::SCALE;
+
+	ImGuiIO& io = ImGui::GetIO();
+	float viewManipulateTop = 0;
+	float viewManipulateRight = io.DisplaySize.x;
+}
+
+>>>>>>> Stashed changes
 void LevelEditor::Update()
 {
 	if (Event::LeftIsClicked() && !ImGui::GetIO().WantCaptureMouse)
@@ -323,13 +351,7 @@ void LevelEditor::Update()
 
 void LevelEditor::Render()
 {
-	
-	BeginFrame();
-
-	//TO DO: ADD PARTICLE RENDER PASS (IN OPEN WORLD)
-	//ADD RENDERER THAT RENDERS TO TEXTURE THAT CAN BE SHOWN AS "INGAME"-PREVIEW IN MATERIAL EDITOR 
-	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
-	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
+	BeginViewportFrame();
 
 	terrainRenderer.Render(*terrain);
 
@@ -338,6 +360,20 @@ void LevelEditor::Render()
 	modelRenderer.Render();
 	
 	volumeRenderer.Render();
+
+	BeginFrame();
+
+	if (!selectedObject.empty())
+	{
+		ImGUI::BeginGizmo();
+		auto selected = scene.Get<Drawable>(selectedObject);
+
+		Matrix matrix = selected->GetMatrix().Transpose();
+		
+		ImGUI::Gizmo(matrix, scene.GetCamera()->GetViewMatrix(), scene.GetCamera()->GetProjectionMatrix(), ImGuizmo::TRANSLATE);
+
+		selected->SetMatrix(matrix);
+	}
 
 	EndFrame();
 

@@ -45,6 +45,6 @@ public:
 	Vector3 GetDirection() const { return this->direction; }
 	Vector3 GetPosition() const { return this->position; }
 	Matrix GetMatrix() const { return (viewMatrix * perspectiveMatrix).Transpose(); }
-	Matrix GetProjectionMatrix() const { return perspectiveMatrix; }
-	Matrix GetViewMatrix() const { return viewMatrix; }
+	const Matrix& GetProjectionMatrix() const { return perspectiveMatrix; }
+	const Matrix& GetViewMatrix() const { return viewMatrix; }
 };
