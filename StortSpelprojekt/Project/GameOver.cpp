@@ -13,15 +13,19 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(DEFERRED, true),
 	particleRenderer(DEFERRED)
 {
-	//{ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "C", 250, 250, UI::COLOR::GRAY, [this] { Test(); }, TestFuncOptions
-	//ui = std::make_unique<UI>(window);
 	currentCanvas = new Canvas();
-	//currentCanvas->AddImage({ (float)clientWidth /2.f, (float)clientHeight / 2.f }, "GameOver", "GameOver.png", 2.f, true);
-	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "MainMenuButton", "MainMenuButton.png", 1.f, true);
-	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 4.f }, "Quit", "Quit.png", 1.f, true);
+	//QUIT
+	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 1.4f }, "Quit", 400, 150, UI::COLOR::GRAY, [this] { QuitGame(); }, hovering2);
+	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 1.4f }, "Quit", "Quit.png", 1.f, true);
 
+	//MAINMENU
 	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "Name", 400, 150, UI::COLOR::GRAY, [this] { MainMenu(); }, hovering);
-	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 4.f }, "Quit", 400, 150, UI::COLOR::GRAY, [this] { QuitGame(); }, hovering2);
+	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "MainMenuButton", "MainMenuButton.png", 1.f, true);
+
+	//GAMEOVERTEXT
+	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 5.5f }, "GameOverText", "GameOverText.png", 2.f, true);
+
+
 
 	(void)Run();
 }

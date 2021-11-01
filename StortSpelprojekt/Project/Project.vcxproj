@@ -186,6 +186,7 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="Win.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -285,6 +286,7 @@
     <ClInclude Include="VolumeRenderer.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="WaterRenderer.h" />
+    <ClInclude Include="Win.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

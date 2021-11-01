@@ -562,6 +562,9 @@ APPSTATE Game::Run()
 	if (Event::KeyIsPressed('M'))
 		return APPSTATE::MAIN_MENU;
 
+	if (Event::KeyIsPressed('X'))
+		return APPSTATE::GAMEOVER;
+
 	if (player->GetGameOver() == true)
 	{
 		std::cout << "DEAD!!!" << std::endl;
