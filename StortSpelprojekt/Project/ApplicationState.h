@@ -4,7 +4,7 @@
 
 #include <map>
 
-enum class APPSTATE { NO_CHANGE, MAIN_MENU, GAME, LEVEL, PARTICLE, EXIT, GAMEOVER };
+enum class APPSTATE { NO_CHANGE, MAIN_MENU, GAME, LEVEL, PARTICLE, EXIT, GAMEOVER, WIN};
 
 class ApplicationState 
 {

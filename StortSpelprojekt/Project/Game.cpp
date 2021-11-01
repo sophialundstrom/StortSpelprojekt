@@ -565,6 +565,12 @@ APPSTATE Game::Run()
 	if (Event::KeyIsPressed('X'))
 		return APPSTATE::GAMEOVER;
 
+	if (questLog.get()->GetActiveQuest() == 0)
+	{
+		std::cout << "WIN!!!" << std::endl;
+		return APPSTATE::WIN;
+	}
+
 	if (player->GetGameOver() == true)
 	{
 		std::cout << "DEAD!!!" << std::endl;
