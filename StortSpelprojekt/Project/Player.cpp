@@ -184,6 +184,7 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 			stats.healthPoints--;
 			std::cout << "GAME OVER" << std::endl;
 			UpdateHealthUI();
+			gameOver = true;
 			return collided;
 		}
 		stats.healthPoints--;

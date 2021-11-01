@@ -163,6 +163,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLoader.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Heap.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
     <ClInclude Include="GameLoader.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="IDRenderer.h" />

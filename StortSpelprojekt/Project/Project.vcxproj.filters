@@ -251,6 +251,9 @@
     <ClCompile Include="Heap.cpp">
       <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
     </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -543,6 +546,9 @@
     </ClInclude>
     <ClInclude Include="Heap.h">
       <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
