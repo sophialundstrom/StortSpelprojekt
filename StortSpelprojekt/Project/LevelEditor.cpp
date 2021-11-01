@@ -182,34 +182,6 @@ void LevelEditor::CreateBoundingSphere()
 	Print("BoundingSphere Created!");
 }
 
-<<<<<<< Updated upstream
-=======
-void LevelEditor::GizmoEdit(std::string object)
-{
-	ImGuizmo::SetID(1);
-
-	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
-	static bool useSnap = false;
-	static float snap[3] = { 1.f, 1.f, 1.f };
-	static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
-	static float boundsSnap[] = { 0.1f, 0.1f, 0.1f };
-	static bool boundSizing = false;
-	static bool boundSizingSnap = false;
-	auto model = scene.Get<Drawable>(object);
-
-	if (ImGui::IsKeyPressed(1))
-		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-	if (ImGui::IsKeyPressed(2))
-		mCurrentGizmoOperation = ImGuizmo::ROTATE;
-	if (ImGui::IsKeyPressed(3))
-		mCurrentGizmoOperation = ImGuizmo::SCALE;
-
-	ImGuiIO& io = ImGui::GetIO();
-	float viewManipulateTop = 0;
-	float viewManipulateRight = io.DisplaySize.x;
-}
-
->>>>>>> Stashed changes
 void LevelEditor::Update()
 {
 	if (Event::LeftIsClicked() && !ImGui::GetIO().WantCaptureMouse)
