@@ -94,14 +94,14 @@ UI::~UI()
 {
 	RemoveFontResourceA("Fonts/HighLevel.ttf");
 
+	if (imageFactory)
+		imageFactory->Release();
 	if (UIFactory)
 		UIFactory->Release();
 	if (UIRenderTarget)
 		UIRenderTarget->Release();
 	if (writeFactory)
 		writeFactory->Release();
-	if (imageFactory)
-		imageFactory->Release();
 
 	for (auto& [color, brush] : brushes)
 		brush->Release();
