@@ -427,7 +427,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	friendly->SetPosition(-50, 23, -580);
 
-	friendly->SetScale(10);
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 

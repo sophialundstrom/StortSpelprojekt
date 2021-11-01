@@ -7,14 +7,22 @@ class BuildingEffect
 public:
 	BuildingEffect(Vector3 position)
 	{
-		p1 = std::make_shared<ParticleSystem>("smoke3.ps");
-		p1->SetPosition(position);
-		p2 = std::make_shared<ParticleSystem>("smoke3.ps");
-		p2->SetPosition(position);
-		p3 = std::make_shared<ParticleSystem>("smoke3.ps");
-		p3->SetPosition(position);
-		p4 = std::make_shared<ParticleSystem>("smoke3.ps");
-		p4->SetPosition(position);
+		p1 = std::make_shared<ParticleSystem>("testSmoke.ps");
+		p1->SetPosition(Vector3(position.x - 4, position.y + 1, position.z - 1));
+		p2 = std::make_shared<ParticleSystem>("testSmoke.ps");
+		p2->SetPosition(Vector3(position.x - 4, position.y - 1, position.z - 1));
+		p3 = std::make_shared<ParticleSystem>("testSmoke.ps");
+		p3->SetPosition(Vector3(position.x - 4, position.y, position.z + 1));
+		p4 = std::make_shared<ParticleSystem>("testSmoke.ps");
+		p4->SetPosition(Vector3(position.x - 4, position.y + 2, position.z - 2));
+		/*p5 = std::make_shared<ParticleSystem>("testSmoke.ps");
+		p5->SetPosition(Vector3(position.x - 4, position.y + 1, position.z - 1));
+		p6 = std::make_shared<ParticleSystem>("testSmoke.ps");
+		p6->SetPosition(Vector3(position.x - 4, position.y - 1, position.z - 1));
+		p7 = std::make_shared<ParticleSystem>("testSmoke.ps");
+		p7->SetPosition(Vector3(position.x - 4, position.y, position.z + 1));
+		p8 = std::make_shared<ParticleSystem>("testSmoke.ps");
+		p8->SetPosition(Vector3(position.x - 4, position.y + 2, position.z - 2));*/
 	}
 	void Unbind(Scene& scene, ParticleRenderer& renderer)
 	{

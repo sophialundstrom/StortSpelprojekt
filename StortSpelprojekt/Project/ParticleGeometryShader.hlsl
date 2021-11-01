@@ -16,14 +16,14 @@ cbuffer EXTENTS : register(b2)
 struct GS_INPUT
 {
     float4 position : SV_POSITION;
-   // float3 color : COLOR;
+    float lifetime : LIFETIME;
 };
 
 struct GS_OUTPUT
 {
     float4 position : SV_POSITION;
     float2 texCoords : TEXTURECOORDS;
-   // float3 color : COLOR;
+    float lifetime : LIFETIME;
 };
 
 [maxvertexcount(4)]
@@ -49,16 +49,17 @@ void main(
     float2 texCoords[] =
     {
         { 0.0f, 0.0f },
-        { 0.0f, 1.0f },
         { 1.0f, 0.0f },
+        { 0.0f, 1.0f },
         { 1.0f, 1.0f }
         
     };
 
-    
+    GS_OUTPUT output;
+    output.lifetime = input[0].lifetime;
     for (int i = 0; i < 4; ++i)
     {
-        GS_OUTPUT output;
+
         output.position = mul(corners[i], viewPerspective);
 
     //output.texCoords = mul(corners[0], texCoords[0]);

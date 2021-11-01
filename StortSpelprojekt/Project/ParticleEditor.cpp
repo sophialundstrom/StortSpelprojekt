@@ -27,8 +27,11 @@ void ParticleEditor::Save(const std::string& file)
 	writer << particleSystem->GetPosition().y << space;
 	writer << particleSystem->GetPosition().z << space;
 
+
+
 	//writer << "'" << particleSystem->GetTexturePath() <<"'" << space;
-	writer << "'" << particleSystem->GetTextureFile() << "'";
+	writer << "'" << particleSystem->GetFirstTextureFile() << "'" << space;
+	writer << "'" << particleSystem->GetSecondTextureFile() << "'";
 
 	writer.close();
 }
@@ -51,7 +54,7 @@ void ParticleEditor::Load(const std::string& file)
 	window.SetValue<SliderFloatComponent, float>("SYSTEM SIZE", particleSystem->GetSize());
 	window.SetValue<SliderFloatComponent, float>("MIN VELOCITY", particleSystem->GetMinVelocity());
 	window.SetValue<SliderFloatComponent, float>("MAX VELOCITY", particleSystem->GetMaxVelocity());
-	
+
 
 
 	if (particleSystem->GetParticleWidth() == particleSystem->GetParticleHeight())
@@ -63,29 +66,53 @@ void ParticleEditor::Load(const std::string& file)
 	window.SetValue<SliderFloatComponent, float>("PARTICLE HEIGHT", particleSystem->GetParticleHeight());
 	window.SetValue<RadioButtonComponent, UINT>("EMITTER TYPES", (UINT)particleSystem->GetType());
 
-	window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Image", particleSystem->GetTexture());
+	window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("First Image", particleSystem->GetFirstTexture());
+	window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Second Image", particleSystem->GetSecondTexture());
+
+	source->SetPosition(particleSystem->GetPosition());
+
+	source->Update();
+
 }
 
 void ParticleEditor::Update()
 {
-	particleSystem->Update();
+	if (Event::ScrolledUp())
+	{
+		Vector3 newPos = { camera.GetPosition().x + 1, camera.GetPosition().y, camera.GetPosition().z };
+		camera.SetPosition(newPos);
+	}
 
+	else if (Event::ScrolledDown())
+	{
+		Vector3 newPos = { camera.GetPosition().x - 1, camera.GetPosition().y, camera.GetPosition().z };
+
+		camera.SetPosition(newPos);
+	}
+
+
+	particleSystem->Update();
+	camera.UpdatePosOnly();
 	ShaderData::Inst().Update(camera);
 }
 
 void ParticleEditor::Render()
 {
 	BeginFrame();
-
+	colliderRenderer.Render();
 	renderer.Render();
 
 	EndFrame();
 }
 
 ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
-	:renderer(FORWARD)
+	:renderer(FORWARD), colliderRenderer(FORWARD)
 {
-	camera = Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 20.0f, 0, 0, { -2.5f, 5.0f, -15.0f }, { -2.5f, 0.0f, 0.0f });
+	camera = Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0, 0, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
+
+	source = std::make_shared<BoundingSphere>();
+	source->SetScale(0.5f);
+	colliderRenderer.Bind(source);
 
 	AddWindow("PARTICLE SYSTEM EDITOR");
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
@@ -94,15 +121,15 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("SYSTEM");
-	window.AddSliderIntComponent("MAX PARTICLES", 1, 5000 /*ParticleSystem::ABSOLUTE_MAX_PARTICLES*/);
+	window.AddSliderIntComponent("MAX PARTICLES", 1, 1500 /*ParticleSystem::ABSOLUTE_MAX_PARTICLES*/);
 	window.AddSliderFloatComponent("DELTA SPAWN");
 	window.AddSliderFloatComponent("LIFETIME", 0.0f, 10.0f);
 	window.AddSliderFloatComponent("SYSTEM SIZE", 0.0f, 50.0f);
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("VELOCITY");
-	window.AddSliderFloatComponent("MIN VELOCITY", 0.0f, 100.0f);
-	window.AddSliderFloatComponent("MAX VELOCITY", 0.0f, 100.0f);
+	window.AddSliderFloatComponent("MIN VELOCITY", 0.0f, 50.0f);
+	window.AddSliderFloatComponent("MAX VELOCITY", 0.0f, 50.0f);
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("DIMENSIONS");
@@ -119,11 +146,17 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	window.AddTextComponent("IN CASE OF DELTA TIME BUG");
 	window.AddButtonComponent("RESET", 50, 20);
 	window.AddSeperatorComponent();
-	
+
 	// CHANGE TEXTURE BUTTON
-	window.AddButtonComponent("CHANGE IMAGE", 100, 50);
+	window.AddButtonComponent("CHANGE FIRST IMAGE", 100, 50);
 	window.AddTextComponent("\t\t\t\t\t", true);
-	window.AddImageComponent("Image", true, nullptr, 75, 75);
+	window.AddImageComponent("First Image", true, nullptr, 75, 75);
+	window.AddSeperatorComponent();
+
+	// CHANGE TEXTURE BUTTON
+	window.AddButtonComponent("CHANGE SECOND IMAGE", 100, 50);
+	window.AddTextComponent("\t\t\t\t\t", true);
+	window.AddImageComponent("Second Image", true, nullptr, 75, 75);
 	window.AddSeperatorComponent();
 
 	window.AddButtonComponent("LOAD", 100, 50);
@@ -157,14 +190,25 @@ APPSTATE ParticleEditor::Run()
 		return APPSTATE::MAIN_MENU;
 
 	// CHANGE TEXTURE
-	else if (window.GetValue<ButtonComponent>("CHANGE IMAGE"))
+	else if (window.GetValue<ButtonComponent>("CHANGE FIRST IMAGE"))
 	{
 		std::filesystem::path filePath = FileSystem::LoadFile("ParticleTextures");
 
-		particleSystem->ChangeTexture(filePath.string(), filePath.filename().string());
+		particleSystem->ChangeFirstTexture(filePath.string(), filePath.filename().string());
 
-		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Image", particleSystem->GetTexture());
-		
+		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("First Image", particleSystem->GetFirstTexture());
+
+		return APPSTATE::NO_CHANGE;
+	}
+
+	else if (window.GetValue<ButtonComponent>("CHANGE SECOND IMAGE"))
+	{
+		std::filesystem::path filePath = FileSystem::LoadFile("ParticleTextures");
+
+		particleSystem->ChangeSecondTexture(filePath.string(), filePath.filename().string());
+
+		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Second Image", particleSystem->GetSecondTexture());
+
 		return APPSTATE::NO_CHANGE;
 	}
 
