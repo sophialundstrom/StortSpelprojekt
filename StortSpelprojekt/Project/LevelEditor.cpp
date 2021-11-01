@@ -330,6 +330,7 @@ void LevelEditor::Render()
 	//ADD RENDERER THAT RENDERS TO TEXTURE THAT CAN BE SHOWN AS "INGAME"-PREVIEW IN MATERIAL EDITOR 
 	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
 	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
+	ImGuizmo::DrawGrid(*scene.GetCamera()->GetViewMatrix().m, *scene.GetCamera()->GetProjectionMatrix().m, *Matrix::Identity.m, 5000);
 
 	terrainRenderer.Render(*terrain);
 

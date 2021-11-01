@@ -168,6 +168,7 @@
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
     <ClCompile Include="Main Menu.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Heap.h" />
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="LoadingScreen.h" />
     <ClInclude Include="Main Menu.h" />
