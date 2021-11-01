@@ -147,6 +147,9 @@
     <Filter Include="Header Files\UI\.cpp">
       <UniqueIdentifier>{ecb8c68c-124d-41d6-b7f2-7c26782e3573}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Application\Scene\Game\Pathing">
+      <UniqueIdentifier>{90e584c9-bff9-4123-894f-dabf62201477}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\Application\Scene\Game\SaveStation">
       <UniqueIdentifier>{83465f75-34dd-401b-9242-706cec97dc2e}</UniqueIdentifier>
     </Filter>
@@ -227,6 +230,15 @@
     <ClCompile Include="Arrow.cpp">
       <Filter>Header Files\Application\Scene\Game\Combat</Filter>
     </ClCompile>
+    <ClCompile Include="Grid.cpp">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClCompile>
+    <ClCompile Include="Pathfinding.cpp">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClCompile>
     <ClCompile Include="Main Menu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -235,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="AudioChunks.cpp">
       <Filter>Header Files\Application\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Heap.cpp">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -358,14 +373,8 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Application\Scene\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>Header Files\Application\GameStates</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Header Files\Application\GameStates\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="StateENUM.h">
-      <Filter>Header Files\Application\GameStates</Filter>
     </ClInclude>
     <ClInclude Include="States.h">
       <Filter>Header Files\Application\GameStates</Filter>
@@ -478,6 +487,9 @@
     <ClInclude Include="UIComponent.h">
       <Filter>Header Files\UI\.h</Filter>
     </ClInclude>
+    <ClInclude Include="LoadingScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="BoundingVolumes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -504,6 +516,33 @@
     </ClInclude>
     <ClInclude Include="AudioChunks.h">
       <Filter>Header Files\Application\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Grid.h">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="Pathfinding.h">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicPlane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugApplication.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Heap.h">
+      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -589,5 +628,7 @@
     <FxCompile Include="VolumeVertexShader.hlsl" />
     <FxCompile Include="SkeletonPixelShader.hlsl" />
     <FxCompile Include="SkeletonVertexShader.hlsl" />
+    <FxCompile Include="WaterDomainShader.hlsl" />
+    <FxCompile Include="WaterPixelShader.hlsl" />
   </ItemGroup>
 </Project>

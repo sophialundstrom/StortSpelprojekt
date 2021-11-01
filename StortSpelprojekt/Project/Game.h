@@ -15,7 +15,9 @@
 #include "SaveStation.h"
 #include "Canvas.h"
 #include "Time.h"
+#include "Grid.h"
 #include "Arrow.h"
+#include "Pathfinding.h"
 #include "Audio.h"
 
 //PlayerClassLib
@@ -27,6 +29,9 @@ class Game : public ApplicationState
 private:
     bool paused = false;
     const std::string file = "Default"; //"Test"
+
+    //-----TEMP-----//
+    Pathfinding pathing;
 
     std::unique_ptr<QuestLog> questLog;
 
