@@ -392,10 +392,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	for (int i = 0; i < 3; i++)
 		AddArrow("Arrow");
 
-
-	arrows[0]->statTracked = true;
-
-
 	for (int i = 0; i < 3; i++)
 		AddHostileArrow("Arrow");
 
