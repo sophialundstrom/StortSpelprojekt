@@ -16,13 +16,10 @@ public:
 			Vector3(position.x - 7, position.y + 8, position.z + 12),
 			Vector3(position.x - 9, position.y + 10, position.z + 12),
 			Vector3(position.x - 7, position.y, position.z + 12),
-			Vector3(position.x - 9, position.y + 10, position.z + 15),
-
-									 						
-									
+			Vector3(position.x - 9, position.y + 10, position.z + 15),		 						
 		};
 
-		const std::string systemName = "testSmoke.ps";
+		const std::string systemName = "testSmoke2.ps";
 		for (UINT i = 0; i < ARRAYSIZE(positions); i++)
 		{
 			auto system = std::make_shared<ParticleSystem>(systemName);

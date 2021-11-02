@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "Event.h"
 #include "ImGUI.h"
+#include "Time.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -109,6 +110,17 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 
 		break;
 	}
+	case WM_SETFOCUS:
+	{
+		Time::Update(0);
+		DeactivateCursor();
+		break;
+	}
+	case WM_KILLFOCUS:
+	{
+		ActivateCursor();
+		break;
+	}
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
@@ -142,9 +154,7 @@ Window::Window(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 	(void)freopen("conout$", "w", stdout);
 #endif
 
-	ActivateCursor();
 	ShowWindow(hWnd, SW_SHOWDEFAULT);
-
 	RECT clientRect;
 	GetClientRect(hWnd, &clientRect);
 	this->width = clientRect.right;
@@ -153,16 +163,20 @@ Window::Window(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 
 void Window::ActivateCursor()
 {
+	ClipCursor(nullptr);
+
 	cursorEnabled = true;
 	ShowCursor(true);
-	Event::DisableMovement();
 }
 
 void Window::DeactivateCursor()
 {
+	RECT rect;
+	GetClientRect(hWnd, &rect);
+	MapWindowPoints(hWnd, nullptr, reinterpret_cast<POINT*>(&rect), 2);
+	ClipCursor(&rect);
 	cursorEnabled = false;
 	ShowCursor(false);
-	Event::EnableMovement();
 }
 
 void Window::ToggleCursor()

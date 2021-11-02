@@ -24,6 +24,7 @@ public:
 		FileSystem::SetProjectDirectory();
 
 		window = new Window(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
+		window->DeactivateCursor();
 
 		graphics = std::make_unique<Graphics>(window->ClientWidth(), window->ClientHeight(), window->GetHWND(), false);
 
