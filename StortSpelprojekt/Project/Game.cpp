@@ -34,6 +34,10 @@ void Game::Update()
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 		
+	pathing.CreateGrid(scene.GetDrawables());
+
+	pathing.FindPath(Vector3(12, 0, 12), Vector3(4, 0, 6));
+
 	Event::ClearRawDelta();
 }
 
@@ -449,7 +453,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	animatedModelRenderer.Bind(animated);
 
 	//SOUND
-	Audio::AddAudio(L"Audio/Rain.wav");
+	Audio::AddAudio(L"Audio/Rainy.wav");
 	Audio::StartAudio();
 
 	(void)Run();

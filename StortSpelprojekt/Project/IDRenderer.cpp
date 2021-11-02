@@ -12,14 +12,15 @@ int IDRenderer::GetObjectID(int xPix, int yPix)
 	box.bottom = yPix + 1;
 	box.back = 1;
 
-	long xCord = xPix;
-	long yCord = yPix;
+	//long xCord = xPix;
+	//long yCord = yPix;
 	/*Graphics::Inst().GetContext().CopyResource(idTextureData, idTexture);*/
 
 	Graphics::Inst().GetContext().CopySubresourceRegion(idTextureData,0,0,0,0, idTexture, 0, &box);
 
 	D3D11_TEXTURE2D_DESC textureDesc;
 	idTextureData->GetDesc(&textureDesc);
+
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 
 	HRESULT hr = Graphics::Inst().GetContext().Map(idTextureData, 0, D3D11_MAP_READ, 0, &mappedResource);

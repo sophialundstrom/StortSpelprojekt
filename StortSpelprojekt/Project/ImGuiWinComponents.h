@@ -285,7 +285,6 @@ struct ImageComponent : public ImGuiWinComponent
 
 		ImGui::Image(value, { width, height });
 	}
-
 };
 
 struct ListBoxComponent : public ImGuiWinComponent
