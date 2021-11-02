@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "BoundingVolumes.h"
+#include "ViewportPanel.h"
 
 class IDRenderer : public Renderer
 {
@@ -51,7 +52,6 @@ private:
 public:
 	IDRenderer()
 	{
-
 		//INDEX BUFFERS
 		CreateIndexBuffer(sphereIndices, SphereVolumeData::INDICES, SphereVolumeData::indices);
 		CreateIndexBuffer(boxIndices, BoxVolumeData::INDICES, BoxVolumeData::indices);
@@ -103,7 +103,7 @@ public:
 		}
 		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "ID RENDERER (VOLUME)");
 
-		D3D11_TEXTURE2D_DESC textDesc;
+		D3D11_TEXTURE2D_DESC textDesc = {};
 		textDesc.Width = Graphics::Inst().GetViewport().Width;
 		textDesc.Height = Graphics::Inst().GetViewport().Height;
 		textDesc.MipLevels = 1;
@@ -163,12 +163,70 @@ public:
 		idTextureData->Release();
 	}
 
+	void UpdateViewport(UINT width, UINT height)
+	{
+		if (idTexture)
+		{
+			idTexture->Release();
+			idTexture = nullptr;
+		}
+
+		if (idTextureData)
+		{
+			idTextureData->Release();
+			idTextureData = nullptr;
+		}
+
+		if (idRTV)
+		{
+			idRTV->Release();
+			idRTV = nullptr;
+		}
+
+		HRESULT hr;
+
+		D3D11_TEXTURE2D_DESC textDesc = {};
+		textDesc.Width = width;
+		textDesc.Height = height;
+		textDesc.MipLevels = 1;
+		textDesc.ArraySize = 1;
+		textDesc.Format = DXGI_FORMAT_R32_UINT;
+		textDesc.SampleDesc.Count = 1;
+		textDesc.SampleDesc.Quality = 0;
+		textDesc.Usage = D3D11_USAGE_DEFAULT;
+		textDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
+		textDesc.CPUAccessFlags = 0;
+		textDesc.MiscFlags = 0;
+
+		hr = Graphics::Inst().GetDevice().CreateTexture2D(&textDesc, nullptr, &idTexture);
+		if FAILED(hr)
+		{
+			Print("FAILED TO CREATE 2D TEXTURE", "ID RENDERER");
+		}
+
+		textDesc.Width = 1;
+		textDesc.Height = 1;
+		textDesc.BindFlags = 0;
+		textDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+		textDesc.Usage = D3D11_USAGE_STAGING;
+
+		hr = Graphics::Inst().GetDevice().CreateTexture2D(&textDesc, nullptr, &idTextureData);
+		if FAILED(hr)
+		{
+			Print("FAILED TO CREATE 2D TEXTURE", "ID RENDERER");
+		}
+
+		hr = Graphics::Inst().GetDevice().CreateRenderTargetView(idTexture, nullptr, &idRTV);
+		if FAILED(hr)
+		{
+			Print("FAILED TO CREATE RENDER TARGET VIEW", "ID RENDERER");
+		}
+	}
+
 	virtual void Render() override
 	{
 		if (drawables.empty())
 			return;
-
-		BeginFrame();
 
 		//TOPOLOGY
 		Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -233,13 +291,14 @@ public:
 		currentLayout = nullptr;
 	}
 
-	void BeginFrame()
+	void BeginFrame(ID3D11DepthStencilView* dsv, D3D11_VIEWPORT& viewport)
 	{
 		auto &context = Graphics::Inst().GetContext();
 
-		context.OMSetRenderTargets(1, &idRTV, &Graphics::Inst().GetDSV());
+		context.RSSetViewports(1,& viewport);
+		context.OMSetRenderTargets(1, &idRTV, dsv);
 		context.ClearRenderTargetView(idRTV, Graphics::Inst().GetBackgroundColor());
-		context.ClearDepthStencilView(&Graphics::Inst().GetDSV(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+		context.ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
 
 	int GetObjectID(int xPix, int yPix);

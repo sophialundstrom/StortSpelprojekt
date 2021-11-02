@@ -8,6 +8,7 @@ protected:
 	std::string name;
 
 	std::vector<ImGuiWinComponent*> components;
+
 	std::vector<std::string> names;
 public:
 	ImGuiWin() = default;

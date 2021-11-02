@@ -130,7 +130,7 @@ public:
 				
 			if (Event::KeyIsPressed(VK_TAB))
 				window->ToggleCursor();
-			
+
 			currentState = currentGameState->Run();
 
 			switch (currentState)

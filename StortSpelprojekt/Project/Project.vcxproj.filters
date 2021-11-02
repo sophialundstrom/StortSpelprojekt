@@ -251,6 +251,9 @@
     <ClCompile Include="Heap.cpp">
       <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
     </ClCompile>
+    <ClCompile Include="DockSpacePanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp">
       <Filter>Header Files\Utilities</Filter>
     </ClCompile>
@@ -546,6 +549,12 @@
     </ClInclude>
     <ClInclude Include="Heap.h">
       <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="DockSpacePanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewportPanel.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h">
       <Filter>Header Files\Utilities</Filter>

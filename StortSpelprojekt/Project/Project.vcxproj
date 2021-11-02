@@ -161,6 +161,7 @@
     <ClCompile Include="AudioChunks.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DockSpacePanel.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="CollectQuest.h" />
+    <ClInclude Include="DockSpacePanel.h" />
     <ClInclude Include="DynamicPlane.h" />
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
@@ -282,6 +284,7 @@
     <ClInclude Include="UI.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="ViewportPanel.h" />
     <ClInclude Include="VolumeRenderer.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="WaterRenderer.h" />
