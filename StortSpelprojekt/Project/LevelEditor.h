@@ -52,7 +52,6 @@ private:
 	void UpdateToolUI(std::string name);
 	void FocusObject();
 	void DuplicateObject();
-	void GizmoEdit(std::string object);
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

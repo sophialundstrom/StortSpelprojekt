@@ -3,8 +3,6 @@
 #include "GameLoader.h"
 #include "FBXLoader.h"
 
-static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-
 void LevelEditor::BindDrawables()
 {
 	for (auto& [name, drawable] : scene.GetDrawables())
@@ -184,36 +182,6 @@ void LevelEditor::CreateBoundingSphere()
 	Print("BoundingSphere Created!");
 }
 
-void LevelEditor::GizmoEdit(std::string object)
-{
-	ImGuizmo::SetID(1);
-
-	static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::LOCAL);
-	static bool useSnap = false;
-	static float snap[3] = { 1.f, 1.f, 1.f };
-	static float bounds[] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
-	static float boundsSnap[] = { 0.1f, 0.1f, 0.1f };
-	static bool boundSizing = false;
-	static bool boundSizingSnap = false;
-	auto model = scene.Get<Drawable>(object);
-
-	if (ImGui::IsKeyPressed(1))
-		mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-	if (ImGui::IsKeyPressed(2))
-		mCurrentGizmoOperation = ImGuizmo::ROTATE;
-	if (ImGui::IsKeyPressed(3))
-		mCurrentGizmoOperation = ImGuizmo::SCALE;
-
-	ImGuiIO& io = ImGui::GetIO();
-	float viewManipulateTop = 0;
-	float viewManipulateRight = io.DisplaySize.x;
-
-	ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
-	ImGuizmo::Manipulate(*scene.GetCamera()->GetViewMatrix().m, *scene.GetCamera()->GetProjectionMatrix().m, mCurrentGizmoOperation, mCurrentGizmoMode, *model->GetMatrix().m, NULL, useSnap ? &snap[0] : NULL, boundSizing ? bounds : NULL, boundSizingSnap ? boundsSnap : NULL);
-	ImGuizmo::ViewManipulate(*scene.GetCamera()->GetViewMatrix().m, **scene.GetCamera()->GetProjectionMatrix().m, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
-	ImGuizmo::DrawGrid(*scene.GetCamera()->GetViewMatrix().m, *scene.GetCamera()->GetProjectionMatrix().m, *Matrix::Identity.m, 100.f);
-}
-
 void LevelEditor::Update()
 {
 	if (Event::LeftIsClicked() && !ImGuizmo::IsOver() && viewportPanel.Hovered())
@@ -282,7 +250,6 @@ void LevelEditor::Update()
 
 	if (selectedObject != "") //CHECKS EVERY FRAME, USE CHANGED()?
 	{
-		GizmoEdit(selectedObject);
 		auto& window = windows["GAME OBJECT"];
 
 		float newXPos = window.GetValue<SliderFloatComponent>("X");
