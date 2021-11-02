@@ -368,6 +368,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	ingameCanvas->AddImage({ 355, clientHeight - 64.0f }, "hp", "HP10.png");
 
+	ingameCanvas->AddText({ (float)clientWidth - 50, (float)clientHeight - 30 }, "FPS", "0", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
+
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 
@@ -556,6 +558,19 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}
 
+	}
+
+	static int frames = 0;
+	static float time = 0;
+
+	time += Time::GetDelta();
+	frames++;
+
+	if (time >= 1.0f)
+	{
+		canvases["INGAME"]->UpdateText("FPS", std::to_string(frames));
+		frames = 0;
+		time = 0;
 	}
 
 	if (mainMenu)

@@ -47,6 +47,9 @@ public:
 	int Run()
 	{
 		Timer timer;
+		float FPS = 60.0f;
+		float tickInterval = 1.0f / FPS;
+
 		MSG msg = {};
 
 		while (currentState != APPSTATE::EXIT)
@@ -66,7 +69,18 @@ public:
 			}
 
 			currentState = state->Run();
-			
+
+			float dt = timer.DeltaTime();
+
+			if (dt < tickInterval)
+			{
+				float timeToSleep = tickInterval - dt;
+				Sleep(timeToSleep * 1000);
+				dt += timeToSleep;
+			}
+
+			Time::Update(dt);
+
 			switch (currentState)
 			{
 			case APPSTATE::NO_CHANGE:
@@ -88,8 +102,6 @@ public:
 				delete state;
 				break;
 			}
-
-			Time::Update(timer.DeltaTime());
 		}
 
 		return 0;
