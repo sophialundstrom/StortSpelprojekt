@@ -161,6 +161,7 @@
     <ClCompile Include="AudioChunks.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DockSpacePanel.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="Heap.cpp" />
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="Image.cpp" />
+    <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
     <ClCompile Include="Main Menu.cpp" />
@@ -197,6 +199,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="CollectQuest.h" />
+    <ClInclude Include="DockSpacePanel.h" />
     <ClInclude Include="DynamicPlane.h" />
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
@@ -205,6 +208,7 @@
     <ClInclude Include="Heap.h" />
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Image.h" />
+    <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="LoadingScreen.h" />
     <ClInclude Include="Main Menu.h" />
@@ -280,6 +284,7 @@
     <ClInclude Include="UI.h" />
     <ClInclude Include="UIComponent.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="ViewportPanel.h" />
     <ClInclude Include="VolumeRenderer.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="WaterRenderer.h" />

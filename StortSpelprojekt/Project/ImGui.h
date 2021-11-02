@@ -1,10 +1,13 @@
 #pragma once
 #include "Graphics.h"
 #include "FileSystem.h"
+#include "Math.h"
 
 #include <ImGui\imgui.h>
 #include <ImGui\imgui_impl_dx11.h>
 #include <ImGui\imgui_impl_win32.h>
+#include "ImGui\ImGuizmo.h"
+
 #include <iostream>
 struct ImGUI
 {
@@ -27,14 +30,36 @@ struct ImGUI
 		ImGui::RenderPlatformWindowsDefault();
 	}
 
+    static void BeginGizmo(float width, float height)
+    {
+        ImGuizmo::SetDrawlist();
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, width, height);
+    }
+
+    static void Gizmo(Matrix& matrix, const Matrix& viewMatrix, const Matrix& perspectiveMatrix, ImGuizmo::OPERATION operation)
+    {
+        auto* model = reinterpret_cast<float*>(&matrix);
+        const auto viewPtr = reinterpret_cast<const float*>(&viewMatrix);
+        const auto projPtr = reinterpret_cast<const float*>(&perspectiveMatrix);
+
+        ImGuizmo::Manipulate(viewPtr, projPtr, operation, ImGuizmo::LOCAL, model);
+    }
+
 	static void Initialize()
 	{
         ImGUI::Initialized = true;
 
-		ImGui::CreateContext();
-		ImGui_ImplWin32_Init(GetActiveWindow());
-		ImGui_ImplDX11_Init(&Graphics::Inst().GetDevice(), &Graphics::Inst().GetContext());
-        
+        ImGui::CreateContext();
+
+        ImGuiIO& io = ImGui::GetIO();
+        (void)io;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; // Enable Keyboard Controls
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable; // Enable Docking
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
+
+        ImGui_ImplWin32_Init(GetActiveWindow());
+        ImGui_ImplDX11_Init(&Graphics::Inst().GetDevice(), &Graphics::Inst().GetContext());
+
 		//THEME
         auto& style = ImGui::GetStyle();
         style.FrameRounding = 4.0f;
