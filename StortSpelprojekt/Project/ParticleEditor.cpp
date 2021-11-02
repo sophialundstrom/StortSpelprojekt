@@ -79,28 +79,34 @@ void ParticleEditor::Update()
 {
 	if (Event::ScrolledUp())
 	{
-		Vector3 newPos = { camera.GetPosition().x + 1, camera.GetPosition().y, camera.GetPosition().z };
-		camera.SetPosition(newPos);
+		Vector3 newPos = { camera->GetPosition().x + 1, camera->GetPosition().y, camera->GetPosition().z };
+		camera->SetPosition(newPos);
 	}
 
 	else if (Event::ScrolledDown())
 	{
-		Vector3 newPos = { camera.GetPosition().x - 1, camera.GetPosition().y, camera.GetPosition().z };
+		Vector3 newPos = { camera->GetPosition().x - 1, camera->GetPosition().y, camera->GetPosition().z };
 
-		camera.SetPosition(newPos);
+		camera->SetPosition(newPos);
 	}
 
 
 	particleSystem->Update();
-	camera.UpdatePosOnly();
-	ShaderData::Inst().Update(camera);
+	camera->UpdatePosOnly();
+	ShaderData::Inst().Update(*camera);
 }
 
 void ParticleEditor::Render()
 {
-	BeginFrame();
+	BeginViewportFrame();
+
 	colliderRenderer.Render();
 	renderer.Render();
+
+	BeginFrame();
+
+	ImGui::End();
+	ImGui::PopStyleVar();
 
 	EndFrame();
 }
@@ -108,7 +114,7 @@ void ParticleEditor::Render()
 ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	:renderer(FORWARD), colliderRenderer(FORWARD)
 {
-	camera = Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0, 0, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
+	camera = new Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0, 0, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
 
 	source = std::make_shared<BoundingSphere>();
 	source->SetScale(0.5f);
@@ -165,6 +171,8 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	window.AddSeperatorComponent();
 
 	window.AddButtonComponent("RETURN TO MENU", 120, 30);
+
+	InitCamera(camera);
 
 	Load("default.ps");
 	(void)Run();

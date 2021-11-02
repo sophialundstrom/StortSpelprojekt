@@ -17,6 +17,8 @@ private:
 	float moveSpeed;
 	float rotationSpeed;
 
+	float FOV;
+	float nearZ, farZ;
 	float pitch;
 	float yaw;
 public:
@@ -29,6 +31,8 @@ public:
 	void MoveForward(int sign = 1);
 	void Rotate(float dx, float dy);
 	void SetSpeedMultiplier(float xSpeed);
+
+	void SetPerspectiveMatrix(float width, float height);
 
 	void UpdatePosOnly();
 
@@ -45,6 +49,6 @@ public:
 	Vector3 GetDirection() const { return this->direction; }
 	Vector3 GetPosition() const { return this->position; }
 	Matrix GetMatrix() const { return (viewMatrix * perspectiveMatrix).Transpose(); }
-	Matrix GetProjectionMatrix() const { return perspectiveMatrix; }
-	Matrix GetViewMatrix() const { return viewMatrix; }
+	const Matrix& GetProjectionMatrix() const { return perspectiveMatrix; }
+	const Matrix& GetViewMatrix() const { return viewMatrix; }
 };

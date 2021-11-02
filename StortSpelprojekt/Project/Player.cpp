@@ -96,7 +96,7 @@ void Player::Update(HeightMap* heightMap)
 
 	//Only update what direction the player is facing when keyboardinput is detected by the moveDirection vector
 	if (moveDirection.Length() > 0 || moveDirection.Length() < 0 || Event::RightIsClicked())
-		rotation = { 0, movementYRadiant, 0 };
+		rotation =  Quaternion::CreateFromYawPitchRoll(movementYRadiant, 0, 0);
 
 	//Updates the player and cameras positions
 	Vector3 newPlayerPos = position + (moveDirection * stats.currentSpeed * Time::GetDelta());

@@ -29,4 +29,5 @@ public:
 
 	void Clear() { drawables.clear(); }
 	virtual void Render() = 0;
+	virtual void OnResize(float width, float height) {}
 };	

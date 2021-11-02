@@ -49,11 +49,13 @@ void Arrow::Update()
 
 	if (lifeLength <= lifeTime && isShot == true)
 	{
-		if(rotation.x > -PI_DIV4)
-		{
-			//Rotate downwards
-			rotation.x -= 0.05f * Time::GetDelta();
-		}
+		//float x = rotation.x / sqrt(1 - rotation.w * rotation.w);
+		//if(rotation.x > -PI_DIV4)
+		//{
+		//	//Rotate downwards
+		//	rotation.x -= 0.05f * Time::GetDelta();
+		//} 
+		
 		//Gravitation
 		direction.y -= 0.05f * Time::GetDelta();
 		SetPosition(GetPosition() + (direction * speed * Time::GetDelta()));
