@@ -35,6 +35,13 @@ bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 
 void Arrow::Update()
 {
+	if(statTracked == true)	//REMOVE THIS ifstatment BEFORE PUSH NOT INTENDED FOR FINAL VERSION INTENTIONAL POOR CODE.
+	{
+		std::cout << "<ArrowTracking>:\n";
+		std::cout << "ArrowPosition: " << position.x << " " << position.y << " " << position.z << "\n";
+		std::cout << "ColliderPosition: " << collider->GetPosition().x << " " << collider->GetPosition().y << " " << collider->GetPosition().z << "\n\n\n---";
+	}
+
 	if (isShot == true)
 	{
 		lifeLength += Time::GetDelta();

@@ -14,6 +14,8 @@ private:
 	std::shared_ptr<BoundingBox> collider;
 
 public:
+	bool statTracked = false; //DEBUG THING NOT INTENTED TO STAY IN CODE
+
 	Arrow(const std::string file);
 	~Arrow();
 
