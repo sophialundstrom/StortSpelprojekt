@@ -159,7 +159,6 @@ void Player::Update(HeightMap* heightMap)
 	for (int i = 0; i < arrows.size(); i++)
 	{
 		arrows.at(i)->Update();
-		arrows.at(i)->GetCollider()->Update();
 	}
 
 	sceneCamera->MoveTowards(newCameraPos);
@@ -173,7 +172,7 @@ void Player::Update(HeightMap* heightMap)
 bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 {
 	bool collided = false;
-	if ((position - arrow->GetCollider()->GetPosition()).Length() < 3.0f)
+	if (Collision::Intersection(this->bounds, arrow->GetCollider()))
 	{
 		collided = true;
 		if (stats.healthPoints == 0)
@@ -192,7 +191,6 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 		stats.healthPoints--;
 		UpdateHealthUI();
 	}
-
 	return collided;
 }
 

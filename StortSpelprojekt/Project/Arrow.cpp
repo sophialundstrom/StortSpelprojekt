@@ -12,7 +12,9 @@ Arrow::~Arrow()
 
 void Arrow::DisableArrow()
 {
-	lifeLength = lifeTime * 2;
+	SetPosition(0, -200, 0);
+	isShot = false;
+	lifeLength = 0;
 }
 
 bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
@@ -26,7 +28,6 @@ bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 		SetPosition(startPos);
 		isShot = true;
 		isArrowActivating = true;
-		std::cout << "ARROW SHOT" << std::endl;
 	}
 	
 	return isArrowActivating;
@@ -39,7 +40,7 @@ void Arrow::Update()
 		lifeLength += Time::GetDelta();
 	}
 
-	if (lifeLength <= lifeTime)
+	if (lifeLength <= lifeTime && isShot == true)
 	{
 		if(rotation.x > -PI_DIV4)
 		{
@@ -52,10 +53,7 @@ void Arrow::Update()
 	}
 	else
 	{
-		SetPosition(0, -100, 0);
-		collider->SetPosition(collider->GetPosition().x, collider->GetPosition().y, collider->GetPosition().z - 0.5f);
-		isShot = false;
-		lifeLength = 0;
+		DisableArrow();
 	}
 
 	collider->Update();

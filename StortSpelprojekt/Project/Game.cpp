@@ -207,6 +207,7 @@ void Game::AddArrow(const std::string fileName)
 	modelRenderer.Bind(arrow);
 	shadowRenderer.Bind(arrow);
 	colliderRenderer.Bind(arrow->GetCollider());
+	arrow->Update();
 }
 
 void Game::AddHostileArrow(const std::string fileName)
@@ -224,6 +225,7 @@ void Game::AddHostileArrow(const std::string fileName)
 	modelRenderer.Bind(arrow);
 	shadowRenderer.Bind(arrow);
 	colliderRenderer.Bind(arrow->GetCollider());
+	arrow->Update();
 }
 
 void Game::CheckNearbyCollision()
@@ -389,9 +391,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 		AddArrow("Arrow");
 
 	for (int i = 0; i < 3; i++)
-	{
 		AddHostileArrow("Arrow");
-	}
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
