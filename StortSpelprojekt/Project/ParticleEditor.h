@@ -8,7 +8,7 @@
 class ParticleEditor : public Editor, public ApplicationState
 {
 private:
-	Camera camera;
+	Camera* camera;
 	std::string loadedParticleSystem = "default.ps";
 	std::shared_ptr<ParticleSystem> particleSystem;
 

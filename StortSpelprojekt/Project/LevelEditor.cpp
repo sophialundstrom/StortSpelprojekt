@@ -250,6 +250,7 @@ void LevelEditor::Update()
 	if (selectedObject != "") //CHECKS EVERY FRAME, USE CHANGED()?
 	{
 		auto& window = windows["GAME OBJECT"];
+
 		float newXPos = window.GetValue<SliderFloatComponent>("X");
 		float newYPos = window.GetValue<SliderFloatComponent>("Y");
 		float newZPos = window.GetValue<SliderFloatComponent>("Z");
@@ -276,12 +277,14 @@ void LevelEditor::Update()
 				window.SetValue<SliderFloatComponent, float>("Y-axis", newXScale);
 				window.SetValue<SliderFloatComponent, float>("Z-axis", newXScale);
 			}
+
 			if (window.Changed("Y-axis"))
 			{
 				model->SetScale(newYScale, newYScale, newYScale);
 				window.SetValue<SliderFloatComponent, float>("X-axis", newYScale);
 				window.SetValue<SliderFloatComponent, float>("Z-axis", newYScale);
 			}
+
 			if (window.Changed("Z-axis"))
 			{
 				model->SetScale(newZScale, newZScale, newZScale);
