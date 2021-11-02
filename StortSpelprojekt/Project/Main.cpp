@@ -1,6 +1,7 @@
 #ifdef _DEBUG
 	#include "DebugApplication.h"
-//#else
+	#include "Application.h"
+#else
 	#include "Application.h"
 #endif
 

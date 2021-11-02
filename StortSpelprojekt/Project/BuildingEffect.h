@@ -4,6 +4,7 @@
 
 class BuildingEffect
 {
+	friend class Building;
 public:
 	BuildingEffect(Vector3 position)
 	{
@@ -16,10 +17,18 @@ public:
 			Vector3(position.x - 7, position.y + 8, position.z + 12),
 			Vector3(position.x - 9, position.y + 10, position.z + 12),
 			Vector3(position.x - 7, position.y, position.z + 12),
-			Vector3(position.x - 9, position.y + 10, position.z + 15),		 						
+			Vector3(position.x - 9, position.y + 10, position.z + 15),
+			Vector3(position.x + 7, position.y, position.z),
+			Vector3(position.x + 9, position.y + 6, position.z + 3),
+			Vector3(position.x + 7, position.y, position.z + 6),
+			Vector3(position.x + 9, position.y + 6, position.z + 9),
+			Vector3(position.x + 7, position.y + 8, position.z + 12),
+			Vector3(position.x + 9, position.y + 10, position.z + 12),
+			Vector3(position.x + 7, position.y, position.z + 12),
+			Vector3(position.x + 9, position.y + 10, position.z + 15),
 		};
 
-		const std::string systemName = "testSmoke2.ps";
+		const std::string systemName = "testSmoke.ps";
 		for (UINT i = 0; i < ARRAYSIZE(positions); i++)
 		{
 			auto system = std::make_shared<ParticleSystem>(systemName);
@@ -29,11 +38,15 @@ public:
 
 	}
 
-	void Unbind(Scene& scene, ParticleRenderer& renderer)
+	/*void Unbind(Scene& scene, ParticleRenderer& renderer)
 	{
-	/*	renderer.Unbind(p1);
-		scene.DeleteDrawable("testSystem");*/
-	}
+		int index = 0;
+		for (auto system : particles)
+		{
+			renderer.Unbind(system);
+			scene.DeleteDrawable("testSystem" + std::to_string(index));
+		}
+	}*/
 
 	void Bind(Scene& scene, ParticleRenderer& renderer)
 	{

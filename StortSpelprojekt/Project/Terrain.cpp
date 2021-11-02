@@ -41,7 +41,7 @@ Terrain::Terrain(UINT subdivisions)
 	heightMap->texture->Bind(0, Shader::DS);
 
 	blendMap = new Texture("Textures/blendMap.png", "BlendMap");
-
+	blendMap->Bind(10);
 	const std::string tx[3] = { "SandSeamless.jpg", "GrassSeamless.jpg", "RockSeamless.jpg" };
 	for (UINT i = 0; i < 3; ++i)
 		textures[i] = new Texture("Textures/" + tx[i], tx[i]);
@@ -58,7 +58,7 @@ Terrain::~Terrain()
 
 void Terrain::Draw() const
 {
-	blendMap->Bind();
+
 	for (UINT i = 0; i < 3; ++i)
 		textures[i]->Bind(i + 1);
 

@@ -33,38 +33,61 @@ void Game::Update()
 	CheckSaveStationCollision();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
-		
-	pathing.CreateGrid(scene.GetDrawables());
-
-	pathing.FindPath(Vector3(12, 0, 12), Vector3(4, 0, 6));
 
 	Event::ClearRawDelta();
 }
 
 void Game::Render()
 {
+	Timer timer;
+	timer.Start();
+
 	deferredRenderer.SetRenderTargets();
 
 	particleRenderer.Render();
+	Print("ParticleRenderer");
+	Print(timer.DeltaTime());
+	timer.Start();
 
 	modelRenderer.Render();
+	Print("ModelRendeder");
+
+	Print(timer.DeltaTime());
+	timer.Start();
+
 
 	animatedModelRenderer.Render();
+	Print("animationmodelrenderer");
 
-	colliderRenderer.Render();
+	Print(timer.DeltaTime());
+	timer.Start();
+
+
+	//colliderRenderer.Render();
 
 	terrainRenderer.Render(terrain);
+	Print("TerrainRenderer");
 
-	waterRenderer.Render(water);
+	Print(timer.DeltaTime());
+	timer.Start();
+	//waterRenderer.Render(water);
 
-	skeletonRenderer.Render();
+	//skeletonRenderer.Render();
 
 	shadowRenderer.Render();
+	Print("ShadowRenderer");
+
+	Print(timer.DeltaTime());
+	timer.Start();
 
 	Graphics::Inst().BeginFrame();
 
 	deferredRenderer.Render();
-	
+	Print("DeferredRednberer");
+
+	Print(timer.DeltaTime());
+	timer.Start();
+
 	currentCanvas->Render();
 
 	Graphics::Inst().EndFrame();
@@ -307,7 +330,7 @@ void Game::CheckItemCollision()
 
 void Game::UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect)
 {
-	effect->Unbind(scene, particleRenderer);
+	//effect->Unbind(scene, particleRenderer);
 }
   
 void Game::UpdateInventoryUI()
@@ -411,7 +434,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture"};
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -67, 21.0f, -571 });
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -67, 21.0f, -571 }, scene, particleRenderer);
 	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
 	building->SetScale(4.5f);
 
@@ -529,7 +552,7 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('R'))
 		{
 			building->effect->Bind(scene, particleRenderer);
-			building->Upgrade();
+			building->Upgrade(scene, particleRenderer);
 			lastClick = Time::Get();
 		}
 
