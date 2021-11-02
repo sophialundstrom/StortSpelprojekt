@@ -163,8 +163,18 @@ float4 main(PS_INPUT input) : SV_TARGET
 
     const float4 finalLighting = float4(dlResult.diffuse + dlResult.specular * dlResult.color) * shadow + globalAmbient + A
                                 /*+ float4(plResult.diffuse + plResult.specular * plResult.color)*/;
-	//RESULT
-    const float4 finalColor = T * (saturate(finalLighting));
+
+    //FOG
+    float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
+    float fogStart = 100.0f;
+    float fogRange = 2000.0f;
+
+    float fogDistance = distance(cameraPosition, P);
+
+    float fogFactor = saturate((fogDistance - fogStart) / fogRange);
+
+    //RESULT
+    const float4 finalColor = lerp((T * (saturate(finalLighting))), fogColor, fogFactor);
 	
     return finalColor;
 }
