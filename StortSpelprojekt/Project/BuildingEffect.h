@@ -9,9 +9,15 @@ public:
 	{
 		const Vector3 positions[] = 
 		{ // LEFT SIDE
-			Vector3(position.x - 8, position.y, position.z),
-			Vector3(position.x - 10, position.y + 6, position.z + 3),
-			Vector3(position.x - 6, position.y, position.z + 3),
+			Vector3(position.x - 7, position.y, position.z),
+			Vector3(position.x - 9, position.y + 6, position.z + 3),
+			Vector3(position.x - 7, position.y, position.z + 6),
+			Vector3(position.x - 9, position.y + 6, position.z + 9),
+			Vector3(position.x - 7, position.y + 8, position.z + 12),
+			Vector3(position.x - 9, position.y + 10, position.z + 12),
+			Vector3(position.x - 7, position.y, position.z + 12),
+			Vector3(position.x - 9, position.y + 10, position.z + 15),
+
 									 						
 									
 		};
