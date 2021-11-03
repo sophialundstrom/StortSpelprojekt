@@ -41,7 +41,11 @@ void Game::Update()
 
 void Game::Render()
 {
-	deferredRenderer.SetRenderTargets();
+	//shadowRenderer.Render();
+
+	ShaderData::Inst().BindFrameConstants();
+
+	Graphics::Inst().BeginFrame();
 
 	particleRenderer.Render();
 
@@ -53,16 +57,10 @@ void Game::Render()
 
 	terrainRenderer.Render(terrain);
 
-	waterRenderer.Render(water);
+	//waterRenderer.Render(water);
 
-	skeletonRenderer.Render();
+	//skeletonRenderer.Render();
 
-	shadowRenderer.Render();
-
-	Graphics::Inst().BeginFrame();
-
-	deferredRenderer.Render();
-	
 	currentCanvas->Render();
 
 	Graphics::Inst().EndFrame();
@@ -332,12 +330,12 @@ void TestFuncMenu()
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
-	modelRenderer(DEFERRED, true),
-	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED),
-	colliderRenderer(DEFERRED),
-	animatedModelRenderer(DEFERRED, true),
-	water(5000)
+	modelRenderer(FORWARD, true),
+	particleRenderer(FORWARD),
+	terrainRenderer(FORWARD),
+	colliderRenderer(FORWARD),
+	animatedModelRenderer(FORWARD, false),
+	water(5000), terrain(2)
 {
 	//LOAD SCENE
 	Initialize();
@@ -390,20 +388,22 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
+	player->SetPosition(-75, 20, -650);
 	scene.AddModel("Player", player);
-	modelRenderer.Bind(scene.Get<Model>("Player"));
-	shadowRenderer.Bind(scene.Get<Model>("Player"));
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
+	animatedModelRenderer.Bind(player);
+
 	colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
-	std::string materialNames[] = { "", "HouseTexture"};
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -72, 20.5f, -566 });
-	building->SetScale(1.7f, 1.7f, 1.7f);
+	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
+	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture"};
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
+	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
+	building->SetScale(5);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
@@ -430,15 +430,15 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer.Bind(particleSystem);
 
 	//ANIMATION
-	auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
-	animated->SetPosition(-30, 25, -580);
-	scene.AddDrawable("AnimatedModel", animated);
-	skeletonRenderer.Bind(animated);
-	animatedModelRenderer.Bind(animated);
+	//auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
+	//animated->SetPosition(-30, 25, -580);
+	//scene.AddDrawable("AnimatedModel", animated);
+	//skeletonRenderer.Bind(animated);
+	//animatedModelRenderer.Bind(animated);
 
 	//SOUND
-	Audio::AddAudio(L"Audio/Rainy.wav");
-	Audio::StartAudio();
+	//Audio::AddAudio(L"Audio/Rainy.wav");
+	//Audio::StartAudio();
 
 	(void)Run();
 }
@@ -511,19 +511,13 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('R'))
 		{
 			building->effect->Bind(scene, particleRenderer);
-			building->Upgrade();
+			building->Upgrade(scene, particleRenderer);
 			lastClick = Time::Get();
 		}
 
 		if (Event::KeyIsPressed('T'))
 		{
 			player->TakeDamage();
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('O'))
-		{
-			scene.Get<AnimatedModel>("AnimatedModel")->PlayAnimation("Take 001");
 			lastClick = Time::Get();
 		}
 
@@ -561,8 +555,24 @@ APPSTATE Game::Run()
 	if (Event::KeyIsPressed('M'))
 		return APPSTATE::MAIN_MENU;
 
+	if (Event::KeyIsPressed('X'))
+		return APPSTATE::GAMEOVER;
+
+	if (questLog.get()->GetActiveQuest() == 0)
+	{
+		std::cout << "WIN!!!" << std::endl;
+		return APPSTATE::WIN;
+	}
+
+	if (player->GetGameOver() == true)
+	{
+		std::cout << "DEAD!!!" << std::endl;
+		return APPSTATE::GAMEOVER;
+	}
+
 	if (Event::KeyIsPressed(VK_ESCAPE))
 		return APPSTATE::EXIT;
+
 
 	return APPSTATE::NO_CHANGE;
 }

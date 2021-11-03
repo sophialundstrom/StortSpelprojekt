@@ -107,13 +107,22 @@ void Player::Update(HeightMap* heightMap)
 		if (Event::KeyIsPressed(VK_SPACE))
 		{
 			jumping = true;
-			preJumpGroundLevel = heightMapGroundLevel;
+			preJumpGroundLevel = heightMapGroundLevel; PlayAnimation("Jump", false, 0.5f);
 		}
 	}
 
 	if (jumping)
 	{
 		airTime += Time::GetDelta() * 5.0f;
+		if (airTime >= 1.5f)
+		{
+			PlayAnimation("Falling", true);
+			std::cout << "IN AIR" << std::endl;
+		}
+		else
+			{
+			std::cout << "Startup" << std::endl;
+		}
 		newPlayerPos.y = -powf(airTime, 2) + jumpHeight * airTime + preJumpGroundLevel;
 	}
 
@@ -126,11 +135,23 @@ void Player::Update(HeightMap* heightMap)
 		newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
 	}
 
-	position = newPlayerPos + Vector3(0, 3.5f, 0);
+	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
 
 	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 2.0f, 0.0f);
 
 	static float lastClick = 0;
+
+	sinceLastShot += Time::GetDelta();
+	if (sinceLastShot > shootingAnimationLenght) {
+
+		bool hasMoved = position == lastPosition ? false : true;
+		if (!hasMoved)
+			PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
+		else if (hasMoved && !jumping)
+			PlayAnimation("Walk", true); // ADD WALKING ANIMATION
+		//else if (jumping)
+			 // ADD IN AIR JUMP ANIMATION
+	}
 
 	if(Event::RightIsClicked())
 	{
@@ -141,6 +162,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			if (Event::LeftIsClicked())
 			{
+				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				int currentIndex = 0;
 				bool isPlayerShootingArrow = false;
 				while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
@@ -149,6 +171,7 @@ void Player::Update(HeightMap* heightMap)
 					lastClick = Time::Get();
 					currentIndex++;
 				}
+				sinceLastShot = 0.f;
 			}
 		}
 	}
@@ -163,7 +186,7 @@ void Player::Update(HeightMap* heightMap)
 
 	sceneCamera->MoveTowards(newCameraPos);
 
-	Model::Update();
+	AnimatedModel::Update();
 
 	bounds->Update();
 	frustum->Update();
@@ -186,6 +209,7 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 			stats.healthPoints--;
 			std::cout << "GAME OVER" << std::endl;
 			UpdateHealthUI();
+			gameOver = true;
 			return collided;
 		}
 		stats.healthPoints--;

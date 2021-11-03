@@ -7,6 +7,7 @@
 #include "Item.h"
 #include "Canvas.h"
 #include "Arrow.h"
+#include "AnimatedModel.h"
 
 #undef Ray
 
@@ -57,8 +58,8 @@ struct Stats
 	UINT barbariansKilled = 0;
 	float movementSpeed = 30.0f;
 	float sprintSpeed = 50.0f;
-	UINT maxHealthPoints = 10;
-	UINT healthPoints = 10;
+	UINT maxHealthPoints = 1;
+	UINT healthPoints = 1;
 	UINT level = 1;
 	float currentSpeed = movementSpeed;
 
@@ -70,7 +71,7 @@ struct Stats
 	void DecreaseHealthPoint() { if (healthPoints != 0) this->healthPoints--; };
 };
 
-class Player : public Model
+class Player : public AnimatedModel
 {
 private:
 	Stats stats;
@@ -110,15 +111,21 @@ private:
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);
 
-	Vector3 lastPosition;
-
 	std::shared_ptr<BoundingSphere> bounds;
 	std::shared_ptr<FrustumCollider> frustum;
 
 	bool isRightPressed;
 	bool isLeftPressed;
+	bool gameOver = false;
 
 	Inventory inventory;
+
+	Vector3 lastPosition = Vector3(0, 0, 0); // 
+	float sinceLastShot = 0;
+	float shootingAnimationLenght = 1.f;
+	float currentLerp = 0.f;
+	float duration = 1.f;
+	bool inAir = false;
 
 	void UpdateHealthUI()
 	{
@@ -134,7 +141,7 @@ public:
 	void Update(HeightMap* heightMap);
 
 	Player(const std::string file, Camera* camera, Canvas* ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows)
-		:Model("LowPolyCharacter", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
+		:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
 	{
 		isRightPressed = false;
 		isLeftPressed = false;
@@ -148,6 +155,8 @@ public:
 
 		Load(file);
 		UpdateHealthUI();
+
+		PlayAnimation("Idle", true, 0.2f);
 	}
 public:
 	// TEMP STATS PRINT
@@ -162,7 +171,7 @@ public:
 	}
 
 	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
-
+	bool GetGameOver() { return this->gameOver; }
 	std::shared_ptr<BoundingSphere> GetBounds() { return bounds; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 

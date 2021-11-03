@@ -28,7 +28,8 @@ private:
 	DynamicPlane* plane;
 
 	Texture* blendMap;
-	Texture* textures[3];
+	Texture* pathMap;
+	Texture* textures[4];
 	HeightMap* heightMap;
 public:
 	Terrain(UINT subdivisions = 0);

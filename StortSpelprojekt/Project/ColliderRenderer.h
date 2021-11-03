@@ -28,7 +28,8 @@ private:
 	const std::string deferred_ps_path ="../x64/Debug/DeferredColliderPixelShader.cso";
 #else
 	const std::string vs_path = "../x64/Release/ColliderVertexShader.cso";
-	const std::string ps_path = "../x64/Release/ColliderPixelShader.cso";
+	const std::string forward_ps_path = "../x64/Release/ColliderPixelShader.cso";
+	const std::string deferred_ps_path = "../x64/Release/DeferredColliderPixelShader.cso";
 #endif
 
 	//SHADERS
