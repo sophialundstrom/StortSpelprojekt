@@ -17,7 +17,7 @@ cbuffer CAMERA : register(b2)
 struct PS_INPUT
 {
     float4 position : SV_POSITION;
-    float2 texCoords : TEXCOORDS;
+    float2 texCoords : TEXTURECOORDS;
     float3 normal : NORMAL;
     float4 worldPosition : WORLDPOSITION;
     float4 lightClipPosition : LIGHTPOSITION;
@@ -31,7 +31,24 @@ cbuffer MATERIAL : register(b0)
     float specularPower;
 }
 
+float ShadowCalculation(float4 LCP)
+{
+    LCP.xyz /= LCP.w; //PERSPECTIVE DIVIDE (NDC-COORDS)
+    const float2 tx = float2(0.5f * LCP.x + 0.5f, -0.5f * LCP.y + 0.5f); // [-1,1] => [0, 1]
+    const float sm = shadowMap.Sample(wrapSampler, tx).r;
+    float shadow = (sm + 0.005 < LCP.z) ? 0.0f : 1.0f; //if closest depth (sample) < pixel-depth there is a primitive in front castings shadow.
+
+    if (tx.x > 1.0f || tx.x < 0.0f ||
+        tx.y > 1.0f || tx.y < 0.0f ||
+        LCP.z > 1.0f || LCP.z < 0.0f)
+        shadow = 1.0f;
+
+    return shadow;
+}
+
 float4 main(PS_INPUT input) : SV_TARGET
 {
-    return diffuseTexture.Sample(wrapSampler, input.texCoords) * LightCalculation(input.lightClipPosition, input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition, shadowMap, wrapSampler);
+    const float shadow = ShadowCalculation(input.lightClipPosition);
+    //return float4 (shadow, shadow, shadow, 0.1f);
+    return diffuseTexture.Sample(wrapSampler, input.texCoords) * shadow * LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition);
 }

@@ -107,6 +107,7 @@ public:
 		//DIRECTIONAL LIGHT
 		lightMatrix = directionalLight.GetMatrix();
 		lightData = directionalLight.data;
+		UpdateBuffer(lightDataBuf, lightData);
 
 		//POINT LIGHTS
 		ShaderData::pointLightsData = pointLightsData;
