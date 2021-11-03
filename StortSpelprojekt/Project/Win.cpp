@@ -32,31 +32,6 @@ Win::~Win()
 	delete currentCanvas;
 }
 
-void Win::Initialize()
-{
-	//LOAD SCENE
-	FBXLoader levelLoader("Models");
-
-	GameLoader gameLoader;
-	gameLoader.Load("Default", scene.GetDrawables());
-
-	for (auto& [name, drawable] : scene.GetDrawables())
-	{
-		auto model = std::dynamic_pointer_cast<Model>(drawable);
-		if (model)
-		{
-			modelRenderer.Bind(model);
-			shadowRenderer.Bind(model);
-		}
-
-		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
-		if (particleSystem)
-		{
-			//SAME BUT PS->
-		}
-	}
-
-}
 
 void Win::MainMenu()
 {
