@@ -26,24 +26,24 @@ cbuffer test : register(b0)
     float4x4 lightMatrix;
 }
 
-PS_OUTPUT main(PS_INPUT input)
+float4 main(PS_INPUT input) : SV_TARGET
 {
     PS_OUTPUT output;
 
     const float2 newTex = input.texCoords * 30.0f;
 
-    output.diffuseTexture = diffuseTexture.Sample(wrapSampler, newTex) * 0.8;
+    float4 color = diffuseTexture.Sample(wrapSampler, newTex) * 0.8;
 
-    output.normal = float4(input.normal, 1.0f);
+    //output.normal = float4(input.normal, 1.0f);
 
-    output.worldPosition = float4(input.worldPosition, 1.0f);
+    //output.worldPosition = float4(input.worldPosition, 1.0f);
 
-    output.diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
-    output.specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    //output.diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    //output.specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
-    output.ambient = float4(0.5f, 0.5f, 0.5f, 1.0f);
+    //output.ambient = float4(0.5f, 0.5f, 0.5f, 1.0f);
 
-    output.lightClipPosition = mul(output.worldPosition, lightMatrix);
+    //output.lightClipPosition = mul(output.worldPosition, lightMatrix);
 
-    return output.diffuseTexture;
+    return color;
 }
