@@ -136,7 +136,6 @@ HRESULT Graphics::CreateRasterizerState()
 	D3D11_RASTERIZER_DESC desc = {};
 	desc.CullMode = D3D11_CULL_BACK;
 	desc.FillMode = D3D11_FILL_WIREFRAME;
-
 	return device->CreateRasterizerState(&desc, &wireframeState);
 }
 

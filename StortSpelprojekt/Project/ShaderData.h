@@ -55,7 +55,7 @@ public:
 		CreateBuffer(cameraPositionBuf);
 		CreateBuffer(matrices_buf, sizeof(Matrices));
 
-		shadowMap = ShadowMap(4096, 7);
+		shadowMap = ShadowMap(2024, 7);
 
 		//SAMPLER
 		D3D11_SAMPLER_DESC samplerDesc = {};

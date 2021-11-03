@@ -2,9 +2,11 @@
 #include "Window.h"
 #include "Event.h"
 #include "Time.h"
+#include "Game.h"
 #include "LoadingScreen.h"
 #include "ApplicationState.h"
 #include "ShaderData.h"
+#include "Main Menu.h"
 #include "GameOver.h"
 #include "Win.h"
 
@@ -26,7 +28,7 @@ public:
 		FileSystem::SetProjectDirectory();
 
 		window = new Window(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
-
+		
 		graphics = std::make_unique<Graphics>(window->ClientWidth(), window->ClientHeight(), window->GetHWND(), false);
 
 		RunLoadingScreen();
@@ -89,6 +91,7 @@ public:
 
 			case APPSTATE::MAIN_MENU:
 				RunLoadingScreen();
+				window->ActivateCursor();
 				delete state;
 				state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 				break;
@@ -108,6 +111,7 @@ public:
 
 			case APPSTATE::GAME:
 				RunLoadingScreen();
+				window->DeactivateCursor();
 				delete state;
 				state = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 				break;

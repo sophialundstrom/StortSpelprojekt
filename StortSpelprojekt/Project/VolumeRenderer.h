@@ -29,7 +29,7 @@ private:
 	const std::string forward_ps_path = "../x64/Debug/VolumePixelShader.cso";
 #else
 	const std::string vs_path = "../x64/Release/VolumeVertexShader.cso";
-	const std::string ps_path = "../x64/Release/VolumePixelShader.cso";
+	const std::string forward_ps_path = "../x64/Release/VolumePixelShader.cso";
 #endif
 
 	//SHADERS

@@ -26,14 +26,12 @@ private:
 	const std::string vs_path = "../x64/Release/TerrainVertexShader.cso";
 
 	const std::string hs_path = "../x64/Release/TerrainHullShader.cso";
-	const std::string LOD_hs_path = "../x64/Release/LODTerrainHullShader.cso";
 
-	const std::string ds_path = "../x64/Release/TerrainDomainShader.cso";
+	const std::string ds_path = "../x64/Release/WaterDomainShader.cso";
 
 	const std::string gs_path = "../x64/Release/TerrainGeometryShader.cso";
 
-	const std::string deferred_ps_path = "../x64/Release/DeferredTerrainPixelShader.cso";
-	const std::string forward_ps_path = "../x64/Release/ForwardTerrainPixelShader.cso";
+	const std::string ps_path = "../x64/Release/WaterPixelShader.cso";
 #endif
 
 	//SHADERS
