@@ -428,7 +428,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::consistantDelay);
-	AddHostileNPC("BarbarianBow", { 450, 23, -700 }, CombatStyle::consistantDelay);
+	//AddHostileNPC("BarbarianBow", { 450, 23, -700 }, CombatStyle::consistantDelay);
 
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
 	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ -70, 70, -580 });
