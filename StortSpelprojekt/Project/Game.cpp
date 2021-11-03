@@ -483,7 +483,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPC
-	auto friendlyNPC = AddFriendlyNPC("LowPolyCharacter", Vector3{ -70, 25.0f, -596 });
+	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
 	friendlyNPC->BindBuilding(building);
 	friendlyNPC->AddQuestID(0);
 	friendlyNPC->AddQuestID(2);
