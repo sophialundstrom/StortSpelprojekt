@@ -198,12 +198,12 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 	if (Collision::Intersection(this->bounds, arrow->GetCollider()))
 	{
 		collided = true;
+		Print("ARROW HIT PLAYER");
+		arrow->DisableArrow();
 		if (stats.healthPoints == 0)
 		{
 			return collided;
 		}
-		Print("ARROW HIT PLAYER");
-		arrow->DisableArrow();
 		if (stats.healthPoints - 1 == 0)
 		{
 			stats.healthPoints--;
@@ -251,6 +251,33 @@ void Player::Save(const std::string file)
 
 	writer.close();
 	Print("SUCCEEDED SAVING PLAYER FILE");
+}
+
+bool Player::CheckArrowHit(std::shared_ptr<Collider> collider)
+{
+
+	for (auto arrow : arrows)
+	{
+		if (!arrow->IsShot())
+			continue;
+
+		bool hit = false;
+
+		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+		if (box)
+			hit = Collision::Intersection(box, arrow->GetCollider());
+
+		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
+		if (sphere)
+			hit = Collision::Intersection(sphere, arrow->GetCollider());
+
+		if (hit)
+			arrow->DisableArrow();
+		
+		return hit;
+
+	}
+	return false;
 }
 
 void Player::Load(const std::string file)

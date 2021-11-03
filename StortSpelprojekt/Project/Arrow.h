@@ -14,7 +14,7 @@ private:
 	std::shared_ptr<BoundingBox> collider;
 
 public:
-	Arrow(const std::string file);
+	Arrow();
 	~Arrow();
 
 	void DisableArrow();

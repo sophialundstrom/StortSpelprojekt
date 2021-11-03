@@ -19,6 +19,7 @@ public:
 	bool Collided(Player &player);
 	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 	void Die();
+	void TakeDamage();
 	std::shared_ptr<BoundingSphere> GetCollider() { return boundingSphere; }
 	//void AddModel(std::map<std::string, std::shared_ptr<Drawable>> &drawables, const std::string& file);
 	void debugPrint();

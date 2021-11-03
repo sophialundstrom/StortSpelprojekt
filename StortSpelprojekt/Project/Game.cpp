@@ -8,11 +8,6 @@ void Game::Update()
 	player->Update(terrain.GetHeightMap());
 
 	QuestLog::Inst().Update();
-
-	for (int i = 0; i < hostileArrows.size(); i++)
-	{
-		player->ProjectileCollided(hostileArrows[i]);
-	}
 	
 	scene.Update();
 
@@ -202,32 +197,13 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Ve
 
 void Game::AddArrow(const std::string fileName)
 {
-	auto arrow = std::make_shared<Arrow>(fileName);
+	auto arrow = std::make_shared<Arrow>();
 	arrows.emplace_back(arrow);
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
 	arrow->GetCollider()->SetScale(0.15);
-	//arrow->GetCollider()->SetPosition(arrow->GetPosition().x, arrow->GetPosition().y, arrow->GetPosition().z - 0.5f);
 	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
-	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
-	colliderRenderer.Bind(arrow->GetCollider());
-	arrow->Update();
-}
-
-void Game::AddHostileArrow(const std::string fileName)
-{
-	auto arrow = std::make_shared<Arrow>(fileName);
-	//scene.AddModel(fileName, arrow);
-	hostileArrows.emplace_back(arrow);
-
-	arrow->SetPosition(0, -100, 0);
-	arrow->SetScale(2);
-	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
-	arrow->GetCollider()->SetScale(0.15);
-	
 	modelRenderer.Bind(arrow);
 	shadowRenderer.Bind(arrow);
 	colliderRenderer.Bind(arrow->GetCollider());
@@ -274,6 +250,20 @@ void Game::CheckNearbyCollision()
 
 	if (collided)
 		player->ResetToLastPosition();
+}
+
+void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
+{
+	auto npc = std::make_shared<HostileNPC>(filename, player, combatStyle);
+	npc->SetPosition(position);
+	npc->BindPlayerArrows(arrows);
+	modelRenderer.Bind(npc);
+	scene.AddDrawable("hostileNpc", npc);
+	npc->BindArrows(modelRenderer);
+
+	shadowRenderer.Bind(npc);
+	colliderRenderer.Bind(npc->GetCollider());
+	hostiles.emplace_back(npc);
 }
 
 void Game::CheckSaveStationCollision()
@@ -424,8 +414,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	for (int i = 0; i < 3; i++)
 		AddArrow("Arrow");
 
-	for (int i = 0; i < 3; i++)
-		AddHostileArrow("Arrow");
+	//for (int i = 0; i < 3; i++)
+	//	AddHostileArrow("Arrow");
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
@@ -610,4 +600,23 @@ APPSTATE Game::Run()
 
 
 	return APPSTATE::NO_CHANGE;
+}
+
+void Game::CheckNearbyEnemies()
+{
+
+	for (auto hostile : hostiles)
+	{
+		bool hit = player->CheckArrowHit(hostile->GetCollider());
+
+		if (hit)
+		{
+			
+			hostile->TakeDamage();
+		}
+
+	}
+
+
+
 }
