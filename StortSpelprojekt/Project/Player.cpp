@@ -96,7 +96,7 @@ void Player::Update(HeightMap* heightMap)
 
 	//Only update what direction the player is facing when keyboardinput is detected by the moveDirection vector
 	if (moveDirection.Length() > 0 || moveDirection.Length() < 0 || Event::RightIsClicked())
-		rotation = { 0, movementYRadiant, 0 };
+		rotation =  Quaternion::CreateFromYawPitchRoll(movementYRadiant, 0, 0);
 
 	//Updates the player and cameras positions
 	Vector3 newPlayerPos = position + (moveDirection * stats.currentSpeed * Time::GetDelta());
@@ -126,11 +126,23 @@ void Player::Update(HeightMap* heightMap)
 		newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
 	}
 
-	position = newPlayerPos + Vector3(0, 3.5f, 0);
+	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
 
 	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 2.0f, 0.0f);
 
 	static float lastClick = 0;
+
+	sinceLastShot += Time::GetDelta();
+	if (sinceLastShot > shootingAnimationLenght) {
+
+		bool hasMoved = position == lastPosition ? false : true;
+		if (!hasMoved)
+			PlayAnimation("Take003", true); // ADD IDLE ANIMATION
+		else if (hasMoved)
+			PlayAnimation("Take001", true); // ADD WALKING ANIMATION
+		else if (jumping)
+			PlayAnimation("Take003", false); // ADD IN AIR JUMP ANIMATION
+	}
 
 	if(Event::RightIsClicked())
 	{
@@ -141,6 +153,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			if (Event::LeftIsClicked())
 			{
+				PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				int currentIndex = 0;
 				bool isPlayerShootingArrow = false;
 				while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
@@ -149,6 +162,7 @@ void Player::Update(HeightMap* heightMap)
 					lastClick = Time::Get();
 					currentIndex++;
 				}
+				sinceLastShot = 0.f;
 			}
 		}
 	}
@@ -157,11 +171,13 @@ void Player::Update(HeightMap* heightMap)
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 
 	for (int i = 0; i < arrows.size(); i++)
+	{
 		arrows.at(i)->Update();
+	}
 
 	sceneCamera->MoveTowards(newCameraPos);
 
-	Model::Update();
+	AnimatedModel::Update();
 
 	bounds->Update();
 	frustum->Update();
@@ -170,7 +186,7 @@ void Player::Update(HeightMap* heightMap)
 bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 {
 	bool collided = false;
-	if ((position - arrow->GetPosition()).Length() < 3.0f)
+	if (Collision::Intersection(this->bounds, arrow->GetCollider()))
 	{
 		collided = true;
 		if (stats.healthPoints == 0)
@@ -190,7 +206,6 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 		stats.healthPoints--;
 		UpdateHealthUI();
 	}
-
 	return collided;
 }
 

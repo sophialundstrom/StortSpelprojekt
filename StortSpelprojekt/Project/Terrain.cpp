@@ -8,7 +8,7 @@ HeightMap::HeightMap(const std::string& texture)
 
 	this->texture = new Texture(path, texture);
 
-	int channels = 3;
+	int channels = 4;
 	unsigned char* image = stbi_load(path.c_str(), &width, &height, &channels, channels);
 	if (!image)
 	{

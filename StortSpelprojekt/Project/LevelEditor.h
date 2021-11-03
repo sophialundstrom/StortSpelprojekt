@@ -15,6 +15,8 @@
 class LevelEditor : public Editor, public ApplicationState
 {
 private:
+	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+
 	std::string selectedObject;
 	HWND appWindow;
 	float wRatioX;
@@ -24,7 +26,8 @@ private:
 	Scene scene;
 	std::map<std::string, std::shared_ptr<BoundingSphere>> pickBoxes;
 	Terrain* terrain;
-	std::shared_ptr <Building> building;
+	std::shared_ptr<Building> building;
+
 	//ADD RENDERERS
 	AnimatedModelRenderer animatedModelRenderer;
 	TerrainRenderer terrainRenderer;

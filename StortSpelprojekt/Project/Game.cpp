@@ -33,17 +33,13 @@ void Game::Update()
 	CheckSaveStationCollision();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
-		
-	pathing.CreateGrid(scene.GetDrawables());
-
-	pathing.FindPath(Vector3(12, 0, 12), Vector3(4, 0, 6));
 
 	Event::ClearRawDelta();
 }
 
 void Game::Render()
 {
-	deferredRenderer.SetRenderTargets();
+	Graphics::Inst().BeginFrame();
 
 	particleRenderer.Render();
 
@@ -55,16 +51,12 @@ void Game::Render()
 
 	terrainRenderer.Render(terrain);
 
-	waterRenderer.Render(water);
+	//waterRenderer.Render(water);
 
-	skeletonRenderer.Render();
+	//skeletonRenderer.Render();
 
-	shadowRenderer.Render();
+	//shadowRenderer.Render();
 
-	Graphics::Inst().BeginFrame();
-
-	deferredRenderer.Render();
-	
 	currentCanvas->Render();
 
 	Graphics::Inst().EndFrame();
@@ -197,17 +189,17 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 void Game::AddArrow(const std::string fileName)
 {
 	auto arrow = std::make_shared<Arrow>(fileName);
-	//scene.AddModel(fileName, arrow);
 	arrows.emplace_back(arrow);
-	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
 	arrow->GetCollider()->SetScale(0.15);
-	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z -0.5f };
-	arrow->GetCollider()->SetPosition(offset);
+	//arrow->GetCollider()->SetPosition(arrow->GetPosition().x, arrow->GetPosition().y, arrow->GetPosition().z - 0.5f);
+	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
+	modelRenderer.Bind(arrow);
+	shadowRenderer.Bind(arrow);
 	colliderRenderer.Bind(arrow->GetCollider());
+	arrow->Update();
 }
 
 void Game::AddHostileArrow(const std::string fileName)
@@ -215,16 +207,17 @@ void Game::AddHostileArrow(const std::string fileName)
 	auto arrow = std::make_shared<Arrow>(fileName);
 	//scene.AddModel(fileName, arrow);
 	hostileArrows.emplace_back(arrow);
-	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
+
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
+	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	arrow->GetCollider()->SetScale(0.15);
-	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z };
-	offset += {0, 0, -0.5};
-	arrow->GetCollider()->SetPosition(offset);
+	
+	modelRenderer.Bind(arrow);
+	shadowRenderer.Bind(arrow);
 	colliderRenderer.Bind(arrow->GetCollider());
+	arrow->Update();
 }
 
 void Game::CheckNearbyCollision()
@@ -338,12 +331,12 @@ void TestFuncMenu()
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
-	modelRenderer(DEFERRED, true),
-	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED),
-	colliderRenderer(DEFERRED),
-	animatedModelRenderer(DEFERRED, true),
-	water(5000)
+	modelRenderer(FORWARD, false),
+	particleRenderer(FORWARD),
+	terrainRenderer(FORWARD),
+	colliderRenderer(FORWARD),
+	animatedModelRenderer(FORWARD, false),
+	water(5000), terrain(2)
 {
 	//LOAD SCENE
 	Initialize();
@@ -368,6 +361,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	ingameCanvas->AddImage({ 355, clientHeight - 64.0f }, "hp", "HP10.png");
 
+	ingameCanvas->AddText({ (float)clientWidth - 50, (float)clientHeight - 30 }, "FPS", "0", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
+
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 
@@ -390,17 +385,15 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 		AddArrow("Arrow");
 
 	for (int i = 0; i < 3; i++)
-	{
 		AddHostileArrow("Arrow");
-	}
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
 	scene.AddModel("Player", player);
-	modelRenderer.Bind(scene.Get<Model>("Player"));
-	shadowRenderer.Bind(scene.Get<Model>("Player"));
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
+	animatedModelRenderer.Bind(player);
+
 	colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
 
@@ -418,7 +411,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
-
 	//Item
 	AddItem(WOOD, { -62, 23, -580 });
 
@@ -433,7 +425,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddHostileNPC("HostileCube", hostileArrows, player);
 	auto hostile = scene.Get<NPC>("HostileCube");
 	hostile->SetPosition(-40, 23, -580);
-	hostile->SetScale(1);
+	hostile->SetScale(2);
 	//hostile->GetCollider()->SetParent(hostile);
 	modelRenderer.Bind(hostile);
 	shadowRenderer.Bind(hostile);
@@ -444,15 +436,15 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer.Bind(particleSystem);
 
 	//ANIMATION
-	auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
-	animated->SetPosition(-30, 25, -580);
-	scene.AddDrawable("AnimatedModel", animated);
-	skeletonRenderer.Bind(animated);
-	animatedModelRenderer.Bind(animated);
+	//auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
+	//animated->SetPosition(-30, 25, -580);
+	//scene.AddDrawable("AnimatedModel", animated);
+	//skeletonRenderer.Bind(animated);
+	//animatedModelRenderer.Bind(animated);
 
 	//SOUND
-	Audio::AddAudio(L"Audio/Rain.wav");
-	Audio::StartAudio();
+	//Audio::AddAudio(L"Audio/Rainy.wav");
+	//Audio::StartAudio();
 
 	(void)Run();
 }
@@ -535,12 +527,6 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}
 
-		if (Event::KeyIsPressed('O'))
-		{
-			scene.Get<AnimatedModel>("AnimatedModel")->PlayAnimation("Take 001");
-			lastClick = Time::Get();
-		}
-
 		if (Event::KeyIsPressed('Y'))
 		{
 			player->AddHealthPoint();
@@ -554,6 +540,19 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}
 
+	}
+
+	static int frames = 0;
+	static float time = 0;
+
+	time += Time::GetDelta();
+	frames++;
+
+	if (time >= 1.0f)
+	{
+		canvases["INGAME"]->UpdateText("FPS", std::to_string(frames));
+		frames = 0;
+		time = 0;
 	}
 
 	if (mainMenu)

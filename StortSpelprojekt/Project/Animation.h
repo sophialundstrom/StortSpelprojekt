@@ -13,6 +13,7 @@ struct Channel
 
 struct Animation
 {
+	bool repeat = false;
 	bool active = false;
 	std::string name = "";
 	float ticksPerSecond = 0;
@@ -90,6 +91,8 @@ struct Animation
 		{
 			timer = 0;
 			//active = false;
+			if (!repeat)
+				active = false;
 			return;
 		}
 
@@ -118,8 +121,14 @@ struct Animation
 		localMatrix = scaling * quaternion * translation;
 	}
 
-	void Play()
+	void Play(const bool& onRepeat)
 	{
 		active = true;
+		repeat = onRepeat;
+	}
+
+	void Stop()
+	{
+		active = false;
 	}
 };
