@@ -257,6 +257,12 @@
     <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp">
       <Filter>Header Files\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Win.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -559,6 +565,12 @@
     <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Win.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -645,5 +657,10 @@
     <FxCompile Include="SkeletonVertexShader.hlsl" />
     <FxCompile Include="WaterDomainShader.hlsl" />
     <FxCompile Include="WaterPixelShader.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LightCalculations.hlsli">
+      <Filter>Header Files\Application\Graphics\Renderers</Filter>
+    </None>
   </ItemGroup>
 </Project>

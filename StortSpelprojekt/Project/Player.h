@@ -58,8 +58,8 @@ struct Stats
 	UINT barbariansKilled = 0;
 	float movementSpeed = 30.0f;
 	float sprintSpeed = 50.0f;
-	UINT maxHealthPoints = 10;
-	UINT healthPoints = 10;
+	UINT maxHealthPoints = 1;
+	UINT healthPoints = 1;
 	UINT level = 1;
 	float currentSpeed = movementSpeed;
 
@@ -116,6 +116,7 @@ private:
 
 	bool isRightPressed;
 	bool isLeftPressed;
+	bool gameOver = false;
 
 	Inventory inventory;
 
@@ -124,6 +125,7 @@ private:
 	float shootingAnimationLenght = 1.f;
 	float currentLerp = 0.f;
 	float duration = 1.f;
+	bool inAir = false;
 
 	void UpdateHealthUI()
 	{
@@ -153,6 +155,8 @@ public:
 
 		Load(file);
 		UpdateHealthUI();
+
+		PlayAnimation("Idle", true, 0.2f);
 	}
 public:
 	// TEMP STATS PRINT
@@ -167,7 +171,7 @@ public:
 	}
 
 	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
-
+	bool GetGameOver() { return this->gameOver; }
 	std::shared_ptr<BoundingSphere> GetBounds() { return bounds; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 

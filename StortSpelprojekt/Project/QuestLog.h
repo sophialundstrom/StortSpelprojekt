@@ -16,6 +16,8 @@ private:
 	const UINT UILeftOffset = 70u;
 	const UINT UIOffset = 80u;
 
+	bool IsQuestDone = false;
+
 	std::map<UINT, Quest*> quests;
 	std::vector<Quest*> activeQuests;
 
@@ -170,4 +172,6 @@ public:
 			
 		return quests[ID]->IsCompleted();
 	}
+
+	bool GetActiveQuest() { return this->activeQuests.size(); }
 };

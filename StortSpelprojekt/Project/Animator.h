@@ -46,7 +46,7 @@ public:
 		animations.emplace(animation->mName.C_Str(), new Animation(animation));
 	}
 
-	void PlayAnimation(const std::string& name, const bool& onRepeat)
+	void PlayAnimation(const std::string& name, const bool& onRepeat, const float& speedFactor = 1.f)
 	{
 
 		if (currentAnimation == animations[name]) // compare if they are the same
@@ -54,6 +54,7 @@ public:
 
 		currentAnimation = animations[name];
 		currentAnimation->Play(onRepeat);
+		currentAnimation->speedFactor = speedFactor;
 	}
 
 	bool HasActiveAnimation() { if (currentAnimation) return true; return false; }
