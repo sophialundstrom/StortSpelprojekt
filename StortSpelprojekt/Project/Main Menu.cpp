@@ -129,11 +129,12 @@ void MainMenu::Render()
 
 APPSTATE MainMenu::Run()
 {
+	currentCanvas->Update();
+	scene.Update();
 	Render();
 	scene.UpdateDirectionalLight(scene.GetCamera()->GetPosition());
-	scene.Update();
 
-	currentCanvas->Update();
+
 
 	if (play)
 		return APPSTATE::GAME;

@@ -393,7 +393,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//INGAME CANVAS
 	auto ingameCanvas = new Canvas();
-
+	ingameCanvas->HideCursor();
 	ingameCanvas->AddImage({ 250, 365 }, "QuestBorder", "QuestBorder.png");
 	ingameCanvas->AddText({ 250, 65 }, "AQ", "Active Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
