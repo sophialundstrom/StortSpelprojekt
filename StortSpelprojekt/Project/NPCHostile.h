@@ -19,7 +19,7 @@ private:
 	float movementYRadiant;
 
 	CombatStyle combatStyle;
-	float enemyShootDetectionRadius = 150.f;
+	float enemyShootDetectionRadius = 75;
 	float shootDeelay = 0.2f;
 
 	float shootDeelayPattern[3];

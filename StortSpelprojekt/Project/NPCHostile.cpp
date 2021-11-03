@@ -41,7 +41,7 @@ void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
     combatStyle = newCombatStyle;
     shootPatternIndex = 0;
 
-    float normalDelay = 1.f;
+    float normalDelay = 3.f;
     float quickDelay = 0.2f;
     float breakTime = 2.4f;
 
@@ -79,7 +79,8 @@ void HostileNPC::Update()
         if (aimDir.x < 0)
             movementYRadiant *= -1;
         movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
-        SetRotation({ PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+
+        SetRotation({ 0, movementYRadiant, 0 });
 
         if (Time::Get() - lastClick > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow)
         {

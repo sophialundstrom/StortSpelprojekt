@@ -5,21 +5,21 @@ NPC::NPC(const std::string& file)
 	:Model(file, file)
 {
 	// call bind here cause i think it binds the bounding volume to a useful place
-	boundingSphere = std::make_shared<BoundingSphere>();
+	boundingBox = std::make_shared<BoundingBox>();
 	hp = 3;
 }
 
 NPC::NPC(const Model& model)
 	: Model(model)
 {
-	boundingSphere = std::make_shared<BoundingSphere>();
+	boundingBox = std::make_shared<BoundingBox>();
 }
 
 void NPC::Update()
 {
-	boundingSphere->SetPosition(position);
+	boundingBox->SetPosition(position);
 	Model::Update();
-	boundingSphere->Update();
+	boundingBox->Update();
 }
 
 bool NPC::Collided(Player& player)
@@ -35,7 +35,7 @@ bool NPC::Collided(Player& player)
 bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 {
 
-	if (Collision::Intersection(this->boundingSphere, arrow->GetCollider()) && arrow->IsShot() == true)
+	if (Collision::Intersection(this->boundingBox, arrow->GetCollider()) && arrow->IsShot() == true)
 	{
 		Print("ARROW HIT");
 		arrow->DisableArrow();
