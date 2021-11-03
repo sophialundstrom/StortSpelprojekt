@@ -15,14 +15,19 @@ Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer(DEFERRED)
 {
 	currentCanvas = new Canvas();
+
+	//FORM
+	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 1.25f }, "Form", 500, 150, UI::COLOR::GRAY, [this] { MainMenu(); }, hoveringWin);
+	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 1.25f }, "Form", "Form.png", 1.f, true);
+
 	//QUIT
-	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 1.4f }, "Quit", 400, 150, UI::COLOR::GRAY, [this] { QuitGame(); }, hoveringWin);
-	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 1.4f }, "Quit", "Quit.png", 1.f, true);
+	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 1.6f }, "Quit", 400, 150, UI::COLOR::GRAY, [this] { QuitGame(); }, hoveringWin);
+	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 1.6f }, "Quit", "Quit.png", 1.f, true);
 
 	//MAINMENU
-	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "Name", 400, 150, UI::COLOR::GRAY, [this] { MainMenu(); }, hovering2Win);
-	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 2.f }, "MainMenuButton", "MainMenuButton.png", 1.f, true);
-	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 4.f }, "Win", "Win.png", 1.f, true);
+	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 2.2f }, "Name", 400, 150, UI::COLOR::GRAY, [this] { MainMenu(); }, hovering2Win);
+	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 2.2f }, "MainMenuButton", "MainMenuButton.png", 1.f, true);
+	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 5.5f }, "Win", "Win.png", 1.f, true);
 
 	(void)Run();
 }

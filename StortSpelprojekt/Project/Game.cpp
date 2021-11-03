@@ -558,6 +558,9 @@ APPSTATE Game::Run()
 	if (Event::KeyIsPressed('X'))
 		return APPSTATE::GAMEOVER;
 
+	if (Event::KeyIsPressed('Z'))
+		return APPSTATE::WIN;
+
 	if (questLog.get()->GetActiveQuest() == 0)
 	{
 		std::cout << "WIN!!!" << std::endl;
