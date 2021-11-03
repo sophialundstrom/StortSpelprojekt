@@ -240,9 +240,12 @@ void LevelEditor::Update()
 	if (Event::KeyIsPressed(VK_SPACE))
 		scene.GetCamera()->MoveUp();
 
-	if (Event::KeyIsPressed(VK_CONTROL))
+	if (Event::KeyIsPressed('Z'))
 		scene.GetCamera()->MoveUp(-1);
   
+	if (Event::KeyIsPressed(VK_CONTROL) && Event::KeyIsPressed('D'))
+		DuplicateObject();
+
 	if (Event::KeyIsPressed(VK_SHIFT))
 		scene.GetCamera()->SetSpeedMultiplier(4);
 	else
@@ -385,6 +388,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	{
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];
+		window.AddTextComponent("FPS");
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
@@ -528,6 +532,16 @@ APPSTATE LevelEditor::Run()
 
 	{
 		auto& window = windows["TOOLS"];
+		static int frames = 0;
+		static float time = 0.0f;
+		time += Time::GetDelta();
+		frames++;
+		if (time >= 1)
+		{
+			window.SetValue<TextComponent, std::string>("FPS", std::to_string(frames));
+			frames = 0;
+			time = 0.0f;
+		}
 		if (window.GetValue<ButtonComponent>("LOAD FBX"))
 			Load(FileSystem::LoadFile("Models"));
 
