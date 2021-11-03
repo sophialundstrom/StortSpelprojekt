@@ -99,9 +99,9 @@ public:
 			mesh.bufferID = ID;
 	}
 
-	void PlayAnimation(const std::string& animation, const bool& onRepeat)
+	void PlayAnimation(const std::string& animation, const bool& onRepeat, const float& speedFactor = 1.f)
 	{
-		animator->PlayAnimation(animation, onRepeat);
+		animator->PlayAnimation(animation, onRepeat, speedFactor);
 	}
 
 	// Inherited via Drawable

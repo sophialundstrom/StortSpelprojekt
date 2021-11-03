@@ -28,3 +28,7 @@ C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debu
 C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumeIDVertexShader.cso
 C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumePixelShader.cso
 C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumeVertexShader.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\SkeletonPixelShader.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\SkeletonVertexShader.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterDomainShader.cso
+C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterPixelShader.cso
