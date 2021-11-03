@@ -125,6 +125,7 @@ private:
 	float shootingAnimationLenght = 1.f;
 	float currentLerp = 0.f;
 	float duration = 1.f;
+	bool inAir = false;
 
 	void UpdateHealthUI()
 	{
@@ -154,6 +155,8 @@ public:
 
 		Load(file);
 		UpdateHealthUI();
+
+		PlayAnimation("Idle", true, 0.2f);
 	}
 public:
 	// TEMP STATS PRINT
