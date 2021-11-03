@@ -89,7 +89,7 @@ void Game::Options()
 void Game::HowToPlay()
 {
 	paused = true;
-	currentCanvas = canvases["HOWTOPLAY"];
+	currentCanvas = canvases["HOW TO PLAY"];
 }
 
 void Game::BacktoPause()
@@ -370,18 +370,27 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//PAUSED CANVAS
 	auto pauseCanvas = new Canvas();
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "RESUME", 100, 50, UI::COLOR::GRAY, [this] { Resume(); }, TestFuncResume);
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Z", "Pause.png", 1.0f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.09f }, "A", 370, 133, UI::COLOR::GRAY, [this] { Resume(); }, TestFuncResume);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.35f }, "B", 270, 100, UI::COLOR::GRAY, [this] { Options(); }, TestFuncOptions);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.2f }, "C", 250, 100, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncMenu);
-	canvases["PAUSED"] = pauseCanvas;
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "PauseBackground", "PauseBackground.png", 1.0f, 1.0f);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 8.0f }, "PauseTitle", "PAUSED.png", 1.0f, 1.0f);
 
-	//OPTIONS
-	auto optionsCanvas = new Canvas();
-	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Options.png", 1.0f, 1.0f);
-	optionsCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "D", 200, 78, UI::COLOR::GRAY, [this] { Pause(); }, TestFuncResume);
-	canvases["OPTIONS"] = optionsCanvas;
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "RESUME", 350, 95, UI::COLOR::GRAY, [this] { Resume(); }, TestFuncResume);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100}, "ResumeButton", "ResumeButton.png", 0.50f, 1.0f);
+
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlayButton", "HowToPlayButton.png", 0.50f, 1.0f);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlay", 350, 95, UI::COLOR::GRAY, [this] { HowToPlay(); }, TestFuncOptions);
+
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "BackToMainMenu", "MainMenuButton.png", 0.50f, 1.0f);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100}, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncOptions);
+
+	canvases["PAUSED"] = pauseCanvas;
+	//HOW TO PLAY
+	auto howToPlayCanvas = new Canvas();
+	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "ControlImage", "Controls.png", 2.0f, 1.0f);
+	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackHowToPlay", "BackButton.png", 0.5f, 1.0f);
+	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackButtonHowToPlay", 340, 90, UI::COLOR::GRAY, [this] { BacktoPause(); }, TestFuncBack);
+
+	canvases["HOW TO PLAY"] = howToPlayCanvas;
+
 
 	for (int i = 0; i < 3; i++)
 		AddArrow("Arrow");
@@ -403,7 +412,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
-	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture"};
+	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture" };
 	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
 	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
 	building->SetScale(5);
@@ -433,6 +442,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
 	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ -70, 70, -580 });
 	particleRenderer.Bind(particleSystem);
+
+	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
+	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
+	particleRenderer.Bind(campFireSystem);
 
 	//ANIMATION
 	//auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
