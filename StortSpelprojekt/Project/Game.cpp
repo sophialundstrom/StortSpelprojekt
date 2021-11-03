@@ -39,7 +39,7 @@ void Game::Update()
 
 void Game::Render()
 {
-	deferredRenderer.SetRenderTargets();
+	Graphics::Inst().BeginFrame();
 
 	particleRenderer.Render();
 
@@ -51,16 +51,12 @@ void Game::Render()
 
 	terrainRenderer.Render(terrain);
 
-	waterRenderer.Render(water);
+	//waterRenderer.Render(water);
 
-	skeletonRenderer.Render();
+	//skeletonRenderer.Render();
 
-	shadowRenderer.Render();
+	//shadowRenderer.Render();
 
-	Graphics::Inst().BeginFrame();
-
-	deferredRenderer.Render();
-	
 	currentCanvas->Render();
 
 	Graphics::Inst().EndFrame();
@@ -335,11 +331,11 @@ void TestFuncMenu()
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
-	modelRenderer(DEFERRED, true),
-	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED),
-	colliderRenderer(DEFERRED),
-	animatedModelRenderer(DEFERRED, true),
+	modelRenderer(FORWARD, false),
+	particleRenderer(FORWARD),
+	terrainRenderer(FORWARD),
+	colliderRenderer(FORWARD),
+	animatedModelRenderer(FORWARD, false),
 	water(5000), terrain(2)
 {
 	//LOAD SCENE

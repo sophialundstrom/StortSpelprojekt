@@ -126,7 +126,7 @@ void Player::Update(HeightMap* heightMap)
 		newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
 	}
 
-	position = newPlayerPos + Vector3(0, 3.5f, 0);
+	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
 
 	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 2.0f, 0.0f);
 
