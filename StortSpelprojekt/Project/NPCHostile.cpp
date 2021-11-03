@@ -23,18 +23,19 @@ void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
     combatStyle = newCombatStyle;
     shootPatternIndex = 0;
 
+    float normalDelay = 1.f;
+    float quickDelay = 0.2f;
+    float breakTime = 2.4f;
+
     switch (combatStyle)
     {
     case CombatStyle::consistantDelay :
-        float normalDelay = 1.f;
         shootDeelayPattern[0] = normalDelay;
         shootDeelayPattern[1] = normalDelay;
         shootDeelayPattern[2] = normalDelay;
         break;
 
     case CombatStyle::Burst:
-        float quickDelay = 0.2f;
-        float breakTime = 2.4f;
         shootDeelayPattern[0] = quickDelay;
         shootDeelayPattern[1] = quickDelay;
         shootDeelayPattern[2] = quickDelay + breakTime;
