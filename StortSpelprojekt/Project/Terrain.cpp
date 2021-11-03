@@ -41,8 +41,11 @@ Terrain::Terrain(UINT subdivisions)
 	heightMap->texture->Bind(0, Shader::DS);
 
 	blendMap = new Texture("Textures/blendMap.png", "BlendMap");
-	const std::string tx[3] = { "SandSeamless.jpg", "GrassSeamless.jpg", "RockSeamless.jpg" };
-	for (UINT i = 0; i < 3; ++i)
+
+	pathMap = new Texture("Textures/PathBlendMap.png", "PathMap");
+
+	const std::string tx[4] = { "SandSeamless.jpg", "GrassSeamless.jpg", "RockSeamless.jpg", "Path.jpg"};
+	for (UINT i = 0; i < 4; ++i)
 		textures[i] = new Texture("Textures/" + tx[i], tx[i]);
 }
 
@@ -50,16 +53,18 @@ Terrain::~Terrain()
 {
 	delete heightMap;
 	delete blendMap;
-	for (UINT i = 0; i < 3; ++i)
+	delete pathMap;
+	for (UINT i = 0; i < 4; ++i)
 		delete textures[i];
 	delete plane;
 }
 
 void Terrain::Draw() const
 {
-
-	for (UINT i = 0; i < 3; ++i)
-		textures[i]->Bind(i + 1);
+	blendMap->Bind(0);
+	pathMap->Bind(1);
+	for (UINT i = 0; i < 4; ++i)
+		textures[i]->Bind(i + 2);
 
 	plane->Draw();
 }
