@@ -449,8 +449,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//animatedModelRenderer.Bind(animated);
 
 	//SOUND
-	Audio::AddAudio(L"Audio/Rainy.wav");
-	Audio::StartAudio();
+	//Audio::AddAudio(L"Audio/Rainy.wav");
+	//Audio::StartAudio();
 
 	(void)Run();
 }
