@@ -150,8 +150,10 @@ public:
 		bounds = std::make_shared<BoundingSphere>();
 
 		bounds->SetScale(3);
+		bounds->SetPosition(0, 3, 0);
 
 		frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
+		frustum->SetPosition(0, 3, 0);
 
 		Load(file);
 		UpdateHealthUI();
