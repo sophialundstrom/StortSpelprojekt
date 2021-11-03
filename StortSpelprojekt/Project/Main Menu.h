@@ -25,7 +25,6 @@ private:
 	ParticleRenderer particleRenderer;
 	ModelRenderer modelRenderer;
 	ShadowRenderer shadowRenderer;
-	DeferredRenderer deferredRenderer;
 	std::shared_ptr<Building> building;
 
 	void Initialize();
