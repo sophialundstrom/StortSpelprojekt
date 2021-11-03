@@ -154,6 +154,8 @@ public:
 
 		Load(file);
 		UpdateHealthUI();
+
+		PlayAnimation("Idle", true, 0.2f);
 	}
 public:
 	// TEMP STATS PRINT

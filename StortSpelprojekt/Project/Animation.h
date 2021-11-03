@@ -13,6 +13,7 @@ struct Channel
 
 struct Animation
 {
+	float speedFactor = 1.f;
 	bool repeat = false;
 	bool active = false;
 	std::string name = "";
@@ -80,7 +81,7 @@ struct Animation
 			return;
 
 		timer += Time::GetDelta();
-		float timeInTicks = timer / 100.0f * ticksPerSecond;
+		float timeInTicks = timer / 100.0f * ticksPerSecond * speedFactor;
 		float frameTime = fmod(timeInTicks, duration);
 
 		/*Print(ticksPerSecond);

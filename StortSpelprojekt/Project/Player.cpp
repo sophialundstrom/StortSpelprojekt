@@ -107,16 +107,16 @@ void Player::Update(HeightMap* heightMap)
 		if (Event::KeyIsPressed(VK_SPACE))
 		{
 			jumping = true;
-			preJumpGroundLevel = heightMapGroundLevel; PlayAnimation("Jump", false);
+			preJumpGroundLevel = heightMapGroundLevel; PlayAnimation("Jump", false, 0.5f);
 		}
 	}
 
 	if (jumping)
 	{
 		airTime += Time::GetDelta() * 5.0f;
-		if (airTime >= 1.f)
+		if (airTime >= 1.5f)
 		{
-			PlayAnimation("Take003", true);
+			PlayAnimation("Falling", true);
 			std::cout << "IN AIR" << std::endl;
 		}
 		else
@@ -146,7 +146,7 @@ void Player::Update(HeightMap* heightMap)
 
 		bool hasMoved = position == lastPosition ? false : true;
 		if (!hasMoved)
-			PlayAnimation("Idle", true); // ADD IDLE ANIMATION
+			PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
 		else if (hasMoved && !jumping)
 			PlayAnimation("Walk", true); // ADD WALKING ANIMATION
 		//else if (jumping)
@@ -162,7 +162,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			if (Event::LeftIsClicked())
 			{
-				PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
+				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				int currentIndex = 0;
 				bool isPlayerShootingArrow = false;
 				while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
