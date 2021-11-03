@@ -20,6 +20,9 @@ private:
 	float enemyShootDetectionRadius = 150.f;
 	float shootDeelay = 0.2f;
 
+	float shootDeelayPattern[3];
+	int shootPatternIndex = 0;
+
 public:
 	HostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player, CombatStyle combatStyle);
 	HostileNPC(const Model& model);

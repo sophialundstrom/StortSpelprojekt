@@ -1,7 +1,7 @@
 #include "Arrow.h"
 
 Arrow::Arrow(const std::string file)
-	:Model(file, "Arrow"), speed(200.0f), lifeTime(5.0f)
+	:Model(file, "Arrow"), speed(330.0f), lifeTime(3.0f)
 {
 	collider = std::make_shared<BoundingBox>();
 }
