@@ -423,7 +423,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
-	AddHostileNPC("HostileCube", { -40, 23, -580 }, CombatStyle::consistantDelay);
+	AddHostileNPC("HostileCube", { 300, 23, -700 }, CombatStyle::consistantDelay);
 
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
 	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ -70,70,-580 });
