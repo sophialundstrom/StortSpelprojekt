@@ -63,6 +63,8 @@ private:
 
     std::vector<std::shared_ptr<Collider>> colliders;
 
+    std::vector<std::shared_ptr<HostileNPC>> hostiles;
+
     void Update();
     void Render();
 
@@ -80,11 +82,14 @@ private:
     void AddItem(RESOURCE resource, Vector3 position);
 
     void AddArrow(const std::string fileName);
-    void AddHostileArrow(const std::string fileName);
+    //void AddHostileArrow(const std::string fileName);
+
+    void AddHostileNPC(const std::string& filename, Vector3 position);
 
     void CheckNearbyCollision();
     void CheckSaveStationCollision();
     void CheckItemCollision();
+    void CheckNearbyEnemies();
 
     void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
     void UpdateInventoryUI();

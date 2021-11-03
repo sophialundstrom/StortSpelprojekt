@@ -1,19 +1,37 @@
 #include "NPCHostile.h"
 
 
-HostileNPC::HostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player, CombatStyle combatStyle)
+HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle)
 	:NPC(file)
 {
-	this->arrows = hostileArrows;
     this->player = player;
     this->combatStyle = combatStyle;
     SwapCombatStyle(combatStyle);
+
+    for (int i = 0; i < 3; i++)
+    {
+        auto arrow = std::make_shared<Arrow>();
+        arrow->GetCollider()->SetParent(arrow);
+        arrows.emplace_back(arrow);
+    }
+
 }
 
 HostileNPC::HostileNPC(const Model& model)
 	:NPC(model)
 {
 
+}
+
+void HostileNPC::BindPlayerArrows(std::vector<std::shared_ptr<Arrow>> playerArrows)
+{
+    this->playerArrows = playerArrows;
+}
+
+void HostileNPC::BindArrows(ModelRenderer& modelrenderer)
+{
+    for (auto arrow : arrows)
+        modelrenderer.Bind(arrow);
 }
 
 void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
@@ -52,8 +70,6 @@ void HostileNPC::Update()
 
      Vector3 aimDir = player->GetPosition() - position;
 
-     std::cout << aimDir.Length() << "    " << enemyShootDetectionRadius << std::endl;
-
     if (aimDir.Length() <=  enemyShootDetectionRadius)
     {
 
@@ -69,7 +85,7 @@ void HostileNPC::Update()
         SetRotation({ PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 
 
-
+        /*
         if (Time::Get() - lastClick > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow)
         {
 
@@ -96,15 +112,27 @@ void HostileNPC::Update()
             lastClick = Time::Get();
            
         }
+        */
 
-
-
+        
     }
 
-    for (int i = 0; i < arrows.size(); i++)
+    for (auto arrow : arrows)
     {
-        arrows.at(i)->Update();
+        if (!arrow->IsShot())
+            continue;
+        arrow->Update();
+        player->ProjectileCollided(arrow);
     }
+
+    /*for (auto arrow : playerArrows)
+    {
+        if (!arrow->IsShot())
+            continue;
+        
+        arrow->Update();
+        ProjectileCollided(arrow);
+    }*/
 
 	NPC::Update();
 }
