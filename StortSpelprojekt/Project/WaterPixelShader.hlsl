@@ -45,5 +45,5 @@ PS_OUTPUT main(PS_INPUT input)
 
     output.lightClipPosition = mul(output.worldPosition, lightMatrix);
 
-    return output;
+    return output.diffuseTexture;
 }
