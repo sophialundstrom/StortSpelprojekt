@@ -426,7 +426,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
-	scene.AddHostileNPC("HostileCube", hostileArrows, player);
+	scene.AddHostileNPC("HostileCube", hostileArrows, player, CombatStyle::Burst);
 	auto hostile = scene.Get<NPC>("HostileCube");
 	hostile->SetPosition(-40, 23, -580);
 	hostile->SetScale(2);

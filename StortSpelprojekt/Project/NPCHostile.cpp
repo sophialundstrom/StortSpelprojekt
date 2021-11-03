@@ -1,11 +1,12 @@
 #include "NPCHostile.h"
 
 
-HostileNPC::HostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player)
+HostileNPC::HostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player, CombatStyle combatStyle)
 	:NPC(file)
 {
 	this->arrows = hostileArrows;
     this->player = player;
+    this->combatStyle = combatStyle;
 }
 
 HostileNPC::HostileNPC(const Model& model)
@@ -18,11 +19,17 @@ void HostileNPC::Update()
 {
      static float lastClick = 0;
 
-    if (Event::KeyIsPressed('L'))
+     Vector3 aimDir = player->GetPosition() - position;
+
+     std::cout << aimDir.Length() << "    " << enemyShootDetectionRadius << std::endl;
+
+    if (aimDir.Length() <=  enemyShootDetectionRadius)
     {
-        if (Time::Get() - lastClick > 1.f)
+
+        std::cout << "IN RANGE\n";
+
+        if (Time::Get() - lastClick > shootDeelay)
         {
-            Vector3 aimDir = player->GetPosition() - position;
             aimDir.Normalize();
 
             movementYRadiant = acos(aimDir.x * 0 + aimDir.z * 1);
