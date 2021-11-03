@@ -39,7 +39,7 @@ void Game::Update()
 
 void Game::Render()
 {
-	deferredRenderer.SetRenderTargets();
+	Graphics::Inst().BeginFrame();
 
 	particleRenderer.Render();
 
@@ -50,16 +50,12 @@ void Game::Render()
 	colliderRenderer.Render();
 
 	terrainRenderer.Render(terrain);
-	
-	waterRenderer.Render(water);
 
-	skeletonRenderer.Render();
+	//waterRenderer.Render(water);
 
-	shadowRenderer.Render();
-	
-	Graphics::Inst().BeginFrame();
+	//skeletonRenderer.Render();
 
-	deferredRenderer.Render();
+	//shadowRenderer.Render();
 
 	currentCanvas->Render();
 
@@ -70,7 +66,6 @@ void Game::Render()
 
 void Game::Pause()
 {
-	
 	paused = true;
 	currentCanvas = canvases["PAUSED"];
 }
@@ -194,17 +189,17 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 void Game::AddArrow(const std::string fileName)
 {
 	auto arrow = std::make_shared<Arrow>(fileName);
-	//scene.AddModel(fileName, arrow);
 	arrows.emplace_back(arrow);
-	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
 	arrow->GetCollider()->SetScale(0.15);
-	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z -0.5f };
-	arrow->GetCollider()->SetPosition(offset);
+	//arrow->GetCollider()->SetPosition(arrow->GetPosition().x, arrow->GetPosition().y, arrow->GetPosition().z - 0.5f);
+	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
+	modelRenderer.Bind(arrow);
+	shadowRenderer.Bind(arrow);
 	colliderRenderer.Bind(arrow->GetCollider());
+	arrow->Update();
 }
 
 void Game::AddHostileArrow(const std::string fileName)
@@ -212,16 +207,17 @@ void Game::AddHostileArrow(const std::string fileName)
 	auto arrow = std::make_shared<Arrow>(fileName);
 	//scene.AddModel(fileName, arrow);
 	hostileArrows.emplace_back(arrow);
-	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
+
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
+	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	arrow->GetCollider()->SetScale(0.15);
-	Vector3 offset = { arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z };
-	offset += {0, 0, -0.5};
-	arrow->GetCollider()->SetPosition(offset);
+	
+	modelRenderer.Bind(arrow);
+	shadowRenderer.Bind(arrow);
 	colliderRenderer.Bind(arrow->GetCollider());
+	arrow->Update();
 }
 
 void Game::CheckNearbyCollision()
@@ -304,7 +300,7 @@ void Game::CheckItemCollision()
 
 void Game::UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect)
 {
-	//effect->Unbind(scene, particleRenderer);
+	effect->Unbind(scene, particleRenderer);
 }
   
 void Game::UpdateInventoryUI()
@@ -335,12 +331,12 @@ void TestFuncMenu()
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
-	modelRenderer(DEFERRED, true),
-	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED),
-	colliderRenderer(DEFERRED),
-	animatedModelRenderer(DEFERRED, true),
-	water(5000)
+	modelRenderer(FORWARD, false),
+	particleRenderer(FORWARD),
+	terrainRenderer(FORWARD),
+	colliderRenderer(FORWARD),
+	animatedModelRenderer(FORWARD, false),
+	water(5000), terrain(2)
 {
 	//LOAD SCENE
 	Initialize();
@@ -389,28 +385,24 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 		AddArrow("Arrow");
 
 	for (int i = 0; i < 3; i++)
-	{
 		AddHostileArrow("Arrow");
-	}
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
-	player->SetPosition(-80, 26, -580);
 	scene.AddModel("Player", player);
-	modelRenderer.Bind(scene.Get<Model>("Player"));
-	shadowRenderer.Bind(scene.Get<Model>("Player"));
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
+	animatedModelRenderer.Bind(player);
+
 	colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
-	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture"};
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -67, 21.0f, -571 }, scene, particleRenderer);
-	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
-	building->SetScale(4.5f);
+	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
+	std::string materialNames[] = { "", "HouseTexture"};
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -72, 20.5f, -566 });
+	building->SetScale(1.7f, 1.7f, 1.7f);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
@@ -418,7 +410,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
-
 
 	//Item
 	AddItem(WOOD, { -62, 23, -580 });
@@ -434,7 +425,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddHostileNPC("HostileCube", hostileArrows, player);
 	auto hostile = scene.Get<NPC>("HostileCube");
 	hostile->SetPosition(-40, 23, -580);
-	hostile->SetScale(1);
+	hostile->SetScale(2);
 	//hostile->GetCollider()->SetParent(hostile);
 	modelRenderer.Bind(hostile);
 	shadowRenderer.Bind(hostile);
@@ -445,15 +436,15 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer.Bind(particleSystem);
 
 	//ANIMATION
-	auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
-	animated->SetPosition(-30, 25, -580);
-	scene.AddDrawable("AnimatedModel", animated);
-	skeletonRenderer.Bind(animated);
-	animatedModelRenderer.Bind(animated);
+	//auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
+	//animated->SetPosition(-30, 25, -580);
+	//scene.AddDrawable("AnimatedModel", animated);
+	//skeletonRenderer.Bind(animated);
+	//animatedModelRenderer.Bind(animated);
 
 	//SOUND
-	Audio::AddAudio(L"Audio/Rainy.wav");
-	Audio::StartAudio();
+	//Audio::AddAudio(L"Audio/Rainy.wav");
+	//Audio::StartAudio();
 
 	(void)Run();
 }
@@ -482,7 +473,6 @@ APPSTATE Game::Run()
 	{
 		if (Event::KeyIsPressed(VK_TAB))
 		{
-
 			if (paused)
 				Resume();
 			else
@@ -527,19 +517,13 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('R'))
 		{
 			building->effect->Bind(scene, particleRenderer);
-			building->Upgrade(scene, particleRenderer);
+			building->Upgrade();
 			lastClick = Time::Get();
 		}
 
 		if (Event::KeyIsPressed('T'))
 		{
 			player->TakeDamage();
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('O'))
-		{
-			scene.Get<AnimatedModel>("AnimatedModel")->PlayAnimation("Take 001");
 			lastClick = Time::Get();
 		}
 
