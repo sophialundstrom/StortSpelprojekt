@@ -392,6 +392,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
+	player->SetPosition(-75, 20, -650);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
@@ -402,10 +403,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
-	std::string materialNames[] = { "", "HouseTexture"};
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -72, 20.5f, -566 });
-	building->SetScale(1.7f, 1.7f, 1.7f);
+	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
+	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture"};
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
+	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
+	building->SetScale(5);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
@@ -520,7 +522,7 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('R'))
 		{
 			building->effect->Bind(scene, particleRenderer);
-			building->Upgrade();
+			building->Upgrade(scene, particleRenderer);
 			lastClick = Time::Get();
 		}
 
@@ -564,8 +566,24 @@ APPSTATE Game::Run()
 	if (Event::KeyIsPressed('M'))
 		return APPSTATE::MAIN_MENU;
 
+	if (Event::KeyIsPressed('X'))
+		return APPSTATE::GAMEOVER;
+
+	if (questLog.get()->GetActiveQuest() == 0)
+	{
+		std::cout << "WIN!!!" << std::endl;
+		return APPSTATE::WIN;
+	}
+
+	if (player->GetGameOver() == true)
+	{
+		std::cout << "DEAD!!!" << std::endl;
+		return APPSTATE::GAMEOVER;
+	}
+
 	if (Event::KeyIsPressed(VK_ESCAPE))
 		return APPSTATE::EXIT;
+
 
 	return APPSTATE::NO_CHANGE;
 }

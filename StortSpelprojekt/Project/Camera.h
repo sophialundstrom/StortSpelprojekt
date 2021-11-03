@@ -42,7 +42,11 @@ public:
 	void MoveTowards(Vector3 position)
 	{
 		const Vector3 direction = position - this->position;
-		this->position += moveSpeed * direction * Time::GetDelta();
+		const Vector3 distance = moveSpeed * direction * Time::GetDelta();
+		if ((this->position - position).Length() < distance.Length())
+			this->position = position;
+		else
+			this->position += moveSpeed * direction *  Time::GetDelta();
 	}
 
 	void SetPosition(Vector3 newPosition) { position = newPosition; };
