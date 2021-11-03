@@ -39,54 +39,27 @@ void Game::Update()
 
 void Game::Render()
 {
-	Timer timer;
-	timer.Start();
-
 	deferredRenderer.SetRenderTargets();
 
 	particleRenderer.Render();
-	Print("ParticleRenderer");
-	Print(timer.DeltaTime());
-	timer.Start();
 
 	modelRenderer.Render();
-	Print("ModelRendeder");
-
-	Print(timer.DeltaTime());
-	timer.Start();
-
 
 	animatedModelRenderer.Render();
-	Print("animationmodelrenderer");
 
-	Print(timer.DeltaTime());
-	timer.Start();
-
-
-	//colliderRenderer.Render();
+	colliderRenderer.Render();
 
 	terrainRenderer.Render(terrain);
-	Print("TerrainRenderer");
+	
+	waterRenderer.Render(water);
 
-	Print(timer.DeltaTime());
-	timer.Start();
-	//waterRenderer.Render(water);
-
-	//skeletonRenderer.Render();
+	skeletonRenderer.Render();
 
 	shadowRenderer.Render();
-	Print("ShadowRenderer");
-
-	Print(timer.DeltaTime());
-	timer.Start();
-
+	
 	Graphics::Inst().BeginFrame();
 
 	deferredRenderer.Render();
-	Print("DeferredRednberer");
-
-	Print(timer.DeltaTime());
-	timer.Start();
 
 	currentCanvas->Render();
 
@@ -97,6 +70,7 @@ void Game::Render()
 
 void Game::Pause()
 {
+	
 	paused = true;
 	currentCanvas = canvases["PAUSED"];
 }
@@ -508,6 +482,7 @@ APPSTATE Game::Run()
 	{
 		if (Event::KeyIsPressed(VK_TAB))
 		{
+
 			if (paused)
 				Resume();
 			else

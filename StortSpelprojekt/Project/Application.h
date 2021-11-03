@@ -89,6 +89,7 @@ public:
 
 			case APPSTATE::MAIN_MENU:
 				RunLoadingScreen();
+				window->ActivateCursor();
 				delete state;
 				state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 				break;

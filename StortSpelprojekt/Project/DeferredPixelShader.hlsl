@@ -146,35 +146,35 @@ float4 main(PS_INPUT input) : SV_TARGET
     if (S.x < 0) //PARTICLE SYSTEM DOESNT NEED SHADING
         return T;
 	
-	////SHADOWS
- //   L.xyz /= L.w; //PERSPECTIVE DIVIDE (NDC-COORDS)
- //   const float2 tx = float2(0.5f * L.x + 0.5f, -0.5f * L.y + 0.5f); // [-1,1] => [0, 1]
- //   const float sm = shadowMap.Sample(wrapSampler, tx).r;
- //   float shadow = (sm + 0.005 < L.z) ? 0.0f : 1.0f; //if closest depth (sample) < pixel-depth there is a primitive in front castings shadow.
+	//SHADOWS
+    L.xyz /= L.w; //PERSPECTIVE DIVIDE (NDC-COORDS)
+    const float2 tx = float2(0.5f * L.x + 0.5f, -0.5f * L.y + 0.5f); // [-1,1] => [0, 1]
+    const float sm = shadowMap.Sample(wrapSampler, tx).r;
+    float shadow = (sm + 0.005 < L.z) ? 0.0f : 1.0f; //if closest depth (sample) < pixel-depth there is a primitive in front castings shadow.
 	
- //   if (tx.x > 1.0f || tx.x < 0.0f ||
- //       tx.y > 1.0f || tx.y < 0.0f ||
- //       L.z > 1.0f || L.z < 0.0f)
- //       shadow = 1.0f;
+    if (tx.x > 1.0f || tx.x < 0.0f ||
+        tx.y > 1.0f || tx.y < 0.0f ||
+        L.z > 1.0f || L.z < 0.0f)
+        shadow = 1.0f;
     
 	//LIGHT
-    //const LightResult dlResult = DirectionalLightCalculation(P, N, D, S);
-    //const LightResult plResult = PointLightCalculation(P, N, D, S);
+    const LightResult dlResult = DirectionalLightCalculation(P, N, D, S);
+    const LightResult plResult = PointLightCalculation(P, N, D, S);
 
-    //const float4 finalLighting = float4(dlResult.diffuse + dlResult.specular * dlResult.color) * shadow + globalAmbient + A
-    //                            /*+ float4(plResult.diffuse + plResult.specular * plResult.color)*/;
+    const float4 finalLighting = float4(dlResult.diffuse + dlResult.specular * dlResult.color) * shadow + globalAmbient + A
+                                /*+ float4(plResult.diffuse + plResult.specular * plResult.color)*/;
 
     //FOG
     float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
     float fogStart = 100.0f;
     float fogRange = 2000.0f;
 
-   // float fogDistance = distance(cameraPosition, P);
+    float fogDistance = distance(cameraPosition, P);
 
-   // float fogFactor = saturate((fogDistance - fogStart) / fogRange);
+    float fogFactor = saturate((fogDistance - fogStart) / fogRange);
 
     //RESULT
-    //const float4 finalColor = lerp((T * (saturate(finalLighting))), fogColor, fogFactor);
+    const float4 finalColor = lerp((T * (saturate(finalLighting))), fogColor, fogFactor);
 	
-    return T;
+    return finalColor;
 }
