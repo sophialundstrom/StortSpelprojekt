@@ -7,13 +7,26 @@
 class Canvas
 {
 private:
+	bool showCursor = true;
+	Image* hoveredCursor;
+	Image* regularCursor;
+	Image* currentCursor;
 	std::map<std::string, Button*> buttons;
 	std::map<std::string, Image*> images;
 	std::map<std::string, Text*> texts;
 public:
-	Canvas() = default;
+	Canvas()
+	{
+		regularCursor = new Image("RegularCursor.png", { 0,0 });
+		hoveredCursor = new Image("HoveredCursor.png", { 0,0 });
+		currentCursor = regularCursor;
+	}
+
 	~Canvas()
 	{
+		delete hoveredCursor;
+		delete regularCursor;
+
 		for (auto& [name, button] : buttons)
 			if (button)
 			{
@@ -38,12 +51,20 @@ public:
 
 	void Update()
 	{
+		if (showCursor)
+		{
+			hoveredCursor->SetPosition(UI::Inst().GetMousePosition().x, UI::Inst().GetMousePosition().y);
+			regularCursor->SetPosition(UI::Inst().GetMousePosition().x, UI::Inst().GetMousePosition().y);
+		}
+			
+		currentCursor = regularCursor;
 		POINT mp = UI::Inst().GetMousePosition();
 
 		for (auto& [name, button] : buttons)
 		{
 			if (button->IsHovered(mp.x, mp.y))
 			{
+				currentCursor = hoveredCursor;
 				button->OnHoverFunction();
 
 				if (Event::LeftIsClicked())
@@ -58,9 +79,9 @@ public:
 	{
 		UI::Inst().BeginFrame();
 
-		for (auto& [name, button] : buttons)
-			if (button->IsVisible())
-				button->Draw();
+		//for (auto& [name, button] : buttons)
+		//	if (button->IsVisible())
+		//		button->Draw();
 
 		for (auto& [name, image] : images)
 			if (image->IsVisible())
@@ -70,8 +91,14 @@ public:
 			if (text->IsVisible())
 				text->Draw();
 
+		if (showCursor)
+			currentCursor->Draw();
+
 		UI::Inst().EndFrame();
 	}
+
+	void HideCursor() { showCursor = false; }
+	void ShowCursor() { showCursor = true; }
 
 	void UpdateText(const std::string name, const std::string newString) { texts[name]->SetString(newString); }
 

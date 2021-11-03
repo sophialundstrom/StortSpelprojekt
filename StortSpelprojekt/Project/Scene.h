@@ -4,8 +4,6 @@
 #include "Player.h"
 #include "Model.h"
 #include "AnimatedModel.h"
-#include "NPCHostile.h"
-#include "NPCFriendly.h"
 #include <map>
 
 class Scene
@@ -42,11 +40,11 @@ public:
 
 	void DeleteDrawable(const std::string name) { drawables.erase(name); }
 
-	void AddFriendlyNPC(const std::string& file);
-	void AddFriendlyNPC(const std::string& name, std::shared_ptr <Drawable> drawable);
+	//void AddFriendlyNPC(const std::string& file);
+	//void AddFriendlyNPC(const std::string& name, std::shared_ptr <Drawable> drawable);
 
-	void AddHostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player, CombatStyle combatStyle);
-	void AddHostileNPC(const std::string& name, std::shared_ptr<Drawable> drawable);
+	//void AddHostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player);
+	//void AddHostileNPC(const std::string& name, std::shared_ptr<Drawable> drawable);
 
 	void AddAnimatedModel(const std::string& file);
 

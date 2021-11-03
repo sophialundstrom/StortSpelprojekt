@@ -5,26 +5,11 @@
 
 void Game::Update()
 {
+	hovering = false;
+
 	player->Update(terrain.GetHeightMap());
 
-
 	QuestLog::Inst().Update();
-
-	auto friendly = scene.Get<NPC>("Staff");
-
-
-	friendly->Collided(*player);
-	CheckNearbyEnemies();
-
-	/*for(int i = 0; i < arrows.size(); i++)
-	{
-		hostile->ProjectileCollided(arrows[i]);
-	}*/
-
-	/*for (int i = 0; i < hostileArrows.size(); i++)
-	{
-		player->ProjectileCollided(hostileArrows[i]);
-	}*/
 	
 	scene.Update();
 
@@ -33,6 +18,10 @@ void Game::Update()
 	CheckNearbyCollision();
 
 	CheckSaveStationCollision();
+
+	CheckNearbyEnemies();
+
+	CheckQuestInteraction();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
@@ -53,7 +42,7 @@ void Game::Render()
 
 	animatedModelRenderer.Render();
 
-	colliderRenderer.Render();
+	//colliderRenderer.Render();
 
 	terrainRenderer.Render(terrain);
 
@@ -180,7 +169,7 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	const std::string name = "testItem";
 
 	auto item = std::make_shared<Item>(resource, name);
-	scene.AddModel(name, item);
+	scene.AddDrawable(name, item);
 	items.emplace_back(item);
 	item->GetBounds()->SetParent(item);
 	item->SetPosition(position);
@@ -188,6 +177,26 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	modelRenderer.Bind(item);
 	shadowRenderer.Bind(item);
 	colliderRenderer.Bind(item->GetBounds());
+}
+
+std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Vector3 position)
+{
+	auto NPC = std::make_shared<FriendlyNPC>(fileName);
+	NPC->SetPosition(position);
+
+	auto collider = NPC->GetCollider();
+	collider->SetParent(NPC);
+	collider->Update();
+	colliderRenderer.Bind(collider);
+
+	modelRenderer.Bind(NPC);
+	shadowRenderer.Bind(NPC);
+
+	scene.AddDrawable("FriendlyNPC", NPC);
+
+	friendlyNPCs.emplace_back(NPC);
+
+	return NPC;
 }
 
 void Game::AddArrow(const std::string fileName)
@@ -249,19 +258,22 @@ void Game::CheckNearbyCollision()
 
 void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
 {
-	auto npc = std::make_shared<HostileNPC>(filename, player, combatStyle);
-	npc->SetPosition(position);
-	npc->BindPlayerArrows(arrows);
-	modelRenderer.Bind(npc);
-	scene.AddDrawable("hostileNpc", npc);
-	npc->BindArrows(modelRenderer);
-	npc->SetScale(1.f);
+	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle);
+	NPC->SetPosition(position);
+	NPC->BindArrows(modelRenderer);
 
-	npc->GetCollider()->SetScale(2, 7, 2);
+	auto collider = NPC->GetCollider();
+	collider->SetParent(NPC);
+	collider->Update();
+	collider->SetScale(2, 7, 2);
+	colliderRenderer.Bind(collider);
 
-	shadowRenderer.Bind(npc);
-	colliderRenderer.Bind(npc->GetCollider());
-	hostiles.emplace_back(npc);
+	modelRenderer.Bind(NPC);
+	shadowRenderer.Bind(NPC);
+
+	scene.AddDrawable("hostileNpc", NPC);
+
+	hostiles.emplace_back(NPC);
 }
 
 void Game::CheckSaveStationCollision()
@@ -289,12 +301,46 @@ void Game::CheckItemCollision()
 	{
 		if (Collision::Intersection(*item->GetBounds(), *player->GetFrustum()))
 		{
+			hovering = true;
+
 			if (Event::KeyIsPressed('E'))
 			{
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
 				UpdateInventoryUI();
+				return;
+			}
+		}
+	}
+}
+
+void Game::CheckQuestInteraction()
+{
+	for (auto& NPC : friendlyNPCs)
+	{
+		if (NPC->Interactable())
+		{
+			if (Collision::Intersection(*NPC->GetCollider(), *player->GetFrustum()))
+			{
+				hovering = true;
+
+				if (Event::KeyIsPressed('E'))
+				{
+					int ID = NPC->GetQuestID();
+					if (ID != -1)
+					{
+						if (ID != 0)
+							NPC->ConnectedBuilding()->Upgrade();
+
+						if (ID == 4) //LAST QUEST
+							done = true;
+
+						QuestLog::Inst().Complete(ID);
+					}
+
+					return;
+				}
 			}
 		}
 	}
@@ -348,7 +394,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//INGAME CANVAS
 	auto ingameCanvas = new Canvas();
-
+	ingameCanvas->HideCursor();
 	ingameCanvas->AddImage({ 250, 365 }, "QuestBorder", "QuestBorder.png");
 	ingameCanvas->AddText({ 250, 65 }, "AQ", "Active Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
@@ -364,6 +410,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ingameCanvas->AddImage({ 355, clientHeight - 64.0f }, "hp", "HP10.png");
 
 	ingameCanvas->AddText({ (float)clientWidth - 50, (float)clientHeight - 30 }, "FPS", "0", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
+
+	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 200.0f }, "INTERACT", "INTERACT [E]", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
 
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
@@ -425,23 +473,22 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
 	//Item
-	AddItem(WOOD, { -62, 23, -580 });
-
-	scene.AddFriendlyNPC("Staff");
-	auto friendly = scene.Get<NPC>("Staff");
-
-	friendly->SetPosition(-50, 23, -580);
-
-	modelRenderer.Bind(friendly);
-	shadowRenderer.Bind(friendly);
+	AddItem(WOOD, { -134, 22, -594 });
+	AddItem(WOOD, { -113, 22, -582 });
+	AddItem(WOOD, { -116, 20, -609 });
+	AddItem(WOOD, { -91, 20, -593 });
+	AddItem(WOOD, { -85, 20, -608 });
 
 	AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::consistantDelay);
-	//AddHostileNPC("BarbarianBow", { 450, 23, -700 }, CombatStyle::consistantDelay);
 
-	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
-	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ -70, 70, -580 });
-	particleRenderer.Bind(particleSystem);
+	//FRIENDLY NPC
+	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
+	friendlyNPC->BindBuilding(building);
+	friendlyNPC->AddQuestID(0);
+	friendlyNPC->AddQuestID(2);
+	friendlyNPC->AddQuestID(4);
+	friendlyNPC->AddQuestID(6);
 
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
@@ -526,12 +573,25 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}*/
 
-		if (Event::KeyIsPressed('R'))
+		/*if (Event::KeyIsPressed('R'))
 		{
 			building->effect->Bind(scene, particleRenderer);
-			building->Upgrade(scene, particleRenderer);
+			building->Upgrade();
 			lastClick = Time::Get();
-		}
+		}*/
+	}
+
+	if (hovering)
+		canvases["INGAME"]->GetText("INTERACT")->Show();
+	else
+		canvases["INGAME"]->GetText("INTERACT")->Hide();
+
+	static float counter = 0;
+	if (done)
+	{
+		counter += Time::GetDelta();
+		if (counter >= 5.0f)
+			return APPSTATE::WIN;
 	}
 
 	static int frames = 0;
@@ -560,14 +620,16 @@ APPSTATE Game::Run()
 
 void Game::CheckNearbyEnemies()
 {
-	for (auto hostile : hostiles)
+
+	for (auto& hostile : hostiles)
 	{
 		bool hit = player->CheckArrowHit(hostile->GetCollider());
 
 		if (hit)
 		{
-			
 			hostile->TakeDamage();
+			if (hostile->IsDead())
+				player->Stats().barbariansKilled++;
 		}
 	}
 }

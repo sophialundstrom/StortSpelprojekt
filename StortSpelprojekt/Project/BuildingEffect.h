@@ -1,6 +1,6 @@
 #pragma once
-#include "ParticleSystem.h"
 #include "ParticleRenderer.h"
+#include "Scene.h"
 
 class BuildingEffect
 {
@@ -159,7 +159,7 @@ public:
 	void Unbind(Scene& scene, ParticleRenderer& renderer)
 	{
 		int index = 0;
-		for (auto system : particles)
+		for (auto& system : particles)
 		{
 			renderer.Unbind(system);
 			scene.DeleteDrawable("testSystem" + std::to_string(index));
@@ -169,7 +169,7 @@ public:
 	void Bind(Scene& scene, ParticleRenderer& renderer)
 	{
 		int index = 0;
-		for (auto system : particles)
+		for (auto& system : particles)
 		{
 			renderer.Bind(system);
 			scene.AddDrawable("testSystem" + std::to_string(index), system);
@@ -186,7 +186,7 @@ public:
 
 	void Start()
 	{
-		for (auto system : particles)
+		for (auto& system : particles)
 		{
 			system->StartSpawn();
 		}

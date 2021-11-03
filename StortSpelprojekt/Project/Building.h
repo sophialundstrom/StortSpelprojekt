@@ -7,6 +7,7 @@
 class Building :public Model
 {
 private:
+	bool upgrading = false;
 	static const UINT stages = 3;
 	std::string meshNames[stages];
 	std::string materialNames[stages];
@@ -23,6 +24,9 @@ public:
 		unbindCallback = [this](Scene& scene, ParticleRenderer& renderer, std::unique_ptr<BuildingEffect> &effect) {Unbind(scene, renderer, effect); };
 		this->position = position;
 		effect = std::make_unique<BuildingEffect>(Vector3{position.x, position.y + 5, position.z});
+		effect->Bind(scene, renderer);
+		effect->Stop();
+
 		for (UINT i = 0; i < stages; ++i)
 		{
 			this->meshNames[i] = meshNames[i];
@@ -30,20 +34,25 @@ public:
 		}
 	}
 
-	void Upgrade(Scene &scene, ParticleRenderer &renderer)
+	void Upgrade()
 	{
+		if (upgrading)
+			return;
+
+		upgrading = true;
 		std::thread worker([=] {
 
 			currState++;
 			if (currState >= stages)
 				return;
+
 			//done.store(true);
 			effect->Start();
 			Sleep(5000);
 			ApplyMesh(meshNames[currState]);
 			ApplyMaterial(materialNames[currState]);
 			effect->Stop();
-			unbindCallback;
+			upgrading = false;
 			//done.store(false);
 
 		});
@@ -60,21 +69,5 @@ public:
 			renderer.Unbind(system);
 			scene.DeleteDrawable("testSystem" + std::to_string(index));
 		}
-	}
-
-
-	void Upgrade()
-	{
-		if (Time::Get() - lastUpdate < 1.0f)
-			return;
-
-		lastUpdate = Time::Get();
-
-		currState++;
-		if (currState >= stages)
-			return;
-
-		ApplyMesh(meshNames[currState]);
-		ApplyMaterial(materialNames[currState]);
 	}
 };

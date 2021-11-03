@@ -68,57 +68,6 @@ void Scene::AddBoundingVolume(const std::string& name, std::shared_ptr<Drawable>
 	drawables[name]->SetName(name);
 }
 
-void Scene::AddFriendlyNPC(const std::string& file)
-{
-	UINT numInstances = 0;
-	std::string fileName = file;
-
-	for (auto& [name, drawable] : drawables)
-		if (name.find(file) != std::string::npos)
-			numInstances++;
-
-	if (numInstances > 0)
-	{
-		fileName = file + std::to_string(numInstances);
-		drawables[fileName] = std::make_shared<FriendlyNPC>(*std::dynamic_pointer_cast<Model>(drawables[file]));
-	}
-
-	else
-		drawables[fileName] = std::make_shared<FriendlyNPC>(fileName);
-
-	objectNames.push_back(fileName);
-}
-
-void Scene::AddFriendlyNPC(const std::string& name, std::shared_ptr<Drawable> drawable)
-{
-	drawables[name] = drawable;
-	objectNames.push_back(name);
-}
-
-void Scene::AddHostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player, CombatStyle combatStyle)
-{
-	UINT numInstances = 0;
-	std::string fileName = file;
-
-	for (auto& [name, drawable] : drawables)
-		if (name.find(file) != std::string::npos)
-			numInstances++;
-
-	if (numInstances > 0)
-	{
-		fileName = file + std::to_string(numInstances);
-		//drawables[fileName] = std::make_shared<HostileNPC>(*std::dynamic_pointer_cast<Model>(drawables[file]), hostileArrows);
-	}
-
-	objectNames.push_back(fileName);
-}
-
-void Scene::AddHostileNPC(const std::string& name, std::shared_ptr<Drawable> drawable)
-{
-	drawables[name] = drawable;
-	objectNames.push_back(name);
-}
-
 void Scene::AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type)
 {
 	std::string name = "ParticleSystem";

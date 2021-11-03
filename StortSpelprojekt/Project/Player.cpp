@@ -139,7 +139,7 @@ void Player::Update(HeightMap* heightMap)
 
 	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
 
-	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 2.0f, 0.0f);
+	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
 
 	static float lastClick = 0;
 

@@ -126,7 +126,7 @@ public:
 	//TO BE ABLE TO START A QUEST FROM GAME
 	void Activate(UINT ID)
 	{
-		if (quests[ID]->IsCompleted() || quests.find(ID) == quests.end())
+		if (quests.find(ID) == quests.end() || quests[ID]->IsCompleted())
 			return;
 
 		else
@@ -151,6 +151,15 @@ public:
 				EraseQuest(quest);
 			}
 		}
+	}
+
+	bool QuestIsActive(UINT ID)
+	{
+		for (auto& quest : activeQuests)
+			if (quest->GetID() == ID)
+				return true;
+
+		return false;
 	}
 
 	bool QuestIsDone(UINT ID)
