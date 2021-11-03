@@ -31,6 +31,8 @@ float Get2DAngle(Vector2 a, Vector2 b)
 
 void Player::Update(HeightMap* heightMap)
 {
+	std::cout << position.x << "	" << position.y << "	" << position.z << "	\n";
+
 	lastPosition = position;
 
 	CalcHeight(heightMap);

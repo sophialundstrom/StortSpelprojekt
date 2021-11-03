@@ -255,6 +255,9 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 	modelRenderer.Bind(npc);
 	scene.AddDrawable("hostileNpc", npc);
 	npc->BindArrows(modelRenderer);
+	npc->SetScale(1.f);
+
+	npc->GetCollider()->SetScale(2, 7, 2);
 
 	shadowRenderer.Bind(npc);
 	colliderRenderer.Bind(npc->GetCollider());
@@ -423,10 +426,12 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
-	AddHostileNPC("HostileCube", { 300, 23, -700 }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { 450, 23, -700 }, CombatStyle::consistantDelay);
 
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
-	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ -70,70,-580 });
+	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ -70, 70, -580 });
 	particleRenderer.Bind(particleSystem);
 
 	//ANIMATION
