@@ -79,6 +79,7 @@ private:
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);
 
+    std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string fileName);
     void AddArrow(const std::string fileName);
     void AddHostileArrow(const std::string fileName);
 

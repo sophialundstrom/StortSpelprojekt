@@ -151,6 +151,15 @@ public:
 		}
 	}
 
+	bool QuestIsActive(UINT ID)
+	{
+		for (auto& quest : activeQuests)
+			if (quest->GetID() == ID)
+				return true;
+
+		return false;
+	}
+
 	bool QuestIsDone(UINT ID)
 	{
 		if (quests.find(ID) == quests.end())

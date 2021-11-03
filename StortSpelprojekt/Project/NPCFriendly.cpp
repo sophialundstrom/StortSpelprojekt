@@ -1,4 +1,5 @@
 #include "NPCFriendly.h"
+#include "QuestLog.h"
 
 
 FriendlyNPC::FriendlyNPC(const std::string& file)
@@ -14,6 +15,14 @@ FriendlyNPC::FriendlyNPC(const Model& model)
 void FriendlyNPC::Update()
 {
 	NPC::Update();
+
+	for (auto& ID : questIDs)
+	{
+		if (QuestLog::Inst().QuestIsActive(ID))
+		{
+
+		}
+	}
 }
 
 void FriendlyNPC::Walking()

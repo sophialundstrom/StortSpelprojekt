@@ -9,10 +9,7 @@ void Game::Update()
 
 	QuestLog::Inst().Update();
 
-	auto friendly = scene.Get<NPC>("Staff");
 	auto hostile = scene.Get<NPC>("HostileCube");
-
-	friendly->Collided(*player);
 
 	for(int i = 0; i < arrows.size(); i++)
 	{
@@ -184,6 +181,22 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	modelRenderer.Bind(item);
 	shadowRenderer.Bind(item);
 	colliderRenderer.Bind(item->GetBounds());
+}
+
+std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName)
+{
+	auto NPC = std::make_shared<FriendlyNPC>(fileName);
+	auto collider = NPC->GetCollider();
+
+	collider->SetParent(NPC);
+	colliderRenderer.Bind(collider);
+
+	modelRenderer.Bind(NPC);
+	shadowRenderer.Bind(NPC);
+
+	scene.AddDrawable("FriendlyNPC", NPC);
+
+	return NPC;
 }
 
 void Game::AddArrow(const std::string fileName)
@@ -414,33 +427,25 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//Item
 	AddItem(WOOD, { -62, 23, -580 });
 
-	scene.AddFriendlyNPC("Staff");
-	auto friendly = scene.Get<NPC>("Staff");
-
-	friendly->SetPosition(-50, 23, -580);
-
-	modelRenderer.Bind(friendly);
-	shadowRenderer.Bind(friendly);
-
 	scene.AddHostileNPC("HostileCube", hostileArrows, player);
 	auto hostile = scene.Get<NPC>("HostileCube");
 	hostile->SetPosition(-40, 23, -580);
 	hostile->SetScale(2);
-	//hostile->GetCollider()->SetParent(hostile);
 	modelRenderer.Bind(hostile);
 	shadowRenderer.Bind(hostile);
 	colliderRenderer.Bind(hostile->GetCollider());
 
+	//RAIN SYSTEM
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
 	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ -70,70,-580 });
 	particleRenderer.Bind(particleSystem);
 
-	//ANIMATION
-	//auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
-	//animated->SetPosition(-30, 25, -580);
-	//scene.AddDrawable("AnimatedModel", animated);
-	//skeletonRenderer.Bind(animated);
-	//animatedModelRenderer.Bind(animated);
+	//FRIENDLY NPC
+	auto friendlyNPC = AddFriendlyNPC("Chest");
+	friendlyNPC->AddQuestID(0);
+	friendlyNPC->AddQuestID(2);
+	friendlyNPC->AddQuestID(4);
+	friendlyNPC->AddQuestID(6);
 
 	//SOUND
 	//Audio::AddAudio(L"Audio/Rainy.wav");
