@@ -26,7 +26,7 @@ private:
 public:
 	HostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player, CombatStyle combatStyle);
 	HostileNPC(const Model& model);
-
+	void SwapCombatStyle(CombatStyle newCombatStyle);
 	virtual void Update() override;
 
 private:

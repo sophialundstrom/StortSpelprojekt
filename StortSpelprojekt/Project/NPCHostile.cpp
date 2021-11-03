@@ -7,31 +7,42 @@ HostileNPC::HostileNPC(const std::string& file, std::vector<std::shared_ptr<Arro
 	this->arrows = hostileArrows;
     this->player = player;
     this->combatStyle = combatStyle;
-
-    //speed(330.0f), lifeTime(3.0f)
-    if (combatStyle == CombatStyle::consistantDelay)
-    {
-        float normalDelay = 1.f;
-        shootDeelayPattern[0] = normalDelay;
-        shootDeelayPattern[1] = normalDelay;
-        shootDeelayPattern[2] = normalDelay;
-    }
-
-    if (combatStyle == CombatStyle::Burst)
-    {
-        float quickDelay = 0.2f;
-        float breakTime = 2.4f;
-        shootDeelayPattern[0] = quickDelay;
-        shootDeelayPattern[1] = quickDelay;
-        shootDeelayPattern[2] = quickDelay + breakTime;
-    }
-
+    SwapCombatStyle(combatStyle);
 }
 
 HostileNPC::HostileNPC(const Model& model)
 	:NPC(model)
 {
 
+}
+
+void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
+{
+    //speed(330.0f), lifeTime(3.0f)
+
+    combatStyle = newCombatStyle;
+    shootPatternIndex = 0;
+
+    switch (combatStyle)
+    {
+    case CombatStyle::consistantDelay :
+        float normalDelay = 1.f;
+        shootDeelayPattern[0] = normalDelay;
+        shootDeelayPattern[1] = normalDelay;
+        shootDeelayPattern[2] = normalDelay;
+        break;
+
+    case CombatStyle::Burst:
+        float quickDelay = 0.2f;
+        float breakTime = 2.4f;
+        shootDeelayPattern[0] = quickDelay;
+        shootDeelayPattern[1] = quickDelay;
+        shootDeelayPattern[2] = quickDelay + breakTime;
+        break;
+
+    default:
+        break;
+    }
 }
 
 void HostileNPC::Update()
