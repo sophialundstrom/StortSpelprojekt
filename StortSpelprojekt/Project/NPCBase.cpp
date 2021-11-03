@@ -34,6 +34,7 @@ bool NPC::Collided(Player& player)
 
 bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 {
+
 	if (Collision::Intersection(this->boundingSphere, arrow->GetCollider()) && arrow->IsShot() == true)
 	{
 		Print("ARROW HIT");
@@ -51,6 +52,14 @@ bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 void NPC::Die()
 {
 	position = { 0,-100,0 };
+}
+
+void NPC::TakeDamage()
+{
+	std::cout << "DamageTaken\n";
+	hp--;
+	if (hp <= 0)
+		Die();
 }
 
 void NPC::debugPrint()
