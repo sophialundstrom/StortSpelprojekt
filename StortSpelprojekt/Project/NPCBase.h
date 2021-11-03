@@ -9,8 +9,6 @@ class NPC : public Model
 {
 private:
 	int hp;
-	bool playerCanHit;
-	bool enemyCanHit;
 
 protected:
 	std::shared_ptr<BoundingSphere> boundingSphere;

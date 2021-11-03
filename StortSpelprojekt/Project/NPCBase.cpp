@@ -6,8 +6,6 @@ NPC::NPC(const std::string& file)
 {
 	// call bind here cause i think it binds the bounding volume to a useful place
 	boundingSphere = std::make_shared<BoundingSphere>();
-	playerCanHit = true;
-	enemyCanHit = true;
 	hp = 3;
 }
 
@@ -36,10 +34,8 @@ bool NPC::Collided(Player& player)
 
 bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 {
-	bool collided = false;
-	if ((position - arrow->GetPosition()).Length() < 2.0f && playerCanHit == true)
+	if (Collision::Intersection(this->boundingSphere, arrow->GetCollider()) && arrow->IsShot() == true)
 	{
-		collided = true;
 		Print("ARROW HIT");
 		arrow->DisableArrow();
 		hp--;
@@ -47,15 +43,14 @@ bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 		{
 			Die();
 		}
-
+		return true;
 	}
-
-	return collided;
+	return false;
 }
 
 void NPC::Die()
 {
-	position = { 0,-200,0 };
+	position = { 0,-100,0 };
 }
 
 void NPC::debugPrint()
