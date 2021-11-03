@@ -57,7 +57,7 @@ void Game::Render()
 
 	terrainRenderer.Render(terrain);
 
-	//waterRenderer.Render(water);
+	waterRenderer.Render(water);
 
 	//skeletonRenderer.Render();
 
@@ -388,7 +388,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
-	player->SetPosition(-75, 20, -650);
+	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
@@ -557,6 +557,9 @@ APPSTATE Game::Run()
 
 	if (Event::KeyIsPressed('X'))
 		return APPSTATE::GAMEOVER;
+
+	if (Event::KeyIsPressed('Z'))
+		return APPSTATE::WIN;
 
 	if (questLog.get()->GetActiveQuest() == 0)
 	{
