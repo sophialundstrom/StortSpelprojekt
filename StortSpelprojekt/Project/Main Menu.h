@@ -25,7 +25,6 @@ private:
 	ParticleRenderer particleRenderer;
 	ModelRenderer modelRenderer;
 	ShadowRenderer shadowRenderer;
-	DeferredRenderer deferredRenderer;
 	std::shared_ptr<Building> building;
 
 	void Initialize();
@@ -39,6 +38,7 @@ private:
 	void BacktoMenu();
 	void Play();
 	void Quit();
+	void Form();
 public:
 	MainMenu() = default;
 	MainMenu(UINT clientWidth, UINT clientHeight, HWND window);
