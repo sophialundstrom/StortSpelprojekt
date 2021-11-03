@@ -5,6 +5,8 @@
 
 void Game::Update()
 {
+	hovering = false;
+
 	player->Update(terrain.GetHeightMap());
 
 	QuestLog::Inst().Update();
@@ -291,6 +293,8 @@ void Game::CheckItemCollision()
 	{
 		if (Collision::Intersection(*item->GetBounds(), *player->GetFrustum()))
 		{
+			hovering = true;
+
 			if (Event::KeyIsPressed('E'))
 			{
 				Print("PICKED UP ITEM");
@@ -308,21 +312,26 @@ void Game::CheckQuestInteraction()
 	{
 		if (NPC->Interactable())
 		{
-			if (Event::KeyIsPressed('E') && Collision::Intersection(*NPC->GetCollider(), *player->GetFrustum()))
+			if (Collision::Intersection(*NPC->GetCollider(), *player->GetFrustum()))
 			{
-				int ID = NPC->GetQuestID();
-				if (ID != -1)
+				hovering = true;
+
+				if (Event::KeyIsPressed('E'))
 				{
-					if (ID != 0)
-						NPC->ConnectedBuilding()->Upgrade();	
+					int ID = NPC->GetQuestID();
+					if (ID != -1)
+					{
+						if (ID != 0)
+							NPC->ConnectedBuilding()->Upgrade();
 
-					if (ID == 4) //LAST QUEST
-						done = true;
+						if (ID == 4) //LAST QUEST
+							done = true;
 
-					QuestLog::Inst().Complete(ID);
+						QuestLog::Inst().Complete(ID);
+					}
+
+					return;
 				}
-					
-				return;
 			}
 		}
 	}
@@ -392,6 +401,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ingameCanvas->AddImage({ 355, clientHeight - 64.0f }, "hp", "HP10.png");
 
 	ingameCanvas->AddText({ (float)clientWidth - 50, (float)clientHeight - 30 }, "FPS", "0", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
+
+	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 200.0f }, "INTERACT", "INTERACT [E]", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
 
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
@@ -558,6 +569,11 @@ APPSTATE Game::Run()
 		}
 
 	}
+
+	if (hovering)
+		canvases["INGAME"]->GetText("INTERACT")->Show();
+	else
+		canvases["INGAME"]->GetText("INTERACT")->Hide();
 
 	static float counter = 0;
 	if (done)

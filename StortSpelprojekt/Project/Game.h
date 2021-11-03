@@ -20,6 +20,7 @@
 #include "Pathfinding.h"
 #include "NPCFriendly.h"
 #include "Audio.h"
+#include "NPCHostile.h"
 
 //PlayerClassLib
 #include <math.h>
@@ -28,6 +29,7 @@
 class Game : public ApplicationState
 {
 private:
+    bool hovering = false;
     bool done = false;
     bool paused = false;
     const std::string file = "Default"; //"Test"
