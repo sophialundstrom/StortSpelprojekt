@@ -75,20 +75,14 @@ void HostileNPC::Update()
 
         aimDir.Normalize();
         shootPatternIndex = ((shootPatternIndex++) % 3);
-
         movementYRadiant = acos(aimDir.x * 0 + aimDir.z * 1);
         if (aimDir.x < 0)
             movementYRadiant *= -1;
-
         movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
-
         SetRotation({ PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 
-
-        /*
         if (Time::Get() - lastClick > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow)
         {
-
             for (int i = 0; i < arrows.size(); i++)
             {
                 if (arrows[i]->IsShot())
@@ -102,18 +96,13 @@ void HostileNPC::Update()
         else if (Time::Get() - lastClick > 3 && combatStyle == CombatStyle::wideArrow)
         {
             float arrowWidth = PI/32.f;
-
             arrows.at(0)->Shoot(aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             arrows.at(1)->Shoot(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
             arrows.at(2)->Shoot(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
-            
             DirectX::XMMatrixRotationX(-arrowWidth);
-
             lastClick = Time::Get();
            
         }
-        */
-
         
     }
 
@@ -124,15 +113,6 @@ void HostileNPC::Update()
         arrow->Update();
         player->ProjectileCollided(arrow);
     }
-
-    /*for (auto arrow : playerArrows)
-    {
-        if (!arrow->IsShot())
-            continue;
-        
-        arrow->Update();
-        ProjectileCollided(arrow);
-    }*/
 
 	NPC::Update();
 }

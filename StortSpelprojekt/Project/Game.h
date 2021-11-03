@@ -84,7 +84,7 @@ private:
     void AddArrow(const std::string fileName);
     //void AddHostileArrow(const std::string fileName);
 
-    void AddHostileNPC(const std::string& filename, Vector3 position);
+    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
 
     void CheckNearbyCollision();
     void CheckSaveStationCollision();

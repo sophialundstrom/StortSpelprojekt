@@ -207,23 +207,6 @@ void Game::AddArrow(const std::string fileName)
 	arrow->Update();
 }
 
-//void Game::AddHostileArrow(const std::string fileName)
-//{
-//	auto arrow = std::make_shared<Arrow>(fileName);
-//	hostileArrows.emplace_back(arrow);
-//
-//	arrow->SetPosition(0, -100, 0);
-//	arrow->SetScale(2);
-//	arrow->GetCollider()->SetParent(arrow);
-//	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
-//	arrow->GetCollider()->SetScale(0.15);
-//	
-//	modelRenderer.Bind(arrow);
-//	shadowRenderer.Bind(arrow);
-//	colliderRenderer.Bind(arrow->GetCollider());
-//	arrow->Update();
-//}
-
 void Game::CheckNearbyCollision()
 {
 	auto playerCollider = player->GetBounds();
@@ -266,9 +249,9 @@ void Game::CheckNearbyCollision()
 		player->ResetToLastPosition();
 }
 
-void Game::AddHostileNPC(const std::string& filename, Vector3 position)
+void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
 {
-	auto npc = std::make_shared<HostileNPC>(filename, player, CombatStyle::consistantDelay);
+	auto npc = std::make_shared<HostileNPC>(filename, player, combatStyle);
 	npc->SetPosition(position);
 	npc->BindPlayerArrows(arrows);
 	modelRenderer.Bind(npc);
@@ -440,7 +423,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(friendly);
 	shadowRenderer.Bind(friendly);
 
-	AddHostileNPC("HostileCube", { -40, 23, -580 });
+	AddHostileNPC("HostileCube", { -40, 23, -580 }, CombatStyle::consistantDelay);
 
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
 	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ -70,70,-580 });
