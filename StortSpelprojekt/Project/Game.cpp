@@ -39,6 +39,10 @@ void Game::Update()
 
 void Game::Render()
 {
+	shadowRenderer.Render();
+
+	ShaderData::Inst().BindFrameConstants();
+
 	Graphics::Inst().BeginFrame();
 
 	particleRenderer.Render();
@@ -55,7 +59,6 @@ void Game::Render()
 
 	//skeletonRenderer.Render();
 
-	//shadowRenderer.Render();
 
 	currentCanvas->Render();
 

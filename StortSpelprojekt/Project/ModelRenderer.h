@@ -22,8 +22,8 @@ private:
 	const std::string deferred_ps_path = "../x64/Debug/DeferredModelPixelShader.cso";
 	const std::string forward_ps_path = "../x64/Debug/ForwardModelPixelShader.cso";
 
-	const std::string unlit_vs_path = "../x64/Debug/UnlitModelVertexShader.cso";
-	const std::string unlit_forward_ps_path = "../x64/Debug/UnlitForwardModelPixelShader.cso";
+	const std::string unlit_vs_path = "../x64/Debug/ModelVertexShader.cso";
+	const std::string unlit_forward_ps_path = "../x64/Debug/ForwardModelPixelShader.cso";
 #else
 	const std::string vs_path = "../x64/Release/ModelVertexShader.cso";
 	const std::string deferred_ps_path = "../x64/Release/DeferredModelPixelShader.cso";

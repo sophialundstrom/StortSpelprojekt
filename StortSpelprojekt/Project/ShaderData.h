@@ -27,6 +27,7 @@ private:
 	//DIRECTIONAL LIGHT
 	Matrix lightMatrix;
 	DirectionalLight::Data lightData;
+	ID3D11Buffer* lightDataBuf;
 
 	//POINT LIGHTS
 	UINT numPointLights = 0;
@@ -54,8 +55,9 @@ public:
 	{
 		CreateBuffer(cameraPositionBuf);
 		CreateBuffer(matrices_buf, sizeof(Matrices));
+		CreateBuffer(lightDataBuf, sizeof(DirectionalLight::Data));
 
-		shadowMap = ShadowMap(4096, 7);
+		shadowMap = ShadowMap(4096, 10);
 
 		//SAMPLER
 		D3D11_SAMPLER_DESC samplerDesc = {};
@@ -118,5 +120,12 @@ public:
 		cameraPosition = camera.GetPosition();
 
 		UpdateBuffer(cameraPositionBuf, cameraPosition);
+	}
+
+	void BindFrameConstants()
+	{
+		Graphics::Inst().GetContext().PSSetConstantBuffers(1, 1, &lightDataBuf);
+		Graphics::Inst().GetContext().PSSetConstantBuffers(2, 1, &cameraPositionBuf);
+		shadowMap.BindAsResource();
 	}
 };

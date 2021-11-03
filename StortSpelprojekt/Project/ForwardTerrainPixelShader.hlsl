@@ -1,3 +1,4 @@
+#include "LightCalculations.hlsli"
 Texture2D blendTexture : register(t0);
 
 Texture2D pathTexture : register (t1);

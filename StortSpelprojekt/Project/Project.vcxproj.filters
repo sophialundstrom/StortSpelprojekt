@@ -646,4 +646,9 @@
     <FxCompile Include="WaterDomainShader.hlsl" />
     <FxCompile Include="WaterPixelShader.hlsl" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="LightCalculations.hlsli">
+      <Filter>Header Files\Application\Graphics\Renderers</Filter>
+    </None>
+  </ItemGroup>
 </Project>
