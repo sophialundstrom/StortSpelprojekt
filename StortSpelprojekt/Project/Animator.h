@@ -46,10 +46,14 @@ public:
 		animations.emplace(animation->mName.C_Str(), new Animation(animation));
 	}
 
-	void PlayAnimation(const std::string& name)
+	void PlayAnimation(const std::string& name, const bool& onRepeat)
 	{
+
+		if (currentAnimation == animations[name]) // compare if they are the same
+			return;
+
 		currentAnimation = animations[name];
-		currentAnimation->Play();
+		currentAnimation->Play(onRepeat);
 	}
 
 	bool HasActiveAnimation() { if (currentAnimation) return true; return false; }

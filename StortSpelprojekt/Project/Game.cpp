@@ -39,7 +39,7 @@ void Game::Update()
 
 void Game::Render()
 {
-	deferredRenderer.SetRenderTargets();
+	Graphics::Inst().BeginFrame();
 
 	particleRenderer.Render();
 
@@ -51,16 +51,12 @@ void Game::Render()
 
 	terrainRenderer.Render(terrain);
 
-	waterRenderer.Render(water);
+	//waterRenderer.Render(water);
 
-	skeletonRenderer.Render();
+	//skeletonRenderer.Render();
 
-	shadowRenderer.Render();
+	//shadowRenderer.Render();
 
-	Graphics::Inst().BeginFrame();
-
-	deferredRenderer.Render();
-	
 	currentCanvas->Render();
 
 	Graphics::Inst().EndFrame();
@@ -335,12 +331,12 @@ void TestFuncMenu()
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
-	modelRenderer(DEFERRED, true),
-	particleRenderer(DEFERRED),
-	terrainRenderer(DEFERRED),
-	colliderRenderer(DEFERRED),
-	animatedModelRenderer(DEFERRED, true),
-	water(5000)
+	modelRenderer(FORWARD, false),
+	particleRenderer(FORWARD),
+	terrainRenderer(FORWARD),
+	colliderRenderer(FORWARD),
+	animatedModelRenderer(FORWARD, false),
+	water(5000), terrain(2)
 {
 	//LOAD SCENE
 	Initialize();
@@ -394,10 +390,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
 	scene.AddModel("Player", player);
-	modelRenderer.Bind(scene.Get<Model>("Player"));
-	shadowRenderer.Bind(scene.Get<Model>("Player"));
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
+	animatedModelRenderer.Bind(player);
+
 	colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
 
@@ -440,15 +436,15 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer.Bind(particleSystem);
 
 	//ANIMATION
-	auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
-	animated->SetPosition(-30, 25, -580);
-	scene.AddDrawable("AnimatedModel", animated);
-	skeletonRenderer.Bind(animated);
-	animatedModelRenderer.Bind(animated);
+	//auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
+	//animated->SetPosition(-30, 25, -580);
+	//scene.AddDrawable("AnimatedModel", animated);
+	//skeletonRenderer.Bind(animated);
+	//animatedModelRenderer.Bind(animated);
 
 	//SOUND
-	Audio::AddAudio(L"Audio/Rainy.wav");
-	Audio::StartAudio();
+	//Audio::AddAudio(L"Audio/Rainy.wav");
+	//Audio::StartAudio();
 
 	(void)Run();
 }
@@ -528,12 +524,6 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('T'))
 		{
 			player->TakeDamage();
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('O'))
-		{
-			scene.Get<AnimatedModel>("AnimatedModel")->PlayAnimation("Take 001");
 			lastClick = Time::Get();
 		}
 

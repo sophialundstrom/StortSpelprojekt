@@ -126,11 +126,23 @@ void Player::Update(HeightMap* heightMap)
 		newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
 	}
 
-	position = newPlayerPos + Vector3(0, 3.5f, 0);
+	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
 
 	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 2.0f, 0.0f);
 
 	static float lastClick = 0;
+
+	sinceLastShot += Time::GetDelta();
+	if (sinceLastShot > shootingAnimationLenght) {
+
+		bool hasMoved = position == lastPosition ? false : true;
+		if (!hasMoved)
+			PlayAnimation("Take003", true); // ADD IDLE ANIMATION
+		else if (hasMoved)
+			PlayAnimation("Take001", true); // ADD WALKING ANIMATION
+		else if (jumping)
+			PlayAnimation("Take003", false); // ADD IN AIR JUMP ANIMATION
+	}
 
 	if(Event::RightIsClicked())
 	{
@@ -141,6 +153,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			if (Event::LeftIsClicked())
 			{
+				PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				int currentIndex = 0;
 				bool isPlayerShootingArrow = false;
 				while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
@@ -149,6 +162,7 @@ void Player::Update(HeightMap* heightMap)
 					lastClick = Time::Get();
 					currentIndex++;
 				}
+				sinceLastShot = 0.f;
 			}
 		}
 	}
@@ -163,7 +177,7 @@ void Player::Update(HeightMap* heightMap)
 
 	sceneCamera->MoveTowards(newCameraPos);
 
-	Model::Update();
+	AnimatedModel::Update();
 
 	bounds->Update();
 	frustum->Update();
