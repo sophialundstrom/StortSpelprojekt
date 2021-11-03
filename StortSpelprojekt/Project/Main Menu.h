@@ -38,6 +38,7 @@ private:
 	void BacktoMenu();
 	void Play();
 	void Quit();
+	void Form();
 public:
 	MainMenu() = default;
 	MainMenu(UINT clientWidth, UINT clientHeight, HWND window);

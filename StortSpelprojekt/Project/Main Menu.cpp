@@ -26,6 +26,11 @@ void MainMenu::Quit()
 	quit = true;
 }
 
+void MainMenu::Form()
+{
+	ShellExecute(0, 0, L"http://www.google.com", 0, 0, SW_SHOW);
+}
+
 void Hovering()
 {
 	Print("HOVERING");
@@ -49,6 +54,10 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	menuCanvas->AddButton({ clientWidth / 8.0f, clientHeight / 1.10f }, "C", 360, 105, UI::COLOR::GRAY, [this] { Quit(); }, Hovering);
 	menuCanvas->AddImage({ clientWidth / 8.0f, clientHeight / 1.1f }, "I", "QuitButton.png", 0.6f, 1.0f);
+
+	menuCanvas->AddButton({ clientWidth / 1.25f, clientHeight / 1.15f }, "Form", 480, 150, UI::COLOR::GRAY, [this] { Form(); }, Hovering);
+	menuCanvas->AddImage({ clientWidth / 1.25f, clientHeight / 1.15f }, "Form", "Form.png", 0.75f, true);
+
 
 	canvases["MAIN MENU"] = menuCanvas;
 	currentCanvas = menuCanvas;
