@@ -6,6 +6,7 @@ NPC::NPC(const std::string& file)
 {
 	// call bind here cause i think it binds the bounding volume to a useful place
 	boundingSphere = std::make_shared<BoundingSphere>();
+	boundingSphere->SetScale(3);
 	hp = 3;
 }
 
@@ -17,7 +18,6 @@ NPC::NPC(const Model& model)
 
 void NPC::Update()
 {
-	boundingSphere->SetPosition(position);
 	Model::Update();
 	boundingSphere->Update();
 }

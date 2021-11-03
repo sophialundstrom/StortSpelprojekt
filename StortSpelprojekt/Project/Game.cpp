@@ -9,13 +9,6 @@ void Game::Update()
 
 	QuestLog::Inst().Update();
 
-	auto hostile = scene.Get<NPC>("HostileCube");
-
-	for(int i = 0; i < arrows.size(); i++)
-	{
-		hostile->ProjectileCollided(arrows[i]);
-	}
-
 	for (int i = 0; i < hostileArrows.size(); i++)
 	{
 		player->ProjectileCollided(hostileArrows[i]);
@@ -28,6 +21,8 @@ void Game::Update()
 	CheckNearbyCollision();
 
 	CheckSaveStationCollision();
+
+	CheckQuestInteraction();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
@@ -185,18 +180,22 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	colliderRenderer.Bind(item->GetBounds());
 }
 
-std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName)
+std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Vector3 position)
 {
 	auto NPC = std::make_shared<FriendlyNPC>(fileName);
-	auto collider = NPC->GetCollider();
+	NPC->SetPosition(position);
 
+	auto collider = NPC->GetCollider();
 	collider->SetParent(NPC);
+	collider->Update();
 	colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
 	shadowRenderer.Bind(NPC);
 
 	scene.AddDrawable("FriendlyNPC", NPC);
+
+	friendlyNPCs.emplace_back(NPC);
 
 	return NPC;
 }
@@ -308,6 +307,32 @@ void Game::CheckItemCollision()
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
 				UpdateInventoryUI();
+			}
+		}
+	}
+}
+
+void Game::CheckQuestInteraction()
+{
+	for (auto& NPC : friendlyNPCs)
+	{
+		if (NPC->Interactable())
+		{
+			if (Event::KeyIsPressed('E') && Collision::Intersection(*NPC->GetCollider(), *player->GetFrustum()))
+			{
+				int ID = NPC->GetQuestID();
+				if (ID != -1)
+				{
+					if (ID != 0)
+						NPC->ConnectedBuilding()->Upgrade();	
+
+					if (ID == 4) //LAST QUEST
+						done = true;
+
+					QuestLog::Inst().Complete(ID);
+				}
+					
+				return;
 			}
 		}
 	}
@@ -431,21 +456,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//Item
 	AddItem(WOOD, { -62, 23, -580 });
 
-	scene.AddHostileNPC("HostileCube", hostileArrows, player);
-	auto hostile = scene.Get<NPC>("HostileCube");
-	hostile->SetPosition(-40, 23, -580);
-	hostile->SetScale(2);
-	modelRenderer.Bind(hostile);
-	shadowRenderer.Bind(hostile);
-	colliderRenderer.Bind(hostile->GetCollider());
-
 	//RAIN SYSTEM
 	auto particleSystem = std::make_shared<ParticleSystem>("rain.ps");
 	scene.AddParticleSystem("RainingGATOS", particleSystem, Vector3{ -70,70,-580 });
 	particleRenderer.Bind(particleSystem);
 
 	//FRIENDLY NPC
-	auto friendlyNPC = AddFriendlyNPC("Chest");
+	auto friendlyNPC = AddFriendlyNPC("LowPolyCharacter", Vector3{ -70, 25.0f, -596 });
+	friendlyNPC->BindBuilding(building);
 	friendlyNPC->AddQuestID(0);
 	friendlyNPC->AddQuestID(2);
 	friendlyNPC->AddQuestID(4);
@@ -526,7 +544,7 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('R'))
 		{
 			building->effect->Bind(scene, particleRenderer);
-			building->Upgrade(scene, particleRenderer);
+			building->Upgrade();
 			lastClick = Time::Get();
 		}
 
@@ -551,6 +569,14 @@ APPSTATE Game::Run()
 
 	}
 
+	static float counter = 0;
+	if (done)
+	{
+		counter += Time::GetDelta();
+		if (counter >= 5.0f)
+			return APPSTATE::WIN;
+	}
+
 	static int frames = 0;
 	static float time = 0;
 
@@ -572,12 +598,6 @@ APPSTATE Game::Run()
 
 	if (Event::KeyIsPressed('X'))
 		return APPSTATE::GAMEOVER;
-
-	if (questLog.get()->GetActiveQuest() == 0)
-	{
-		std::cout << "WIN!!!" << std::endl;
-		return APPSTATE::WIN;
-	}
 
 	if (player->GetGameOver() == true)
 	{

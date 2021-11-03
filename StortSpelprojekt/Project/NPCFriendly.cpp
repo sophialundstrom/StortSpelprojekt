@@ -1,6 +1,4 @@
 #include "NPCFriendly.h"
-#include "QuestLog.h"
-
 
 FriendlyNPC::FriendlyNPC(const std::string& file)
 	: NPC(file)
@@ -16,13 +14,25 @@ void FriendlyNPC::Update()
 {
 	NPC::Update();
 
+	activeQuestID = -1;
+	interactable = false;
+
+	UINT completedQuests = 0;
 	for (auto& ID : questIDs)
 	{
 		if (QuestLog::Inst().QuestIsActive(ID))
 		{
-
+			activeQuestID = ID;
+			interactable = true;
+			return;
 		}
+
+		if (QuestLog::Inst().QuestIsDone(ID))
+			completedQuests++;
 	}
+
+	if (completedQuests >= questIDs.size())
+		completed = true;
 }
 
 void FriendlyNPC::Walking()

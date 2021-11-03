@@ -125,14 +125,22 @@ public:
 
 		bounds.Transform(bounds, matrix.Invert());
 
+		Quaternion quat = bounds.Orientation;
+		quat.Normalize();
+		bounds.Orientation = quat;
+
 		UpdateMatrix();
 
 		bounds.Transform(bounds, matrix);
 
+		quat = bounds.Orientation;
+		quat.Normalize();
+		bounds.Orientation = quat;
+
 		if (preMatrix == matrix)
 			return;
 
-		Quaternion quat = bounds.Orientation;
+		quat = bounds.Orientation;
 		quat.Normalize();
 		bounds.Orientation = quat;
 

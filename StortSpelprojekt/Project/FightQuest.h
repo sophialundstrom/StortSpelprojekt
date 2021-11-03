@@ -31,6 +31,6 @@ public:
 
 	virtual void UpdateUI(std::string& string) override
 	{
-		string = "Barbarians fought: " + std::to_string(numTargets - completedTargets) + "/" + std::to_string(numTargets);
+		string = "Barbarians left: " + std::to_string(numTargets - completedTargets) + "/" + std::to_string(numTargets);
 	}
 };

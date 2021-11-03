@@ -126,7 +126,7 @@ public:
 	//TO BE ABLE TO START A QUEST FROM GAME
 	void Activate(UINT ID)
 	{
-		if (quests[ID]->IsCompleted() || quests.find(ID) == quests.end())
+		if (quests.find(ID) == quests.end() || quests[ID]->IsCompleted())
 			return;
 
 		else
