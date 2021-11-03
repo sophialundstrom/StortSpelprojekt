@@ -389,6 +389,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
+	player->SetPosition(-75, 20, -650);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
@@ -401,7 +402,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture"};
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -72, 20.5f, -566 }, scene, particleRenderer);
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
 	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
 	building->SetScale(5);
 
