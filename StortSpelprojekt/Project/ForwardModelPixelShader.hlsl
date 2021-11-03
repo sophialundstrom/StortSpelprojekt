@@ -50,5 +50,5 @@ float4 main(PS_INPUT input) : SV_TARGET
 {
     const float shadow = ShadowCalculation(input.lightClipPosition);
     //return float4 (shadow, shadow, shadow, 0.1f);
-    return diffuseTexture.Sample(wrapSampler, input.texCoords) * shadow * LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition);
+    return diffuseTexture.Sample(wrapSampler, input.texCoords) * LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition);
 }
