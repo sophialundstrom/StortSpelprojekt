@@ -344,6 +344,8 @@ void LevelEditor::Render()
 	
 	volumeRenderer.Render();
 
+	waterRenderer.Render(water);
+
 	BeginFrame();
 
 	if (!selectedObject.empty())
@@ -382,7 +384,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(FORWARD, false),
 	terrainRenderer(FORWARD),
 	animatedModelRenderer(FORWARD, false),
-	colliderRenderer(FORWARD)
+	colliderRenderer(FORWARD),
+	water(5000)
 {
 	//WINDOWS
 	{
