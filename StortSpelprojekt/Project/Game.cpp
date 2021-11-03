@@ -399,10 +399,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	std::string meshNames[] = { "BuildingFirst", "BuildingSecond" };
-	std::string materialNames[] = { "", "HouseTexture"};
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -72, 20.5f, -566 });
-	building->SetScale(1.7f, 1.7f, 1.7f);
+	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
+	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture"};
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -72, 20.5f, -566 }, scene, particleRenderer);
+	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
+	building->SetScale(5);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
@@ -517,7 +518,7 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('R'))
 		{
 			building->effect->Bind(scene, particleRenderer);
-			building->Upgrade();
+			building->Upgrade(scene, particleRenderer);
 			lastClick = Time::Get();
 		}
 

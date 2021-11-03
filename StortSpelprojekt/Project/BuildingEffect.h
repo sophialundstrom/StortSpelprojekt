@@ -38,7 +38,7 @@ public:
 
 	}
 
-	/*void Unbind(Scene& scene, ParticleRenderer& renderer)
+	void Unbind(Scene& scene, ParticleRenderer& renderer)
 	{
 		int index = 0;
 		for (auto system : particles)
@@ -46,7 +46,7 @@ public:
 			renderer.Unbind(system);
 			scene.DeleteDrawable("testSystem" + std::to_string(index));
 		}
-	}*/
+	}
 
 	void Bind(Scene& scene, ParticleRenderer& renderer)
 	{

@@ -63,7 +63,7 @@ public:
 	}
 
 
-	/*void Upgrade()
+	void Upgrade()
 	{
 		if (Time::Get() - lastUpdate < 1.0f)
 			return;
@@ -76,5 +76,5 @@ public:
 
 		ApplyMesh(meshNames[currState]);
 		ApplyMaterial(materialNames[currState]);
-	}*/
+	}
 };
