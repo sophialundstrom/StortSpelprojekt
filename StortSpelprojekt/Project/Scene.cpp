@@ -95,7 +95,7 @@ void Scene::AddFriendlyNPC(const std::string& name, std::shared_ptr<Drawable> dr
 	objectNames.push_back(name);
 }
 
-void Scene::AddHostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player)
+void Scene::AddHostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player, CombatStyle combatStyle)
 {
 	UINT numInstances = 0;
 	std::string fileName = file;
@@ -109,8 +109,6 @@ void Scene::AddHostileNPC(const std::string& file, std::vector<std::shared_ptr<A
 		fileName = file + std::to_string(numInstances);
 		//drawables[fileName] = std::make_shared<HostileNPC>(*std::dynamic_pointer_cast<Model>(drawables[file]), hostileArrows);
 	}
-	else
-		drawables[fileName] = std::make_shared<HostileNPC>(fileName, hostileArrows, player);
 
 	objectNames.push_back(fileName);
 }

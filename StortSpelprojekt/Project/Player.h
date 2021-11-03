@@ -180,6 +180,8 @@ public:
 
 	void Save(const std::string file);
 
+	bool CheckArrowHit(std::shared_ptr<Collider> collider);
+
 	void MoveTowards(const Vector3& position);
 	void ResetToLastPosition() { position = lastPosition; }
 	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
