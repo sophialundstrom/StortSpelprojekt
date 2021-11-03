@@ -44,18 +44,22 @@ void HostileNPC::Update()
 
     if (aimDir.Length() <=  enemyShootDetectionRadius)
     {
-        std::cout << "IN RANGE\n";
+
+        aimDir.Normalize();
+        shootPatternIndex = ((shootPatternIndex++) % 3);
+
+        movementYRadiant = acos(aimDir.x * 0 + aimDir.z * 1);
+        if (aimDir.x < 0)
+            movementYRadiant *= -1;
+
+        movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
+
+        SetRotation({ PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+
+
 
         if (Time::Get() - lastClick > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow)
         {
-            aimDir.Normalize();
-            shootPatternIndex = ((shootPatternIndex++) % 3);
-
-            movementYRadiant = acos(aimDir.x * 0 + aimDir.z * 1);
-	        if (aimDir.x < 0)
-		        movementYRadiant *= -1;
-
-            movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
 
             for (int i = 0; i < arrows.size(); i++)
             {
@@ -70,12 +74,6 @@ void HostileNPC::Update()
         else if (Time::Get() - lastClick > 3 && combatStyle == CombatStyle::wideArrow)
         {
             float arrowWidth = PI/32.f;
-
-            aimDir.Normalize();
-            movementYRadiant = acos(aimDir.x * 0 + aimDir.z * 1);
-            if (aimDir.x < 0)
-                movementYRadiant *= -1;
-            movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
 
             arrows.at(0)->Shoot(aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             arrows.at(1)->Shoot(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
