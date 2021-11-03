@@ -38,16 +38,16 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	deferredRenderer(clientWidth, clientHeight)
 {
 	auto menuCanvas = new Canvas();
-	//menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "K", "Arcus logo.png", 0.75f, 1.0f);
-	//menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.10f }, "O", 360, 100, UI::COLOR::GRAY, [this] { Play(); }, Hovering);
-	//menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.11f }, "L", "MainMenuPlay.png", 0.6f, 1.0f);
-	////menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.7f }, "A", 370, 133, UI::COLOR::GRAY, [this] { HowToPlay(); }, Hovering);
-	//menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.8f }, "N", 360, 100, UI::COLOR::GRAY, [this] { Options(); }, Hovering);
-	//menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.8f }, "J", "MainMenuOptions.png", 0.6f, 1.0f);
-	//menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.49f }, "B", 270, 100, UI::COLOR::GRAY, [this] { HowToPlay(); }, Hovering);
-	//menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.49f }, "H", "MainMenuControls.png", 0.6f, 1.0f);
-	//menuCanvas->AddButton({ clientWidth / 5.0f, clientHeight / 1.10f }, "C", 270, 100, UI::COLOR::GRAY, [this] { Quit(); }, Hovering);
-	//menuCanvas->AddImage({ clientWidth / 5.0f, clientHeight / 1.1f }, "I", "MainMenuQuit.png", 0.6f, 1.0f);
+	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "K", "Arcus logo.png", 0.75f, 1.0f);
+	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.10f }, "O", 360, 100, UI::COLOR::GRAY, [this] { Play(); }, Hovering);
+	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.11f }, "L", "MainMenuPlay.png", 0.6f, 1.0f);
+	//menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.7f }, "A", 370, 133, UI::COLOR::GRAY, [this] { HowToPlay(); }, Hovering);
+	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.8f }, "N", 360, 100, UI::COLOR::GRAY, [this] { Options(); }, Hovering);
+	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.8f }, "J", "MainMenuOptions.png", 0.6f, 1.0f);
+	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.49f }, "B", 270, 100, UI::COLOR::GRAY, [this] { HowToPlay(); }, Hovering);
+	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.49f }, "H", "MainMenuControls.png", 0.6f, 1.0f);
+	menuCanvas->AddButton({ clientWidth / 5.0f, clientHeight / 1.10f }, "C", 270, 100, UI::COLOR::GRAY, [this] { Quit(); }, Hovering);
+	menuCanvas->AddImage({ clientWidth / 5.0f, clientHeight / 1.1f }, "I", "MainMenuQuit.png", 0.6f, 1.0f);
 	canvases["MAIN MENU"] = menuCanvas;
 	currentCanvas = menuCanvas;
 

@@ -38,7 +38,7 @@ public:
 		ui = std::make_unique<UI>(window->GetHWND());
 
 		//SWAP TO MAINMENU TO NOT SKIP IT
-		state = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+		state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 	}
 
 	~Application()
@@ -86,6 +86,7 @@ public:
 
 			switch (currentState)
 			{
+
 			case APPSTATE::NO_CHANGE:
 				break;
 
