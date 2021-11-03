@@ -132,7 +132,7 @@ void LevelEditor::CreateBoundingBox()
 			numInstances++;
 	std::string name = "BoxVolume";
 	if (numInstances > 0)
-		name += std::to_string(numInstances);
+		name += std::to_string(numInstances) + "b";
 	
 	scene.AddBoundingVolume(name, box);
 	selectedObject = name;
@@ -165,7 +165,7 @@ void LevelEditor::CreateBoundingSphere()
 			numInstances++;
 	std::string name = "SphereVolume";
 	if (numInstances > 0)
-		name += std::to_string(numInstances);
+		name += std::to_string(numInstances) + "b";
 
 	scene.AddBoundingVolume(name, sphere);
 	selectedObject = name;
