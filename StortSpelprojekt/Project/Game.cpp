@@ -561,8 +561,24 @@ APPSTATE Game::Run()
 	if (Event::KeyIsPressed('M'))
 		return APPSTATE::MAIN_MENU;
 
+	if (Event::KeyIsPressed('X'))
+		return APPSTATE::GAMEOVER;
+
+	if (questLog.get()->GetActiveQuest() == 0)
+	{
+		std::cout << "WIN!!!" << std::endl;
+		return APPSTATE::WIN;
+	}
+
+	if (player->GetGameOver() == true)
+	{
+		std::cout << "DEAD!!!" << std::endl;
+		return APPSTATE::GAMEOVER;
+	}
+
 	if (Event::KeyIsPressed(VK_ESCAPE))
 		return APPSTATE::EXIT;
+
 
 	return APPSTATE::NO_CHANGE;
 }

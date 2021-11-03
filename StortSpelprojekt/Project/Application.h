@@ -5,6 +5,8 @@
 #include "LoadingScreen.h"
 #include "ApplicationState.h"
 #include "ShaderData.h"
+#include "GameOver.h"
+#include "Win.h"
 
 class Application
 {
@@ -89,6 +91,19 @@ public:
 				RunLoadingScreen();
 				delete state;
 				state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+				break;
+
+			case APPSTATE::WIN:
+				delete state;
+				RunLoadingScreen();
+				state = new Win(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+
+				break;
+			case APPSTATE::GAMEOVER:
+				delete state;
+				RunLoadingScreen();
+				state = new GameOver(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+
 				break;
 
 			case APPSTATE::GAME:

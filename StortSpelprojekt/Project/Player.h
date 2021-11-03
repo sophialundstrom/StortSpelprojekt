@@ -58,8 +58,8 @@ struct Stats
 	UINT barbariansKilled = 0;
 	float movementSpeed = 30.0f;
 	float sprintSpeed = 50.0f;
-	UINT maxHealthPoints = 10;
-	UINT healthPoints = 10;
+	UINT maxHealthPoints = 1;
+	UINT healthPoints = 1;
 	UINT level = 1;
 	float currentSpeed = movementSpeed;
 
@@ -116,6 +116,7 @@ private:
 
 	bool isRightPressed;
 	bool isLeftPressed;
+	bool gameOver = false;
 
 	Inventory inventory;
 
@@ -167,7 +168,7 @@ public:
 	}
 
 	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
-
+	bool GetGameOver() { return this->gameOver; }
 	std::shared_ptr<BoundingSphere> GetBounds() { return bounds; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 

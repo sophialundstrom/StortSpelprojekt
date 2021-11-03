@@ -126,7 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>PROJECT_DIR="$(ProjectDir)";_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)ImGui\include;$(ProjectDir)Assimp\include;$(ProjectDir)DirectXTK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
@@ -164,6 +164,7 @@
     <ClCompile Include="DockSpacePanel.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLoader.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Heap.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="Win.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +206,7 @@
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
     <ClInclude Include="GameLoader.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Heap.h" />
     <ClInclude Include="IDRenderer.h" />
@@ -288,6 +291,7 @@
     <ClInclude Include="VolumeRenderer.h" />
     <ClInclude Include="Water.h" />
     <ClInclude Include="WaterRenderer.h" />
+    <ClInclude Include="Win.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
