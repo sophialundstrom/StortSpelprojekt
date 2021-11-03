@@ -39,7 +39,7 @@ void Game::Update()
 
 void Game::Render()
 {
-	shadowRenderer.Render();
+	//shadowRenderer.Render();
 
 	ShaderData::Inst().BindFrameConstants();
 
@@ -58,7 +58,6 @@ void Game::Render()
 	//waterRenderer.Render(water);
 
 	//skeletonRenderer.Render();
-
 
 	currentCanvas->Render();
 
@@ -334,7 +333,7 @@ void TestFuncMenu()
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:deferredRenderer(clientWidth, clientHeight),
-	modelRenderer(FORWARD, false),
+	modelRenderer(FORWARD, true),
 	particleRenderer(FORWARD),
 	terrainRenderer(FORWARD),
 	colliderRenderer(FORWARD),
