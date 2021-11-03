@@ -16,21 +16,10 @@ public:
 	static const std::string Names[];
 
 	Item(RESOURCE type, const std::string& name)
-		:Model("Pyramid", name), ID(type)
+		:Model("Stick", name), ID(type)
 	{
 		bounds = std::make_shared<BoundingSphere>();
-	}
-
-	bool Collision(const Collider *other)
-	{
-		switch (other->Type())
-		{
-		case ColliderType::SPHERE:
-		    return Collision::Intersection(*dynamic_cast<const BoundingSphere*>(other), *bounds);
-		case ColliderType::BOX:
-			return Collision::Intersection(*bounds,*dynamic_cast<const BoundingBox*>(other));
-		}
-		return false;
+		//bounds->SetScale(2, 0.5f, 0.5f);
 	}
 
 	void Update()

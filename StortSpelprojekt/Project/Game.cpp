@@ -42,7 +42,7 @@ void Game::Render()
 
 	animatedModelRenderer.Render();
 
-	colliderRenderer.Render();
+	//colliderRenderer.Render();
 
 	terrainRenderer.Render(terrain);
 
@@ -169,7 +169,7 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	const std::string name = "testItem";
 
 	auto item = std::make_shared<Item>(resource, name);
-	scene.AddModel(name, item);
+	scene.AddDrawable(name, item);
 	items.emplace_back(item);
 	item->GetBounds()->SetParent(item);
 	item->SetPosition(position);
@@ -309,6 +309,7 @@ void Game::CheckItemCollision()
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
 				UpdateInventoryUI();
+				return;
 			}
 		}
 	}
@@ -463,7 +464,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
 	//Item
-	AddItem(WOOD, { -62, 23, -580 });
+	AddItem(WOOD, { -134, 22, -594 });
+	AddItem(WOOD, { -113, 22, -582 });
+	AddItem(WOOD, { -116, 20, -609 });
+	AddItem(WOOD, { -91, 20, -593 });
+	AddItem(WOOD, { -85, 20, -608 });
 
 	AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::consistantDelay);
@@ -552,12 +557,12 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}*/
 
-		if (Event::KeyIsPressed('R'))
+		/*if (Event::KeyIsPressed('R'))
 		{
 			building->effect->Bind(scene, particleRenderer);
 			building->Upgrade();
 			lastClick = Time::Get();
-		}
+		}*/
 	}
 
 	if (hovering)
