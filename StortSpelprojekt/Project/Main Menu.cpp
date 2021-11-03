@@ -58,7 +58,6 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	menuCanvas->AddButton({ clientWidth / 1.25f, clientHeight / 1.15f }, "Form", 480, 150, UI::COLOR::GRAY, [this] { Form(); }, Hovering);
 	menuCanvas->AddImage({ clientWidth / 1.25f, clientHeight / 1.15f }, "Form", "Form.png", 0.75f, true);
 
-
 	canvases["MAIN MENU"] = menuCanvas;
 	currentCanvas = menuCanvas;
 
@@ -69,13 +68,8 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
-	auto optionsCanvas = new Canvas();
-	//optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "X", "Options.png", 1.0f, 1.0f);
-	optionsCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.08f }, "D", 200, 78, UI::COLOR::GRAY, [this] { BacktoMenu(); }, Hovering);
-	canvases["OPTIONS"] = optionsCanvas;
-
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 370.0f, 180.0f, -90.0 }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(500, 4, 4);
+	scene.SetDirectionalLight(500, 1, 1);
 	
 	(void)Run();
 }
@@ -114,6 +108,8 @@ void MainMenu::Initialize()
 
 void MainMenu::Render()
 {
+	ShaderData::Inst().BindFrameConstants();
+
 	Graphics::Inst().BeginFrame();
 
 	modelRenderer.Render();
@@ -134,8 +130,9 @@ void MainMenu::Render()
 APPSTATE MainMenu::Run()
 {
 	Render();
-	scene.Update();
 	scene.UpdateDirectionalLight(scene.GetCamera()->GetPosition());
+	scene.Update();
+
 	currentCanvas->Update();
 
 	if (play)
