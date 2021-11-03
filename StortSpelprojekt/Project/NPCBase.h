@@ -10,7 +10,7 @@ private:
 	int hp;
 
 protected:
-	std::shared_ptr<BoundingSphere> boundingSphere;
+	std::shared_ptr<BoundingBox> boundingBox;
 public:
 	NPC(const std::string& file);
 	NPC(const Model& model);
@@ -20,7 +20,7 @@ public:
 	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 	void Die();
 	void TakeDamage();
-	std::shared_ptr<BoundingSphere> GetCollider() { return boundingSphere; }
+	std::shared_ptr<BoundingBox> GetCollider() { return boundingBox; }
 	//void AddModel(std::map<std::string, std::shared_ptr<Drawable>> &drawables, const std::string& file);
 	void debugPrint();
 };

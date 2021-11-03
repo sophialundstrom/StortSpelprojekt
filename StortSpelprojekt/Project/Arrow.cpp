@@ -1,7 +1,7 @@
 #include "Arrow.h"
 
 Arrow::Arrow()
-	:Model("Arrow", "Arrow"), speed(330.0f), lifeTime(3.0f)
+	:Model("Arrow", "Arrow"), speed(150.f), lifeTime(3.0f)
 {
 	collider = std::make_shared<BoundingBox>();
 }

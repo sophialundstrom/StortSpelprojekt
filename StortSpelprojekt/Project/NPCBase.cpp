@@ -13,13 +13,13 @@ NPC::NPC(const std::string& file)
 NPC::NPC(const Model& model)
 	: Model(model)
 {
-	boundingSphere = std::make_shared<BoundingSphere>();
+	boundingBox = std::make_shared<BoundingBox>();
 }
 
 void NPC::Update()
 {
 	Model::Update();
-	boundingSphere->Update();
+	boundingBox->Update();
 }
 
 bool NPC::Collided(Player& player)
@@ -35,7 +35,7 @@ bool NPC::Collided(Player& player)
 bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 {
 
-	if (Collision::Intersection(this->boundingSphere, arrow->GetCollider()) && arrow->IsShot() == true)
+	if (Collision::Intersection(this->boundingBox, arrow->GetCollider()) && arrow->IsShot() == true)
 	{
 		Print("ARROW HIT");
 		arrow->DisableArrow();
