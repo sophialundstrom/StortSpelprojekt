@@ -141,8 +141,5 @@ APPSTATE MainMenu::Run()
 	if (quit)
 		return APPSTATE::EXIT;
 	
-	if (Event::KeyIsPressed(VK_ESCAPE))
-		return APPSTATE::EXIT;
-
 	return APPSTATE::NO_CHANGE;
 }

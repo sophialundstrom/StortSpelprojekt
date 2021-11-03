@@ -480,7 +480,7 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}
 
-		if (Event::KeyIsPressed('U'))
+		/*if (Event::KeyIsPressed('U'))
 		{
 			QuestLog::Inst().Complete(0);
 			lastClick = Time::Get();
@@ -490,17 +490,17 @@ APPSTATE Game::Run()
 		{
 			QuestLog::Inst().Complete(3);
 			lastClick = Time::Get();
-		}
+		}*/
 
-		if (Event::KeyIsPressed('B'))
+		/*if (Event::KeyIsPressed('B'))
 		{
 			Print("Killed barbarian!");
 			player->Stats().barbariansKilled++;
 			player->TakeDamage();
 			lastClick = Time::Get();
-		}
+		}*/
 
-		if (Event::KeyIsPressed('I'))
+	/*	if (Event::KeyIsPressed('I'))
 		{
 			Print("-Added Items-");
 			player->Inventory().AddItem(RESOURCE::WOOD);
@@ -511,7 +511,7 @@ APPSTATE Game::Run()
 			player->Inventory().GetResources(RESOURCE::FOOD);
 			UpdateInventoryUI();
 			lastClick = Time::Get();
-		}
+		}*/
 
 		if (Event::KeyIsPressed('R'))
 		{
@@ -519,26 +519,6 @@ APPSTATE Game::Run()
 			building->Upgrade(scene, particleRenderer);
 			lastClick = Time::Get();
 		}
-
-		if (Event::KeyIsPressed('T'))
-		{
-			player->TakeDamage();
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('Y'))
-		{
-			player->AddHealthPoint();
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('P'))
-		{
-			player->GetStats();
-			player->AddHealthPoint();
-			lastClick = Time::Get();
-		}
-
 	}
 
 	static int frames = 0;
@@ -557,37 +537,16 @@ APPSTATE Game::Run()
 	if (mainMenu)
 		return APPSTATE::MAIN_MENU;
 
-	if (Event::KeyIsPressed('M'))
-		return APPSTATE::MAIN_MENU;
-
-	if (Event::KeyIsPressed('X'))
-		return APPSTATE::GAMEOVER;
-
-	if (Event::KeyIsPressed('Z'))
-		return APPSTATE::WIN;
-
-	if (questLog.get()->GetActiveQuest() == 0)
-	{
-		std::cout << "WIN!!!" << std::endl;
-		return APPSTATE::WIN;
-	}
-
 	if (player->GetGameOver() == true)
 	{
-		std::cout << "DEAD!!!" << std::endl;
 		return APPSTATE::GAMEOVER;
 	}
-
-	if (Event::KeyIsPressed(VK_ESCAPE))
-		return APPSTATE::EXIT;
-
 
 	return APPSTATE::NO_CHANGE;
 }
 
 void Game::CheckNearbyEnemies()
 {
-
 	for (auto hostile : hostiles)
 	{
 		bool hit = player->CheckArrowHit(hostile->GetCollider());
@@ -597,9 +556,5 @@ void Game::CheckNearbyEnemies()
 			
 			hostile->TakeDamage();
 		}
-
 	}
-
-
-
 }
