@@ -19,6 +19,8 @@ void Game::Update()
 
 	CheckSaveStationCollision();
 
+	CheckNearbyEnemies();
+
 	CheckQuestInteraction();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
@@ -256,19 +258,22 @@ void Game::CheckNearbyCollision()
 
 void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
 {
-	auto npc = std::make_shared<HostileNPC>(filename, player, combatStyle);
-	npc->SetPosition(position);
-	npc->BindPlayerArrows(arrows);
-	modelRenderer.Bind(npc);
-	scene.AddDrawable("hostileNpc", npc);
-	npc->BindArrows(modelRenderer);
-	npc->SetScale(1.f);
+	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle);
+	NPC->SetPosition(position);
+	NPC->BindArrows(modelRenderer);
 
-	npc->GetCollider()->SetScale(2, 7, 2);
+	auto collider = NPC->GetCollider();
+	collider->SetParent(NPC);
+	collider->Update();
+	collider->SetScale(2, 7, 2);
+	colliderRenderer.Bind(collider);
 
-	shadowRenderer.Bind(npc);
-	colliderRenderer.Bind(npc->GetCollider());
-	hostiles.emplace_back(npc);
+	modelRenderer.Bind(NPC);
+	shadowRenderer.Bind(NPC);
+
+	scene.AddDrawable("hostileNpc", NPC);
+
+	hostiles.emplace_back(NPC);
 }
 
 void Game::CheckSaveStationCollision()
@@ -626,14 +631,15 @@ APPSTATE Game::Run()
 void Game::CheckNearbyEnemies()
 {
 
-	for (auto hostile : hostiles)
+	for (auto& hostile : hostiles)
 	{
 		bool hit = player->CheckArrowHit(hostile->GetCollider());
 
 		if (hit)
 		{
-			
 			hostile->TakeDamage();
+			if (hostile->IsDead())
+				player->Stats().barbariansKilled++;
 		}
 
 	}

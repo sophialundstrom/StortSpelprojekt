@@ -5,8 +5,7 @@ NPC::NPC(const std::string& file)
 	:Model(file, file)
 {
 	// call bind here cause i think it binds the bounding volume to a useful place
-	boundingSphere = std::make_shared<BoundingSphere>();
-	boundingSphere->SetScale(3);
+	boundingBox = std::make_shared<BoundingBox>();
 	hp = 3;
 }
 
@@ -51,6 +50,7 @@ bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 
 void NPC::Die()
 {
+	dead = true;
 	position = { 0,-100,0 };
 }
 

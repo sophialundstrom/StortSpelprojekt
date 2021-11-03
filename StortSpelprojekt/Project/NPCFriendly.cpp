@@ -3,6 +3,7 @@
 FriendlyNPC::FriendlyNPC(const std::string& file)
 	: NPC(file)
 {
+	boundingBox->SetScale(2, 4, 2);
 }
 
 FriendlyNPC::FriendlyNPC(const Model& model)
