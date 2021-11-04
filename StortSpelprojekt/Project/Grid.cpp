@@ -77,7 +77,10 @@ void Grid::RetracePath(Node *startNode, Node *endNode)
 
 	while (currentNode != startNode)
 	{
-		path.emplace_back(currentNode);
+		path.push_back(currentNode);
+		char str = currentNode->GetGridCoord().x;
+		std::cout << currentNode->gridX << ", " << currentNode->gridY << std::endl;
+		//Print((char)currentNode->gridX + ", " + (char)currentNode->gridY);
 		currentNode = currentNode->parent;
 	}
 	std::reverse(path.begin(), path.end());

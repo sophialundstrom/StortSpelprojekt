@@ -65,3 +65,8 @@ int Node::getFCost()
 void Node::Update()
 {
 }
+
+Vector2 Node::GetGridCoord()
+{
+	return Vector2(this->gridX, this->gridY);
+}
