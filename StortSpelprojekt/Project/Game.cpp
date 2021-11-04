@@ -42,7 +42,7 @@ void Game::Render()
 
 	animatedModelRenderer.Render();
 
-	//colliderRenderer.Render();
+	/*colliderRenderer.Render();*/
 
 	terrainRenderer.Render(terrain);
 
