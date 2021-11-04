@@ -14,9 +14,16 @@ FriendlyNPC::FriendlyNPC(const Model& model)
 void FriendlyNPC::Update()
 {
 	NPC::Update();
+	Timer timer;
+	timer.Start();
 
 	activeQuestID = -1;
 	interactable = false;
+
+	
+	std::cout << timer.DeltaTime() << std::endl;;
+	time
+	Walking();
 
 	UINT completedQuests = 0;
 	for (auto& ID : questIDs)
@@ -39,4 +46,12 @@ void FriendlyNPC::Update()
 void FriendlyNPC::Walking()
 {
 	//TODO: Implement walking behaviour
+	static int pathIndex = 0;
+	if (pathIndex < path.size())
+	{
+		std::cout << position.x << ", " << position.y << ", " << position.z << std::endl;
+		SetPosition(path[pathIndex]->position);
+		std::cout << position.x << ", " << position.y << ", " << position.z << std::endl;
+	}
+	pathIndex++;
 }

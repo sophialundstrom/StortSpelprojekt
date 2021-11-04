@@ -18,12 +18,12 @@ private:
 	Node* grid[32]; // placeholder numbers
 
 	float nodeDiameter;
-
+	
 	std::vector<Node*> path;
 
 public:
 	Grid();
-	void CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable);
+	void CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable, Vector3 worldPosition);
 	Node* NodeFromWorldPoint(Vector3 worldPoint);
 	std::vector<Node*> GetNeighbours(Node* node);
 	void RetracePath(Node* startNode, Node* endNode);

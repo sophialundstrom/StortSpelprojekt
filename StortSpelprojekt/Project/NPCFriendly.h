@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Building.h"
 #include "QuestLog.h"
+#include "Node.h"
 
 class FriendlyNPC : public NPC
 {
@@ -18,6 +19,7 @@ public:
 	UINT NumConnectedQuests() { return questIDs.size(); }
 	bool Completed() { return completed; }
 	virtual void Update() override;
+	void SetPath(std::vector<Node*> path) { this->path = path; }
 private:
 	std::shared_ptr<Building> building;
 	int activeQuestID = -1;
@@ -26,4 +28,6 @@ private:
 
 	std::vector<UINT> questIDs;
 	void Walking();
+	std::vector<Node*> path;
+	float time = 0;
 };

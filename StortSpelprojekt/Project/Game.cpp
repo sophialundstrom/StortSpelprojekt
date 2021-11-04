@@ -144,6 +144,7 @@ void Game::Initialize()
 
 	for (auto& collider : colliders)
 		scene.DeleteDrawable(collider->GetName());
+
 }
 
 void Game::RemoveItem(const std::string name)
@@ -483,7 +484,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPC
-	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
+	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -615 });
 	friendlyNPC->BindBuilding(building);
 	friendlyNPC->AddQuestID(0);
 	friendlyNPC->AddQuestID(2);
@@ -504,6 +505,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//SOUND
 	//Audio::AddAudio(L"Audio/Rainy.wav");
 	//Audio::StartAudio();
+
+
+	pathing.CreateGrid(scene.GetDrawables(), friendlyNPCs[0]->GetPosition());
+	pathing.FindPath(friendlyNPCs[0]->GetPosition(), player->GetPosition());
+	friendlyNPCs[0]->SetPath(pathing.GetPath());
 
 	(void)Run();
 }

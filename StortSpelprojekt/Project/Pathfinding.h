@@ -13,7 +13,7 @@ public:
 	Pathfinding();
 
 	void Update();
-	void CreateGrid(std::map<std::string, std::shared_ptr<Drawable>>& drawable);
+	void CreateGrid(std::map<std::string, std::shared_ptr<Drawable>>& drawable, Vector3 worldPos);
 	void FindPath(Vector3 startPos, Vector3 TargetPos);
-	
+	std::vector<Node*> GetPath() { return grid.GetPath(); }
 };
