@@ -10,8 +10,6 @@ void hovering2()
 }
 
 GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
-	:modelRenderer(DEFERRED, true),
-	particleRenderer(DEFERRED)
 {
 	currentCanvas = new Canvas();
 	//FORM
@@ -28,40 +26,14 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 	//GAMEOVERTEXT
 	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 5.5f }, "GameOverText", "GameOverText.png", 2.f, true);
 
-
-
 	(void)Run();
+
+	BindShaders(nullptr, nullptr, nullptr, nullptr, nullptr);
 }
 
 GameOver::~GameOver()
 {
 	delete currentCanvas;
-}
-
-void GameOver::Initialize()
-{
-	//LOAD SCENE
-	FBXLoader levelLoader("Models");
-
-	GameLoader gameLoader;
-	gameLoader.Load("Default", scene.GetDrawables());
-
-	for (auto& [name, drawable] : scene.GetDrawables())
-	{
-		auto model = std::dynamic_pointer_cast<Model>(drawable);
-		if (model)
-		{
-			modelRenderer.Bind(model);
-			shadowRenderer.Bind(model);
-		}
-
-		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
-		if (particleSystem)
-		{
-			//SAME BUT PS->
-		}
-	}
-
 }
 
 void GameOver::MainMenu()
@@ -77,7 +49,9 @@ void GameOver::QuitGame()
 void GameOver::Render()
 {
 	Graphics::Inst().BeginFrame();
+
 	currentCanvas->Render();
+
 	Graphics::Inst().EndFrame();
 }
 
@@ -87,10 +61,6 @@ APPSTATE GameOver::Run()
 
 	currentCanvas->Update();
 	Render();
-	
-
-	if (Event::KeyIsPressed('M'))
-		gameStateStatus = APPSTATE::MAIN_MENU;
 
 	if (quit)
 		return APPSTATE::EXIT;
@@ -99,7 +69,7 @@ APPSTATE GameOver::Run()
 		return APPSTATE::MAIN_MENU;
 
 	if (Event::KeyIsPressed(VK_ESCAPE))
-		gameStateStatus = APPSTATE::EXIT;
+		return APPSTATE::EXIT;
 
-	return gameStateStatus;
+	return APPSTATE::NO_CHANGE;;
 }

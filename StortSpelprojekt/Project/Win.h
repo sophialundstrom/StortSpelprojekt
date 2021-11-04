@@ -17,7 +17,6 @@ private:
 
 	ParticleRenderer particleRenderer;
 	ModelRenderer modelRenderer;
-	ShadowRenderer shadowRenderer;
 	APPSTATE gameStateStatus = APPSTATE::NO_CHANGE;
 	bool goToMenu = false;
 

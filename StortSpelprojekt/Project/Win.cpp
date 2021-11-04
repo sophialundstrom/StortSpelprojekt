@@ -11,8 +11,8 @@ void hovering2Win()
 }
 
 Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
-	:modelRenderer(DEFERRED, true),
-	particleRenderer(DEFERRED)
+	:modelRenderer(FORWARD, true),
+	particleRenderer(FORWARD)
 {
 	currentCanvas = new Canvas();
 

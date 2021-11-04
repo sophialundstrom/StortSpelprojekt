@@ -103,10 +103,10 @@ void Game::Initialize()
 
 	//SAVE STATIONS
 	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
-	colliderRenderer.Bind(saveStations[0].Collider());
+	//colliderRenderer.Bind(saveStations[0].Collider());
 
 	saveStations[1] = SaveStation({ 20, 0, -20 }, 1, scene.GetDrawables());
-	colliderRenderer.Bind(saveStations[1].Collider());
+	//colliderRenderer.Bind(saveStations[1].Collider());
 
 	//MODELS & COLLIDERS
 	for (auto& [name, drawable] : scene.GetDrawables())
@@ -115,7 +115,7 @@ void Game::Initialize()
 		if (model)
 		{
 			modelRenderer.Bind(model);
-			shadowRenderer.Bind(model);
+			//shadowRenderer.Bind(model);
 			continue;
 		}
 			
@@ -129,7 +129,7 @@ void Game::Initialize()
 		if (boundingBox)
 		{
 			colliders.emplace_back(boundingBox);
-			colliderRenderer.Bind(boundingBox);
+			//colliderRenderer.Bind(boundingBox);
 			continue;
 		}
 
@@ -137,7 +137,7 @@ void Game::Initialize()
 		if (boundingSphere)
 		{
 			colliders.emplace_back(boundingSphere);
-			colliderRenderer.Bind(boundingSphere);
+			//colliderRenderer.Bind(boundingSphere);
 			continue;
 		}
 	}
@@ -154,8 +154,8 @@ void Game::RemoveItem(const std::string name)
 		{
 			auto item = scene.Get<Item>(name);
 			modelRenderer.Unbind(item);
-			shadowRenderer.Unbind(item);
-			colliderRenderer.Unbind(item->GetBounds());
+			//shadowRenderer.Unbind(item);
+			//colliderRenderer.Unbind(item->GetBounds());
 			auto it = items.begin() + i;
 			items.erase(it);
 			scene.DeleteDrawable(name);
@@ -175,8 +175,8 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	item->SetPosition(position);
 	item->GetBounds()->Update();
 	modelRenderer.Bind(item);
-	shadowRenderer.Bind(item);
-	colliderRenderer.Bind(item->GetBounds());
+	//shadowRenderer.Bind(item);
+	//colliderRenderer.Bind(item->GetBounds());
 }
 
 std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Vector3 position)
@@ -187,10 +187,10 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Ve
 	auto collider = NPC->GetCollider();
 	collider->SetParent(NPC);
 	collider->Update();
-	colliderRenderer.Bind(collider);
+	//colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
-	shadowRenderer.Bind(NPC);
+	//shadowRenderer.Bind(NPC);
 
 	scene.AddDrawable("FriendlyNPC", NPC);
 
@@ -213,8 +213,8 @@ void Game::AddArrow(const std::string fileName)
 	arrow->GetCollider()->SetScale(0.15);
 	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
-	colliderRenderer.Bind(arrow->GetCollider());
+	//shadowRenderer.Bind(arrow);
+	//colliderRenderer.Bind(arrow->GetCollider());
 	arrow->Update();
 }
 
@@ -270,10 +270,10 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 	collider->SetParent(NPC);
 	collider->Update();
 	collider->SetScale(2, 7, 2);
-	colliderRenderer.Bind(collider);
+	//colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
-	shadowRenderer.Bind(NPC);
+	//shadowRenderer.Bind(NPC);
 
 	scene.AddDrawable("hostileNpc", NPC);
 
@@ -382,11 +382,11 @@ void TestFuncMenu()
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
-	:deferredRenderer(clientWidth, clientHeight),
+	://deferredRenderer(clientWidth, clientHeight),
 	modelRenderer(FORWARD, true),
 	particleRenderer(FORWARD),
 	terrainRenderer(FORWARD),
-	colliderRenderer(FORWARD),
+	//colliderRenderer(FORWARD),
 	animatedModelRenderer(FORWARD, false),
 	water(5000), terrain(2)
 {
@@ -455,10 +455,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
-	colliderRenderer.Bind(player->GetBounds());
+	//colliderRenderer.Bind(player->GetBounds());
 	animatedModelRenderer.Bind(player);
 
-	colliderRenderer.Bind(player->GetFrustum());
+	//colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
 
 	//BUILDING
@@ -471,7 +471,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
-	shadowRenderer.Bind(building);
+	//shadowRenderer.Bind(building);
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);

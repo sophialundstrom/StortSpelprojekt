@@ -9,7 +9,11 @@ private:
 	ID3D11Buffer* matrixBuf;
 
 	//SHADERS
+#ifdef _DEBUG
 	const std::string vs_path = "../x64/Debug/ShadowVertexShader.cso";
+#else
+	const std::string vs_path = "../x64/Release/ShadowVertexShader.cso";
+#endif
 	ID3D11VertexShader* vertexShader;
 
 	//INPUT LAYOUT
