@@ -49,8 +49,8 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.10f }, "O", 360, 100, UI::COLOR::GRAY, [this] { Play(); }, Hovering);
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.10f }, "L", "PlayButton.png", 0.6f, 1.0f);
 	
-	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.7f }, "G", "HowToPlayButton.png", 0.6f, 1.0f);
-	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.7f }, "A", 360, 100, UI::COLOR::GRAY, [this] { HowToPlay(); }, Hovering);
+	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.12f }, "G", "HowToPlayButton.png", 0.6f, 1.0f);
+	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.12f }, "A", 360, 100, UI::COLOR::GRAY, [this] { HowToPlay(); }, Hovering);
 
 	menuCanvas->AddButton({ clientWidth / 8.0f, clientHeight / 1.10f }, "C", 360, 105, UI::COLOR::GRAY, [this] { Quit(); }, Hovering);
 	menuCanvas->AddImage({ clientWidth / 8.0f, clientHeight / 1.1f }, "I", "QuitButton.png", 0.6f, 1.0f);
@@ -133,8 +133,6 @@ APPSTATE MainMenu::Run()
 	scene.Update();
 	Render();
 	scene.UpdateDirectionalLight(scene.GetCamera()->GetPosition());
-
-
 
 	if (play)
 		return APPSTATE::GAME;
