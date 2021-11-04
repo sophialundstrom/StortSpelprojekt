@@ -2,7 +2,7 @@
 #include "Collision.h"
 #include "Model.h"
 
-typedef enum RESOURCE 
+enum RESOURCE 
 {
 	WOOD,
 	STONE,
