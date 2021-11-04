@@ -387,7 +387,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer(FORWARD),
 	terrainRenderer(FORWARD),
 	//colliderRenderer(FORWARD),
-	animatedModelRenderer(FORWARD, false),
+	animatedModelRenderer(FORWARD, true),
 	water(5000), terrain(2)
 {
 	//LOAD SCENE

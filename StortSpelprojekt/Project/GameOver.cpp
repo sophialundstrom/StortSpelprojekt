@@ -33,8 +33,7 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 
 GameOver::~GameOver()
 {
-	for (auto& [name, canvas] : canvases)
-		delete canvas;
+	delete currentCanvas;
 }
 
 void GameOver::MainMenu()
