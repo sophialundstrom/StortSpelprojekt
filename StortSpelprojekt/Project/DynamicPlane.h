@@ -22,8 +22,8 @@ struct DynamicPlane
 	{
 		const UINT cells = pow(2, subdivisions);
 		const UINT numTris = pow(2, subdivisions * 2 + 1);
-		const float triSize = (float)size / cells;
-		const float texSize = 1.0 / cells;
+		const float triSize = (float)size / (float)cells;
+		const float texSize = 1.0f / (float)cells;
 
 		Vector3 position;
 		Vector2 texCoords;
