@@ -19,24 +19,18 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 	Node *startNode = grid.NodeFromWorldPoint(startPos);
 	Node *targetNode = grid.NodeFromWorldPoint(TargetPos);
 
-	std::vector<Node*> openSet;
 	std::unordered_set<Node*> closedSet;
 
-	openSet.push_back(startNode); // add to the end of openset
+	openSet.push(startNode); // add to the end of openset
 
 	// main loop for the path algorithm
 	while (openSet.size() > 0)
 	{
-		Node *node = openSet[0];
-		for (int i = 0; i < openSet.size(); i++)
-		{
-			if (openSet[i]->getFCost() < node->getFCost() || openSet[i]->getFCost() == node->getFCost()) {
-				if (openSet[i]->hCost < node->hCost)
-					node = openSet[i];
-			}
-		}
+		Node* node = openSet.top();// ->RemoveFirst();// remove the last element from the open set
+		node->inOpenSet = false;
 
-		openSet.pop_back(); // remove the last element from the open set
+		openSet.pop();
+
 		closedSet.insert(node);
 
 		if (node == targetNode)
@@ -49,22 +43,24 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 		for (auto neighbour : grid.GetNeighbours(node))
 		{
 			// check if the neighbour is in the closed set or is walkable
-			// would like to use .contains for the set but that is c++20 code
 			if (!neighbour->walkable || closedSet.find(neighbour) != closedSet.end()) //!(std::none_of(closedSet.begin(), closedSet.end(), neighbour))) {
 			{
 				continue;
 			}
 
 			int newCostToNeighbour = node->gCost + GetDistance(node, neighbour);
-			if (newCostToNeighbour < neighbour->gCost || !(std::find(openSet.begin(), openSet.end(), neighbour) != openSet.end()))
+			if (newCostToNeighbour < neighbour->gCost || !neighbour->inOpenSet)
 			{
 				neighbour->gCost = newCostToNeighbour;
 				neighbour->hCost = GetDistance(neighbour, targetNode);
 				neighbour->parent = node;
 
-				//if openset contains "neighbour" node
-				if (!(std::find(openSet.begin(), openSet.end(), neighbour) != openSet.end()))//	!std::any_of(openSet.begin(), openSet.end(), (Node)*neighbour))
-					openSet.push_back(neighbour);
+				//if openset does not contains "neighbour" node
+				if (!neighbour->inOpenSet)//	!std::any_of(openSet.begin(), openSet.end(), (Node)*neighbour))
+				{
+					openSet.push(neighbour);
+					neighbour->inOpenSet = true;
+				}
 			}
 			//grid.SetGridNode(neighbour->gridX, neighbour->gridY, *neighbour);
 		}

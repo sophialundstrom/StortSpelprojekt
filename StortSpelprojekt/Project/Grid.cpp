@@ -19,7 +19,7 @@ void Grid::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable
 			{
 				if (Vector3::Distance(worldPoint, drawable->GetPosition()) < 4.0f)
 				{
-					BoundingSphere tmpSphere = { {Matrix::Identity}, {drawable->GetPosition()}, {6.0f} }; // tempporary solution to a colliding issue
+					BoundingSphere tmpSphere = { {Matrix::Identity}, {drawable->GetPosition()}, {1.0f} }; // tempporary solution to a colliding issue
 					if (grid[x][y].BSphere.GetBounds().Intersects(tmpSphere.GetBounds()))
 					{
 						if (name != "RainingGATOS")

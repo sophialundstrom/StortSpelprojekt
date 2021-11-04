@@ -222,8 +222,7 @@ Vector2 operator* (float S, const Vector2 &V) noexcept;
 struct Vector3 : public XMFLOAT3
 {
 	Vector3() noexcept : XMFLOAT3(0.f, 0.f, 0.f) {}
-	constexpr explicit Vector3(float ix) noexcept : XMFLOAT3(ix, ix, ix) {}
-	constexpr Vector3(float ix, float iy, float iz) noexcept : XMFLOAT3(ix, iy, iz) {}
+	constexpr explicit Vector3(float ix) noexcept : XMFLOAT3(ix, ix, ix) {}	constexpr Vector3(float ix, float iy, float iz) noexcept : XMFLOAT3(ix, iy, iz) {}
 	explicit Vector3(_In_reads_(3) const float *pArray) noexcept : XMFLOAT3(pArray) {}
 	Vector3(FXMVECTOR V) noexcept { XMStoreFloat3(this, V); }
 	Vector3(const XMFLOAT3 &V) noexcept { this->x = V.x; this->y = V.y; this->z = V.z; }

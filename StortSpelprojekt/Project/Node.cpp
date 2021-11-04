@@ -41,20 +41,14 @@ Node::Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int
 	this->parent = parent;
 }
 
-int Node::Compare(const Node* n)
+int Node::CompareTo(Node *n)
 {
-	if (this->getFCost() > n->gCost + n->hCost)
+	int compare = Compare(this->getFCost(), n->getFCost());
+	if (compare == 0)
 	{
-		return 1;
+		compare = Compare(this->hCost, n->hCost);
 	}
-	else if(this->getFCost() == n->gCost + n->hCost)
-	{
-		return 0;
-	}
-	else if (this->getFCost() < n->gCost + n->hCost)
-	{
-		return -1;
-	}
+	return -compare; // out nodes are reversed
 }
 
 int Node::getFCost()

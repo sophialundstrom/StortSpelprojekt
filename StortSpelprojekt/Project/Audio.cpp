@@ -5,7 +5,7 @@ IXAudio2MasteringVoice* Audio::pMasterVoice = nullptr;
 WAVEFORMATEXTENSIBLE Audio::wfx = { 0 };
 XAUDIO2_BUFFER Audio::audioBuffer = { 0 };
 IXAudio2SourceVoice* Audio::pSourceVoice = nullptr;
-float Audio::volume = 0.5f;
+float Audio::volume = 0.02f;
 
 void Audio::StartEngine()
 {

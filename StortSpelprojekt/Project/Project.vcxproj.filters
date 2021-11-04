@@ -248,9 +248,6 @@
     <ClCompile Include="AudioChunks.cpp">
       <Filter>Header Files\Application\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Heap.cpp">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
