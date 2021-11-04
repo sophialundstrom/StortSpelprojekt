@@ -624,7 +624,6 @@ APPSTATE Game::Run()
 
 void Game::CheckNearbyEnemies()
 {
-
 	for (auto& hostile : hostiles)
 	{
 		bool hit = player->CheckArrowHit(hostile->GetCollider());
