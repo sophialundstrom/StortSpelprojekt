@@ -14,7 +14,16 @@ public:
 	virtual ~Renderer() = default;
 
 	void Bind(const std::map<std::string, std::shared_ptr<Drawable>>& drawables) { for (auto& [name, drawable] : drawables) this->drawables.emplace_back(drawable); }
-	void Bind(std::shared_ptr<Drawable> drawable) { drawables.push_back(drawable); }
+	void Bind(std::shared_ptr<Drawable> drawable) 
+	{ 
+		bool found = false;
+		for (auto& d : drawables)
+			if (d == drawable)
+				found = true;
+
+		if (!found)
+			drawables.push_back(drawable); 
+	}
 
 	void Unbind(std::shared_ptr<Drawable> drawable)
 	{

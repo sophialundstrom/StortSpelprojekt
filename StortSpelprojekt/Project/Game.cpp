@@ -196,6 +196,10 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Ve
 
 	friendlyNPCs.emplace_back(NPC);
 
+	auto marker = NPC->GetQuestMarker();
+	marker->SetParent(NPC);
+	modelRenderer.Bind(marker);
+
 	return NPC;
 }
 
