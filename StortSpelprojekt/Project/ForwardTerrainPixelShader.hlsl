@@ -15,6 +15,11 @@ struct PS_INPUT
     float3 worldPosition : WORLDPOSITION;
 };
 
+cbuffer CAMERA : register(b2)
+{
+    float3 cameraPosition;
+}
+
 float4 main(PS_INPUT input) : SV_TARGET
 {
     const float4 blendValue = blendTexture.Sample(wrapSampler, input.texCoords);
@@ -27,6 +32,15 @@ float4 main(PS_INPUT input) : SV_TARGET
     const float4 t = t1 + t2 + t3;
 
     const float4 path = textures[3].Sample(wrapSampler, newTex);
+
+    //FOG
+    float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
+    float fogStart = 100.0f;
+    float fogRange = 2000.0f;
+    float fogDistance = distance(cameraPosition, input.worldPosition);
+    float fogFactor = saturate((fogDistance - fogStart) / fogRange);
     
-    return lerp(t, path, pathTexture.Sample(wrapSampler, input.texCoords).x);
+    float4 color = lerp(t, path, pathTexture.Sample(wrapSampler, input.texCoords).x);
+    
+    return lerp(color, fogColor, fogFactor);
 }

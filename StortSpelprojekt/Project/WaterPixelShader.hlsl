@@ -26,6 +26,11 @@ cbuffer test : register(b0)
     float4x4 lightMatrix;
 }
 
+cbuffer CAMERA : register(b2)
+{
+    float3 cameraPosition;
+}
+
 float4 main(PS_INPUT input) : SV_TARGET
 {
     PS_OUTPUT output;
@@ -45,5 +50,12 @@ float4 main(PS_INPUT input) : SV_TARGET
 
     //output.lightClipPosition = mul(output.worldPosition, lightMatrix);
 
-    return color;
+    //FOG
+    float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
+    float fogStart = 100.0f;
+    float fogRange = 2000.0f;
+    float fogDistance = distance(cameraPosition, input.worldPosition);
+    float fogFactor = saturate((fogDistance - fogStart) / fogRange);
+
+    return (lerp((input.worldPosition, 1.0f) * saturate(color), fogColor, fogFactor));
 }
