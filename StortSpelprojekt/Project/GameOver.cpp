@@ -15,7 +15,6 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 {
 	currentCanvas = new Canvas();
 	//FORM
-	currentCanvas->AddButton({ (float)clientWidth / 2.f, (float)clientHeight / 1.25f }, "Form", 400, 150, UI::COLOR::GRAY, [this] { MainMenu(); }, hovering);
 	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 1.25f }, "Form", "Form.png", 1.f, true);
 
 	//QUIT
@@ -36,7 +35,8 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 
 GameOver::~GameOver()
 {
-	delete currentCanvas;
+	for (auto& [name, canvas] : canvases)
+		delete canvas;
 }
 
 void GameOver::Initialize()

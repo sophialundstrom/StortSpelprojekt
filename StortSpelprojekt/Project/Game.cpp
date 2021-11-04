@@ -42,7 +42,7 @@ void Game::Render()
 
 	animatedModelRenderer.Render();
 
-	//colliderRenderer.Render();
+	/*colliderRenderer.Render();*/
 
 	terrainRenderer.Render(terrain);
 
@@ -195,6 +195,10 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Ve
 	scene.AddDrawable("FriendlyNPC", NPC);
 
 	friendlyNPCs.emplace_back(NPC);
+
+	auto marker = NPC->GetQuestMarker();
+	marker->SetParent(NPC);
+	modelRenderer.Bind(marker);
 
 	return NPC;
 }
@@ -624,7 +628,6 @@ APPSTATE Game::Run()
 
 void Game::CheckNearbyEnemies()
 {
-
 	for (auto& hostile : hostiles)
 	{
 		bool hit = player->CheckArrowHit(hostile->GetCollider());

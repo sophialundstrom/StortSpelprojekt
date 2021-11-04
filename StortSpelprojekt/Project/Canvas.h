@@ -26,6 +26,7 @@ public:
 	{
 		delete hoveredCursor;
 		delete regularCursor;
+		//delete currentCursor;
 
 		for (auto& [name, button] : buttons)
 			if (button)

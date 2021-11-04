@@ -69,6 +69,7 @@ public:
 
 	~SkeletonRenderer()
 	{
+		vertexBuffer->Release();
 		matricesBuf->Release();
 		vertexShader->Release();
 		pixelShader->Release();

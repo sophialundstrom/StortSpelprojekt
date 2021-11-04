@@ -3,6 +3,7 @@
 FriendlyNPC::FriendlyNPC(const std::string& file)
 	: NPC(file)
 {
+	questMarker = std::make_shared<QuestMarker>();
 	boundingBox->SetScale(2, 4, 2);
 }
 
@@ -17,6 +18,7 @@ void FriendlyNPC::Update()
 
 	activeQuestID = -1;
 	interactable = false;
+	Vector3 qmPosition = { 0, -1000, 0 };
 
 	UINT completedQuests = 0;
 	for (auto& ID : questIDs)
@@ -25,7 +27,8 @@ void FriendlyNPC::Update()
 		{
 			activeQuestID = ID;
 			interactable = true;
-			return;
+			qmPosition = { 0, 10, 0 };
+			break;
 		}
 
 		if (QuestLog::Inst().QuestIsDone(ID))
@@ -34,6 +37,9 @@ void FriendlyNPC::Update()
 
 	if (completedQuests >= questIDs.size())
 		completed = true;
+	
+	questMarker->SetPosition(qmPosition);
+	questMarker->Update();
 }
 
 void FriendlyNPC::Walking()
