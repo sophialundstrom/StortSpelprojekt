@@ -90,6 +90,9 @@ public:
 	{
 		cameraPositionBuf->Release();
 		matrices_buf->Release();
+		if (inputLayout)
+			inputLayout->Release();
+		lightDataBuf->Release();
 		wrapSampler->Release();
 		shadowMap.ShutDown();
 	}

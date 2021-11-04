@@ -139,6 +139,7 @@ public:
 
 	void Reset()
 	{
+		BindShaders(nullptr, nullptr, nullptr, nullptr, nullptr);
 		currentMaterial = nullptr;
 	}
 

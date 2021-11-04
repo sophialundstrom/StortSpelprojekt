@@ -118,6 +118,8 @@ public:
 
 	~ColliderRenderer()
 	{
+		boxIndices->Release();
+		frustumIndices->Release();
 		sphereIndices->Release();
 		boxIndices->Release();
 		matrixBuf->Release();

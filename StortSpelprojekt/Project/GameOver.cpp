@@ -35,7 +35,8 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 
 GameOver::~GameOver()
 {
-	delete currentCanvas;
+	for (auto& [name, canvas] : canvases)
+		delete canvas;
 }
 
 void GameOver::Initialize()

@@ -97,6 +97,7 @@ public:
 		if (tesselationBuf)
 			tesselationBuf->Release();
 		matrixBuf->Release();
+		timeBuf->Release();
 		lightBuf->Release();
 		vertexShader->Release();
 		hullShader->Release();
