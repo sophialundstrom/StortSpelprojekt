@@ -41,7 +41,7 @@ void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
     combatStyle = newCombatStyle;
     shootPatternIndex = 0;
 
-    float normalDelay = 3.f;
+    float normalDelay = 2.f;
     float quickDelay = 0.2f;
     float breakTime = 2.4f;
 
