@@ -57,9 +57,8 @@ float4 main(PS_INPUT input) : SV_TARGET
     float fogDistance = distance(cameraPosition, input.worldPosition);
     float fogFactor = saturate((fogDistance - fogStart) / fogRange);
 
-    float4 finalColour = lerp((diffuseTexture.Sample(wrapSampler, input.texCoords)) * (saturate(LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition))), fogColor, fogFactor);
     //RESULT
-    return finalColour;
+    return lerp((diffuseTexture.Sample(wrapSampler, input.texCoords)) * (saturate(LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition))), fogColor, fogFactor);
     //return float4 (shadow, shadow, shadow, 0.1f);
     //return diffuseTexture.Sample(wrapSampler, input.texCoords) * LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition);
 }
