@@ -42,7 +42,7 @@ void Game::Render()
 
 	animatedModelRenderer.Render();
 
-	//colliderRenderer.Render();
+	/*colliderRenderer.Render();*/
 
 	terrainRenderer.Render(terrain);
 
@@ -417,6 +417,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 200.0f }, "INTERACT", "INTERACT [E]", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
 
+	ingameCanvas->AddImage({ (float)clientWidth / 2.0f, (float)clientHeight / 2 }, "CrossHair", "CrossHair.png");
+
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 
@@ -484,7 +486,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -85, 20, -608 });
 
 	AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
-	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
+
+
+
+	//AddHostileNPC("BarbarianBow", { 200, 26, -620 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPC
 	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
@@ -590,6 +596,14 @@ APPSTATE Game::Run()
 	else
 		canvases["INGAME"]->GetText("INTERACT")->Hide();
 
+	if (Event::RightIsClicked())
+	{
+		canvases["INGAME"]->GetImage("CrossHair")->Show();
+	}
+	else
+		canvases["INGAME"]->GetImage("CrossHair")->Hide();
+
+
 	static float counter = 0;
 	if (done)
 	{
@@ -624,7 +638,6 @@ APPSTATE Game::Run()
 
 void Game::CheckNearbyEnemies()
 {
-
 	for (auto& hostile : hostiles)
 	{
 		bool hit = player->CheckArrowHit(hostile->GetCollider());

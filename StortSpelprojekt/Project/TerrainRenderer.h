@@ -11,6 +11,8 @@ private:
 
 	ID3D11Buffer* tesselationBuf = nullptr;
 
+	ID3D11Buffer* camPosBuf = nullptr;
+
 	//SHADER PATHS
 #ifdef _DEBUG
 	const std::string vs_path = "../x64/Debug/TerrainVertexShader.cso";
@@ -54,7 +56,7 @@ public:
 		//BUFFER
 		CreateBuffer(matrixBuf, sizeof(Matrix));
 		CreateBuffer(lightBuf, sizeof(Matrix));
-
+		
 		BindBuffer(matrixBuf, Shader::DS);
 
 		//SHADERS

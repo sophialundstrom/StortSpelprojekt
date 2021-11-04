@@ -87,8 +87,8 @@ private:
 
 	float preJumpGroundLevel = 0;
 	float heightMapGroundLevel = 20.0f;
-	const float mouseDefaultSensitivity = 2.f;
-	const float mouseAimSensitivity = 5.f;
+	const float mouseDefaultSensitivity = 3.f;
+	const float mouseAimSensitivity = 2.f;
 	float mouseCurrentSensitivity = mouseDefaultSensitivity;
 	float mouseSensitivity = 5.f;
 
@@ -111,7 +111,7 @@ private:
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);
 
-	std::shared_ptr<BoundingSphere> bounds;
+	std::shared_ptr<BoundingBox> bounds;
 	std::shared_ptr<FrustumCollider> frustum;
 
 	bool isRightPressed;
@@ -147,9 +147,9 @@ public:
 		isLeftPressed = false;
 
 		this->arrows = arrows;
-		bounds = std::make_shared<BoundingSphere>();
+		bounds = std::make_shared<BoundingBox>();
 
-		bounds->SetScale(3);
+		bounds->SetScale(0.8f, 2.5f, 0.8f);
 		bounds->SetPosition(0, 3, 0);
 
 		frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
@@ -174,7 +174,7 @@ public:
 
 	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 	bool GetGameOver() { return this->gameOver; }
-	std::shared_ptr<BoundingSphere> GetBounds() { return bounds; }
+	std::shared_ptr<BoundingBox> GetBounds() { return bounds; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 
 	Inventory& Inventory() { return inventory; }

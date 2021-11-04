@@ -33,7 +33,8 @@ Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
 
 Win::~Win()
 {
-	delete currentCanvas;
+	for (auto& [name, canvas] : canvases)
+		delete canvas;
 }
 
 

@@ -153,6 +153,7 @@ public:
 		vertexShader->Release();
 		pixelShader->Release();
 		volumeInputLayout->Release();
+		currentLayout->Release();
 		inputLayout->Release();
 		idRTV->Release();
 		idTexture->Release();

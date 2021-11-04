@@ -106,6 +106,10 @@ public:
 		vertexShader->Release();
 		pixelShader->Release();
 		inputLayout->Release();
+		blendState->Release();
+		boxIndices->Release();
+		sphereVertexBuffer->Release();
+		boxVertexBuffer->Release();
 	}
 
 	virtual void Render() override

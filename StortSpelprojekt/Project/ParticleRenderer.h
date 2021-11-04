@@ -89,6 +89,7 @@ public:
 		geometryShader->Release();
 		pixelShader->Release();
 		inputLayout->Release();
+		lifeTimeBuffer->Release();
 	}
 
 	void Render()
