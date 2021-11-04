@@ -480,7 +480,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -85, 20, -608 });
 
 	AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
-	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
+
+
+
+	//AddHostileNPC("BarbarianBow", { 200, 26, -620 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPC
 	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
