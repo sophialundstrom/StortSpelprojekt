@@ -177,9 +177,10 @@ std::shared_ptr<Model> GameLoader::ReadModel()
 
 	Read(vec);	//PosData
 	model->SetPosition(vec);
-
-	Read(vec);  //RotData
-	model->SetRotation(vec);
+	
+	Quaternion quaternion;
+	Read(quaternion);  //RotData
+	model->SetRotation(quaternion);
 
 	Read(vec);  //ScaleData
 	model->SetScale(vec);
@@ -201,8 +202,11 @@ std::shared_ptr<BoundingBox> GameLoader::ReadBoxVolume()
 	Vector3 vector;
 	Read(vector);
 	box->SetPosition(vector);
-	Read(vector);
-	box->SetRotation(vector);
+
+	Quaternion quaternion;
+	Read(quaternion);
+	box->SetRotation(quaternion);
+
 	Read(vector);
 	box->SetScale(vector);
 
@@ -224,8 +228,11 @@ std::shared_ptr<BoundingSphere> GameLoader::ReadSphereVolume()
 	Vector3 vector;
 	Read(vector);
 	sphere->SetPosition(vector);
-	Read(vector);
-	sphere->SetRotation(vector);
+
+	Quaternion quaternion;
+	Read(quaternion);
+	sphere->SetRotation(quaternion);
+
 	Read(vector);
 	sphere->SetScale(vector);
 

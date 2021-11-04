@@ -13,6 +13,8 @@ struct Channel
 
 struct Animation
 {
+	float speedFactor = 1.f;
+	bool repeat = false;
 	bool active = false;
 	std::string name = "";
 	float ticksPerSecond = 0;
@@ -79,7 +81,7 @@ struct Animation
 			return;
 
 		timer += Time::GetDelta();
-		float timeInTicks = timer / 100.0f * ticksPerSecond;
+		float timeInTicks = timer / 100.0f * ticksPerSecond * speedFactor;
 		float frameTime = fmod(timeInTicks, duration);
 
 		/*Print(ticksPerSecond);
@@ -90,6 +92,8 @@ struct Animation
 		{
 			timer = 0;
 			//active = false;
+			if (!repeat)
+				active = false;
 			return;
 		}
 
@@ -118,8 +122,14 @@ struct Animation
 		localMatrix = scaling * quaternion * translation;
 	}
 
-	void Play()
+	void Play(const bool& onRepeat)
 	{
 		active = true;
+		repeat = onRepeat;
+	}
+
+	void Stop()
+	{
+		active = false;
 	}
 };

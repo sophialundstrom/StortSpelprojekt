@@ -17,11 +17,33 @@ private:
 	AnimatedMesh mesh;
 	Skeleton skeleton;
 	Animator* animator = nullptr;
+
+	void ProcessAnimations(const std::string& fileName)
+	{
+		using directory_iterator = std::filesystem::directory_iterator;
+		for (const auto& dirEntry : directory_iterator("Models/Animated/" + fileName + "/Clips/"))
+		{
+			if (dirEntry.path().extension() == ".fbx")
+			{
+				Assimp::Importer tempImporter;
+				const aiScene* tempScene = tempImporter.ReadFile(dirEntry.path().string(), aiProcess_FlipUVs);
+
+				if (tempScene->HasAnimations())
+				{
+					std::cout << "NUM ANIM: " << tempScene->mNumAnimations << std::endl << "NAME: " << tempScene->mAnimations[0]->mName.C_Str() << std::endl;
+
+					animator->AddAnimation(tempScene->mAnimations[0]);
+				}
+
+			}
+		}
+	}
+
 public:
 	AnimatedModel(const std::string& fileName, const std::string& name)
 	{
 		SetName(name);
-		scene = importer.ReadFile("Models/Animated/" + fileName + ".fbx", aiProcess_FlipUVs);
+		scene = importer.ReadFile("Models/Animated/" + fileName + "/" + fileName + ".fbx", aiProcess_FlipUVs);
 
 		if (!scene)
 		{
@@ -41,11 +63,10 @@ public:
 			MaterialLoader::Load(scene->mMeshes[0]->mName.C_Str(), scene->mMaterials[0]);
 
 		ApplyMaterial(materialName);
-		
+
 		animator = new Animator(scene, skeleton);
-		if (scene->HasAnimations())
-			for (UINT i = 0; i < scene->mNumAnimations; ++i)
-				animator->AddAnimation(scene->mAnimations[i]);
+
+		ProcessAnimations(fileName);
 	}
 	
 	~AnimatedModel() { delete animator; }
@@ -78,9 +99,9 @@ public:
 			mesh.bufferID = ID;
 	}
 
-	void PlayAnimation(const std::string& animation)
+	void PlayAnimation(const std::string& animation, const bool& onRepeat, const float& speedFactor = 1.f)
 	{
-		animator->PlayAnimation(animation);
+		animator->PlayAnimation(animation, onRepeat, speedFactor);
 	}
 
 	// Inherited via Drawable

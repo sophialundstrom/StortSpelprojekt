@@ -1,4 +1,4 @@
-Texture2D blendTexture : register(t0);
+Texture2D blendTexture : register(t10);
 
 Texture2D textures[3] : register(t1);
 

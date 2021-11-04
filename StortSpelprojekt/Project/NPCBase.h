@@ -1,6 +1,5 @@
 #pragma once
 #include "Model.h"
-#include "Print.h"
 #include "Collision.h"
 #include "Player.h"
 #include "Arrow.h"
@@ -9,11 +8,9 @@ class NPC : public Model
 {
 private:
 	int hp;
-	bool playerCanHit;
-	bool enemyCanHit;
-
+	bool dead = false;
 protected:
-	std::shared_ptr<BoundingSphere> boundingSphere;
+	std::shared_ptr<BoundingBox> boundingBox;
 public:
 	NPC(const std::string& file);
 	NPC(const Model& model);
@@ -22,7 +19,9 @@ public:
 	bool Collided(Player &player);
 	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 	void Die();
-	std::shared_ptr<BoundingSphere> GetCollider() { return boundingSphere; }
+	bool IsDead() { return dead; }
+	void TakeDamage();
+	std::shared_ptr<BoundingBox> GetCollider() { return boundingBox; }
 	//void AddModel(std::map<std::string, std::shared_ptr<Drawable>> &drawables, const std::string& file);
 	void debugPrint();
 };

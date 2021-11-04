@@ -29,6 +29,7 @@ private:
 	const UINT fullScreenWidth = GetSystemMetrics(SM_CXSCREEN);
 	const UINT fullscreenHeight = GetSystemMetrics(SM_CYSCREEN);
 	HINSTANCE instance;
+	
 
 	void InitFullscreen()
 	{ 
@@ -37,6 +38,7 @@ private:
 			delete window;
 
 		window = new Window(fullScreenWidth, fullscreenHeight, title.c_str(), instance);
+		window->ActivateCursor();
 
 		isFullscreen = true;
 
@@ -95,8 +97,10 @@ public:
 		UINT clientWidth = window->ClientWidth();
 		UINT clientHeight = window->ClientHeight();
 
+		window->ActivateCursor();
 		currentState = APPSTATE::MAIN_MENU;
 		currentGameState = new DebugMainMenu(clientWidth, clientHeight);
+
 	}
 
 	~DebugApplication()
@@ -129,8 +133,8 @@ public:
 			}
 				
 			if (Event::KeyIsPressed(VK_TAB))
-				window->ToggleCursor();
-			
+				window->ActivateCursor();
+
 			currentState = currentGameState->Run();
 
 			switch (currentState)
@@ -140,24 +144,28 @@ public:
 
 			case APPSTATE::MAIN_MENU:
 				currentGameState->Delete();
+				window->ActivateCursor();
 				InitWindowed();
 				currentGameState = new DebugMainMenu(window->ClientWidth(), window->ClientHeight());
 				break;
 
 			case APPSTATE::GAME:
 				delete currentGameState;
+				window->DeactivateCursor();
 				return 1;
 				break;
 
 			case APPSTATE::LEVEL:
 				RunLoadingScreen();
 				currentGameState->Delete();
+				window->ActivateCursor();
 				InitFullscreen();
 				currentGameState = new LevelEditor(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 				break;
 
 			case APPSTATE::PARTICLE:
 				currentGameState->Delete();
+				window->ActivateCursor();
 				InitFullscreen();
 				currentGameState = new ParticleEditor(window->ClientWidth(), window->ClientHeight());
 				break;

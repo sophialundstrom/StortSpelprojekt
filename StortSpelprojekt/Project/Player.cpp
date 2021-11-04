@@ -31,6 +31,8 @@ float Get2DAngle(Vector2 a, Vector2 b)
 
 void Player::Update(HeightMap* heightMap)
 {
+	std::cout << position.x << "	" << position.y << "	" << position.z << "	\n";
+
 	lastPosition = position;
 
 	CalcHeight(heightMap);
@@ -96,7 +98,7 @@ void Player::Update(HeightMap* heightMap)
 
 	//Only update what direction the player is facing when keyboardinput is detected by the moveDirection vector
 	if (moveDirection.Length() > 0 || moveDirection.Length() < 0 || Event::RightIsClicked())
-		rotation = { 0, movementYRadiant, 0 };
+		rotation =  Quaternion::CreateFromYawPitchRoll(movementYRadiant, 0, 0);
 
 	//Updates the player and cameras positions
 	Vector3 newPlayerPos = position + (moveDirection * stats.currentSpeed * Time::GetDelta());
@@ -107,13 +109,22 @@ void Player::Update(HeightMap* heightMap)
 		if (Event::KeyIsPressed(VK_SPACE))
 		{
 			jumping = true;
-			preJumpGroundLevel = heightMapGroundLevel;
+			preJumpGroundLevel = heightMapGroundLevel; PlayAnimation("Jump", false, 0.5f);
 		}
 	}
 
 	if (jumping)
 	{
 		airTime += Time::GetDelta() * 5.0f;
+		if (airTime >= 1.5f)
+		{
+			PlayAnimation("Falling", true);
+			std::cout << "IN AIR" << std::endl;
+		}
+		else
+			{
+			std::cout << "Startup" << std::endl;
+		}
 		newPlayerPos.y = -powf(airTime, 2) + jumpHeight * airTime + preJumpGroundLevel;
 	}
 
@@ -126,11 +137,23 @@ void Player::Update(HeightMap* heightMap)
 		newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
 	}
 
-	position = newPlayerPos + Vector3(0, 3.5f, 0);
+	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
 
-	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 2.0f, 0.0f);
+	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
 
 	static float lastClick = 0;
+
+	sinceLastShot += Time::GetDelta();
+	if (sinceLastShot > shootingAnimationLenght) {
+
+		bool hasMoved = position == lastPosition ? false : true;
+		if (!hasMoved)
+			PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
+		else if (hasMoved && !jumping)
+			PlayAnimation("Walk", true); // ADD WALKING ANIMATION
+		//else if (jumping)
+			 // ADD IN AIR JUMP ANIMATION
+	}
 
 	if(Event::RightIsClicked())
 	{
@@ -141,6 +164,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			if (Event::LeftIsClicked())
 			{
+				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				int currentIndex = 0;
 				bool isPlayerShootingArrow = false;
 				while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
@@ -149,6 +173,7 @@ void Player::Update(HeightMap* heightMap)
 					lastClick = Time::Get();
 					currentIndex++;
 				}
+				sinceLastShot = 0.f;
 			}
 		}
 	}
@@ -157,11 +182,13 @@ void Player::Update(HeightMap* heightMap)
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 
 	for (int i = 0; i < arrows.size(); i++)
+	{
 		arrows.at(i)->Update();
+	}
 
 	sceneCamera->MoveTowards(newCameraPos);
 
-	Model::Update();
+	AnimatedModel::Update();
 
 	bounds->Update();
 	frustum->Update();
@@ -170,26 +197,26 @@ void Player::Update(HeightMap* heightMap)
 bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 {
 	bool collided = false;
-	if ((position - arrow->GetPosition()).Length() < 3.0f)
+	if (Collision::Intersection(this->bounds, arrow->GetCollider()))
 	{
 		collided = true;
+		Print("ARROW HIT PLAYER");
+		arrow->DisableArrow();
 		if (stats.healthPoints == 0)
 		{
 			return collided;
 		}
-		Print("ARROW HIT PLAYER");
-		arrow->DisableArrow();
 		if (stats.healthPoints - 1 == 0)
 		{
 			stats.healthPoints--;
 			std::cout << "GAME OVER" << std::endl;
 			UpdateHealthUI();
+			gameOver = true;
 			return collided;
 		}
 		stats.healthPoints--;
 		UpdateHealthUI();
 	}
-
 	return collided;
 }
 
@@ -226,6 +253,33 @@ void Player::Save(const std::string file)
 
 	writer.close();
 	Print("SUCCEEDED SAVING PLAYER FILE");
+}
+
+bool Player::CheckArrowHit(std::shared_ptr<Collider> collider)
+{
+
+	for (auto arrow : arrows)
+	{
+		if (!arrow->IsShot())
+			continue;
+
+		bool hit = false;
+
+		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+		if (box)
+			hit = Collision::Intersection(box, arrow->GetCollider());
+
+		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
+		if (sphere)
+			hit = Collision::Intersection(sphere, arrow->GetCollider());
+
+		if (hit)
+			arrow->DisableArrow();
+		
+		return hit;
+
+	}
+	return false;
 }
 
 void Player::Load(const std::string file)

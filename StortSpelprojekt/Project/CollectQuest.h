@@ -33,6 +33,6 @@ public:
 
 	virtual void UpdateUI(std::string& string) override
 	{
-		string = "Collected *INSERT ITEM NAME*: " + std::to_string(collectedItems) + "/" + std::to_string(numItems);
+		string = "Collected: " + std::to_string(collectedItems) + "/" + std::to_string(numItems);
 	}
 };

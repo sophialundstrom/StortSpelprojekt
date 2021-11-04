@@ -8,7 +8,7 @@
 class Graphics : public Singleton<Graphics>
 {
 private:
-	const float backgroundColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	const float backgroundColor[4] = { 129.0f / 255, 212.0f / 255, 212.0f / 255, 1.0f };
 
 	D3D11_VIEWPORT viewport;
 	ID3D11Device* device;
@@ -31,6 +31,7 @@ public:
 	~Graphics();
 
 	void BeginFrame();
+	void BeginFrame(ID3D11RenderTargetView* rtv, ID3D11DepthStencilView* dsv, D3D11_VIEWPORT viewport);
 	void EndFrame() { swapChain->Present(0, 0); }
 
 	void ActivateWireframe() { context->RSSetState(wireframeState); }

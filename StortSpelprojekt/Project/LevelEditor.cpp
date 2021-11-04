@@ -115,6 +115,7 @@ void LevelEditor::DuplicateObject()
 		
 }
 
+
 void LevelEditor::CreateBoundingBox()
 {
 	if (selectedObject == "")
@@ -131,7 +132,7 @@ void LevelEditor::CreateBoundingBox()
 			numInstances++;
 	std::string name = "BoxVolume";
 	if (numInstances > 0)
-		name += std::to_string(numInstances);
+		name += std::to_string(numInstances) + "b";
 	
 	scene.AddBoundingVolume(name, box);
 	selectedObject = name;
@@ -150,7 +151,6 @@ void LevelEditor::CreateBoundingBox()
 
 void LevelEditor::CreateBoundingSphere()
 {
-
 	if (selectedObject == "")
 		return;
 
@@ -165,7 +165,7 @@ void LevelEditor::CreateBoundingSphere()
 			numInstances++;
 	std::string name = "SphereVolume";
 	if (numInstances > 0)
-		name += std::to_string(numInstances);
+		name += std::to_string(numInstances) + "b";
 
 	scene.AddBoundingVolume(name, sphere);
 	selectedObject = name;
@@ -184,40 +184,31 @@ void LevelEditor::CreateBoundingSphere()
 
 void LevelEditor::Update()
 {
-	if (Event::LeftIsClicked() && !ImGui::GetIO().WantCaptureMouse)
+	if (Event::LeftIsClicked() && !ImGuizmo::IsOver() && viewportPanel.Hovered())
 	{
-		idRenderer.Render();
-		GetCursorPos(&cursor);
-		ScreenToClient(appWindow, &cursor);
-
-		int id = idRenderer.GetObjectID(cursor.x, cursor.y);
-		Print(id);
-
-		if (id > 0)
+		auto mousePos = viewportPanel.GetMousePosition();
+	
+		if (mousePos.x >= 0 && mousePos.y >= 0)
 		{
-			std::string name = scene.GetObjectNames()[id - 1];
-			if (name != "")
+			int id = idRenderer.GetObjectID(mousePos.x, mousePos.y);
+
+			if (id > 0)
 			{
-				UpdateToolUI(name);
+				std::string name = scene.GetObjectNames()[id - 1];
+				if (name != "")
+					UpdateToolUI(name);
 			}
-		}
-		if (id == 0)
-		{
-			ClearToolUI();
-			selectedObject = "";
+
+			if (id == 0)
+				ClearToolUI();
 		}
 	}
 
 	if (Event::KeyIsPressed('C'))
-	{
 		ClearToolUI();
-		selectedObject = "";
-	}
 
 	if (Event::KeyIsPressed('F'))
-	{
 		FocusObject();
-	}
 
 	if (Event::RightIsClicked())
 	{
@@ -249,9 +240,12 @@ void LevelEditor::Update()
 	if (Event::KeyIsPressed(VK_SPACE))
 		scene.GetCamera()->MoveUp();
 
-	if (Event::KeyIsPressed(VK_CONTROL))
+	if (Event::KeyIsPressed('Z'))
 		scene.GetCamera()->MoveUp(-1);
   
+	if (Event::KeyIsPressed(VK_CONTROL) && Event::KeyIsPressed('D'))
+		DuplicateObject();
+
 	if (Event::KeyIsPressed(VK_SHIFT))
 		scene.GetCamera()->SetSpeedMultiplier(4);
 	else
@@ -260,13 +254,14 @@ void LevelEditor::Update()
 	if (selectedObject != "") //CHECKS EVERY FRAME, USE CHANGED()?
 	{
 		auto& window = windows["GAME OBJECT"];
+
 		float newXPos = window.GetValue<SliderFloatComponent>("X");
 		float newYPos = window.GetValue<SliderFloatComponent>("Y");
 		float newZPos = window.GetValue<SliderFloatComponent>("Z");
 
-		float newXRot = window.GetValue<SliderFloatComponent>("Around X");
-		float newYRot = window.GetValue<SliderFloatComponent>("Around Y");
-		float newZRot = window.GetValue<SliderFloatComponent>("Around Z");
+		//float newXRot = window.GetValue<SliderFloatComponent>("Around X");
+		//float newYRot = window.GetValue<SliderFloatComponent>("Around Y");
+		//float newZRot = window.GetValue<SliderFloatComponent>("Around Z");
 
 		float newXScale = window.GetValue<SliderFloatComponent>("X-axis");
 		float newYScale = window.GetValue<SliderFloatComponent>("Y-axis");
@@ -274,7 +269,9 @@ void LevelEditor::Update()
 
 		auto model = scene.Get<Drawable>(selectedObject);
 		model->SetPosition(newXPos, newYPos, newZPos);
-		model->SetRotation(newXRot * PI / 180, newYRot * PI / 180, newZRot * PI / 180);
+
+		//model->SetRotation(newXRot * PI / 180, newYRot * PI / 180, newZRot * PI / 180);
+
 		model->SetScale(newXScale, newYScale, newZScale);
 		if (window.GetValue<CheckBoxComponent>("Uniform scaling") == true)
 		{
@@ -284,12 +281,14 @@ void LevelEditor::Update()
 				window.SetValue<SliderFloatComponent, float>("Y-axis", newXScale);
 				window.SetValue<SliderFloatComponent, float>("Z-axis", newXScale);
 			}
+
 			if (window.Changed("Y-axis"))
 			{
 				model->SetScale(newYScale, newYScale, newYScale);
 				window.SetValue<SliderFloatComponent, float>("X-axis", newYScale);
 				window.SetValue<SliderFloatComponent, float>("Z-axis", newYScale);
 			}
+
 			if (window.Changed("Z-axis"))
 			{
 				model->SetScale(newZScale, newZScale, newZScale);
@@ -298,6 +297,13 @@ void LevelEditor::Update()
 			}
 		}
 	}
+
+	if (Event::KeyIsPressed('1'))
+		operation = ImGuizmo::TRANSLATE;
+	else if (Event::KeyIsPressed('2'))
+		operation = ImGuizmo::ROTATE;
+	else if (Event::KeyIsPressed('3'))
+		operation = ImGuizmo::SCALE;
 
 	auto& window = windows["GAME OBJECT"];
 	if (window.GetValue<ButtonComponent>("Delete") || Event::KeyIsPressed(VK_DELETE))
@@ -316,28 +322,58 @@ void LevelEditor::Update()
 		UpdateToolUI(name);
 	}
 
+
 	scene.Update();
 
 	Event::ClearRawDelta();
+
+	if (viewportPanel.GetWidth() != 0)
+		idRenderer.UpdateViewport(viewportPanel.GetWidth(), viewportPanel.GetHeight());
 }
 
 void LevelEditor::Render()
 {
-	
-	BeginFrame();
+	idRenderer.BeginFrame(dsv, viewport);
+	idRenderer.Render();
 
-	//TO DO: ADD PARTICLE RENDER PASS (IN OPEN WORLD)
-	//ADD RENDERER THAT RENDERS TO TEXTURE THAT CAN BE SHOWN AS "INGAME"-PREVIEW IN MATERIAL EDITOR 
-	//(ONLY NEEDS ONE POINT LIGHT & DIRECTIONAL LIGHT, MAYBE A POSITION SLIDER FOR POINT TO PLAY WITH SPECULAR (OR ROTATING MESH))
-	//PREVIEW EITHER ON A SPHERE OR THE SELECTED MESH
+	BeginViewportFrame();
 
 	terrainRenderer.Render(*terrain);
-
-	animatedModelRenderer.Render();
 
 	modelRenderer.Render();
 	
 	volumeRenderer.Render();
+
+	waterRenderer.Render(water);
+
+	BeginFrame();
+
+	if (!selectedObject.empty())
+	{
+		ImGUI::BeginGizmo(viewportPanel.GetWidth(), viewportPanel.GetHeight());
+		auto selected = scene.Get<Drawable>(selectedObject);
+
+		Matrix matrix = selected->GetMatrix().Transpose();
+		
+		ImGUI::Gizmo(matrix, scene.GetCamera()->GetViewMatrix(), scene.GetCamera()->GetProjectionMatrix(), operation);
+
+		selected->SetMatrix(matrix);
+
+		Vector3 translation;
+		Quaternion quaternion;
+		Vector3 scale;
+
+		matrix.Decompose(scale, quaternion, translation);
+
+		selected->SetScale(scale);
+		selected->SetPosition(translation);
+		selected->SetRotation(quaternion);
+
+		UpdateToolUI(selectedObject);
+	}
+
+	ImGui::End();
+	ImGui::PopStyleVar();
 
 	EndFrame();
 
@@ -348,12 +384,14 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(FORWARD, false),
 	terrainRenderer(FORWARD),
 	animatedModelRenderer(FORWARD, false),
-	colliderRenderer(FORWARD)
+	colliderRenderer(FORWARD),
+	water(5000)
 {
 	//WINDOWS
 	{
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];
+		window.AddTextComponent("FPS");
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
@@ -368,19 +406,19 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		auto& window = windows["GAME OBJECT"];
 		window.AddTextComponent("ObjectName");
 		window.AddTextComponent("Position");
-		window.AddSliderFloatComponent("X", -300, 300, 0, false);
-		window.AddSliderFloatComponent("Y", -300, 300, 0, false);
-		window.AddSliderFloatComponent("Z", -300, 300, 0, false);
+		window.AddSliderFloatComponent("X", -700, 700, 0, false);
+		window.AddSliderFloatComponent("Y", -50, 200, 0, false);
+		window.AddSliderFloatComponent("Z", -700, 700, 0, false);
 
-		window.AddTextComponent("Rotation");
-		window.AddSliderFloatComponent("Around X", -180, 180, 0, false);
-		window.AddSliderFloatComponent("Around Y", -180, 180, 0, false);
-		window.AddSliderFloatComponent("Around Z", -180, 180, 0, false);
+		//window.AddTextComponent("Rotation");
+		//window.AddSliderFloatComponent("Around X", -180, 180, 0, false);
+		//window.AddSliderFloatComponent("Around Y", -180, 180, 0, false);
+		//window.AddSliderFloatComponent("Around Z", -180, 180, 0, false);
 
 		window.AddTextComponent("Scale");
-		window.AddSliderFloatComponent("X-axis", -30, 30, 0, false);
-		window.AddSliderFloatComponent("Y-axis", -30, 30, 0, false);
-		window.AddSliderFloatComponent("Z-axis", -30, 30, 0, false);
+		window.AddSliderFloatComponent("X-axis", -1, 50, 0, false);
+		window.AddSliderFloatComponent("Y-axis", -1, 50, 0, false);
+		window.AddSliderFloatComponent("Z-axis", -1, 50, 0, false);
 		window.AddCheckBoxComponent("Uniform scaling", false);
 		window.AddButtonComponent("Delete", 120, 30);
 		window.AddButtonComponent("Duplicate", 120, 30);
@@ -402,6 +440,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 1.0f, 25.0f, {0, 90, 0});
 	scene.SetDirectionalLight(40);
 
+	InitCamera(scene.GetCamera());
+
 	//CLIENT INFORMATION (PICKING) TO BE REMOVED?
 	wWidth = clientWidth;
 	wHeight = clientHeight;
@@ -412,7 +452,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 
 	terrain = new Terrain();
 
-	(void)Run();
+	(void*)Run();
 }
 
 void LevelEditor::RemoveItem(const std::string name)
@@ -437,13 +477,15 @@ void LevelEditor::ClearToolUI()
 	window.SetValue<SliderFloatComponent, float>("Y", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Z", 0.0f);
 
-	window.SetValue<SliderFloatComponent, float>("Around X", 0.0f);
-	window.SetValue<SliderFloatComponent, float>("Around Y", 0.0f);
-	window.SetValue<SliderFloatComponent, float>("Around Z", 0.0f);
+	//window.SetValue<SliderFloatComponent, float>("Around X", 0.0f);
+	//window.SetValue<SliderFloatComponent, float>("Around Y", 0.0f);
+	//window.SetValue<SliderFloatComponent, float>("Around Z", 0.0f);
 
 	window.SetValue<SliderFloatComponent, float>("X-axis", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Y-axis", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Z-axis", 0.0f);
+
+	selectedObject = "";
 }
 
 void LevelEditor::UpdateToolUI(std::string name)
@@ -457,9 +499,9 @@ void LevelEditor::UpdateToolUI(std::string name)
 	window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
 	window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
 
-	window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x * 180 / PI);
-	window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y * 180 / PI);
-	window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z * 180 / PI);
+	//window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x * 180 / PI);
+	//window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y * 180 / PI);
+	//window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z * 180 / PI);
 
 	window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
 	window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
@@ -480,7 +522,6 @@ void LevelEditor::FocusObject()
 	}
 }
 
-
 LevelEditor::~LevelEditor()
 {
 	delete terrain;
@@ -494,6 +535,16 @@ APPSTATE LevelEditor::Run()
 
 	{
 		auto& window = windows["TOOLS"];
+		static int frames = 0;
+		static float time = 0.0f;
+		time += Time::GetDelta();
+		frames++;
+		if (time >= 1)
+		{
+			window.SetValue<TextComponent, std::string>("FPS", std::to_string(frames));
+			frames = 0;
+			time = 0.0f;
+		}
 		if (window.GetValue<ButtonComponent>("LOAD FBX"))
 			Load(FileSystem::LoadFile("Models"));
 

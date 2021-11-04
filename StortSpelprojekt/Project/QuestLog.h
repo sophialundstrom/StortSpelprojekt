@@ -16,6 +16,8 @@ private:
 	const UINT UILeftOffset = 70u;
 	const UINT UIOffset = 80u;
 
+	bool IsQuestDone = false;
+
 	std::map<UINT, Quest*> quests;
 	std::vector<Quest*> activeQuests;
 
@@ -124,7 +126,7 @@ public:
 	//TO BE ABLE TO START A QUEST FROM GAME
 	void Activate(UINT ID)
 	{
-		if (quests[ID]->IsCompleted() || quests.find(ID) == quests.end())
+		if (quests.find(ID) == quests.end() || quests[ID]->IsCompleted())
 			return;
 
 		else
@@ -151,6 +153,15 @@ public:
 		}
 	}
 
+	bool QuestIsActive(UINT ID)
+	{
+		for (auto& quest : activeQuests)
+			if (quest->GetID() == ID)
+				return true;
+
+		return false;
+	}
+
 	bool QuestIsDone(UINT ID)
 	{
 		if (quests.find(ID) == quests.end())
@@ -161,4 +172,6 @@ public:
 			
 		return quests[ID]->IsCompleted();
 	}
+
+	bool GetActiveQuest() { return this->activeQuests.size(); }
 };

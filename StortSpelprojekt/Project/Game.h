@@ -18,7 +18,9 @@
 #include "Grid.h"
 #include "Arrow.h"
 #include "Pathfinding.h"
+#include "NPCFriendly.h"
 #include "Audio.h"
+#include "NPCHostile.h"
 
 //PlayerClassLib
 #include <math.h>
@@ -27,6 +29,8 @@
 class Game : public ApplicationState
 {
 private:
+    bool hovering = false;
+    bool done = false;
     bool paused = false;
     const std::string file = "Default"; //"Test"
 
@@ -61,7 +65,11 @@ private:
 
     std::shared_ptr<Building> building;
 
+    std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs;
+    
     std::vector<std::shared_ptr<Collider>> colliders;
+
+    std::vector<std::shared_ptr<HostileNPC>> hostiles;
 
     void Update();
     void Render();
@@ -79,12 +87,17 @@ private:
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);
 
+    std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string fileName, Vector3 position);
     void AddArrow(const std::string fileName);
-    void AddHostileArrow(const std::string fileName);
+    //void AddHostileArrow(const std::string fileName);
+
+    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
 
     void CheckNearbyCollision();
     void CheckSaveStationCollision();
     void CheckItemCollision();
+    void CheckQuestInteraction();
+    void CheckNearbyEnemies();
 
     void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
     void UpdateInventoryUI();

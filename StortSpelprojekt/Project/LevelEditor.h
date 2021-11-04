@@ -11,10 +11,13 @@
 #include "ColliderRenderer.h"
 #include "IDRenderer.h"
 #include "VolumeRenderer.h"
+#include "WaterRenderer.h"
 
 class LevelEditor : public Editor, public ApplicationState
 {
 private:
+	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+
 	std::string selectedObject;
 	HWND appWindow;
 	float wRatioX;
@@ -24,7 +27,9 @@ private:
 	Scene scene;
 	std::map<std::string, std::shared_ptr<BoundingSphere>> pickBoxes;
 	Terrain* terrain;
-	std::shared_ptr <Building> building;
+	std::shared_ptr<Building> building;
+	Water water;
+
 	//ADD RENDERERS
 	AnimatedModelRenderer animatedModelRenderer;
 	TerrainRenderer terrainRenderer;
@@ -32,6 +37,7 @@ private:
 	ColliderRenderer colliderRenderer;
 	IDRenderer idRenderer;
 	VolumeRenderer volumeRenderer;
+	WaterRenderer waterRenderer;
 
 	UINT wWidth, wHeight;
 

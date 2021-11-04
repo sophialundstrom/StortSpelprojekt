@@ -29,7 +29,7 @@ private:
 	const std::string forward_ps_path = "../x64/Debug/VolumePixelShader.cso";
 #else
 	const std::string vs_path = "../x64/Release/VolumeVertexShader.cso";
-	const std::string ps_path = "../x64/Release/VolumePixelShader.cso";
+	const std::string forward_ps_path = "../x64/Release/VolumePixelShader.cso";
 #endif
 
 	//SHADERS
@@ -76,7 +76,7 @@ public:
 		blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 		blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-		blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
 		blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blendDesc.RenderTarget[0].RenderTargetWriteMask = 0X0f;
 		HRESULT hr = Graphics::Inst().GetDevice().CreateBlendState(&blendDesc, &blendState);

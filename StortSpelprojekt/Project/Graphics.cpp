@@ -136,7 +136,6 @@ HRESULT Graphics::CreateRasterizerState()
 	D3D11_RASTERIZER_DESC desc = {};
 	desc.CullMode = D3D11_CULL_BACK;
 	desc.FillMode = D3D11_FILL_WIREFRAME;
-
 	return device->CreateRasterizerState(&desc, &wireframeState);
 }
 
@@ -152,8 +151,13 @@ void Graphics::CreateViewport(UINT clientWidth, UINT clientHeight)
 
 void Graphics::BeginFrame()
 {
+	BeginFrame(backBuffer, dsView, viewport);
+}
+
+void Graphics::BeginFrame(ID3D11RenderTargetView* rtv, ID3D11DepthStencilView* dsv, D3D11_VIEWPORT viewport)
+{
 	context->RSSetViewports(1, &viewport);
-	context->OMSetRenderTargets(1, &backBuffer, dsView);
-	context->ClearRenderTargetView(backBuffer, backgroundColor);
-	context->ClearDepthStencilView(dsView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	context->OMSetRenderTargets(1, &rtv, dsv);
+	context->ClearRenderTargetView(rtv, backgroundColor);
+	context->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
