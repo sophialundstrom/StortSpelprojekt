@@ -13,24 +13,16 @@ class GameOver : public ApplicationState
 {
 private:
 	Canvas* currentCanvas;
-	std::map<std::string, Canvas*> canvases;
-
-	ParticleRenderer particleRenderer;
-	ModelRenderer modelRenderer;
-	ShadowRenderer shadowRenderer;
-	APPSTATE gameStateStatus = APPSTATE::NO_CHANGE;
 	bool goToMenu = false;
 public:
-
 	GameOver() = default;
 	GameOver(UINT clientWidth, UINT clientHeight, HWND window);
 	~GameOver();
 
-	bool quit;
-	bool backToMenu;
+	bool quit = false;
+	bool backToMenu = false;
 
 	void Render();
-	void Initialize();
 	void MainMenu();
 	void QuitGame();
 

@@ -42,11 +42,11 @@ private:
     AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
-    ShadowRenderer shadowRenderer;
-    DeferredRenderer deferredRenderer;
+   // ShadowRenderer shadowRenderer;
+   // DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
-    ColliderRenderer colliderRenderer;
-    SkeletonRenderer skeletonRenderer;
+    //ColliderRenderer colliderRenderer;
+    //SkeletonRenderer skeletonRenderer;
     WaterRenderer waterRenderer;
 
     SaveStation saveStations[2];
