@@ -51,5 +51,6 @@ void Text::SetString(const std::string newString)
 void Text::Draw()
 {
 	//UI::Inst().GetRenderTarget()->DrawRectangle(bounds, brush);
+	UI::Inst().GetRenderTarget()->DrawTextW(string.c_str(), (UINT32)string.size(), UI::Inst().GetTextFormat(UI::TEXTFORMAT::TITLE_BACKGROUND), bounds, UI::Inst().GetBrush(UI::COLOR::BLACK));
 	UI::Inst().GetRenderTarget()->DrawTextW(string.c_str(), (UINT32)string.size(), format, bounds, brush);
 }

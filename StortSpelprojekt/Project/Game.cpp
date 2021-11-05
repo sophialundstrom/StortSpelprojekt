@@ -649,6 +649,10 @@ APPSTATE Game::Run()
 		return APPSTATE::GAMEOVER;
 	}
 
+	if (Event::KeyIsPressed('X'))
+	{
+		return APPSTATE::EXIT;
+	}
 	return APPSTATE::NO_CHANGE;
 }
 

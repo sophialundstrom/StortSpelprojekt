@@ -56,21 +56,21 @@ UI::UI(HWND window)
 		brushes[(COLOR)i] = brush;
 	}
 
-	std::string font = "Fonts/HighLevel.ttf";
+	/*std::string font = "Fonts/HighLevel.ttf";
 	if (AddFontResourceA(font.c_str()) == 0)
 	{
 		Print("NIET");
-	}
+	}*/
 
-	if FAILED(writeFactory->GetSystemFontCollection(&fontCollection, false))
-	{
-		Print("NIET 2");
-	}
+	//if FAILED(writeFactory->GetSystemFontCollection(&fontCollection, false))
+	//{
+	//	Print("NIET 2");
+	//}
 
 	for (auto& desc : textFormatDescs)
 	{
 		IDWriteTextFormat* format = nullptr;
-		hr = writeFactory->CreateTextFormat(desc.fontName, fontCollection, desc.fontWeight, desc.fontStyle, desc.fontStretch, desc.fontSize, desc.localeName, &format);
+		hr = writeFactory->CreateTextFormat(desc.fontName, nullptr, desc.fontWeight, desc.fontStyle, desc.fontStretch, desc.fontSize, desc.localeName, &format);
 		if FAILED(hr)
 		{
 			Print("FAILED TO CREATE TEXT FORMAT", "UI");
@@ -92,7 +92,7 @@ UI::UI(HWND window)
 
 UI::~UI()
 {
-	RemoveFontResourceA("Fonts/HighLevel.ttf");
+	/*RemoveFontResourceA("Fonts/HighLevel.ttf");*/
 
 	if (imageFactory)
 		imageFactory->Release();
