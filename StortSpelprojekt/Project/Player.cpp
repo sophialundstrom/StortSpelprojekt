@@ -158,6 +158,7 @@ void Player::Update(HeightMap* heightMap)
 	{
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
+		sceneCamera->SetPosition(newCameraPos);
 		
 		if (Time::Get() - lastClick > 0.2f)
 		{
@@ -176,16 +177,19 @@ void Player::Update(HeightMap* heightMap)
 			}
 		}
 	}
-
 	else
+	{
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
+		sceneCamera->MoveTowards(newCameraPos);
+	}
+		
 
 	for (int i = 0; i < arrows.size(); i++)
 	{
 		arrows.at(i)->Update();
 	}
 
-	sceneCamera->MoveTowards(newCameraPos);
+	
 
 	AnimatedModel::Update();
 
