@@ -420,8 +420,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ingameCanvas->AddImage({ (float)clientWidth / 2.0f, (float)clientHeight / 2 }, "CrossHair", "CrossHair.png");
 	
 
-	ingameCanvas->AddText({ 200, (float)clientHeight - 100 }, "NrOfArrows", "Arrows:", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
-	ingameCanvas->AddText({ 300, (float)clientHeight - 100 }, "ArrowCount", std::to_string(0), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
+	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 50 }, "ArrowCount", "Arrows:" + std::to_string(0), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
@@ -602,11 +601,11 @@ APPSTATE Game::Run()
 		if (!arrows[i]->IsShot())
 		{
 			nrOfFreeArrows++;
-			std::cout << nrOfFreeArrows << std::endl;
-			canvases["INGAME"]->UpdateText("ArrowCount", std::to_string(nrOfFreeArrows));
 		}
 	}
 
+	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(nrOfFreeArrows));
+	
 	if (hovering)
 		canvases["INGAME"]->GetText("INTERACT")->Show();
 	else
