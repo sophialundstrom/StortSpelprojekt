@@ -410,11 +410,11 @@ void LevelEditor::Render()
 
 	terrainRenderer.Render(*terrain);
 
+	waterRenderer.Render(water);
+
 	modelRenderer.Render();
 	
 	volumeRenderer.Render();
-
-	waterRenderer.Render(water);
 
 	BeginFrame();
 
