@@ -107,7 +107,6 @@ public:
 		pixelShader->Release();
 		inputLayout->Release();
 		blendState->Release();
-		boxIndices->Release();
 		sphereVertexBuffer->Release();
 		boxVertexBuffer->Release();
 	}
