@@ -4,26 +4,31 @@ FriendlyNPC::FriendlyNPC(const std::string& file)
 	: NPC(file)
 {
 	boundingBox->SetScale(2, 4, 2);
+	timer.Start();
 }
 
 FriendlyNPC::FriendlyNPC(const Model& model)
 	: NPC(model)
 {
+	timer.Start();
 }
 
 void FriendlyNPC::Update()
 {
 	NPC::Update();
-	Timer timer;
-	timer.Start();
 
 	activeQuestID = -1;
 	interactable = false;
 
 	
 	std::cout << timer.DeltaTime() << std::endl;;
-	time
-	Walking();
+	timeMeasurement += timer.DeltaTime();
+	if (timeMeasurement >= 2)
+	{
+		timer.Start();
+		Walking();
+		timeMeasurement = 0;
+	}
 
 	UINT completedQuests = 0;
 	for (auto& ID : questIDs)

@@ -29,5 +29,6 @@ private:
 	std::vector<UINT> questIDs;
 	void Walking();
 	std::vector<Node*> path;
-	float time = 0;
+	float timeMeasurement = 0;
+	Timer timer;
 };
