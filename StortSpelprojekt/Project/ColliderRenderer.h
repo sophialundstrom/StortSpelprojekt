@@ -121,7 +121,6 @@ public:
 		boxIndices->Release();
 		frustumIndices->Release();
 		sphereIndices->Release();
-		boxIndices->Release();
 		matrixBuf->Release();
 		vertexShader->Release();
 		pixelShader->Release();
