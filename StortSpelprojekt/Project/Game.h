@@ -42,7 +42,7 @@ private:
     AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
-   // ShadowRenderer shadowRenderer;
+    ShadowRenderer shadowRenderer;
    // DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
     //ColliderRenderer colliderRenderer;

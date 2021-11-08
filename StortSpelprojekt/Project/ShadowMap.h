@@ -9,8 +9,8 @@ private:
 	ID3D11DepthStencilView* dsv;
 	D3D11_VIEWPORT viewport = {};
 	UINT size;
-	UINT boundSlot;
 public:
+	UINT boundSlot;
 	ShadowMap() = default;
 	ShadowMap(UINT size, UINT boundSlot)
 		:size(size), boundSlot(boundSlot)

@@ -134,6 +134,8 @@ public:
 		matrices.viewPerspective = shaderData.cameraMatrix;
 		matrices.lightViewPerspective = shaderData.lightMatrix;
 
+		shaderData.shadowMap.BindAsResource();
+
 		for (auto& drawable : drawables)
 		{
 			auto model = std::dynamic_pointer_cast<Model>(drawable);

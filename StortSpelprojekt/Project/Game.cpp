@@ -30,7 +30,9 @@ void Game::Update()
 
 void Game::Render()
 {
-	//shadowRenderer.Render();
+	const UINT fuckyou = 0;
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.directionalLight, fuckyou, nullptr);
+	shadowRenderer.Render();
 
 	ShaderData::Inst().BindFrameConstants();
 
@@ -115,7 +117,7 @@ void Game::Initialize()
 		if (model)
 		{
 			modelRenderer.Bind(model);
-			//shadowRenderer.Bind(model);
+			shadowRenderer.Bind(model);
 			continue;
 		}
 			
@@ -175,7 +177,7 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	item->SetPosition(position);
 	item->GetBounds()->Update();
 	modelRenderer.Bind(item);
-	//shadowRenderer.Bind(item);
+	shadowRenderer.Bind(item);
 	//colliderRenderer.Bind(item->GetBounds());
 }
 
@@ -190,7 +192,7 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Ve
 	//colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
-	//shadowRenderer.Bind(NPC);
+	shadowRenderer.Bind(NPC);
 
 	scene.AddDrawable("FriendlyNPC", NPC);
 
@@ -213,7 +215,7 @@ void Game::AddArrow(const std::string fileName)
 	arrow->GetCollider()->SetScale(0.15);
 	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	modelRenderer.Bind(arrow);
-	//shadowRenderer.Bind(arrow);
+	shadowRenderer.Bind(arrow);
 	//colliderRenderer.Bind(arrow->GetCollider());
 	arrow->Update();
 }
@@ -273,7 +275,7 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 	//colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
-	//shadowRenderer.Bind(NPC);
+	shadowRenderer.Bind(NPC);
 
 	scene.AddDrawable("hostileNpc", NPC);
 
@@ -476,7 +478,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
-	//shadowRenderer.Bind(building);
+	shadowRenderer.Bind(building);
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);

@@ -10,11 +10,11 @@ class Scene
 {
 private:
 	Camera* camera = nullptr;
-	DirectionalLight directionalLight;
 	std::vector<PointLight> pointLights;
 	std::map<std::string, std::shared_ptr<Drawable>> drawables;
 	std::vector<std::string> objectNames;
 public:
+	DirectionalLight directionalLight;
 	Scene(const std::string& file);
 	Scene() = default;
 	~Scene() { delete camera; }
@@ -25,6 +25,7 @@ public:
 	void Update();
 
 	Camera* GetCamera() { return this->camera; }
+	//DirectionalLight GetDirectionalLight{ return this->directionalLight; }
 
 	//GET DRAWABLE BY SPECIFYING TYPE AND NAME
 	template <typename T>

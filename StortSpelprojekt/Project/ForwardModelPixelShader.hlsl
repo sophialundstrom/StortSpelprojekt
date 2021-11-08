@@ -36,7 +36,7 @@ float ShadowCalculation(float4 LCP)
     LCP.xyz /= LCP.w; //PERSPECTIVE DIVIDE (NDC-COORDS)
     const float2 tx = float2(0.5f * LCP.x + 0.5f, -0.5f * LCP.y + 0.5f); // [-1,1] => [0, 1]
     const float sm = shadowMap.Sample(wrapSampler, tx).r;
-    float shadow = (sm + 0.005 < LCP.z) ? 0.0f : 1.0f; //if closest depth (sample) < pixel-depth there is a primitive in front castings shadow.
+    float shadow = (sm + 0.005 < LCP.z) ? 0.1f : 1.0f; //if closest depth (sample) < pixel-depth there is a primitive in front castings shadow.
 
     if (tx.x > 1.0f || tx.x < 0.0f ||
         tx.y > 1.0f || tx.y < 0.0f ||
@@ -58,7 +58,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     float fogFactor = saturate((fogDistance - fogStart) / fogRange);
 
     //RESULT
-    return lerp((diffuseTexture.Sample(wrapSampler, input.texCoords)) * (saturate(LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition))), fogColor, fogFactor);
+    return lerp((diffuseTexture.Sample(wrapSampler, input.texCoords)) * shadow * (saturate(LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition))), fogColor, fogFactor);
     //return float4 (shadow, shadow, shadow, 0.1f);
     //return diffuseTexture.Sample(wrapSampler, input.texCoords) * LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition);
 }

@@ -50,6 +50,14 @@ private:
 
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
+
+	ID3D11Buffer* matricesBuf = nullptr;
+	struct Matrices
+	{
+		Matrix world;
+		Matrix viewPerspective;
+		Matrix lightViewPerspective;
+	} matrices;
 public:
 	TerrainRenderer(RenderMethod method, float tesselationAmount = 63)
 	{
@@ -122,6 +130,8 @@ public:
 
 		Print("SUCCEEDED TO INITIALIZE TERRAIN RENDERER");
 		Print("=======================================");
+
+		CreateBuffer(matricesBuf, sizeof(Matrices));
 	}
 
 	~TerrainRenderer()
@@ -148,9 +158,16 @@ public:
 
 		//TOPOLOGY
 		Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
-
+		
 		//SHADERS
 		BindShaders(vertexShader, hullShader, domainShader, geometryShader, pixelShader);
+
+		ShaderData::Inst().shadowMap.BindAsResource();
+		
+		matrices.viewPerspective = ShaderData::Inst().cameraMatrix;
+		matrices.lightViewPerspective = ShaderData::Inst().lightMatrix;
+		UpdateBuffer(matricesBuf, matrices);
+		BindBuffer(matricesBuf, Shader::DS, 1);
 
 		//BUFFER(S)
 		UpdateBuffer(lightBuf, ShaderData::Inst().lightMatrix);

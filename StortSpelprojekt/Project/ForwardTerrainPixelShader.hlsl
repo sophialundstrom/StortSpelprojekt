@@ -4,6 +4,7 @@ Texture2D blendTexture : register(t0);
 Texture2D pathTexture : register (t1);
 
 Texture2D textures[4] : register(t2);
+Texture2D shadowMap : register(t10);
 
 sampler wrapSampler : register(s0);
 
@@ -13,6 +14,7 @@ struct PS_INPUT
     float2 texCoords : TEXTURECOORDS;
     float3 normal : NORMAL;
     float3 worldPosition : WORLDPOSITION;
+    float3 lightClipPosition : LIGHT;
 };
 
 cbuffer CAMERA : register(b2)
@@ -20,8 +22,26 @@ cbuffer CAMERA : register(b2)
     float3 cameraPosition;
 }
 
+float ShadowCalculation(float4 LCP)
+{
+    LCP.xyz /= LCP.w; //PERSPECTIVE DIVIDE (NDC-COORDS)
+    const float2 tx = float2(0.5f * LCP.x + 0.5f, -0.5f * LCP.y + 0.5f); // [-1,1] => [0, 1]
+    const float sm = shadowMap.Sample(wrapSampler, tx).r;
+    float shadow = (sm + 0.005 < LCP.z) ? 0.1f : 1.0f; //if closest depth (sample) < pixel-depth there is a primitive in front castings shadow.
+
+    if (tx.x > 1.0f || tx.x < 0.0f ||
+        tx.y > 1.0f || tx.y < 0.0f ||
+        LCP.z > 1.0f || LCP.z < 0.0f)
+        shadow = 1.0f;
+
+    return shadow;
+}
+
 float4 main(PS_INPUT input) : SV_TARGET
 {
+    float4 LCP = float4(input.lightClipPosition, 1.f);
+    const float shadow = ShadowCalculation(LCP);
+
     const float4 blendValue = blendTexture.Sample(wrapSampler, input.texCoords);
     
     const float2 newTex = input.texCoords * 40.0f;
@@ -42,5 +62,5 @@ float4 main(PS_INPUT input) : SV_TARGET
     
     float4 color = lerp(t, path, pathTexture.Sample(wrapSampler, input.texCoords).x);
     
-    return lerp(color, fogColor, fogFactor);
+    return lerp(color, fogColor, fogFactor) * shadow;
 }
