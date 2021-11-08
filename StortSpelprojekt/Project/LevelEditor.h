@@ -55,6 +55,7 @@ private:
 	void UpdateToolUI(std::string name);
 	void FocusObject();
 	void DuplicateObject();
+	void DuplicateVolume();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

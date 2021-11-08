@@ -59,7 +59,7 @@ void Player::Update(HeightMap* heightMap)
 	//SPRINTING
 	if (Event::KeyIsPressed(VK_SHIFT))
 	{
-		stats.currentSpeed += 5.0f * Time::GetDelta();
+		stats.currentSpeed += 50.0f * Time::GetDelta();
 		if (stats.currentSpeed > stats.sprintSpeed)
 			stats.currentSpeed = stats.sprintSpeed;
 
@@ -117,7 +117,7 @@ void Player::Update(HeightMap* heightMap)
 
 	if (jumping)
 	{
-		airTime += Time::GetDelta() * 5.0f;
+		airTime += Time::GetDelta() * 8.0f;
 		if (airTime >= 1.5f)
 		{
 			PlayAnimation("Falling", true);
@@ -148,7 +148,7 @@ void Player::Update(HeightMap* heightMap)
 	sinceLastShot += Time::GetDelta();
 	if (sinceLastShot > shootingAnimationLenght) {
 
-		bool hasMoved = position == lastPosition ? false : true;
+		bool hasMoved = (position == lastPosition) ? false : true;
 		if (!hasMoved)
 			PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
 		else if (hasMoved && !jumping)
