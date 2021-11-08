@@ -295,12 +295,13 @@ void Game::AddLoot(LOOTTYPE type, const Vector3& position, const float& lifeTime
 	auto LOOT = std::make_shared<Loot>(type, position, lifeTime);
 	modelRenderer.Bind(LOOT);
 	auto collider = LOOT->GetCollider();
-	collider->SetParent(LOOT);
+	//collider->SetParent(LOOT);
 	collider->Update();
 	const std::string name = "loot" + lootID;
 	LOOT->SetName(name);
 	scene.AddDrawable(name, LOOT);
 	loot.emplace_back(LOOT);
+	lootID++;
 }
 
 void Game::CheckSaveStationCollision()

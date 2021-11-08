@@ -26,4 +26,5 @@ void Loot::Update()
 	currentLifeTime += Time::GetDelta();
 	if (currentLifeTime > lifeTime)
 		destroy = true;
+	Model::Update();
 }
