@@ -79,6 +79,9 @@ void Player::Update(HeightMap* heightMap)
 			currentCameraDistance = defaultCameraDistance;
 	}
 
+	if (closestColliderToCam < currentCameraDistance)
+		currentCameraDistance = closestColliderToCam;
+
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
 	//Aligns the keyboardinputs by the camera direction afterwards via the radian.
 	if (!Event::LeftIsClicked())
@@ -189,10 +192,9 @@ void Player::Update(HeightMap* heightMap)
 		arrows.at(i)->Update();
 	}
 
-	
 
 	AnimatedModel::Update();
-
+	sceneCamera->updatecamRay(position, 1000);
 	bounds->Update();
 	frustum->Update();
 }
