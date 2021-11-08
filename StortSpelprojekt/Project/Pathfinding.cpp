@@ -1,5 +1,6 @@
 #include "Pathfinding.h"
 
+
 Pathfinding::Pathfinding()
 {
 	//grid.CreateGrid();

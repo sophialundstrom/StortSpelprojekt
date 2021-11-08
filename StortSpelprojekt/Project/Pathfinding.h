@@ -9,6 +9,7 @@ private:
 	Vector3 seeker, target;
 	Grid grid;
 
+
 public:
 	Pathfinding();
 

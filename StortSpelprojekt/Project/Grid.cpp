@@ -80,13 +80,34 @@ void Grid::RetracePath(Node *startNode, Node *endNode)
 		path.emplace_back(currentNode);
 		currentNode = currentNode->parent;
 	}
-	std::reverse(path.begin(), path.end());
-	this->path = path;
+	std::vector<Vector3> waypoints = optimizePath(path);
+	std::reverse(waypoints.begin(), waypoints.end());
+	this->waypointPath = waypoints;
 }
 
-std::vector<Node*> Grid::GetPath()
+std::vector<Vector3> Grid::GetPath()
 {
-	return path;
+	return waypointPath;
+}
+
+std::vector<Vector3> Grid::optimizePath(std::vector<Node*> path)
+{
+	std::vector<Vector3> waypoints;
+	Vector2 directionOld = Vector2::Zero;
+
+	for (int i = 1; i < path.size(); i++)
+	{
+		// may have to change this to world coordinates instead of indexes. but it might work
+		Vector2 directionNew = Vector2(path[i - 1]->gridX - path[i]->gridX, path[i - 1]->gridY - path[i]->gridY);
+		if (directionNew != directionOld)
+		{
+			waypoints.push_back(path[i]->position);
+		}
+		directionOld = directionNew;
+	}
+
+
+	return waypoints;
 }
 
 Grid::Grid()

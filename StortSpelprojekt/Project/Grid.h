@@ -19,7 +19,8 @@ private:
 
 	float nodeDiameter;
 
-	std::vector<Node*> path;
+	std::vector<Vector3> waypointPath;
+	std::vector<Vector3> optimizePath(std::vector<Node*> path);
 
 public:
 	Grid();
@@ -27,10 +28,6 @@ public:
 	Node* NodeFromWorldPoint(Vector3 worldPoint);
 	std::vector<Node*> GetNeighbours(Node* node);
 	void RetracePath(Node* startNode, Node* endNode);
-	//void SetGridNode(int x, int y, Node* node);
-	//std::vector<Node*> GetNeighbours(Node node);
-	//void RetracePath(Node startNode, Node endNode);
-	//void SetGridNode(int, int, Node& node);
 
-	std::vector<Node*> GetPath();
+	std::vector<Vector3> GetPath();
 };
