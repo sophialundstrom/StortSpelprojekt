@@ -75,8 +75,15 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 370.0f, 180.0f, -90.0 }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { -41.0f, 36.0f, -687.0f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });
+	//scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 370.0f, 180.0f, -90.0 }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(500, 1, 1);
+
+
+	auto menuFireSystem = std::make_shared<ParticleSystem>("fire.ps");
+	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 32, -687 });
+	particleRenderer.Bind(menuFireSystem);
+
 	
 	(void)Run();
 }
@@ -93,7 +100,7 @@ void MainMenu::Initialize()
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
-	gameLoader.Load("Default", scene.GetDrawables());
+	gameLoader.Load("Main Menu", scene.GetDrawables());
 
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
@@ -102,12 +109,14 @@ void MainMenu::Initialize()
 		{
 			modelRenderer.Bind(model);
 			//shadowRenderer.Bind(model);
+			continue;
 		}
 
 		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
 		if (particleSystem)
 		{
 			//SAME BUT PS->
+			continue;
 		}
 	}
 
@@ -123,7 +132,7 @@ void MainMenu::Render()
 
 	particleRenderer.Render();
 
-	terrainRenderer.Render(terrain);
+	//terrainRenderer.Render(terrain);
 
 	//shadowRenderer.Render();
 
@@ -139,9 +148,13 @@ APPSTATE MainMenu::Run()
 	canvases["MAIN MENU"]->GetImage("ButtonLeaves")->Hide();
 
 	currentCanvas->Update();
-	scene.Update();
-	Render();
+	//scene.Update();
 	scene.UpdateDirectionalLight(scene.GetCamera()->GetPosition());
+	scene.GetCamera()->RotateAroundPoint({ -41.0f, 37.0f, -687.0f }, 30, (Vector3{ 0, -0.5f, -1 } / Vector3(0, -0.5f, -1).Length()));
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0 , nullptr);
+
+	Render();
+
 
 	if (play)
 		return APPSTATE::GAME;

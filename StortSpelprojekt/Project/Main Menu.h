@@ -19,8 +19,6 @@ private:
 	Canvas* currentCanvas;
 	std::map<std::string, Canvas*> canvases;
 
-	Terrain terrain;
-
 	TerrainRenderer terrainRenderer;
 	ParticleRenderer particleRenderer;
 	ModelRenderer modelRenderer;

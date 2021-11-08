@@ -535,6 +535,7 @@ APPSTATE Game::Run()
 	if (!paused)
 		Update();
 	
+	//std::cout << player->GetPosition().x << " " << player->GetPosition().y << " " << player->GetPosition().z << std::endl;
 	currentCanvas->Update();
 
 	Render();

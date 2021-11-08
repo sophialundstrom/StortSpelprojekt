@@ -46,6 +46,8 @@ public:
 	//void AddHostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player);
 	//void AddHostileNPC(const std::string& name, std::shared_ptr<Drawable> drawable);
 
+	DirectionalLight GetDirectionalLight() { return directionalLight; }
+
 	void AddAnimatedModel(const std::string& file);
 
 	void AddParticleSystem(const std::string name, std::shared_ptr<ParticleSystem> system, Vector3 pos);

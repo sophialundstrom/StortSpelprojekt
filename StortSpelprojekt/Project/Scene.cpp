@@ -140,10 +140,10 @@ Scene::Scene(const std::string& file)
 void Scene::Update()
 {
 	camera->Update();
-	//directionalLight.Update();
+	directionalLight.Update();
 
 	for (auto& [name, drawable] : drawables)
 		drawable->Update();
 
-	ShaderData::Inst().Update(*camera, directionalLight, (UINT)pointLights.size(), nullptr);
+	//ShaderData::Inst().Update(*camera, directionalLight, (UINT)pointLights.size(), nullptr);
 }
