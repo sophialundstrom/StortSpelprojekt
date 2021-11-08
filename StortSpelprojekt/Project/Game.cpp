@@ -30,8 +30,7 @@ void Game::Update()
 
 void Game::Render()
 {
-	const UINT fuckyou = 0;
-	ShaderData::Inst().Update(*scene.GetCamera(), scene.directionalLight, fuckyou, nullptr);
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.directionalLight, 0, nullptr);
 	shadowRenderer.Render();
 
 	ShaderData::Inst().BindFrameConstants();
