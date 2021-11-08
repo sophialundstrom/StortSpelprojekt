@@ -39,6 +39,7 @@ private:
 	void Play();
 	void Quit();
 	void Form();
+	void HoveringPlay();
 public:
 	MainMenu() = default;
 	MainMenu(UINT clientWidth, UINT clientHeight, HWND window);

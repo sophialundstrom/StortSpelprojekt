@@ -31,9 +31,15 @@ void MainMenu::Form()
 	ShellExecute(0, 0, L"https://docs.google.com/forms/d/1wSGU7CwBNTTCu50nsunQX2Q9DC06SEi5SAqbgJstgb0/viewform?edit_requested=true", 0, 0, SW_SHOW);
 }
 
+void MainMenu::HoveringPlay()
+{
+	canvases["MAIN MENU"]->GetImage("ButtonLeaves")->Show();
+}
+
 void Hovering()
 {
-	Print("HOVERING");
+	
+	//Print("HOVERING");
 }
 
 MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
@@ -46,9 +52,10 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	auto menuCanvas = new Canvas();
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "K", "ArcusLogo.png", 0.5f, 1.0f);
 
-	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.10f }, "O", 360, 100, UI::COLOR::GRAY, [this] { Play(); }, Hovering);
-	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.10f }, "L", "PlayButton.png", 0.6f, 1.0f);
-	
+	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.10f }, "O", 360, 100, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringPlay(); });
+	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.10f }, "BorderButton", "ButtonBorder.png", 0.4f, 1.0f);
+	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.10f }, "ButtonLeaves", "ButtonLeaves.png", 0.4f, 1.0f);
+
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.12f }, "G", "HowToPlayButton.png", 0.6f, 1.0f);
 	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.12f }, "A", 360, 100, UI::COLOR::GRAY, [this] { HowToPlay(); }, Hovering);
 
@@ -129,6 +136,8 @@ void MainMenu::Render()
 
 APPSTATE MainMenu::Run()
 {
+	canvases["MAIN MENU"]->GetImage("ButtonLeaves")->Hide();
+
 	currentCanvas->Update();
 	scene.Update();
 	Render();

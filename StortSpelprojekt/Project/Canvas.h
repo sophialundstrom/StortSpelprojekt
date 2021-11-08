@@ -80,9 +80,9 @@ public:
 	{
 		UI::Inst().BeginFrame();
 
-		//for (auto& [name, button] : buttons)
-		//	if (button->IsVisible())
-		//		button->Draw();
+		for (auto& [name, button] : buttons)
+			if (button->IsVisible())
+				button->Draw();
 
 		for (auto& [name, image] : images)
 			if (image->IsVisible())
