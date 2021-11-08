@@ -71,6 +71,7 @@ private:
     std::vector<std::shared_ptr<Collider>> colliders;
 
     std::vector<std::shared_ptr<HostileNPC>> hostiles;
+    UINT hostileID = 0;
 
     std::vector<std::shared_ptr<Loot>> loot;
     UINT lootID = 0;

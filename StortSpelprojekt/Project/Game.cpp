@@ -228,7 +228,8 @@ void Game::CheckLootDestruction()
 		if (loot[i]->destroy)
 		{
 			scene.DeleteDrawable(loot[i]->GetName());
-			loot[i] = loot[loot.size() - 1];
+			modelRenderer.Unbind(loot[i]);
+			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 
 
@@ -294,9 +295,9 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 
 	modelRenderer.Bind(NPC);
 	//shadowRenderer.Bind(NPC);
-
-	scene.AddDrawable("hostileNpc", NPC);
-
+	const std::string name = "hostileNPC" + std::to_string(hostileID);
+	scene.AddDrawable(name, NPC);
+	hostileID++;
 	hostiles.emplace_back(NPC);
 }
 
@@ -689,17 +690,25 @@ APPSTATE Game::Run()
 
 void Game::CheckNearbyEnemies()
 {
-	for (auto& hostile : hostiles)
+	for (int i = 0; i < hostiles.size(); i++)
 	{
-		bool hit = player->CheckArrowHit(hostile->GetCollider());
+		bool hit = player->CheckArrowHit(hostiles[i]->GetCollider());
 
 		if (hit)
 		{
-			hostile->TakeDamage();
-			if (hostile->IsDead())
+			hostiles[i]->TakeDamage();
+			if (hostiles[i]->IsDead())
 			{
+
 				player->Stats().barbariansKilled++;
-				AddLoot(LOOTTYPE::MIXED, hostile->GetPosition());
+				//std::cout << "Hostile: " << hostile[i]->GetPosition().x << " " << hostile->GetPosition().y << " " << hostile->GetPosition().z << std::endl;
+				//std::cout << "Player: " << player->GetPosition().x << " " << player->GetPosition().y << " " << player->GetPosition().z << std::endl;
+				AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() /*+ Vector3(0,5,0)*/);
+				//hostiles[i]->SetPosition(0, -100, 0);
+				scene.DeleteDrawable(hostiles[i]->GetName());
+				modelRenderer.Unbind(hostiles[i]);
+				hostiles[i] = hostiles[hostiles.size() - 1];
+				hostiles.resize(hostiles.size() - 1);
 				//Loot loot(LOOTTYPE::ARROWS, hostile->GetPosition());
 			}
 		}

@@ -7,7 +7,7 @@ class Loot : public Model
 {
 
 private:
-	float rotationSpeed = 2.f;
+	float rotationSpeed = 20.f;
 	float lifeTime = 5.f;
 	float currentLifeTime = 0.f;
 	std::shared_ptr<BoundingBox> boundingBox;
