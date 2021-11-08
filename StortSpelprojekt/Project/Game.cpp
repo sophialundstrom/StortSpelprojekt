@@ -518,6 +518,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//Audio::AddAudio(L"Audio/Rainy.wav");
 	//Audio::StartAudio();
 
+	pathing.CreateGrid(scene.GetDrawables());
+	pathing.FindPath(friendlyNPCs[0]->GetPosition(), player->GetPosition());
+	friendlyNPCs[0]->SetPath(pathing.GetGrid()->GetPath());
+
 	(void)Run();
 }
 

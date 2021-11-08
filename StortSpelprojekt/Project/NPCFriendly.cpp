@@ -19,7 +19,7 @@ void FriendlyNPC::Update()
 	activeQuestID = -1;
 	interactable = false;
 	Vector3 qmPosition = { 0, -1000, 0 };
-
+	Walking();
 	UINT completedQuests = 0;
 	for (auto& ID : questIDs)
 	{
@@ -45,4 +45,12 @@ void FriendlyNPC::Update()
 void FriendlyNPC::Walking()
 {
 	//TODO: Implement walking behaviour
+	static int pathIndex = 0;
+	if (pathIndex < path.size())
+	{
+		std::cout << position.x << ", " << position.y << ", " << position.z << std::endl;
+		SetPosition(path[pathIndex]);
+		std::cout << position.x << ", " << position.y << ", " << position.z << std::endl;
+	}
+	pathIndex++;
 }

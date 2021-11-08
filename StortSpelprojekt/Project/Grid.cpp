@@ -37,8 +37,8 @@ void Grid::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable
 
 Node* Grid::NodeFromWorldPoint(Vector3 worldPoint)
 {
-	float percentX = (worldPoint.x + gridWorldSize.x / 2) / gridWorldSize.x;
-	float percentY = (worldPoint.z + gridWorldSize.y / 2) / gridWorldSize.y;
+	float percentX = (worldPoint.x - position.x + gridWorldSize.x / 2) / gridWorldSize.x;
+	float percentY = (worldPoint.z - position.z + gridWorldSize.y / 2) / gridWorldSize.y;
 
 	std::clamp(percentX, 0.0f, 1.0f);
 	std::clamp(percentY, 0.0f, 1.0f);

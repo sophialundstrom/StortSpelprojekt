@@ -21,13 +21,17 @@ public:
 	UINT NumConnectedQuests() { return questIDs.size(); }
 	bool Completed() { return completed; }
 	virtual void Update() override;
+	void SetPath(std::vector<Vector3> path) { this->path = path; }
+
 private:
 	std::shared_ptr<QuestMarker> questMarker;
 	std::shared_ptr<Building> building;
 	int activeQuestID = -1;
 	bool interactable = false;
 	bool completed = false;
-
 	std::vector<UINT> questIDs;
 	void Walking();
+	std::vector<Vector3> path;
+	float timeMeasurement = 0;
+	Timer timer;
 };
