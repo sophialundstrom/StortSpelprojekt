@@ -5,6 +5,7 @@
 #include "QuestLog.h"
 #include "QuestMarker.h"
 
+
 class FriendlyNPC : public NPC
 {
 public:
