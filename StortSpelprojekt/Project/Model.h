@@ -14,6 +14,7 @@ class Model : public Drawable
 	friend class LevelEditor;
 private:
 	Mesh mesh;
+	Vector3 outlineColor;
 public:
 	Model() = default;
 	Model(const std::string& meshName, const std::string name)
@@ -57,6 +58,9 @@ public:
 			mesh.vertexCount = Resources::Inst().GetVertexCountFromID(ID);
 		}
 	}
+
+	Vector3 GetOutlineColor() { return this->outlineColor; }
+	void SetOutlineColor(Vector3 color) { this->outlineColor = color; }
 
 	// Inherited via Drawable
 	virtual void Update() override

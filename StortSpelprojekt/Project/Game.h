@@ -9,6 +9,8 @@
 #include "TerrainRenderer.h"
 #include "SkeletonRenderer.h"
 #include "WaterRenderer.h"
+#include "OutlineRenderer.h"
+#include "OutlineObjectRenderer.h"
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
@@ -21,6 +23,7 @@
 #include "NPCFriendly.h"
 #include "Audio.h"
 #include "NPCHostile.h"
+#include "Stencil.h"
 
 //PlayerClassLib
 #include <math.h>
@@ -49,6 +52,9 @@ private:
     //SkeletonRenderer skeletonRenderer;
     WaterRenderer waterRenderer;
 
+    OutlineObjectRenderer outlineObjectRenderer;
+    OutlineRenderer outlineRenderer;
+
     SaveStation saveStations[2];
 
     Terrain terrain;
@@ -70,6 +76,8 @@ private:
     std::vector<std::shared_ptr<Collider>> colliders;
 
     std::vector<std::shared_ptr<HostileNPC>> hostiles;
+
+    Stencil stencil;
 
     void Update();
     void Render();

@@ -3,6 +3,7 @@
 #include "FBXLoader.h"
 #include "GameLoader.h"
 
+
 void Game::Update()
 {
 	hovering = false;
@@ -36,9 +37,15 @@ void Game::Render()
 
 	Graphics::Inst().BeginFrame();
 
-	particleRenderer.Render();
-
 	modelRenderer.Render();
+
+	outlineObjectRenderer.Render();
+
+	outlineRenderer.Render();
+
+	stencil.Bind();
+
+	particleRenderer.Render();
 
 	animatedModelRenderer.Render();
 
@@ -382,7 +389,7 @@ void TestFuncMenu()
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
-	://deferredRenderer(clientWidth, clientHeight),
+	:/*deferredRenderer(clientWidth, clientHeight),*/ stencil(Stencil::Mode::OFF),
 	modelRenderer(FORWARD, true),
 	particleRenderer(FORWARD),
 	terrainRenderer(FORWARD),
@@ -448,7 +455,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
-
 	for (int i = 0; i < 3; i++)
 		AddArrow("Arrow");
 
@@ -473,9 +479,12 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
 	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
 	building->SetScale(5);
+	building->SetOutlineColor({ 1.0f, 0.0f, 0.0f });
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
+	outlineObjectRenderer.Bind(building);
+	outlineRenderer.Bind(building);
 	//shadowRenderer.Bind(building);
 
 	//QUEST LOG

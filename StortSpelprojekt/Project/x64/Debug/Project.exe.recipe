@@ -52,6 +52,15 @@
       <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\OutlineObjectVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\OutlinePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\OutlineVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleGeometryShader.cso</FullPath>
     </ContentFile>
     <ContentFile>

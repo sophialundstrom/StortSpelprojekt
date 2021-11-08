@@ -574,6 +574,15 @@
     <ClInclude Include="QuestMarker.h">
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Stencil.h">
+      <Filter>Header Files\Application\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="OutlineRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="OutlineObjectRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -660,6 +669,15 @@
     <FxCompile Include="SkeletonVertexShader.hlsl" />
     <FxCompile Include="WaterDomainShader.hlsl" />
     <FxCompile Include="WaterPixelShader.hlsl" />
+    <FxCompile Include="OutlineVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers</Filter>
+    </FxCompile>
+    <FxCompile Include="OutlinePixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers</Filter>
+    </FxCompile>
+    <FxCompile Include="OutlineObjectVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="LightCalculations.hlsli">

@@ -159,5 +159,6 @@ void Graphics::BeginFrame(ID3D11RenderTargetView* rtv, ID3D11DepthStencilView* d
 	context->RSSetViewports(1, &viewport);
 	context->OMSetRenderTargets(1, &rtv, dsv);
 	context->ClearRenderTargetView(rtv, backgroundColor);
-	context->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	context->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0xFF);
 }
+
