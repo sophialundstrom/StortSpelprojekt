@@ -5,13 +5,15 @@
 
 #include <algorithm>
 
-Camera::Camera() : moveSpeed(0), rotationSpeed(0), pitch(0), yaw(0) {}
+Camera::Camera() : moveSpeed(0), rotationSpeed(0), pitch(0), yaw(0) {
+}
 
 Camera::Camera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position, Vector3 forward, Vector3 up)
 	: position(position), forward(forward), direction(forward), up(up), moveSpeed(moveSpeed), rotationSpeed(rotationSpeed), pitch(0), yaw(0), FOV(FOV), nearZ(nearZ), farZ(farZ)
 {
 	this->viewMatrix = Matrix::CreateLookAt(position, forward, up);
 	this->perspectiveMatrix = Matrix::CreatePerspectiveFieldOfView(FOV, aspectRatio, nearZ, farZ);
+	camRay = std::make_shared<RayCollider>();
 }
 
 void Camera::MoveUp(int sign)

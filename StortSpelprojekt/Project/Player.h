@@ -106,7 +106,8 @@ private:
 	float defaultCameraDistance = 17.0f;
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
-	Vector3 cameraLocationSocket = { 1.3f, 2.7f, -2.f };
+	float closestColliderToCam = 9999;
+	Vector3 cameraLocationSocket = { 1.3f, 5.0, -2.f };
 
 	void CalcHeight(HeightMap* heightMap);
 	void Load(std::string file);
@@ -188,4 +189,8 @@ public:
 	void ResetToLastPosition() { position = lastPosition; }
 	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
 	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
+	void SetClosestColliderToCam(float range)
+	{
+		closestColliderToCam = range;
+	}
 };
