@@ -14,7 +14,7 @@ public:
 	Pathfinding();
 
 	void Update();
-	void CreateGrid(std::map<std::string, std::shared_ptr<Drawable>>& drawable);
+	void CreateGrid(std::map<std::string, std::shared_ptr<Drawable>>& drawable, Vector3 worldPoint);
 	void FindPath(Vector3 startPos, Vector3 TargetPos);
 	Grid* GetGrid() { return &grid; }
 	

@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Building.h"
 #include "QuestLog.h"
+#include "Event.h"
 #include "QuestMarker.h"
 
 

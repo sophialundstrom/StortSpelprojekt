@@ -19,7 +19,11 @@ void FriendlyNPC::Update()
 	activeQuestID = -1;
 	interactable = false;
 	Vector3 qmPosition = { 0, -1000, 0 };
-	Walking();
+	if (Event::KeyIsPressed('G'))
+	{
+		Walking();
+
+	}
 	UINT completedQuests = 0;
 	for (auto& ID : questIDs)
 	{
