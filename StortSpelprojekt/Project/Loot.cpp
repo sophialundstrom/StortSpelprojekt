@@ -8,14 +8,17 @@ Loot::Loot(LOOTTYPE type, const Vector3& position, const float& lifeTime)
 	{
 		case LOOTTYPE::MIXED:
 		{
-			ApplyMesh("Bird");
-			ApplyMaterial("Bird");
+			ApplyMesh("BlacksmithDoneTriangulated");
+			ApplyMaterial("BlacksmithDoneTriangulated");
+			SetScale(10, 10, 10);
 		}
 		case LOOTTYPE::ARROWS:
 		{
-			ApplyMesh("Arrow");
-			ApplyMaterial("Arrow");
+			ApplyMesh("BlacksmithDoneTriangulated");
+			ApplyMaterial("BlacksmithDoneTriangulated");
 		}
+		default:
+			break;
 	}
 	SetPosition(position);
 }
@@ -27,4 +30,5 @@ void Loot::Update()
 	if (currentLifeTime > lifeTime)
 		destroy = true;
 	Model::Update();
+	boundingBox->Update();
 }

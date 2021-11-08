@@ -145,7 +145,7 @@ public:
 			UpdateBuffer(matricesBuf, matrices);
 			BindBuffer(matricesBuf);
 
-			if (isLit)
+			if (isLit) 
 				model->Draw();
 			else
 				model->Draw(true, false);

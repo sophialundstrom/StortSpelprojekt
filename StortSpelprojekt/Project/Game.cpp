@@ -23,6 +23,8 @@ void Game::Update()
 
 	CheckQuestInteraction();
 
+	CheckLootDestruction();
+
 	scene.UpdateDirectionalLight(player->GetPosition());
 
 	Event::ClearRawDelta();
@@ -220,11 +222,19 @@ void Game::AddArrow(const std::string fileName)
 
 void Game::CheckLootDestruction()
 {
-	for (auto& drop : loot)
+	for (int i = 0; i < loot.size(); i++)
 	{
-		drop->Update();
-		if (drop->destroy)
-			scene.DeleteDrawable(drop->GetName());
+		loot[i]->Update();
+		if (loot[i]->destroy)
+		{
+			scene.DeleteDrawable(loot[i]->GetName());
+			loot[i] = loot[loot.size() - 1];
+			loot.resize(loot.size() - 1);
+
+
+			std::cout << "Loot destoyed\n";
+		}
+		
 	}
 }
 
@@ -297,7 +307,7 @@ void Game::AddLoot(LOOTTYPE type, const Vector3& position, const float& lifeTime
 	auto collider = LOOT->GetCollider();
 	//collider->SetParent(LOOT);
 	collider->Update();
-	const std::string name = "loot" + lootID;
+	const std::string name = "loot" + std::to_string(lootID);
 	LOOT->SetName(name);
 	scene.AddDrawable(name, LOOT);
 	loot.emplace_back(LOOT);
@@ -513,7 +523,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -85, 20, -608 });
 
 	//AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
-	AddHostileNPC("BarbarianBow", { player->GetPosition() }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
 
 
@@ -689,7 +699,7 @@ void Game::CheckNearbyEnemies()
 			if (hostile->IsDead())
 			{
 				player->Stats().barbariansKilled++;
-				AddLoot(LOOTTYPE::ARROWS, hostile->GetPosition());
+				AddLoot(LOOTTYPE::MIXED, hostile->GetPosition());
 				//Loot loot(LOOTTYPE::ARROWS, hostile->GetPosition());
 			}
 		}
