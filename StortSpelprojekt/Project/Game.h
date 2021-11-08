@@ -21,6 +21,7 @@
 #include "NPCFriendly.h"
 #include "Audio.h"
 #include "NPCHostile.h"
+#include "Loot.h"
 
 //PlayerClassLib
 #include <math.h>
@@ -71,6 +72,9 @@ private:
 
     std::vector<std::shared_ptr<HostileNPC>> hostiles;
 
+    std::vector<std::shared_ptr<Loot>> loot;
+    UINT lootID = 0;
+
     void Update();
     void Render();
 
@@ -92,7 +96,9 @@ private:
     //void AddHostileArrow(const std::string fileName);
 
     void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
+    void AddLoot(LOOTTYPE type, const Vector3& position, const float& lifeTime = 5.f);
 
+    void CheckLootDestruction();
     void CheckNearbyCollision();
     void CheckSaveStationCollision();
     void CheckItemCollision();

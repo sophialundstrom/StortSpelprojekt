@@ -218,6 +218,16 @@ void Game::AddArrow(const std::string fileName)
 	arrow->Update();
 }
 
+void Game::CheckLootDestruction()
+{
+	for (auto& drop : loot)
+	{
+		drop->Update();
+		if (drop->destroy)
+			scene.DeleteDrawable(drop->GetName());
+	}
+}
+
 void Game::CheckNearbyCollision()
 {
 	auto playerCollider = player->GetBounds();
@@ -278,6 +288,19 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 	scene.AddDrawable("hostileNpc", NPC);
 
 	hostiles.emplace_back(NPC);
+}
+
+void Game::AddLoot(LOOTTYPE type, const Vector3& position, const float& lifeTime)
+{
+	auto LOOT = std::make_shared<Loot>(type, position, lifeTime);
+	modelRenderer.Bind(LOOT);
+	auto collider = LOOT->GetCollider();
+	collider->SetParent(LOOT);
+	collider->Update();
+	const std::string name = "loot" + lootID;
+	LOOT->SetName(name);
+	scene.AddDrawable(name, LOOT);
+	loot.emplace_back(LOOT);
 }
 
 void Game::CheckSaveStationCollision()
@@ -488,7 +511,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -91, 20, -593 });
 	AddItem(WOOD, { -85, 20, -608 });
 
-	AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
+	//AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { player->GetPosition() }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
 
 
@@ -662,7 +686,11 @@ void Game::CheckNearbyEnemies()
 		{
 			hostile->TakeDamage();
 			if (hostile->IsDead())
+			{
 				player->Stats().barbariansKilled++;
+				AddLoot(LOOTTYPE::ARROWS, hostile->GetPosition());
+				//Loot loot(LOOTTYPE::ARROWS, hostile->GetPosition());
+			}
 		}
 	}
 }

@@ -27,7 +27,7 @@ public:
 	{
 		FileSystem::SetProjectDirectory();
 
-		window = new Window(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
+		window = new Window(/*GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)*/1000,700, L"ARCUS", instance);
 		
 		graphics = std::make_unique<Graphics>(window->ClientWidth(), window->ClientHeight(), window->GetHWND(), false);
 
@@ -39,7 +39,7 @@ public:
 
 		//SWAP TO MAINMENU TO NOT SKIP IT
 		window->DeactivateCursor();
-		state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+		state = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 	}
 
 	~Application()
