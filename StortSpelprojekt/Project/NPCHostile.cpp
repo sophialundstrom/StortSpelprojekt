@@ -82,9 +82,36 @@ void HostileNPC::Update()
 
         aimDir.Normalize();
         shootPatternIndex = ((shootPatternIndex++) % 3);
-        movementYRadiant = acos(aimDir.x * 0 + aimDir.z * 1);
-        if (aimDir.x < 0)
-            movementYRadiant *= -1;
+        float additionalRadians = 0;
+
+        Vector3 yRadiantVecReference;
+        std::cout << aimDir.x << std::endl;
+        float aimDirXIgnoranceLevel = 0.2f;
+
+        if (aimDir.x > -aimDirXIgnoranceLevel && aimDir.x < aimDirXIgnoranceLevel)
+        {
+            if (aimDir.z < 0)
+            {
+                yRadiantVecReference = { 1, 0, 0 };
+                additionalRadians = PI_DIV2;
+            }
+            else if(aimDir.z > 0)
+            {
+                yRadiantVecReference = { -1, 0, 0 };
+                additionalRadians = -PI_DIV2;
+            }
+        }
+        else if (aimDir.x > 0)
+        {
+            yRadiantVecReference = { 0, 0, 1 };
+            additionalRadians = 0;
+        }
+        else
+        {
+            yRadiantVecReference = { 0, 0, -1 };
+            additionalRadians = PI;
+        }
+        movementYRadiant = additionalRadians + acos(aimDir.Dot(yRadiantVecReference) / aimDir.Length());
         movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
 
         SetRotation({ 0, movementYRadiant, 0 });
