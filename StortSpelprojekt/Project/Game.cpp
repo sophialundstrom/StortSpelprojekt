@@ -232,7 +232,8 @@ void Game::UpdateAndHandleLoot()
 			colliderRenderer.Unbind(loot[i]->GetCollider());
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
-
+			//Audio::AddAudio(L"Audio/PickupPop.wav");
+			//Audio::StartAudio();
 			std::cout << "Loot destoyed\n";
 		}
 		
