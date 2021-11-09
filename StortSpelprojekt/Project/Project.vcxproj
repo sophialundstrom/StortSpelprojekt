@@ -178,7 +178,7 @@
     <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
-    <ClCompile Include="Main Menu.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModelRenderer.cpp" />
     <ClCompile Include="Node.cpp" />
