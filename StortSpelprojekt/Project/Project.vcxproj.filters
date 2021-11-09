@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="ARCUS">
       <UniqueIdentifier>{22492d73-9e8b-4a35-b3e7-e4f84997daca}</UniqueIdentifier>
     </Filter>
@@ -510,9 +506,6 @@
     <ClInclude Include="Item.h">
       <Filter>ARCUS\Scene\Game</Filter>
     </ClInclude>
-    <ClInclude Include="LoadingScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Arrow.h">
       <Filter>ARCUS\Scene\Game\Combat</Filter>
     </ClInclude>
@@ -653,6 +646,9 @@
     </ClInclude>
     <ClInclude Include="DebugApplication.h">
       <Filter>ARCUS</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingScreen.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
