@@ -10,7 +10,7 @@ void Game::Update()
 	player->Update(terrain.GetHeightMap());
 
 	QuestLog::Inst().Update();
-	
+
 	scene.Update();
 
 	CheckItemCollision();
@@ -118,7 +118,7 @@ void Game::Initialize()
 			//shadowRenderer.Bind(model);
 			continue;
 		}
-			
+
 		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
 		if (particleSystem)
 		{
@@ -242,7 +242,7 @@ void Game::CheckNearbyCollision()
 
 			continue;
 		};
-		
+
 		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
 		if (sphere)
 		{
@@ -301,7 +301,7 @@ void Game::CheckSaveStationCollision()
 
 void Game::CheckItemCollision()
 {
-	for (auto &item : items)
+	for (auto& item : items)
 	{
 		if (Collision::Intersection(*item->GetBounds(), *player->GetFrustum()))
 		{
@@ -354,7 +354,7 @@ void Game::UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect)
 {
 	effect->Unbind(scene, particleRenderer);
 }
-  
+
 void Game::UpdateInventoryUI()
 {
 	auto canvas = canvases["INGAME"];
@@ -418,7 +418,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 200.0f }, "INTERACT", "INTERACT [E]", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
 
 	ingameCanvas->AddImage({ (float)clientWidth / 2.0f, (float)clientHeight / 2 }, "CrossHair", "CrossHair.png");
-	
+
 
 	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 50 }, "ArrowCount", "Arrows:" + std::to_string(0), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
@@ -431,13 +431,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 8.0f }, "PauseTitle", "PAUSED.png", 1.0f, 1.0f);
 
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "RESUME", 350, 95, UI::COLOR::GRAY, [this] { Resume(); }, TestFuncResume);
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100}, "ResumeButton", "ResumeButton.png", 0.50f, 1.0f);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "ResumeButton", "ResumeButton.png", 0.50f, 1.0f);
 
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlayButton", "HowToPlayButton.png", 0.50f, 1.0f);
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlay", 350, 95, UI::COLOR::GRAY, [this] { HowToPlay(); }, TestFuncOptions);
 
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "BackToMainMenu", "MainMenuButton.png", 0.50f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100}, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncOptions);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncOptions);
 
 	canvases["PAUSED"] = pauseCanvas;
 	//HOW TO PLAY
@@ -518,10 +518,18 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//Audio::AddAudio(L"Audio/Rainy.wav");
 	//Audio::StartAudio();
 
-	pathing.CreateGrid(scene.GetDrawables(), friendlyNPCs[0]->GetPosition());
+	// start the pathing and afterwards let NPC handle it
+	pathing.SetDrawables(scene.GetDrawables());
+	pathing.SetHeightMap(terrain.GetHeightMap());
+	Timer timer;
+	timer.Start();
+	std::cout << timer.DeltaTime() << std::endl;
+	pathing.CreateGrid(friendlyNPCs[0]->GetPosition());
+	std::cout << timer.DeltaTime() << std::endl;
 	pathing.FindPath(friendlyNPCs[0]->GetPosition(), player->GetPosition());
-	friendlyNPCs[0]->SetPath(pathing.GetGrid()->GetPath());
-
+	friendlyNPCs[0]->SetPathVar(&pathing);
+	friendlyNPCs[0]->SetPlayerPtr(this->player);
+	//pathing.GetGrid()->GetPath()
 	(void)Run();
 }
 
@@ -538,7 +546,7 @@ APPSTATE Game::Run()
 {
 	if (!paused)
 		Update();
-	
+
 	currentCanvas->Update();
 
 	Render();
@@ -577,25 +585,25 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}*/
 
-	/*	if (Event::KeyIsPressed('I'))
-		{
-			Print("-Added Items-");
-			player->Inventory().AddItem(RESOURCE::WOOD);
-			player->Inventory().GetResources(RESOURCE::WOOD);
-			player->Inventory().AddItem(RESOURCE::STONE);
-			player->Inventory().GetResources(RESOURCE::STONE);
-			player->Inventory().AddItem(RESOURCE::FOOD);
-			player->Inventory().GetResources(RESOURCE::FOOD);
-			UpdateInventoryUI();
-			lastClick = Time::Get();
-		}*/
+		/*	if (Event::KeyIsPressed('I'))
+			{
+				Print("-Added Items-");
+				player->Inventory().AddItem(RESOURCE::WOOD);
+				player->Inventory().GetResources(RESOURCE::WOOD);
+				player->Inventory().AddItem(RESOURCE::STONE);
+				player->Inventory().GetResources(RESOURCE::STONE);
+				player->Inventory().AddItem(RESOURCE::FOOD);
+				player->Inventory().GetResources(RESOURCE::FOOD);
+				UpdateInventoryUI();
+				lastClick = Time::Get();
+			}*/
 
-		/*if (Event::KeyIsPressed('R'))
-		{
-			building->effect->Bind(scene, particleRenderer);
-			building->Upgrade();
-			lastClick = Time::Get();
-		}*/
+			/*if (Event::KeyIsPressed('R'))
+			{
+				building->effect->Bind(scene, particleRenderer);
+				building->Upgrade();
+				lastClick = Time::Get();
+			}*/
 	}
 
 
@@ -609,7 +617,7 @@ APPSTATE Game::Run()
 	}
 
 	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(nrOfFreeArrows));
-	
+
 	if (hovering)
 		canvases["INGAME"]->GetText("INTERACT")->Show();
 	else

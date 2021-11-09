@@ -10,9 +10,9 @@ void Pathfinding::Update()
 {
 }
 
-void Pathfinding::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>>& drawable, Vector3 worldPoint)
+void Pathfinding::CreateGrid(/*std::map<std::string, std::shared_ptr<Drawable>>& drawable,*/ Vector3 worldPoint)
 {
-	grid.CreateGrid(drawable, worldPoint);
+	grid.CreateGrid(drawables, worldPoint, this->heightMap);
 }
 
 void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)

@@ -39,7 +39,7 @@ public:
 
 		//SWAP TO MAINMENU TO NOT SKIP IT
 		window->DeactivateCursor();
-		state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+		state = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
 	}
 
 	~Application()

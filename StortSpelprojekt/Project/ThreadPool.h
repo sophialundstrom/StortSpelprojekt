@@ -14,11 +14,19 @@ class ThreadPool {
 public:
 
 	using Task = std::function<void()>;
-
-	explicit ThreadPool(UINT numThreads)
+	ThreadPool() = default;
+	ThreadPool(UINT numThreads)
 	{
 		Start(numThreads);
 	}
+
+	//ThreadPool& operator =(const ThreadPool other)
+	//{
+	//	if (this != other)
+	//	{
+
+	//	}
+	//}
 
 	~ThreadPool()
 	{
