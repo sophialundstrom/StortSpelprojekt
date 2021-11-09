@@ -50,7 +50,7 @@ public:
 			}
 	}
 
-	void Update()
+	virtual void Update()
 	{
 		if (showCursor)
 		{
@@ -76,7 +76,7 @@ public:
 		}
 	}
 
-	void Render()
+	virtual void Render()
 	{
 		UI::Inst().BeginFrame();
 

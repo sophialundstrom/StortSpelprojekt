@@ -47,10 +47,9 @@ private:
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
    // ShadowRenderer shadowRenderer;
-   // DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
-    //ColliderRenderer colliderRenderer;
-    //SkeletonRenderer skeletonRenderer;
+    ColliderRenderer colliderRenderer;
+    SkeletonRenderer skeletonRenderer;
     WaterRenderer waterRenderer;
 
     SaveStation saveStations[2];
@@ -58,8 +57,8 @@ private:
     Terrain terrain;
     Water water;
 
-    Canvas* currentCanvas;
-    std::map<std::string, Canvas*> canvases;
+    std::shared_ptr<Canvas> currentCanvas;
+    std::map<std::string, std::shared_ptr<Canvas>> canvases;
 
     std::shared_ptr<Player> player;
     std::vector<std::shared_ptr<Arrow>> arrows;
