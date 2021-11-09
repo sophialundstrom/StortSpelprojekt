@@ -51,7 +51,7 @@ public:
 	int Run()
 	{
 		Timer timer;
-		float FPS = 60.0f;
+		float FPS = 300.0f;
 		float tickInterval = 1.0f / FPS;
 
 		MSG msg = {};
