@@ -37,12 +37,18 @@ c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\project\x64\debug\n
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\project\x64\debug\node.obj
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\project\x64\debug\main.obj
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\project\x64\debug\main menu.obj
+c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\project\x64\debug\animatedmodelrenderer.obj
+c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\project\x64\debug\colliderrenderer.obj
+c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\project\x64\debug\particlerenderer.obj
+c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\project\x64\debug\modelrenderer.obj
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\animatedmodelvertexshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\deferredcolliderpixelshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\deferredterrainpixelshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\colliderpixelshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\collidervertexshader.cso
+c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\deferredpixelshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\deferredvertexshader.cso
+c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\forwardmodelpixelshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\forwardparticlepixelshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\deferredmodelpixelshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\forwardterrainpixelshader.cso
@@ -68,8 +74,6 @@ c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\volumeidv
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\volumepixelshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\volumevertexshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\waterdomainshader.cso
-c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\deferredpixelshader.cso
-c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\forwardmodelpixelshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\waterpixelshader.cso
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\x64\debug\project.exe
 c:\users\sophi\desktop\git\stortspelprojekt\stortspelprojekt\project\x64\debug\project.ilk

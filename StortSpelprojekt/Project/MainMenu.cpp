@@ -1,4 +1,4 @@
-#include "Main Menu.h"
+#include "MainMenu.h"
 
 void MainMenu::Options()
 {

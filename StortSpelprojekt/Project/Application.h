@@ -6,7 +6,7 @@
 #include "LoadingScreen.h"
 #include "ApplicationState.h"
 #include "ShaderData.h"
-#include "Main Menu.h"
+#include "MainMenu.h"
 #include "GameOver.h"
 #include "Win.h"
 

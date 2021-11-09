@@ -75,9 +75,6 @@
     <Filter Include="Header Files\Application\Scene\Game">
       <UniqueIdentifier>{186acd6b-a652-4879-9118-37cf9ac0b21a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Scene\Terrain">
-      <UniqueIdentifier>{d73aeb48-8473-4c38-b404-c9cf9d6abf29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Application\Scene\Camera">
       <UniqueIdentifier>{8e37f8ef-fcbe-4592-9f9c-630092af58f2}</UniqueIdentifier>
     </Filter>
@@ -98,9 +95,6 @@
     </Filter>
     <Filter Include="Header Files\Application\GameStates\Debug\Editors\LevelEditor">
       <UniqueIdentifier>{aaaec7a4-2872-40be-8b8d-73488dc6f3f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\GameStates\Debug\Editors\ImGuiWindow">
-      <UniqueIdentifier>{c4bed249-3e66-4e8c-a4e5-f7a35d7e23c0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Application\Scene\Drawable\AnimatedModel">
       <UniqueIdentifier>{53cac745-6011-4dc6-926c-5a8ca3f94801}</UniqueIdentifier>
@@ -141,17 +135,8 @@
     <Filter Include="Header Files\UI">
       <UniqueIdentifier>{f4425efb-57b7-44c5-ab3a-513a649c0635}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\UI\.h">
-      <UniqueIdentifier>{99782d8d-f9f6-4e54-8c9a-f0ec440c4201}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\UI\.cpp">
-      <UniqueIdentifier>{ecb8c68c-124d-41d6-b7f2-7c26782e3573}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Application\Scene\Game\Pathing">
       <UniqueIdentifier>{90e584c9-bff9-4123-894f-dabf62201477}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Game\SaveStation">
-      <UniqueIdentifier>{83465f75-34dd-401b-9242-706cec97dc2e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Application\Scene\Game\Combat">
       <UniqueIdentifier>{f7ac95ee-c9fe-476a-96e3-eb873123733a}</UniqueIdentifier>
@@ -159,13 +144,58 @@
     <Filter Include="Header Files\Application\Audio">
       <UniqueIdentifier>{70728d1d-be0b-4400-be63-775ea488aed7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\LoadingScreen">
+      <UniqueIdentifier>{4ed5bf57-428a-4134-8630-0eab8e1d0482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LoadingScreen\Shaders">
+      <UniqueIdentifier>{a3efacb8-ddde-4f01-a905-be2533244a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\GameStates\Debug\Editors\ImGui">
+      <UniqueIdentifier>{c4bed249-3e66-4e8c-a4e5-f7a35d7e23c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\WaterRenderer">
+      <UniqueIdentifier>{2ff36da8-748c-4be5-b5a2-5ef5d50897e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\WaterRenderer\Shaders">
+      <UniqueIdentifier>{d9e884ef-4f50-4d58-9c46-647513a97fd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\VolumeRenderer">
+      <UniqueIdentifier>{c10a5e49-4da7-4172-99c6-f9eac2356729}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\VolumeRenderer\Shaders">
+      <UniqueIdentifier>{01ad3413-0027-4610-97db-fd487aa5eb3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\SkeletonRenderer">
+      <UniqueIdentifier>{adb08812-9a5a-4148-896c-ce48ff65f6b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Graphics\Renderers\SkeletonRenderer\Shaders">
+      <UniqueIdentifier>{07afdc37-8e2b-4a9c-9128-a18f56a95598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities\DirectX">
+      <UniqueIdentifier>{759b68e4-c293-471b-921f-8804a8d84512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities\FileLoading">
+      <UniqueIdentifier>{1ef94ab5-a678-4cab-a58d-5911eb498c75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities\stb_image">
+      <UniqueIdentifier>{bff732c7-b1fe-434c-8984-9a6101825b3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI\Components">
+      <UniqueIdentifier>{1a84fb82-3c7a-4303-9e8e-76e30f710950}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Game\Collision">
+      <UniqueIdentifier>{f8101903-31c8-48f5-b875-573dd54ab9f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Application\Scene\Terrain/Water/Plane">
+      <UniqueIdentifier>{d73aeb48-8473-4c38-b404-c9cf9d6abf29}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Terrain.cpp">
-      <Filter>Header Files\Application\Scene\Terrain</Filter>
+      <Filter>Header Files\Application\Scene\Terrain/Water/Plane</Filter>
     </ClCompile>
     <ClCompile Include="ParticleEditor.cpp">
       <Filter>Header Files\Application\GameStates\Debug\Editors\ParticleEditor</Filter>
@@ -203,29 +233,11 @@
     <ClCompile Include="NPCFriendly.cpp">
       <Filter>Header Files\Application\Scene\Game\NPC\.cpp</Filter>
     </ClCompile>
-    <ClCompile Include="GameLoader.cpp">
-      <Filter>Header Files\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClCompile>
     <ClCompile Include="IDRenderer.cpp">
       <Filter>Header Files\Application\Graphics\Renderers\IDRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>Header Files\UI\.cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Header Files\UI\.cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="UI.cpp">
-      <Filter>Header Files\UI\.cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>Header Files\UI\.cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadingScreen.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Arrow.cpp">
       <Filter>Header Files\Application\Scene\Game\Combat</Filter>
@@ -251,12 +263,6 @@
     <ClCompile Include="Heap.cpp">
       <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
     </ClCompile>
-    <ClCompile Include="DockSpacePanel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp">
-      <Filter>Header Files\Utilities</Filter>
-    </ClCompile>
     <ClCompile Include="GameOver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -266,11 +272,62 @@
     <ClCompile Include="DialogueOverlay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AnimatedModelRenderer.cpp">
+      <Filter>Header Files\Application\Graphics\Renderers\AnimatedModelRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderRenderer.cpp">
+      <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelRenderer.cpp">
+      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleRenderer.cpp">
+      <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowRenderer.cpp">
+      <Filter>Header Files\Application\Graphics\Renderers\ShadowRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainRenderer.cpp">
+      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonRenderer.cpp">
+      <Filter>Header Files\Application\Graphics\Renderers\SkeletonRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumeRenderer.cpp">
+      <Filter>Header Files\Application\Graphics\Renderers\VolumeRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterRenderer.cpp">
+      <Filter>Header Files\Application\Graphics\Renderers\WaterRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadingScreen.cpp">
+      <Filter>Source Files\LoadingScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="DockSpacePanel.cpp">
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp">
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLoader.cpp">
+      <Filter>Header Files\Utilities\FileLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Header Files\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Header Files\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Header Files\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Header Files\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Canvas.cpp">
-      <Filter>Header Files\UI\.cpp</Filter>
+      <Filter>Header Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="DynamicPlane.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\Application\Scene\Terrain/Water/Plane</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -301,16 +358,10 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files\Application\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXHelp.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Event.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Math.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Print.h">
@@ -319,14 +370,11 @@
     <ClInclude Include="Random.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Time.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h">
-      <Filter>Header Files\Application\Scene\Terrain</Filter>
+      <Filter>Header Files\Application\Scene\Terrain/Water/Plane</Filter>
     </ClInclude>
     <ClInclude Include="Editor.h">
       <Filter>Header Files\Application\GameStates\Debug\Editors</Filter>
@@ -344,16 +392,10 @@
       <Filter>Header Files\Application\GameStates\Debug\Editors\LevelEditor</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiWin.h">
-      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGuiWindow</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiWinComponents.h">
-      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGuiWindow</Filter>
-    </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="MaterialLoader.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Singleton.h">
       <Filter>Header Files\Utilities</Filter>
@@ -415,9 +457,6 @@
     <ClInclude Include="Skeleton.h">
       <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
     </ClInclude>
-    <ClInclude Include="AssimpDirectXMathConverter.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Animator.h">
       <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
     </ClInclude>
@@ -451,9 +490,6 @@
     <ClInclude Include="QuestLog.h">
       <Filter>Header Files\Application\Scene\Game\Quests</Filter>
     </ClInclude>
-    <ClInclude Include="QuestLogFile.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="PRay.h">
       <Filter>Header Files\Utilities</Filter>
     </ClInclude>
@@ -466,32 +502,8 @@
     <ClInclude Include="NPCBase.h">
       <Filter>Header Files\Application\Scene\Game\NPC\.h</Filter>
     </ClInclude>
-    <ClInclude Include="FBXLoader.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="GameLoader.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="IDRenderer.h">
       <Filter>Header Files\Application\Graphics\Renderers\IDRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Button.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_image_write.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="UI.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="ThreadPool.h">
       <Filter>Header Files\Utilities</Filter>
@@ -499,25 +511,7 @@
     <ClInclude Include="Item.h">
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Canvas.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="SaveStation.h">
-      <Filter>Header Files\Application\Scene\Game\SaveStation</Filter>
-    </ClInclude>
-    <ClInclude Include="UIComponent.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
     <ClInclude Include="LoadingScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingVolumes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadingScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VolumeRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Arrow.h">
@@ -526,10 +520,7 @@
     <ClInclude Include="BuildingEffect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Main Menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SkeletonRenderer.h">
+    <ClInclude Include="MainMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Audio.h">
@@ -547,32 +538,14 @@
     <ClInclude Include="Pathfinding.h">
       <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
     </ClInclude>
-    <ClInclude Include="DynamicPlane.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DebugApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Water.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WaterRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Heap.h">
       <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
-    </ClInclude>
-    <ClInclude Include="DockSpacePanel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ViewportPanel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h">
-      <Filter>Header Files\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="GameOver.h">
       <Filter>Header Files</Filter>
@@ -580,11 +553,95 @@
     <ClInclude Include="Win.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="QuestMarker.h">
-      <Filter>Header Files\Application\Scene\Game</Filter>
-    </ClInclude>
     <ClInclude Include="DialogueOverlay.h">
       <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\SkeletonRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumeRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\VolumeRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterRenderer.h">
+      <Filter>Header Files\Application\Graphics\Renderers\WaterRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingScreen.h">
+      <Filter>Source Files\LoadingScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="DockSpacePanel.h">
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewportPanel.h">
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui.h">
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h">
+      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="AssimpDirectXMathConverter.h">
+      <Filter>Header Files\Utilities\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXHelp.h">
+      <Filter>Header Files\Utilities\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>Header Files\Utilities\FileLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>Header Files\Utilities\FileLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialLoader.h">
+      <Filter>Header Files\Utilities\FileLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLoader.h">
+      <Filter>Header Files\Utilities\FileLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestLogFile.h">
+      <Filter>Header Files\Utilities\FileLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\Utilities\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image_write.h">
+      <Filter>Header Files\Utilities\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Header Files\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComponent.h">
+      <Filter>Header Files\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Canvas.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>Header Files\Application\Scene\Terrain/Water/Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveStation.h">
+      <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files\Application\Scene\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestMarker.h">
+      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingVolumes.h">
+      <Filter>Header Files\Application\Scene\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicPlane.h">
+      <Filter>Header Files\Application\Scene\Terrain/Water/Plane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -663,15 +720,33 @@
     <FxCompile Include="DeferredColliderPixelShader.hlsl">
       <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="LoadingPS.hlsl" />
-    <FxCompile Include="LoadingVS.hlsl" />
-    <FxCompile Include="VolumeIDVertexShader.hlsl" />
-    <FxCompile Include="VolumePixelShader.hlsl" />
-    <FxCompile Include="VolumeVertexShader.hlsl" />
-    <FxCompile Include="SkeletonPixelShader.hlsl" />
-    <FxCompile Include="SkeletonVertexShader.hlsl" />
-    <FxCompile Include="WaterDomainShader.hlsl" />
-    <FxCompile Include="WaterPixelShader.hlsl" />
+    <FxCompile Include="SkeletonPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\SkeletonRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="SkeletonVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\SkeletonRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VolumeIDVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\VolumeRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VolumePixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\VolumeRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VolumeVertexShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\VolumeRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterDomainShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\WaterRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterPixelShader.hlsl">
+      <Filter>Header Files\Application\Graphics\Renderers\WaterRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LoadingPS.hlsl">
+      <Filter>Source Files\LoadingScreen\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LoadingVS.hlsl">
+      <Filter>Source Files\LoadingScreen\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="LightCalculations.hlsli">

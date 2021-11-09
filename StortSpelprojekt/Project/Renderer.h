@@ -1,6 +1,7 @@
 #pragma once
 #include "Drawable.h"
 #include "DirectXHelp.h"
+#include "ShaderData.h"
 #include <memory>
 #include <map>
 

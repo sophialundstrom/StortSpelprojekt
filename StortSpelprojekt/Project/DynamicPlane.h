@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics.h"
+#include "Drawable.h"
 #include "Math.h"
 
 struct DynamicPlane

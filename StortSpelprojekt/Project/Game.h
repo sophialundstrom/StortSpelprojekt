@@ -22,9 +22,6 @@
 #include "Audio.h"
 #include "NPCHostile.h"
 
-//PlayerClassLib
-#include <math.h>
-
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
 // The state subclass for the level/game

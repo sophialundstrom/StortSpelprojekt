@@ -4,7 +4,7 @@
 #include "Time.h"
 #include "States.h"
 #include "LoadingScreen.h"
-#include "Main Menu.h"
+#include "MainMenu.h"
 
 class DebugApplication
 {
