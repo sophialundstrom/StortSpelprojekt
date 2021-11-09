@@ -553,6 +553,10 @@ APPSTATE Game::Run()
 
 			lastClick = Time::Get();
 		}
+		if (Event::KeyIsPressed(VK_ESCAPE))
+		{
+			return APPSTATE::EXIT;
+		}
 
 		/*if (Event::KeyIsPressed('U'))
 		{

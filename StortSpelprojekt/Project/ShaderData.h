@@ -111,6 +111,7 @@ public:
 		lightMatrix = directionalLight.GetMatrix();
 		lightData = directionalLight.data;
 		UpdateBuffer(lightDataBuf, lightData);
+		//UpdateBuffer(matrices_buf, lightMatrix);
 
 		//POINT LIGHTS
 		ShaderData::pointLightsData = pointLightsData;
