@@ -10,7 +10,7 @@ class DebugApplication
 {
 private:
 	//WINDOW
-	Window* window;
+	//Window* window;
 
 	//SINGLETONS
 	std::unique_ptr<Graphics> graphics;
@@ -30,20 +30,17 @@ private:
 	const UINT fullscreenHeight = GetSystemMetrics(SM_CYSCREEN);
 	HINSTANCE instance;
 	
-
 	void InitFullscreen()
 	{ 
 		ui.reset();
-		if (window)
-			delete window;
 
-		window = new Window(fullScreenWidth, fullscreenHeight, title.c_str(), instance);
-		window->ActivateCursor();
+		Window::Resize();
+		Window::ActivateCursor();
 
 		isFullscreen = true;
 
-		UINT clientWidth = window->ClientWidth();
-		UINT clientHeight = window->ClientHeight();
+		UINT clientWidth = Window::ClientWidth();
+		UINT clientHeight = Window::ClientHeight();
 
 		graphics.reset();
 		shaderData.reset();
@@ -51,29 +48,27 @@ private:
 
 		ImGUI::ShutDown();
 
-		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window->GetHWND(), false);
+		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, Window::GetHWND(), false);
 
 		RunLoadingScreen();
 
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
-		ui = std::make_unique<UI>(window->GetHWND());
+		ui = std::make_unique<UI>(Window::GetHWND());
 
 		ImGUI::Initialize();
 	}
 
 	void InitWindowed()
 	{
-		ui.reset();
-		if (window)
-			delete window;
+		ui.reset();;
 
-		window = new Window(width, height, title.c_str(), instance);
+		Window::Resize(width, height);
 
 		isFullscreen = false;
 
-		UINT clientWidth = window->ClientWidth();
-		UINT clientHeight = window->ClientHeight();
+		UINT clientWidth = Window::ClientWidth();
+		UINT clientHeight = Window::ClientHeight();
 
 		graphics.reset();
 		shaderData.reset();
@@ -81,10 +76,10 @@ private:
 
 		ImGUI::ShutDown();
 
-		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, window->GetHWND());
+		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, Window::GetHWND());
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
-		ui = std::make_unique<UI>(window->GetHWND());
+		ui = std::make_unique<UI>(Window::GetHWND());
 
 		ImGUI::Initialize();
 	}
@@ -92,12 +87,17 @@ public:
 	DebugApplication(HINSTANCE instance)
 	{
 		FileSystem::SetProjectDirectory();
+
+		WindowCreator creator;
+		Window window;
+		creator.Initialize(window, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
+
 		InitWindowed();
 
-		UINT clientWidth = window->ClientWidth();
-		UINT clientHeight = window->ClientHeight();
+		UINT clientWidth = Window::ClientWidth();
+		UINT clientHeight = Window::ClientHeight();
 
-		window->ActivateCursor();
+		Window::ActivateCursor();
 		currentState = APPSTATE::MAIN_MENU;
 		currentGameState = new DebugMainMenu(clientWidth, clientHeight);
 
@@ -106,7 +106,7 @@ public:
 	~DebugApplication()
 	{
 		ui.reset();
-		delete window;
+		Window::ShutDown();
 		ImGUI::ShutDown();
 	}
 
@@ -126,14 +126,14 @@ public:
 				DispatchMessage(&msg);
 			}
 
-			if (window->Exit())
+			if (Window::Exit())
 			{
 				currentGameState->Delete();
 				break;
 			}
 				
 			if (Event::KeyIsPressed(VK_TAB))
-				window->ActivateCursor();
+				Window::ActivateCursor();
 
 			currentState = currentGameState->Run();
 
@@ -144,30 +144,30 @@ public:
 
 			case APPSTATE::MAIN_MENU:
 				currentGameState->Delete();
-				window->ActivateCursor();
+				Window::ActivateCursor();
 				InitWindowed();
-				currentGameState = new DebugMainMenu(window->ClientWidth(), window->ClientHeight());
+				currentGameState = new DebugMainMenu(Window::ClientWidth(), Window::ClientHeight());
 				break;
 
 			case APPSTATE::GAME:
 				delete currentGameState;
-				window->DeactivateCursor();
+				Window::DeactivateCursor();
 				return 1;
 				break;
 
 			case APPSTATE::LEVEL:
 				RunLoadingScreen();
 				currentGameState->Delete();
-				window->ActivateCursor();
+				Window::ActivateCursor();
 				InitFullscreen();
-				currentGameState = new LevelEditor(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+				currentGameState = new LevelEditor(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 				break;
 
 			case APPSTATE::PARTICLE:
 				currentGameState->Delete();
-				window->ActivateCursor();
+				Window::ActivateCursor();
 				InitFullscreen();
-				currentGameState = new ParticleEditor(window->ClientWidth(), window->ClientHeight());
+				currentGameState = new ParticleEditor(Window::ClientWidth(), Window::ClientHeight());
 				break;
 
 			case APPSTATE::EXIT:

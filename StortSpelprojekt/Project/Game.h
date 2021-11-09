@@ -25,13 +25,17 @@
 //PlayerClassLib
 #include <math.h>
 
+enum class GameState { ACTIVE, PAUSED, DIALOGUE };
+
 // The state subclass for the level/game
 class Game : public ApplicationState
 {
 private:
+    GameState state = GameState::ACTIVE;
+
     bool hovering = false;
     bool done = false;
-    bool paused = false;
+    //bool paused = false;
     const std::string file = "Default"; //"Test"
 
     //-----TEMP-----//

@@ -2,6 +2,7 @@
 #include "Event.h"
 #include "FBXLoader.h"
 #include "GameLoader.h"
+#include "DialogueOverlay.h"
 
 void Game::Update()
 {
@@ -59,37 +60,33 @@ void Game::Render()
 
 void Game::Pause()
 {
-	paused = true;
+	state = GameState::PAUSED;
 	currentCanvas = canvases["PAUSED"];
 }
 
 void Game::Resume()
 {
-	paused = false;
+	state = GameState::ACTIVE;
 	currentCanvas = canvases["INGAME"];
 }
 
 void Game::Options()
 {
-	paused = true;
 	currentCanvas = canvases["OPTIONS"];
 }
 
 void Game::HowToPlay()
 {
-	paused = true;
 	currentCanvas = canvases["HOW TO PLAY"];
 }
 
 void Game::BacktoPause()
 {
-	paused = true;
 	currentCanvas = canvases["PAUSED"];
 }
 
 void Game::MainMenu()
 {
-	paused = false;
 	mainMenu = true;
 }
 
@@ -331,6 +328,7 @@ void Game::CheckQuestInteraction()
 
 				if (Event::KeyIsPressed('E'))
 				{
+					state == GameState::DIALOGUE;
 					int ID = NPC->GetQuestID();
 					if (ID != -1)
 					{
@@ -448,6 +446,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
+	canvases["DIALOGUE"] = new DialogueOverlay();
 
 	for (int i = 0; i < 3; i++)
 		AddArrow("Arrow");
@@ -491,8 +490,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
 
-
-
 	//AddHostileNPC("BarbarianBow", { 200, 26, -620 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPC
@@ -532,10 +529,17 @@ Game::~Game()
 
 APPSTATE Game::Run()
 {
-	if (!paused)
+	if (state != GameState::PAUSED)
 		Update();
-	
+
 	currentCanvas->Update();
+
+	if (state == GameState::DIALOGUE)
+	{
+		auto overlay = (DialogueOverlay*)canvases["DIALOGUE"];
+		if (overlay->IsDone())
+			state = GameState::ACTIVE;
+	}
 
 	Render();
 
@@ -545,7 +549,7 @@ APPSTATE Game::Run()
 	{
 		if (Event::KeyIsPressed(VK_TAB))
 		{
-			if (paused)
+			if (state == GameState::PAUSED)
 				Resume();
 			else
 				Pause();
@@ -594,7 +598,6 @@ APPSTATE Game::Run()
 		}*/
 	}
 
-
 	int nrOfFreeArrows = 0;
 	for (int i = 0; i < arrows.size(); i++)
 	{
@@ -612,9 +615,7 @@ APPSTATE Game::Run()
 		canvases["INGAME"]->GetText("INTERACT")->Hide();
 
 	if (Event::RightIsClicked())
-	{
 		canvases["INGAME"]->GetImage("CrossHair")->Show();
-	}
 	else
 		canvases["INGAME"]->GetImage("CrossHair")->Hide();
 

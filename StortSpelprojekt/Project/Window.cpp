@@ -126,40 +126,40 @@ LRESULT Window::MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-Window::Window(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
-{
-	const wchar_t* className = L"Window Class";
-
-	WNDCLASS wc = { 0 };
-	wc.lpfnWndProc = WindowProc;
-	wc.hInstance = instance;
-	wc.lpszClassName = className;
-
-	RegisterClass(&wc);
-
-	hWnd = CreateWindowEx(0, className, title,
-		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
-		CW_USEDEFAULT, CW_USEDEFAULT, width, height,
-		nullptr, nullptr, instance, this);
-
-	RAWINPUTDEVICE rid = {};
-	rid.usUsagePage = 0x01;
-	rid.usUsage = 0x02;
-	rid.dwFlags = 0;
-	rid.hwndTarget = nullptr;
-	RegisterRawInputDevices(&rid, 1, sizeof(rid));
-
-#ifdef _DEBUG
-	AllocConsole();
-	(void)freopen("conout$", "w", stdout);
-#endif
-
-	ShowWindow(hWnd, SW_SHOWDEFAULT);
-	RECT clientRect;
-	GetClientRect(hWnd, &clientRect);
-	this->width = clientRect.right;
-	this->height = clientRect.bottom;
-}
+//Window::Window(UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
+//{
+//	const wchar_t* className = L"Window Class";
+//
+//	WNDCLASS wc = { 0 };
+//	wc.lpfnWndProc = WindowProc;
+//	wc.hInstance = instance;
+//	wc.lpszClassName = className;
+//
+//	RegisterClass(&wc);
+//
+//	hWnd = CreateWindowEx(0, className, title,
+//		WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
+//		CW_USEDEFAULT, CW_USEDEFAULT, width, height,
+//		nullptr, nullptr, instance, this);
+//
+//	RAWINPUTDEVICE rid = {};
+//	rid.usUsagePage = 0x01;
+//	rid.usUsage = 0x02;
+//	rid.dwFlags = 0;
+//	rid.hwndTarget = nullptr;
+//	RegisterRawInputDevices(&rid, 1, sizeof(rid));
+//
+//#ifdef _DEBUG
+//	AllocConsole();
+//	(void)freopen("conout$", "w", stdout);
+//#endif
+//
+//	ShowWindow(hWnd, SW_SHOWDEFAULT);
+//	RECT clientRect;
+//	GetClientRect(hWnd, &clientRect);
+//	this->width = clientRect.right;
+//	this->height = clientRect.bottom;
+//}
 
 void Window::ActivateCursor()
 {
@@ -186,4 +186,18 @@ void Window::ToggleCursor()
 
 	else
 		ActivateCursor();
+}
+
+void Window::Resize(UINT newWidth, UINT newHeight)
+{
+	if (newWidth == 0)
+	{
+		newWidth = GetSystemMetrics(SM_CXSCREEN);
+		newHeight = GetSystemMetrics(SM_CYSCREEN);
+	}
+
+	width = newWidth;
+	height = newHeight;
+
+	SetWindowPos(hWnd, nullptr, (GetSystemMetrics(SM_CXSCREEN) / 2.0f) - (width / 2.0f), (GetSystemMetrics(SM_CYSCREEN) / 2.0f) - (height / 2.0f), width, height, 0);
 }
