@@ -25,13 +25,17 @@
 //PlayerClassLib
 #include <math.h>
 
+enum class GameState { ACTIVE, PAUSED, DIALOGUE };
+
 // The state subclass for the level/game
 class Game : public ApplicationState
 {
 private:
+    GameState state = GameState::ACTIVE;
+
     bool hovering = false;
     bool done = false;
-    bool paused = false;
+    //bool paused = false;
     const std::string file = "Default"; //"Test"
 
     //-----TEMP-----//
@@ -43,10 +47,9 @@ private:
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
    // ShadowRenderer shadowRenderer;
-   // DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
-    //SkeletonRenderer skeletonRenderer;
+    SkeletonRenderer skeletonRenderer;
     WaterRenderer waterRenderer;
 
     SaveStation saveStations[2];
@@ -54,8 +57,8 @@ private:
     Terrain terrain;
     Water water;
 
-    Canvas* currentCanvas;
-    std::map<std::string, Canvas*> canvases;
+    std::shared_ptr<Canvas> currentCanvas;
+    std::map<std::string, std::shared_ptr<Canvas>> canvases;
 
     std::shared_ptr<Player> player;
     std::vector<std::shared_ptr<Arrow>> arrows;
@@ -74,7 +77,7 @@ private:
     void Update();
     void Render();
 
-    // PAUSE & UI
+    // UI FUNC
     void Pause();
     void Resume();
     void Options();
@@ -88,8 +91,8 @@ private:
     void AddItem(RESOURCE resource, Vector3 position);
 
     std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string fileName, Vector3 position);
+
     void AddArrow(const std::string fileName);
-    //void AddHostileArrow(const std::string fileName);
 
     void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
 
@@ -106,7 +109,7 @@ private:
 public:
     Game() = delete;
     Game(UINT clientWidth, UINT clientHeight, HWND window);
-    ~Game(); // Removes drawables and resources
+    ~Game();
 
     // Inherited via GameState
     virtual APPSTATE Run() override;

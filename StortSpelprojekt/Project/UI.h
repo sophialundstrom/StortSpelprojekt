@@ -1,13 +1,8 @@
 #pragma once
-#include <Windows.h>
-#include <stdlib.h>
-#include <malloc.h>
-#include <wchar.h>
 #include "Math.h"
 #include <dwrite.h>
 #include <wincodec.h>
 #include "Graphics.h"
-#include "Event.h"
 #include <d2d1.h>
 #include <map>
 
@@ -41,7 +36,7 @@ private:
 	struct TextFormatDesc
 	{
 		TEXTFORMAT format = TEXTFORMAT::DEFAULT;
-		const WCHAR* fontName				= L"HighLevel";
+		const WCHAR* fontName				= L"Arial";
 		IDWriteFontCollection* collection	= nullptr;
 		DWRITE_FONT_WEIGHT fontWeight		= DWRITE_FONT_WEIGHT_SEMI_BOLD;
 		DWRITE_FONT_STYLE fontStyle			= DWRITE_FONT_STYLE_NORMAL;
@@ -54,53 +49,29 @@ private:
 	const TextFormatDesc textFormatDescs[4] =
 	{
 		TextFormatDesc(),
-		{ TEXTFORMAT::TITLE, L"HighLevel", nullptr, DWRITE_FONT_WEIGHT_ULTRA_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_SEMI_EXPANDED, 30 },
-		{ TEXTFORMAT::TITLE_SMALL, L"HighLevel", nullptr, DWRITE_FONT_WEIGHT_ULTRA_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 20 },
-		{ TEXTFORMAT::TITLE_CENTERED, L"HighLevel", nullptr, DWRITE_FONT_WEIGHT_ULTRA_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_SEMI_EXPANDED, 30, DWRITE_TEXT_ALIGNMENT_CENTER }
+		{ TEXTFORMAT::TITLE, L"Arial", nullptr, DWRITE_FONT_WEIGHT_ULTRA_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_SEMI_EXPANDED, 30 },
+		{ TEXTFORMAT::TITLE_SMALL, L"Arial", nullptr, DWRITE_FONT_WEIGHT_ULTRA_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 20 },
+		{ TEXTFORMAT::TITLE_CENTERED, L"Arial", nullptr, DWRITE_FONT_WEIGHT_ULTRA_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_SEMI_EXPANDED, 30, DWRITE_TEXT_ALIGNMENT_CENTER }
 	};
 
-	IDWriteFontCollection* fontCollection = nullptr;
-	ID2D1Factory* UIFactory = nullptr;
-	ID2D1RenderTarget* UIRenderTarget = nullptr;
+	ID2D1Factory* factory = nullptr;
+	ID2D1RenderTarget* renderTarget = nullptr;
 	IDWriteFactory* writeFactory = nullptr;
 	IWICImagingFactory* imageFactory = nullptr;
 	
 	std::map<TEXTFORMAT, IDWriteTextFormat*> textFormats;
 	std::map<COLOR, ID2D1SolidColorBrush*> brushes;
-	HWND UIwindow;
 public:
-	UI(HWND window);
+	UI();
 	~UI();
 
-	void Render();
-	void BeginFrame() { UIRenderTarget->BeginDraw(); UIRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());}
-	void EndFrame() { UIRenderTarget->EndDraw(); }
+	void BeginFrame()	{ renderTarget->BeginDraw(); renderTarget->SetTransform(D2D1::Matrix3x2F::Identity());}
+	void EndFrame()		{ renderTarget->EndDraw(); }
 
-	ID2D1SolidColorBrush* GetBrush(COLOR color)
-	{
-		if (brushes.find(color) != brushes.end())
-			return brushes[color];
-		else
-			return brushes.begin()->second;
-	}
+	ID2D1SolidColorBrush* GetBrush(COLOR color);
+	IDWriteTextFormat* GetTextFormat(TEXTFORMAT format);
 
-	IDWriteTextFormat* GetTextFormat(TEXTFORMAT format)
-	{
-		if (textFormats.find(format) != textFormats.end())
-			return textFormats[format];
-		else
-			return textFormats.begin()->second;
-	}
-
-	POINT GetMousePosition()
-	{
-		POINT mp;
-		GetCursorPos(&mp);
-		ScreenToClient(UIwindow, &mp);
-		return mp;
-	}
-
-	IWICImagingFactory* GetImageFactory() { return imageFactory; }
-	IDWriteFactory* GetWriteFactory() { return writeFactory; }
-	ID2D1RenderTarget* GetRenderTarget() { return UIRenderTarget; }
+	IWICImagingFactory* GetImageFactory()	{ return imageFactory; }
+	IDWriteFactory* GetWriteFactory()		{ return writeFactory; }
+	ID2D1RenderTarget* GetRenderTarget()	{ return renderTarget; }
 };

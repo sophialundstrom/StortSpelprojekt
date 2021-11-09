@@ -263,6 +263,15 @@
     <ClCompile Include="Win.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DialogueOverlay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Canvas.cpp">
+      <Filter>Header Files\UI\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicPlane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -572,6 +581,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QuestMarker.h">
+      <Filter>Header Files\Application\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogueOverlay.h">
       <Filter>Header Files\Application\Scene\Game</Filter>
     </ClInclude>
   </ItemGroup>

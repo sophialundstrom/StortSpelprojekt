@@ -78,7 +78,7 @@ private:
 
 	Camera* sceneCamera;
 
-	Canvas* ingameCanvas;
+	std::shared_ptr<Canvas> ingameCanvas;
 	//ARROW STUFF
 	std::vector<std::shared_ptr<Arrow>> arrows;
 
@@ -142,7 +142,7 @@ private:
 public:
 	void Update(HeightMap* heightMap);
 
-	Player(const std::string file, Camera* camera, Canvas* ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows)
+	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows)
 		:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
 	{
 		isRightPressed = false;

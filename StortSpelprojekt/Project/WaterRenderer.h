@@ -94,16 +94,14 @@ public:
 
 	~WaterRenderer()
 	{
-		if (tesselationBuf)
-			tesselationBuf->Release();
+		tesselationBuf->Release();
 		matrixBuf->Release();
 		timeBuf->Release();
 		lightBuf->Release();
 		vertexShader->Release();
 		hullShader->Release();
 		domainShader->Release();
-		if (geometryShader)
-			geometryShader->Release();
+		geometryShader->Release();
 		pixelShader->Release();
 		inputLayout->Release();
 	}

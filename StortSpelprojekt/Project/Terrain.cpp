@@ -44,7 +44,7 @@ Terrain::Terrain(UINT subdivisions)
 
 	pathMap = new Texture("Textures/PathBlendMap.png", "PathMap");
 
-	const std::string tx[4] = { "SandSeamless.jpg", "GrassSeamless.jpg", "RockSeamless.jpg", "Path.jpg"};
+	const std::string tx[4] = { "SandSeamless.jpg", "GrassSeamless.jpg", "RockSeamless.jpg", "Gravel.jpg"};
 	for (UINT i = 0; i < 4; ++i)
 		textures[i] = new Texture("Textures/" + tx[i], tx[i]);
 }

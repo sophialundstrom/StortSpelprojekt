@@ -40,7 +40,7 @@ public:
 		for (UINT i = 0; i < numCrystals; ++i)
 		{
 			crystals[i] = std::make_shared<Crystal>("SaveStationCrystal", "SaveStation" + std::to_string(ID) + "Crystal" + std::to_string(i));
-			const float z = (int)i - 2;
+			const float z = i - 2.0f;
 			const float y = 8.0f - (float)pow((int)i - 2, 2) * 0.30f + 2.0f;
 			crystals[i]->maxPos = y + 0.25f;
 			crystals[i]->minPos = y - 0.25f;
@@ -62,7 +62,7 @@ public:
 			
 			float x = ((position.y - crystal->minPos) / (crystal->maxPos - crystal->minPos)) * 2;
 
-			float speed = -(double)pow(x, 2) + 2 * x;
+			float speed = -(float)pow(x, 2) + 2 * x;
 			if (speed < 0 + 0.1 || speed > 2 - 0.1)
 				speed += 0.1f;
 

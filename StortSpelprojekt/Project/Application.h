@@ -13,8 +13,7 @@
 class Application
 {
 private:
-	Window* window;
-
+	//SINGLETONS
 	std::unique_ptr<Graphics> graphics;
 	std::unique_ptr<Resources> resources;
 	std::unique_ptr<ShaderData> shaderData;
@@ -27,25 +26,25 @@ public:
 	{
 		FileSystem::SetProjectDirectory();
 
-		window = new Window(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
+		WindowCreator(Window(), GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
 		
-		graphics = std::make_unique<Graphics>(window->ClientWidth(), window->ClientHeight(), window->GetHWND(), false);
+		graphics = std::make_unique<Graphics>(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND(), false);
 
 		RunLoadingScreen();
 
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
-		ui = std::make_unique<UI>(window->GetHWND());
+		ui = std::make_unique<UI>();
 
 		//SWAP TO MAINMENU TO NOT SKIP IT
-		window->DeactivateCursor();
-		state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+		Window::DeactivateCursor();
+		state = new Game(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 	}
 
 	~Application()
 	{
 		ui.reset();
-		delete window;
+		Window::ShutDown();
 	}
 
 	int Run()
@@ -66,7 +65,7 @@ public:
 				DispatchMessage(&msg);
 			}
 
-			if (window->Exit())
+			if (Window::Exit())
 			{
 				delete state;
 				break;
@@ -83,25 +82,25 @@ public:
 			case APPSTATE::MAIN_MENU:
 				delete state;
 				RunLoadingScreen();
-				state = new MainMenu(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+				state = new MainMenu(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 				break;
 
 			case APPSTATE::WIN:
 				delete state;
 				RunLoadingScreen();
-				state = new Win(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+				state = new Win(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 				break;
 
 			case APPSTATE::GAMEOVER:
 				delete state;
 				RunLoadingScreen();
-				state = new GameOver(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+				state = new GameOver(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 				break;
 
 			case APPSTATE::GAME:
 				delete state;
 				RunLoadingScreen();
-				state = new Game(window->ClientWidth(), window->ClientHeight(), window->GetHWND());
+				state = new Game(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 				break;
 
 			case APPSTATE::EXIT:
@@ -114,7 +113,7 @@ public:
 			if (dt < tickInterval)
 			{
 				float timeToSleep = tickInterval - dt;
-				Sleep(timeToSleep * 1000);
+				Sleep(timeToSleep * 1000.0f);
 				dt += timeToSleep;
 			}
 
