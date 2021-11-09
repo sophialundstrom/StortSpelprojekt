@@ -10,10 +10,9 @@ void Loot::DealMixedItems()
 	numArrows = Random::Integer(1, maxItemsPerType - 2);
 }
 
-Loot::Loot(LOOTTYPE type, const Vector3& position, const float& lifeTime)
+Loot::Loot(LOOTTYPE type, const Vector3& position)
 {
 	boundingSphere = std::make_shared<BoundingSphere>();
-	this->lifeTime = lifeTime;
 	switch (type)
 	{
 		case LOOTTYPE::MIXED:
@@ -37,6 +36,7 @@ Loot::Loot(LOOTTYPE type, const Vector3& position, const float& lifeTime)
 	}
 
 	SetPosition(position);
+	originalPosition = position;
 	boundingSphere->SetPosition(position);
 	boundingSphere->SetScale(8);
 }
@@ -50,9 +50,15 @@ void Loot::Update()
 void Loot::Update(std::shared_ptr<Player> player)
 {
 	Update();
-	rotationSpeed += Time::GetDelta();
-	rotation = Quaternion::CreateFromRotationMatrix(Matrix::CreateRotationY(rotationSpeed));
+	currentRotation += Time::GetDelta();
+	if (!isTaken)
+	{
+		float sin = std::sin(currentRotation * floatingSpeed) * 2;
+		SetPosition(originalPosition + Vector3(0, sin, 0));
+	}
+	rotation = Quaternion::CreateFromRotationMatrix(Matrix::CreateRotationY(currentRotation * rotationSpeed));
 	currentLifeTime += Time::GetDelta();
+
 	if (currentLifeTime > lifeTime)
 	{
 		std::cout << "Destroyed by time\n";
@@ -60,8 +66,7 @@ void Loot::Update(std::shared_ptr<Player> player)
 	}
 
 	float distance = (player->GetPosition() - GetPosition()).Length();
-	//distance = (player->GetBounds()->GetPosition() - position).Length();
-	std::cout << "Distance: " << distance << std::endl;
+
 	if (distance < maxPickupRange)
 	{
 
@@ -76,7 +81,7 @@ void Loot::Update(std::shared_ptr<Player> player)
 			if (distance < collectRange)
 			{
 
-				if (type == LOOTTYPE::MIXED) // DOESN'T WORK TO DO THIS FOR SOME REASON
+				if (type == LOOTTYPE::MIXED)
 				{
 				for (int wood = 0; wood < numWood; wood++)
 					player->Inventory().AddItem(RESOURCE::WOOD);

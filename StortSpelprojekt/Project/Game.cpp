@@ -301,9 +301,9 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 	hostiles.emplace_back(NPC);
 }
 
-void Game::AddLoot(LOOTTYPE type, const Vector3& position, const float& lifeTime)
+void Game::AddLoot(LOOTTYPE type, const Vector3& position)
 {
-	auto LOOT = std::make_shared<Loot>(type, position, lifeTime);
+	auto LOOT = std::make_shared<Loot>(type, position);
 	modelRenderer.Bind(LOOT);
 	auto collider = LOOT->GetCollider();
 	//collider->SetParent(LOOT);

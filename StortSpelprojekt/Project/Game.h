@@ -97,7 +97,7 @@ private:
     //void AddHostileArrow(const std::string fileName);
 
     void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
-    void AddLoot(LOOTTYPE type, const Vector3& position, const float& lifeTime = 5.f);
+    void AddLoot(LOOTTYPE type, const Vector3& position);
 
     void UpdateAndHandleLoot();
     void CheckNearbyCollision();
