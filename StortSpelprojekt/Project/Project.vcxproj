@@ -164,6 +164,7 @@
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="DialogueOverlay.cpp" />
     <ClCompile Include="DockSpacePanel.cpp" />
+    <ClCompile Include="DynamicPlane.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="GameOver.cpp" />
