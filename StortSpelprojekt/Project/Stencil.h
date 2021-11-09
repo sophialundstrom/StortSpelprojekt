@@ -16,19 +16,23 @@ public:
 		if (mode == Mode::WRITE)
 		{
 			dsDesc.StencilEnable = true;
-			dsDesc.StencilWriteMask = 0xFF;
+			dsDesc.StencilWriteMask = 0x00;
 			dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-			dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+			dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_ZERO;
 		}
 		else if (mode == Mode::MASK)
 		{
 			dsDesc.DepthEnable = false;
 			dsDesc.StencilEnable = true;
 			dsDesc.StencilReadMask = 0xFF;
-			dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+			dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
 			dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 		}
 		Graphics::Inst().GetDevice().CreateDepthStencilState(&dsDesc, &dStencilState);
+		if (mode == Mode::OFF)
+		{
+			dStencilState = nullptr;
+		}
 	}
 	~Stencil()
 	{
