@@ -1,15 +1,8 @@
 struct VS_INPUT
 {
     float3 position : POSITION;
-};
-
-struct VS_OUTPUT
-{
-    float3 position : POSITION;
     float2 textureCoords : TEXTURECOORDS;
     float3 normal : NORMAL;
-    float4 worldPosition : WORLDPOSITION;
-    float4 lightClipPosition : LIGHTPOSITION;
 };
 
 cbuffer MATRICES : register(b0)

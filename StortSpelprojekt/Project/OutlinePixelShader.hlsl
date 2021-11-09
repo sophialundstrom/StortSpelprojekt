@@ -6,7 +6,7 @@ cbuffer CAMERA : register(b2)
 
 struct PS_INPUT
 {
-    float3 position : POSITION;
+    float4 position : SV_POSITION;
     float2 textureCoords : TEXTURECOORDS;
     float3 normal : NORMAL;
     float4 worldPosition : WORLDPOSITION;
