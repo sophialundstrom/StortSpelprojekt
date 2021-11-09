@@ -109,6 +109,7 @@ private:
 	Vector3 cameraLocationSocket = { 1.3f, 2.7f, -2.f };
 
 	void CalcHeight(HeightMap* heightMap);
+	float CalcHeightForCamera(HeightMap* heightMap);
 	void Load(std::string file);
 
 	std::shared_ptr<BoundingBox> bounds;
