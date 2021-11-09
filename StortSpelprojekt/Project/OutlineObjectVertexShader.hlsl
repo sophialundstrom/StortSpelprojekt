@@ -21,6 +21,6 @@ cbuffer MATRICES : register(b0)
 
 float4 main(VS_INPUT input) : SV_POSITION
 {
-    float4x4 tempMatrix = mul(world, viewPerspective);
-    return mul(float4(input.position, 1.0f), tempMatrix);
+    float4x4 WVP = mul(world, viewPerspective);
+    return mul(float4(input.position, 1.0f), WVP);
 }

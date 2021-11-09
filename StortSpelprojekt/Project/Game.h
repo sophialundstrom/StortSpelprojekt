@@ -48,7 +48,7 @@ private:
    // ShadowRenderer shadowRenderer;
    // DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
-    //ColliderRenderer colliderRenderer;
+    ColliderRenderer colliderRenderer;
     //SkeletonRenderer skeletonRenderer;
     WaterRenderer waterRenderer;
 
