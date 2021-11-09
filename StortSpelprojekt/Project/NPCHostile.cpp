@@ -44,6 +44,7 @@ void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
     float normalDelay = 2.f;
     float quickDelay = 0.2f;
     float breakTime = 2.4f;
+    float superSlow = 864000; //86 400 seconds aka 1 real life day
 
     switch (combatStyle)
     {
@@ -57,6 +58,12 @@ void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
         shootDeelayPattern[0] = quickDelay;
         shootDeelayPattern[1] = quickDelay;
         shootDeelayPattern[2] = quickDelay + breakTime;
+        break;
+
+    case CombatStyle::Defenseless:
+        shootDeelayPattern[0] = superSlow;
+        shootDeelayPattern[1] = superSlow;
+        shootDeelayPattern[2] = superSlow;
         break;
 
     default:
