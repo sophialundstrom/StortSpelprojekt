@@ -121,9 +121,9 @@ void Scene::AddPointLight(Vector3 position, float range, Vector3 attenuation, Ve
 }
 
 
-void Scene::SetDirectionalLight(float range, float startAngle, int startDir)
+void Scene::SetDirectionalLight(float range, Vector4 color, float startAngle, int startDir)
 {
-	directionalLight = DirectionalLight(range, startAngle, startDir);
+	directionalLight = DirectionalLight(range, color, startAngle, startDir);
 }
 
 void Scene::SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position, Vector3 forward, Vector3 up)
@@ -139,8 +139,8 @@ Scene::Scene(const std::string& file)
 
 void Scene::Update()
 {
-	camera->Update();
-	directionalLight.Update();
+	//camera->Update();
+	//directionalLight.Update();
 
 	for (auto& [name, drawable] : drawables)
 		drawable->Update();

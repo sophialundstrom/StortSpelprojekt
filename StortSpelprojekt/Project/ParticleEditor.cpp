@@ -92,7 +92,7 @@ void ParticleEditor::Update()
 
 
 	particleSystem->Update();
-	camera->UpdatePosOnly();
+	camera->Update();
 	ShaderData::Inst().Update(*camera);
 }
 

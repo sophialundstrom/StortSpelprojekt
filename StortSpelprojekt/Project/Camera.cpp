@@ -87,6 +87,15 @@ void Camera::Update()
 
 void Camera::RotateAroundPoint(Vector3 target, float distance, Vector3 direction)
 {
-	viewMatrix = Matrix::CreateLookAt(target - direction * distance, target, { 0, 1, 0 });
+	static float angle = 0;
+	angle += Time::GetDelta() * 0.3f;
+	const float x = cos(angle);
+	const float z = sin(angle);
+
+	direction = Vector3(x, direction.y, z);
+	position = target - direction * distance;
+	viewMatrix = Matrix::CreateLookAt(position, target, { 0, 1, 0 });
+
+
 
 }

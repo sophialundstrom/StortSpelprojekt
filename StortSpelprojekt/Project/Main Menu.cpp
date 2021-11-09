@@ -52,7 +52,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	auto menuCanvas = new Canvas();
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "K", "ArcusLogo.png", 0.5f, 1.0f);
 
-	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.10f }, "O", 360, 100, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringPlay(); });
+	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.10f }, "O", 340, 100, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringPlay(); });
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.10f }, "BorderButton", "ButtonBorder.png", 0.4f, 1.0f);
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.10f }, "ButtonLeaves", "ButtonLeaves.png", 0.4f, 1.0f);
 
@@ -75,16 +75,15 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { -41.0f, 36.0f, -687.0f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });
-	//scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 370.0f, 180.0f, -90.0 }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(500, 1, 1);
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { -41.0f, 37.0f, -687.0f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(500, { 0.2f, 0.2f, 0.2f ,1 }, 1);
+	scene.AddPointLight({ -41.9f, 33.0f, -687.4f }, 30, { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
 
 
 	auto menuFireSystem = std::make_shared<ParticleSystem>("fire.ps");
 	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 32, -687 });
 	particleRenderer.Bind(menuFireSystem);
-
-	
+		
 	(void)Run();
 }
 
@@ -148,13 +147,12 @@ APPSTATE MainMenu::Run()
 	canvases["MAIN MENU"]->GetImage("ButtonLeaves")->Hide();
 
 	currentCanvas->Update();
-	//scene.Update();
+	scene.GetCamera()->RotateAroundPoint({ -41.0f, 37.0f, -687.0f }, 30, (Vector3{ 0, -0.6f, -1 } / Vector3(0, -0.6f, -1).Length()));
 	scene.UpdateDirectionalLight(scene.GetCamera()->GetPosition());
-	scene.GetCamera()->RotateAroundPoint({ -41.0f, 37.0f, -687.0f }, 30, (Vector3{ 0, -0.5f, -1 } / Vector3(0, -0.5f, -1).Length()));
-	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0 , nullptr);
+	scene.Update();
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), scene.GetNumberOfPointlights(), (PointLight::Data*)scene.GetPointLights());
 
 	Render();
-
 
 	if (play)
 		return APPSTATE::GAME;

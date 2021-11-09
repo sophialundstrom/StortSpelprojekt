@@ -394,6 +394,8 @@ void LevelEditor::Update()
 
 
 	scene.Update();
+	scene.GetCamera()->Update();
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
 	Event::ClearRawDelta();
 
