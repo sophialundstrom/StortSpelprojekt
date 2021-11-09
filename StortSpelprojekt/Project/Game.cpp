@@ -303,6 +303,7 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 
 void Game::AddLoot(LOOTTYPE type, const Vector3& position)
 {
+
 	auto LOOT = std::make_shared<Loot>(type, position);
 	modelRenderer.Bind(LOOT);
 	auto collider = LOOT->GetCollider();
@@ -313,7 +314,7 @@ void Game::AddLoot(LOOTTYPE type, const Vector3& position)
 	scene.AddDrawable(name, LOOT);
 	loot.emplace_back(LOOT);
 	lootID++;
-	colliderRenderer.Bind(LOOT->GetCollider());
+	//colliderRenderer.Bind(LOOT->GetCollider());
 }
 
 void Game::CheckSaveStationCollision()

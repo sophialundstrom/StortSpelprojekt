@@ -10,26 +10,28 @@ void Loot::DealMixedItems()
 	numArrows = Random::Integer(1, maxItemsPerType - 2);
 }
 
-Loot::Loot(LOOTTYPE type, const Vector3& position)
+Loot::Loot(LOOTTYPE inType, const Vector3& position)
 {
 	boundingSphere = std::make_shared<BoundingSphere>();
-	switch (type)
+	switch (inType)
 	{
 		case LOOTTYPE::MIXED:
 		{
-			this->type = LOOTTYPE::MIXED;
-			ApplyMesh("pole1");
-			ApplyMaterial("pole1");
-			SetScale(1, 1, 1);
+			this->type = inType;
+			ApplyMesh("Barb");
+			ApplyMaterial("Barb");
+			SetScale(0.4, 0.4, 0.4);
 			DealMixedItems();
+			break;
 		}
 		case LOOTTYPE::ARROWS:
 		{
-			this->type = LOOTTYPE::ARROWS;
+			this->type = inType;
 			ApplyMesh("Arrow");
 			ApplyMaterial("Arrow");
 			SetScale(2, 2, 2);
 			numArrows = Random::Integer(1, maxItemsPerType);
+			break;
 		}
 		default:
 			break;

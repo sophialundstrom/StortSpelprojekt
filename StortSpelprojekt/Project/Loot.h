@@ -34,7 +34,7 @@ private:
 	void DealMixedItems();
 
 public:
-	Loot(LOOTTYPE type, const Vector3& position);
+	Loot(LOOTTYPE inType, const Vector3& position);
 	virtual void Update() override;
 	void Update(std::shared_ptr< Player> player);
 	const bool& IsDestroyed() { return this->destroy; }
