@@ -56,17 +56,6 @@ UI::UI(HWND window)
 		brushes[(COLOR)i] = brush;
 	}
 
-	/*std::string font = "Fonts/HighLevel.ttf";
-	if (AddFontResourceA(font.c_str()) == 0)
-	{
-		Print("NIET");
-	}*/
-
-	//if FAILED(writeFactory->GetSystemFontCollection(&fontCollection, false))
-	//{
-	//	Print("NIET 2");
-	//}
-
 	for (auto& desc : textFormatDescs)
 	{
 		IDWriteTextFormat* format = nullptr;
@@ -92,7 +81,6 @@ UI::UI(HWND window)
 
 UI::~UI()
 {
-	/*RemoveFontResourceA("Fonts/HighLevel.ttf");*/
 
 	if (imageFactory)
 		imageFactory->Release();

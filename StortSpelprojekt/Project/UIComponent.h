@@ -1,4 +1,5 @@
 #pragma once
+#include "UI.h"
 #include <d2d1.h>
 
 class UIComponent
@@ -8,6 +9,8 @@ protected:
 	D2D1_RECT_F bounds = {};
 	float width, height;
 public:
+
+	UIComponent() = default;
 	UIComponent(float width, float height, bool visible = true)
 		:visible(visible), width(width), height(height) {}
 
