@@ -351,7 +351,7 @@ void Game::CheckQuestInteraction()
 					state = GameState::DIALOGUE;
 
 					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
-					dialogueOverlay->Set("TEST", "HEJEHE HEHHEH EJHEE EHEH HEHESAEEH HEHEHADJA HEHEH EHEHHE");
+					dialogueOverlay->Set("GILBERT", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum et sagittis sem. Quisque ut ultrices ex. Sed vestibulum placerat nisl nec faucibus. Praesent lacinia leo id mauris imperdiet scelerisque euismod nec quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec gravida mollis sapien semper aliquet. Morbi sit amet ante nisl. Maecenas rutrum vehicula felis, non iaculis ante posuere nec. Etiam ullamcorper ornare convallis. Mauris in metus vel ex consectetur tempor. Nulla augue lectus, suscipit ut pulvinar et, luctus et mi. Aenean posuere nulla augue, non scelerisque lacus feugiat in. Pellentesque felis ante, imperdiet ornare varius non, rutrum eget nulla. Vivamus faucibus vestibulum volutpat.");
 					currentCanvas = dialogueOverlay;
 
 					int ID = NPC->GetQuestID();
@@ -497,8 +497,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
 
-	//AddHostileNPC("BarbarianBow", { 200, 26, -620 }, CombatStyle::consistantDelay);
-
 	//FRIENDLY NPC
 	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
 	friendlyNPC->BindBuilding(building);
@@ -625,8 +623,6 @@ APPSTATE Game::Run()
 		canvases["INGAME"]->GetImage("CrossHair")->Show();
 	else
 		canvases["INGAME"]->GetImage("CrossHair")->Hide();
-
-
 
 	static float counter = 0;
 	if (done)

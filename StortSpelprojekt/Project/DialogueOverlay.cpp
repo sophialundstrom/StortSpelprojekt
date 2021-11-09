@@ -1,6 +1,7 @@
 #include "DialogueOverlay.h"
 
 #include "Window.h"
+#include "Event.h"
 #include "Time.h"
 
 DialogueOverlay::DialogueOverlay()
@@ -10,8 +11,8 @@ DialogueOverlay::DialogueOverlay()
 
 	auto color = UI::Inst().GetBrush(UI::COLOR::YELLOW);
 
-	dialogueName = new Text(L"TEMP NAME", { center.x, Window::ClientHeight() - 400.0f }, UI::Inst().GetTextFormat(UI::TEXTFORMAT::TITLE_SMALL), color, 700, 30);
-	dialogueText = new Text(L"TEMP TEXT", { center.x, Window::ClientHeight() - 300.0f}, UI::Inst().GetTextFormat(UI::TEXTFORMAT::DEFAULT), color, 700, 200);
+	dialogueName = new Text(L"TEMP NAME", { center.x - 366, Window::ClientHeight() - 230.0f }, UI::Inst().GetTextFormat(UI::TEXTFORMAT::TITLE_SMALL), color, 652, 30);
+	dialogueText = new Text(L"TEMP TEXT", { center.x - 366, Window::ClientHeight() - 200.0f}, UI::Inst().GetTextFormat(UI::TEXTFORMAT::DEFAULT), color, 652, 200);
 }
 
 DialogueOverlay::~DialogueOverlay()
@@ -27,34 +28,39 @@ void DialogueOverlay::Update()
 	else
 		speed = regularSpeed;
 
-	if (numCharacters < dialogueText->GetString().length())
-		numCharacters += Time::GetDelta() * speed;
+	timeSinceChar += Time::GetDelta() * speed;
 
+	if (numCharacters < dialogueText->GetString().length() && timeSinceChar >= timeBetweenChars)
+	{
+		timeSinceChar = 0;
+		numCharacters++;
+	}
+		
 	else
 	{
-		static float delay = 0;
 		delay += Time::GetDelta();
 
-		if (delay > doneDelay)
-			active = false;
-
-		if (!active && Event::KeyIsPressed('E'))
+		if (delay > doneDelay && Event::KeyIsPressed('E'))
 			done = true;
 	}
 }
 
 void DialogueOverlay::Render()
 {
-	Canvas::Render();
+	UI::Inst().BeginFrame();
+
+	DrawImages();
 
 	dialogueName->Draw();
 	dialogueText->Draw(false, numCharacters);
+
+	UI::Inst().EndFrame();
 }
 
 void DialogueOverlay::Set(const std::string& NPCName, const std::string& text)
 {
+	delay = 0;
 	numCharacters = 0;
-	active = true;
 	done = false;
 	dialogueName->SetString(NPCName, true);
 	dialogueText->SetString(text, true);

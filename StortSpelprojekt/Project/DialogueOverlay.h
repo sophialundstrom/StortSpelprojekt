@@ -8,13 +8,14 @@ private:
 	Text* dialogueText;
 
 	float speed = 0;
-	const float holdSpeed = 50;
+	const float holdSpeed = 100;
 	const float regularSpeed = 10;
+	const float timeBetweenChars = 0.2f;
+	float timeSinceChar = 0.0f;
 	UINT numCharacters = 0;
 
-	const float doneDelay = 0.5f;
-
-	bool active = false;
+	float delay = 0.0f;
+	const float doneDelay = 2.0f;
 	bool done = false;
 public:
 	DialogueOverlay();
@@ -24,7 +25,6 @@ public:
 	void Render();
 
 	bool IsDone()	{ return done; }
-	bool IsActive() { return active; }
 
 	void Set(const std::string& NPCName, const std::string& text);
 };

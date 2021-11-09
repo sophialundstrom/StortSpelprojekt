@@ -161,6 +161,7 @@
     <ClCompile Include="AudioChunks.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="DialogueOverlay.cpp" />
     <ClCompile Include="DockSpacePanel.cpp" />
     <ClCompile Include="Game.cpp" />

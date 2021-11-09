@@ -77,7 +77,7 @@ private:
     void Update();
     void Render();
 
-    // PAUSE & UI
+    // UI FUNC
     void Pause();
     void Resume();
     void Options();
@@ -91,8 +91,8 @@ private:
     void AddItem(RESOURCE resource, Vector3 position);
 
     std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string fileName, Vector3 position);
+
     void AddArrow(const std::string fileName);
-    //void AddHostileArrow(const std::string fileName);
 
     void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
 
@@ -109,7 +109,7 @@ private:
 public:
     Game() = delete;
     Game(UINT clientWidth, UINT clientHeight, HWND window);
-    ~Game(); // Removes drawables and resources
+    ~Game();
 
     // Inherited via GameState
     virtual APPSTATE Run() override;

@@ -13,8 +13,7 @@
 class Application
 {
 private:
-	//Window* window;
-
+	//SINGLETONS
 	std::unique_ptr<Graphics> graphics;
 	std::unique_ptr<Resources> resources;
 	std::unique_ptr<ShaderData> shaderData;
@@ -27,10 +26,7 @@ public:
 	{
 		FileSystem::SetProjectDirectory();
 
-		WindowCreator creator;
-		Window window;
-		creator.Initialize(window, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
-	/*	window = new Window(, L"ARCUS", instance);*/
+		WindowCreator(Window(), GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
 		
 		graphics = std::make_unique<Graphics>(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND(), false);
 
@@ -38,11 +34,11 @@ public:
 
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
-		ui = std::make_unique<UI>(Window::GetHWND());
+		ui = std::make_unique<UI>();
 
 		//SWAP TO MAINMENU TO NOT SKIP IT
 		Window::DeactivateCursor();
-		state = new MainMenu(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
+		state = new Game(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 	}
 
 	~Application()

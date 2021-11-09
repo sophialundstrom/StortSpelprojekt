@@ -1,8 +1,5 @@
 #pragma once
 #include "UIComponent.h"
-#include <d2d1helper.h>
-#include <string>
-#include <dwrite.h>
 
 inline std::string to_str(const std::wstring& wstr)
 {

@@ -9,9 +9,6 @@
 class DebugApplication
 {
 private:
-	//WINDOW
-	//Window* window;
-
 	//SINGLETONS
 	std::unique_ptr<Graphics> graphics;
 	std::unique_ptr<Resources> resources;
@@ -54,7 +51,7 @@ private:
 
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
-		ui = std::make_unique<UI>(Window::GetHWND());
+		ui = std::make_unique<UI>();
 
 		ImGUI::Initialize();
 	}
@@ -79,7 +76,7 @@ private:
 		graphics = std::make_unique<Graphics>(clientWidth, clientHeight, Window::GetHWND());
 		shaderData = std::make_unique<ShaderData>();
 		resources = std::make_unique<Resources>();
-		ui = std::make_unique<UI>(Window::GetHWND());
+		ui = std::make_unique<UI>();
 
 		ImGUI::Initialize();
 	}
@@ -88,9 +85,7 @@ public:
 	{
 		FileSystem::SetProjectDirectory();
 
-		WindowCreator creator;
-		Window window;
-		creator.Initialize(window, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
+		WindowCreator(Window(), GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS EDITOR", instance);
 
 		InitWindowed();
 
