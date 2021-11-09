@@ -118,7 +118,7 @@ void Player::Update(HeightMap* heightMap)
 		if (airTime >= 1.5f)
 		{
 			PlayAnimation("Falling", true);
-			std::cout << "IN AIR" << std::endl;
+			//std::cout << "IN AIR" << std::endl;
 		}
 		else
 			{
@@ -199,7 +199,7 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 	if (Collision::Intersection(this->bounds, arrow->GetCollider()))
 	{
 		collided = true;
-		Print("ARROW HIT PLAYER");
+		//Print("ARROW HIT PLAYER");
 		arrow->DisableArrow();
 		if (stats.healthPoints == 0)
 		{

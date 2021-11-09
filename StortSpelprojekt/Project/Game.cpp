@@ -23,7 +23,7 @@ void Game::Update()
 
 	CheckQuestInteraction();
 
-	CheckLootDestruction();
+	UpdateAndHandleLoot();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
@@ -220,12 +220,12 @@ void Game::AddArrow(const std::string fileName)
 	arrow->Update();
 }
 
-void Game::CheckLootDestruction()
+void Game::UpdateAndHandleLoot()
 {
 	for (int i = 0; i < loot.size(); i++)
 	{
-		loot[i]->Update();
-		if (loot[i]->destroy)
+		loot[i]->Update(player);
+		if (loot[i]->IsDestroyed())
 		{
 			scene.DeleteDrawable(loot[i]->GetName());
 			modelRenderer.Unbind(loot[i]);
@@ -588,7 +588,11 @@ APPSTATE Game::Run()
 
 			lastClick = Time::Get();
 		}
-
+		if (Event::KeyIsPressed(VK_RETURN))
+		{
+			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+			lastClick = Time::Get();
+		}
 		/*if (Event::KeyIsPressed('U'))
 		{
 			QuestLog::Inst().Complete(0);
@@ -630,6 +634,7 @@ APPSTATE Game::Run()
 		}*/
 	}
 
+	UpdateInventoryUI();
 
 	int nrOfFreeArrows = 0;
 	for (int i = 0; i < arrows.size(); i++)
@@ -703,7 +708,7 @@ void Game::CheckNearbyEnemies()
 				player->Stats().barbariansKilled++;
 				//std::cout << "Hostile: " << hostile[i]->GetPosition().x << " " << hostile->GetPosition().y << " " << hostile->GetPosition().z << std::endl;
 				//std::cout << "Player: " << player->GetPosition().x << " " << player->GetPosition().y << " " << player->GetPosition().z << std::endl;
-				AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() /*+ Vector3(0,5,0)*/);
+				AddLoot(LOOTTYPE::MIXED, hostiles[i]->GetPosition() /*+ Vector3(0,5,0)*/);
 				//hostiles[i]->SetPosition(0, -100, 0);
 				scene.DeleteDrawable(hostiles[i]->GetName());
 				modelRenderer.Unbind(hostiles[i]);
