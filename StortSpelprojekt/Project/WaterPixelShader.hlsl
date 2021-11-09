@@ -39,22 +39,11 @@ float4 main(PS_INPUT input) : SV_TARGET
 
     float4 color = diffuseTexture.Sample(wrapSampler, newTex) * 0.8;
 
-    //output.normal = float4(input.normal, 1.0f);
-
-    //output.worldPosition = float4(input.worldPosition, 1.0f);
-
-    //output.diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
-    //output.specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
-
-    //output.ambient = float4(0.5f, 0.5f, 0.5f, 1.0f);
-
-    //output.lightClipPosition = mul(output.worldPosition, lightMatrix);
-
     //FOG
     float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
     float fogStart = 100.0f;
     float fogRange = 2000.0f;
-    float fogDistance = distance(cameraPosition, input.worldPosition);
+    float fogDistance = distance(cameraPosition, input.worldPosition.xyz);
     float fogFactor = saturate((fogDistance - fogStart) / fogRange);
 
     return (lerp((input.worldPosition, 1.0f) * saturate(color), fogColor, fogFactor));

@@ -207,7 +207,7 @@ void Game::AddArrow(const std::string fileName)
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetScale(0.15);
+	arrow->GetCollider()->SetScale(0.15f);
 	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	modelRenderer.Bind(arrow);
 	//shadowRenderer.Bind(arrow);

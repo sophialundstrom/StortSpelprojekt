@@ -113,7 +113,7 @@ public:
 			if (dt < tickInterval)
 			{
 				float timeToSleep = tickInterval - dt;
-				Sleep(timeToSleep * 1000);
+				Sleep(timeToSleep * 1000.0f);
 				dt += timeToSleep;
 			}
 

@@ -40,12 +40,12 @@ Node* Grid::NodeFromWorldPoint(Vector3 worldPoint)
 	float percentX = (worldPoint.x + gridWorldSize.x / 2) / gridWorldSize.x;
 	float percentY = (worldPoint.z + gridWorldSize.y / 2) / gridWorldSize.y;
 
-	std::clamp(percentX, 0.0f, 1.0f);
-	std::clamp(percentY, 0.0f, 1.0f);
+	(void)std::clamp(percentX, 0.0f, 1.0f);
+	(void)std::clamp(percentY, 0.0f, 1.0f);
 
 
-	int x = rint((gridSizeX - 1) * percentX);
-	int y = rint((gridSizeY - 1) * percentY);
+	int x = (int)rint((gridSizeX - 1) * percentX);
+	int y = (int)rint((gridSizeY - 1) * percentY);
 	return &grid[x][y];
 }
 

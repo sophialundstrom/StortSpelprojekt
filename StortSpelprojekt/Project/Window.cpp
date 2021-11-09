@@ -173,7 +173,7 @@ void Window::Resize(UINT newWidth, UINT newHeight)
 	width = newWidth;
 	height = newHeight;
 
-	SetWindowPos(hWnd, nullptr, (GetSystemMetrics(SM_CXSCREEN) / 2.0f) - (width / 2.0f), (GetSystemMetrics(SM_CYSCREEN) / 2.0f) - (height / 2.0f), width, height, 0);
+	SetWindowPos(hWnd, nullptr, (GetSystemMetrics(SM_CXSCREEN) / 2) - (width / 2), (GetSystemMetrics(SM_CYSCREEN) / 2) - (height / 2), width, height, 0);
 }
 
 WindowCreator::WindowCreator(Window window, UINT width, UINT height, LPCWSTR title, HINSTANCE instance)

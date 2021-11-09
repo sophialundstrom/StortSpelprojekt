@@ -14,7 +14,7 @@ void GameLoader::Load(const std::string& filename, std::map<std::string, std::sh
 	}
 
 	reader.seekg(0, reader.end);
-	UINT fileLength = reader.tellg();
+	UINT fileLength = (UINT)reader.tellg();
 	reader.seekg(0, reader.beg);
 
 	UINT header;

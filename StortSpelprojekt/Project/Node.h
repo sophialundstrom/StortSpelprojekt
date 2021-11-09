@@ -57,7 +57,7 @@ struct MyHash
 	}
 };
 
-inline float GetDistance(Node* n1, Node* n2)
+inline int GetDistance(Node* n1, Node* n2)
 {
 	int dstX = abs(n1->gridX - n2->gridX);
 	int dstY = abs(n1->gridY - n2->gridY);

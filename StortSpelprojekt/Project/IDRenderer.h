@@ -104,8 +104,8 @@ public:
 		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "ID RENDERER (VOLUME)");
 
 		D3D11_TEXTURE2D_DESC textDesc = {};
-		textDesc.Width = Graphics::Inst().GetViewport().Width;
-		textDesc.Height = Graphics::Inst().GetViewport().Height;
+		textDesc.Width = (UINT)Graphics::Inst().GetViewport().Width;
+		textDesc.Height = (UINT)Graphics::Inst().GetViewport().Height;
 		textDesc.MipLevels = 1;
 		textDesc.ArraySize = 1;
 		textDesc.Format = DXGI_FORMAT_R32_UINT;

@@ -4,17 +4,13 @@
 
 int IDRenderer::GetObjectID(int xPix, int yPix)
 {
-	D3D11_BOX box;
+	D3D11_BOX box = {};
 	box.left = xPix;
 	box.top = yPix;
 	box.front = 0;
 	box.right = xPix + 1;
 	box.bottom = yPix + 1;
 	box.back = 1;
-
-	//long xCord = xPix;
-	//long yCord = yPix;
-	/*Graphics::Inst().GetContext().CopyResource(idTextureData, idTexture);*/
 
 	Graphics::Inst().GetContext().CopySubresourceRegion(idTextureData,0,0,0,0, idTexture, 0, &box);
 
@@ -27,18 +23,12 @@ int IDRenderer::GetObjectID(int xPix, int yPix)
 	if FAILED(hr)
 	{
 		Print("FAILED TO MAP SUBRESOURCE", "ID RENDERER::COPYING TEXTURE");
+		return 0;
 	}
 
 	int id = 0;
 	UINT32* data = static_cast<UINT32*>(mappedResource.pData);
 
-	D3D11_MAPPED_SUBRESOURCE pixelResource;
-
-	//Print(textureDesc.Width);
-	//Print(xPix);
-	//Print(yPix);
-
-	/*data += (yCord * textureDesc.Width) + xCord;*/
 	memcpy(&id, data, sizeof(UINT32));
 
 	Graphics::Inst().GetContext().Unmap(idTextureData, 0);

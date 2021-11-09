@@ -4,8 +4,8 @@
 
 DynamicPlane::DynamicPlane(UINT subdivisions, UINT size)
 {
-	const UINT cells = pow(2, subdivisions);
-	const UINT numTris = pow(2, subdivisions * 2 + 1);
+	const UINT cells = (UINT)pow(2, subdivisions);
+	const UINT numTris = (UINT)pow(2, subdivisions * 2 + 1);
 	const float triSize = (float)size / (float)cells;
 	const float texSize = 1.0f / (float)cells;
 
@@ -41,7 +41,7 @@ DynamicPlane::DynamicPlane(UINT subdivisions, UINT size)
 	}
 
 	//VERTICES
-	CreateVertexBuffer(vertexBuffer, sizeof(Vertex), vertices.size() * sizeof(Vertex), vertices.data());
+	CreateVertexBuffer(vertexBuffer, sizeof(Vertex), (UINT)vertices.size() * sizeof(Vertex), vertices.data());
 
 	//INDICES
 	indexCount = (UINT)indices.size();
