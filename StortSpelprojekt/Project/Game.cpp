@@ -44,7 +44,7 @@ void Game::Render()
 
 	animatedModelRenderer.Render();
 
-	/*colliderRenderer.Render();*/
+	colliderRenderer.Render();
 
 	terrainRenderer.Render(terrain);
 
@@ -229,9 +229,9 @@ void Game::UpdateAndHandleLoot()
 		{
 			scene.DeleteDrawable(loot[i]->GetName());
 			modelRenderer.Unbind(loot[i]);
+			colliderRenderer.Unbind(loot[i]->GetCollider());
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
-
 
 			std::cout << "Loot destoyed\n";
 		}
@@ -307,12 +307,13 @@ void Game::AddLoot(LOOTTYPE type, const Vector3& position, const float& lifeTime
 	modelRenderer.Bind(LOOT);
 	auto collider = LOOT->GetCollider();
 	//collider->SetParent(LOOT);
-	collider->Update();
+	//collider->Update();
 	const std::string name = "loot" + std::to_string(lootID);
 	LOOT->SetName(name);
 	scene.AddDrawable(name, LOOT);
 	loot.emplace_back(LOOT);
 	lootID++;
+	colliderRenderer.Bind(LOOT->GetCollider());
 }
 
 void Game::CheckSaveStationCollision()
@@ -421,7 +422,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer(FORWARD, true),
 	particleRenderer(FORWARD),
 	terrainRenderer(FORWARD),
-	//colliderRenderer(FORWARD),
+	colliderRenderer(FORWARD),
 	animatedModelRenderer(FORWARD, true),
 	water(5000), terrain(2)
 {

@@ -1,5 +1,6 @@
 #include "Loot.h"
 #include "Random.h"
+#include <cmath>
 
 void Loot::DealMixedItems()
 {
@@ -17,7 +18,7 @@ Loot::Loot(LOOTTYPE type, const Vector3& position, const float& lifeTime)
 	{
 		case LOOTTYPE::MIXED:
 		{
-			type = LOOTTYPE::MIXED;
+			this->type = LOOTTYPE::MIXED;
 			ApplyMesh("pole1");
 			ApplyMaterial("pole1");
 			SetScale(1, 1, 1);
@@ -25,7 +26,7 @@ Loot::Loot(LOOTTYPE type, const Vector3& position, const float& lifeTime)
 		}
 		case LOOTTYPE::ARROWS:
 		{
-			type = LOOTTYPE::ARROWS;
+			this->type = LOOTTYPE::ARROWS;
 			ApplyMesh("Arrow");
 			ApplyMaterial("Arrow");
 			SetScale(2, 2, 2);
@@ -37,6 +38,7 @@ Loot::Loot(LOOTTYPE type, const Vector3& position, const float& lifeTime)
 
 	SetPosition(position);
 	boundingSphere->SetPosition(position);
+	boundingSphere->SetScale(8);
 }
 
 void Loot::Update()
@@ -47,6 +49,7 @@ void Loot::Update()
 
 void Loot::Update(std::shared_ptr<Player> player)
 {
+	Update();
 	rotationSpeed += Time::GetDelta();
 	rotation = Quaternion::CreateFromRotationMatrix(Matrix::CreateRotationY(rotationSpeed));
 	currentLifeTime += Time::GetDelta();
@@ -56,28 +59,38 @@ void Loot::Update(std::shared_ptr<Player> player)
 		destroy = true;
 	}
 
-	float distance = (player->GetPosition() - position).Length();
-	//std::cout << "distance: " << distance << std::endl;
-	distance = (player->GetBounds()->GetPosition() - position).Length();
-	//std::cout << "bound distance: " << distance << std::endl;
-	if ((player->GetPosition() - position).Length() < maxPickupRange)
+	float distance = (player->GetPosition() - GetPosition()).Length();
+	//distance = (player->GetBounds()->GetPosition() - position).Length();
+	std::cout << "Distance: " << distance << std::endl;
+	if (distance < maxPickupRange)
 	{
-		if (Collision::Intersection(boundingSphere, player->GetBounds()))
+
+		if (Collision::Intersection(boundingSphere, player->GetBounds()) || isTaken)
 		{
-			/*if (type == LOOTTYPE::MIXED) // DOESN'T WORK TO DO THIS FOR SOME REASON
-			{*/
+			isTaken = true;
+			float posX = std::lerp(position.x, player->GetPosition().x, lerpSpeed);
+			float posY = std::lerp(position.y, player->GetPosition().y, lerpSpeed);
+			float posZ = std::lerp(position.z, player->GetPosition().z, lerpSpeed);
+			SetPosition(posX, posY, posZ);
+
+			if (distance < collectRange)
+			{
+
+				if (type == LOOTTYPE::MIXED) // DOESN'T WORK TO DO THIS FOR SOME REASON
+				{
 				for (int wood = 0; wood < numWood; wood++)
 					player->Inventory().AddItem(RESOURCE::WOOD);
 				for (int stone = 0; stone < numStones; stone++)
 					player->Inventory().AddItem(RESOURCE::STONE);
 				for (int food = 0; food < numFood; food++)
 					player->Inventory().AddItem(RESOURCE::FOOD);
-			//}
-			// GIVE ARROWS HERE....
+				}
+				// GIVE ARROWS HERE....
 
-			std::cout << "Destroyed by collision\n";
-			destroy = true;
+				std::cout << "Destroyed by collision\n";
+				destroy = true;
+			}
 		}
 	}
-	Update();
+
 }

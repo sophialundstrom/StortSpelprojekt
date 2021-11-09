@@ -11,8 +11,11 @@ private:
 	float rotationSpeed = 20.f;
 	float lifeTime = 10.f; // NOT IN SECOND. DON'T KNOW WHY THOUGHT...
 	float currentLifeTime = 0.f;
-	float maxPickupRange = 8.f;
+	float maxPickupRange = 9.f;
+	float collectRange = 4.2f;
 	UINT maxItemsPerType = 5.f;
+	float lerpSpeed = 0.12f;
+	bool isTaken = false;
 
 	// COLLISION
 	std::shared_ptr<BoundingSphere> boundingSphere;
