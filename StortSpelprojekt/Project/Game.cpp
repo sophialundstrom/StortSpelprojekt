@@ -307,8 +307,6 @@ void Game::AddLoot(LOOTTYPE type, const Vector3& position)
 	auto LOOT = std::make_shared<Loot>(type, position);
 	modelRenderer.Bind(LOOT);
 	auto collider = LOOT->GetCollider();
-	//collider->SetParent(LOOT);
-	//collider->Update();
 	const std::string name = "loot" + std::to_string(lootID);
 	LOOT->SetName(name);
 	scene.AddDrawable(name, LOOT);
@@ -708,15 +706,11 @@ void Game::CheckNearbyEnemies()
 			{
 
 				player->Stats().barbariansKilled++;
-				//std::cout << "Hostile: " << hostile[i]->GetPosition().x << " " << hostile->GetPosition().y << " " << hostile->GetPosition().z << std::endl;
-				//std::cout << "Player: " << player->GetPosition().x << " " << player->GetPosition().y << " " << player->GetPosition().z << std::endl;
-				AddLoot(LOOTTYPE::MIXED, hostiles[i]->GetPosition() /*+ Vector3(0,5,0)*/);
-				//hostiles[i]->SetPosition(0, -100, 0);
+				AddLoot(LOOTTYPE::MIXED, hostiles[i]->GetPosition() + Vector3(0,-3,0));
 				scene.DeleteDrawable(hostiles[i]->GetName());
 				modelRenderer.Unbind(hostiles[i]);
 				hostiles[i] = hostiles[hostiles.size() - 1];
 				hostiles.resize(hostiles.size() - 1);
-				//Loot loot(LOOTTYPE::ARROWS, hostile->GetPosition());
 			}
 		}
 	}
