@@ -79,9 +79,6 @@ void Player::Update(HeightMap* heightMap)
 			currentCameraDistance = defaultCameraDistance;
 	}
 
-	if (closestColliderToCam < currentCameraDistance)
-		currentCameraDistance = closestColliderToCam;
-
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
 	//Aligns the keyboardinputs by the camera direction afterwards via the radian.
 	if (!Event::LeftIsClicked())
@@ -161,7 +158,6 @@ void Player::Update(HeightMap* heightMap)
 	{
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
-		sceneCamera->SetPosition(newCameraPos);
 		
 		if (Time::Get() - lastClick > 0.2f)
 		{
@@ -180,21 +176,19 @@ void Player::Update(HeightMap* heightMap)
 			}
 		}
 	}
+
 	else
-	{
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
-		sceneCamera->MoveTowards(newCameraPos);
-	}
-		
 
 	for (int i = 0; i < arrows.size(); i++)
 	{
 		arrows.at(i)->Update();
 	}
 
+	sceneCamera->MoveTowards(newCameraPos);
 
 	AnimatedModel::Update();
-	sceneCamera->updatecamRay(position, 1000);
+
 	bounds->Update();
 	frustum->Update();
 }

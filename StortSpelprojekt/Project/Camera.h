@@ -1,7 +1,6 @@
 #pragma once
 #include "Math.h"
 #include "Time.h"
-#include "Collision.h"
 
 class Camera
 {
@@ -22,8 +21,6 @@ private:
 	float nearZ, farZ;
 	float pitch;
 	float yaw;
-
-	std::shared_ptr<RayCollider> camRay;
 public:
 	Camera();
 	Camera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed,
@@ -41,19 +38,6 @@ public:
 
 	void Update();
 
-	void updatecamRay(Vector3 playerPosition, float camMaxLength)
-	{
-		camRay->SetPosition(playerPosition);
-		camRay->origin = playerPosition;
-		camRay->direction = (direction * -1);
-		camRay->length = camMaxLength;
-		camRay->Update();
-	}
-
-	std::shared_ptr<RayCollider> GetCamRay()
-	{
-		return camRay;
-	}
 
 	void MoveTowards(Vector3 position)
 	{

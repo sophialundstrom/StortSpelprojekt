@@ -49,7 +49,7 @@ void Game::Render()
 
 	animatedModelRenderer.Render();
 
-	colliderRenderer.Render();
+	/*colliderRenderer.Render();*/
 
 	terrainRenderer.Render(terrain);
 
@@ -110,10 +110,10 @@ void Game::Initialize()
 
 	//SAVE STATIONS
 	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
-	colliderRenderer.Bind(saveStations[0].Collider());
+	//colliderRenderer.Bind(saveStations[0].Collider());
 
 	saveStations[1] = SaveStation({ 20, 0, -20 }, 1, scene.GetDrawables());
-	colliderRenderer.Bind(saveStations[1].Collider());
+	//colliderRenderer.Bind(saveStations[1].Collider());
 
 	//MODELS & COLLIDERS
 	for (auto& [name, drawable] : scene.GetDrawables())
@@ -136,7 +136,7 @@ void Game::Initialize()
 		if (boundingBox)
 		{
 			colliders.emplace_back(boundingBox);
-			colliderRenderer.Bind(boundingBox);
+			//colliderRenderer.Bind(boundingBox);
 			continue;
 		}
 
@@ -144,7 +144,7 @@ void Game::Initialize()
 		if (boundingSphere)
 		{
 			colliders.emplace_back(boundingSphere);
-			colliderRenderer.Bind(boundingSphere);
+			//colliderRenderer.Bind(boundingSphere);
 			continue;
 		}
 	}
@@ -162,7 +162,7 @@ void Game::RemoveItem(const std::string name)
 			auto item = scene.Get<Item>(name);
 			modelRenderer.Unbind(item);
 			//shadowRenderer.Unbind(item);
-			colliderRenderer.Unbind(item->GetBounds());
+			//colliderRenderer.Unbind(item->GetBounds());
 			auto it = items.begin() + i;
 			items.erase(it);
 			scene.DeleteDrawable(name);
@@ -183,7 +183,7 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	item->GetBounds()->Update();
 	modelRenderer.Bind(item);
 	//shadowRenderer.Bind(item);
-	colliderRenderer.Bind(item->GetBounds());
+	//colliderRenderer.Bind(item->GetBounds());
 }
 
 std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Vector3 position)
@@ -194,7 +194,7 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Ve
 	auto collider = NPC->GetCollider();
 	collider->SetParent(NPC);
 	collider->Update();
-	colliderRenderer.Bind(collider);
+	//colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
 	//shadowRenderer.Bind(NPC);
@@ -221,7 +221,7 @@ void Game::AddArrow(const std::string fileName)
 	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	modelRenderer.Bind(arrow);
 	//shadowRenderer.Bind(arrow);
-	colliderRenderer.Bind(arrow->GetCollider());
+	//colliderRenderer.Bind(arrow->GetCollider());
 	arrow->Update();
 }
 
@@ -233,14 +233,10 @@ void Game::CheckNearbyCollision()
 	UINT numCollided = 0;
 	const UINT numColliders = 3;
 
-	float closestCamCollision = 9999;
-	
 	for (auto& collider : colliders)
 	{
-		/*if (numCollided >= numColliders)
-			break;*/
-
-		
+		if (numCollided >= numColliders)
+			break;
 
 		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
 		if (box)
@@ -249,13 +245,6 @@ void Game::CheckNearbyCollision()
 			{
 				collided = true;
 				numCollided++;
-			}
-
-			Collision::RayResults colliderResult = Collision::Intersection(*box, *scene.GetCamera()->GetCamRay());
-			if (colliderResult.didHit)
-			{
-				if (colliderResult.distance < closestCamCollision)
-					closestCamCollision = colliderResult.distance;
 			}
 
 			continue;
@@ -270,18 +259,9 @@ void Game::CheckNearbyCollision()
 				numCollided++;
 			}
 
-			Collision::RayResults colliderResult = Collision::Intersection(*sphere, *scene.GetCamera()->GetCamRay());
-			if (colliderResult.didHit)
-			{
-				if (colliderResult.distance < closestCamCollision)
-					closestCamCollision = colliderResult.distance;
-			}
-
 			continue;
 		};
 	}
-
-	player->SetClosestColliderToCam(closestCamCollision);
 
 	if (collided)
 		player->ResetToLastPosition();
@@ -297,7 +277,7 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 	collider->SetParent(NPC);
 	collider->Update();
 	collider->SetScale(2, 7, 2);
-	colliderRenderer.Bind(collider);
+	//colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
 	//shadowRenderer.Bind(NPC);
@@ -413,7 +393,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer(FORWARD, true),
 	particleRenderer(FORWARD),
 	terrainRenderer(FORWARD),
-	colliderRenderer(FORWARD),
+	//colliderRenderer(FORWARD),
 	animatedModelRenderer(FORWARD, true),
 	water(5000), terrain(2)
 {
@@ -486,14 +466,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
-	colliderRenderer.Bind(player->GetBounds());
+	//colliderRenderer.Bind(player->GetBounds());
 	animatedModelRenderer.Bind(player);
 
-	colliderRenderer.Bind(player->GetFrustum());
+	//colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
-
-	colliderRenderer.Bind(scene.GetCamera()->GetCamRay());
-	
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA

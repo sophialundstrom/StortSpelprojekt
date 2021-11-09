@@ -265,48 +265,37 @@ namespace Collision
 			return sphere.GetBounds().Intersects(rayOrigin, rayDirection, temp);
 		}
 	}
-	struct RayResults
-	{
-		bool didHit = false;
-		float distance;
-	};
-
 
 	//RAY LENGTH = 0 WILL CHECK FOR INTERSECTION INFINITELY
-	inline RayResults Intersection(const BoundingSphere& sphere, const RayCollider& ray)
+	inline bool Intersection(const BoundingSphere& sphere, const RayCollider& ray)
 	{
-		RayResults result;
+		float temp;
 
 		if (ray.length == 0)
-			result.didHit = sphere.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
+			return sphere.GetBounds().Intersects(ray.origin, ray.direction, temp);
 
 		else
 		{
 			if ((sphere.GetPosition() - ray.origin).Length() > ray.length)
-				result.didHit = false;
-			else
-				result.didHit = sphere.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
+				return false;
+			return sphere.GetBounds().Intersects(ray.origin, ray.direction, temp);
 		}
-
-		return result;
 	}
 
 	//RAY LENGTH = 0 WILL CHECK FOR INTERSECTION INFINITELY
-	inline RayResults Intersection(const BoundingBox& box, const RayCollider& ray)
+	inline bool Intersection(const BoundingBox& box, const RayCollider& ray)
 	{
-		RayResults result;
+		float temp;
 
 		if (ray.length == 0)
-			result.didHit = box.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
+			return box.GetBounds().Intersects(ray.origin, ray.direction, temp);
 
 		else
 		{
 			if ((box.GetPosition() - ray.origin).Length() > ray.length)
-				result.didHit = false;
-			else
-				result.didHit = box.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
+				return false;
+			return box.GetBounds().Intersects(ray.origin, ray.direction, temp);
 		}
-		return result;
 	}
 
 	inline bool Intersection(const BoundingBox& box, const FrustumCollider& frustum)
