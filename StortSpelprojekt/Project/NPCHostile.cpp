@@ -73,9 +73,16 @@ void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
 
 void HostileNPC::Update()
 {
+    if (IsDead() == true)
+    {
+        return;
+    }
      static float lastClick = 0;
 
      Vector3 aimDir = player->GetPosition() - position;
+
+    
+
 
     if (aimDir.Length() <=  enemyShootDetectionRadius)
     {

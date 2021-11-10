@@ -24,6 +24,8 @@ void Game::Update()
 
 	CheckQuestInteraction();
 
+	UpdateAndHandleLoot();
+
 	scene.UpdateDirectionalLight(player->GetPosition());
 
 	Event::ClearRawDelta();
@@ -215,6 +217,26 @@ void Game::AddArrow(const std::string fileName)
 	arrow->Update();
 }
 
+void Game::UpdateAndHandleLoot()
+{
+	for (int i = 0; i < loot.size(); i++)
+	{
+		loot[i]->Update(player);
+		if (loot[i]->IsDestroyed())
+		{
+			scene.DeleteDrawable(loot[i]->GetName());
+			modelRenderer.Unbind(loot[i]);
+			colliderRenderer.Unbind(loot[i]->GetCollider());
+			loot[i] = std::move(loot[loot.size() - 1]);
+			loot.resize(loot.size() - 1);
+			//Audio::AddAudio(L"Audio/PickupPop.wav");
+			//Audio::StartAudio();
+			std::cout << "Loot destoyed\n";
+		}
+		
+	}
+}
+
 void Game::CheckNearbyCollision()
 {
 	auto playerCollider = player->GetBounds();
@@ -291,10 +313,24 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 
 	modelRenderer.Bind(NPC);
 	//shadowRenderer.Bind(NPC);
-
-	scene.AddDrawable("hostileNpc", NPC);
-
+	const std::string name = "hostileNPC" + std::to_string(hostileID);
+	scene.AddDrawable(name, NPC);
+	hostileID++;
 	hostiles.emplace_back(NPC);
+}
+
+void Game::AddLoot(LOOTTYPE type, const Vector3& position)
+{
+
+	auto LOOT = std::make_shared<Loot>(type, position);
+	modelRenderer.Bind(LOOT);
+	auto collider = LOOT->GetCollider();
+	const std::string name = "loot" + std::to_string(lootID);
+	LOOT->SetName(name);
+	scene.AddDrawable(name, LOOT);
+	loot.emplace_back(LOOT);
+	lootID++;
+	//colliderRenderer.Bind(LOOT->GetCollider());
 }
 
 void Game::CheckSaveStationCollision()
@@ -494,7 +530,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -91, 20, -593 });
 	AddItem(WOOD, { -85, 20, -608 });
 
-	AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
+	//AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
 	AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
@@ -562,7 +599,11 @@ APPSTATE Game::Run()
 
 			lastClick = Time::Get();
 		}
-
+		if (Event::KeyIsPressed(VK_RETURN))
+		{
+			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+			lastClick = Time::Get();
+		}
 		/*if (Event::KeyIsPressed('U'))
 		{
 			QuestLog::Inst().Complete(0);
@@ -603,6 +644,8 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}*/
 	}
+
+	UpdateInventoryUI();
 
 	int nrOfFreeArrows = 0;
 	for (int i = 0; i < arrows.size(); i++)
@@ -659,15 +702,23 @@ APPSTATE Game::Run()
 
 void Game::CheckNearbyEnemies()
 {
-	for (auto& hostile : hostiles)
+	for (int i = 0; i < hostiles.size(); i++)
 	{
-		bool hit = player->CheckArrowHit(hostile->GetCollider());
+		bool hit = player->CheckArrowHit(hostiles[i]->GetCollider());
 
 		if (hit)
 		{
-			hostile->TakeDamage();
-			if (hostile->IsDead())
+			hostiles[i]->TakeDamage();
+			if (hostiles[i]->IsDead())
+			{
+
 				player->Stats().barbariansKilled++;
+				AddLoot(LOOTTYPE::MIXED, hostiles[i]->GetPosition() + Vector3(0,-3,0));
+				scene.DeleteDrawable(hostiles[i]->GetName());
+				modelRenderer.Unbind(hostiles[i]);
+				hostiles[i] = hostiles[hostiles.size() - 1];
+				hostiles.resize(hostiles.size() - 1);
+			}
 		}
 	}
 }
