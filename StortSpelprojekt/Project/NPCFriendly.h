@@ -11,14 +11,15 @@ public:
 	FriendlyNPC(const std::string& file);
 	FriendlyNPC(const Model& model);
 
-	void AddQuestID(UINT ID) { questIDs.emplace_back(ID); }
-	bool Interactable() { return interactable; }
-	int GetQuestID() { return activeQuestID; }
-	void BindBuilding(std::shared_ptr<Building> building) { this->building = building; }
-	std::shared_ptr<Building> ConnectedBuilding() { return building; }
-	std::shared_ptr<QuestMarker> GetQuestMarker() { return questMarker; }
-	UINT NumConnectedQuests() { return questIDs.size(); }
-	bool Completed() { return completed; }
+	void AddQuestID(UINT ID)								{ questIDs.emplace_back(ID); }
+	bool Interactable()										{ return interactable; }
+	int GetQuestID()										{ return activeQuestID; }
+	void BindBuilding(std::shared_ptr<Building> building)	{ this->building = building; }
+	std::shared_ptr<Building> ConnectedBuilding()			{ return building; }
+	std::shared_ptr<QuestMarker> GetQuestMarker()			{ return questMarker; }
+	UINT NumConnectedQuests()								{ return (UINT)questIDs.size(); }
+	bool Completed()										{ return completed; }
+
 	virtual void Update() override;
 private:
 	std::shared_ptr<QuestMarker> questMarker;

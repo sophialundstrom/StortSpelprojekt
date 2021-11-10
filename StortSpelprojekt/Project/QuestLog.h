@@ -11,7 +11,7 @@ private:
 	std::shared_ptr<Player> player;
 
 	//CANVAS 
-	Canvas* ingameCanvas;
+	std::shared_ptr<Canvas> ingameCanvas;
 	const UINT UIStartOffset = 100u;
 	const UINT UILeftOffset = 70u;
 	const UINT UIOffset = 80u;
@@ -83,7 +83,7 @@ private:
 		numQuests = (UINT)activeQuests.size();
 	}
 public:
-	QuestLog(const std::string& name, std::shared_ptr<Player> player, Canvas* ingameCanvas)
+	QuestLog(const std::string& name, std::shared_ptr<Player> player, std::shared_ptr<Canvas> ingameCanvas)
 		:Singleton(this), player(player), ingameCanvas(ingameCanvas)
 	{
 		QuestLogFile::Load(name, quests);

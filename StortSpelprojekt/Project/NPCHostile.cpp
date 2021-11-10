@@ -44,6 +44,7 @@ void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
     float normalDelay = 2.f;
     float quickDelay = 0.2f;
     float breakTime = 2.4f;
+    float superSlow = 864000; //86 400 seconds aka 1 real life day
 
     switch (combatStyle)
     {
@@ -57,6 +58,12 @@ void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
         shootDeelayPattern[0] = quickDelay;
         shootDeelayPattern[1] = quickDelay;
         shootDeelayPattern[2] = quickDelay + breakTime;
+        break;
+
+    case CombatStyle::Defenseless:
+        shootDeelayPattern[0] = superSlow;
+        shootDeelayPattern[1] = superSlow;
+        shootDeelayPattern[2] = superSlow;
         break;
 
     default:
@@ -75,9 +82,36 @@ void HostileNPC::Update()
 
         aimDir.Normalize();
         shootPatternIndex = ((shootPatternIndex++) % 3);
-        movementYRadiant = acos(aimDir.x * 0 + aimDir.z * 1);
-        if (aimDir.x < 0)
-            movementYRadiant *= -1;
+        float additionalRadians = 0;
+
+        Vector3 yRadiantVecReference;
+        std::cout << aimDir.x << std::endl;
+        float aimDirXIgnoranceLevel = 0.2f;
+
+        if (aimDir.x > -aimDirXIgnoranceLevel && aimDir.x < aimDirXIgnoranceLevel)
+        {
+            if (aimDir.z < 0)
+            {
+                yRadiantVecReference = { 1, 0, 0 };
+                additionalRadians = PI_DIV2;
+            }
+            else if(aimDir.z > 0)
+            {
+                yRadiantVecReference = { -1, 0, 0 };
+                additionalRadians = -PI_DIV2;
+            }
+        }
+        else if (aimDir.x > 0)
+        {
+            yRadiantVecReference = { 0, 0, 1 };
+            additionalRadians = 0;
+        }
+        else
+        {
+            yRadiantVecReference = { 0, 0, -1 };
+            additionalRadians = PI;
+        }
+        movementYRadiant = additionalRadians + acos(aimDir.Dot(yRadiantVecReference) / aimDir.Length());
         movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
 
         SetRotation({ 0, movementYRadiant, 0 });

@@ -2,34 +2,50 @@
 #include <Windows.h>
 #include <vector>
 
-
 class Window
 {
+	friend struct WindowCreator;
 private:
-	std::vector<char> rawBuffer;
+	static std::vector<char> rawBuffer;
 
-	bool wantExit = false;
+	static bool wantExit;
 
-	UINT width, height;
-	HWND hWnd;
+	static UINT width, height;
+	static HWND hWnd;
 
-	bool cursorEnabled = true;
+	static bool cursorEnabled;
 	
-	LRESULT MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	static LRESULT MessageHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 public:
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	Window() = default;
-	Window(UINT width, UINT height, LPCWSTR title, HINSTANCE instance);
-	~Window() { DestroyWindow(hWnd); }
 
-	void ActivateCursor();
-	void DeactivateCursor();
+	static void ShutDown() { DestroyWindow(hWnd); }
 
-	void ToggleCursor();
-	bool CursorIsActive() { return this->cursorEnabled; }
+	static void Resize(UINT newWidth = 0, UINT newHeight = 0);
 
-	UINT ClientWidth() { return width; }
-	UINT ClientHeight() { return height; }
-	bool Exit() { return wantExit; }
-	HWND GetHWND() { return hWnd; }
+	static POINT GetMousePosition();
+
+	static void ToggleCursor();
+	static void ActivateCursor();
+	static void DeactivateCursor();
+
+	static bool CursorIsActive() { return cursorEnabled; }
+
+	static UINT ClientWidth()	{ return width; }
+	static UINT ClientHeight()	{ return height; }
+
+	static bool Exit()			{ return wantExit; }
+
+	static HWND GetHWND()		{ return hWnd; }
+};
+inline std::vector<char> Window::rawBuffer;
+inline bool Window::wantExit;
+inline UINT Window::width;
+inline UINT Window::height;
+inline HWND Window::hWnd;
+inline bool Window::cursorEnabled = true;
+
+struct WindowCreator
+{
+	WindowCreator(Window window, UINT width, UINT height, LPCWSTR title, HINSTANCE instance);
 };

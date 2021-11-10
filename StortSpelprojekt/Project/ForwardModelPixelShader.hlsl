@@ -58,7 +58,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
     float fogStart = 100.0f;
     float fogRange = 2000.0f;
-    float fogDistance = distance(cameraPosition, input.worldPosition);
+    float fogDistance = distance(cameraPosition, input.worldPosition.xyz);
     float fogFactor = saturate((fogDistance - fogStart) / fogRange);
 
     //RESULT
