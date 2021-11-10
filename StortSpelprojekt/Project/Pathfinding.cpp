@@ -80,11 +80,6 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 				//if openset contains "neighbour" node
 				if (!(std::find(openSet.begin(), openSet.end(), neighbour) != openSet.end()))//	!std::any_of(openSet.begin(), openSet.end(), (Node)*neighbour))
 					openSet.push_back(neighbour);
-				else
-				{
-					//std::swap()
-					std::swap(openSet[0], openSet[openSet.size()]);
-				}
 			}
 			//grid.SetGridNode(neighbour->gridX, neighbour->gridY, *neighbour);
 		}
