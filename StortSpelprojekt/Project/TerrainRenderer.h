@@ -1,5 +1,5 @@
 #pragma once
-#include "ShaderData.h"
+#include "Renderer.h"
 #include "Terrain.h"
 
 class TerrainRenderer
@@ -10,8 +10,6 @@ private:
 	ID3D11Buffer* lightBuf = nullptr;
 
 	ID3D11Buffer* tesselationBuf = nullptr;
-
-	ID3D11Buffer* camPosBuf = nullptr;
 
 	//SHADER PATHS
 #ifdef _DEBUG
@@ -51,117 +49,8 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	TerrainRenderer(RenderMethod method, float tesselationAmount = 63)
-	{
-		//BUFFER
-		CreateBuffer(matrixBuf, sizeof(Matrix));
-		CreateBuffer(lightBuf, sizeof(Matrix));
-		
-		BindBuffer(matrixBuf, Shader::DS);
+	TerrainRenderer(RenderMethod method, float tesselationAmount = 63);
+	~TerrainRenderer();
 
-		//SHADERS
-		std::string byteCode;
-		if (!LoadShader(vertexShader, vs_path, byteCode))
-			return;
-
-		//EDITOR (MAX TESSELATION EVERYWHERE)
-		if (method == FORWARD)
-		{
-			//FIXED TESSELATION AMOUNT
-			CreateBuffer(tesselationBuf);
-			UpdateBuffer(tesselationBuf, tesselationAmount);
-			BindBuffer(tesselationBuf, Shader::HS);
-
-			if (!LoadShader(hullShader, hs_path))
-				return;
-
-			if (!LoadShader(domainShader, ds_path))
-				return;
-
-			if (!LoadShader(geometryShader, gs_path))
-				return;
-
-			if (!LoadShader(pixelShader, forward_ps_path))
-				return;
-		}
-
-		//IN-GAME
-		else
-		{
-			CreateBuffer(tesselationBuf);
-			UpdateBuffer(tesselationBuf, tesselationAmount);
-
-			if (!LoadShader(hullShader, hs_path))
-				return;
-
-			if (!LoadShader(domainShader, ds_path))
-				return;
-
-			if (!LoadShader(geometryShader, gs_path))
-				return;
-
-			if (!LoadShader(pixelShader, deferred_ps_path))
-				return;
-		}
-		Print("SUCCEEDED LOADING SHADERS", "TERRAIN RENDERER");
-
-		//INPUT LAYOUT
-		D3D11_INPUT_ELEMENT_DESC inputDesc[] =
-		{
-			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"TEXTURECOORDS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
-		};
-
-		HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
-		if FAILED(hr)
-		{
-			Print("FAILED TO CREATE INPUT LAYOUT", "TERRAIN RENDERER");
-			return;
-		}
-		Print("SUCCEEDED TO CREATE INPUT LAYOUT", "TERRAIN RENDERER");
-
-		Print("SUCCEEDED TO INITIALIZE TERRAIN RENDERER");
-		Print("=======================================");
-	}
-
-	~TerrainRenderer()
-	{
-		if (tesselationBuf)
-			tesselationBuf->Release();
-		matrixBuf->Release();
-		lightBuf->Release();
-
-		vertexShader->Release();
-		hullShader->Release();
-		domainShader->Release();
-		if (geometryShader)
-			geometryShader->Release();
-		pixelShader->Release();
-
-		inputLayout->Release();
-	}
-
-	void Render(const Terrain& terrain)
-	{
-		//INPUT LAYOUT
-		Graphics::Inst().GetContext().IASetInputLayout(inputLayout);
-
-		//TOPOLOGY
-		Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
-
-		//SHADERS
-		BindShaders(vertexShader, hullShader, domainShader, geometryShader, pixelShader);
-
-		//BUFFER(S)
-		UpdateBuffer(lightBuf, ShaderData::Inst().lightMatrix);
-		BindBuffer(lightBuf, Shader::PS);
-
-		UpdateBuffer(matrixBuf, ShaderData::Inst().cameraMatrix);
-		BindBuffer(matrixBuf, Shader::DS);
-
-		BindBuffer(tesselationBuf, Shader::HS);
-
-		//DRAW
-		terrain.Draw();
-	}
+	void Render(const Terrain& terrain);
 };

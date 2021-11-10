@@ -1,267 +1,340 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="ARCUS">
+      <UniqueIdentifier>{22492d73-9e8b-4a35-b3e7-e4f84997daca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="ARCUS\Audio">
+      <UniqueIdentifier>{70728d1d-be0b-4400-be63-775ea488aed7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Utilities">
-      <UniqueIdentifier>{fa7cfd21-3f7c-4c98-a727-287ef296e521}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application">
-      <UniqueIdentifier>{01609692-0484-4871-9d38-b2a287fd59f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics">
-      <UniqueIdentifier>{a1615b81-80d3-4cf8-b69a-d9f2f374b402}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers">
-      <UniqueIdentifier>{20c5cf0f-f847-4e09-a639-da1c37ce0f83}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\ModelRenderer">
-      <UniqueIdentifier>{57d40355-9a41-4765-8a70-855b2484934c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders">
-      <UniqueIdentifier>{8ef6027c-e747-47bb-a90e-d8642ff0f6be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Lit">
-      <UniqueIdentifier>{72651256-7d99-4036-9de6-7747c6785899}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Unlit">
-      <UniqueIdentifier>{12516dee-9470-4750-9d24-c53270f161f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\ParticleRenderer">
-      <UniqueIdentifier>{b6090a1b-a225-4318-84fb-13f453562458}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\ParticleRenderer\Shaders">
-      <UniqueIdentifier>{410d8c6e-77d0-4575-9bd2-ca7cdbe76ad0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\DeferredRenderer">
-      <UniqueIdentifier>{02b31700-0f13-4624-bd35-2da859184629}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\DeferredRenderer\Shaders">
-      <UniqueIdentifier>{77fecad8-beb1-409d-bd8c-be69223cf3cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\TerrainRenderer">
-      <UniqueIdentifier>{be75707b-99a4-431c-a5cd-a09dac62f273}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\ShadowRenderer">
-      <UniqueIdentifier>{4873b9e4-9a33-46a9-a392-80a4d482690a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\ShadowRenderer\Shaders">
-      <UniqueIdentifier>{98c4b0bd-119c-49c1-9c3b-431344b6c16e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene">
-      <UniqueIdentifier>{bc321ab5-8fa1-47e8-85cf-30261f9fd5fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Drawable">
-      <UniqueIdentifier>{a634b05d-51af-4df2-a655-5e103a87df2b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Drawable\Model">
-      <UniqueIdentifier>{5d82c9b2-1d6f-4c9f-849a-92b2739271fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Drawable\Model\Resources">
-      <UniqueIdentifier>{3e81a81c-e1fb-4b39-8d2d-104ad05de87a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Drawable\Model\Resources\Material">
-      <UniqueIdentifier>{525143f9-5e9d-40f3-9b2d-d15a343014b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Drawable\Particle System">
-      <UniqueIdentifier>{c00abe99-b0c8-442c-bec8-4a791efdda75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Game">
-      <UniqueIdentifier>{186acd6b-a652-4879-9118-37cf9ac0b21a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Terrain">
-      <UniqueIdentifier>{d73aeb48-8473-4c38-b404-c9cf9d6abf29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Camera">
-      <UniqueIdentifier>{8e37f8ef-fcbe-4592-9f9c-630092af58f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\GameStates">
+    <Filter Include="ARCUS\ApplicationStates">
       <UniqueIdentifier>{1bfd5d48-db46-44e4-8f7c-3cf555fdb145}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\GameStates\Game">
+    <Filter Include="ARCUS\ApplicationStates\GameStates">
       <UniqueIdentifier>{ccfbf19b-eb95-4144-ad10-decf149cafc9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\GameStates\Debug">
-      <UniqueIdentifier>{7a1778c2-6760-46ba-923d-d17c2be09679}</UniqueIdentifier>
+    <Filter Include="ARCUS\ApplicationStates\GameStates\Game">
+      <UniqueIdentifier>{bab0ce45-9b21-4e42-9fa5-8916fb95ec63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\GameStates\Debug\Editors">
+    <Filter Include="ARCUS\ApplicationStates\GameStates\Game\Canvases">
+      <UniqueIdentifier>{a9aa3fa1-a6b5-4dba-8f5e-1d16a8b714bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\ApplicationStates\GameStates\Win">
+      <UniqueIdentifier>{94ce8bdd-3901-400f-bf63-51d8874dc0ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\ApplicationStates\GameStates\GameOver">
+      <UniqueIdentifier>{14a66cce-dfe9-4b84-95fa-c57c8cbb1e03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\ApplicationStates\GameStates\MainMenu">
+      <UniqueIdentifier>{acc69866-bcb8-45b6-bb6d-2fae8eb3fa4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\ApplicationStates\GameStates\LoadingScreen">
+      <UniqueIdentifier>{4ed5bf57-428a-4134-8630-0eab8e1d0482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\ApplicationStates\GameStates\LoadingScreen\Shaders">
+      <UniqueIdentifier>{a3efacb8-ddde-4f01-a905-be2533244a8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\ApplicationStates\Editors">
       <UniqueIdentifier>{4d9985e3-1487-4720-8877-ff32c953c028}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\GameStates\Debug\Editors\ParticleEditor">
+    <Filter Include="ARCUS\ApplicationStates\Editors\ParticleEditor">
       <UniqueIdentifier>{c6fd61be-2116-4a46-9df5-5e08f62a9657}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\GameStates\Debug\Editors\LevelEditor">
+    <Filter Include="ARCUS\ApplicationStates\Editors\LevelEditor">
       <UniqueIdentifier>{aaaec7a4-2872-40be-8b8d-73488dc6f3f1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\GameStates\Debug\Editors\ImGuiWindow">
-      <UniqueIdentifier>{c4bed249-3e66-4e8c-a4e5-f7a35d7e23c0}</UniqueIdentifier>
+    <Filter Include="ARCUS\Graphics">
+      <UniqueIdentifier>{a1615b81-80d3-4cf8-b69a-d9f2f374b402}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Scene\Drawable\AnimatedModel">
-      <UniqueIdentifier>{53cac745-6011-4dc6-926c-5a8ca3f94801}</UniqueIdentifier>
+    <Filter Include="ARCUS\Graphics\Renderers">
+      <UniqueIdentifier>{20c5cf0f-f847-4e09-a639-da1c37ce0f83}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\AnimatedModelRenderer">
-      <UniqueIdentifier>{79e017bb-561b-47bd-a601-74ce75349ee9}</UniqueIdentifier>
+    <Filter Include="ARCUS\Graphics\Renderers\ModelRenderer">
+      <UniqueIdentifier>{57d40355-9a41-4765-8a70-855b2484934c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\AnimatedModelRenderer\Shaders">
-      <UniqueIdentifier>{cc2343bc-5a8e-4247-8866-73102e301f2b}</UniqueIdentifier>
+    <Filter Include="ARCUS\Graphics\Renderers\ModelRenderer\Shaders">
+      <UniqueIdentifier>{8ef6027c-e747-47bb-a90e-d8642ff0f6be}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders">
+    <Filter Include="ARCUS\Graphics\Renderers\ModelRenderer\Shaders\Lit">
+      <UniqueIdentifier>{72651256-7d99-4036-9de6-7747c6785899}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\ModelRenderer\Shaders\Unlit">
+      <UniqueIdentifier>{12516dee-9470-4750-9d24-c53270f161f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\ParticleRenderer">
+      <UniqueIdentifier>{b6090a1b-a225-4318-84fb-13f453562458}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\ParticleRenderer\Shaders">
+      <UniqueIdentifier>{410d8c6e-77d0-4575-9bd2-ca7cdbe76ad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\DeferredRenderer">
+      <UniqueIdentifier>{02b31700-0f13-4624-bd35-2da859184629}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\DeferredRenderer\Shaders">
+      <UniqueIdentifier>{77fecad8-beb1-409d-bd8c-be69223cf3cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\TerrainRenderer">
+      <UniqueIdentifier>{be75707b-99a4-431c-a5cd-a09dac62f273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\TerrainRenderer\Shaders">
       <UniqueIdentifier>{7576a954-47cf-4814-aad7-8e2459cc2894}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\ColliderRenderer">
+    <Filter Include="ARCUS\Graphics\Renderers\ShadowRenderer">
+      <UniqueIdentifier>{4873b9e4-9a33-46a9-a392-80a4d482690a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\ShadowRenderer\Shaders">
+      <UniqueIdentifier>{98c4b0bd-119c-49c1-9c3b-431344b6c16e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\AnimatedModelRenderer">
+      <UniqueIdentifier>{79e017bb-561b-47bd-a601-74ce75349ee9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\AnimatedModelRenderer\Shaders">
+      <UniqueIdentifier>{cc2343bc-5a8e-4247-8866-73102e301f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\ColliderRenderer">
       <UniqueIdentifier>{924c5e1a-24b2-4585-878e-3e079165a539}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders">
+    <Filter Include="ARCUS\Graphics\Renderers\ColliderRenderer\Shaders">
       <UniqueIdentifier>{c2237309-3c92-424a-839f-092aa3287d67}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Scene\Game\Quests">
-      <UniqueIdentifier>{5c4e414d-8cc2-4eb5-8f12-488d61db7c69}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Game\NPC">
-      <UniqueIdentifier>{f0cace42-5caa-449e-a08d-f8a635830aad}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Game\NPC\.h">
-      <UniqueIdentifier>{a043bc87-76fb-467b-8291-b792dcbcaf4e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Game\NPC\.cpp">
-      <UniqueIdentifier>{8aeb864f-4e42-440e-b2d9-2c4f8546c352}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\IDRenderer">
+    <Filter Include="ARCUS\Graphics\Renderers\IDRenderer">
       <UniqueIdentifier>{d891fbae-913f-40c7-82d2-2416583ab147}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Graphics\Renderers\IDRenderer\Shaders">
+    <Filter Include="ARCUS\Graphics\Renderers\IDRenderer\Shaders">
       <UniqueIdentifier>{a15e2d1a-6e03-45e9-8bdb-79ced595b252}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\UI">
-      <UniqueIdentifier>{f4425efb-57b7-44c5-ab3a-513a649c0635}</UniqueIdentifier>
+    <Filter Include="ARCUS\Graphics\Renderers\WaterRenderer">
+      <UniqueIdentifier>{2ff36da8-748c-4be5-b5a2-5ef5d50897e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\UI\.h">
-      <UniqueIdentifier>{99782d8d-f9f6-4e54-8c9a-f0ec440c4201}</UniqueIdentifier>
+    <Filter Include="ARCUS\Graphics\Renderers\WaterRenderer\Shaders">
+      <UniqueIdentifier>{d9e884ef-4f50-4d58-9c46-647513a97fd5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\UI\.cpp">
-      <UniqueIdentifier>{ecb8c68c-124d-41d6-b7f2-7c26782e3573}</UniqueIdentifier>
+    <Filter Include="ARCUS\Graphics\Renderers\VolumeRenderer">
+      <UniqueIdentifier>{c10a5e49-4da7-4172-99c6-f9eac2356729}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Scene\Game\Pathing">
+    <Filter Include="ARCUS\Graphics\Renderers\VolumeRenderer\Shaders">
+      <UniqueIdentifier>{01ad3413-0027-4610-97db-fd487aa5eb3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\SkeletonRenderer">
+      <UniqueIdentifier>{adb08812-9a5a-4148-896c-ce48ff65f6b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\SkeletonRenderer\Shaders">
+      <UniqueIdentifier>{07afdc37-8e2b-4a9c-9128-a18f56a95598}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene">
+      <UniqueIdentifier>{bc321ab5-8fa1-47e8-85cf-30261f9fd5fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Drawable">
+      <UniqueIdentifier>{a634b05d-51af-4df2-a655-5e103a87df2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Drawable\Model">
+      <UniqueIdentifier>{5d82c9b2-1d6f-4c9f-849a-92b2739271fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Drawable\Model\Resources">
+      <UniqueIdentifier>{3e81a81c-e1fb-4b39-8d2d-104ad05de87a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Drawable\Model\Resources\Material">
+      <UniqueIdentifier>{525143f9-5e9d-40f3-9b2d-d15a343014b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Drawable\Particle System">
+      <UniqueIdentifier>{c00abe99-b0c8-442c-bec8-4a791efdda75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Drawable\AnimatedModel">
+      <UniqueIdentifier>{53cac745-6011-4dc6-926c-5a8ca3f94801}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Drawable\Terrain/Water/Plane">
+      <UniqueIdentifier>{d73aeb48-8473-4c38-b404-c9cf9d6abf29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Game">
+      <UniqueIdentifier>{186acd6b-a652-4879-9118-37cf9ac0b21a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Game\Quests">
+      <UniqueIdentifier>{5c4e414d-8cc2-4eb5-8f12-488d61db7c69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Game\NPC">
+      <UniqueIdentifier>{f0cace42-5caa-449e-a08d-f8a635830aad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Game\NPC\.h">
+      <UniqueIdentifier>{a043bc87-76fb-467b-8291-b792dcbcaf4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Game\NPC\.cpp">
+      <UniqueIdentifier>{8aeb864f-4e42-440e-b2d9-2c4f8546c352}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Game\Pathing">
       <UniqueIdentifier>{90e584c9-bff9-4123-894f-dabf62201477}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Scene\Game\SaveStation">
-      <UniqueIdentifier>{83465f75-34dd-401b-9242-706cec97dc2e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Application\Scene\Game\Combat">
+    <Filter Include="ARCUS\Scene\Game\Combat">
       <UniqueIdentifier>{f7ac95ee-c9fe-476a-96e3-eb873123733a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Application\Audio">
-      <UniqueIdentifier>{70728d1d-be0b-4400-be63-775ea488aed7}</UniqueIdentifier>
+    <Filter Include="ARCUS\Scene\Game\Collision">
+      <UniqueIdentifier>{f8101903-31c8-48f5-b875-573dd54ab9f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Game\Building">
+      <UniqueIdentifier>{9a9aaa71-89fa-42da-8b85-cdf663dd0f65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Camera">
+      <UniqueIdentifier>{8e37f8ef-fcbe-4592-9f9c-630092af58f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Utilities">
+      <UniqueIdentifier>{fa7cfd21-3f7c-4c98-a727-287ef296e521}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Utilities\DirectX">
+      <UniqueIdentifier>{759b68e4-c293-471b-921f-8804a8d84512}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Utilities\FileLoading">
+      <UniqueIdentifier>{1ef94ab5-a678-4cab-a58d-5911eb498c75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Utilities\stb_image">
+      <UniqueIdentifier>{bff732c7-b1fe-434c-8984-9a6101825b3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Utilities\ImGui">
+      <UniqueIdentifier>{c4bed249-3e66-4e8c-a4e5-f7a35d7e23c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\UI">
+      <UniqueIdentifier>{f4425efb-57b7-44c5-ab3a-513a649c0635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\UI\Components">
+      <UniqueIdentifier>{1a84fb82-3c7a-4303-9e8e-76e30f710950}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Terrain.cpp">
-      <Filter>Header Files\Application\Scene\Terrain</Filter>
+      <Filter>ARCUS\Scene\Drawable\Terrain/Water/Plane</Filter>
     </ClCompile>
     <ClCompile Include="ParticleEditor.cpp">
-      <Filter>Header Files\Application\GameStates\Debug\Editors\ParticleEditor</Filter>
+      <Filter>ARCUS\ApplicationStates\Editors\ParticleEditor</Filter>
     </ClCompile>
     <ClCompile Include="LevelEditor.cpp">
-      <Filter>Header Files\Application\GameStates\Debug\Editors\LevelEditor</Filter>
+      <Filter>ARCUS\ApplicationStates\Editors\LevelEditor</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>Header Files\Application\Scene\Drawable\Model\Resources\Material</Filter>
+      <Filter>ARCUS\Scene\Drawable\Model\Resources\Material</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
-      <Filter>Header Files\Application\Scene\Drawable\Particle System</Filter>
+      <Filter>ARCUS\Scene\Drawable\Particle System</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Header Files\Application\Scene\Camera</Filter>
+      <Filter>ARCUS\Scene\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
-      <Filter>Header Files\Application\Scene</Filter>
+      <Filter>ARCUS\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Graphics.cpp">
-      <Filter>Header Files\Application\Graphics</Filter>
+      <Filter>ARCUS\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
-      <Filter>Header Files\Application\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Header Files\Application\GameStates\Game</Filter>
+      <Filter>ARCUS\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="NPCHostile.cpp">
-      <Filter>Header Files\Application\Scene\Game\NPC\.cpp</Filter>
+      <Filter>ARCUS\Scene\Game\NPC\.cpp</Filter>
     </ClCompile>
     <ClCompile Include="NPCBase.cpp">
-      <Filter>Header Files\Application\Scene\Game\NPC\.cpp</Filter>
+      <Filter>ARCUS\Scene\Game\NPC\.cpp</Filter>
     </ClCompile>
     <ClCompile Include="NPCFriendly.cpp">
-      <Filter>Header Files\Application\Scene\Game\NPC\.cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="GameLoader.cpp">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Scene\Game\NPC\.cpp</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Header Files\Application\Scene\Game</Filter>
+      <Filter>ARCUS\Scene\Game</Filter>
     </ClCompile>
     <ClCompile Include="IDRenderer.cpp">
-      <Filter>Header Files\Application\Graphics\Renderers\IDRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>Header Files\UI\.cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="Button.cpp">
-      <Filter>Header Files\UI\.cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="UI.cpp">
-      <Filter>Header Files\UI\.cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="Text.cpp">
-      <Filter>Header Files\UI\.cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadingScreen.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ARCUS\Graphics\Renderers\IDRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Arrow.cpp">
-      <Filter>Header Files\Application\Scene\Game\Combat</Filter>
+      <Filter>ARCUS\Scene\Game\Combat</Filter>
     </ClCompile>
     <ClCompile Include="Grid.cpp">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+      <Filter>ARCUS\Scene\Game\Pathing</Filter>
     </ClCompile>
     <ClCompile Include="Node.cpp">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+      <Filter>ARCUS\Scene\Game\Pathing</Filter>
     </ClCompile>
     <ClCompile Include="Pathfinding.cpp">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
-    </ClCompile>
-    <ClCompile Include="Main Menu.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ARCUS\Scene\Game\Pathing</Filter>
     </ClCompile>
     <ClCompile Include="Audio.cpp">
-      <Filter>Header Files\Application\Audio</Filter>
+      <Filter>ARCUS\Audio</Filter>
     </ClCompile>
     <ClCompile Include="AudioChunks.cpp">
-      <Filter>Header Files\Application\Audio</Filter>
+      <Filter>ARCUS\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Heap.cpp">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+      <Filter>ARCUS\Scene\Game\Pathing</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedModelRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\AnimatedModelRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ColliderRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\ColliderRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\ModelRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\ParticleRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\ShadowRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\TerrainRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\SkeletonRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumeRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\VolumeRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\WaterRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadingScreen.cpp">
+      <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen</Filter>
     </ClCompile>
     <ClCompile Include="DockSpacePanel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ARCUS\Utilities\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Utilities\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="GameOver.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="GameLoader.cpp">
+      <Filter>ARCUS\Utilities\FileLoading</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>ARCUS\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>ARCUS\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>ARCUS\UI\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>ARCUS\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Canvas.cpp">
+      <Filter>ARCUS\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicPlane.cpp">
+      <Filter>ARCUS\Scene\Drawable\Terrain/Water/Plane</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>ARCUS\ApplicationStates\GameStates\Game</Filter>
     </ClCompile>
     <ClCompile Include="Win.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ARCUS\ApplicationStates\GameStates\Win</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOver.cpp">
+      <Filter>ARCUS\ApplicationStates\GameStates\GameOver</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>ARCUS\ApplicationStates\GameStates\MainMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="DialogueOverlay.cpp">
+      <Filter>ARCUS\ApplicationStates\GameStates\Game\Canvases</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>ARCUS</Filter>
     </ClCompile>
     <ClCompile Include="Loot.cpp">
       <Filter>Source Files</Filter>
@@ -269,313 +342,316 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
-      <Filter>Header Files\Application\Graphics</Filter>
+      <Filter>ARCUS\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="ShaderData.h">
-      <Filter>Header Files\Application\Graphics</Filter>
+      <Filter>ARCUS\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>Header Files\Application\Graphics</Filter>
+      <Filter>ARCUS\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="ShadowMap.h">
-      <Filter>Header Files\Application\Graphics</Filter>
+      <Filter>ARCUS\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
-      <Filter>Header Files\Application\Graphics\Renderers</Filter>
+      <Filter>ARCUS\Graphics\Renderers</Filter>
     </ClInclude>
     <ClInclude Include="Drawable.h">
-      <Filter>Header Files\Application\Scene\Drawable</Filter>
+      <Filter>ARCUS\Scene\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Header Files\Application\Scene\Game</Filter>
+      <Filter>ARCUS\Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Header Files\Application\Scene</Filter>
+      <Filter>ARCUS\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>Header Files\Application\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXHelp.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Event.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Math.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Print.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Random.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Time.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h">
-      <Filter>Header Files\Application\Scene\Terrain</Filter>
+      <Filter>ARCUS\Scene\Drawable\Terrain/Water/Plane</Filter>
     </ClInclude>
     <ClInclude Include="Editor.h">
-      <Filter>Header Files\Application\GameStates\Debug\Editors</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugMainMenu.h">
-      <Filter>Header Files\Application\GameStates\Debug\Editors</Filter>
+      <Filter>ARCUS\ApplicationStates\Editors</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
-      <Filter>Header Files\Application\Scene\Drawable\Model</Filter>
+      <Filter>ARCUS\Scene\Drawable\Model</Filter>
     </ClInclude>
     <ClInclude Include="ParticleEditor.h">
-      <Filter>Header Files\Application\GameStates\Debug\Editors\ParticleEditor</Filter>
+      <Filter>ARCUS\ApplicationStates\Editors\ParticleEditor</Filter>
     </ClInclude>
     <ClInclude Include="LevelEditor.h">
-      <Filter>Header Files\Application\GameStates\Debug\Editors\LevelEditor</Filter>
+      <Filter>ARCUS\ApplicationStates\Editors\LevelEditor</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiWin.h">
-      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGuiWindow</Filter>
+      <Filter>ARCUS\Utilities\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiWinComponents.h">
-      <Filter>Header Files\Application\GameStates\Debug\Editors\ImGuiWindow</Filter>
-    </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="MaterialLoader.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Utilities\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="Singleton.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
-      <Filter>Header Files\Application\Scene\Drawable\Model</Filter>
+      <Filter>ARCUS\Scene\Drawable\Model</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Header Files\Application\Scene\Drawable\Model\Resources\Material</Filter>
+      <Filter>ARCUS\Scene\Drawable\Model\Resources\Material</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Header Files\Application\Scene\Drawable\Model\Resources\Material</Filter>
+      <Filter>ARCUS\Scene\Drawable\Model\Resources\Material</Filter>
     </ClInclude>
     <ClInclude Include="Resources.h">
-      <Filter>Header Files\Application\Scene\Drawable\Model\Resources</Filter>
+      <Filter>ARCUS\Scene\Drawable\Model\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
-      <Filter>Header Files\Application\Scene\Drawable\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>Header Files\Application</Filter>
+      <Filter>ARCUS\Scene\Drawable\Model</Filter>
     </ClInclude>
     <ClInclude Include="ModelRenderer.h">
-      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ModelRenderer</Filter>
     </ClInclude>
     <ClInclude Include="ParticleRenderer.h">
-      <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ParticleRenderer</Filter>
     </ClInclude>
     <ClInclude Include="DeferredRenderer.h">
-      <Filter>Header Files\Application\Graphics\Renderers\DeferredRenderer</Filter>
+      <Filter>ARCUS\Graphics\Renderers\DeferredRenderer</Filter>
     </ClInclude>
     <ClInclude Include="ShadowRenderer.h">
-      <Filter>Header Files\Application\Graphics\Renderers\ShadowRenderer</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ShadowRenderer</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
-      <Filter>Header Files\Application\Scene\Drawable\Particle System</Filter>
+      <Filter>ARCUS\Scene\Drawable\Particle System</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Header Files\Application\Scene\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files\Application\GameStates\Game</Filter>
+      <Filter>ARCUS\Scene\Camera</Filter>
     </ClInclude>
     <ClInclude Include="States.h">
-      <Filter>Header Files\Application\GameStates</Filter>
+      <Filter>ARCUS\ApplicationStates</Filter>
     </ClInclude>
     <ClInclude Include="Transform.h">
-      <Filter>Header Files\Application\Scene</Filter>
+      <Filter>ARCUS\Scene</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedVertex.h">
-      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
+      <Filter>ARCUS\Scene\Drawable\AnimatedModel</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedMesh.h">
-      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
+      <Filter>ARCUS\Scene\Drawable\AnimatedModel</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedModel.h">
-      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
+      <Filter>ARCUS\Scene\Drawable\AnimatedModel</Filter>
     </ClInclude>
     <ClInclude Include="Skeleton.h">
-      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
-    </ClInclude>
-    <ClInclude Include="AssimpDirectXMathConverter.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Scene\Drawable\AnimatedModel</Filter>
     </ClInclude>
     <ClInclude Include="Animator.h">
-      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
+      <Filter>ARCUS\Scene\Drawable\AnimatedModel</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
-      <Filter>Header Files\Application\Scene\Drawable\AnimatedModel</Filter>
+      <Filter>ARCUS\Scene\Drawable\AnimatedModel</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedModelRenderer.h">
-      <Filter>Header Files\Application\Graphics\Renderers\AnimatedModelRenderer</Filter>
+      <Filter>ARCUS\Graphics\Renderers\AnimatedModelRenderer</Filter>
     </ClInclude>
     <ClInclude Include="TerrainRenderer.h">
-      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Building.h">
-      <Filter>Header Files\Application\Scene\Game</Filter>
+      <Filter>ARCUS\Graphics\Renderers\TerrainRenderer</Filter>
     </ClInclude>
     <ClInclude Include="ColliderRenderer.h">
-      <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ColliderRenderer</Filter>
     </ClInclude>
     <ClInclude Include="CollectQuest.h">
-      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
     </ClInclude>
     <ClInclude Include="FightQuest.h">
-      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
     </ClInclude>
     <ClInclude Include="Quest.h">
-      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
     </ClInclude>
     <ClInclude Include="TalkQuest.h">
-      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
     </ClInclude>
     <ClInclude Include="QuestLog.h">
-      <Filter>Header Files\Application\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="QuestLogFile.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
     </ClInclude>
     <ClInclude Include="PRay.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="NPCFriendly.h">
-      <Filter>Header Files\Application\Scene\Game\NPC\.h</Filter>
+      <Filter>ARCUS\Scene\Game\NPC\.h</Filter>
     </ClInclude>
     <ClInclude Include="NPCHostile.h">
-      <Filter>Header Files\Application\Scene\Game\NPC\.h</Filter>
+      <Filter>ARCUS\Scene\Game\NPC\.h</Filter>
     </ClInclude>
     <ClInclude Include="NPCBase.h">
-      <Filter>Header Files\Application\Scene\Game\NPC\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="FBXLoader.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="GameLoader.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Scene\Game\NPC\.h</Filter>
     </ClInclude>
     <ClInclude Include="IDRenderer.h">
-      <Filter>Header Files\Application\Graphics\Renderers\IDRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Button.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="stb_image_write.h">
-      <Filter>Header Files\Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="UI.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="Collision.h">
-      <Filter>Header Files\Application\Scene\Game</Filter>
+      <Filter>ARCUS\Graphics\Renderers\IDRenderer</Filter>
     </ClInclude>
     <ClInclude Include="ThreadPool.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Item.h">
-      <Filter>Header Files\Application\Scene\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Canvas.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="SaveStation.h">
-      <Filter>Header Files\Application\Scene\Game\SaveStation</Filter>
-    </ClInclude>
-    <ClInclude Include="UIComponent.h">
-      <Filter>Header Files\UI\.h</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadingScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingVolumes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadingScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VolumeRenderer.h">
-      <Filter>Header Files</Filter>
+      <Filter>ARCUS\Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="Arrow.h">
-      <Filter>Header Files\Application\Scene\Game\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="BuildingEffect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Main Menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SkeletonRenderer.h">
-      <Filter>Header Files</Filter>
+      <Filter>ARCUS\Scene\Game\Combat</Filter>
     </ClInclude>
     <ClInclude Include="Audio.h">
-      <Filter>Header Files\Application\Audio</Filter>
+      <Filter>ARCUS\Audio</Filter>
     </ClInclude>
     <ClInclude Include="AudioChunks.h">
-      <Filter>Header Files\Application\Audio</Filter>
+      <Filter>ARCUS\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Grid.h">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+      <Filter>ARCUS\Scene\Game\Pathing</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+      <Filter>ARCUS\Scene\Game\Pathing</Filter>
     </ClInclude>
     <ClInclude Include="Pathfinding.h">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
-    </ClInclude>
-    <ClInclude Include="DynamicPlane.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugApplication.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ApplicationState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Water.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WaterRenderer.h">
-      <Filter>Header Files</Filter>
+      <Filter>ARCUS\Scene\Game\Pathing</Filter>
     </ClInclude>
     <ClInclude Include="Heap.h">
-      <Filter>Header Files\Application\Scene\Game\Pathing</Filter>
+      <Filter>ARCUS\Scene\Game\Pathing</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonRenderer.h">
+      <Filter>ARCUS\Graphics\Renderers\SkeletonRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="VolumeRenderer.h">
+      <Filter>ARCUS\Graphics\Renderers\VolumeRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterRenderer.h">
+      <Filter>ARCUS\Graphics\Renderers\WaterRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingScreen.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen</Filter>
     </ClInclude>
     <ClInclude Include="DockSpacePanel.h">
-      <Filter>Header Files</Filter>
+      <Filter>ARCUS\Utilities\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ViewportPanel.h">
-      <Filter>Header Files</Filter>
+      <Filter>ARCUS\Utilities\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui.h">
+      <Filter>ARCUS\Utilities\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h">
-      <Filter>Header Files\Utilities</Filter>
+      <Filter>ARCUS\Utilities\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="GameOver.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="AssimpDirectXMathConverter.h">
+      <Filter>ARCUS\Utilities\DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="Win.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="DirectXHelp.h">
+      <Filter>ARCUS\Utilities\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>ARCUS\Utilities\FileLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem.h">
+      <Filter>ARCUS\Utilities\FileLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialLoader.h">
+      <Filter>ARCUS\Utilities\FileLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLoader.h">
+      <Filter>ARCUS\Utilities\FileLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestLogFile.h">
+      <Filter>ARCUS\Utilities\FileLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>ARCUS\Utilities\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image_write.h">
+      <Filter>ARCUS\Utilities\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>ARCUS\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>ARCUS\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>ARCUS\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="UIComponent.h">
+      <Filter>ARCUS\UI\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Canvas.h">
+      <Filter>ARCUS\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>ARCUS\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>ARCUS\Scene\Drawable\Terrain/Water/Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveStation.h">
+      <Filter>ARCUS\Scene\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>ARCUS\Scene\Game\Collision</Filter>
     </ClInclude>
     <ClInclude Include="QuestMarker.h">
-      <Filter>Header Files\Application\Scene\Game</Filter>
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingVolumes.h">
+      <Filter>ARCUS\Scene\Game\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicPlane.h">
+      <Filter>ARCUS\Scene\Drawable\Terrain/Water/Plane</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugMainMenu.h">
+      <Filter>ARCUS\ApplicationStates</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationState.h">
+      <Filter>ARCUS\ApplicationStates</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Win.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOver.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\GameOver</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\MainMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogueOverlay.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\Game\Canvases</Filter>
+    </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>ARCUS\Scene\Game\Building</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildingEffect.h">
+      <Filter>ARCUS\Scene\Game\Building</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugApplication.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingScreen.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen</Filter>
     </ClInclude>
     <ClInclude Include="Loot.h">
       <Filter>Source Files</Filter>
@@ -583,93 +659,111 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ParticleVertexShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="DeferredParticlePixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ForwardParticlePixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ParticleRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ModelVertexShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Lit</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ModelRenderer\Shaders\Lit</Filter>
     </FxCompile>
     <FxCompile Include="DeferredModelPixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Lit</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ModelRenderer\Shaders\Lit</Filter>
     </FxCompile>
     <FxCompile Include="ForwardModelPixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Lit</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ModelRenderer\Shaders\Lit</Filter>
     </FxCompile>
     <FxCompile Include="UnlitModelVertexShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Unlit</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ModelRenderer\Shaders\Unlit</Filter>
     </FxCompile>
     <FxCompile Include="UnlitForwardModelPixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ModelRenderer\Shaders\Unlit</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ModelRenderer\Shaders\Unlit</Filter>
     </FxCompile>
     <FxCompile Include="DeferredPixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\DeferredRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\DeferredRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="DeferredVertexShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\DeferredRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\DeferredRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ShadowVertexShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ShadowRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ShadowRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="AnimatedModelVertexShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\AnimatedModelRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\AnimatedModelRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="UnlitAnimatedModelVertexShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\AnimatedModelRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\AnimatedModelRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="TerrainVertexShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="TerrainHullShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="TerrainDomainShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ForwardTerrainPixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="DeferredTerrainPixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="TerrainGeometryShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\TerrainRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ColliderPixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="ColliderVertexShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="IDPixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\IDRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\IDRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="IDVertexShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\IDRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\IDRenderer\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="DeferredColliderPixelShader.hlsl">
-      <Filter>Header Files\Application\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
+      <Filter>ARCUS\Graphics\Renderers\ColliderRenderer\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="LoadingPS.hlsl" />
-    <FxCompile Include="LoadingVS.hlsl" />
-    <FxCompile Include="VolumeIDVertexShader.hlsl" />
-    <FxCompile Include="VolumePixelShader.hlsl" />
-    <FxCompile Include="VolumeVertexShader.hlsl" />
-    <FxCompile Include="SkeletonPixelShader.hlsl" />
-    <FxCompile Include="SkeletonVertexShader.hlsl" />
-    <FxCompile Include="WaterDomainShader.hlsl" />
-    <FxCompile Include="WaterPixelShader.hlsl" />
+    <FxCompile Include="SkeletonPixelShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\SkeletonRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="SkeletonVertexShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\SkeletonRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VolumeIDVertexShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\VolumeRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VolumePixelShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\VolumeRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VolumeVertexShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\VolumeRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterDomainShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\WaterRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterPixelShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\WaterRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LoadingPS.hlsl">
+      <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="LoadingVS.hlsl">
+      <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="LightCalculations.hlsli">
-      <Filter>Header Files\Application\Graphics\Renderers</Filter>
+      <Filter>ARCUS\Graphics\Renderers</Filter>
     </None>
   </ItemGroup>
 </Project>

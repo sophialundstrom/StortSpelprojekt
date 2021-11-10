@@ -1,9 +1,8 @@
 #pragma once
-#include "Renderer.h"
 #include "Camera.h"
 #include "Light.h"
 #include "ShadowMap.h"
-#include "Singleton.h"
+#include "Graphics.h"
 
 class ShaderData : public Singleton<ShaderData>
 {

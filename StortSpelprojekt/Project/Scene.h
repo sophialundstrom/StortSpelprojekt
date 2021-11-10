@@ -30,8 +30,7 @@ public:
 	template <typename T>
 	auto Get(const std::string& name) { return std::dynamic_pointer_cast<T>(drawables[name]); }
 
-	const std::map<std::string, std::shared_ptr<Drawable>>& GetSortedMap() const;
-	std::vector<std::string> &GetObjectNames();
+	std::vector<std::string>& GetObjectNames();
 
 	std::string AddDrawable(const std::string& name, std::shared_ptr<Drawable> drawable);
 	std::string AddModel(const std::string& file, const std::string path);
@@ -39,14 +38,6 @@ public:
 	void AddBoundingVolume(const std::string& name, std::shared_ptr <Drawable> drawable);
 
 	void DeleteDrawable(const std::string name) { drawables.erase(name); }
-
-	//void AddFriendlyNPC(const std::string& file);
-	//void AddFriendlyNPC(const std::string& name, std::shared_ptr <Drawable> drawable);
-
-	//void AddHostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player);
-	//void AddHostileNPC(const std::string& name, std::shared_ptr<Drawable> drawable);
-
-	void AddAnimatedModel(const std::string& file);
 
 	void AddParticleSystem(const std::string name, std::shared_ptr<ParticleSystem> system, Vector3 pos);
 	void AddParticleSystem(const std::string name, std::shared_ptr<ParticleSystem> system);

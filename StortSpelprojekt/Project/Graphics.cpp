@@ -46,6 +46,7 @@ Graphics::~Graphics()
 	context->Release();
 	device->Release();
 	UISurface->Release();
+	wireframeState->Release();
 }
 
 HRESULT Graphics::CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed)
