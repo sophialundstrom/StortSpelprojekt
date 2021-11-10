@@ -8,8 +8,6 @@ void Game::Update()
 {
 	hovering = false;
 
-	player->Update(terrain.GetHeightMap());
-
 	QuestLog::Inst().Update();
 	
 	scene.Update();
@@ -17,6 +15,8 @@ void Game::Update()
 	CheckItemCollision();
 
 	CheckNearbyCollision();
+
+	player->Update(terrain.GetHeightMap());
 
 	CheckSaveStationCollision();
 
@@ -220,26 +220,22 @@ void Game::CheckNearbyCollision()
 	auto playerCollider = player->GetBounds();
 
 	bool collided = false;
-	UINT numCollided = 0;
-	const UINT numColliders = 3;
 
 	float closestCamCollision = 9999;
 	
+	std::vector<std::shared_ptr<Collider>> collidedColliders;
+
 	for (auto& collider : colliders)
 	{
-		/*if (numCollided >= numColliders)
-			break;*/
-
-		
-
 		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
 		if (box)
 		{
 			if (Collision::Intersection(box, playerCollider))
 			{
 				collided = true;
-				numCollided++;
+				collidedColliders.emplace_back(box);
 			}
+				
 
 			Collision::RayResults colliderResult = Collision::Intersection(*box, *scene.GetCamera()->GetCamRay());
 			if (colliderResult.didHit)
@@ -257,7 +253,7 @@ void Game::CheckNearbyCollision()
 			if (Collision::Intersection(sphere, playerCollider))
 			{
 				collided = true;
-				numCollided++;
+				collidedColliders.emplace_back(sphere);
 			}
 
 			Collision::RayResults colliderResult = Collision::Intersection(*sphere, *scene.GetCamera()->GetCamRay());
@@ -273,8 +269,7 @@ void Game::CheckNearbyCollision()
 
 	player->SetClosestColliderToCam(closestCamCollision);
 
-	if (collided)
-		player->ResetToLastPosition();
+	player->HandleCollidedObjects(collidedColliders);
 }
 
 void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)

@@ -1,5 +1,28 @@
 #include "Player.h"
 
+Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows)
+	:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
+{
+	isRightPressed = false;
+	isLeftPressed = false;
+
+	this->arrows = arrows;
+	bounds = std::make_shared<BoundingBox>();
+
+	bounds->SetScale(0.8f, 2.5f, 0.8f);
+	bounds->SetPosition(0, 3, 0);
+
+	frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
+	frustum->SetPosition(0, 3, 0);
+
+	Load(file);
+	UpdateHealthUI();
+
+	PlayAnimation("Idle", true, 0.2f);
+
+	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
+}
+
 void Player::CalcHeight(HeightMap* heightMap)
 {
 	const int lowX = (int)std::floor(position.x);
@@ -20,8 +43,6 @@ void Player::CalcHeight(HeightMap* heightMap)
 
 float Player::CalcHeightForCamera(HeightMap* heightMap)
 {
-	
-
 	const int lowX = (int)std::floor(sceneCamera->GetPosition().x);
 	const int highX = (int)std::ceil(sceneCamera->GetPosition().x);
 	const float Xdecimal = sceneCamera->GetPosition().x - lowX;
@@ -36,7 +57,7 @@ float Player::CalcHeightForCamera(HeightMap* heightMap)
 	const float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
 
 	float newY = H1 + H2 + H3 + H4;
-	//sceneCamera->SetPosition({ sceneCamera->GetPosition().x, newY, sceneCamera->GetPosition().z });
+
 	return newY;
 }
 
@@ -53,12 +74,10 @@ float Get2DAngle(Vector2 a, Vector2 b)
 
 void Player::Update(HeightMap* heightMap)
 {
-	
-
-
 	lastPosition = position;
 
-	CalcHeight(heightMap);
+	if (!hasCollided)
+		CalcHeight(heightMap);
 
 	//Rotate camera by cursor movement 
 	sceneCamera->Rotate(Event::ReadRawDelta().x * mouseCurrentSensitivity, Event::ReadRawDelta().y * mouseCurrentSensitivity);
@@ -88,7 +107,7 @@ void Player::Update(HeightMap* heightMap)
 		if (stats.currentSpeed > stats.sprintSpeed)
 			stats.currentSpeed = stats.sprintSpeed;
 
-		currentCameraDistance += Time::GetDelta() * 10.0f;
+		currentCameraDistance += Time::GetDelta() * 20.0f;
 		if (currentCameraDistance > maxCameraDistance)
 			currentCameraDistance = maxCameraDistance;
 	}
@@ -99,13 +118,10 @@ void Player::Update(HeightMap* heightMap)
 		if (stats.currentSpeed < stats.movementSpeed)
 			stats.currentSpeed = stats.movementSpeed;
 
-		currentCameraDistance -= Time::GetDelta() * 7.0f;
+		currentCameraDistance -= Time::GetDelta() * 10.0f;
 		if (currentCameraDistance < defaultCameraDistance)
 			currentCameraDistance = defaultCameraDistance;
 	}
-
-
-
 
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
 	//Aligns the keyboardinputs by the camera direction afterwards via the radian.
@@ -130,7 +146,6 @@ void Player::Update(HeightMap* heightMap)
 	//Updates the player and cameras positions
 	Vector3 newPlayerPos = position + (moveDirection * stats.currentSpeed * Time::GetDelta());
 
-
 	// JUMPING 
 	if (!jumping)
 	{
@@ -144,15 +159,12 @@ void Player::Update(HeightMap* heightMap)
 	if (jumping)
 	{
 		airTime += Time::GetDelta() * 8.0f;
+
 		if (airTime >= 1.5f)
-		{
 			PlayAnimation("Falling", true);
-			std::cout << "IN AIR" << std::endl;
-		}
 		else
-			{
 			std::cout << "Startup" << std::endl;
-		}
+
 		newPlayerPos.y = -powf(airTime, 2) + jumpHeight * airTime + preJumpGroundLevel;
 	}
 
@@ -168,15 +180,12 @@ void Player::Update(HeightMap* heightMap)
 	if (closestColliderToCam < currentCameraDistance)
 		currentCameraDistance = closestColliderToCam;
 
-
-
 	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
+
 	Vector3 newCameraPos;
 
 	bool approvedCam = false;
 
-
-	
 	CalcHeightForCamera(heightMap);
 
 	newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
@@ -189,8 +198,6 @@ void Player::Update(HeightMap* heightMap)
 		newCameraPos.y = newY;
 	}
 	
-	
-
 	static float lastClick = 0;
 
 	sinceLastShot += Time::GetDelta();
@@ -228,6 +235,7 @@ void Player::Update(HeightMap* heightMap)
 			}
 		}
 	}
+
 	else
 	{
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
@@ -244,6 +252,93 @@ void Player::Update(HeightMap* heightMap)
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 	bounds->Update();
 	frustum->Update();
+}
+
+void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders)
+{
+	if (colliders.empty())
+	{
+		hasCollided = false;
+		return;
+	}
+
+	hasCollided = true;
+
+	auto lastPos = position;
+
+	Vector3 highestPoint = lastPos;
+
+	while (true)
+	{
+		Vector3 force;
+		UINT numNotCollided = 0;
+
+		for (auto& collider : colliders)
+		{
+			auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+			if (box)
+			{
+				Vector3 corners[8];
+				box->GetBounds().GetCorners(corners);
+				for (auto& corner : corners)
+					if (corner.y > highestPoint.y)
+						highestPoint = corner;
+
+				if (!Collision::Intersection(box, this->bounds))
+					numNotCollided++;
+				else
+					force += position - box->GetBounds().Center;
+			}
+
+			auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
+			if (sphere)
+			{
+				auto& bounds = sphere->GetBounds();
+
+				auto incomingDirection = highestPoint - bounds.Center;
+
+				if (incomingDirection.Length() < bounds.Radius)
+				{
+					incomingDirection.Normalize();
+
+					auto point = bounds.Center + incomingDirection * bounds.Radius;
+					if (highestPoint.y > bounds.Center.y)
+						highestPoint = point;
+				}
+
+				if (!Collision::Intersection(sphere, this->bounds))
+					numNotCollided++;
+				else
+				{
+					const auto forceDirection = position - bounds.Center;
+
+					if (forceDirection.Dot({ 0, 1, 0 }) > 0)
+						force += forceDirection;
+					else
+						force += { forceDirection.x, -forceDirection.y, forceDirection.z} ;
+				}
+			}	
+		}
+
+		if (numNotCollided == (UINT)colliders.size())
+		{
+			position.y = highestPoint.y - 1.0f;
+			heightMapGroundLevel = position.y;
+			return;
+		}
+
+		force.Normalize();
+
+		position += force * Time::GetDelta();
+
+		if (highestPoint.y > lastPos.y)
+		{
+			position.y = highestPoint.y;
+		}
+
+		Transform::UpdateMatrix();
+		bounds->Update();
+	}
 }
 
 bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
@@ -309,8 +404,7 @@ void Player::Save(const std::string file)
 
 bool Player::CheckArrowHit(std::shared_ptr<Collider> collider)
 {
-
-	for (auto arrow : arrows)
+	for (auto& arrow : arrows)
 	{
 		if (!arrow->IsShot())
 			continue;
@@ -329,8 +423,8 @@ bool Player::CheckArrowHit(std::shared_ptr<Collider> collider)
 			arrow->DisableArrow();
 		
 		return hit;
-
 	}
+
 	return false;
 }
 
