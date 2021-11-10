@@ -23,6 +23,7 @@ public:
 
 	void DrawImages();
 	void DrawTexts();
+	void DrawButtons();
 
 	virtual void Render();
 
