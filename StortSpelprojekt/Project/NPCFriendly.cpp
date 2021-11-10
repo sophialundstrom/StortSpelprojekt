@@ -23,7 +23,8 @@ void FriendlyNPC::Update()
 	static bool walking = false;
 	if (Event::KeyIsPressed('G'))
 		walking = true;
-
+	else if (Event::KeyIsPressed('H'))
+		walking = false;
 	if(walking)
 		Walking();
 

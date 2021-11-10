@@ -1,9 +1,10 @@
 #include "Grid.h"
 const int size = 32;
 
-void Grid::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>>& drawable, Vector3 worldPosition, HeightMap* heightMap)
+void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 worldPosition, HeightMap* heightMap)
 {
 	position = worldPosition;
+	int nrUnwalkable = 0;
 	Vector3 worldBottomLeft = position - (Vector3::Right * gridWorldSize.x / 2) - (Vector3::Forward * gridWorldSize.y / 2);
 	for (int x = 0; x < gridSizeX; x++)
 	{
@@ -13,19 +14,45 @@ void Grid::CreateGrid(std::map<std::string, std::shared_ptr<Drawable>>& drawable
 
 			worldPoint.y = heightMap->data.at(Vector2((int)worldPoint.x, (int)worldPoint.z));
 			grid[x][y].position = worldPoint;
+			grid[x][y].BSphere.SetPosition(grid[x][y].position);
+			grid[x][y].BSphere.GetBounds().Center = DirectX::XMFLOAT3(grid[x][y].position);
 			grid[x][y].gridX = x;
 			grid[x][y].gridY = y;
 
-			for (auto& [name, drawable] : drawable)
+			for (auto& collider : colliders)
 			{
-				if (Vector3::Distance(worldPoint, drawable->GetPosition()) < 4.0f)
+				auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+				if (box)
 				{
-					BoundingSphere tmpSphere = { {Matrix::Identity}, {drawable->GetPosition()}, {2.0f} }; // tempporary solution to a colliding issue
-					if (grid[x][y].BSphere.GetBounds().Intersects(tmpSphere.GetBounds()))
+					if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), box->GetBounds()))
 					{
 						grid[x][y].walkable = false;
+						nrUnwalkable++;
 					}
-				}
+
+					continue;
+				};
+
+				auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
+				if (sphere)
+				{
+					if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), sphere->GetBounds()))
+					{
+						grid[x][y].walkable = false;
+						nrUnwalkable++;
+					}
+
+					continue;
+				};
+
+				//if (Vector3::Distance(worldPoint, drawable->GetPosition()) < 4.0f)
+				//{
+				//	BoundingSphere tmpSphere = { {Matrix::Identity}, {drawable->GetPosition()}, {1.0f} }; // tempporary solution to a colliding issue
+				//	if (grid[x][y].BSphere.GetBounds().Intersects(tmpSphere.GetBounds()))
+				//	{
+				//		grid[x][y].walkable = false;
+				//	}
+				//}
 			}
 		}
 	}

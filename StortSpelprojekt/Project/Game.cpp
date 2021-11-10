@@ -519,7 +519,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//Audio::StartAudio();
 
 	// start the pathing and afterwards let NPC handle it
-	pathing.SetDrawables(scene.GetDrawables());
+//	pathing.SetDrawables(scene.GetDrawables());
+	pathing.SetColliders(colliders);
 	pathing.SetHeightMap(terrain.GetHeightMap());
 	Timer timer;
 	timer.Start();

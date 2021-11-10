@@ -6,6 +6,7 @@
 #include <cmath>
 #include <algorithm>
 #include <vector>
+#include "Collision.h"
 
 
 class Grid : public Transform
@@ -18,7 +19,6 @@ private:
 
 	const static int gridWorldSizeInt = 128;
 	float nodeRadius;
-	Node* grid[gridWorldSizeInt]; // placeholder numbers
 
 	float nodeDiameter;
 
@@ -27,7 +27,8 @@ private:
 
 public:
 	Grid();
-	void CreateGrid(std::map<std::string, std::shared_ptr<Drawable>> &drawable, Vector3 worldPosition, HeightMap* heightMap);
+	Node* grid[gridWorldSizeInt]; // placeholder numbers
+	void CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 worldPosition, HeightMap* heightMap);
 	void SubCreateGrid(std::map<std::string, std::shared_ptr<Drawable>>& drawable, Vector3 worldPosition, int subDivision, HeightMap* heightMap);
 	Node* NodeFromWorldPoint(Vector3 worldPoint);
 	std::vector<Node*> GetNeighbours(Node* node);

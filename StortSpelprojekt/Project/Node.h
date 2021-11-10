@@ -8,12 +8,13 @@ class Node
 private:
 
 public:
-	BoundingSphere BSphere;
-	bool walkable = true;
+	int gridX, gridY;
 	Vector3 position;
+	bool walkable = true;
+	int gCost = 0, hCost = 0;
+	BoundingSphere BSphere;
 	int heapIndex;
 
-	int gridX, gridY, gCost = 0, hCost = 0;
 	Node* parent = nullptr;
 
 	int fCost = 0;
