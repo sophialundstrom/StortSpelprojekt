@@ -55,6 +55,8 @@ int Node::Compare(const Node* n)
 	{
 		return -1;
 	}
+
+	return 0;
 }
 
 int Node::getFCost()

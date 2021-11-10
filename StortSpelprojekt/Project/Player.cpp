@@ -18,6 +18,28 @@ void Player::CalcHeight(HeightMap* heightMap)
 	heightMapGroundLevel = position.y = H1 + H2 + H3 + H4;
 }
 
+float Player::CalcHeightForCamera(HeightMap* heightMap)
+{
+	
+
+	const int lowX = (int)std::floor(sceneCamera->GetPosition().x);
+	const int highX = (int)std::ceil(sceneCamera->GetPosition().x);
+	const float Xdecimal = sceneCamera->GetPosition().x - lowX;
+
+	const int lowZ = (int)std::floor(sceneCamera->GetPosition().z);
+	const int highZ = (int)std::ceil(sceneCamera->GetPosition().z);
+	const float Zdecimal = sceneCamera->GetPosition().z - lowZ;
+
+	const float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+	const float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+	const float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+	const float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+
+	float newY = H1 + H2 + H3 + H4;
+	//sceneCamera->SetPosition({ sceneCamera->GetPosition().x, newY, sceneCamera->GetPosition().z });
+	return newY;
+}
+
 float Get2DAngle(Vector2 a, Vector2 b)
 {
 	//MathExplanation
@@ -31,6 +53,8 @@ float Get2DAngle(Vector2 a, Vector2 b)
 
 void Player::Update(HeightMap* heightMap)
 {
+	
+
 
 	lastPosition = position;
 
@@ -56,10 +80,11 @@ void Player::Update(HeightMap* heightMap)
 
 	moveDirection.Normalize();
 
+
 	//SPRINTING
 	if (Event::KeyIsPressed(VK_SHIFT))
 	{
-		stats.currentSpeed += 5.0f * Time::GetDelta();
+		stats.currentSpeed += 50.0f * Time::GetDelta();
 		if (stats.currentSpeed > stats.sprintSpeed)
 			stats.currentSpeed = stats.sprintSpeed;
 
@@ -78,6 +103,9 @@ void Player::Update(HeightMap* heightMap)
 		if (currentCameraDistance < defaultCameraDistance)
 			currentCameraDistance = defaultCameraDistance;
 	}
+
+
+
 
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
 	//Aligns the keyboardinputs by the camera direction afterwards via the radian.
@@ -102,6 +130,7 @@ void Player::Update(HeightMap* heightMap)
 	//Updates the player and cameras positions
 	Vector3 newPlayerPos = position + (moveDirection * stats.currentSpeed * Time::GetDelta());
 
+
 	// JUMPING 
 	if (!jumping)
 	{
@@ -114,7 +143,7 @@ void Player::Update(HeightMap* heightMap)
 
 	if (jumping)
 	{
-		airTime += Time::GetDelta() * 5.0f;
+		airTime += Time::GetDelta() * 8.0f;
 		if (airTime >= 1.5f)
 		{
 			PlayAnimation("Falling", true);
@@ -136,16 +165,38 @@ void Player::Update(HeightMap* heightMap)
 		newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
 	}
 
-	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
+	if (closestColliderToCam < currentCameraDistance)
+		currentCameraDistance = closestColliderToCam;
 
-	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
+
+
+	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
+	Vector3 newCameraPos;
+
+	bool approvedCam = false;
+
+
+	
+	CalcHeightForCamera(heightMap);
+
+	newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
+
+	float newY = CalcHeightForCamera(heightMap);
+	//std::cout << "HeightMapAtCam: " << CalcHeightForCamera(heightMap) << "			CamHeight: " << sceneCamera->GetPosition().y << "			";
+	if (newY > newCameraPos.y)
+	{
+		//std::cout << "PROBLEMATIC\n";
+		newCameraPos.y = newY;
+	}
+	
+	
 
 	static float lastClick = 0;
 
 	sinceLastShot += Time::GetDelta();
 	if (sinceLastShot > shootingAnimationLenght) {
 
-		bool hasMoved = position == lastPosition ? false : true;
+		bool hasMoved = (position == lastPosition) ? false : true;
 		if (!hasMoved)
 			PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
 		else if (hasMoved && !jumping)
@@ -158,6 +209,7 @@ void Player::Update(HeightMap* heightMap)
 	{
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
+		sceneCamera->SetPosition(newCameraPos);
 		
 		if (Time::Get() - lastClick > 0.2f)
 		{
@@ -176,19 +228,20 @@ void Player::Update(HeightMap* heightMap)
 			}
 		}
 	}
-
 	else
+	{
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
+		sceneCamera->MoveTowards(newCameraPos);
+	}
+		
 
 	for (int i = 0; i < arrows.size(); i++)
 	{
 		arrows.at(i)->Update();
 	}
 
-	sceneCamera->MoveTowards(newCameraPos);
-
 	AnimatedModel::Update();
-
+	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 	bounds->Update();
 	frustum->Update();
 }

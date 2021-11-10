@@ -1,9 +1,8 @@
 #pragma once
-#include "Graphics.h"
+#include "DynamicPlane.h"
 #include "Texture.h"
 #include "Math.h"
 #include <map>
-#include "DynamicPlane.h"
 
 struct HeightMap
 {
@@ -22,7 +21,7 @@ struct HeightMap
 	~HeightMap() { delete texture; }
 };
 
-class Terrain
+class Terrain : public Drawable
 {
 private:
 	DynamicPlane* plane;

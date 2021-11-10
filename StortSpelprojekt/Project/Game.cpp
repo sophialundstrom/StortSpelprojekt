@@ -2,6 +2,7 @@
 #include "Event.h"
 #include "FBXLoader.h"
 #include "GameLoader.h"
+#include "DialogueOverlay.h"
 
 void Game::Update()
 {
@@ -42,7 +43,7 @@ void Game::Render()
 
 	animatedModelRenderer.Render();
 
-	/*colliderRenderer.Render();*/
+	colliderRenderer.Render();
 
 	terrainRenderer.Render(terrain);
 
@@ -59,37 +60,33 @@ void Game::Render()
 
 void Game::Pause()
 {
-	paused = true;
+	state = GameState::PAUSED;
 	currentCanvas = canvases["PAUSED"];
 }
 
 void Game::Resume()
 {
-	paused = false;
+	state = GameState::ACTIVE;
 	currentCanvas = canvases["INGAME"];
 }
 
 void Game::Options()
 {
-	paused = true;
 	currentCanvas = canvases["OPTIONS"];
 }
 
 void Game::HowToPlay()
 {
-	paused = true;
 	currentCanvas = canvases["HOW TO PLAY"];
 }
 
 void Game::BacktoPause()
 {
-	paused = true;
 	currentCanvas = canvases["PAUSED"];
 }
 
 void Game::MainMenu()
 {
-	paused = false;
 	mainMenu = true;
 }
 
@@ -103,10 +100,10 @@ void Game::Initialize()
 
 	//SAVE STATIONS
 	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
-	//colliderRenderer.Bind(saveStations[0].Collider());
+	colliderRenderer.Bind(saveStations[0].Collider());
 
 	saveStations[1] = SaveStation({ 20, 0, -20 }, 1, scene.GetDrawables());
-	//colliderRenderer.Bind(saveStations[1].Collider());
+	colliderRenderer.Bind(saveStations[1].Collider());
 
 	//MODELS & COLLIDERS
 	for (auto& [name, drawable] : scene.GetDrawables())
@@ -129,7 +126,7 @@ void Game::Initialize()
 		if (boundingBox)
 		{
 			colliders.emplace_back(boundingBox);
-			//colliderRenderer.Bind(boundingBox);
+			colliderRenderer.Bind(boundingBox);
 			continue;
 		}
 
@@ -137,7 +134,7 @@ void Game::Initialize()
 		if (boundingSphere)
 		{
 			colliders.emplace_back(boundingSphere);
-			//colliderRenderer.Bind(boundingSphere);
+			colliderRenderer.Bind(boundingSphere);
 			continue;
 		}
 	}
@@ -155,7 +152,7 @@ void Game::RemoveItem(const std::string name)
 			auto item = scene.Get<Item>(name);
 			modelRenderer.Unbind(item);
 			//shadowRenderer.Unbind(item);
-			//colliderRenderer.Unbind(item->GetBounds());
+			colliderRenderer.Unbind(item->GetBounds());
 			auto it = items.begin() + i;
 			items.erase(it);
 			scene.DeleteDrawable(name);
@@ -176,7 +173,7 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	item->GetBounds()->Update();
 	modelRenderer.Bind(item);
 	//shadowRenderer.Bind(item);
-	//colliderRenderer.Bind(item->GetBounds());
+	colliderRenderer.Bind(item->GetBounds());
 }
 
 std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Vector3 position)
@@ -187,7 +184,7 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Ve
 	auto collider = NPC->GetCollider();
 	collider->SetParent(NPC);
 	collider->Update();
-	//colliderRenderer.Bind(collider);
+	colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
 	//shadowRenderer.Bind(NPC);
@@ -210,11 +207,11 @@ void Game::AddArrow(const std::string fileName)
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
 	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetScale(0.15);
+	arrow->GetCollider()->SetScale(0.15f);
 	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	modelRenderer.Bind(arrow);
 	//shadowRenderer.Bind(arrow);
-	//colliderRenderer.Bind(arrow->GetCollider());
+	colliderRenderer.Bind(arrow->GetCollider());
 	arrow->Update();
 }
 
@@ -226,10 +223,14 @@ void Game::CheckNearbyCollision()
 	UINT numCollided = 0;
 	const UINT numColliders = 3;
 
+	float closestCamCollision = 9999;
+	
 	for (auto& collider : colliders)
 	{
-		if (numCollided >= numColliders)
-			break;
+		/*if (numCollided >= numColliders)
+			break;*/
+
+		
 
 		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
 		if (box)
@@ -238,6 +239,13 @@ void Game::CheckNearbyCollision()
 			{
 				collided = true;
 				numCollided++;
+			}
+
+			Collision::RayResults colliderResult = Collision::Intersection(*box, *scene.GetCamera()->GetCamRay());
+			if (colliderResult.didHit)
+			{
+				if (colliderResult.distance < closestCamCollision)
+					closestCamCollision = colliderResult.distance;
 			}
 
 			continue;
@@ -252,9 +260,18 @@ void Game::CheckNearbyCollision()
 				numCollided++;
 			}
 
+			Collision::RayResults colliderResult = Collision::Intersection(*sphere, *scene.GetCamera()->GetCamRay());
+			if (colliderResult.didHit)
+			{
+				if (colliderResult.distance < closestCamCollision)
+					closestCamCollision = colliderResult.distance;
+			}
+
 			continue;
 		};
 	}
+
+	player->SetClosestColliderToCam(closestCamCollision);
 
 	if (collided)
 		player->ResetToLastPosition();
@@ -270,7 +287,7 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 	collider->SetParent(NPC);
 	collider->Update();
 	collider->SetScale(2, 7, 2);
-	//colliderRenderer.Bind(collider);
+	colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
 	//shadowRenderer.Bind(NPC);
@@ -331,6 +348,12 @@ void Game::CheckQuestInteraction()
 
 				if (Event::KeyIsPressed('E'))
 				{
+					state = GameState::DIALOGUE;
+
+					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
+					dialogueOverlay->Set("GILBERT", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum et sagittis sem. Quisque ut ultrices ex. Sed vestibulum placerat nisl nec faucibus. Praesent lacinia leo id mauris imperdiet scelerisque euismod nec quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec gravida mollis sapien semper aliquet. Morbi sit amet ante nisl. Maecenas rutrum vehicula felis, non iaculis ante posuere nec. Etiam ullamcorper ornare convallis. Mauris in metus vel ex consectetur tempor. Nulla augue lectus, suscipit ut pulvinar et, luctus et mi. Aenean posuere nulla augue, non scelerisque lacus feugiat in. Pellentesque felis ante, imperdiet ornare varius non, rutrum eget nulla. Vivamus faucibus vestibulum volutpat.");
+					currentCanvas = dialogueOverlay;
+
 					int ID = NPC->GetQuestID();
 					if (ID != -1)
 					{
@@ -357,36 +380,18 @@ void Game::UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect)
   
 void Game::UpdateInventoryUI()
 {
-	auto canvas = canvases["INGAME"];
+	auto& canvas = canvases["INGAME"];
 
 	canvas->UpdateText("WOOD", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
 	canvas->UpdateText("STONE", std::to_string(player->Inventory().NumOf(RESOURCE::STONE)));
 	canvas->UpdateText("FOOD", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));
 }
 
-void TestFuncBack()
-{
-	Print("BACK");
-}
-void TestFuncResume()
-{
-	Print("RESUME");
-}
-void TestFuncOptions()
-{
-	Print("OPTIONS");
-}
-void TestFuncMenu()
-{
-	Print("MENU");
-}
-
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
-	://deferredRenderer(clientWidth, clientHeight),
-	modelRenderer(FORWARD, true),
+	:modelRenderer(FORWARD, true),
 	particleRenderer(FORWARD),
 	terrainRenderer(FORWARD),
-	//colliderRenderer(FORWARD),
+	colliderRenderer(FORWARD),
 	animatedModelRenderer(FORWARD, true),
 	water(5000), terrain(2)
 {
@@ -397,7 +402,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.SetDirectionalLight(100, 4, 4);
 
 	//INGAME CANVAS
-	auto ingameCanvas = new Canvas();
+	auto ingameCanvas = std::make_shared<Canvas>();
 	ingameCanvas->HideCursor();
 	ingameCanvas->AddImage({ 250, 365 }, "QuestBorder", "QuestBorder.png");
 	ingameCanvas->AddText({ 250, 65 }, "AQ", "Active Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
@@ -426,45 +431,46 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	currentCanvas = ingameCanvas;
 
 	//PAUSED CANVAS
-	auto pauseCanvas = new Canvas();
+	auto pauseCanvas = std::make_shared<Canvas>();
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "PauseBackground", "PauseBackground.png", 1.0f, 1.0f);
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 8.0f }, "PauseTitle", "PAUSED.png", 1.0f, 1.0f);
 
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "RESUME", 350, 95, UI::COLOR::GRAY, [this] { Resume(); }, TestFuncResume);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "RESUME", 350, 95, UI::COLOR::GRAY, [this] { Resume(); });
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100}, "ResumeButton", "ResumeButton.png", 0.50f, 1.0f);
 
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlayButton", "HowToPlayButton.png", 0.50f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlay", 350, 95, UI::COLOR::GRAY, [this] { HowToPlay(); }, TestFuncOptions);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlay", 350, 95, UI::COLOR::GRAY, [this] { HowToPlay(); });
 
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "BackToMainMenu", "MainMenuButton.png", 0.50f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100}, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, [this] { MainMenu(); }, TestFuncOptions);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100}, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, [this] { MainMenu(); });
 
 	canvases["PAUSED"] = pauseCanvas;
 	//HOW TO PLAY
-	auto howToPlayCanvas = new Canvas();
+	auto howToPlayCanvas = std::make_shared<Canvas>();
 	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "ControlImage", "Controls.png", 2.0f, 1.0f);
 	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackHowToPlay", "BackButton.png", 0.5f, 1.0f);
-	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackButtonHowToPlay", 340, 90, UI::COLOR::GRAY, [this] { BacktoPause(); }, TestFuncBack);
+	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackButtonHowToPlay", 340, 90, UI::COLOR::GRAY, [this] { BacktoPause(); });
 
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
+	canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
 
 	for (int i = 0; i < 3; i++)
 		AddArrow("Arrow");
-
-	//for (int i = 0; i < 3; i++)
-	//	AddHostileArrow("Arrow");
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
 	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
-	//colliderRenderer.Bind(player->GetBounds());
+	colliderRenderer.Bind(player->GetBounds());
 	animatedModelRenderer.Bind(player);
 
-	//colliderRenderer.Bind(player->GetFrustum());
+	colliderRenderer.Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
+
+	colliderRenderer.Bind(scene.GetCamera()->GetCamRay());
+	
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
@@ -490,10 +496,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
-
-
-
-	//AddHostileNPC("BarbarianBow", { 200, 26, -620 }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPC
 	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
@@ -525,17 +528,24 @@ Game::~Game()
 {
 	scene.Clear();
 	Resources::Inst().Clear();
-
-	for (auto& [name, canvas] : canvases)
-		delete canvas;
 }
 
 APPSTATE Game::Run()
 {
-	if (!paused)
+	if (state != GameState::PAUSED)
 		Update();
-	
+
 	currentCanvas->Update();
+
+	if (state == GameState::DIALOGUE)
+	{
+		auto overlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
+		if (overlay->IsDone())
+		{
+			state = GameState::ACTIVE;
+			currentCanvas = canvases["INGAME"];
+		}
+	}
 
 	Render();
 
@@ -545,7 +555,7 @@ APPSTATE Game::Run()
 	{
 		if (Event::KeyIsPressed(VK_TAB))
 		{
-			if (paused)
+			if (state == GameState::PAUSED)
 				Resume();
 			else
 				Pause();
@@ -594,7 +604,6 @@ APPSTATE Game::Run()
 		}*/
 	}
 
-
 	int nrOfFreeArrows = 0;
 	for (int i = 0; i < arrows.size(); i++)
 	{
@@ -612,13 +621,9 @@ APPSTATE Game::Run()
 		canvases["INGAME"]->GetText("INTERACT")->Hide();
 
 	if (Event::RightIsClicked())
-	{
 		canvases["INGAME"]->GetImage("CrossHair")->Show();
-	}
 	else
 		canvases["INGAME"]->GetImage("CrossHair")->Hide();
-
-
 
 	static float counter = 0;
 	if (done)

@@ -6,7 +6,8 @@ enum CombatStyle
 {
 	consistantDelay,
 	Burst,
-	wideArrow
+	wideArrow,
+	Defenseless
 };
 
 class HostileNPC : public NPC

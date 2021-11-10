@@ -14,15 +14,15 @@ private:
 		//VIEWPORT
 		viewport.TopLeftX = 0.0f;
 		viewport.TopLeftY = 0.0f;
-		viewport.Width = (float)width;
-		viewport.Height = (float)height;
+		viewport.Width = width;
+		viewport.Height = height;
 		viewport.MinDepth = 0.0f;
 		viewport.MaxDepth = 1.0f;
 
 		//RENDER TARGET TEXTURE
 		D3D11_TEXTURE2D_DESC textureDesc = {};
-		textureDesc.Width = width;
-		textureDesc.Height = height;
+		textureDesc.Width = (UINT)width;
+		textureDesc.Height = (UINT)height;
 		textureDesc.MipLevels = 1;
 		textureDesc.ArraySize = 1;
 		textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -52,8 +52,8 @@ private:
 
 		//DEPTH STENCIL TEXTURE
 		D3D11_TEXTURE2D_DESC dsTextureDesc = {};
-		dsTextureDesc.Width = width;
-		dsTextureDesc.Height = height;
+		dsTextureDesc.Width = (UINT)width;
+		dsTextureDesc.Height = (UINT)height;
 		dsTextureDesc.MipLevels = 1;
 		dsTextureDesc.ArraySize = 1;
 		dsTextureDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
