@@ -21,7 +21,10 @@ class Text : public UIComponent
 {
 private:
 	ID2D1SolidColorBrush* brush = nullptr;
+	ID2D1SolidColorBrush* backgroundBrush = nullptr;
 	IDWriteTextFormat* format = nullptr;
+	IDWriteTextFormat* backgroundFormat = nullptr;
+
 	std::wstring string;
 	void SetWidth();
 public:
