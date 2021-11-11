@@ -394,6 +394,8 @@ void LevelEditor::Update()
 
 
 	scene.Update();
+	scene.GetCamera()->Update();
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
 	Event::ClearRawDelta();
 
@@ -504,7 +506,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
-	gameLoader.Load("Default", scene.GetDrawables());
+	gameLoader.Load("Main Menu", scene.GetDrawables());
 	BindDrawables();
 
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 1.0f, 25.0f, {0, 90, 0});
@@ -637,7 +639,7 @@ APPSTATE LevelEditor::Run()
 		if (window.GetValue<ButtonComponent>("SAVE WORLD"))
 		{
 			GameLoader loader;
-			loader.Save("Default", scene.GetDrawables());
+			loader.Save("Main Menu", scene.GetDrawables());
 		}
 
 		if (window.GetValue<ButtonComponent>("RETURN TO MENU"))

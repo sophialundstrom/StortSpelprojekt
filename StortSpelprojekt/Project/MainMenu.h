@@ -19,8 +19,6 @@ private:
 	Canvas* currentCanvas;
 	std::map<std::string, Canvas*> canvases;
 
-	Terrain terrain;
-
 	TerrainRenderer terrainRenderer;
 	ParticleRenderer particleRenderer;
 	ModelRenderer modelRenderer;
@@ -39,6 +37,9 @@ private:
 	void Play();
 	void Quit();
 	void Form();
+	//LEAVES
+	void HoveringNewGame();
+	void HoveringContinue();
 public:
 	MainMenu() = default;
 	MainMenu(UINT clientWidth, UINT clientHeight, HWND window);

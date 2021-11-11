@@ -196,6 +196,9 @@
     <Filter Include="ARCUS\UI\Components">
       <UniqueIdentifier>{1a84fb82-3c7a-4303-9e8e-76e30f710950}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ARCUS\Scene\Game\Loot">
+      <UniqueIdentifier>{026b4804-3197-4874-97ad-f47e47e174e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Terrain.cpp">
@@ -337,7 +340,7 @@
       <Filter>ARCUS</Filter>
     </ClCompile>
     <ClCompile Include="Loot.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ARCUS\Scene\Game\Loot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -654,7 +657,7 @@
       <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen</Filter>
     </ClInclude>
     <ClInclude Include="Loot.h">
-      <Filter>Source Files</Filter>
+      <Filter>ARCUS\Scene\Game\Loot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -39,13 +39,25 @@ public:
 
 	void DeleteDrawable(const std::string name) { drawables.erase(name); }
 
+	//void AddFriendlyNPC(const std::string& file);
+	//void AddFriendlyNPC(const std::string& name, std::shared_ptr <Drawable> drawable);
+
+	//void AddHostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player);
+	//void AddHostileNPC(const std::string& name, std::shared_ptr<Drawable> drawable);
+
+	DirectionalLight GetDirectionalLight() { return directionalLight; }
+
+	void AddAnimatedModel(const std::string& file);
+
 	void AddParticleSystem(const std::string name, std::shared_ptr<ParticleSystem> system, Vector3 pos);
 	void AddParticleSystem(const std::string name, std::shared_ptr<ParticleSystem> system);
 	void AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type);
 	
 	void AddPointLight(Vector3 position, float range, Vector3 attenuation = { 0.05f, 0.05f, 0.05f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
-	
+	PointLight* GetPointLights() { return pointLights.data(); }
+	UINT GetNumberOfPointlights() { return (UINT)pointLights.size(); }
+
 	void UpdateDirectionalLight(const Vector3& position) { directionalLight.SetTargetPosition(position); }
-	void SetDirectionalLight(float range, float startAngle = 0.0f, int startDir = 1);
+	void SetDirectionalLight(float range, Vector4 color = { 1, 1, 1, 1 }, float startAngle = 0.0f, int startDir = 1);
 	void SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 forward = { 0.0f, 0.0f, 1.0f }, Vector3 up = { 0.0f, 1.0f, 0.0f });
 };

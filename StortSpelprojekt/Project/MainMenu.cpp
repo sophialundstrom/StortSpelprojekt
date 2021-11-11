@@ -31,9 +31,20 @@ void MainMenu::Form()
 	ShellExecute(0, 0, L"https://docs.google.com/forms/d/1wSGU7CwBNTTCu50nsunQX2Q9DC06SEi5SAqbgJstgb0/viewform?edit_requested=true", 0, 0, SW_SHOW);
 }
 
+void MainMenu::HoveringContinue()
+{
+	canvases["MAIN MENU"]->GetImage("ContinueLeaves")->Show();
+}
+
+void MainMenu::HoveringNewGame()
+{
+	canvases["MAIN MENU"]->GetImage("NewGameLeaves")->Show();
+}
+
 void Hovering()
 {
-	Print("HOVERING");
+	
+	//Print("HOVERING");
 }
 
 MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
@@ -46,13 +57,18 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	auto menuCanvas = new Canvas();
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "K", "ArcusLogo.png", 0.5f, 1.0f);
 
-	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.10f }, "O", 360, 100, UI::COLOR::GRAY, [this] { Play(); }, Hovering);
-	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.10f }, "L", "PlayButton.png", 0.6f, 1.0f);
-	
+	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.10f }, "NewGameButton", 365, 50, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringNewGame(); });
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.10f }, "NewGame", "NewGame.png", 1.f, 1.0f);
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.10f }, "NewGameLeaves", "NewGameLeaves.png", 1.f, 1.0f);
+
+	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.50f }, "ContinueButton", 375, 50, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringContinue(); });
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.50f }, "Continue", "Continue.png", 1.f, 1.0f);
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.50f }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f);
+
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.12f }, "G", "HowToPlayButton.png", 0.6f, 1.0f);
 	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.12f }, "A", 360, 100, UI::COLOR::GRAY, [this] { HowToPlay(); }, Hovering);
 
-	menuCanvas->AddButton({ clientWidth / 8.0f, clientHeight / 1.10f }, "C", 360, 105, UI::COLOR::GRAY, [this] { Quit(); }, Hovering);
+	menuCanvas->AddButton({ clientWidth / 7.0f, clientHeight / 1.10f }, "C", 360, 105, UI::COLOR::GRAY, [this] { Quit(); }, Hovering);
 	menuCanvas->AddImage({ clientWidth / 8.0f, clientHeight / 1.1f }, "I", "QuitButton.png", 0.6f, 1.0f);
 
 	menuCanvas->AddButton({ clientWidth / 1.25f, clientHeight / 1.15f }, "Form", 480, 150, UI::COLOR::GRAY, [this] { Form(); }, Hovering);
@@ -68,9 +84,15 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 370.0f, 180.0f, -90.0 }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(500, 1, 1);
-	
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { -41.0f, 37.0f, -687.0f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(500, { 0.2f, 0.2f, 0.2f ,1 }, 1);
+	scene.AddPointLight({ -41.9f, 33.0f, -687.4f }, 30, { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
+
+
+	auto menuFireSystem = std::make_shared<ParticleSystem>("fire.ps");
+	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 32, -687 });
+	particleRenderer.Bind(menuFireSystem);
+		
 	(void)Run();
 }
 
@@ -86,7 +108,7 @@ void MainMenu::Initialize()
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
-	gameLoader.Load("Default", scene.GetDrawables());
+	gameLoader.Load("Main Menu", scene.GetDrawables());
 
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
@@ -95,12 +117,14 @@ void MainMenu::Initialize()
 		{
 			modelRenderer.Bind(model);
 			//shadowRenderer.Bind(model);
+			continue;
 		}
 
 		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
 		if (particleSystem)
 		{
 			//SAME BUT PS->
+			continue;
 		}
 	}
 
@@ -116,7 +140,7 @@ void MainMenu::Render()
 
 	particleRenderer.Render();
 
-	terrainRenderer.Render(terrain);
+	//terrainRenderer.Render(terrain);
 
 	//shadowRenderer.Render();
 
@@ -129,10 +153,17 @@ void MainMenu::Render()
 
 APPSTATE MainMenu::Run()
 {
+	// LEAVES
+	canvases["MAIN MENU"]->GetImage("NewGameLeaves")->Hide();
+	canvases["MAIN MENU"]->GetImage("ContinueLeaves")->Hide();
+
 	currentCanvas->Update();
-	scene.Update();
-	Render();
+	scene.GetCamera()->RotateAroundPoint({ -41.0f, 37.0f, -687.0f }, 30, (Vector3{ 0, -0.6f, -1 } / Vector3(0, -0.6f, -1).Length()));
 	scene.UpdateDirectionalLight(scene.GetCamera()->GetPosition());
+	scene.Update();
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), scene.GetNumberOfPointlights(), (PointLight::Data*)scene.GetPointLights());
+
+	Render();
 
 	if (play)
 		return APPSTATE::GAME;

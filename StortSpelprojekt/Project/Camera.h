@@ -41,6 +41,8 @@ public:
 
 	void Update();
 
+	void RotateAroundPoint(Vector3 target, float distance, Vector3 direction);
+
 	void updatecamRay(Vector3 playerPosition, float camMaxLength)
 	{
 		camRay->SetPosition(playerPosition);

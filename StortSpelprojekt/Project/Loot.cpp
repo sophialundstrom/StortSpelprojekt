@@ -1,6 +1,7 @@
 #include "Loot.h"
 #include "Random.h"
 #include <cmath>
+#include <algorithm>
 
 void Loot::DealMixedItems()
 {

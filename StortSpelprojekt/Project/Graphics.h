@@ -8,7 +8,8 @@
 class Graphics : public Singleton<Graphics>
 {
 private:
-	const float backgroundColor[4] = { 129.0f / 255, 212.0f / 255, 212.0f / 255, 1.0f };
+	//const float backgroundColor[4] = { 129.0f / 255, 212.0f / 255, 212.0f / 255, 1.0f };
+	const float backgroundColor[4] = { 0, 0, 0, 1.0f };
 
 	D3D11_VIEWPORT viewport;
 	ID3D11Device* device;

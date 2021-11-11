@@ -14,6 +14,8 @@ void Game::Update()
 	
 	scene.Update();
 
+	scene.GetCamera()->Update();
+
 	CheckItemCollision();
 
 	CheckNearbyCollision();
@@ -27,6 +29,8 @@ void Game::Update()
 	UpdateAndHandleLoot();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
+
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
 	Event::ClearRawDelta();
 }
@@ -435,7 +439,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	Initialize();
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(100, 4, 4);
+	scene.SetDirectionalLight(100, { 1, 1, 1, 1 }, 4, 4);
+
 
 	//INGAME CANVAS
 	auto ingameCanvas = std::make_shared<Canvas>();

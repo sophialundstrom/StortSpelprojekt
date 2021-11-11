@@ -63,8 +63,8 @@ private:
 	};
 	
 	IDWriteFontCollection* fontCollection = nullptr;
-	ID2D1Factory* UIFactory = nullptr;
-	ID2D1RenderTarget* UIRenderTarget = nullptr;
+	ID2D1Factory* factory = nullptr;
+	ID2D1RenderTarget* renderTarget = nullptr;
 	IDWriteFactory* writeFactory = nullptr;
 	IWICImagingFactory* imageFactory = nullptr;
 	

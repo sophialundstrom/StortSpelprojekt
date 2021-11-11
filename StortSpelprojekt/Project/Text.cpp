@@ -33,9 +33,14 @@ Text::Text(std::wstring string, D2D_VECTOR_2F position, UI::TEXTFORMAT format, I
 	}
 }
 
-Text::Text(std::wstring string, D2D_VECTOR_2F position, IDWriteTextFormat* format, ID2D1SolidColorBrush* brush, FLOAT width, FLOAT height, bool visible)
-	:string(string), format(format), brush(brush), UIComponent(width, height, visible)
+Text::Text(std::wstring string, D2D_VECTOR_2F position, UI::TEXTFORMAT format, ID2D1SolidColorBrush* brush, FLOAT width, FLOAT height, bool visible)
+	:string(string), brush(brush), UIComponent(width, height, visible)
 {
+	this->format = UI::Inst().GetTextFormat(format);
+	this->visible = visible;
+	this->backgroundFormat = UI::Inst().GetTextFormat((UI::TEXTFORMAT)((UINT)format - 1));
+	this->backgroundBrush = UI::Inst().GetBrush(UI::COLOR::BROWN);
+
 	bounds = D2D1::RectF(position.x,
 		position.y,
 		position.x + width,

@@ -77,11 +77,20 @@ void Canvas::DrawTexts()
 			text->Draw();
 }
 
+void Canvas::DrawButtons()
+{
+	for (auto& [name, button] : buttons)
+		if (button->IsVisible())
+			button->Draw();
+}
+
 void Canvas::Render()
 {
 	UI::Inst().BeginFrame();
 
 	DrawImages();
+
+	DrawButtons();
 
 	DrawTexts();
 
