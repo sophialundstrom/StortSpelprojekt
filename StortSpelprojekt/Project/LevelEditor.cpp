@@ -80,6 +80,7 @@ void LevelEditor::Load(const std::string& file)
 	modelRenderer.Bind(model);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(fileName);
+	selectedObject = fileName;
 }
 
 void LevelEditor::DuplicateObject()

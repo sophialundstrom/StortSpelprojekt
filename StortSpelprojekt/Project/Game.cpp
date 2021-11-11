@@ -512,12 +512,21 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
-	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
-	building->SetScale(5);
+	farmHouse = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
+	farmHouse->SetRotation(0, -DirectX::XM_PIDIV2, 0);
+	farmHouse->SetScale(5);
 
-	scene.AddModel("Building", building);
-	modelRenderer.Bind(building);
+	scene.AddModel("Building", farmHouse);
+	modelRenderer.Bind(farmHouse);
+
+	std::string bsMeshNames[] = { "BSLevel1", "BSLevel1", "BSLevel1" };
+	std::string bsMaterialNames[] = { "albedoBlacksmith", "albedoBlacksmith", "albedoBlacksmith" };
+	blackSmith = std::make_shared<Building>(bsMeshNames, bsMaterialNames, "Blacksmith", Vector3{ -65, 17, -660 }, scene, particleRenderer);
+	blackSmith->SetRotation(0, 0, 0);
+	blackSmith->SetScale(1.6);
+
+	scene.AddModel("Blacksmith", blackSmith);
+	modelRenderer.Bind(blackSmith);
 	//shadowRenderer.Bind(building);
 
 	//QUEST LOG
@@ -537,7 +546,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//FRIENDLY NPC
 	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
-	friendlyNPC->BindBuilding(building);
+	friendlyNPC->BindBuilding(farmHouse);
 	friendlyNPC->AddQuestID(0);
 	friendlyNPC->AddQuestID(2);
 	friendlyNPC->AddQuestID(4);
