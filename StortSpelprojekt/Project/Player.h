@@ -82,11 +82,15 @@ private:
 	//ARROW STUFF
 	std::vector<std::shared_ptr<Arrow>> arrows;
 
+	bool hasCollided;
+
 	float movementYRadiant = 0;
 	float movementXRadiant = 0;
 
-	float preJumpGroundLevel = 0;
-	float heightMapGroundLevel = 20.0f;
+	float preJumpGroundLevel = 0.0f;
+	float currentGroundLevel = 0.0f;
+	float heightMapGroundLevel = 0.0f;
+
 	const float mouseDefaultSensitivity = 3.f;
 	const float mouseAimSensitivity = 2.f;
 	float mouseCurrentSensitivity = mouseDefaultSensitivity;
@@ -189,6 +193,7 @@ public:
 
 	bool CheckArrowHit(std::shared_ptr<Collider> collider);
 
+	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void MoveTowards(const Vector3& position);
 	void ResetToLastPosition() { position = lastPosition; }
 	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
