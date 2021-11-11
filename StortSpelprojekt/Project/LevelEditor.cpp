@@ -104,7 +104,6 @@ void LevelEditor::DuplicateObject()
 		std::string modelName = model->GetName();
 
 		scene.AddModel(modelName, model);
-		scene.GetObjectNames().push_back(modelName);
 		model->SetID((UINT)scene.GetObjectNames().size());
 		idRenderer.Bind(model);
 		modelRenderer.Bind(model);
