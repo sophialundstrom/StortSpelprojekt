@@ -82,7 +82,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f - 75 }, "Continue", "Continue.png", 1.f, 1.0f);
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f - 75 }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f);
 
-	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 75 }, "HowToPlayButton", 360, 100, UI::COLOR::GRAY, [this] { HowToPlay(); }, [this] { HoveringHowToPlay(); });
+	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 75 }, "HowToPlayButton", 450, 50, UI::COLOR::GRAY, [this] { HowToPlay(); }, [this] { HoveringHowToPlay(); });
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 75}, "HowToPlay", "HowToPlay.png", 1.0f, 1.0f);
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 75 }, "HowToPlayLeaves", "HowToPlayLeaves.png", 1.0f, 1.0f);
 
@@ -90,9 +90,9 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 150}, "Quit", "Quit.png", 1.f, 1.0f);
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 150}, "QuitLeaves", "QuitLeaves.png", 1.f, 1.0f);
 
-	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 450 }, "FormButton", 200, 50, UI::COLOR::GRAY, [this] { Form(); }, [this] {HoveringForm(); });
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 450 }, "Form", "Form.png", 1.0f, true);
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.0f, true);
+	menuCanvas->AddButton({ clientWidth / 1.1f, clientHeight / 2.0f + 450 }, "FormButton", 200, 50, UI::COLOR::GRAY, [this] { Form(); }, [this] {HoveringForm(); });
+	menuCanvas->AddImage({ clientWidth / 1.1f, clientHeight / 2.0f + 450 }, "Form", "Form.png", 1.0f, true);
+	menuCanvas->AddImage({ clientWidth / 1.1f, clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.0f, true);
 
 	canvases["MAIN MENU"] = menuCanvas;
 	currentCanvas = menuCanvas;
