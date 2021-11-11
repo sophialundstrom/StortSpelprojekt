@@ -495,7 +495,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	// THE WILL BE A PROBLEM IF MORE ARROWS THAN MAXARROWS IS IN THE AIR AT THE SAME TIME (NO ARROW WILL BE RENDERED). THIS IS BECAUSE THERE ARE ONLY AS MANY ARROW MODELS AS MAXARROWS.
 	UINT maxArrows = 50;
 	for (int i = 0; i < maxArrows; i++)
-		AddArrow("Arrow");
+		AddArrow("arrowModel");
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows, maxArrows);
