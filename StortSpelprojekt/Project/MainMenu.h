@@ -37,7 +37,9 @@ private:
 	void Play();
 	void Quit();
 	void Form();
-	void HoveringPlay();
+	//LEAVES
+	void HoveringNewGame();
+	void HoveringContinue();
 public:
 	MainMenu() = default;
 	MainMenu(UINT clientWidth, UINT clientHeight, HWND window);
