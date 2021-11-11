@@ -12,11 +12,11 @@ void Game::Update()
 	
 	scene.Update();
 
+	player->Update(terrain.GetHeightMap());
+
 	CheckItemCollision();
 
 	CheckNearbyCollision();
-
-	player->Update(terrain.GetHeightMap());
 
 	CheckSaveStationCollision();
 

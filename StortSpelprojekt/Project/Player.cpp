@@ -76,8 +76,10 @@ void Player::Update(HeightMap* heightMap)
 {
 	lastPosition = position;
 
+	CalcHeight(heightMap);
+
 	if (!hasCollided)
-		CalcHeight(heightMap);
+		currentGroundLevel = heightMapGroundLevel;
 
 	//Rotate camera by cursor movement 
 	sceneCamera->Rotate(Event::ReadRawDelta().x * mouseCurrentSensitivity, Event::ReadRawDelta().y * mouseCurrentSensitivity);
@@ -152,7 +154,8 @@ void Player::Update(HeightMap* heightMap)
 		if (Event::KeyIsPressed(VK_SPACE))
 		{
 			jumping = true;
-			preJumpGroundLevel = heightMapGroundLevel; PlayAnimation("Jump", false, 0.5f);
+			preJumpGroundLevel = currentGroundLevel; 
+			PlayAnimation("Jump", false, 0.5f);
 		}
 	}
 
@@ -169,12 +172,12 @@ void Player::Update(HeightMap* heightMap)
 	}
 
 	// RESET TO THE "GROUND"
-	if (newPlayerPos.y < heightMapGroundLevel)
+	if (newPlayerPos.y < currentGroundLevel)
 	{
 		airTime = 0;
 		pressed = false;
 		jumping = false;
-		newPlayerPos = Vector3(newPlayerPos.x, heightMapGroundLevel, newPlayerPos.z);
+		newPlayerPos = Vector3(newPlayerPos.x, currentGroundLevel, newPlayerPos.z);
 	}
 
 	if (closestColliderToCam < currentCameraDistance)
@@ -266,7 +269,7 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 
 	auto lastPos = position;
 
-	Vector3 highestPoint = lastPos;
+	float highestPoint = lastPos.y;
 
 	while (true)
 	{
@@ -278,16 +281,27 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 			auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
 			if (box)
 			{
-				Vector3 corners[8];
-				box->GetBounds().GetCorners(corners);
-				for (auto& corner : corners)
-					if (corner.y > highestPoint.y)
-						highestPoint = corner;
-
 				if (!Collision::Intersection(box, this->bounds))
 					numNotCollided++;
+
 				else
-					force += position - box->GetBounds().Center;
+				{
+					bool stuck = true;
+					Plane planes[6];
+					box->GetPlanes(planes);
+					for (auto plane : planes)
+						if (this->bounds->GetBounds().Intersects(plane) == DirectX::PlaneIntersectionType::INTERSECTING)
+						{
+							stuck = false;
+							force += plane.Normal();
+							std::cout << "NORMAL: " << plane.Normal().x << " " << plane.Normal().y << " " << plane.Normal().z << std::endl;
+						}
+
+					if (stuck)
+						force += position - box->GetBounds().Center;
+				}
+
+				continue;
 			}
 
 			auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
@@ -295,16 +309,16 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 			{
 				auto& bounds = sphere->GetBounds();
 
-				auto incomingDirection = highestPoint - bounds.Center;
+				//auto incomingDirection = lastPos - bounds.Center;
 
-				if (incomingDirection.Length() < bounds.Radius)
-				{
-					incomingDirection.Normalize();
+				//if (incomingDirection.Length() < bounds.Radius)
+				//{
+				//	incomingDirection.Normalize();
 
-					auto point = bounds.Center + incomingDirection * bounds.Radius;
-					if (highestPoint.y > bounds.Center.y)
-						highestPoint = point;
-				}
+				//	auto point = bounds.Center + incomingDirection * bounds.Radius;
+				//	if (highestPoint > bounds.Center.y)
+				//		highestPoint = point.y;
+				//}
 
 				if (!Collision::Intersection(sphere, this->bounds))
 					numNotCollided++;
@@ -317,13 +331,20 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 					else
 						force += { forceDirection.x, -forceDirection.y, forceDirection.z} ;
 				}
+
+				continue;
 			}	
 		}
 
 		if (numNotCollided == (UINT)colliders.size())
 		{
-			position.y = highestPoint.y - 1.0f;
-			heightMapGroundLevel = position.y;
+		/*	if (highestPoint != lastPos.y)
+				position.y = highestPoint;*/
+			Transform::UpdateMatrix();
+			bounds->Update();
+			sceneCamera->updatecamRay(position, 1000);
+			//if (highestPoint > currentGroundLevel)
+			//	currentGroundLevel = highestPoint;
 			return;
 		}
 
@@ -331,10 +352,8 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 
 		position += force * Time::GetDelta();
 
-		if (highestPoint.y > lastPos.y)
-		{
-			position.y = highestPoint.y;
-		}
+		//if (highestPoint > lastPos.y)
+		//	position.y = highestPoint;
 
 		Transform::UpdateMatrix();
 		bounds->Update();
