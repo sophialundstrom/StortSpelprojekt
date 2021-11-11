@@ -726,7 +726,7 @@ void Game::CheckNearbyEnemies()
 			{
 
 				player->Stats().barbariansKilled++;
-				AddLoot(LOOTTYPE::MIXED, hostiles[i]->GetPosition() + Vector3(0,-3,0));
+				AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0,-3,0));
 				scene.DeleteDrawable(hostiles[i]->GetName());
 				modelRenderer.Unbind(hostiles[i]);
 				hostiles[i] = hostiles[hostiles.size() - 1];
