@@ -130,6 +130,12 @@
     <Filter Include="ARCUS\Scene\Drawable\Model">
       <UniqueIdentifier>{5d82c9b2-1d6f-4c9f-849a-92b2739271fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ARCUS\Scene\Drawable\Model\Resources">
+      <UniqueIdentifier>{3e81a81c-e1fb-4b39-8d2d-104ad05de87a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Scene\Drawable\Model\Resources\Material">
+      <UniqueIdentifier>{525143f9-5e9d-40f3-9b2d-d15a343014b6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ARCUS\Scene\Drawable\Particle System">
       <UniqueIdentifier>{c00abe99-b0c8-442c-bec8-4a791efdda75}</UniqueIdentifier>
     </Filter>
@@ -190,11 +196,8 @@
     <Filter Include="ARCUS\UI\Components">
       <UniqueIdentifier>{1a84fb82-3c7a-4303-9e8e-76e30f710950}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ARCUS\Scene\Drawable\Resources">
-      <UniqueIdentifier>{3e81a81c-e1fb-4b39-8d2d-104ad05de87a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ARCUS\Scene\Drawable\Resources\Material">
-      <UniqueIdentifier>{525143f9-5e9d-40f3-9b2d-d15a343014b6}</UniqueIdentifier>
+    <Filter Include="ARCUS\Scene\Game\Loot">
+      <UniqueIdentifier>{026b4804-3197-4874-97ad-f47e47e174e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -208,7 +211,7 @@
       <Filter>ARCUS\ApplicationStates\Editors\LevelEditor</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
-      <Filter>ARCUS\Scene\Drawable\Resources\Material</Filter>
+      <Filter>ARCUS\Scene\Drawable\Model\Resources\Material</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>ARCUS\Scene\Drawable\Particle System</Filter>
@@ -336,6 +339,9 @@
     <ClCompile Include="Main.cpp">
       <Filter>ARCUS</Filter>
     </ClCompile>
+    <ClCompile Include="Loot.cpp">
+      <Filter>ARCUS\Scene\Game\Loot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -408,13 +414,13 @@
       <Filter>ARCUS\Scene\Drawable\Model</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>ARCUS\Scene\Drawable\Resources\Material</Filter>
+      <Filter>ARCUS\Scene\Drawable\Model\Resources\Material</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>ARCUS\Scene\Drawable\Resources\Material</Filter>
+      <Filter>ARCUS\Scene\Drawable\Model\Resources\Material</Filter>
     </ClInclude>
     <ClInclude Include="Resources.h">
-      <Filter>ARCUS\Scene\Drawable\Resources</Filter>
+      <Filter>ARCUS\Scene\Drawable\Model\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>ARCUS\Scene\Drawable\Model</Filter>
@@ -649,6 +655,9 @@
     </ClInclude>
     <ClInclude Include="LoadingScreen.h">
       <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="Loot.h">
+      <Filter>ARCUS\Scene\Game\Loot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -60,6 +60,6 @@ void Arrow::Update()
 		DisableArrow();
 	}
 
-	collider->Update();
 	Model::Update();
+	collider->Update();
 }

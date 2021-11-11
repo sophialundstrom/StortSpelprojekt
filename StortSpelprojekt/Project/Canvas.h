@@ -23,6 +23,7 @@ public:
 
 	void DrawImages();
 	void DrawTexts();
+	void DrawButtons();
 
 	virtual void Render();
 
@@ -38,7 +39,7 @@ public:
 	{ images[name] = new Image(fileName, position, scale, opacity, visible); }
 	
 	void AddText(D2D_VECTOR_2F position, const std::string name, const std::string string, UI::COLOR color, UI::TEXTFORMAT format, bool visible = true) 
-	{ texts.emplace(name, new Text(to_wstr(string), position, UI::Inst().GetTextFormat(format), UI::Inst().GetBrush(color), visible)); }
+	{ texts.emplace(name, new Text(to_wstr(string), position, format, UI::Inst().GetBrush(color), visible)); }
 
 	void RemoveButton(const std::string& name)	{ if (buttons.find(name) != buttons.end()) buttons.erase(name); }
 	void RemoveImage(const std::string& name)	{ if (images.find(name) != images.end()) images.erase(name); }

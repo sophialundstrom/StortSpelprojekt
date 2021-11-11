@@ -21,6 +21,7 @@
 #include "NPCFriendly.h"
 #include "Audio.h"
 #include "NPCHostile.h"
+#include "Loot.h"
 
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
@@ -70,6 +71,10 @@ private:
     std::vector<std::shared_ptr<Collider>> colliders;
 
     std::vector<std::shared_ptr<HostileNPC>> hostiles;
+    UINT hostileID = 0;
+
+    std::vector<std::shared_ptr<Loot>> loot;
+    UINT lootID = 0;
 
     void Update();
     void Render();
@@ -92,7 +97,9 @@ private:
     void AddArrow(const std::string fileName);
 
     void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
+    void AddLoot(LOOTTYPE type, const Vector3& position);
 
+    void UpdateAndHandleLoot();
     void CheckNearbyCollision();
     void CheckSaveStationCollision();
     void CheckItemCollision();

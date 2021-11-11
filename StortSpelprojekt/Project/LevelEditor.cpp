@@ -91,7 +91,7 @@ void LevelEditor::DuplicateObject()
 	std::string meshName = Resources::Inst().GetBufferNameFromID(originModel->mesh.bufferID);
 
 	UINT instances = 0;
-	for (auto name : scene.GetObjectNames())
+	for (auto& name : scene.GetObjectNames())
 	{
 		if (name.find(meshName) != std::string::npos)
 			instances++;
@@ -394,6 +394,8 @@ void LevelEditor::Update()
 
 
 	scene.Update();
+	scene.GetCamera()->Update();
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
 	Event::ClearRawDelta();
 

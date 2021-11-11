@@ -46,6 +46,10 @@ float ShadowCalculation(float4 LCP)
     return shadow;
 }
 
+//StructuredBuffer<POINT_LIGHT> lights : register(t8);
+
+
+
 float4 main(PS_INPUT input) : SV_TARGET
 {
     const float shadow = ShadowCalculation(input.lightClipPosition);
@@ -58,7 +62,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     float fogFactor = saturate((fogDistance - fogStart) / fogRange);
 
     //RESULT
-    return lerp((diffuseTexture.Sample(wrapSampler, input.texCoords)) * (saturate(LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition))), fogColor, fogFactor);
+    return lerp((diffuseTexture.Sample(wrapSampler, input.texCoords)) * (saturate(LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, /*lights, 2,*/ cameraPosition))), fogColor, fogFactor);
     //return float4 (shadow, shadow, shadow, 0.1f);
     //return diffuseTexture.Sample(wrapSampler, input.texCoords) * LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition);
 }

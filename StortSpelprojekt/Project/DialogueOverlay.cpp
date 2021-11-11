@@ -11,8 +11,8 @@ DialogueOverlay::DialogueOverlay()
 
 	auto color = UI::Inst().GetBrush(UI::COLOR::YELLOW);
 
-	dialogueName = new Text(L"TEMP NAME", { center.x - 366, Window::ClientHeight() - 230.0f }, UI::Inst().GetTextFormat(UI::TEXTFORMAT::TITLE_SMALL), color, 652, 30);
-	dialogueText = new Text(L"TEMP TEXT", { center.x - 366, Window::ClientHeight() - 200.0f}, UI::Inst().GetTextFormat(UI::TEXTFORMAT::DEFAULT), color, 652, 200);
+	dialogueName = new Text(L"TEMP NAME", { center.x - 366, Window::ClientHeight() - 230.0f }, UI::TEXTFORMAT::TITLE_SMALL, color, 652, 30);
+	dialogueText = new Text(L"TEMP TEXT", { center.x - 366, Window::ClientHeight() - 200.0f}, UI::TEXTFORMAT::DEFAULT, color, 652, 200);
 }
 
 DialogueOverlay::~DialogueOverlay()
