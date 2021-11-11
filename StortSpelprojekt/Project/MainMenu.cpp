@@ -94,11 +94,11 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 75}, "HowToPlay", "HowToPlay.png", 1.0f, 1.0f);
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 75 }, "HowToPlayLeaves", "HowToPlayLeaves.png", 1.0f, 1.0f);
 
-	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 150 }, "OptionsButton", 450, 50, UI::COLOR::GRAY, [this] { Options(); }, [this] { HoveringOptions(); });
+	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 150 }, "OptionsButton", 310, 50, UI::COLOR::GRAY, [this] { Options(); }, [this] { HoveringOptions(); });
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 150 }, "Options", "Options.png", 1.0f, 1.0f);
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 150 }, "OptionsLeaves", "OptionsLeaves.png", 1.0f, 1.0f);
 
-	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 255}, "QuitButton", 180, 50, UI::COLOR::GRAY, [this] { Quit(); }, [this] { HoveringQuit(); });
+	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 225}, "QuitButton", 180, 50, UI::COLOR::GRAY, [this] { Quit(); }, [this] { HoveringQuit(); });
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 225}, "Quit", "Quit.png", 1.f, 1.0f);
 	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 225}, "QuitLeaves", "QuitLeaves.png", 1.f, 1.0f);
 
@@ -110,9 +110,9 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	currentCanvas = menuCanvas;
 
 	auto howToPlayCanvas = new Canvas();
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "C", "Controls.png", 2.0f, 1.0f);
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "W", "BackButton.png", 0.5f, 1.0f);
-	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.1f }, "Q", 340, 90, UI::COLOR::GRAY, [this] { BacktoMenu(); }, Hovering);
+	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Controls", "Controls.png", 2.0f, 1.0f);
+	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackControls", "BackButton.png", 0.5f, 1.0f);
+	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackButtonControls", 340, 90, UI::COLOR::GRAY, [this] { BacktoMenu(); }, Hovering);
 
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
