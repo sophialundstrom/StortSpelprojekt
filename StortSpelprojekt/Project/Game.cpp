@@ -496,11 +496,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
 
-	for (int i = 0; i < 3; i++)
+
+	// THE WILL BE A PROBLEM IF MORE ARROWS THAN MAXARROWS IS IN THE AIR AT THE SAME TIME (NO ARROW WILL BE RENDERED). THIS IS BECAUSE THERE ARE ONLY AS MANY ARROW MODELS AS MAXARROWS.
+	UINT maxArrows = 50;
+	for (int i = 0; i < maxArrows; i++)
 		AddArrow("Arrow");
 
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
+	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows, maxArrows);
 	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
@@ -512,6 +515,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	colliderRenderer.Bind(scene.GetCamera()->GetCamRay());
 	
+
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
@@ -661,7 +665,7 @@ APPSTATE Game::Run()
 		}
 	}
 
-	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(nrOfFreeArrows));
+	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(player->numArrows));
 	
 	if (hovering)
 		canvases["INGAME"]->GetText("INTERACT")->Show();

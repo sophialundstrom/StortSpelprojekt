@@ -140,11 +140,14 @@ private:
 		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
 	}
 public:
+	UINT maxArrows = 10;
+	UINT numArrows = 5;
 	void Update(HeightMap* heightMap);
 
-	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows)
+	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows, const UINT& maxArrows)
 		:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
 	{
+		this->maxArrows = maxArrows;
 		isRightPressed = false;
 		isLeftPressed = false;
 

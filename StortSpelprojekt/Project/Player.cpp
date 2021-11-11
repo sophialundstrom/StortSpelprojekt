@@ -193,6 +193,11 @@ void Player::Update(HeightMap* heightMap)
 
 	static float lastClick = 0;
 
+	if (Event::KeyIsPressed('R'))
+	{
+		numArrows++;
+	}
+
 	sinceLastShot += Time::GetDelta();
 	if (sinceLastShot > shootingAnimationLenght) {
 
@@ -204,7 +209,7 @@ void Player::Update(HeightMap* heightMap)
 		//else if (jumping)
 			 // ADD IN AIR JUMP ANIMATION
 	}
-
+	std::cout << "NUM ARROWS: " << numArrows << std::endl;
 	if(Event::RightIsClicked())
 	{
 		newCameraPos = position + camSocketUpdate;
@@ -213,8 +218,9 @@ void Player::Update(HeightMap* heightMap)
 		
 		if (Time::Get() - lastClick > 0.2f)
 		{
-			if (Event::LeftIsClicked())
+			if (Event::LeftIsClicked() && numArrows > 0)
 			{
+
 				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				int currentIndex = 0;
 				bool isPlayerShootingArrow = false;
@@ -224,6 +230,7 @@ void Player::Update(HeightMap* heightMap)
 					lastClick = Time::Get();
 					currentIndex++;
 				}
+				numArrows--;
 				sinceLastShot = 0.f;
 			}
 		}
@@ -326,7 +333,9 @@ bool Player::CheckArrowHit(std::shared_ptr<Collider> collider)
 			hit = Collision::Intersection(sphere, arrow->GetCollider());
 
 		if (hit)
+		{
 			arrow->DisableArrow();
+		}
 		
 		return hit;
 
