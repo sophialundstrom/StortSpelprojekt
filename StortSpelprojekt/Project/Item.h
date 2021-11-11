@@ -31,7 +31,8 @@ public:
 	RESOURCE GetType() { return ID; }
 
 	std::shared_ptr<BoundingSphere> GetBounds() { return bounds; }
-
+public:
+	enum class Type { Wood, Stone, Food, Axe };
 private:
 
 	std::shared_ptr<BoundingSphere> bounds;

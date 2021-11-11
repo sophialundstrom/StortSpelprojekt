@@ -342,6 +342,25 @@
     <ClCompile Include="Loot.cpp">
       <Filter>ARCUS\Scene\Game\Loot</Filter>
     </ClCompile>
+    <ClCompile Include="TempCollectQuest.cpp">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClCompile>
+    <ClCompile Include="TempQuest.cpp">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClCompile>
+    <ClCompile Include="TempFightQuest.cpp">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClCompile>
+    <ClCompile Include="BarbarianCamp.cpp" />
+    <ClCompile Include="TempTalkQuest.cpp">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClCompile>
+    <ClCompile Include="LocationQuest.cpp">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClCompile>
+    <ClCompile Include="TargetQuest.cpp">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -658,6 +677,30 @@
     </ClInclude>
     <ClInclude Include="Loot.h">
       <Filter>ARCUS\Scene\Game\Loot</Filter>
+    </ClInclude>
+    <ClInclude Include="TempQuest.h">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="TempCollectQuest.h">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="TempFightQuest.h">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="BarbarianCamp.h">
+      <Filter>ARCUS\Scene\Game\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="TempTalkQuest.h">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="LocationQuest.h">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="TargetQuest.h">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClInclude>
+    <ClInclude Include="Target.h">
+      <Filter>ARCUS\Scene\Game\Combat</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

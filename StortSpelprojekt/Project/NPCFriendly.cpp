@@ -23,7 +23,7 @@ void FriendlyNPC::Update()
 	UINT completedQuests = 0;
 	for (auto& ID : questIDs)
 	{
-		if (QuestLog::Inst().QuestIsActive(ID))
+		/*if (QuestLog::Inst().QuestIsActive(ID))
 		{
 			activeQuestID = ID;
 			interactable = true;
@@ -32,7 +32,7 @@ void FriendlyNPC::Update()
 		}
 
 		if (QuestLog::Inst().QuestIsDone(ID))
-			completedQuests++;
+			completedQuests++;*/
 	}
 
 	if (completedQuests >= questIDs.size())

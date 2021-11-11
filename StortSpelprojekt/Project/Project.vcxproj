@@ -160,6 +160,7 @@
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioChunks.cpp" />
+    <ClCompile Include="BarbarianCamp.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
+    <ClCompile Include="LocationQuest.cpp" />
     <ClCompile Include="Loot.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -194,6 +196,11 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SkeletonRenderer.cpp" />
+    <ClCompile Include="TargetQuest.cpp" />
+    <ClCompile Include="TempCollectQuest.cpp" />
+    <ClCompile Include="TempFightQuest.cpp" />
+    <ClCompile Include="TempQuest.cpp" />
+    <ClCompile Include="TempTalkQuest.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainRenderer.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -209,6 +216,7 @@
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioChunks.h" />
+    <ClInclude Include="BarbarianCamp.h" />
     <ClInclude Include="BoundingVolumes.h" />
     <ClInclude Include="BuildingEffect.h" />
     <ClInclude Include="Button.h" />
@@ -228,6 +236,7 @@
     <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="LoadingScreen.h" />
+    <ClInclude Include="LocationQuest.h" />
     <ClInclude Include="Loot.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Node.h" />
@@ -293,6 +302,12 @@
     <ClInclude Include="Resources.h" />
     <ClInclude Include="stb_image_write.h" />
     <ClInclude Include="TalkQuest.h" />
+    <ClInclude Include="Target.h" />
+    <ClInclude Include="TargetQuest.h" />
+    <ClInclude Include="TempCollectQuest.h" />
+    <ClInclude Include="TempFightQuest.h" />
+    <ClInclude Include="TempQuest.h" />
+    <ClInclude Include="TempTalkQuest.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainRenderer.h" />
     <ClInclude Include="Text.h" />

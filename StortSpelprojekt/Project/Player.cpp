@@ -351,6 +351,9 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 
 		force.Normalize();
 
+		if (force.Dot({ 0, 1, 0 }) < 0)
+			force.y *= -1;
+
 		position += force * Time::GetDelta();
 
 		//if (highestPoint > lastPos.y)

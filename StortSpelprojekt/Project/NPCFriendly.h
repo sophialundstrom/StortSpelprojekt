@@ -2,7 +2,6 @@
 #include "NPCBase.h"
 #include "Model.h"
 #include "Building.h"
-#include "QuestLog.h"
 #include "QuestMarker.h"
 
 class FriendlyNPC : public NPC
@@ -19,6 +18,7 @@ public:
 	std::shared_ptr<QuestMarker> GetQuestMarker()			{ return questMarker; }
 	UINT NumConnectedQuests()								{ return (UINT)questIDs.size(); }
 	bool Completed()										{ return completed; }
+	bool CompletedConversation()							{ return true; }
 
 	virtual void Update() override;
 private:

@@ -1,6 +1,6 @@
 #pragma once
+#include "Item.h"
 #include <map>
-#include <fstream>
 
 struct Inventory
 {
@@ -27,5 +27,10 @@ struct Inventory
 	UINT NumOf(UINT ID)
 	{
 		return items[ID];
+	}
+
+	UINT NumOf(Item::Type type)
+	{
+		return items[(UINT)type];
 	}
 };
