@@ -506,7 +506,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
-	gameLoader.Load("Main Menu", scene.GetDrawables());
+	gameLoader.Load("Default", scene.GetDrawables());
 	BindDrawables();
 
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 1.0f, 25.0f, {0, 90, 0});
@@ -537,7 +537,6 @@ void LevelEditor::RemoveItem(const std::string name)
 	idRenderer.Unbind(model);
 
 	scene.DeleteDrawable(name);
-	scene.GetObjectNames()[model.get()->GetID() -1] = "";
 }
 
 void LevelEditor::ClearToolUI()
@@ -639,7 +638,7 @@ APPSTATE LevelEditor::Run()
 		if (window.GetValue<ButtonComponent>("SAVE WORLD"))
 		{
 			GameLoader loader;
-			loader.Save("Main Menu", scene.GetDrawables());
+			loader.Save("Default", scene.GetDrawables());
 		}
 
 		if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
