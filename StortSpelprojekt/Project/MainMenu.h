@@ -40,6 +40,9 @@ private:
 	//LEAVES
 	void HoveringNewGame();
 	void HoveringContinue();
+	void HoveringQuit();
+	void HoveringHowToPlay();
+	void HoveringForm();
 public:
 	MainMenu() = default;
 	MainMenu(UINT clientWidth, UINT clientHeight, HWND window);

@@ -36,6 +36,23 @@ void MainMenu::HoveringContinue()
 	canvases["MAIN MENU"]->GetImage("ContinueLeaves")->Show();
 }
 
+void MainMenu::HoveringQuit()
+{
+	canvases["MAIN MENU"]->GetImage("QuitLeaves")->Show();
+
+}
+
+void MainMenu::HoveringHowToPlay()
+{
+	canvases["MAIN MENU"]->GetImage("HowToPlayLeaves")->Show();
+
+}
+
+void MainMenu::HoveringForm()
+{
+	canvases["MAIN MENU"]->GetImage("FormLeaves")->Show();
+}
+
 void MainMenu::HoveringNewGame()
 {
 	canvases["MAIN MENU"]->GetImage("NewGameLeaves")->Show();
@@ -57,22 +74,25 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	auto menuCanvas = new Canvas();
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "K", "ArcusLogo.png", 0.5f, 1.0f);
 
-	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.10f }, "NewGameButton", 365, 50, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringNewGame(); });
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.10f }, "NewGame", "NewGame.png", 1.f, 1.0f);
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.10f }, "NewGameLeaves", "NewGameLeaves.png", 1.f, 1.0f);
+	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f }, "NewGameButton", 365, 50, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringNewGame(); });
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f }, "NewGame", "NewGame.png", 1.f, 1.0f);
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f }, "NewGameLeaves", "NewGameLeaves.png", 1.f, 1.0f);
 
-	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.50f }, "ContinueButton", 375, 50, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringContinue(); });
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.50f }, "Continue", "Continue.png", 1.f, 1.0f);
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.50f }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f);
+	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f - 75 }, "ContinueButton", 375, 50, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringContinue(); });
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f - 75 }, "Continue", "Continue.png", 1.f, 1.0f);
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f - 75 }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f);
 
-	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.12f }, "G", "HowToPlayButton.png", 0.6f, 1.0f);
-	menuCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.12f }, "A", 360, 100, UI::COLOR::GRAY, [this] { HowToPlay(); }, Hovering);
+	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 75 }, "HowToPlayButton", 360, 100, UI::COLOR::GRAY, [this] { HowToPlay(); }, [this] { HoveringHowToPlay(); });
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 75}, "HowToPlay", "HowToPlay.png", 1.0f, 1.0f);
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 75 }, "HowToPlayLeaves", "HowToPlayLeaves.png", 1.0f, 1.0f);
 
-	menuCanvas->AddButton({ clientWidth / 7.0f, clientHeight / 1.10f }, "C", 360, 105, UI::COLOR::GRAY, [this] { Quit(); }, Hovering);
-	menuCanvas->AddImage({ clientWidth / 8.0f, clientHeight / 1.1f }, "I", "QuitButton.png", 0.6f, 1.0f);
+	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 150}, "QuitButton", 180, 50, UI::COLOR::GRAY, [this] { Quit(); }, [this] { HoveringQuit(); });
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 150}, "Quit", "Quit.png", 1.f, 1.0f);
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 150}, "QuitLeaves", "QuitLeaves.png", 1.f, 1.0f);
 
-	menuCanvas->AddButton({ clientWidth / 1.25f, clientHeight / 1.15f }, "Form", 480, 150, UI::COLOR::GRAY, [this] { Form(); }, Hovering);
-	menuCanvas->AddImage({ clientWidth / 1.25f, clientHeight / 1.15f }, "Form", "Form.png", 0.75f, true);
+	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 450 }, "FormButton", 200, 50, UI::COLOR::GRAY, [this] { Form(); }, [this] {HoveringForm(); });
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 450 }, "Form", "Form.png", 1.0f, true);
+	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.0f, true);
 
 	canvases["MAIN MENU"] = menuCanvas;
 	currentCanvas = menuCanvas;
@@ -156,6 +176,9 @@ APPSTATE MainMenu::Run()
 	// LEAVES
 	canvases["MAIN MENU"]->GetImage("NewGameLeaves")->Hide();
 	canvases["MAIN MENU"]->GetImage("ContinueLeaves")->Hide();
+	canvases["MAIN MENU"]->GetImage("QuitLeaves")->Hide();
+	canvases["MAIN MENU"]->GetImage("HowToPlayLeaves")->Hide();
+	canvases["MAIN MENU"]->GetImage("FormLeaves")->Hide();
 
 	currentCanvas->Update();
 	scene.GetCamera()->RotateAroundPoint({ -41.0f, 37.0f, -687.0f }, 30, (Vector3{ 0, -0.6f, -1 } / Vector3(0, -0.6f, -1).Length()));
