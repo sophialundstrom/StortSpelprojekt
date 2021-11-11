@@ -8,11 +8,11 @@ void Game::Update()
 {
 	hovering = false;
 
-	player->Update(terrain.GetHeightMap());
-
 	QuestLog::Inst().Update();
 	
 	scene.Update();
+
+	player->Update(terrain.GetHeightMap());
 
 	scene.GetCamera()->Update();
 
@@ -246,26 +246,22 @@ void Game::CheckNearbyCollision()
 	auto playerCollider = player->GetBounds();
 
 	bool collided = false;
-	UINT numCollided = 0;
-	const UINT numColliders = 3;
 
 	float closestCamCollision = 9999;
 	
+	std::vector<std::shared_ptr<Collider>> collidedColliders;
+
 	for (auto& collider : colliders)
 	{
-		/*if (numCollided >= numColliders)
-			break;*/
-
-		
-
 		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
 		if (box)
 		{
 			if (Collision::Intersection(box, playerCollider))
 			{
 				collided = true;
-				numCollided++;
+				collidedColliders.emplace_back(box);
 			}
+				
 
 			Collision::RayResults colliderResult = Collision::Intersection(*box, *scene.GetCamera()->GetCamRay());
 			if (colliderResult.didHit)
@@ -283,7 +279,7 @@ void Game::CheckNearbyCollision()
 			if (Collision::Intersection(sphere, playerCollider))
 			{
 				collided = true;
-				numCollided++;
+				collidedColliders.emplace_back(sphere);
 			}
 
 			Collision::RayResults colliderResult = Collision::Intersection(*sphere, *scene.GetCamera()->GetCamRay());
@@ -299,8 +295,7 @@ void Game::CheckNearbyCollision()
 
 	player->SetClosestColliderToCam(closestCamCollision);
 
-	if (collided)
-		player->ResetToLastPosition();
+	player->HandleCollidedObjects(collidedColliders);
 }
 
 void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
@@ -496,11 +491,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
 
-	for (int i = 0; i < 3; i++)
+
+	// THE WILL BE A PROBLEM IF MORE ARROWS THAN MAXARROWS IS IN THE AIR AT THE SAME TIME (NO ARROW WILL BE RENDERED). THIS IS BECAUSE THERE ARE ONLY AS MANY ARROW MODELS AS MAXARROWS.
+	UINT maxArrows = 50;
+	for (int i = 0; i < maxArrows; i++)
 		AddArrow("Arrow");
 
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
+	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows, maxArrows);
 	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
@@ -512,6 +510,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	colliderRenderer.Bind(scene.GetCamera()->GetCamRay());
 	
+
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
@@ -661,7 +660,7 @@ APPSTATE Game::Run()
 		}
 	}
 
-	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(nrOfFreeArrows));
+	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(player->numArrows));
 	
 	if (hovering)
 		canvases["INGAME"]->GetText("INTERACT")->Show();
@@ -722,7 +721,7 @@ void Game::CheckNearbyEnemies()
 			{
 
 				player->Stats().barbariansKilled++;
-				AddLoot(LOOTTYPE::MIXED, hostiles[i]->GetPosition() + Vector3(0,-3,0));
+				AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0,-3,0));
 				scene.DeleteDrawable(hostiles[i]->GetName());
 				modelRenderer.Unbind(hostiles[i]);
 				hostiles[i] = hostiles[hostiles.size() - 1];
