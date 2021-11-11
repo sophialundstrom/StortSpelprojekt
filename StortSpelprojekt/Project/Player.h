@@ -82,11 +82,15 @@ private:
 	//ARROW STUFF
 	std::vector<std::shared_ptr<Arrow>> arrows;
 
+	bool hasCollided;
+
 	float movementYRadiant = 0;
 	float movementXRadiant = 0;
 
-	float preJumpGroundLevel = 0;
-	float heightMapGroundLevel = 20.0f;
+	float preJumpGroundLevel = 0.0f;
+	float currentGroundLevel = 0.0f;
+	float heightMapGroundLevel = 0.0f;
+
 	const float mouseDefaultSensitivity = 3.f;
 	const float mouseAimSensitivity = 2.f;
 	float mouseCurrentSensitivity = mouseDefaultSensitivity;
@@ -142,26 +146,7 @@ private:
 public:
 	void Update(HeightMap* heightMap);
 
-	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows)
-		:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
-	{
-		isRightPressed = false;
-		isLeftPressed = false;
-
-		this->arrows = arrows;
-		bounds = std::make_shared<BoundingBox>();
-
-		bounds->SetScale(0.8f, 2.5f, 0.8f);
-		bounds->SetPosition(0, 3, 0);
-
-		frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
-		frustum->SetPosition(0, 3, 0);
-
-		Load(file);
-		UpdateHealthUI();
-
-		PlayAnimation("Idle", true, 0.2f);
-	}
+	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows);
 public:
 	// TEMP STATS PRINT
 	void GetStats()
@@ -186,6 +171,7 @@ public:
 
 	bool CheckArrowHit(std::shared_ptr<Collider> collider);
 
+	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void MoveTowards(const Vector3& position);
 	void ResetToLastPosition() { position = lastPosition; }
 	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
