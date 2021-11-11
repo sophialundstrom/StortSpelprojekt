@@ -43,6 +43,7 @@ private:
 	void HoveringQuit();
 	void HoveringHowToPlay();
 	void HoveringForm();
+	void HoveringOptions();
 public:
 	MainMenu() = default;
 	MainMenu(UINT clientWidth, UINT clientHeight, HWND window);
