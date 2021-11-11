@@ -148,27 +148,8 @@ public:
 	UINT numArrows = 5;
 	void Update(HeightMap* heightMap);
 
-	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows, const UINT& maxArrows)
-		:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
-	{
-		this->maxArrows = maxArrows;
-		isRightPressed = false;
-		isLeftPressed = false;
+	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows, const UINT& maxArrows);
 
-		this->arrows = arrows;
-		bounds = std::make_shared<BoundingBox>();
-
-		bounds->SetScale(0.8f, 2.5f, 0.8f);
-		bounds->SetPosition(0, 3, 0);
-
-		frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
-		frustum->SetPosition(0, 3, 0);
-
-		Load(file);
-		UpdateHealthUI();
-
-		PlayAnimation("Idle", true, 0.2f);
-	}
 public:
 	// TEMP STATS PRINT
 	void GetStats()
