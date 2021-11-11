@@ -174,13 +174,15 @@ void Window::Resize(UINT newWidth, UINT newHeight)
 	height = newHeight;
 
 	SetWindowPos(hWnd, nullptr, (GetSystemMetrics(SM_CXSCREEN) / 2) - (width / 2), (GetSystemMetrics(SM_CYSCREEN) / 2) - (height / 2), width, height, 0);
+
+	RECT clientRect;
+	GetClientRect(hWnd, &clientRect);
+	width = clientRect.right;
+	height = clientRect.bottom;
 }
 
 WindowCreator::WindowCreator(Window window, UINT width, UINT height, LPCWSTR title, HINSTANCE instance)
 {
-	window.width = width;
-	window.height = height;
-
 	const wchar_t* className = L"Window Class";
 
 	WNDCLASS wc = { 0 };
@@ -206,6 +208,11 @@ WindowCreator::WindowCreator(Window window, UINT width, UINT height, LPCWSTR tit
 		AllocConsole();
 		(void)freopen("conout$", "w", stdout);
 	#endif
+
+	RECT clientRect;
+	GetClientRect(window.hWnd, &clientRect);
+	window.width = clientRect.right;
+	window.height = clientRect.bottom;
 
 	ShowWindow(window.hWnd, SW_SHOWDEFAULT);
 }

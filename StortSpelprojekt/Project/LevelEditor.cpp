@@ -91,7 +91,7 @@ void LevelEditor::DuplicateObject()
 	std::string meshName = Resources::Inst().GetBufferNameFromID(originModel->mesh.bufferID);
 
 	UINT instances = 0;
-	for (auto name : scene.GetObjectNames())
+	for (auto& name : scene.GetObjectNames())
 	{
 		if (name.find(meshName) != std::string::npos)
 			instances++;
@@ -506,7 +506,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
-	gameLoader.Load("Main Menu", scene.GetDrawables());
+	gameLoader.Load("Default", scene.GetDrawables());
 	BindDrawables();
 
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 1.0f, 25.0f, {0, 90, 0});
@@ -639,7 +639,7 @@ APPSTATE LevelEditor::Run()
 		if (window.GetValue<ButtonComponent>("SAVE WORLD"))
 		{
 			GameLoader loader;
-			loader.Save("Main Menu", scene.GetDrawables());
+			loader.Save("Default", scene.GetDrawables());
 		}
 
 		if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
