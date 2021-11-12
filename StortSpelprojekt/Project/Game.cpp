@@ -515,7 +515,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
-	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture" };
+	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
 	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
 	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
 	building->SetScale(5);
