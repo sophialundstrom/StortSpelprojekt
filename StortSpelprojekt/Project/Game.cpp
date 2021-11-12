@@ -557,11 +557,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//scene.AddDrawable("AnimatedModel", animated);
 	//skeletonRenderer.Bind(animated);
 	//animatedModelRenderer.Bind(animated);
-
+	float Volume = 0.5;
 	//SOUND
-	//Audio::AddAudio(L"Audio/Rainy.wav");
-	//Audio::StartAudio();
-
+	Audio::AddAudio(L"Audio/Sonrie.wav");
+	Audio::StartAudio();
+	Audio::SetVolume(Volume);
 	(void)Run();
 }
 
