@@ -412,7 +412,8 @@ void LevelEditor::Render()
 
 	terrainRenderer.Render(*terrain);
 
-	waterRenderer.Render(water);
+	if(renderWater)
+		waterRenderer.Render(water);
 
 	modelRenderer.Render();
 	
@@ -468,6 +469,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
 		window.AddCheckBoxComponent("WIREFRAME", false);
+		window.AddCheckBoxComponent("SHOW WATER", false);
 		window.AddButtonComponent("CREATE BBOX", 120, 30);
 		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
@@ -627,6 +629,15 @@ APPSTATE LevelEditor::Run()
 
 		if (window.Changed("WIREFRAME"))
 			Graphics::Inst().ToggleWireframe();
+
+		if (window.Changed("SHOW WATER"))
+		{
+			if (renderWater)
+				renderWater = false;
+			else
+				renderWater = true;
+		}
+			
 
 		if (window.Changed("TERRAIN START SUBDIVISIONS"))
 		{
