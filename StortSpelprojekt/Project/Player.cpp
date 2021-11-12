@@ -87,7 +87,7 @@ void Player::Shoot(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const 
 	arrow->GetCollider()->SetScale(0.15f);
 	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	mRenderer.Bind(arrow);
-	cRenderer.Bind(arrow);
+	cRenderer.Bind(arrow->GetCollider());
 	arrows.emplace_back(arrow);
 }
 
