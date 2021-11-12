@@ -34,6 +34,7 @@ private:
 	float timeMeasurement = 0;
 	Timer timer;
 
+	Vector3 moveDirection;
 
 	// Remove if we don't use pathing for these NPC's later
 public:

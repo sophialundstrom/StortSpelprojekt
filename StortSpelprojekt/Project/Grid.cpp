@@ -1,16 +1,23 @@
 #include "Grid.h"
+#include "Time.h"
+//#include "Event.h"
+#include <fstream>
+#include "FileSystem.h"
+#include <iostream>
 const int size = 32;
 
 void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 worldPosition, HeightMap* heightMap)
 {
 	position = worldPosition;
 	int nrUnwalkable = 0;
+	Timer timer;
 	Vector3 worldBottomLeft = position - (Vector3::Right * gridWorldSize.x / 2) - (Vector3::Forward * gridWorldSize.y / 2);
+	timer.Start();
 	for (int x = 0; x < gridSizeX; x++)
 	{
 		for (int y = 0; y < gridSizeY; y++)
 		{
-			Vector3 worldPoint = worldBottomLeft + Vector3::Right * (x * nodeDiameter + nodeRadius) + /*Vector3(0,0,1)*/Vector3::Forward * (y * nodeDiameter + nodeRadius);
+			Vector3 worldPoint = worldBottomLeft + Vector3::Right * (x * nodeDiameter + nodeRadius) + Vector3::Forward * (y * nodeDiameter + nodeRadius);
 
 			worldPoint.y = heightMap->data.at(Vector2((int)worldPoint.x, (int)worldPoint.z));
 			grid[x][y].position = worldPoint;
@@ -21,30 +28,33 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 
 			for (auto& collider : colliders)
 			{
-				auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
-				if (box)
-				{
-					if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), box->GetBounds()))
+				//if (Vector3::Distance(worldPoint, collider->GetPosition()) < 64.0f)
+				//{
+					//0.75
+					auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+					if (box)
 					{
-						grid[x][y].walkable = false;
-						nrUnwalkable++;
-					}
+						if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), box->GetBounds()))
+						{
+							grid[x][y].walkable = false;
+							nrUnwalkable++;
+						}
 
-					continue;
-				};
-
-				auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
-				if (sphere)
-				{
-					if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), sphere->GetBounds()))
+						continue;
+					};
+					//0.350245
+					auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
+					if (sphere)
 					{
-						grid[x][y].walkable = false;
-						nrUnwalkable++;
-					}
+						if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), sphere->GetBounds()))
+						{
+							grid[x][y].walkable = false;
+							nrUnwalkable++;
+						}
 
-					continue;
-				};
-
+						continue;
+					};
+				//}
 				//if (Vector3::Distance(worldPoint, drawable->GetPosition()) < 4.0f)
 				//{
 				//	BoundingSphere tmpSphere = { {Matrix::Identity}, {drawable->GetPosition()}, {1.0f} }; // tempporary solution to a colliding issue
@@ -56,7 +66,15 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 			}
 		}
 	}
-	Print("grid completed");
+	float time = timer.DeltaTime();
+	std::fstream fs;
+	auto filePath = FileSystem::ProjectDirectory::path;
+	fs.open(filePath + "\\Measurements.txt");
+	fs.seekg(0, std::ios::end);
+	fs.write(std::string(std::to_string(time)).c_str(), sizeof(std::string(std::to_string(time)).c_str()));
+	fs.write(std::string("\n").c_str(), sizeof(std::string("\n").c_str()));
+	fs.close();
+	exit(0);
 }
 
 Node* Grid::NodeFromWorldPoint(Vector3 worldPoint)
@@ -109,13 +127,17 @@ void Grid::RetracePath(Node *startNode, Node *endNode)
 		currentNode = currentNode->parent;
 	}
 	std::vector<Vector3> waypoints = optimizePath(path);
-	if (!path.size() < 1)
-		waypoints.push_back(path[path.size() - 1]->position);
+	if (!path.size() < 3)
+		waypoints.push_back(path[path.size() - 2]->position);
 	std::reverse(waypoints.begin(), waypoints.end());
 	this->waypointPath = waypoints;
 }
 
 std::vector<Vector3> Grid::GetPath()
+{
+	return waypointPath;
+}
+std::vector<Vector3>& Grid::GetPathRef()
 {
 	return waypointPath;
 }
