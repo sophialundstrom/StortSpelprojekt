@@ -112,9 +112,9 @@ public:
 
 			if (quest->IsCompleted())		//IF COMPLETED BY AUTOMATIC REASON (COLLECTING/FIGHT)
 			{
-				ingameCanvas->UpdateText("WOOD", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
+				/*ingameCanvas->UpdateText("WOOD", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
 				ingameCanvas->UpdateText("STONE", std::to_string(player->Inventory().NumOf(RESOURCE::STONE)));
-				ingameCanvas->UpdateText("FOOD", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));
+				ingameCanvas->UpdateText("FOOD", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));*/
 				ActivateTriggerQuests(quest);
 				EraseQuest(quest);
 			}

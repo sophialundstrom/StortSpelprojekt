@@ -158,7 +158,7 @@ void Game::RemoveItem(const std::string name)
 			auto item = scene.Get<Item>(name);
 			modelRenderer.Unbind(item);
 			//shadowRenderer.Unbind(item);
-			colliderRenderer.Unbind(item->GetBounds());
+			colliderRenderer.Unbind(item->GetCollider());
 			auto it = items.begin() + i;
 			items.erase(it);
 			scene.DeleteDrawable(name);
@@ -167,19 +167,22 @@ void Game::RemoveItem(const std::string name)
 	}
 }
 
-void Game::AddItem(RESOURCE resource, Vector3 position)
+void Game::AddItem(Item::Type type, Vector3 position)
 {
-	const std::string name = "testItem";
+	const std::string name = "Item";
 
-	auto item = std::make_shared<Item>(resource, name);
+	auto item = std::make_shared<Item>(type, name);
+	auto collider = item->GetCollider();
+
 	scene.AddDrawable(name, item);
 	items.emplace_back(item);
-	item->GetBounds()->SetParent(item);
-	item->SetPosition(position);
-	item->GetBounds()->Update();
 	modelRenderer.Bind(item);
 	//shadowRenderer.Bind(item);
-	colliderRenderer.Bind(item->GetBounds());
+	item->SetPosition(position);
+
+	collider->SetParent(item);
+	collider->Update();
+	colliderRenderer.Bind(collider);
 }
 
 std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Vector3 position)
@@ -355,7 +358,7 @@ void Game::CheckItemCollision()
 {
 	for (auto &item : items)
 	{
-		if (Collision::Intersection(*item->GetBounds(), *player->GetFrustum()))
+		if (Collision::Intersection(*item->GetCollider(), *player->GetFrustum()))
 		{
 			hovering = true;
 
@@ -417,9 +420,9 @@ void Game::UpdateInventoryUI()
 {
 	auto& canvas = canvases["INGAME"];
 
-	canvas->UpdateText("WOOD", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
+	/*canvas->UpdateText("WOOD", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
 	canvas->UpdateText("STONE", std::to_string(player->Inventory().NumOf(RESOURCE::STONE)));
-	canvas->UpdateText("FOOD", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));
+	canvas->UpdateText("FOOD", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));*/
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
@@ -443,14 +446,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ingameCanvas->AddImage({ 250, 365 }, "QuestBorder", "QuestBorder.png");
 	ingameCanvas->AddText({ 250, 65 }, "AQ", "Active Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
-	const UINT offset = 162;
-	for (UINT i = 0; i < ARRAYSIZE(Item::Names); ++i)
-	{
-		D2D_VECTOR_2F position = { (float)clientWidth - 90 - offset * i, 80.0f };
-		ingameCanvas->AddImage(position, Item::Names[i] + "inventorySlot", "InventorySlot.png");
-		ingameCanvas->AddImage(position, Item::Names[i] + "inventoryValue", Item::Names[i] + ".png");
-		ingameCanvas->AddText({ position.x, position.y + 70 }, Item::Names[i], "0", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
-	}
+	//const UINT offset = 162;
+	//for (UINT i = 0; i < ARRAYSIZE(Item::Names); ++i)
+	//{
+	//	D2D_VECTOR_2F position = { (float)clientWidth - 90 - offset * i, 80.0f };
+	//	ingameCanvas->AddImage(position, Item::Names[i] + "inventorySlot", "InventorySlot.png");
+	//	ingameCanvas->AddImage(position, Item::Names[i] + "inventoryValue", Item::Names[i] + ".png");
+	//	ingameCanvas->AddText({ position.x, position.y + 70 }, Item::Names[i], "0", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
+	//}
 
 	ingameCanvas->AddImage({ 355, clientHeight - 64.0f }, "hp", "HP10.png");
 
@@ -524,11 +527,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
 	//Item
-	AddItem(WOOD, { -134, 22, -594 });
-	AddItem(WOOD, { -113, 22, -582 });
-	AddItem(WOOD, { -116, 20, -609 });
-	AddItem(WOOD, { -91, 20, -593 });
-	AddItem(WOOD, { -85, 20, -608 });
+	AddItem(Item::Type::Stick, { -134, 22, -594 });
+	AddItem(Item::Type::Stick, { -113, 22, -582 });
+	AddItem(Item::Type::Stick, { -116, 20, -609 });
+	AddItem(Item::Type::Stick, { -91, 20, -593 });
+	AddItem(Item::Type::Stick, { -85, 20, -608 });
 
 	//AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);

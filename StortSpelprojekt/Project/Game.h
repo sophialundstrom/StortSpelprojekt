@@ -90,7 +90,7 @@ private:
     bool mainMenu = false;
 
     void RemoveItem(const std::string name);
-    void AddItem(RESOURCE resource, Vector3 position);
+    void AddItem(Item::Type type, Vector3 position);
 
     std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string fileName, Vector3 position);
 

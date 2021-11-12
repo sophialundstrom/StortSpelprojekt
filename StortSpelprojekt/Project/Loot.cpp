@@ -87,11 +87,11 @@ void Loot::Update(std::shared_ptr<Player> player)
 				if (type == LOOTTYPE::MIXED)
 				{
 				for (int wood = 0; wood < numWood; wood++)
-					player->Inventory().AddItem(RESOURCE::WOOD);
+					player->Inventory().AddItem(Item::Type::Stick);
 				for (int stone = 0; stone < numStones; stone++)
-					player->Inventory().AddItem(RESOURCE::STONE);
+					player->Inventory().AddItem(Item::Type::Stone);
 				for (int food = 0; food < numFood; food++)
-					player->Inventory().AddItem(RESOURCE::FOOD);
+					player->Inventory().AddItem(Item::Type::Food);
 				}
 				// GIVE ARROWS HERE....
 

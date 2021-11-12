@@ -4,11 +4,19 @@
 class BarbarianCamp
 {
 public:
-	static const UINT NUM_BARBARIANS = 3;
+	enum class Location { South, East, North, West };
+	static const std::string Locations[];
 private:
-	UINT ID;
-	std::shared_ptr<HostileNPC> barbarians[NUM_BARBARIANS];
+	Location location;
+	UINT numBarbarians;
+	std::shared_ptr<HostileNPC>* barbarians;
 public:
-	UINT GetID();
+	BarbarianCamp(Location location, UINT numBarbarians, float radius);
+	~BarbarianCamp();
+
+	Location GetLocation();
 	UINT NumDead();
+	UINT NumBarbarians();
 };
+
+inline const std::string BarbarianCamp::Locations[] = { "Southern", "Eastern", "Northern", "Western" };

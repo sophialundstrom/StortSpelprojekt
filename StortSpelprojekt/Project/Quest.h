@@ -17,8 +17,7 @@ protected:
 	std::vector<UINT> triggerQuests;
 public:
 	Quest(QuestType type, UINT ID, const std::string& name, bool active)
-		:type(type), ID(ID), name(name), active(active)
-	{}
+		:type(type), ID(ID), name(name), active(active) {}
 
 	UINT GetID() { return ID; }
 

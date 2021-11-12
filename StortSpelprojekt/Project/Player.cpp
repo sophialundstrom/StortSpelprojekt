@@ -473,17 +473,17 @@ void Player::Load(const std::string file)
 	reader >> stats.level;
 	stats.currentSpeed = stats.movementSpeed;
 
-	//INVENTORY
-	UINT numItems;
-	reader >> numItems;
-	for (UINT i = 0; i < numItems; ++i)
-	{
-		UINT resourceID, num;
-		reader >> resourceID;
-		reader >> num;
+	////INVENTORY
+	//UINT numItems;
+	//reader >> numItems;
+	//for (UINT i = 0; i < numItems; ++i)
+	//{
+	//	UINT resourceID, num;
+	//	reader >> resourceID;
+	//	reader >> num;
 
-		inventory.items[(RESOURCE)resourceID] = num;
-	}
+	//	inventory.items[(RESOURCE)resourceID] = num;
+	//}
 
 	reader.close();
 	Print("SUCCEDED LOADING PLAYER FILE");

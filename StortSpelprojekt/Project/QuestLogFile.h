@@ -73,7 +73,7 @@ namespace QuestLogFile
 				std::getline(reader, line);
 				std::string name = GetNthString(line, 1);
 
-				quest = new CollectQuest((QuestType)type, ID, name, active, numItems, (enum RESOURCE)itemID);
+				//quest = new CollectQuest((QuestType)type, ID, name, active, numItems, (enum RESOURCE)itemID);
 				break;
 			}
 				
@@ -143,10 +143,10 @@ namespace QuestLogFile
 				}
 				case QuestType::COLLECT:
 				{
-					auto collectQuest = dynamic_cast<CollectQuest*>(quest);
+					/*auto collectQuest = dynamic_cast<CollectQuest*>(quest);
 					writer << collectQuest->GetTargetAmount() << space;
 					writer << (UINT)collectQuest->GetItemID() << space;
-					writer << "'" << collectQuest->Name() << "'\n";
+					writer << "'" << collectQuest->Name() << "'\n";*/
 					break;
 				}
 				case QuestType::FIGHT:
