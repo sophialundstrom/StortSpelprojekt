@@ -16,9 +16,9 @@ Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
 {
 
 	float Volume = 0.5;
-	Audio::AddAudio(L"Audio/Win.wav");
-	Audio::SetVolume(Volume);
-	Audio::StartAudio();
+	Audio::AddAudio(L"Audio/Win.wav",0);
+	Audio::SetVolume(Volume,0);
+	Audio::StartAudio(0);
 	currentCanvas = new Canvas();
 
 	//FORM

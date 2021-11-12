@@ -559,9 +559,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//animatedModelRenderer.Bind(animated);
 	
 	float Volume = 0.5;
-	Audio::AddAudio(L"Audio/Sonrie.wav");
-	Audio::StartAudio();
-	Audio::SetVolume(Volume);
+	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
+	Audio::SetVolume(Volume, 0);
+	Audio::StartAudio(0);
 	
 	(void)Run();
 }

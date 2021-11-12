@@ -4,7 +4,7 @@ Microsoft::WRL::ComPtr<IXAudio2> Audio::pXAudio2;
 IXAudio2MasteringVoice* Audio::pMasterVoice = nullptr;
 WAVEFORMATEXTENSIBLE Audio::wfx = { 0 };
 XAUDIO2_BUFFER Audio::audioBuffer = { 0 };
-IXAudio2SourceVoice* Audio::pSourceVoice = nullptr;
+IXAudio2SourceVoice* Audio::pSourceVoice[CAP] = { nullptr };
 float Audio::volume = 0.5f;
 
 void Audio::StartEngine()
@@ -17,15 +17,15 @@ void Audio::StopEngine()
 	pXAudio2->StopEngine();
 }
 
-void Audio::SetVolume(float volume)
+void Audio::SetVolume(float volume, int slot)
 {
-	pSourceVoice->SetVolume(volume);
+	pSourceVoice[slot]->SetVolume(volume);
 }
 
-void Audio::StartAudio()
+void Audio::StartAudio(int slot)
 {
 	HRESULT hr;
-	if(FAILED(hr=pSourceVoice->Start(0)))
+	if(FAILED(hr=pSourceVoice[slot]->Start(0, 1)))
 		std::cout << "COULD NOT START AUDIO" << std::endl;
 }
 
@@ -40,11 +40,11 @@ void Audio::Initialize()
 		std::cout << "COULD NOT CREATE MASTERING VOICE" << std::endl;
 }
 
-void Audio::AddAudio(std::wstring fileName)
+void Audio::AddAudio(std::wstring fileName, int slot)
 {
 	LPCWSTR strFileName = fileName.c_str();
 	Initialize();
-
+	
 	HANDLE hFile = CreateFile(strFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (INVALID_HANDLE_VALUE == hFile)
 		ERROR("INVALID HANDLE VALUE");
@@ -71,15 +71,15 @@ void Audio::AddAudio(std::wstring fileName)
 	audioBuffer.AudioBytes = audioChunkSize;
 	audioBuffer.pAudioData = dataBuffer;
 	audioBuffer.Flags = XAUDIO2_END_OF_STREAM;
-	audioBuffer.LoopCount = XAUDIO2_MAX_LOOP_COUNT;
+	audioBuffer.LoopCount = 0;
 
 	HRESULT hr;
-	if (FAILED(hr = pXAudio2->CreateSourceVoice(&pSourceVoice, (WAVEFORMATEX*)&wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
+	if (FAILED(hr = pXAudio2->CreateSourceVoice(&pSourceVoice[slot], (WAVEFORMATEX*)&wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
 	{
 		ERROR("FAILED TO CREATE SOURCE VOICE");
 	}
-	if(FAILED(hr = pSourceVoice->SubmitSourceBuffer(&audioBuffer)))
+	if(FAILED(hr = pSourceVoice[slot]->SubmitSourceBuffer(&audioBuffer)))
 		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
 
-	pSourceVoice->SetVolume(1);
+	pSourceVoice[slot]->SetVolume(1);
 }

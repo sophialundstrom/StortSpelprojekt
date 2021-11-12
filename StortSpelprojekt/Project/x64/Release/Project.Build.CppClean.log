@@ -53,8 +53,10 @@ c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\rele
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\collidervertexshader.cso
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\deferredpixelshader.cso
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\deferredvertexshader.cso
+c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\forwardmodelpixelshader.cso
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\forwardparticlepixelshader.cso
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\deferredmodelpixelshader.cso
+c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\forwardterrainpixelshader.cso
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\idpixelshader.cso
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\idvertexshader.cso
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\loadingps.cso
@@ -78,8 +80,6 @@ c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\rele
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\volumevertexshader.cso
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\waterdomainshader.cso
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\waterpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\forwardmodelpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\forwardterrainpixelshader.cso
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\project.exe
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.ipdb
 c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.iobj

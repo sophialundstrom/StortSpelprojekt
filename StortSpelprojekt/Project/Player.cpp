@@ -241,6 +241,11 @@ void Player::Update(HeightMap* heightMap)
 					lastClick = Time::Get();
 					currentIndex++;
 				}
+				float Volume = 0.2;
+				Audio::AddAudio(L"Audio/Fire.wav", 1);
+				Audio::SetVolume(Volume, 1);
+				Audio::StartAudio(1);
+
 				numArrows--;
 				sinceLastShot = 0.f;
 			}

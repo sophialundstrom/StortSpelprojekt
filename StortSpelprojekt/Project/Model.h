@@ -7,7 +7,7 @@
 #include "assimp\postprocess.h"
 #include "Time.h"
 #include "FileSystem.h"
-
+#include "Audio.h"
 class Model : public Drawable
 {
 	friend class GameLoader;
