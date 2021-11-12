@@ -11,6 +11,11 @@ void hovering2()
 
 GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 {
+	float Volume = 0.5;
+	Audio::AddAudio(L"Audio/GameOver.wav");
+	Audio::SetVolume(Volume);
+	Audio::StartAudio();
+
 	currentCanvas = new Canvas();
 	//FORM
 	currentCanvas->AddImage({ (float)clientWidth / 2.f, (float)clientHeight / 1.25f }, "Form", "Form.png", 1.f, true);

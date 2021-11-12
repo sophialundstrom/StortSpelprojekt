@@ -557,11 +557,12 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//scene.AddDrawable("AnimatedModel", animated);
 	//skeletonRenderer.Bind(animated);
 	//animatedModelRenderer.Bind(animated);
+	
 	float Volume = 0.5;
-	//SOUND
 	Audio::AddAudio(L"Audio/Sonrie.wav");
 	Audio::StartAudio();
 	Audio::SetVolume(Volume);
+	
 	(void)Run();
 }
 
@@ -607,6 +608,10 @@ APPSTATE Game::Run()
 		{
 			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 			lastClick = Time::Get();
+		}
+		if (Event::KeyIsPressed(79))
+		{
+			Audio::StopEngine();
 		}
 		/*if (Event::KeyIsPressed('U'))
 		{

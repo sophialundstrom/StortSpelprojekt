@@ -53,6 +53,11 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(FORWARD, 40)
 {
 	Initialize();
+	
+	float Volume = 0.5;
+	Audio::AddAudio(L"Audio/Menu.wav");
+	Audio::SetVolume(Volume);
+	Audio::StartAudio();
 
 	auto menuCanvas = new Canvas();
 	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "K", "ArcusLogo.png", 0.5f, 1.0f);

@@ -14,6 +14,11 @@ Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(FORWARD, true),
 	particleRenderer(FORWARD)
 {
+
+	float Volume = 0.5;
+	Audio::AddAudio(L"Audio/Win.wav");
+	Audio::SetVolume(Volume);
+	Audio::StartAudio();
 	currentCanvas = new Canvas();
 
 	//FORM
