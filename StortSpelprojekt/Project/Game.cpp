@@ -235,7 +235,7 @@ void Game::UpdateAndHandleLoot()
 			loot.resize(loot.size() - 1);
 			//Audio::AddAudio(L"Audio/PickupPop.wav");
 			//Audio::StartAudio();
-			std::cout << "Loot destoyed\n";
+			//std::cout << "Loot destoyed\n";
 		}
 		
 	}
@@ -253,6 +253,7 @@ void Game::CheckNearbyCollision()
 
 	for (auto& collider : colliders)
 	{
+		player->CheckArrowHit(collider);
 		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
 		if (box)
 		{
@@ -712,10 +713,11 @@ void Game::CheckNearbyEnemies()
 {
 	for (int i = 0; i < hostiles.size(); i++)
 	{
-		bool hit = player->CheckArrowHit(hostiles[i]->GetCollider());
+		bool hit = player->CheckArrowHit(hostiles[i]->GetCollider(), true);
 
 		if (hit)
 		{
+
 			hostiles[i]->TakeDamage();
 			if (hostiles[i]->IsDead())
 			{

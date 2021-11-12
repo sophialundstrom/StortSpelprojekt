@@ -220,7 +220,7 @@ void Player::Update(HeightMap* heightMap)
 		//else if (jumping)
 			 // ADD IN AIR JUMP ANIMATION
 	}
-	std::cout << "NUM ARROWS: " << numArrows << std::endl;
+	//std::cout << "NUM ARROWS: " << numArrows << std::endl;
 	if(Event::RightIsClicked())
 	{
 		newCameraPos = position + camSocketUpdate;
@@ -375,7 +375,7 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 	{
 		collided = true;
 		//Print("ARROW HIT PLAYER");
-		arrow->DisableArrow();
+		//arrow->DisableArrow();
 		if (stats.healthPoints == 0)
 		{
 			return collided;
@@ -429,7 +429,7 @@ void Player::Save(const std::string file)
 	Print("SUCCEEDED SAVING PLAYER FILE");
 }
 
-bool Player::CheckArrowHit(std::shared_ptr<Collider> collider)
+bool Player::CheckArrowHit(std::shared_ptr<Collider> collider, bool deleteOnHit)
 {
 	for (auto& arrow : arrows)
 	{
@@ -448,7 +448,18 @@ bool Player::CheckArrowHit(std::shared_ptr<Collider> collider)
 
 		if (hit)
 		{
-			arrow->DisableArrow();
+			std::cout << "HIT" << std::endl;
+			
+			if (deleteOnHit)
+			{
+				arrow->DisableArrow();
+			}
+			else
+			{
+				arrow->GetCollider()->SetPosition(0, -1000, 0);
+				arrow->GetCollider()->Update();
+				arrow->isStuck = true;
+			}
 		}
 		
 		return hit;

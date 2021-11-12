@@ -172,7 +172,7 @@ public:
 
 	void Save(const std::string file);
 
-	bool CheckArrowHit(std::shared_ptr<Collider> collider);
+	bool CheckArrowHit(std::shared_ptr<Collider> collider, bool deleteOnHit = false);
 
 	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void MoveTowards(const Vector3& position);

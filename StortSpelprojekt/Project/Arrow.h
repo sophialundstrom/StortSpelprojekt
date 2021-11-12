@@ -13,7 +13,9 @@ private:
 	float xRadius = 0;
 	std::shared_ptr<BoundingBox> collider;
 
+
 public:
+	bool isStuck = false;
 	Arrow();
 	~Arrow();
 

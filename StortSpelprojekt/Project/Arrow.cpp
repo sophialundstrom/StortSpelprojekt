@@ -1,7 +1,7 @@
 #include "Arrow.h"
 
 Arrow::Arrow()
-	:Model("Arrow", "Arrow"), speed(150.f), lifeTime(3.0f)
+	:Model("arrowModel", "arrowModel"), speed(150.f), lifeTime(3.0f)
 {
 	collider = std::make_shared<BoundingBox>();
 }
@@ -42,6 +42,12 @@ void Arrow::Update()
 		lifeLength += Time::GetDelta();
 	}
 
+	/*if (lifeLength <= lifeTime && isStuck)
+	{
+		isStuck = false;
+		DisableArrow();
+	}*/
+
 	if (lifeLength <= lifeTime && isShot == true)
 	{
 		//float x = rotation.x / sqrt(1 - rotation.w * rotation.w);
@@ -50,13 +56,19 @@ void Arrow::Update()
 		//	//Rotate downwards
 		//	rotation.x -= 0.05f * Time::GetDelta();
 		//} 
-		
+
 		//Gravitation
-		direction.y -= 0.05f * Time::GetDelta();
-		SetPosition(GetPosition() + (direction * speed * Time::GetDelta()));
+		if (!isStuck)
+		{
+			direction.y -= 0.05f * Time::GetDelta();
+			SetPosition(GetPosition() + (direction * speed * Time::GetDelta()));
+		}
+
 	}
 	else
 	{
+		collider->SetPosition(0, 0, 0);
+		isStuck = false;
 		DisableArrow();
 	}
 
