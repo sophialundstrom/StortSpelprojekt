@@ -80,7 +80,8 @@ private:
 
 	std::shared_ptr<Canvas> ingameCanvas;
 	//ARROW STUFF
-	std::vector<std::shared_ptr<Arrow>> arrows;
+	//std::vector<std::shared_ptr<Arrow>> arrows;
+	std::vector<std::shared_ptr<Arrow>>arrows;
 
 	bool hasCollided;
 
@@ -143,12 +144,14 @@ private:
 		ingameCanvas->RemoveImage("hp");
 		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
 	}
+
+	void Shoot(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const Vector3& direction, Vector3 startPos, Vector3 rotation);
 public:
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
-	void Update(HeightMap* heightMap);
+	void Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
 
-	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows, const UINT& maxArrows);
+	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas/*, std::vector<std::shared_ptr<Arrow>> arrows*/, const UINT& maxArrows);
 
 public:
 	// TEMP STATS PRINT
@@ -172,7 +175,7 @@ public:
 
 	void Save(const std::string file);
 
-	bool CheckArrowHit(std::shared_ptr<Collider> collider, bool deleteOnHit = false);
+	bool CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynamic = false);
 
 	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void MoveTowards(const Vector3& position);

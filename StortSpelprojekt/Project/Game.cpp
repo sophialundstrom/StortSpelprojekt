@@ -12,7 +12,7 @@ void Game::Update()
 	
 	scene.Update();
 
-	player->Update(terrain.GetHeightMap());
+	player->Update(terrain.GetHeightMap(), modelRenderer, colliderRenderer);
 
 	scene.GetCamera()->Update();
 
@@ -494,12 +494,12 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 
 	// THE WILL BE A PROBLEM IF MORE ARROWS THAN MAXARROWS IS IN THE AIR AT THE SAME TIME (NO ARROW WILL BE RENDERED). THIS IS BECAUSE THERE ARE ONLY AS MANY ARROW MODELS AS MAXARROWS.
-	UINT maxArrows = 50;
-	for (int i = 0; i < maxArrows; i++)
-		AddArrow("arrowModel");
+	UINT maxArrows = 5;
+	//for (int i = 0; i < maxArrows; i++)
+	//	AddArrow("arrowModel");
 
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows, maxArrows);
+	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas,/* arrows,*/ maxArrows);
 	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
@@ -535,8 +535,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -91, 20, -593 });
 	AddItem(WOOD, { -85, 20, -608 });
 
-	//AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
-	AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
 	AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
@@ -551,17 +550,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
 	particleRenderer.Bind(campFireSystem);
-
-	//ANIMATION
-	//auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
-	//animated->SetPosition(-30, 25, -580);
-	//scene.AddDrawable("AnimatedModel", animated);
-	//skeletonRenderer.Bind(animated);
-	//animatedModelRenderer.Bind(animated);
-
-	//SOUND
-	//Audio::AddAudio(L"Audio/Rainy.wav");
-	//Audio::StartAudio();
 
 	(void)Run();
 }

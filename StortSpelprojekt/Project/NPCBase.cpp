@@ -37,7 +37,7 @@ bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 	if (Collision::Intersection(this->boundingBox, arrow->GetCollider()) && arrow->IsShot() == true)
 	{
 		Print("ARROW HIT");
-		arrow->DisableArrow();
+		//arrow->DisableArrow();
 		hp--;
 		if (hp <= 0)
 		{

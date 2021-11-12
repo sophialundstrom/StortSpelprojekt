@@ -1,12 +1,12 @@
 #include "Player.h"
 
-Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows, const UINT& maxArrows)
+Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas/*, std::vector<std::shared_ptr<Arrow>> arrows*/, const UINT& maxArrows)
 	:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
 {
 	isRightPressed = false;
 	isLeftPressed = false;
 
-	this->arrows = arrows;
+	//this->arrows = arrows;
 	bounds = std::make_shared<BoundingBox>();
 
 	bounds->SetScale(0.8f, 2.5f, 0.8f);
@@ -72,7 +72,26 @@ float Get2DAngle(Vector2 a, Vector2 b)
 	return acos(a.x * b.x + a.y * b.y);
 };
 
-void Player::Update(HeightMap* heightMap)
+void Player::Shoot(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const Vector3& direction, Vector3 startPos, Vector3 rotation)
+{
+	std::shared_ptr<Arrow> arrow = std::make_shared<Arrow>();
+	//std::make_shared <Arrow> arrow;
+
+	
+	
+	arrow->SetRotation({ rotation.x, rotation.y + PI, rotation.z });
+	arrow->direction = direction;
+	arrow->SetPosition(startPos);
+	arrow->isShot = true;
+	arrow->GetCollider()->SetParent(arrow);
+	arrow->GetCollider()->SetScale(0.15f);
+	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
+	mRenderer.Bind(arrow);
+	cRenderer.Bind(arrow);
+	arrows.emplace_back(arrow);
+}
+
+void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
 {
 	lastPosition = position;
 
@@ -204,7 +223,7 @@ void Player::Update(HeightMap* heightMap)
 	
 	static float lastClick = 0;
 
-	if (Event::KeyIsPressed('R'))
+	if (Event::KeyIsPressed('R') && numArrows < maxArrows)
 	{
 		numArrows++;
 	}
@@ -231,18 +250,19 @@ void Player::Update(HeightMap* heightMap)
 		{
 			if (Event::LeftIsClicked() && numArrows > 0)
 			{
-
+				Shoot(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 } );
 				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				int currentIndex = 0;
-				bool isPlayerShootingArrow = false;
-				while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
-				{
-					isPlayerShootingArrow = arrows.at(currentIndex)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-					lastClick = Time::Get();
-					currentIndex++;
-				}
+				//bool isPlayerShootingArrow = false;
+				//while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
+				//{
+				//	isPlayerShootingArrow = arrows.at(currentIndex)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+				//	lastClick = Time::Get();
+				//	currentIndex++;
+				//}
 				numArrows--;
 				sinceLastShot = 0.f;
+				lastClick = Time::Get();
 			}
 		}
 	}
@@ -256,7 +276,14 @@ void Player::Update(HeightMap* heightMap)
 
 	for (int i = 0; i < arrows.size(); i++)
 	{
-		arrows.at(i)->Update();
+		arrows[i]->Update();
+		if (arrows[i]->isDestroyed)
+		{
+			cRenderer.Unbind(arrows[i]);
+			mRenderer.Unbind(arrows[i]);
+			arrows[i] = arrows[arrows.size() - 1];
+			arrows.resize(arrows.size() - 1);
+		}
 	}
 
 	AnimatedModel::Update();
@@ -429,9 +456,10 @@ void Player::Save(const std::string file)
 	Print("SUCCEEDED SAVING PLAYER FILE");
 }
 
-bool Player::CheckArrowHit(std::shared_ptr<Collider> collider, bool deleteOnHit)
+bool Player::CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynamic)
 {
 	int count = 0;
+
 	for (auto& arrow : arrows)
 	{
 		if (!arrow->IsShot())
@@ -449,14 +477,16 @@ bool Player::CheckArrowHit(std::shared_ptr<Collider> collider, bool deleteOnHit)
 
 		if (hit)
 		{
-			std::cout << "HIT"<< " on arrow num: "<< count << std::endl;
 			
-			if (deleteOnHit)
+
+			if (isDynamic)
 			{
-				arrow->DisableArrow();
+				//arrow->DisableArrow();
+				std::cout << "HIT on dynamic object: " << count << std::endl;
 			}
 			else
 			{
+				std::cout << "HIT on static object: " << count << std::endl;
 				arrow->GetCollider()->SetPosition(0, -1000, 0);
 				arrow->GetCollider()->Update();
 				arrow->isStuck = true;
@@ -464,7 +494,41 @@ bool Player::CheckArrowHit(std::shared_ptr<Collider> collider, bool deleteOnHit)
 		}
 		count++;
 		return hit;
+
 	}
+	//for (auto& arrow : arrows)
+	//{
+	//	if (!arrow->IsShot())
+	//		continue;
+	//
+	//	bool hit = false;
+	//
+	//	auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+	//	if (box)
+	//		hit = Collision::Intersection(box, arrow->GetCollider());
+	//
+	//	auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
+	//	if (sphere)
+	//		hit = Collision::Intersection(sphere, arrow->GetCollider());
+	//
+	//	if (hit)
+	//	{
+	//		std::cout << "HIT"<< " on arrow num: "<< count << std::endl;
+	//		
+	//		if (deleteOnHit)
+	//		{
+	//			arrow->DisableArrow();
+	//		}
+	//		else
+	//		{
+	//			arrow->GetCollider()->SetPosition(0, -1000, 0);
+	//			arrow->GetCollider()->Update();
+	//			arrow->isStuck = true;
+	//		}
+	//	}
+	//	count++;
+	//	return hit;
+	//}
 
 	return false;
 }
