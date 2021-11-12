@@ -431,6 +431,7 @@ void Player::Save(const std::string file)
 
 bool Player::CheckArrowHit(std::shared_ptr<Collider> collider, bool deleteOnHit)
 {
+	int count = 0;
 	for (auto& arrow : arrows)
 	{
 		if (!arrow->IsShot())
@@ -448,7 +449,7 @@ bool Player::CheckArrowHit(std::shared_ptr<Collider> collider, bool deleteOnHit)
 
 		if (hit)
 		{
-			std::cout << "HIT" << std::endl;
+			std::cout << "HIT"<< " on arrow num: "<< count << std::endl;
 			
 			if (deleteOnHit)
 			{
@@ -461,7 +462,7 @@ bool Player::CheckArrowHit(std::shared_ptr<Collider> collider, bool deleteOnHit)
 				arrow->isStuck = true;
 			}
 		}
-		
+		count++;
 		return hit;
 	}
 
