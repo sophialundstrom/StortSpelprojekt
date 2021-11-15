@@ -28,10 +28,10 @@ Loot::Loot(LOOTTYPE inType, const Vector3& position)
 		case LOOTTYPE::ARROWS:
 		{
 			this->type = inType;
-			ApplyMesh("Arrow");
-			ApplyMaterial("Arrow");
+			ApplyMesh("arrowModel");
+			ApplyMaterial("arrowModel");
 			SetScale(2, 2, 2);
-			numArrows = Random::Integer(1, maxItemsPerType);
+			numArrows = Random::Integer(3, maxItemsPerType + 10);
 			break;
 		}
 		default:
@@ -94,6 +94,7 @@ void Loot::Update(std::shared_ptr<Player> player)
 					player->Inventory().AddItem(RESOURCE::FOOD);
 				}
 				// GIVE ARROWS HERE....
+				player->numArrows += numArrows;
 
 				std::cout << "Destroyed by collision\n";
 				destroy = true;

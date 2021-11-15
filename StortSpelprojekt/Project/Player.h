@@ -144,9 +144,12 @@ private:
 		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
 	}
 public:
+	UINT maxArrows = 10;
+	UINT numArrows = 5;
 	void Update(HeightMap* heightMap);
 
-	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows);
+	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows, const UINT& maxArrows);
+
 public:
 	// TEMP STATS PRINT
 	void GetStats()
