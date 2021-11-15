@@ -22,6 +22,7 @@
 #include "Audio.h"
 #include "NPCHostile.h"
 #include "Loot.h"
+#include "MainMenu.h"
 
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
