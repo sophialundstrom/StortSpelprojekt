@@ -223,7 +223,9 @@ void Player::Update(HeightMap* heightMap)
 		//else if (jumping)
 			 // ADD IN AIR JUMP ANIMATION
 	}
-	std::cout << "NUM ARROWS: " << numArrows << std::endl;
+	
+
+
 	if(Event::RightIsClicked())
 	{
 		newCameraPos = position + camSocketUpdate;

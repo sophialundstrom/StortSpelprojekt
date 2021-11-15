@@ -92,7 +92,7 @@ void HostileNPC::Update()
         float additionalRadians = 0;
 
         Vector3 yRadiantVecReference;
-        std::cout << aimDir.x << std::endl;
+        //std::cout << aimDir.x << std::endl;
         float aimDirXIgnoranceLevel = 0.2f;
 
         if (aimDir.x > -aimDirXIgnoranceLevel && aimDir.x < aimDirXIgnoranceLevel)
