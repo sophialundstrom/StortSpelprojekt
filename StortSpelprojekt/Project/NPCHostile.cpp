@@ -22,13 +22,6 @@ HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, 
     this->combatStyle = combatStyle;
     SwapCombatStyle(combatStyle);
 
-   /* for (int i = 0; i < 3; i++)
-    {
-        auto arrow = std::make_shared<Arrow>();
-        arrow->GetCollider()->SetParent(arrow);
-        arrows.emplace_back(arrow);
-    }*/
-
 }
 
 HostileNPC::HostileNPC(const Model& model)
@@ -36,17 +29,6 @@ HostileNPC::HostileNPC(const Model& model)
 {
 
 }
-
-//void HostileNPC::BindPlayerArrows(std::vector<std::shared_ptr<Arrow>> playerArrows)
-//{
-//    this->playerArrows = playerArrows;
-//}
-
-//void HostileNPC::BindArrows(ModelRenderer& modelrenderer)
-//{
-//    for (auto arrow : arrows)
-//        modelrenderer.Bind(arrow);
-//}
 
 void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
 {
@@ -92,16 +74,9 @@ void HostileNPC::Update()
 
 void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player)
 {
-   /* if (IsDead() == true)
-    {
-        return;
-    }*/
     static float lastClick = 0;
 
     Vector3 aimDir = player->GetPosition() - position;
-
-
-
 
     if (aimDir.Length() <= enemyShootDetectionRadius)
     {
@@ -111,7 +86,6 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
         float additionalRadians = 0;
 
         Vector3 yRadiantVecReference;
-        //std::cout << aimDir.x << std::endl;
         float aimDirXIgnoranceLevel = 0.2f;
 
         if (aimDir.x > -aimDirXIgnoranceLevel && aimDir.x < aimDirXIgnoranceLevel)
@@ -142,19 +116,10 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
 
         SetRotation({ 0, movementYRadiant, 0 });
 
-        if (Time::Get() - lastClick > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // currently working....
+        if (Time::Get() - lastClick > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
         {
             Shoot(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             lastClick = Time::Get();
-            //for (int i = 0; i < arrows.size(); i++)
-            //{
-            //    if (arrows[i]->IsShot())
-            //        continue;
-
-            //    // arrows.at(i)->Shoot(aimDir, position, {PI_DIV2 - movementXRadiant, movementYRadiant, 0});
-            //    lastClick = Time::Get();
-            //    break;
-            //}
         }
         else if (Time::Get() - lastClick > 3 && combatStyle == CombatStyle::wideArrow)
         {
@@ -169,9 +134,18 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
 
     }
 
+    // ArrowHandle class which consists of the following:
+        // vector of shared_ptr arrows
+        // 
+        // A update function that takes in cRenderer & mRenderer and does what is shown below (row 147 - 159).
+        // This function is called inside hostile/player update.
+        // 
+        // The class also has a CheckCollision function which is the same as the CheckArrowHit function. This is used in game.cpp instead of the hostile/player function.
+        // 
+        // Also stop the overidden update function to be called each frame (if it is).
+
     for (int i = 0; i < arrows.size(); i++)
     {
-        
         arrows[i]->Update();
 
         if (arrows[i]->isDestroyed)
@@ -182,15 +156,6 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
             arrows[i] = arrows[arrows.size() - 1];
             arrows.resize(arrows.size() - 1);
         }
-
-       //if (!arrows[i]->canCollide)
-       //    continue;
-
-        //std::cout << "LIFE LENGTH: " << i << " : " << arrows[i]->lifeLength << std::endl;
-        //player->ProjectileCollided(arrows[i]);
-        
-
-        
     }
 
     NPC::Update();
@@ -223,8 +188,6 @@ bool HostileNPC::CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynami
             else
             {
                 std::cout << "HIT on static object" << std::endl;
-                //arrow->GetCollider()->SetPosition(0, -10000, 0);
-                //arrow->GetCollider()->Update();
                 arrow->isStuck = true;
                 arrow->canCollide = false;
             }
@@ -238,6 +201,6 @@ bool HostileNPC::CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynami
 
 void HostileNPC::WeaponSlash()
 {
-	//Highly prototype only
+	// Highly prototype only
 	// need some kind of way to do a weapon slash in the future
 }

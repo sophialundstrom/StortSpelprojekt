@@ -13,8 +13,6 @@ enum CombatStyle
 class HostileNPC : public NPC
 {
 private:
-	/*std::vector<std::shared_ptr<Arrow>> arrows;
-	std::vector<std::shared_ptr<Arrow>> playerArrows;*/
 	std::vector<std::shared_ptr<Arrow>>arrows;
 	std::shared_ptr<Player> player;
 	float movementXRadiant;
@@ -31,8 +29,6 @@ private:
 public:
 	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle);
 	HostileNPC(const Model& model);
-	//void BindPlayerArrows(std::vector<std::shared_ptr<Arrow>> playerArrows);
-	//void BindArrows(ModelRenderer& modelrenderer);
 	void SwapCombatStyle(CombatStyle newCombatStyle);
 	virtual void Update() override;
 	void Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player);

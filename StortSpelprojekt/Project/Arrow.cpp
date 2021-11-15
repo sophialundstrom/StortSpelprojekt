@@ -6,19 +6,6 @@ Arrow::Arrow()
 	collider = std::make_shared<BoundingBox>();
 }
 
-Arrow::~Arrow()
-{
-}
-
-//void Arrow::DisableArrow()
-//{
-//	SetPosition(0, -200, 0);
-//	isShot = false;
-//	lifeLength = 0;
-//	collider->Update();
-//	Model::Update();
-//}
-
 void Arrow::Update()
 {
 	lastPosition = position;

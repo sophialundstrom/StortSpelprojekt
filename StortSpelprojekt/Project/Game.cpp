@@ -449,7 +449,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(100, { 1, 1, 1, 1 }, 4, 4);
 
-
 	//INGAME CANVAS
 	auto ingameCanvas = std::make_shared<Canvas>();
 	ingameCanvas->HideCursor();
@@ -494,6 +493,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100}, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, [this] { MainMenu(); });
 
 	canvases["PAUSED"] = pauseCanvas;
+
 	//HOW TO PLAY
 	auto howToPlayCanvas = std::make_shared<Canvas>();
 	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "ControlImage", "Controls.png", 2.0f, 1.0f);
@@ -506,12 +506,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 
 	// THE WILL BE A PROBLEM IF MORE ARROWS THAN MAXARROWS IS IN THE AIR AT THE SAME TIME (NO ARROW WILL BE RENDERED). THIS IS BECAUSE THERE ARE ONLY AS MANY ARROW MODELS AS MAXARROWS.
-	UINT maxArrows = 5;
-	//for (int i = 0; i < maxArrows; i++)
-	//	AddArrow("arrowModel");
 
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas,/* arrows,*/ maxArrows);
+	UINT maxArrows = 5;
+	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, maxArrows);
 	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
@@ -523,8 +521,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	colliderRenderer.Bind(scene.GetCamera()->GetCamRay());
 	
-
-
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
@@ -562,13 +558,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
 	particleRenderer.Bind(campFireSystem);
-
-	//ANIMATION
-	//auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
-	//animated->SetPosition(-30, 25, -580);
-	//scene.AddDrawable("AnimatedModel", animated);
-	//skeletonRenderer.Bind(animated);
-	//animatedModelRenderer.Bind(animated);
 	
 	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
 	Audio::SetVolume(0.3, 0);
@@ -666,15 +655,6 @@ APPSTATE Game::Run()
 	}
 
 	UpdateInventoryUI();
-
-	//int nrOfFreeArrows = 0;
-	//for (int i = 0; i < arrows.size(); i++)
-	//{
-	//	if (!arrows[i]->IsShot())
-	//	{
-	//		nrOfFreeArrows++;
-	//	}
-	//}
 
 	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(player->numArrows));
 	
