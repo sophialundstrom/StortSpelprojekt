@@ -81,5 +81,5 @@ void SoundEffect::AddAudio(std::wstring fileName, int slot)
 	if (FAILED(hr = pSourceVoice[slot]->SubmitSourceBuffer(&audioBuffer)))
 		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
 
-	pSourceVoice[slot]->SetVolume(1);
+	pSourceVoice[slot]->SetVolume(volume);
 }
