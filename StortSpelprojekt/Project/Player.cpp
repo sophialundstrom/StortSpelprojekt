@@ -154,6 +154,9 @@ void Player::Update(HeightMap* heightMap)
 		if (Event::KeyIsPressed(VK_SPACE))
 		{
 			jumping = true;
+			SoundEffect::AddAudio(L"Audio/Jump.wav", 2);
+			SoundEffect::SetVolume(0.5, 2);
+			SoundEffect::StartAudio(2);
 			preJumpGroundLevel = currentGroundLevel; 
 			PlayAnimation("Jump", false, 0.5f);
 		}

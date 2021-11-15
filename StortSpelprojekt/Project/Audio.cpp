@@ -71,7 +71,7 @@ void Audio::AddAudio(std::wstring fileName, int slot)
 	audioBuffer.AudioBytes = audioChunkSize;
 	audioBuffer.pAudioData = dataBuffer;
 	audioBuffer.Flags = XAUDIO2_END_OF_STREAM;
-	audioBuffer.LoopCount = 0;
+	audioBuffer.LoopCount = XAUDIO2_MAX_LOOP_COUNT;
 
 	HRESULT hr;
 	if (FAILED(hr = MusicEngine->CreateSourceVoice(&pSourceVoice[slot], (WAVEFORMATEX*)&wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))

@@ -54,7 +54,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 {
 	Initialize();
 	
-	float Volume = 0.5;
+	float Volume = 0.4;
 	Audio::AddAudio(L"Audio/Menu.wav", 0);
 	Audio::SetVolume(Volume, 0);
 	Audio::StartAudio(0);

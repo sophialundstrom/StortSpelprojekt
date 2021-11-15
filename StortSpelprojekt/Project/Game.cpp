@@ -233,8 +233,9 @@ void Game::UpdateAndHandleLoot()
 			colliderRenderer.Unbind(loot[i]->GetCollider());
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
-			//Audio::AddAudio(L"Audio/PickupPop.wav");
-			//Audio::StartAudio();
+			SoundEffect::AddAudio(L"Audio/Loot.wav", 2);
+			SoundEffect::SetVolume(0.5, 2);
+			SoundEffect::StartAudio(2);
 			std::cout << "Loot destoyed\n";
 		}
 		
@@ -361,6 +362,9 @@ void Game::CheckItemCollision()
 
 			if (Event::KeyIsPressed('E'))
 			{
+				SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
+				SoundEffect::SetVolume(0.5, 2);
+				SoundEffect::StartAudio(2);
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
@@ -384,9 +388,11 @@ void Game::CheckQuestInteraction()
 				if (Event::KeyIsPressed('E'))
 				{
 					state = GameState::DIALOGUE;
-
+					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
+					SoundEffect::SetVolume(0.5, 2);
+					SoundEffect::StartAudio(2);
 					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
-					dialogueOverlay->Set("GILBERT", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum et sagittis sem. Quisque ut ultrices ex. Sed vestibulum placerat nisl nec faucibus. Praesent lacinia leo id mauris imperdiet scelerisque euismod nec quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec gravida mollis sapien semper aliquet. Morbi sit amet ante nisl. Maecenas rutrum vehicula felis, non iaculis ante posuere nec. Etiam ullamcorper ornare convallis. Mauris in metus vel ex consectetur tempor. Nulla augue lectus, suscipit ut pulvinar et, luctus et mi. Aenean posuere nulla augue, non scelerisque lacus feugiat in. Pellentesque felis ante, imperdiet ornare varius non, rutrum eget nulla. Vivamus faucibus vestibulum volutpat.");
+					dialogueOverlay->Set("GILBERT", "Lorem.");
 					currentCanvas = dialogueOverlay;
 
 					int ID = NPC->GetQuestID();
@@ -558,9 +564,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//skeletonRenderer.Bind(animated);
 	//animatedModelRenderer.Bind(animated);
 	
-	float Volume = 0.5;
 	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	Audio::SetVolume(Volume, 0);
+	Audio::SetVolume(0.3, 0);
 	Audio::StartAudio(0);
 	
 	(void)Run();
@@ -727,7 +732,10 @@ void Game::CheckNearbyEnemies()
 			hostiles[i]->TakeDamage();
 			if (hostiles[i]->IsDead())
 			{
-
+				SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
+				SoundEffect::SetVolume(0.8, 2);
+				SoundEffect::StartAudio(2);
+				hostiles[i]->TakeDamage();
 				player->Stats().barbariansKilled++;
 				AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0,-3,0));
 				colliderRenderer.Unbind(hostiles[i]->GetCollider());
