@@ -26,7 +26,7 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 	{
 		if (!divided)
 		{
-			if (collectedDrawables.size() >= maxCap)
+			if (collectedDrawables.size() >= maxCap && currentLevel < maxLevel)
 			{
 				DivideQuadTree();
 				InsertModelInChild(drawable);
@@ -49,6 +49,31 @@ void QuadTree::InsertModelInChild(std::shared_ptr<Drawable>& drawable)
 
 void QuadTree::PrintTree()
 {
+	if (divided)
+	{
+		TopL->PrintTree();
+		TopR->PrintTree();
+		BotL->PrintTree();
+		BotR->PrintTree();
+	}
+	else
+	{
+		std::cout << "---------------------------------------------------------\n";
+		std::cout << "QuadTree LeafBounds:\n";
+		std::cout << "xPosMin: " << bounds.xPos << std::endl;
+		std::cout << "zPosMin: " << bounds.zPos << std::endl;
+		std::cout << std::endl << std::endl;
+		std::cout << "xPosMax: " << bounds.xPos + bounds.width << std::endl;
+		std::cout << "zPosMax: " << bounds.zPos + bounds.depth << std::endl;
+		std::cout << std::endl << std::endl;
+		std::cout << "xWidth: " << bounds.width << std::endl;
+		std::cout << "zDepth: " << bounds.depth << std::endl;
+		std::cout << std::endl << std::endl;
+		std::cout << "LayerDepth: " << currentLevel << std::endl;
+		std::cout << "MaxDepth: " << maxLevel << std::endl;
+		std::cout << "ActiveEntities: " << collectedDrawables.size() << std::endl;
+		std::cout << "MaxEntityCount: " << maxCap << std::endl;
+	}
 
 }
 
@@ -60,6 +85,7 @@ void QuadTree::DivideQuadTree()
 	BotR = new QuadTree(QuadTreeBounds(bounds.xPos + bounds.width / 2.f, bounds.zPos + bounds.depth / 2.f, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1);
 
 	divided = true;
+	
 }
 
 void QuadTree::DeleteMemory()

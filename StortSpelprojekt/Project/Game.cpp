@@ -571,6 +571,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	Audio::SetVolume(0.3, 0);
 	Audio::StartAudio(0);
 	
+	quadTree->PrintTree();
+
 	(void)Run();
 }
 
