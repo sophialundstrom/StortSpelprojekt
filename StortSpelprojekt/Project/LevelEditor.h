@@ -29,7 +29,6 @@ private:
 	Terrain* terrain;
 	std::shared_ptr<Building> building;
 	Water water;
-	bool renderWater = false;
 
 	//ADD RENDERERS
 	AnimatedModelRenderer animatedModelRenderer;
