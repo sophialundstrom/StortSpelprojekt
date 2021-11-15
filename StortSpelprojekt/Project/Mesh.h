@@ -11,6 +11,12 @@ struct Mesh
 	UINT bufferID = -1;
 	UINT materialID = -1;
 	UINT vertexCount = -1;
+	float xMin = 0;
+	float xMax = 0;
+	float yMin = 0;
+	float yMax = 0;
+	float zMin = 0;
+	float zMax = 0;
 
 	Mesh() = default;
 	Mesh(aiMesh* mesh)
@@ -24,6 +30,21 @@ struct Mesh
 
 			val = mesh->mVertices[i];
 			vertices[i].position = { val.x, val.y, val.z };
+
+			//Collecting minMax values for boundingbox of mesh
+			if (val.x < xMin)
+				xMin = val.x;
+			if (val.x > xMax)
+				xMax = val.x;
+			if (val.y < yMin)
+				yMin = val.y;
+			if (val.y > yMax)
+				yMax = val.y;
+			if (val.z < zMin)
+				zMin = val.z;
+			if (val.z > zMax)
+				zMax = val.z;
+
 
 			val = mesh->mNormals[i];
 			vertices[i].normal = { val.x, val.y, val.z };

@@ -48,9 +48,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+<<<<<<< HEAD
     <PlatformToolset>v142</PlatformToolset>
+=======
+>>>>>>> main
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -191,6 +195,7 @@
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SkeletonRenderer.cpp" />
@@ -233,6 +238,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Pathfinding.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
     <ClInclude Include="AnimatedModel.h" />

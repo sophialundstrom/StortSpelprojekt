@@ -63,4 +63,9 @@ public:
 	{
 		UpdateMatrix();
 	}
+
+	void GetMeshBoundingBoxValues(Vector3& minVals, Vector3& maxVals)
+	{
+
+	}
 };
