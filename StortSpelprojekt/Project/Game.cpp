@@ -550,7 +550,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	// THE WILL BE A PROBLEM IF MORE ARROWS THAN MAXARROWS IS IN THE AIR AT THE SAME TIME (NO ARROW WILL BE RENDERED). THIS IS BECAUSE THERE ARE ONLY AS MANY ARROW MODELS AS MAXARROWS.
 	UINT maxArrows = 50;
 	for (int i = 0; i < maxArrows; i++)
-		AddArrow("Arrow");
+		AddArrow("arrowModel");
 
 	//PLAYER
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows, maxArrows);
@@ -787,8 +787,9 @@ void Game::CheckNearbyEnemies()
 
 				player->Stats().barbariansKilled++;
 				AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0,-3,0));
-				scene.DeleteDrawable(hostiles[i]->GetName());
+				colliderRenderer.Unbind(hostiles[i]->GetCollider());
 				modelRenderer.Unbind(hostiles[i]);
+				scene.DeleteDrawable(hostiles[i]->GetName());
 				hostiles[i] = hostiles[hostiles.size() - 1];
 				hostiles.resize(hostiles.size() - 1);
 			}
