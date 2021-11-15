@@ -1,7 +1,7 @@
 #include "LocationObjective.h"
 
-LocationObjective::LocationObjective(bool completed, Vector3 location, float radius)
-	:Objective(Type::LOCATION, completed), location(location), radius(radius) {}
+LocationObjective::LocationObjective(const Vector3& location, float radius)
+	:Objective(Type::LOCATION, false), location(location), radius(radius) {}
 
 void LocationObjective::Update(const Vector3& playerPosition)
 {

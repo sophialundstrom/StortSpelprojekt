@@ -1,17 +1,23 @@
 #include "FightObjective.h"
 
-FightObjective::FightObjective(bool completed, BarbarianCamp::Location location)
-	:Objective(Type::FIGHT, completed), location(location) {}
+FightObjective::FightObjective(BarbarianCamp::Location location)
+	:Objective(Type::FIGHT, false), location(location) {}
 
 void FightObjective::Update(BarbarianCamp& camp)
 {
-	if (camp.NumDead() == camp.NumBarbarians())
+	cleared = camp.NumDead();
+	total = camp.NumBarbarians();
+
+	if (cleared == total)
 		completed = true;
 }
 
 std::string FightObjective::Info()
 {
-	return "Clear The Baribarians At The " + BarbarianCamp::Locations[UINT(location)] + " Camp.";
+	if (BarbarianCamp::Locations[UINT(location)] != "Village")
+		return "Clear The Baribarians At The " + BarbarianCamp::Locations[UINT(location)] + " Camp. " + std::to_string(cleared) + "/" + std::to_string(total) + ".";
+	else
+		return "Fight The Barbarians Attacking The Village! " + std::to_string(cleared) + "/" + std::to_string(total) + ".";;
 }
 
 void FightObjective::WriteToFile(File& file)

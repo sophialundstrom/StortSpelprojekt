@@ -63,3 +63,35 @@ void QuestLog::Load(const std::string& fileName)
 
 	file.Close();
 }
+
+void QuestLog::CreateQuests()
+{
+	//CREATE THE QUESTS HERE, START ONCE TO CREATE THE FILE
+
+	//BEFORE FIRST QUEST, A LIL MESSAGE TO PLAYER LIKE "SEEMS LIKE >>NPC<< HAS A QUEST FOR YOU, YOU SHOULD TALK TO HIM ( WILL BE THE ONLY ONE WITH A SYMBOL )
+
+	//=====================================================
+	//NPC1
+	auto q1 = new Quest("A Helping Hand.", true, false);		//COLLECTING A HAMMER ( MAYBE TO FINISH BUILDING BOW HUT OR SMTH)
+	q1->AddCollectObjective(Item::Type::Hammer, 1);
+	
+	auto q2 = q1->AddChildQuest("Target Aquired.");				//SHOOT THREE TARGETS WITH GIVEN ARROWS FROM LAST QUEST
+	q2->AddTargetObjective(0);
+	q2->AddTargetObjective(1);
+	q2->AddTargetObjective(2);
+
+	auto q3 = q2->AddChildQuest("We're Under Attack!");			//FIGHT THE BARBARIANS ATTACKING THE VILLAGE
+	q3->AddFightObjective(BarbarianCamp::Location::Village);
+
+	//=====================================================
+	//NPC2
+
+
+	//AFTER QUESTS ARE MADE (OR READ FROM EXISTING FILE) ASSIGN TO NPCs
+}
+
+void QuestLog::ShutDown()
+{
+	for (auto quest : quests)
+		delete quest;
+}

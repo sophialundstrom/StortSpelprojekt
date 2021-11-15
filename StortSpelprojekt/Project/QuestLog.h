@@ -1,5 +1,3 @@
-#include "Quest.h"
-
 #include "NPCFriendly.h"
 #include "Target.h"
 
@@ -12,8 +10,13 @@ public:
 	static void Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets);
 	static void Save(const std::string& fileName);
 	static void Load(const std::string& fileName);
+
+	static void CreateQuests();
+	static void ShutDown();
 };
 
+inline std::vector<Quest*> QuestLog::quests;
+inline std::vector<Quest*> QuestLog::activeQuests;
 //#pragma once
 //#include "Singleton.h"
 //#include "Player.h"

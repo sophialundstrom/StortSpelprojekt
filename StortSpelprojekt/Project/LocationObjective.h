@@ -9,7 +9,7 @@ private:
 	float radius;
 public:
 	LocationObjective() = default;
-	LocationObjective(bool completed, Vector3 location, float radius);
+	LocationObjective(const Vector3& location, float radius);
 	void Update(const Vector3& playerPosition);
 
 	// Inherited via Objective

@@ -1,7 +1,7 @@
 #include "TalkObjective.h"
 
-TalkObjective::TalkObjective(bool completed, std::shared_ptr<FriendlyNPC> NPC)
-	:Objective(Type::TALK, completed), NPC(NPC->GetName()) {}
+TalkObjective::TalkObjective(const std::string& NPC)
+	:Objective(Type::TALK, false), NPC(NPC) {}
 
 void TalkObjective::Update(std::shared_ptr<FriendlyNPC> NPC)
 {

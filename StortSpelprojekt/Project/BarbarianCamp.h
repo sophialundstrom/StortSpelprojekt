@@ -4,7 +4,7 @@
 class BarbarianCamp
 {
 public:
-	enum class Location { South, East, North, West };
+	enum class Location { South, East, North, West, Village };
 	static const std::string Locations[];
 private:
 	Location location;
@@ -19,4 +19,4 @@ public:
 	UINT NumBarbarians();
 };
 
-inline const std::string BarbarianCamp::Locations[] = { "Southern", "Eastern", "Northern", "Western" };
+inline const std::string BarbarianCamp::Locations[] = { "Southern", "Eastern", "Northern", "Western", "Village" };

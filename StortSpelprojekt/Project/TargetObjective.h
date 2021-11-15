@@ -8,7 +8,7 @@ private:
 	UINT targetID;
 public:
 	TargetObjective() = default;
-	TargetObjective(bool completed, UINT targetID);
+	TargetObjective(UINT targetID);
 	void Update(std::shared_ptr<Target> target);
 
 	UINT GetTargetID() { return targetID; }

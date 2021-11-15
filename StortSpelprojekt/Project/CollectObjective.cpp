@@ -1,5 +1,8 @@
 #include "CollectObjective.h"
 
+CollectObjective::CollectObjective(Item::Type type, UINT amount)
+    :Objective(Type::COLLECT, false), itemType(type), numToCollect(amount), numCollected(0) {}
+
 void CollectObjective::Update(Inventory& inventory)
 {
     numCollected = inventory.NumOf(itemType);

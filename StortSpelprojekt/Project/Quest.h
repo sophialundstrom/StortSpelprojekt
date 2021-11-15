@@ -23,7 +23,16 @@ public:
 	void Activate()							{ active = true; }
 	bool IsCompleted()						{ return completed; }
 	bool IsActive()							{ return active; }
+
 	std::vector<Quest*>& GetChildQuests()	{ return childQuests; }
+
+	Quest* AddChildQuest(const std::string& name);
+
+	void AddCollectObjective(Item::Type type, UINT amount);
+	void AddTalkObjective(const std::string& NPC);
+	void AddTargetObjective(UINT targetID);
+	void AddFightObjective(BarbarianCamp::Location location);
+	void AddLocationObjective(const Vector3& location, float radius);
 
 	void Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets);
 

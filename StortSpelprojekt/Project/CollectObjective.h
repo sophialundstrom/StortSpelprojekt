@@ -10,6 +10,7 @@ private:
 	Item::Type itemType;
 public:
 	CollectObjective() = default;
+	CollectObjective(Item::Type type, UINT amount);
 	void Update(Inventory& inventory);
 
 	// Inherited via Objective

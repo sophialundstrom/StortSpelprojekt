@@ -5,10 +5,12 @@
 class FightObjective : public Objective
 {
 private:
+	UINT cleared;
+	UINT total;
 	BarbarianCamp::Location location;
 public:
 	FightObjective() = default;
-	FightObjective(bool completed, BarbarianCamp::Location location);
+	FightObjective(BarbarianCamp::Location location);
 	void Update(BarbarianCamp& camp);
 
 	BarbarianCamp::Location CampLocation() { return location; }

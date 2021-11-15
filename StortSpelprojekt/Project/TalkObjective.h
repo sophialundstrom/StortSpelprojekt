@@ -8,7 +8,7 @@ private:
 	std::string NPC;
 public:
 	TalkObjective() = default;
-	TalkObjective(bool completed, std::shared_ptr<FriendlyNPC> NPC);
+	TalkObjective(const std::string& NPC);
 	void Update(std::shared_ptr<FriendlyNPC> NPC);
 
 	std::string GetNPCName() { return NPC; }

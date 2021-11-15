@@ -8,8 +8,38 @@
 #include "LocationObjective.h"
 
 Quest::Quest(const std::string& name, bool active, bool completed)
-{
+	:name(name), active(active), completed(completed) {}
 
+Quest* Quest::AddChildQuest(const std::string& name)
+{
+	auto quest = new Quest(name, false, false);
+	childQuests.emplace_back(quest);
+	return quest;
+}
+
+void Quest::AddCollectObjective(Item::Type type, UINT amount)
+{
+	objectives.emplace_back(new CollectObjective(type, amount));
+}
+
+void Quest::AddTalkObjective(const std::string& NPC)
+{
+	objectives.emplace_back(new TalkObjective(NPC));
+}
+
+void Quest::AddTargetObjective(UINT targetID)
+{
+	objectives.emplace_back(new TargetObjective(targetID));
+}
+
+void Quest::AddFightObjective(BarbarianCamp::Location location)
+{
+	objectives.emplace_back(new FightObjective(location));
+}
+
+void Quest::AddLocationObjective(const Vector3& location, float radius)
+{
+	objectives.emplace_back(new LocationObjective(location, radius));
 }
 
 void Quest::Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets)

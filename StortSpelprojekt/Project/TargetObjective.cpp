@@ -1,7 +1,7 @@
 #include "TargetObjective.h"
 
-TargetObjective::TargetObjective(bool completed, UINT targetID)
-	:Objective(Type::TARGET, completed), targetID(targetID) {}
+TargetObjective::TargetObjective(UINT targetID)
+	:Objective(Type::TARGET, false), targetID(targetID) {}
 
 void TargetObjective::Update(std::shared_ptr<Target> target)
 {

@@ -345,6 +345,17 @@
     <ClCompile Include="SoundEffect.cpp">
       <Filter>ARCUS\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="BarbarianCamp.cpp" />
+    <ClCompile Include="CollectObjective.cpp" />
+    <ClCompile Include="FightObjective.cpp" />
+    <ClCompile Include="Objective.cpp" />
+    <ClCompile Include="Quest.cpp" />
+    <ClCompile Include="QuestLog.cpp" />
+    <ClCompile Include="TargetObjective.cpp" />
+    <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="LocationObjective.cpp" />
+    <ClCompile Include="TalkObjective.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -479,16 +490,7 @@
     <ClInclude Include="ColliderRenderer.h">
       <Filter>ARCUS\Graphics\Renderers\ColliderRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="CollectQuest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="FightQuest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
     <ClInclude Include="Quest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="TalkQuest.h">
       <Filter>ARCUS\Scene\Game\Quests</Filter>
     </ClInclude>
     <ClInclude Include="QuestLog.h">
@@ -665,6 +667,15 @@
     <ClInclude Include="SoundEffect.h">
       <Filter>ARCUS\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="BarbarianCamp.h" />
+    <ClInclude Include="CollectObjective.h" />
+    <ClInclude Include="FightObjective.h" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="Objective.h" />
+    <ClInclude Include="Target.h" />
+    <ClInclude Include="TargetObjective.h" />
+    <ClInclude Include="LocationObjective.h" />
+    <ClInclude Include="TalkObjective.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
