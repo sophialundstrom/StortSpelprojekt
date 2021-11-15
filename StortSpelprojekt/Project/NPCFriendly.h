@@ -3,6 +3,7 @@
 #include "Model.h"
 #include "Building.h"
 #include "QuestMarker.h"
+#include "Quest.h"
 
 class FriendlyNPC : public NPC
 {
@@ -22,6 +23,7 @@ public:
 
 	virtual void Update() override;
 private:
+	std::vector<Quest*> quests;
 	std::shared_ptr<QuestMarker> questMarker;
 	std::shared_ptr<Building> building;
 	int activeQuestID = -1;

@@ -7,6 +7,7 @@ class FightObjective : public Objective
 private:
 	BarbarianCamp::Location location;
 public:
+	FightObjective() = default;
 	FightObjective(bool completed, BarbarianCamp::Location location);
 	void Update(BarbarianCamp& camp);
 
@@ -14,4 +15,6 @@ public:
 
 	// Inherited via Objective
 	virtual std::string Info() override;
+	virtual void WriteToFile(File& file) override;
+	virtual void ReadFromFile(File& file) override;
 };

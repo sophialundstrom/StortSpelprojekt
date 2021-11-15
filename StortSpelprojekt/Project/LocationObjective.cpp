@@ -13,3 +13,21 @@ std::string LocationObjective::Info()
 {
 	return "Travel To Marked Location.";
 }
+
+void LocationObjective::WriteToFile(File& file)
+{
+	Objective::WriteToFile(file);
+
+	file.Write(location);
+	file.Write(radius);
+}
+
+void LocationObjective::ReadFromFile(File& file)
+{
+	this->type = Objective::Type::LOCATION;
+
+	Objective::ReadFromFile(file);
+
+	file.Read(location);
+	file.Read(radius);
+}

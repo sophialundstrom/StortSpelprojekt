@@ -39,7 +39,7 @@ private:
     //-----TEMP-----//
     Pathfinding pathing;
 
-    std::unique_ptr<QuestLog> questLog;
+    //std::unique_ptr<QuestLog> questLog;
 
     AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;

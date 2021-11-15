@@ -22,85 +22,85 @@ namespace QuestLogFile
 
 	inline void Load(const std::string& file, std::map<UINT, Quest*>& quests)
 	{
-		auto filePath = FileSystem::ProjectDirectory::path + "\\SaveData\\" + file + ".qsl";
-		
-		std::ifstream reader;
-		
-		reader.open(filePath, std::ios::beg);
-		if (!reader.is_open())
-		{
-			Print("FAILED TO READ QUEST LOG FILE");
-			return;
-		}
+		//auto filePath = FileSystem::ProjectDirectory::path + "\\SaveData\\" + file + ".qsl";
+		//
+		//std::ifstream reader;
+		//
+		//reader.open(filePath, std::ios::beg);
+		//if (!reader.is_open())
+		//{
+		//	Print("FAILED TO READ QUEST LOG FILE");
+		//	return;
+		//}
 
-		Quest* quest = nullptr;
+		//Quest* quest = nullptr;
 
-		std::string line;
-		while (!reader.eof())
-		{
-			UINT type, ID, numTriggerQuests;
-			bool active;
+		//std::string line;
+		//while (!reader.eof())
+		//{
+		//	UINT type, ID, numTriggerQuests;
+		//	bool active;
 
-			reader >> type;
-			reader >> ID;
-			reader >> active;
-			reader >> numTriggerQuests;
+		//	reader >> type;
+		//	reader >> ID;
+		//	reader >> active;
+		//	reader >> numTriggerQuests;
 
-			UINT* triggerQuests = new UINT[numTriggerQuests];
-			for (UINT i = 0; i < numTriggerQuests; ++i)
-				reader >> triggerQuests[i];
+		//	UINT* triggerQuests = new UINT[numTriggerQuests];
+		//	for (UINT i = 0; i < numTriggerQuests; ++i)
+		//		reader >> triggerQuests[i];
 
-			switch ((QuestType)type)
-			{
+		//	/*switch ((QuestType)type)
+		//	{
 
-			case QuestType::TALK:
-			{
-				std::getline(reader, line);
-				std::string name = GetNthString(line, 1);
-				std::string NPC = GetNthString(line, 2);
-				quest = new TalkQuest((QuestType)type, ID, name, active, NPC);
-				break;
-			}
+		//	case QuestType::TALK:
+		//	{
+		//		std::getline(reader, line);
+		//		std::string name = GetNthString(line, 1);
+		//		std::string NPC = GetNthString(line, 2);
+		//		quest = new TalkQuest((QuestType)type, ID, name, active, NPC);
+		//		break;
+		//	}*/
 
-			case QuestType::COLLECT:
-			{
-				UINT numItems;
-				reader >> numItems;
+		//	//case QuestType::COLLECT:
+		//	//{
+		//	//	UINT numItems;
+		//	//	reader >> numItems;
 
-				UINT itemID;
-				reader >> itemID;
+		//	//	UINT itemID;
+		//	//	reader >> itemID;
 
-				std::getline(reader, line);
-				std::string name = GetNthString(line, 1);
+		//	//	std::getline(reader, line);
+		//	//	std::string name = GetNthString(line, 1);
 
-				//quest = new CollectQuest((QuestType)type, ID, name, active, numItems, (enum RESOURCE)itemID);
-				break;
-			}
-				
-			case QuestType::FIGHT:
-			{
-				UINT numTargets;
-				reader >> numTargets;
+		//	//	//quest = new CollectQuest((QuestType)type, ID, name, active, numItems, (enum RESOURCE)itemID);
+		//	//	break;
+		//	//}
+		//	/*	
+		//	case QuestType::FIGHT:
+		//	{
+		//		UINT numTargets;
+		//		reader >> numTargets;
 
-				std::getline(reader, line);
-				std::string name = GetNthString(line, 1);
+		//		std::getline(reader, line);
+		//		std::string name = GetNthString(line, 1);
 
-				quest = new FightQuest((QuestType)type, ID, name, active, numTargets);
-				break;
-			}
-			}
+		//		quest = new FightQuest((QuestType)type, ID, name, active, numTargets);
+		//		break;
+		//	}*/
+		//	//}
 
-			for (UINT i = 0; i < numTriggerQuests; ++i)
-				quest->AddTriggerQuest(triggerQuests[i]);
+		//	//for (UINT i = 0; i < numTriggerQuests; ++i)
+		//	//	quest->AddTriggerQuest(triggerQuests[i]);
 
-			if (triggerQuests)
-				delete[] triggerQuests;
+		//	//if (triggerQuests)
+		//	//	delete[] triggerQuests;
 
-			quests.emplace(ID, quest);
-		}
+		//	//quests.emplace(ID, quest);
+		//}
 
-		reader.close();
-		Print("SUCCEEDED LOADING QUEST LOG");
+		//reader.close();
+		//Print("SUCCEEDED LOADING QUEST LOG");
 	}
 
 	inline void Save(const std::string& file, const std::map<UINT, Quest*>& quests)
@@ -122,41 +122,41 @@ namespace QuestLogFile
 			if (quest->IsCompleted())
 				continue;
 
-			writer << (UINT)quest->Type() << space;
+			//writer << (UINT)quest->Type() << space;
 			writer << ID << space;
 			writer << quest->IsActive() << space;
 
-			UINT numTriggerQuests = (UINT)quest->GetTriggerQuests().size();
-			writer << numTriggerQuests << space;
+			//UINT numTriggerQuests = (UINT)quest->GetTriggerQuests().size();
+			/*writer << numTriggerQuests << space;
 
 			for (UINT i = 0; i < numTriggerQuests; ++i)
-				writer << quest->GetTriggerQuests()[i] << space;
+				writer << quest->GetTriggerQuests()[i] << space;*/
 
-			switch (quest->Type())
-			{
-				case QuestType::TALK:
-				{
-					auto talkQuest = dynamic_cast<TalkQuest*>(quest);
-					writer << "'" << talkQuest->Name() << "'" << space;
-					writer << "'" << talkQuest->NPCName() << "'\n";
-					break;
-				}
-				case QuestType::COLLECT:
-				{
-					/*auto collectQuest = dynamic_cast<CollectQuest*>(quest);
-					writer << collectQuest->GetTargetAmount() << space;
-					writer << (UINT)collectQuest->GetItemID() << space;
-					writer << "'" << collectQuest->Name() << "'\n";*/
-					break;
-				}
-				case QuestType::FIGHT:
-				{
-					auto fightQuest = dynamic_cast<FightQuest*>(quest);
-					writer << fightQuest->NumTargets() << space;
-					writer << "'" << fightQuest->Name() << "'\n";
-					break;
-				}
-			}
+			//switch (quest->Type())
+			//{
+			//	case QuestType::TALK:
+			//	{
+			//		auto talkQuest = dynamic_cast<TalkQuest*>(quest);
+			//		writer << "'" << talkQuest->Name() << "'" << space;
+			//		writer << "'" << talkQuest->NPCName() << "'\n";
+			//		break;
+			//	}
+			//	case QuestType::COLLECT:
+			//	{
+			//		/*auto collectQuest = dynamic_cast<CollectQuest*>(quest);
+			//		writer << collectQuest->GetTargetAmount() << space;
+			//		writer << (UINT)collectQuest->GetItemID() << space;
+			//		writer << "'" << collectQuest->Name() << "'\n";*/
+			//		break;
+			//	}
+			//	case QuestType::FIGHT:
+			//	{
+			//		auto fightQuest = dynamic_cast<FightQuest*>(quest);
+			//		writer << fightQuest->NumTargets() << space;
+			//		writer << "'" << fightQuest->Name() << "'\n";
+			//		break;
+			//	}
+			//}
 		}
 
 		writer.close();

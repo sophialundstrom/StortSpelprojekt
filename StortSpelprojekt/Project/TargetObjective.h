@@ -5,11 +5,16 @@
 class TargetObjective : public Objective
 {
 private:
-	std::shared_ptr<Target> target;
+	UINT targetID;
 public:
-	TargetObjective(bool completed, std::shared_ptr<Target> target);
-	void Update();
+	TargetObjective() = default;
+	TargetObjective(bool completed, UINT targetID);
+	void Update(std::shared_ptr<Target> target);
+
+	UINT GetTargetID() { return targetID; }
 
 	// Inherited via Objective
 	virtual std::string Info() override;
+	virtual void WriteToFile(File& file) override;
+	virtual void ReadFromFile(File& file) override;
 };

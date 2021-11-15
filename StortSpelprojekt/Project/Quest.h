@@ -2,49 +2,31 @@
 #include <memory>
 #include <vector>
 #include "Player.h"
+#include "Objective.h"
+#include "BarbarianCamp.h"
+#include "Target.h"
 
-enum class QuestType { TALK, COLLECT, FIGHT };
+class FriendlyNPC;
 
 class Quest
 {
-private:
-	QuestType type;
-	UINT ID;
 protected:
 	std::string name;
-	bool active = false;
-	bool completed = false;
-	std::vector<UINT> triggerQuests;
+	bool active;
+	bool completed;
+	std::vector<Objective*> objectives;
+	std::vector<Quest*> childQuests;
 public:
-	Quest(QuestType type, UINT ID, const std::string& name, bool active)
-		:type(type), ID(ID), name(name), active(active) {}
+	Quest() = default;
+	Quest(const std::string& name, bool active, bool completed);
 
-	UINT GetID() { return ID; }
+	void Activate()							{ active = true; }
+	bool IsCompleted()						{ return completed; }
+	bool IsActive()							{ return active; }
+	std::vector<Quest*>& GetChildQuests()	{ return childQuests; }
 
-	std::string Name() { return name; }
+	void Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets);
 
-	QuestType Type() { return type; }
-
-	void AddTriggerQuest(UINT ID)
-	{
-		triggerQuests.emplace_back(ID);
-	}
-
-	const std::vector<UINT>& GetTriggerQuests()
-	{
-		return triggerQuests;
-	}
-
-	void Complete()
-	{
-		Print(name, "Completed Quest");
-		completed = true;
-	}
-
-	bool IsCompleted() { return completed; }
-	bool IsActive() { return active; }
-
-	virtual void Activate(std::shared_ptr<Player> player) = 0;
-	virtual void Update(std::shared_ptr<Player> player) = 0;
-	virtual void UpdateUI(std::string& string) = 0;
+	void SaveToFile(File& file);
+	void LoadFromFile(File& file);
 };

@@ -13,3 +13,19 @@ std::string FightObjective::Info()
 {
 	return "Clear The Baribarians At The " + BarbarianCamp::Locations[UINT(location)] + " Camp.";
 }
+
+void FightObjective::WriteToFile(File& file)
+{
+	Objective::WriteToFile(file);
+
+	file.Write(location);
+}
+
+void FightObjective::ReadFromFile(File& file)
+{
+	this->type = Objective::Type::FIGHT;
+
+	Objective::ReadFromFile(file);
+
+	file.Read(location);
+}

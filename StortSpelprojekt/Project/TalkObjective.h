@@ -5,11 +5,16 @@
 class TalkObjective : public Objective
 {
 private:
-	std::shared_ptr<FriendlyNPC> NPC;
+	std::string NPC;
 public:
+	TalkObjective() = default;
 	TalkObjective(bool completed, std::shared_ptr<FriendlyNPC> NPC);
-	void Update();
+	void Update(std::shared_ptr<FriendlyNPC> NPC);
+
+	std::string GetNPCName() { return NPC; }
 
 	// Inherited via Objective
 	virtual std::string Info() override;
+	virtual void WriteToFile(File& file) override;
+	virtual void ReadFromFile(File& file) override;
 };

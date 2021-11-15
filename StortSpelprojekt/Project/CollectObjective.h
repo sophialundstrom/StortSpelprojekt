@@ -7,10 +7,13 @@ class CollectObjective : public Objective
 private:
 	UINT numCollected;
 	UINT numToCollect;
-	Item::Type type;
+	Item::Type itemType;
 public:
+	CollectObjective() = default;
 	void Update(Inventory& inventory);
 
 	// Inherited via Objective
 	virtual std::string Info() override;
+	virtual void WriteToFile(File& file) override;
+	virtual void ReadFromFile(File& file) override;
 };

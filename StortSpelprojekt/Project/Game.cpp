@@ -8,7 +8,7 @@ void Game::Update()
 {
 	hovering = false;
 
-	QuestLog::Inst().Update();
+	//QuestLog::Inst().Update();
 	
 	scene.Update();
 
@@ -347,7 +347,7 @@ void Game::CheckSaveStationCollision()
 			{
 				Print("SAVED");
 				player->Save("Test");
-				QuestLog::Inst().Save("Test");
+				//QuestLog::Inst().Save("Test");
 				saveStation.LastSave(Time::Get());
 			}
 		}
@@ -401,7 +401,7 @@ void Game::CheckQuestInteraction()
 						if (ID == 4) //LAST QUEST
 							done = true;
 
-						QuestLog::Inst().Complete(ID);
+						//QuestLog::Inst().Complete(ID);
 					}
 
 					return;
@@ -524,7 +524,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//shadowRenderer.Bind(building);
 
 	//QUEST LOG
-	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
+	//questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
 
 	//Item
 	AddItem(Item::Type::Stick, { -134, 22, -594 });

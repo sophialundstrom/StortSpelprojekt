@@ -1,9 +1,9 @@
 #include "TargetObjective.h"
 
-TargetObjective::TargetObjective(bool completed, std::shared_ptr<Target> target)
-	:Objective(Type::TARGET, completed), target(target) {}
+TargetObjective::TargetObjective(bool completed, UINT targetID)
+	:Objective(Type::TARGET, completed), targetID(targetID) {}
 
-void TargetObjective::Update()
+void TargetObjective::Update(std::shared_ptr<Target> target)
 {
 	if (target->GotHit())
 		completed = true;
@@ -12,4 +12,20 @@ void TargetObjective::Update()
 std::string TargetObjective::Info()
 {
 	return "Shoot The Marked Target.";
+}
+
+void TargetObjective::WriteToFile(File& file)
+{
+	Objective::WriteToFile(file);
+	
+	file.Write(targetID);
+}
+
+void TargetObjective::ReadFromFile(File& file)
+{
+	this->type = Objective::Type::TARGET;
+
+	Objective::ReadFromFile(file);
+
+	file.Read(targetID);
 }

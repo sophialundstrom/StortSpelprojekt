@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "File.h"
 
 class Objective
 {
@@ -9,9 +10,12 @@ protected:
 	Type type;
 	bool completed;
 public:
+	Objective() = default;
 	Objective(Type type, bool completed);
 
 	bool IsCompleted() { return completed; }
 
 	virtual std::string Info() = 0;
+	virtual void WriteToFile(File& file);
+	virtual void ReadFromFile(File& file);
 };

@@ -199,6 +199,8 @@
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Quest.cpp" />
+    <ClCompile Include="QuestLog.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SkeletonRenderer.cpp" />
@@ -237,6 +239,7 @@
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightObjective.h" />
     <ClInclude Include="FightQuest.h" />
+    <ClInclude Include="File.h" />
     <ClInclude Include="GameLoader.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="Grid.h" />

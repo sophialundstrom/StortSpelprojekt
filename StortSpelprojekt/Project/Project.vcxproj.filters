@@ -391,6 +391,12 @@
     <ClCompile Include="LocationObjective.cpp">
       <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
     </ClCompile>
+    <ClCompile Include="Quest.cpp">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestLog.cpp">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -752,6 +758,9 @@
     </ClInclude>
     <ClInclude Include="LocationObjective.h">
       <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
+    </ClInclude>
+    <ClInclude Include="File.h">
+      <Filter>ARCUS\Scene\Game\Quests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
