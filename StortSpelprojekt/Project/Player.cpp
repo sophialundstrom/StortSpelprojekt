@@ -241,9 +241,8 @@ void Player::Update(HeightMap* heightMap)
 					lastClick = Time::Get();
 					currentIndex++;
 				}
-				float Volume = 0.2;
 				SoundEffect::AddAudio(L"Audio/Fire.wav", 1);
-				SoundEffect::SetVolume(Volume, 1);
+				SoundEffect::SetVolume(0.3, 1);
 				SoundEffect::StartAudio(1);
 
 				numArrows--;
@@ -393,6 +392,9 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 			gameOver = true;
 			return collided;
 		}
+		SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
+		SoundEffect::SetVolume(0.5, 2);
+		SoundEffect::StartAudio(2);
 		stats.healthPoints--;
 		UpdateHealthUI();
 	}

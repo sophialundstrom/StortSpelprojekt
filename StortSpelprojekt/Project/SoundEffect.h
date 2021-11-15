@@ -7,7 +7,7 @@
 class SoundEffect
 {
 private:
-	static const int CAP = 5;
+	static const int CAP = 10;
 	static Microsoft::WRL::ComPtr<IXAudio2> SoundEffectEngine;
 	static IXAudio2MasteringVoice* pMasterVoice;
 	static IXAudio2SourceVoice* pSourceVoice[CAP];
