@@ -60,6 +60,12 @@ public:
 		}
 	}
 
+	void GetMeshBoundingBoxValues(Vector3& minVals, Vector3& maxVals)
+	{
+		minVals = mesh.vertMinVals;
+		maxVals = mesh.vertMaxVals;
+	}
+
 	// Inherited via Drawable
 	virtual void Update() override
 	{

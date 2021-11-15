@@ -1,7 +1,5 @@
 #include "QuadTree.h"
 
-
-
 QuadTree::QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int currentLevel)
 {
 	this->currentLevel = currentLevel;

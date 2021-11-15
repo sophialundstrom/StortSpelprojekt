@@ -11,6 +11,8 @@ struct Mesh
 	UINT bufferID = -1;
 	UINT materialID = -1;
 	UINT vertexCount = -1;
+	Vector3 vertMinVals = {0, 0, 0};
+	Vector3 vertMaxVals = { 0, 0, 0 };
 
 	Mesh() = default;
 	Mesh(aiMesh* mesh)
@@ -24,6 +26,25 @@ struct Mesh
 
 			val = mesh->mVertices[i];
 			vertices[i].position = { val.x, val.y, val.z };
+
+			//Xvalues
+			if (val.x > vertMaxVals.x)
+				vertMaxVals.x = val.x;
+			if (val.x < vertMinVals.x)
+				vertMinVals.x = val.x;
+
+			//Yvalues
+			if (val.y > vertMaxVals.y)
+				vertMaxVals.y = val.y;
+			if (val.y < vertMinVals.y)
+				vertMinVals.y = val.y;
+
+			//Zvalues
+			if (val.z > vertMaxVals.z)
+				vertMaxVals.z = val.z;
+			if (val.z < vertMinVals.z)
+				vertMinVals.z = val.z;
+
 
 			val = mesh->mNormals[i];
 			vertices[i].normal = { val.x, val.y, val.z };

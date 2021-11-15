@@ -345,6 +345,9 @@
     <ClCompile Include="SoundEffect.cpp">
       <Filter>ARCUS\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>ARCUS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -664,6 +667,9 @@
     </ClInclude>
     <ClInclude Include="SoundEffect.h">
       <Filter>ARCUS\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>ARCUS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
