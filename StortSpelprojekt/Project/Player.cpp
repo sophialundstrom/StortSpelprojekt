@@ -173,6 +173,9 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		if (Event::KeyIsPressed(VK_SPACE))
 		{
 			jumping = true;
+			SoundEffect::AddAudio(L"Audio/Jump.wav", 2);
+			SoundEffect::SetVolume(0.5, 2);
+			SoundEffect::StartAudio(2);
 			preJumpGroundLevel = currentGroundLevel; 
 			PlayAnimation("Jump", false, 0.5f);
 		}
@@ -415,6 +418,9 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 			gameOver = true;
 			return collided;
 		}
+		SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
+		SoundEffect::SetVolume(0.5, 2);
+		SoundEffect::StartAudio(2);
 		stats.healthPoints--;
 		UpdateHealthUI();
 	}

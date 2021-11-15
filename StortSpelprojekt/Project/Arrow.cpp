@@ -24,6 +24,7 @@ void Arrow::Update()
 	if (isShot == true)
 	{
 		lifeLength += Time::GetDelta();
+
 	}
 
 	if (lifeLength <= lifeTime){

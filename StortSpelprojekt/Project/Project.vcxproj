@@ -42,13 +42,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -194,6 +194,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SkeletonRenderer.cpp" />
+    <ClCompile Include="SoundEffect.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainRenderer.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -286,6 +287,7 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonRenderer.h" />
+    <ClInclude Include="SoundEffect.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Mesh.h" />
