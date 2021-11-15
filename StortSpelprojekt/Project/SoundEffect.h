@@ -4,11 +4,11 @@
 #include <wrl.h>
 #include "AudioChunks.h"
 
-class Audio
+class SoundEffect
 {
 private:
 	static const int CAP = 5;
-	static Microsoft::WRL::ComPtr<IXAudio2> MusicEngine;
+	static Microsoft::WRL::ComPtr<IXAudio2> SoundEffectEngine;
 	static IXAudio2MasteringVoice* pMasterVoice;
 	static IXAudio2SourceVoice* pSourceVoice[CAP];
 	static WAVEFORMATEXTENSIBLE wfx;

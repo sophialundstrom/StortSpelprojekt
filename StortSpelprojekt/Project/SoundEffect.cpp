@@ -1,50 +1,50 @@
-#include "Audio.h"
+#include "SoundEffect.h"
 
-Microsoft::WRL::ComPtr<IXAudio2> Audio::MusicEngine;
-IXAudio2MasteringVoice* Audio::pMasterVoice = nullptr;
-WAVEFORMATEXTENSIBLE Audio::wfx = { 0 };
-XAUDIO2_BUFFER Audio::audioBuffer = { 0 };
-IXAudio2SourceVoice* Audio::pSourceVoice[CAP] = { nullptr };
-float Audio::volume = 0.5f;
+Microsoft::WRL::ComPtr<IXAudio2> SoundEffect::SoundEffectEngine;
+IXAudio2MasteringVoice* SoundEffect::pMasterVoice = nullptr;
+WAVEFORMATEXTENSIBLE SoundEffect::wfx = { 0 };
+XAUDIO2_BUFFER SoundEffect::audioBuffer = { 0 };
+IXAudio2SourceVoice* SoundEffect::pSourceVoice[CAP] = { nullptr };
+float SoundEffect::volume = 0.5f;
 
-void Audio::StartEngine()
+void SoundEffect::StartEngine()
 {
-	MusicEngine->StartEngine();
+	SoundEffectEngine->StartEngine();
 }
 
-void Audio::StopEngine()
+void SoundEffect::StopEngine()
 {
-	MusicEngine->StopEngine();
+	SoundEffectEngine->StopEngine();
 }
 
-void Audio::SetVolume(float volume, int slot)
+void SoundEffect::SetVolume(float volume, int slot)
 {
 	pSourceVoice[slot]->SetVolume(volume);
 }
 
-void Audio::StartAudio(int slot)
+void SoundEffect::StartAudio(int slot)
 {
 	HRESULT hr;
-	if(FAILED(hr=pSourceVoice[slot]->Start(0)))
+	if (FAILED(hr = pSourceVoice[slot]->Start(0)))
 		std::cout << "COULD NOT START AUDIO" << std::endl;
 }
 
-void Audio::Initialize()
-{	
+void SoundEffect::Initialize()
+{
 	HRESULT hr;
 
-	if(FAILED(hr = XAudio2Create(&MusicEngine, 0 , XAUDIO2_DEFAULT_PROCESSOR)))
+	if (FAILED(hr = XAudio2Create(&SoundEffectEngine, 0, XAUDIO2_DEFAULT_PROCESSOR)))
 		std::cout << "COULD NOT CREATE AUDIO ENGINE" << std::endl;
 
-	if (FAILED(hr = MusicEngine->CreateMasteringVoice(&pMasterVoice)))
+	if (FAILED(hr = SoundEffectEngine->CreateMasteringVoice(&pMasterVoice)))
 		std::cout << "COULD NOT CREATE MASTERING VOICE" << std::endl;
 }
 
-void Audio::AddAudio(std::wstring fileName, int slot)
+void SoundEffect::AddAudio(std::wstring fileName, int slot)
 {
 	LPCWSTR strFileName = fileName.c_str();
 	Initialize();
-	
+
 	HANDLE hFile = CreateFile(strFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (INVALID_HANDLE_VALUE == hFile)
 		ERROR("INVALID HANDLE VALUE");
@@ -74,11 +74,11 @@ void Audio::AddAudio(std::wstring fileName, int slot)
 	audioBuffer.LoopCount = 0;
 
 	HRESULT hr;
-	if (FAILED(hr = MusicEngine->CreateSourceVoice(&pSourceVoice[slot], (WAVEFORMATEX*)&wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
+	if (FAILED(hr = SoundEffectEngine->CreateSourceVoice(&pSourceVoice[slot], (WAVEFORMATEX*)&wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
 	{
 		ERROR("FAILED TO CREATE SOURCE VOICE");
 	}
-	if(FAILED(hr = pSourceVoice[slot]->SubmitSourceBuffer(&audioBuffer)))
+	if (FAILED(hr = pSourceVoice[slot]->SubmitSourceBuffer(&audioBuffer)))
 		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
 
 	pSourceVoice[slot]->SetVolume(1);
