@@ -155,7 +155,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			jumping = true;
 			SoundEffect::AddAudio(L"Audio/Jump.wav", 2);
-			SoundEffect::SetVolume(0.5, 2);
+			SoundEffect::SetVolume(0.1, 2);
 			SoundEffect::StartAudio(2);
 			preJumpGroundLevel = currentGroundLevel; 
 			PlayAnimation("Jump", false, 0.5f);
@@ -245,7 +245,7 @@ void Player::Update(HeightMap* heightMap)
 					currentIndex++;
 				}
 				SoundEffect::AddAudio(L"Audio/Fire.wav", 1);
-				SoundEffect::SetVolume(0.3, 1);
+				SoundEffect::SetVolume(0.1, 1);
 				SoundEffect::StartAudio(1);
 
 				numArrows--;
@@ -396,7 +396,7 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 			return collided;
 		}
 		SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
-		SoundEffect::SetVolume(0.5, 2);
+		SoundEffect::SetVolume(0.1, 2);
 		SoundEffect::StartAudio(2);
 		stats.healthPoints--;
 		UpdateHealthUI();
