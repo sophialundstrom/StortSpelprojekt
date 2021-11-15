@@ -21,27 +21,19 @@ Arrow::~Arrow()
 
 void Arrow::Update()
 {
-	if (isShot == true)
-	{
-		lifeLength += Time::GetDelta();
-
-	}
+	lastPosition = position;
+	lifeLength += Time::GetDelta();
 
 	if (lifeLength <= lifeTime){
 
-		if (isShot)
+		if (!isStuck)
 		{
-			if (!isStuck)
-			{
-				direction.y -= 0.05f * Time::GetDelta();
-				SetPosition(GetPosition() + (direction * speed * Time::GetDelta()));
-			}
+			direction.y -= 0.05f * Time::GetDelta();
+			SetPosition(GetPosition() + (direction * speed * Time::GetDelta()));
 		}
 	}
 	else
 	{
-		collider->SetPosition(0, 0, 0);
-		isStuck = false;
 		isDestroyed = true;
 	}
 

@@ -254,10 +254,16 @@ void Game::CheckNearbyCollision()
 
 	for (auto& collider : colliders)
 	{
+		for (auto& hostile : hostiles)
+		{
+			hostile->CheckArrowHit(collider);
+		}
+
 		player->CheckArrowHit(collider);
 		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
 		if (box)
 		{
+
 			if (Collision::Intersection(box, playerCollider))
 			{
 				collided = true;
@@ -304,7 +310,7 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 {
 	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle);
 	NPC->SetPosition(position);
-	NPC->BindArrows(modelRenderer);
+	//NPC->BindArrows(modelRenderer);
 
 	auto collider = NPC->GetCollider();
 	collider->SetParent(NPC);
@@ -661,14 +667,14 @@ APPSTATE Game::Run()
 
 	UpdateInventoryUI();
 
-	int nrOfFreeArrows = 0;
-	for (int i = 0; i < arrows.size(); i++)
-	{
-		if (!arrows[i]->IsShot())
-		{
-			nrOfFreeArrows++;
-		}
-	}
+	//int nrOfFreeArrows = 0;
+	//for (int i = 0; i < arrows.size(); i++)
+	//{
+	//	if (!arrows[i]->IsShot())
+	//	{
+	//		nrOfFreeArrows++;
+	//	}
+	//}
 
 	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(player->numArrows));
 	
@@ -722,16 +728,20 @@ void Game::CheckNearbyEnemies()
 {
 	for (int i = 0; i < hostiles.size(); i++)
 	{
+		hostiles[i]->CheckArrowHit(player->GetBounds(), true);
+		hostiles[i]->Update(modelRenderer, colliderRenderer, player);
 		bool hit = player->CheckArrowHit(hostiles[i]->GetCollider(), true);
 
 		if (hit)
 		{
+			std::cout << "HIT BARB" << std::endl;
 			SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
 			SoundEffect::SetVolume(0.5, 2);
 			SoundEffect::StartAudio(2);
 			hostiles[i]->TakeDamage();
 			if (hostiles[i]->IsDead())
 			{
+				std::cout << "BARB DEAD" << std::endl;
 				SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
 				SoundEffect::SetVolume(0.8, 2);
 				SoundEffect::StartAudio(2);

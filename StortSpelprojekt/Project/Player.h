@@ -79,8 +79,7 @@ private:
 	Camera* sceneCamera;
 
 	std::shared_ptr<Canvas> ingameCanvas;
-	//ARROW STUFF
-	//std::vector<std::shared_ptr<Arrow>> arrows;
+
 	std::vector<std::shared_ptr<Arrow>>arrows;
 
 	bool hasCollided;
