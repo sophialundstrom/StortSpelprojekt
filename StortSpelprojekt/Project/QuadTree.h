@@ -39,13 +39,14 @@ public:
 private:
     void DivideQuadTree();
     void DeleteMemory();
-    QuadTreeBounds bounds;
     
     //CREATE FROM MATRIX på frustrummet jag vill ha collision check med
 
     int maxCap;
     std::map<std::string, std::shared_ptr<Drawable>> collectedDrawables;
-    std::shared_ptr<BoundingBox> quadTreeCollider;
+
+    DirectX::BoundingOrientedBox quadTreeBoundsCollider;
+    QuadTreeBounds bounds;
 
     int maxLevel;
     int currentLevel;

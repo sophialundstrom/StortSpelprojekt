@@ -6,40 +6,45 @@ QuadTree::QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int 
 	this->maxLevel = maxlevel;
 	maxCap = maxCapacity;
 	bounds = newBounds;
-	quadTreeCollider = std::make_shared<BoundingBox>();
-	quadTreeCollider->SetPosition({ bounds.xPos + (bounds.width/2.f), 0, bounds.zPos + (bounds.depth/2.f) });
-	quadTreeCollider->SetScale(bounds.width, 1000, bounds.depth);
+	Vector3 minMaxVals[2] = { {bounds.xPos, -500, bounds.zPos}, { bounds.xPos + bounds.width, 500, bounds.zPos + bounds.depth } };
+	quadTreeBoundsCollider.CreateFromPoints(quadTreeBoundsCollider, 2, minMaxVals, sizeof(Vector3));
 }
 
 void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 {
-	//bool addCollider = Collision::Intersection(quadTreeCollider, );
-
 	auto drawableAsModel = std::dynamic_pointer_cast<Model>(drawable);
 	Vector3 minVals, maxVals;
 	drawableAsModel->GetMeshBoundingBoxValues(minVals, maxVals);
 	Vector3 minMaxVals[2] = { minVals, maxVals };
-	DirectX::BoundingOrientedBox bounds;
-	bounds.CreateFromPoints(bounds, 2, minMaxVals, sizeof(Vector3));
-	bounds.Transform(bounds, drawableAsModel->GetMatrix());
+	DirectX::BoundingOrientedBox drawableBounds;
+	drawableBounds.CreateFromPoints(drawableBounds, 2, minMaxVals, sizeof(Vector3));
+	drawableBounds.Transform(drawableBounds, drawableAsModel->GetMatrix());
 
+	bool insideLeaf = drawableBounds.Intersects(quadTreeBoundsCollider);
 
-	if (!divided)
+	if (insideLeaf)
 	{
-		if (collectedDrawables.size() >= maxCap)
+		if (!divided)
 		{
-			DivideQuadTree();
-			InsertModelInChild(drawable);
+			if (collectedDrawables.size() >= maxCap)
+			{
+				DivideQuadTree();
+				InsertModelInChild(drawable);
+			}
+			else
+				collectedDrawables.emplace(drawable->GetName(), drawable);
 		}
 		else
-			collectedDrawables.emplace(drawable->GetName(), drawable);
+			InsertModelInChild(drawable);
 	}
-	else
-		InsertModelInChild(drawable);
 }
 
 void QuadTree::InsertModelInChild(std::shared_ptr<Drawable>& drawable)
 {
+	TopL->InsertModel(drawable);
+	TopR->InsertModel(drawable);
+	BotL->InsertModel(drawable);
+	BotR->InsertModel(drawable);
 }
 
 void QuadTree::PrintTree()
