@@ -15,7 +15,16 @@ QuadTree::QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int 
 
 void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 {
-	bool addCollider = Collision::Intersection(quadTreeCollider, );
+	//bool addCollider = Collision::Intersection(quadTreeCollider, );
+
+	auto drawableAsModel = std::dynamic_pointer_cast<Model>(drawable);
+	Vector3 minVals, maxVals;
+	drawableAsModel->GetMeshBoundingBoxValues(minVals, maxVals);
+	Vector3 minMaxVals[2] = { minVals, maxVals };
+	DirectX::BoundingOrientedBox bounds;
+	bounds.CreateFromPoints(bounds, 2, minMaxVals, sizeof(Vector3));
+	bounds.Transform(bounds, drawableAsModel->GetMatrix());
+
 
 	if (!divided)
 	{
@@ -42,10 +51,11 @@ void QuadTree::PrintTree()
 
 void QuadTree::DivideQuadTree()
 {
-	TopL = new QuadTree(QuadTreeBounds(bounds.xPos, bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, currentLevel + 1);
-	TopR = new QuadTree(QuadTreeBounds(bounds.xPos + bounds.width / 2.f, bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, currentLevel + 1);
-	BotL = new QuadTree(QuadTreeBounds(bounds.xPos, bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, currentLevel + 1);
-	BotR = new QuadTree(QuadTreeBounds(bounds.xPos + bounds.width/2.f, bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, currentLevel + 1);
+	TopL = new QuadTree(QuadTreeBounds(bounds.xPos, bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1);
+	TopR = new QuadTree(QuadTreeBounds(bounds.xPos + bounds.width / 2.f, bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1);
+	BotL = new QuadTree(QuadTreeBounds(bounds.xPos, bounds.zPos + bounds.depth / 2.f, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1);
+	BotR = new QuadTree(QuadTreeBounds(bounds.xPos + bounds.width / 2.f, bounds.zPos + bounds.depth / 2.f, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1);
+
 	divided = true;
 }
 

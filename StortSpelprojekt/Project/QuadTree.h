@@ -41,8 +41,8 @@ private:
     void DeleteMemory();
     QuadTreeBounds bounds;
     
+    //CREATE FROM MATRIX på frustrummet jag vill ha collision check med
 
-    //int cap;
     int maxCap;
     std::map<std::string, std::shared_ptr<Drawable>> collectedDrawables;
     std::shared_ptr<BoundingBox> quadTreeCollider;
