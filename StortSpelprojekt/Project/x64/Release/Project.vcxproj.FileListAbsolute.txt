@@ -19,37 +19,3 @@ C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\Deferre
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredParticlePixelShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitForwardModelPixelShader.cso
 C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitModelVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\AnimatedModelVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredColliderPixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredTerrainPixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\ColliderPixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\ColliderVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredPixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardModelPixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardParticlePixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredModelPixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardTerrainPixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\IDPixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\IDVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\LoadingPS.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\ModelVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\ParticleGeometryShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredParticlePixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\ParticleVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\ShadowVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\SkeletonPixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\SkeletonVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\TerrainDomainShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\TerrainGeometryShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\TerrainHullShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\TerrainVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitAnimatedModelVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitForwardModelPixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitModelVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\LoadingVS.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\VolumeIDVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\VolumePixelShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\VolumeVertexShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\WaterDomainShader.cso
-C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\WaterPixelShader.cso

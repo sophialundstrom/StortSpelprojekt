@@ -236,8 +236,9 @@ void Game::UpdateAndHandleLoot()
 			colliderRenderer.Unbind(loot[i]->GetCollider());
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
-			//Audio::AddAudio(L"Audio/PickupPop.wav");
-			//Audio::StartAudio();
+			SoundEffect::AddAudio(L"Audio/Loot.wav", 2);
+			SoundEffect::SetVolume(0.5, 2);
+			SoundEffect::StartAudio(2);
 			std::cout << "Loot destoyed\n";
 		}
 		
@@ -364,6 +365,9 @@ void Game::CheckItemCollision()
 
 			if (Event::KeyIsPressed('E'))
 			{
+				SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
+				SoundEffect::SetVolume(0.5, 2);
+				SoundEffect::StartAudio(2);
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
@@ -387,9 +391,11 @@ void Game::CheckQuestInteraction()
 				if (Event::KeyIsPressed('E'))
 				{
 					state = GameState::DIALOGUE;
-
+					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
+					SoundEffect::SetVolume(0.5, 2);
+					SoundEffect::StartAudio(2);
 					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
-					dialogueOverlay->Set("GILBERT", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum et sagittis sem. Quisque ut ultrices ex. Sed vestibulum placerat nisl nec faucibus. Praesent lacinia leo id mauris imperdiet scelerisque euismod nec quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec gravida mollis sapien semper aliquet. Morbi sit amet ante nisl. Maecenas rutrum vehicula felis, non iaculis ante posuere nec. Etiam ullamcorper ornare convallis. Mauris in metus vel ex consectetur tempor. Nulla augue lectus, suscipit ut pulvinar et, luctus et mi. Aenean posuere nulla augue, non scelerisque lacus feugiat in. Pellentesque felis ante, imperdiet ornare varius non, rutrum eget nulla. Vivamus faucibus vestibulum volutpat.");
+					dialogueOverlay->Set("GILBERT", "Lorem.");
 					currentCanvas = dialogueOverlay;
 
 					int ID = NPC->GetQuestID();
@@ -518,22 +524,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
-	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture" };
-	farmHouse = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
-	farmHouse->SetRotation(0, -DirectX::XM_PIDIV2, 0);
-	farmHouse->SetScale(5);
+	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
+	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
+	building->SetScale(5);
 
-	scene.AddModel("Building", farmHouse);
-	modelRenderer.Bind(farmHouse);
-
-	std::string bsMeshNames[] = { "BSLevel1", "BSLevel1", "BSLevel1" };
-	std::string bsMaterialNames[] = { "albedoBlacksmith", "albedoBlacksmith", "albedoBlacksmith" };
-	blackSmith = std::make_shared<Building>(bsMeshNames, bsMaterialNames, "Blacksmith", Vector3{ -65, 17, -660 }, scene, particleRenderer);
-	blackSmith->SetRotation(0, 0, 0);
-	blackSmith->SetScale(1.6);
-
-	scene.AddModel("Blacksmith", blackSmith);
-	modelRenderer.Bind(blackSmith);
+	scene.AddModel("Building", building);
+	modelRenderer.Bind(building);
 	//shadowRenderer.Bind(building);
 
 	//QUEST LOG
@@ -553,14 +550,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//FRIENDLY NPC
 	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
-	friendlyNPC->BindBuilding(farmHouse);
+	friendlyNPC->BindBuilding(building);
 	friendlyNPC->AddQuestID(0);
 	friendlyNPC->AddQuestID(2);
 	friendlyNPC->AddQuestID(4);
 	friendlyNPC->AddQuestID(6);
 
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
-	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -105.4, 19.2, -625.8 });
+	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
 	particleRenderer.Bind(campFireSystem);
 
 	//ANIMATION
@@ -569,11 +566,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//scene.AddDrawable("AnimatedModel", animated);
 	//skeletonRenderer.Bind(animated);
 	//animatedModelRenderer.Bind(animated);
-
-	//SOUND
-	//Audio::AddAudio(L"Audio/Rainy.wav");
-	//Audio::StartAudio();
-
+	
+	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
+	Audio::SetVolume(0.3, 0);
+	Audio::StartAudio(0);
+	
 	(void)Run();
 }
 
@@ -619,6 +616,10 @@ APPSTATE Game::Run()
 		{
 			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 			lastClick = Time::Get();
+		}
+		if (Event::KeyIsPressed(79))
+		{
+			Audio::StopEngine();
 		}
 		/*if (Event::KeyIsPressed('U'))
 		{
@@ -728,10 +729,16 @@ void Game::CheckNearbyEnemies()
 
 		if (hit)
 		{
+			SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
+			SoundEffect::SetVolume(0.5, 2);
+			SoundEffect::StartAudio(2);
 			hostiles[i]->TakeDamage();
 			if (hostiles[i]->IsDead())
 			{
-
+				SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
+				SoundEffect::SetVolume(0.8, 2);
+				SoundEffect::StartAudio(2);
+				hostiles[i]->TakeDamage();
 				player->Stats().barbariansKilled++;
 				AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0,-3,0));
 				colliderRenderer.Unbind(hostiles[i]->GetCollider());

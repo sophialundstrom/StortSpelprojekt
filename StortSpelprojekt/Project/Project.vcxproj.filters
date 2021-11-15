@@ -199,12 +199,6 @@
     <Filter Include="ARCUS\Scene\Game\Loot">
       <UniqueIdentifier>{026b4804-3197-4874-97ad-f47e47e174e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ARCUS\Scene\Game\Player">
-      <UniqueIdentifier>{3ae64938-c930-4b98-a1c0-7c8678b4b6a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ARCUS\Scene\Game\Quests\Objectives">
-      <UniqueIdentifier>{f7c31c0a-2ee7-4a7d-8132-0c7363e8a6cb}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Terrain.cpp">
@@ -242,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="NPCFriendly.cpp">
       <Filter>ARCUS\Scene\Game\NPC\.cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ARCUS\Scene\Game</Filter>
     </ClCompile>
     <ClCompile Include="IDRenderer.cpp">
       <Filter>ARCUS\Graphics\Renderers\IDRenderer</Filter>
@@ -345,57 +342,8 @@
     <ClCompile Include="Loot.cpp">
       <Filter>ARCUS\Scene\Game\Loot</Filter>
     </ClCompile>
-    <ClCompile Include="TempCollectQuest.cpp">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClCompile>
-    <ClCompile Include="TempQuest.cpp">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClCompile>
-    <ClCompile Include="TempFightQuest.cpp">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClCompile>
-    <ClCompile Include="BarbarianCamp.cpp" />
-    <ClCompile Include="TempTalkQuest.cpp">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClCompile>
-    <ClCompile Include="LocationQuest.cpp">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClCompile>
-    <ClCompile Include="TargetQuest.cpp">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>ARCUS\Scene\Game\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Inventory.cpp">
-      <Filter>ARCUS\Scene\Game\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Item.cpp">
-      <Filter>ARCUS\Scene\Game\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Objective.cpp">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClCompile>
-    <ClCompile Include="CollectObjective.cpp">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClCompile>
-    <ClCompile Include="FightObjective.cpp">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClCompile>
-    <ClCompile Include="TargetObjective.cpp">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClCompile>
-    <ClCompile Include="TalkObjective.cpp">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClCompile>
-    <ClCompile Include="LocationObjective.cpp">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClCompile>
-    <ClCompile Include="Quest.cpp">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClCompile>
-    <ClCompile Include="QuestLog.cpp">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    <ClCompile Include="SoundEffect.cpp">
+      <Filter>ARCUS\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -416,6 +364,9 @@
     </ClInclude>
     <ClInclude Include="Drawable.h">
       <Filter>ARCUS\Scene\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ARCUS\Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>ARCUS\Scene</Filter>
@@ -560,6 +511,9 @@
     </ClInclude>
     <ClInclude Include="ThreadPool.h">
       <Filter>ARCUS\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>ARCUS\Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="Arrow.h">
       <Filter>ARCUS\Scene\Game\Combat</Filter>
@@ -708,59 +662,8 @@
     <ClInclude Include="Loot.h">
       <Filter>ARCUS\Scene\Game\Loot</Filter>
     </ClInclude>
-    <ClInclude Include="TempQuest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="TempCollectQuest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="TempFightQuest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="BarbarianCamp.h">
-      <Filter>ARCUS\Scene\Game\NPC</Filter>
-    </ClInclude>
-    <ClInclude Include="TempTalkQuest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="LocationQuest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="TargetQuest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="Target.h">
-      <Filter>ARCUS\Scene\Game\Combat</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>ARCUS\Scene\Game\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>ARCUS\Scene\Game\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Inventory.h">
-      <Filter>ARCUS\Scene\Game\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Objective.h">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClInclude>
-    <ClInclude Include="CollectObjective.h">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClInclude>
-    <ClInclude Include="FightObjective.h">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClInclude>
-    <ClInclude Include="TargetObjective.h">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClInclude>
-    <ClInclude Include="TalkObjective.h">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClInclude>
-    <ClInclude Include="LocationObjective.h">
-      <Filter>ARCUS\Scene\Game\Quests\Objectives</Filter>
-    </ClInclude>
-    <ClInclude Include="File.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
+    <ClInclude Include="SoundEffect.h">
+      <Filter>ARCUS\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

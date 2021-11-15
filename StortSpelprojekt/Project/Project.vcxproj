@@ -42,15 +42,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -160,16 +160,13 @@
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioChunks.cpp" />
-    <ClCompile Include="BarbarianCamp.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
-    <ClCompile Include="CollectObjective.cpp" />
     <ClCompile Include="ColliderRenderer.cpp" />
     <ClCompile Include="DialogueOverlay.cpp" />
     <ClCompile Include="DockSpacePanel.cpp" />
     <ClCompile Include="DynamicPlane.cpp" />
-    <ClCompile Include="FightObjective.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="GameOver.cpp" />
@@ -179,12 +176,8 @@
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp" />
-    <ClCompile Include="Inventory.cpp" />
-    <ClCompile Include="Item.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
-    <ClCompile Include="LocationObjective.cpp" />
-    <ClCompile Include="LocationQuest.cpp" />
     <ClCompile Include="Loot.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -193,24 +186,15 @@
     <ClCompile Include="NPCBase.cpp" />
     <ClCompile Include="NPCFriendly.cpp" />
     <ClCompile Include="NPCHostile.cpp" />
-    <ClCompile Include="Objective.cpp" />
     <ClCompile Include="ParticleEditor.cpp" />
     <ClCompile Include="ParticleRenderer.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Quest.cpp" />
-    <ClCompile Include="QuestLog.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SkeletonRenderer.cpp" />
-    <ClCompile Include="TalkObjective.cpp" />
-    <ClCompile Include="TargetObjective.cpp" />
-    <ClCompile Include="TargetQuest.cpp" />
-    <ClCompile Include="TempCollectQuest.cpp" />
-    <ClCompile Include="TempFightQuest.cpp" />
-    <ClCompile Include="TempQuest.cpp" />
-    <ClCompile Include="TempTalkQuest.cpp" />
+    <ClCompile Include="SoundEffect.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainRenderer.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -226,20 +210,16 @@
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioChunks.h" />
-    <ClInclude Include="BarbarianCamp.h" />
     <ClInclude Include="BoundingVolumes.h" />
     <ClInclude Include="BuildingEffect.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Canvas.h" />
-    <ClInclude Include="CollectObjective.h" />
     <ClInclude Include="CollectQuest.h" />
     <ClInclude Include="DialogueOverlay.h" />
     <ClInclude Include="DockSpacePanel.h" />
     <ClInclude Include="DynamicPlane.h" />
     <ClInclude Include="FBXLoader.h" />
-    <ClInclude Include="FightObjective.h" />
     <ClInclude Include="FightQuest.h" />
-    <ClInclude Include="File.h" />
     <ClInclude Include="GameLoader.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="Grid.h" />
@@ -247,16 +227,12 @@
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h" />
-    <ClInclude Include="Inventory.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="LoadingScreen.h" />
-    <ClInclude Include="LocationObjective.h" />
-    <ClInclude Include="LocationQuest.h" />
     <ClInclude Include="Loot.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NPCFriendly.h" />
-    <ClInclude Include="Objective.h" />
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
@@ -311,21 +287,14 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonRenderer.h" />
+    <ClInclude Include="SoundEffect.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="stb_image_write.h" />
-    <ClInclude Include="TalkObjective.h" />
     <ClInclude Include="TalkQuest.h" />
-    <ClInclude Include="Target.h" />
-    <ClInclude Include="TargetObjective.h" />
-    <ClInclude Include="TargetQuest.h" />
-    <ClInclude Include="TempCollectQuest.h" />
-    <ClInclude Include="TempFightQuest.h" />
-    <ClInclude Include="TempQuest.h" />
-    <ClInclude Include="TempTalkQuest.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainRenderer.h" />
     <ClInclude Include="Text.h" />
