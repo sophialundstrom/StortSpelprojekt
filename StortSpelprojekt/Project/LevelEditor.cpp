@@ -26,6 +26,7 @@ void LevelEditor::BindDrawables()
 			volume->SetPosition(box->GetPosition());
 			volume->SetRotation(box->GetRotation());
 			volume->SetScale(box->GetScale());
+			volume->SetName(name);
 			scene.GetDrawables()[name] = volume;
 			scene.GetObjectNames().push_back(name);
 			volume->SetID((UINT)scene.GetObjectNames().size());
@@ -43,6 +44,7 @@ void LevelEditor::BindDrawables()
 			volume->SetPosition(sphere->GetPosition());
 			volume->SetRotation(sphere->GetRotation());
 			volume->SetScale(sphere->GetScale());
+			volume->SetName(name);
 			scene.GetDrawables()[name] = volume;
 			scene.GetObjectNames().push_back(name);
 			volume->SetID((UINT)scene.GetObjectNames().size());
@@ -382,7 +384,6 @@ void LevelEditor::Update()
 		{
 			RemoveItem(selectedObject);
 			ClearToolUI();
-			selectedObject = "";
 		}
 	}
 
@@ -527,17 +528,116 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	(void*)Run();
 }
 
-void LevelEditor::RemoveItem(const std::string name)
+void LevelEditor::RemoveItem(std::string name)
 {
-	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
-	component->RemoveName(name);
-	auto model = scene.Get<Drawable>(name);
-	volumeRenderer.Unbind(model);
-	modelRenderer.Unbind(model);
-	idRenderer.Unbind(model);
+	selectedObject = "";
+	std::vector<std::shared_ptr <Drawable>> sameNameArray;
 
-	scene.DeleteDrawable(name);
-	scene.GetObjectNames()[model.get()->GetID() -1] = "";
+	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+	component->Clear();
+
+	auto deleted = scene.Get<Drawable>(name);
+
+	scene.GetObjectNames().clear();
+
+	auto model = std::dynamic_pointer_cast<Model>(deleted);
+	if (model)
+	{
+		modelRenderer.Unbind(model);
+		idRenderer.Unbind(model);
+		scene.DeleteDrawable(name);
+		name = Resources::Inst().GetBufferNameFromID(model->mesh.bufferID);
+
+		auto& drawables = scene.GetDrawables();
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			if (drawableName.find(name) != std::string::npos)
+				sameNameArray.emplace_back(drawable);
+		}
+		for (int i = 0; i < sameNameArray.size(); i++)
+		{
+			scene.DeleteDrawable(sameNameArray[i]->GetName());
+			std::string newName;
+			if (i != 0)
+				newName = name + std::to_string(i);
+			else
+				newName = name;
+			sameNameArray[i]->SetName(newName);
+			scene.AddDrawable(sameNameArray[i]);
+		}
+
+		auto& names = scene.GetObjectNames();
+		int ID = 0;
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			drawable->SetID(ID + 1);
+			ID++;
+			names.emplace_back(drawableName);
+			component->AddName(drawableName);
+		}
+	}
+
+	else
+	{
+		auto box = std::dynamic_pointer_cast<BoxVolume>(deleted);
+		if (box)
+		{
+			volumeRenderer.Unbind(box);
+			idRenderer.Unbind(box);
+			scene.DeleteDrawable(name);
+			name = "BoxVolume";
+		}
+
+		auto sphere = std::dynamic_pointer_cast<SphereVolume>(deleted);
+		if (sphere)
+		{
+			volumeRenderer.Unbind(sphere);
+			idRenderer.Unbind(sphere);
+			scene.DeleteDrawable(name);
+			name = "SphereVolume";
+		}
+
+		auto& drawables = scene.GetDrawables();
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			if (drawableName.find(name) != std::string::npos)
+				sameNameArray.emplace_back(drawable);
+		}
+
+		for (auto& drawable : sameNameArray)
+		{
+			scene.DeleteDrawable(drawable->GetName());
+		}
+
+		for (int i = 0; i < sameNameArray.size(); i++)
+		{
+			std::string newName;
+			if (i != 0)
+				newName = name + std::to_string(i);
+			else
+				newName = name;
+			sameNameArray[i]->SetName(newName);
+			drawables[newName] = sameNameArray[i];
+		}
+
+		for (int i = 0; i < sameNameArray.size(); i++)
+			Print(sameNameArray[i]->GetName());
+
+		for (auto& [drawableName, drawable] : drawables)
+			Print(drawable->GetName());
+	
+		auto& names = scene.GetObjectNames();
+		int ID = 0;
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			drawable->SetID(ID + 1);
+			ID++;
+			names.emplace_back(drawableName);
+			component->AddName(drawableName);
+		}
+	}
+
+
 }
 
 void LevelEditor::ClearToolUI()

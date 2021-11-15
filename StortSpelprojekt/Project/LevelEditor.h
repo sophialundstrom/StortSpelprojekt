@@ -50,7 +50,7 @@ private:
 	virtual void Render() override;
 	void CreateBoundingBox();
 	void CreateBoundingSphere();
-	void RemoveItem(const std::string name);
+	void RemoveItem(std::string name);
 	void ClearToolUI();
 	void UpdateToolUI(std::string name);
 	void FocusObject();
