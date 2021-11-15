@@ -31,7 +31,7 @@ class QuadTree
 {
 
 public:
-    QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel,int currentLevel);
+    QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int currentLevel);
     void InsertModel(std::shared_ptr<Drawable>& drawable);
     void InsertModelInChild(std::shared_ptr<Drawable>& drawable);
     void PrintTree();
