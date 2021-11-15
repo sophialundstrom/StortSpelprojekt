@@ -7,6 +7,8 @@
 #include "assimp\postprocess.h"
 #include "Time.h"
 #include "FileSystem.h"
+#include "Audio.h"
+#include "SoundEffect.h"
 
 class Model : public Drawable
 {

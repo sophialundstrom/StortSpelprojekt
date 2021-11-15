@@ -22,6 +22,7 @@
 #include "Audio.h"
 #include "NPCHostile.h"
 #include "Loot.h"
+#include "MainMenu.h"
 
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
@@ -64,8 +65,7 @@ private:
 
     std::vector<std::shared_ptr<Item>> items;
 
-    std::shared_ptr<Building> farmHouse;
-    std::shared_ptr<Building> blackSmith;
+    std::shared_ptr<Building> building;
 
     std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs;
     
