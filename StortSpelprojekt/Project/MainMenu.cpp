@@ -55,7 +55,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	Initialize();
 	
 	Audio::AddAudio(L"Audio/Menu.wav", 0);
-	Audio::SetVolume(0.05, 0);
+	Audio::SetVolume(0.002, 0);
 	Audio::StartAudio(0);
 
 	auto menuCanvas = new Canvas();
