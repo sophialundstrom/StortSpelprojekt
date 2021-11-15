@@ -279,7 +279,7 @@ void Game::UpdateAndHandleLoot()
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 			SoundEffect::AddAudio(L"Audio/Loot.wav", 2);
-			SoundEffect::SetVolume(0.5, 2);
+			SoundEffect::SetVolume(0.002, 2);
 			SoundEffect::StartAudio(2);
 			std::cout << "Loot destoyed\n";
 		}
@@ -408,7 +408,7 @@ void Game::CheckItemCollision()
 			if (Event::KeyIsPressed('E'))
 			{
 				SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
-				SoundEffect::SetVolume(0.5, 2);
+				SoundEffect::SetVolume(0.002, 2);
 				SoundEffect::StartAudio(2);
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
@@ -434,7 +434,7 @@ void Game::CheckQuestInteraction()
 				{
 					state = GameState::DIALOGUE;
 					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
-					SoundEffect::SetVolume(0.5, 2);
+					SoundEffect::SetVolume(0.002, 2);
 					SoundEffect::StartAudio(2);
 					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
 					dialogueOverlay->Set("GILBERT", "Lorem.");
@@ -620,7 +620,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//animatedModelRenderer.Bind(animated);
 	
 	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	Audio::SetVolume(0.3, 0);
+	Audio::SetVolume(0.002, 0);
 	Audio::StartAudio(0);
 	
 	(void)Run();
@@ -792,13 +792,13 @@ void Game::CheckNearbyEnemies()
 		if (hit)
 		{
 			SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
-			SoundEffect::SetVolume(0.5, 2);
+			SoundEffect::SetVolume(0.002, 2);
 			SoundEffect::StartAudio(2);
 			hostiles[i]->TakeDamage();
 			if (hostiles[i]->IsDead())
 			{
 				SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
-				SoundEffect::SetVolume(0.8, 2);
+				SoundEffect::SetVolume(0.002, 2);
 				SoundEffect::StartAudio(2);
 				hostiles[i]->TakeDamage();
 				player->Stats().barbariansKilled++;
