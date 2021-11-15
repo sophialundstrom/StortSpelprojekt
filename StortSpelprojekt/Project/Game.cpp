@@ -494,11 +494,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
 
-	for (int i = 0; i < 3; i++)
-		AddArrow("Arrow");
+
+	// THE WILL BE A PROBLEM IF MORE ARROWS THAN MAXARROWS IS IN THE AIR AT THE SAME TIME (NO ARROW WILL BE RENDERED). THIS IS BECAUSE THERE ARE ONLY AS MANY ARROW MODELS AS MAXARROWS.
+	UINT maxArrows = 50;
+	for (int i = 0; i < maxArrows; i++)
+		AddArrow("arrowModel");
 
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows);
+	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows, maxArrows);
 	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
@@ -511,16 +514,26 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	colliderRenderer.Bind(scene.GetCamera()->GetCamRay());
 	
 
+
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "HouseTexture", "HouseTexture", "HouseTexture" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
-	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
-	building->SetScale(5);
+	farmHouse = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
+	farmHouse->SetRotation(0, -DirectX::XM_PIDIV2, 0);
+	farmHouse->SetScale(5);
 
-	scene.AddModel("Building", building);
-	modelRenderer.Bind(building);
+	scene.AddModel("Building", farmHouse);
+	modelRenderer.Bind(farmHouse);
+
+	std::string bsMeshNames[] = { "BSLevel1", "BSLevel1", "BSLevel1" };
+	std::string bsMaterialNames[] = { "albedoBlacksmith", "albedoBlacksmith", "albedoBlacksmith" };
+	blackSmith = std::make_shared<Building>(bsMeshNames, bsMaterialNames, "Blacksmith", Vector3{ -65, 17, -660 }, scene, particleRenderer);
+	blackSmith->SetRotation(0, 0, 0);
+	blackSmith->SetScale(1.6);
+
+	scene.AddModel("Blacksmith", blackSmith);
+	modelRenderer.Bind(blackSmith);
 	//shadowRenderer.Bind(building);
 
 	//QUEST LOG
@@ -540,14 +553,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//FRIENDLY NPC
 	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
-	friendlyNPC->BindBuilding(building);
+	friendlyNPC->BindBuilding(farmHouse);
 	friendlyNPC->AddQuestID(0);
 	friendlyNPC->AddQuestID(2);
 	friendlyNPC->AddQuestID(4);
 	friendlyNPC->AddQuestID(6);
 
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
-	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
+	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -105.4, 19.2, -625.8 });
 	particleRenderer.Bind(campFireSystem);
 
 	//ANIMATION
@@ -659,7 +672,7 @@ APPSTATE Game::Run()
 		}
 	}
 
-	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(nrOfFreeArrows));
+	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(player->numArrows));
 	
 	if (hovering)
 		canvases["INGAME"]->GetText("INTERACT")->Show();
@@ -720,9 +733,10 @@ void Game::CheckNearbyEnemies()
 			{
 
 				player->Stats().barbariansKilled++;
-				AddLoot(LOOTTYPE::MIXED, hostiles[i]->GetPosition() + Vector3(0,-3,0));
-				scene.DeleteDrawable(hostiles[i]->GetName());
+				AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0,-3,0));
+				colliderRenderer.Unbind(hostiles[i]->GetCollider());
 				modelRenderer.Unbind(hostiles[i]);
+				scene.DeleteDrawable(hostiles[i]->GetName());
 				hostiles[i] = hostiles[hostiles.size() - 1];
 				hostiles.resize(hostiles.size() - 1);
 			}
