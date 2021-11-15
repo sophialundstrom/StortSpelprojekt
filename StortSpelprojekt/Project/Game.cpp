@@ -101,6 +101,9 @@ void Game::Initialize()
 	//LOAD SCENE
 	FBXLoader meshLoader("Models");
 
+	QuadTreeBounds qtBounds(-700.f, -600.f, 1300.f, 1600.f);
+	quadTree = new QuadTree(qtBounds, 4, 5, 0);
+
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
 
@@ -573,6 +576,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 Game::~Game()
 {
+	delete quadTree;
 	scene.Clear();
 	Resources::Inst().Clear();
 }

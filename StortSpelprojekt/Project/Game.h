@@ -23,6 +23,7 @@
 #include "NPCHostile.h"
 #include "Loot.h"
 #include "MainMenu.h"
+#include "QuadTree.h"
 
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
@@ -31,6 +32,7 @@ class Game : public ApplicationState
 {
 private:
     GameState state = GameState::ACTIVE;
+    QuadTree* quadTree;
 
     bool hovering = false;
     bool done = false;
