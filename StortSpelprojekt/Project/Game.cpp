@@ -726,7 +726,7 @@ void Game::CheckNearbyEnemies()
 
 		if (hit)
 		{
-			SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
+			SoundEffect::AddAudio(L"Audio/Hit.wav", 2);
 			SoundEffect::SetVolume(0.002, 2);
 			SoundEffect::StartAudio(2);
 			hostiles[i]->TakeDamage();

@@ -229,7 +229,7 @@ void Player::Update(HeightMap* heightMap)
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
 		sceneCamera->SetPosition(newCameraPos);
-		
+		playSound = true;
 		if (Time::Get() - lastClick > 0.2f)
 		{
 			if (Event::LeftIsClicked() && numArrows > 0)
@@ -259,7 +259,14 @@ void Player::Update(HeightMap* heightMap)
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 		sceneCamera->MoveTowards(newCameraPos);
 	}
-		
+
+	if (playSound == true)
+	{
+		SoundEffect::AddAudio(L"Audio/Scream.wav", 3);
+		SoundEffect::SetVolume(0.01, 3);
+		SoundEffect::StartAudio(3);
+	}
+
 
 	for (int i = 0; i < arrows.size(); i++)
 	{
