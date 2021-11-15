@@ -7,8 +7,6 @@
 #include "assimp\postprocess.h"
 #include "Time.h"
 #include "FileSystem.h"
-#include "Audio.h"
-#include "SoundEffect.h"
 
 class Model : public Drawable
 {
@@ -64,5 +62,10 @@ public:
 	virtual void Update() override
 	{
 		UpdateMatrix();
+	}
+
+	void GetMeshBoundingBoxValues(Vector3& minVals, Vector3& maxVals)
+	{
+
 	}
 };

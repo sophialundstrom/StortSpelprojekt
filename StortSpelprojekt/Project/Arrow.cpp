@@ -30,9 +30,7 @@ bool Arrow::Shoot(Vector3 direction, Vector3 startPos, Vector3 rotation)
 		SetPosition(startPos);
 		isShot = true;
 		isArrowActivating = true;
-		
 	}
-	
 	
 	return isArrowActivating;
 }
@@ -42,7 +40,6 @@ void Arrow::Update()
 	if (isShot == true)
 	{
 		lifeLength += Time::GetDelta();
-
 	}
 
 	if (lifeLength <= lifeTime && isShot == true)

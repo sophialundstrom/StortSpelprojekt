@@ -7,20 +7,19 @@
 class Audio
 {
 private:
-	static const int CAP = 5;
-	static Microsoft::WRL::ComPtr<IXAudio2> MusicEngine;
+	static Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
 	static IXAudio2MasteringVoice* pMasterVoice;
-	static IXAudio2SourceVoice* pSourceVoice[CAP];
+	static IXAudio2SourceVoice* pSourceVoice;
 	static WAVEFORMATEXTENSIBLE wfx;
 	static XAUDIO2_BUFFER audioBuffer;
 	static float volume;
 
 public:
 	static void Initialize();
-	static void AddAudio(std::wstring fileName, int slot);
+	static void AddAudio(std::wstring fileName);
 	static void StartEngine();
 	static void StopEngine();
-	static void SetVolume(float volume, int slot);
+	static void SetVolume(float volume);
 	static float GetVolume() { return volume; }
-	static void StartAudio(int slot);
+	static void StartAudio();
 };

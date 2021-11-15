@@ -1,95 +1,36 @@
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\vc142.pdb
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\imguizmo.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\image.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\idrenderer.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\heap.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\grid.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\graphics.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\gameover.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\gameloader.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\game.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\dynamicplane.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\dockspacepanel.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\dialogueoverlay.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\colliderrenderer.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\canvas.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\camera.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\button.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\audiochunks.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\audio.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\arrow.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\animatedmodelrenderer.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\terrainrenderer.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\terrain.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\skeletonrenderer.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\shadowrenderer.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\scene.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\player.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\pathfinding.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\particlesystem.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\particlerenderer.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\particleeditor.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\npchostile.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\npcfriendly.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\npcbase.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\node.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\modelrenderer.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\main.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\mainmenu.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\loot.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\loadingscreen.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\leveleditor.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\window.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\win.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\waterrenderer.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\volumerenderer.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\ui.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\texture.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\text.obj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\animatedmodelvertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\deferredcolliderpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\deferredterrainpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\colliderpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\collidervertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\deferredpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\deferredvertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\forwardmodelpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\forwardparticlepixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\deferredmodelpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\forwardterrainpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\idpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\idvertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\loadingps.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\modelvertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\particlegeometryshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\deferredparticlepixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\particlevertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\shadowvertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\skeletonpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\skeletonvertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\terraindomainshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\terraingeometryshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\terrainhullshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\terrainvertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\unlitanimatedmodelvertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\unlitforwardmodelpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\unlitmodelvertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\loadingvs.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\volumeidvertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\volumepixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\volumevertexshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\waterdomainshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\waterpixelshader.cso
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\project.exe
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.ipdb
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.iobj
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\x64\release\project.pdb
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\cl.command.1.tlog
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\cl.read.1.tlog
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\cl.write.1.tlog
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\fxc.command.1.tlog
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\fxc.read.1.tlog
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\fxc.write.1.tlog
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\link.command.1.tlog
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\link.read.1.tlog
-c:\users\johan\onedrive - bth student\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\link.write.1.tlog
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\animatedmodelvertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\deferredcolliderpixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\deferredterrainpixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\colliderpixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\collidervertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\deferredpixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\deferredvertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\forwardmodelpixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\forwardparticlepixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\deferredmodelpixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\forwardterrainpixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\idpixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\idvertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\loadingps.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\modelvertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\particlegeometryshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\deferredparticlepixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\particlevertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\shadowvertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\skeletonpixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\skeletonvertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\terraindomainshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\terraingeometryshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\terrainhullshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\terrainvertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\unlitanimatedmodelvertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\unlitforwardmodelpixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\unlitmodelvertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\loadingvs.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\volumeidvertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\volumepixelshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\volumevertexshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\x64\release\waterdomainshader.cso
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\fxc.command.1.tlog
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\fxc.read.1.tlog
+c:\users\fredrik\documents\github\stortspelprojekt\stortspelprojekt\project\x64\release\project.tlog\fxc.write.1.tlog

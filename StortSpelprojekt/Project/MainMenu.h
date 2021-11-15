@@ -18,6 +18,7 @@ class MainMenu : public ApplicationState
 private:
 	Canvas* currentCanvas;
 	std::map<std::string, Canvas*> canvases;
+
 	TerrainRenderer terrainRenderer;
 	ParticleRenderer particleRenderer;
 	ModelRenderer modelRenderer;

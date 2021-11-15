@@ -342,8 +342,8 @@
     <ClCompile Include="Loot.cpp">
       <Filter>ARCUS\Scene\Game\Loot</Filter>
     </ClCompile>
-    <ClCompile Include="SoundEffect.cpp">
-      <Filter>ARCUS\Audio</Filter>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>ARCUS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -662,8 +662,8 @@
     <ClInclude Include="Loot.h">
       <Filter>ARCUS\Scene\Game\Loot</Filter>
     </ClInclude>
-    <ClInclude Include="SoundEffect.h">
-      <Filter>ARCUS\Audio</Filter>
+    <ClInclude Include="QuadTree.h">
+      <Filter>ARCUS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
