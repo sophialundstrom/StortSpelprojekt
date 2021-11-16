@@ -101,9 +101,6 @@ void Game::Initialize()
 	//LOAD SCENE
 	FBXLoader meshLoader("Models");
 
-	QuadTreeBounds qtBounds(-700.f, -600.f, 1300.f, 1600.f);
-	quadTree = new QuadTree(qtBounds, 4, 5, 0);
-
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
 
@@ -571,6 +568,19 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	Audio::SetVolume(0.3, 0);
 	Audio::StartAudio(0);
 	
+
+
+	QuadTreeBounds qtBounds(-700.f, -600.f, 1300.f, 1600.f);
+	quadTree = new QuadTree(qtBounds, 4, 5, 0);
+
+	
+	auto tempModel = std::make_shared<Model>("Tent", "TentNameKey");
+	auto tempModelAsDrawable = std::dynamic_pointer_cast<Drawable>(tempModel);
+	tempModelAsDrawable->SetPosition(168.f, 54.f, -331.f);
+	tempModel->Update();
+	modelRenderer.Bind(tempModel);
+
+	quadTree->InsertModel(tempModelAsDrawable);
 	quadTree->PrintTree();
 
 	(void)Run();

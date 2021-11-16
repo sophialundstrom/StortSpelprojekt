@@ -10,6 +10,8 @@ struct TempMeshData
 	std::string name;
 	UINT vertexCount;
 	ID3D11Buffer* buffer;
+	Vector3 vertMinVals = { D3D11_FLOAT32_MAX, D3D11_FLOAT32_MAX, D3D11_FLOAT32_MAX };
+	Vector3 vertMaxVals = { -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX };
 };
 
 class FBXLoader
@@ -76,7 +78,7 @@ private:
 		auto& resources = Resources::Inst();
 
 		for (auto* meshData : tempMeshData)
-			resources.AddVertexBuffer(meshData->name, meshData->buffer, meshData->vertexCount);
+			resources.AddVertexBuffer(meshData->name, meshData->buffer, meshData->vertexCount, meshData->vertMaxVals, meshData->vertMinVals);
 
 		for (auto* material : tempMaterials)
 			resources.AddMaterial(material);
@@ -134,6 +136,28 @@ private:
 
 			val = mesh->mTextureCoords[0][i];
 			vertices[i].texCoords = { val.x, val.y };
+
+
+
+
+			val = mesh->mVertices[i];
+			//Xvalues
+			if (val.x > resource->vertMaxVals.x)
+				resource->vertMaxVals.x = val.x;
+			if (val.x < resource->vertMinVals.x)
+				resource->vertMinVals.x = val.x;
+
+			//Yvalues
+			if (val.y > resource->vertMaxVals.y)
+				resource->vertMaxVals.y = val.y;
+			if (val.y < resource->vertMinVals.y)
+				resource->vertMinVals.y = val.y;
+
+			//Zvalues
+			if (val.z > resource->vertMaxVals.z)
+				resource->vertMaxVals.z = val.z;
+			if (val.z < resource->vertMinVals.z)
+				resource->vertMinVals.z = val.z;
 		}
 
 		resource->vertexCount = mesh->mNumVertices;

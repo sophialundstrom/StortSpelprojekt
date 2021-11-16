@@ -60,10 +60,9 @@ public:
 		}
 	}
 
-	void GetMeshBoundingBoxValues(Vector3& minVals, Vector3& maxVals)
+	Vector3* GetMeshBoundingBoxValues()
 	{
-		minVals = mesh.vertMinVals;
-		maxVals = mesh.vertMaxVals;
+		return Resources::Inst().GetMinMaxBoundsFromID(mesh.bufferID);
 	}
 
 	// Inherited via Drawable
