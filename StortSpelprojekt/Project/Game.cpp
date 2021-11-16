@@ -7,12 +7,11 @@
 void Game::Update()
 {
 	hovering = false;
-
-	//QuestLog::Inst().Update();
 	
 	scene.Update();
 
-	player->Update(terrain.GetHeightMap());
+	if (state != GameState::DIALOGUE)
+		player->Update(terrain.GetHeightMap());
 
 	scene.GetCamera()->Update();
 
@@ -29,6 +28,8 @@ void Game::Update()
 	UpdateAndHandleLoot();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
+
+	QuestLog::Update(player, camps, friendlyNPCs, targets);
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
@@ -185,9 +186,9 @@ void Game::AddItem(Item::Type type, Vector3 position)
 	colliderRenderer.Bind(collider);
 }
 
-std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Vector3 position)
+std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position)
 {
-	auto NPC = std::make_shared<FriendlyNPC>(fileName);
+	auto NPC = std::make_shared<FriendlyNPC>(name, fileName);
 	NPC->SetPosition(position);
 
 	auto collider = NPC->GetCollider();
@@ -198,7 +199,7 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Ve
 	modelRenderer.Bind(NPC);
 	//shadowRenderer.Bind(NPC);
 
-	scene.AddDrawable("FriendlyNPC", NPC);
+	scene.AddDrawable(name, NPC);
 
 	friendlyNPCs.emplace_back(NPC);
 
@@ -243,6 +244,51 @@ void Game::UpdateAndHandleLoot()
 		}
 		
 	}
+}
+
+void Game::AddFriendlyNPCs()
+{
+	//NPC1
+	{
+		auto NPC = AddFriendlyNPC("Gilbert", "Priest", { -134, 25, -594 });
+
+		NPC->AddQuest("A Helping Hand.");
+		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+		NPC->AddDialogue("INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING IN THE QUEST");
+
+		NPC->AddQuest("Target Aquired.");
+		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+		NPC->AddDialogue("INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING IN THE QUEST");
+
+		NPC->AddQuest("We're Under Attack!");
+		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+		NPC->AddDialogue("INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING IN THE QUEST");
+
+		NPC->AddDialogue("INSERT DIALOGUE FOR WHEN NPC HAS NO QUESTS LEFT");
+
+		friendlyNPCs.emplace_back(NPC);
+	}
+
+	//NPC2
+	{
+		auto NPC = AddFriendlyNPC("Gilbert2", "Priest", { -144, 25, -594 });
+
+		NPC->AddQuest("FIRST QUEST FOR NPC2");
+		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+		NPC->AddDialogue("INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING IN THE QUEST");
+
+		NPC->AddDialogue("INSERT DIALOGUE FOR WHEN NPC HAS NO QUESTS LEFT");
+
+		friendlyNPCs.emplace_back(NPC);
+	}
+
+	//NPC3
+
+	//NPC4
 }
 
 void Game::CheckNearbyCollision()
@@ -390,26 +436,19 @@ void Game::CheckQuestInteraction()
 
 				if (Event::KeyIsPressed('E'))
 				{
+					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
+					if (!dialogueOverlay->IsDone())
+						return;
+
 					state = GameState::DIALOGUE;
+
 					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
 					SoundEffect::SetVolume(0.5, 2);
 					SoundEffect::StartAudio(2);
-					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
-					dialogueOverlay->Set("GILBERT", "Lorem.");
+
+					dialogueOverlay->Set(NPC);
+
 					currentCanvas = dialogueOverlay;
-
-					int ID = NPC->GetQuestID();
-					if (ID != -1)
-					{
-						if (ID != 0)
-							NPC->ConnectedBuilding()->Upgrade();
-
-						if (ID == 4) //LAST QUEST
-							done = true;
-
-						//QuestLog::Inst().Complete(ID);
-					}
-
 					return;
 				}
 			}
@@ -439,6 +478,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	animatedModelRenderer(FORWARD, true),
 	water(5000), terrain(2)
 {
+	QuestLog::CreateQuests();
+	//QuestLog::Load("Default");
+
 	//LOAD SCENE
 	Initialize();
 
@@ -549,23 +591,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPC
-	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
-	friendlyNPC->BindBuilding(building);
-	friendlyNPC->AddQuestID(0);
-	friendlyNPC->AddQuestID(2);
-	friendlyNPC->AddQuestID(4);
-	friendlyNPC->AddQuestID(6);
+	AddFriendlyNPCs();
 
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
 	particleRenderer.Bind(campFireSystem);
-
-	//ANIMATION
-	//auto animated = std::make_shared<AnimatedModel>("AnimatedLowPolyCharacter", "AnimatedModel");
-	//animated->SetPosition(-30, 25, -580);
-	//scene.AddDrawable("AnimatedModel", animated);
-	//skeletonRenderer.Bind(animated);
-	//animatedModelRenderer.Bind(animated);
 	
 	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
 	Audio::SetVolume(0.3, 0);
@@ -576,6 +606,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 Game::~Game()
 {
+	QuestLog::ShutDown();
 	scene.Clear();
 	Resources::Inst().Clear();
 }
@@ -612,11 +643,13 @@ APPSTATE Game::Run()
 
 			lastClick = Time::Get();
 		}
+
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
 			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 			lastClick = Time::Get();
 		}
+
 		if (Event::KeyIsPressed(79))
 		{
 			Audio::StopEngine();
@@ -661,6 +694,9 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}*/
 	}
+
+	if (Event::KeyIsPressed('L'))
+		player->Inventory().AddItem(Item::Type::Hammer);
 
 	UpdateInventoryUI();
 

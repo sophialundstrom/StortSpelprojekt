@@ -12,6 +12,7 @@ class Quest
 {
 protected:
 	std::string name;
+	bool unlocked;
 	bool active;
 	bool completed;
 	std::vector<Objective*> objectives;
@@ -20,9 +21,15 @@ public:
 	Quest() = default;
 	Quest(const std::string& name, bool active, bool completed);
 
-	void Activate()							{ active = true; }
-	bool IsCompleted()						{ return completed; }
-	bool IsActive()							{ return active; }
+	const std::vector<Objective*> GetObjectives() { return objectives; }
+
+	const std::string GetName()				{ return name; }
+
+	void Unlock()		{ unlocked = true; }
+	bool Unlocked()		{ return unlocked; }
+	void Activate()		{ active = true; }
+	bool IsCompleted()	{ return completed; }
+	bool IsActive()		{ return active; }
 
 	std::vector<Quest*>& GetChildQuests()	{ return childQuests; }
 

@@ -1,48 +1,87 @@
 #include "NPCFriendly.h"
 
-FriendlyNPC::FriendlyNPC(const std::string& file)
-	: NPC(file)
+#include "QuestLog.h"
+
+FriendlyNPC::FriendlyNPC(const std::string& name, const std::string& file)
+	:NPC(file), currentDialogueState(DialogueState::HANDOUT)
 {
+	SetName(name);
 	questMarker = std::make_shared<QuestMarker>();
 	boundingBox->SetScale(2, 4, 2);
 }
 
-FriendlyNPC::FriendlyNPC(const Model& model)
-	: NPC(model)
+const std::string FriendlyNPC::AddQuest(const std::string& name)
 {
+	auto quest = QuestLog::Get(name);
+	if (quest)
+	{
+		quests.emplace_back(quest);
+		return quest->GetName();
+	}
+	
+	return "";
+}
+
+void FriendlyNPC::AddDialogue(const std::string& string)
+{
+	dialogues.emplace_back(string);
+}
+
+bool FriendlyNPC::Interactable()
+{
+	if (!currentQuest)
+		return false;
+
+	return currentQuest->Unlocked();
+}
+
+void FriendlyNPC::ActivateCurrentQuest()
+{
+	QuestLog::Activate(currentQuest);
 }
 
 void FriendlyNPC::Update()
 {
 	NPC::Update();
 
-	activeQuestID = -1;
-	interactable = false;
-	Vector3 qmPosition = { 0, -1000, 0 };
-
-	UINT completedQuests = 0;
-	for (auto& ID : questIDs)
+	if (currentQuest)
 	{
-		/*if (QuestLog::Inst().QuestIsActive(ID))
+		if (!currentQuest->Unlocked())
+			return;
+
+		Print(currentQuest->GetName(), "========");
+
+		if (currentQuest->Unlocked() && currentQuest->IsActive() && !currentQuest->IsCompleted())
 		{
-			activeQuestID = ID;
-			interactable = true;
-			qmPosition = { 0, 10, 0 };
-			break;
+			Print("HELP");
+			currentDialogueState = DialogueState::HELP;
 		}
 
-		if (QuestLog::Inst().QuestIsDone(ID))
-			completedQuests++;*/
+		else if (currentQuest->IsCompleted())
+		{
+			Print("HANDIN");
+			currentDialogueState = DialogueState::HANDIN;
+			if (finishedDialogue)
+			{
+				QuestLog::Complete(currentQuest);
+				currentQuestID++;
+				currentQuest = nullptr;
+				return;
+			}
+		}
+
+		else
+		{
+			Print("HANDOUT");
+			currentDialogueState = DialogueState::HANDOUT;
+		}
+
+		questMarker->SetPosition(position.x, position.y + 5.0f, position.z);
+		questMarker->Update();
 	}
 
-	if (completedQuests >= questIDs.size())
-		completed = true;
-	
-	questMarker->SetPosition(qmPosition);
-	questMarker->Update();
-}
-
-void FriendlyNPC::Walking()
-{
-	//TODO: Implement walking behaviour
+	if (!currentQuest)
+	{
+		currentQuest = quests[currentQuestID];
+	}
 }

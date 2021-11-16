@@ -8,28 +8,32 @@
 class FriendlyNPC : public NPC
 {
 public:
-	FriendlyNPC(const std::string& file);
-	FriendlyNPC(const Model& model);
+	FriendlyNPC(const std::string& name, const std::string& file);
 
-	void AddQuestID(UINT ID)								{ questIDs.emplace_back(ID); }
-	bool Interactable()										{ return interactable; }
-	int GetQuestID()										{ return activeQuestID; }
-	void BindBuilding(std::shared_ptr<Building> building)	{ this->building = building; }
-	std::shared_ptr<Building> ConnectedBuilding()			{ return building; }
-	std::shared_ptr<QuestMarker> GetQuestMarker()			{ return questMarker; }
-	UINT NumConnectedQuests()								{ return (UINT)questIDs.size(); }
-	bool Completed()										{ return completed; }
-	bool CompletedConversation()							{ return true; }
+	const std::string AddQuest(const std::string& name);
+
+	void AddDialogue(const std::string& string);
+
+	bool Interactable();
+
+	bool CompletedConversation()					{ return finishedDialogue; }
+	void SetCompletedConversation()					{ finishedDialogue = true; }
+	void ActivateCurrentQuest();
+
+	std::shared_ptr<QuestMarker> GetQuestMarker()	{ return questMarker; }
+	const std::string GetCurrentDialogue()			{ return dialogues[currentQuestID + UINT(currentDialogueState)]; }
 
 	virtual void Update() override;
 private:
-	std::vector<Quest*> quests;
-	std::shared_ptr<QuestMarker> questMarker;
-	std::shared_ptr<Building> building;
-	int activeQuestID = -1;
-	bool interactable = false;
-	bool completed = false;
+	std::vector<std::string> dialogues;
 
-	std::vector<UINT> questIDs;
-	void Walking();
+	enum class DialogueState { HANDOUT, HELP, HANDIN, DONE };
+	DialogueState currentDialogueState;
+	bool finishedDialogue;
+
+	UINT currentQuestID = 0;
+	Quest* currentQuest = nullptr;
+	std::vector<Quest*> quests;
+
+	std::shared_ptr<QuestMarker> questMarker;
 };

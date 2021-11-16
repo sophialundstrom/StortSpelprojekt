@@ -67,6 +67,8 @@ private:
 
     std::shared_ptr<Building> building;
 
+    std::vector<BarbarianCamp> camps;
+    std::vector<std::shared_ptr<Target>> targets;
     std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs;
     
     std::vector<std::shared_ptr<Collider>> colliders;
@@ -93,10 +95,11 @@ private:
     void RemoveItem(const std::string name);
     void AddItem(Item::Type type, Vector3 position);
 
-    std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string fileName, Vector3 position);
+    std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position);
 
     void AddArrow(const std::string fileName);
 
+    void AddFriendlyNPCs();
     void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
     void AddLoot(LOOTTYPE type, const Vector3& position);
 

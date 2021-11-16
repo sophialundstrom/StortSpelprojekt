@@ -8,7 +8,9 @@ private:
 public:
 	QuestMarker()
 		:Model("QuestMarkerStart", "QM")
-	{}
+	{
+		position = { 0, -1000, 0 };
+	}
 
 	void Update()
 	{

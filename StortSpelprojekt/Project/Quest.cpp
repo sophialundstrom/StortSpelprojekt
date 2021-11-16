@@ -134,7 +134,7 @@ void Quest::Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> ca
 	if (numCompleted == objectives.size())
 	{
 		for (auto child : childQuests)
-			child->Activate();
+			child->Unlock();
 
 		completed = true;
 	}
@@ -143,6 +143,7 @@ void Quest::Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> ca
 void Quest::SaveToFile(File& file)
 {
 	file.WriteString(name.c_str());
+	file.Write(unlocked);
 	file.Write(active);
 	file.Write(completed);
 
@@ -197,6 +198,7 @@ void Quest::LoadFromFile(File& file)
 	name = string;
 	delete[] string;
 
+	file.Read(unlocked);
 	file.Read(active);
 	file.Read(completed);
 
@@ -208,43 +210,47 @@ void Quest::LoadFromFile(File& file)
 		Objective::Type type;
 		file.Read(type);
 
+		Objective* objective;
+
 		switch (type)
 		{
 			case Objective::Type::COLLECT:
 			{
-				auto objective = new CollectObjective();
+				objective = new CollectObjective();
 				objective->ReadFromFile(file);
 				break;
 			}
 
 			case Objective::Type::FIGHT:
 			{
-				auto objective = new FightObjective();
+				objective = new FightObjective();
 				objective->ReadFromFile(file);
 				break;
 			}
 
 			case Objective::Type::TALK:
 			{
-				auto objective = new TalkObjective();
+				objective = new TalkObjective();
 				objective->ReadFromFile(file);
 				break;
 			}
 
 			case Objective::Type::TARGET:
 			{
-				auto objective = new TargetObjective();
+				objective = new TargetObjective();
 				objective->ReadFromFile(file);
 				break;
 			}
 
 			case Objective::Type::LOCATION:
 			{
-				auto objective = new LocationObjective();
+				objective = new LocationObjective();
 				objective->ReadFromFile(file);
 				break;
 			}
 		}
+
+		objectives.emplace_back(objective);
 	}
 
 	size_t numChildren;

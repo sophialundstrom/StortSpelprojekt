@@ -101,7 +101,6 @@ void Player::Update(HeightMap* heightMap)
 
 	moveDirection.Normalize();
 
-
 	//SPRINTING
 	if (Event::KeyIsPressed(VK_SHIFT))
 	{
@@ -169,8 +168,8 @@ void Player::Update(HeightMap* heightMap)
 		if (airTime >= 1.5f)
 			PlayAnimation("Falling", true);
 
-		else
-			std::cout << "Startup" << std::endl;
+		/*else
+			std::cout << "Startup" << std::endl;*/
 
 		newPlayerPos.y = -powf(airTime, 2) + jumpHeight * airTime + preJumpGroundLevel;
 	}
@@ -187,7 +186,7 @@ void Player::Update(HeightMap* heightMap)
 	if (closestColliderToCam < currentCameraDistance)
 		currentCameraDistance = closestColliderToCam;
 
-	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
+	position = newPlayerPos;
 
 	Vector3 newCameraPos;
 
@@ -198,7 +197,7 @@ void Player::Update(HeightMap* heightMap)
 	newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
 
 	float newY = CalcHeightForCamera(heightMap);
-	//std::cout << "HeightMapAtCam: " << CalcHeightForCamera(heightMap) << "			CamHeight: " << sceneCamera->GetPosition().y << "			";
+	
 	if (newY > newCameraPos.y)
 	{
 		//std::cout << "PROBLEMATIC\n";
@@ -223,7 +222,7 @@ void Player::Update(HeightMap* heightMap)
 		//else if (jumping)
 			 // ADD IN AIR JUMP ANIMATION
 	}
-	std::cout << "NUM ARROWS: " << numArrows << std::endl;
+
 	if(Event::RightIsClicked())
 	{
 		newCameraPos = position + camSocketUpdate;
@@ -244,6 +243,7 @@ void Player::Update(HeightMap* heightMap)
 					lastClick = Time::Get();
 					currentIndex++;
 				}
+
 				SoundEffect::AddAudio(L"Audio/Fire.wav", 1);
 				SoundEffect::SetVolume(0.3, 1);
 				SoundEffect::StartAudio(1);
@@ -267,7 +267,9 @@ void Player::Update(HeightMap* heightMap)
 	}
 
 	AnimatedModel::Update();
+
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
+
 	bounds->Update();
 	frustum->Update();
 }
@@ -309,7 +311,6 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 						{
 							stuck = false;
 							force += plane.Normal();
-							std::cout << "NORMAL: " << plane.Normal().x << " " << plane.Normal().y << " " << plane.Normal().z << std::endl;
 						}
 
 					if (stuck)
@@ -384,26 +385,29 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 	if (Collision::Intersection(this->bounds, arrow->GetCollider()))
 	{
 		collided = true;
-		//Print("ARROW HIT PLAYER");
+	
 		arrow->DisableArrow();
 		if (stats.healthPoints == 0)
 		{
 			return collided;
 		}
+
 		if (stats.healthPoints - 1 == 0)
 		{
 			stats.healthPoints--;
-			std::cout << "GAME OVER" << std::endl;
 			UpdateHealthUI();
 			gameOver = true;
 			return collided;
 		}
+
 		SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
 		SoundEffect::SetVolume(0.5, 2);
 		SoundEffect::StartAudio(2);
+
 		stats.healthPoints--;
 		UpdateHealthUI();
 	}
+
 	return collided;
 }
 
@@ -439,7 +443,6 @@ void Player::Save(const std::string file)
 	}
 
 	writer.close();
-	Print("SUCCEEDED SAVING PLAYER FILE");
 }
 
 bool Player::CheckArrowHit(std::shared_ptr<Collider> collider)
@@ -505,5 +508,4 @@ void Player::Load(const std::string file)
 	//}
 
 	reader.close();
-	Print("SUCCEDED LOADING PLAYER FILE");
 }

@@ -64,7 +64,7 @@ public:
 
 	void WriteString(const char* string)
 	{
-		size_t length = strlen(string);
+		size_t length = strlen(string) + 1;
 		Write(length);
 		output.write(string, length);
 	}

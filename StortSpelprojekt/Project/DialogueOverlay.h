@@ -1,9 +1,12 @@
 #pragma once
 #include "Canvas.h"
+#include "NPCFriendly.h"
 
 class DialogueOverlay : public Canvas
 {
 private:
+	std::shared_ptr<FriendlyNPC> NPC;
+
 	Text* dialogueName;
 	Text* dialogueText;
 
@@ -14,9 +17,11 @@ private:
 	float timeSinceChar = 0.0f;
 	UINT numCharacters = 0;
 
+	float lastInteraction = 0.0f;
+
 	float delay = 0.0f;
 	const float doneDelay = 2.0f;
-	bool done = false;
+	bool done = true;
 public:
 	DialogueOverlay();
 	~DialogueOverlay();
@@ -26,5 +31,5 @@ public:
 
 	bool IsDone()	{ return done; }
 
-	void Set(const std::string& NPCName, const std::string& text);
+	void Set(std::shared_ptr<FriendlyNPC> NPC);
 };

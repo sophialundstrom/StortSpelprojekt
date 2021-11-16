@@ -23,6 +23,9 @@ DialogueOverlay::~DialogueOverlay()
 
 void DialogueOverlay::Update()
 {
+	if (!NPC)
+		return;
+
 	if (Event::KeyIsPressed('E'))
 		speed = holdSpeed;
 	else
@@ -41,7 +44,13 @@ void DialogueOverlay::Update()
 		delay += Time::GetDelta();
 
 		if (delay > doneDelay && Event::KeyIsPressed('E'))
+		{
+			lastInteraction = Time::Get();
+			NPC->SetCompletedConversation();
+			NPC->ActivateCurrentQuest();
+			NPC = nullptr;
 			done = true;
+		}
 	}
 }
 
@@ -57,11 +66,15 @@ void DialogueOverlay::Render()
 	UI::Inst().EndFrame();
 }
 
-void DialogueOverlay::Set(const std::string& NPCName, const std::string& text)
+void DialogueOverlay::Set(std::shared_ptr<FriendlyNPC> NPC)
 {
+	if (Time::Get() - lastInteraction < 2.0f)
+		return;
+
+	this->NPC = NPC;
 	delay = 0;
 	numCharacters = 0;
 	done = false;
-	dialogueName->SetString(NPCName, true);
-	dialogueText->SetString(text, true);
+	dialogueName->SetString(NPC->GetName(), true);
+	dialogueText->SetString(NPC->GetCurrentDialogue(), true);
 }
