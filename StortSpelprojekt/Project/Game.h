@@ -65,7 +65,8 @@ private:
 
     std::vector<std::shared_ptr<Item>> items;
 
-    std::shared_ptr<Building> building;
+    std::shared_ptr<Building> farmHouse;
+    std::shared_ptr<Building> blackSmith;
 
     std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs;
     
