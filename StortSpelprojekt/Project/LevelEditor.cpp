@@ -80,6 +80,7 @@ void LevelEditor::Load(const std::string& file)
 	modelRenderer.Bind(model);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(fileName);
+	selectedObject = fileName;
 }
 
 void LevelEditor::DuplicateObject()
@@ -103,7 +104,6 @@ void LevelEditor::DuplicateObject()
 		std::string modelName = model->GetName();
 
 		scene.AddModel(modelName, model);
-		scene.GetObjectNames().push_back(modelName);
 		model->SetID((UINT)scene.GetObjectNames().size());
 		idRenderer.Bind(model);
 		modelRenderer.Bind(model);
@@ -412,7 +412,8 @@ void LevelEditor::Render()
 
 	terrainRenderer.Render(*terrain);
 
-	waterRenderer.Render(water);
+	if(renderWater)
+		waterRenderer.Render(water);
 
 	modelRenderer.Render();
 	
@@ -468,6 +469,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
 		window.AddCheckBoxComponent("WIREFRAME", false);
+		window.AddCheckBoxComponent("SHOW WATER", false);
 		window.AddButtonComponent("CREATE BBOX", 120, 30);
 		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
@@ -537,7 +539,6 @@ void LevelEditor::RemoveItem(const std::string name)
 	idRenderer.Unbind(model);
 
 	scene.DeleteDrawable(name);
-	scene.GetObjectNames()[model.get()->GetID() -1] = "";
 }
 
 void LevelEditor::ClearToolUI()
@@ -628,6 +629,15 @@ APPSTATE LevelEditor::Run()
 
 		if (window.Changed("WIREFRAME"))
 			Graphics::Inst().ToggleWireframe();
+
+		if (window.Changed("SHOW WATER"))
+		{
+			if (renderWater)
+				renderWater = false;
+			else
+				renderWater = true;
+		}
+			
 
 		if (window.Changed("TERRAIN START SUBDIVISIONS"))
 		{
