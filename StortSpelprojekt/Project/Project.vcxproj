@@ -42,13 +42,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClCompile Include="AnimatedModelRenderer.cpp" />
     <ClCompile Include="Arrow.cpp" />
+    <ClCompile Include="ArrowHandler.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioChunks.cpp" />
     <ClCompile Include="Button.cpp" />
@@ -208,6 +209,7 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Arrow.h" />
+    <ClInclude Include="ArrowHandler.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioChunks.h" />
     <ClInclude Include="BoundingVolumes.h" />

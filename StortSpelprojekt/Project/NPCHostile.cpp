@@ -3,7 +3,7 @@
 
 void HostileNPC::Shoot(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const Vector3& direction, Vector3 startPos, Vector3 rotation)
 {
-    std::shared_ptr<Arrow> arrow = std::make_shared<Arrow>();
+    /*std::shared_ptr<Arrow> arrow = std::make_shared<Arrow>();
     arrow->SetRotation({ rotation.x, rotation.y + PI, rotation.z });
     arrow->direction = direction;
     arrow->SetPosition(startPos);
@@ -12,15 +12,18 @@ void HostileNPC::Shoot(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, co
     arrow->GetCollider()->SetParent(arrow);
     mRenderer.Bind(arrow);
     cRenderer.Bind(arrow->GetCollider());
-    arrows.emplace_back(arrow);
+    arrows.emplace_back(arrow);*/
+    arrowHandler.AddArrow(mRenderer, cRenderer, direction, startPos, { rotation.x, rotation.y + PI, rotation.z });
 }
 
-HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle)
+HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
 	:NPC(file)
 {
     this->player = player;
     this->combatStyle = combatStyle;
     SwapCombatStyle(combatStyle);
+    mRend = &mRenderer;
+    cRend = &cRenderer;
 
 }
 
@@ -76,7 +79,7 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
 {
     static float lastClick = 0;
 
-    Vector3 aimDir = player->GetPosition() - position;
+    Vector3 aimDir = player->GetPosition() + Vector3(0.f,2.f,0.f) - position;
 
     if (aimDir.Length() <= enemyShootDetectionRadius)
     {
@@ -118,7 +121,8 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
 
         if (Time::Get() - lastClick > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
         {
-            Shoot(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            arrowHandler.AddArrow(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            //Shoot(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             lastClick = Time::Get();
         }
         else if (Time::Get() - lastClick > 3 && combatStyle == CombatStyle::wideArrow)
@@ -144,7 +148,7 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
         // 
         // Also stop the overidden update function to be called each frame (if it is).
 
-    for (int i = 0; i < arrows.size(); i++)
+    /*for (int i = 0; i < arrows.size(); i++)
     {
         arrows[i]->Update();
 
@@ -156,48 +160,59 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
             arrows[i] = arrows[arrows.size() - 1];
             arrows.resize(arrows.size() - 1);
         }
-    }
+    }*/
+
+    arrowHandler.Update(mRenderer, cRenderer);
 
     NPC::Update();
 }
 
-bool HostileNPC::CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynamic)
+void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
 {
-    for (auto& arrow : arrows)
+    if (arrowHandler.CheckCollision(player->GetBounds(), true))
     {
-        if (!arrow->canCollide)
-            continue;
-
-        bool hit = false;
-
-        auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
-        if (box)
-            hit = Collision::Intersection(box, arrow->GetCollider());
-
-        auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
-        if (sphere)
-            hit = Collision::Intersection(sphere, arrow->GetCollider());
-
-        if (hit)
-        {
-            if (isDynamic)
-            {
-                arrow->isDestroyed = true;
-                std::cout << "HIT on dynamic object" << std::endl;
-            }
-            else
-            {
-                std::cout << "HIT on static object" << std::endl;
-                arrow->isStuck = true;
-                arrow->canCollide = false;
-            }
-        }
-        return hit;
-
+        std::cout << "PLAYER HIT" << std::endl;
+        player->TakeDamage(2);
     }
-
-    return false;
 }
+
+//bool HostileNPC::CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynamic)
+//{
+//    for (auto& arrow : arrows)
+//    {
+//        if (!arrow->canCollide)
+//            continue;
+//
+//        bool hit = false;
+//
+//        auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+//        if (box)
+//            hit = Collision::Intersection(box, arrow->GetCollider());
+//
+//        auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
+//        if (sphere)
+//            hit = Collision::Intersection(sphere, arrow->GetCollider());
+//
+//        if (hit)
+//        {
+//            if (isDynamic)
+//            {
+//                arrow->isDestroyed = true;
+//                std::cout << "HIT on dynamic object" << std::endl;
+//            }
+//            else
+//            {
+//                std::cout << "HIT on static object" << std::endl;
+//                arrow->isStuck = true;
+//                arrow->canCollide = false;
+//            }
+//        }
+//        return hit;
+//
+//    }
+//
+//    return false;
+//}
 
 void HostileNPC::WeaponSlash()
 {

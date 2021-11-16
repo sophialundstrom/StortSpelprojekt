@@ -6,7 +6,7 @@
 #include "Terrain.h"
 #include "Item.h"
 #include "Canvas.h"
-#include "Arrow.h"
+#include "ArrowHandler.h"
 #include "AnimatedModel.h"
 
 #undef Ray
@@ -80,7 +80,8 @@ private:
 
 	std::shared_ptr<Canvas> ingameCanvas;
 
-	std::vector<std::shared_ptr<Arrow>>arrows;
+	//std::vector<std::shared_ptr<Arrow>>arrows;
+	ArrowHandler arrowHandler;
 
 	bool hasCollided;
 
@@ -149,6 +150,8 @@ public:
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
 	void Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
+	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
+	void TakeDamage(const int& damage);
 
 	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas/*, std::vector<std::shared_ptr<Arrow>> arrows*/, const UINT& maxArrows);
 

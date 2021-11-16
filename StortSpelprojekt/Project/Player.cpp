@@ -72,20 +72,20 @@ float Get2DAngle(Vector2 a, Vector2 b)
 	return acos(a.x * b.x + a.y * b.y);
 };
 
-void Player::Shoot(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const Vector3& direction, Vector3 startPos, Vector3 rotation)
-{
-	std::shared_ptr<Arrow> arrow = std::make_shared<Arrow>();
-	arrow->SetRotation({ rotation.x, rotation.y + PI, rotation.z });
-	arrow->direction = direction;
-	arrow->SetPosition(startPos);
-	arrow->isShot = true;
-	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetScale(0.4f);
-	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
-	mRenderer.Bind(arrow);
-	cRenderer.Bind(arrow->GetCollider());
-	arrows.emplace_back(arrow);
-}
+//void Player::Shoot(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const Vector3& direction, Vector3 startPos, Vector3 rotation)
+//{
+//	std::shared_ptr<Arrow> arrow = std::make_shared<Arrow>();
+//	arrow->SetRotation({ rotation.x, rotation.y + PI, rotation.z });
+//	arrow->direction = direction;
+//	arrow->SetPosition(startPos);
+//	arrow->isShot = true;
+//	arrow->GetCollider()->SetParent(arrow);
+//	arrow->GetCollider()->SetScale(0.4f);
+//	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
+//	mRenderer.Bind(arrow);
+//	cRenderer.Bind(arrow->GetCollider());
+//	arrows.emplace_back(arrow);
+//}
 
 void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
 {
@@ -249,7 +249,8 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		{
 			if (Event::LeftIsClicked() && numArrows > 0)
 			{
-				Shoot(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 } );
+				arrowHandler.AddArrow(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+				//Shoot(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 } );
 				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				int currentIndex = 0;
 				//bool isPlayerShootingArrow = false;
@@ -272,8 +273,9 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		sceneCamera->MoveTowards(newCameraPos);
 	}
 		
+	arrowHandler.Update(mRenderer, cRenderer);
 
-	for (int i = 0; i < arrows.size(); i++)
+	/*for (int i = 0; i < arrows.size(); i++)
 	{
 		arrows[i]->Update();
 		if (arrows[i]->isDestroyed)
@@ -284,12 +286,35 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 			arrows[i] = arrows[arrows.size() - 1];
 			arrows.resize(arrows.size() - 1);
 		}
-	}
+	}*/
 
 	AnimatedModel::Update();
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 	bounds->Update();
 	frustum->Update();
+}
+
+void Player::TakeDamage(const int& damage)
+{
+	/*if (stats.healthPoints == 0)
+	{
+		return collided;
+	}*/
+	if (stats.healthPoints - 1 == 0)
+	{
+		stats.healthPoints--;
+		TakeDamage();
+		std::cout << "GAME OVER" << std::endl;
+		UpdateHealthUI();
+		gameOver = true;
+		//return collided;
+	}
+	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
+	//SoundEffect::SetVolume(0.5, 2);
+	//SoundEffect::StartAudio(2);
+	stats.healthPoints--;
+	
+	UpdateHealthUI();
 }
 
 void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders)
@@ -415,9 +440,9 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 			gameOver = true;
 			return collided;
 		}
-		SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
-		SoundEffect::SetVolume(0.5, 2);
-		SoundEffect::StartAudio(2);
+		//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
+		//SoundEffect::SetVolume(0.5, 2);
+		//SoundEffect::StartAudio(2);
 		stats.healthPoints--;
 		UpdateHealthUI();
 	}
@@ -459,46 +484,46 @@ void Player::Save(const std::string file)
 	Print("SUCCEEDED SAVING PLAYER FILE");
 }
 
-bool Player::CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynamic)
-{
-
-	for (auto& arrow : arrows)
-	{
-		if (!arrow->canCollide)
-			continue;
-
-		bool hit = false;
-
-		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
-		if (box)
-			hit = Collision::Intersection(box, arrow->GetCollider());
-
-		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
-		if (sphere)
-			hit = Collision::Intersection(sphere, arrow->GetCollider());
-
-		if (hit)
-		{
-			if (isDynamic)
-			{
-				arrow->isDestroyed = true;
-				std::cout << "HIT on dynamic object" << std::endl;
-			}
-			else
-			{
-				std::cout << "HIT on static object" << std::endl;
-				//arrow->GetCollider()->SetPosition(0, -10000, 0);
-				//arrow->GetCollider()->Update();
-				arrow->isStuck = true;
-				arrow->canCollide = false;
-			}
-		}
-		return hit;
-
-	}
-
-	return false;
-}
+//bool Player::CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynamic)
+//{
+//
+//	for (auto& arrow : arrows)
+//	{
+//		if (!arrow->canCollide)
+//			continue;
+//
+//		bool hit = false;
+//
+//		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+//		if (box)
+//			hit = Collision::Intersection(box, arrow->GetCollider());
+//
+//		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
+//		if (sphere)
+//			hit = Collision::Intersection(sphere, arrow->GetCollider());
+//
+//		if (hit)
+//		{
+//			if (isDynamic)
+//			{
+//				arrow->isDestroyed = true;
+//				std::cout << "HIT on dynamic object" << std::endl;
+//			}
+//			else
+//			{
+//				std::cout << "HIT on static object" << std::endl;
+//				//arrow->GetCollider()->SetPosition(0, -10000, 0);
+//				//arrow->GetCollider()->Update();
+//				arrow->isStuck = true;
+//				arrow->canCollide = false;
+//			}
+//		}
+//		return hit;
+//
+//	}
+//
+//	return false;
+//}
 
 void Player::Load(const std::string file)
 {

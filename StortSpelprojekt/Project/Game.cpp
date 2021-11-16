@@ -233,9 +233,9 @@ void Game::UpdateAndHandleLoot()
 			colliderRenderer.Unbind(loot[i]->GetCollider());
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
-			SoundEffect::AddAudio(L"Audio/Loot.wav", 2);
-			SoundEffect::SetVolume(0.5, 2);
-			SoundEffect::StartAudio(2);
+			//SoundEffect::AddAudio(L"Audio/Loot.wav", 2);
+			//SoundEffect::SetVolume(0.5, 2);
+			//SoundEffect::StartAudio(2);
 			std::cout << "Loot destoyed\n";
 		}
 		
@@ -256,10 +256,10 @@ void Game::CheckNearbyCollision()
 	{
 		for (auto& hostile : hostiles)
 		{
-			hostile->CheckArrowHit(collider);
+			hostile->GetArrowHandler().CheckCollision(collider, true);
 		}
 
-		player->CheckArrowHit(collider);
+		player->GetArrowHandler().CheckCollision(collider);
 		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
 		if (box)
 		{
@@ -308,7 +308,7 @@ void Game::CheckNearbyCollision()
 
 void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
 {
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle);
+	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, modelRenderer, colliderRenderer);
 	NPC->SetPosition(position);
 	//NPC->BindArrows(modelRenderer);
 
@@ -369,9 +369,9 @@ void Game::CheckItemCollision()
 
 			if (Event::KeyIsPressed('E'))
 			{
-				SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
-				SoundEffect::SetVolume(0.5, 2);
-				SoundEffect::StartAudio(2);
+				//SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
+				//SoundEffect::SetVolume(0.5, 2);
+				//SoundEffect::StartAudio(2);
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
@@ -395,9 +395,9 @@ void Game::CheckQuestInteraction()
 				if (Event::KeyIsPressed('E'))
 				{
 					state = GameState::DIALOGUE;
-					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
-					SoundEffect::SetVolume(0.5, 2);
-					SoundEffect::StartAudio(2);
+					//SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
+					//SoundEffect::SetVolume(0.5, 2);
+					//SoundEffect::StartAudio(2);
 					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
 					dialogueOverlay->Set("GILBERT", "Lorem.");
 					currentCanvas = dialogueOverlay;
@@ -559,9 +559,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
 	particleRenderer.Bind(campFireSystem);
 	
-	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	Audio::SetVolume(0.3, 0);
-	Audio::StartAudio(0);
+	//Audio::AddAudio(L"Audio/Sonrie.wav", 0);
+	//Audio::SetVolume(0.3, 0);
+	//Audio::StartAudio(0);
 	
 	(void)Run();
 }
@@ -708,26 +708,28 @@ void Game::CheckNearbyEnemies()
 {
 	for (int i = 0; i < hostiles.size(); i++)
 	{
-		hostiles[i]->CheckArrowHit(player->GetBounds(), true);
+		hostiles[i]->CheckPlayerCollision(player);
 		hostiles[i]->Update(modelRenderer, colliderRenderer, player);
-		bool hit = player->CheckArrowHit(hostiles[i]->GetCollider(), true);
+		//bool hit = player->CheckArrowHit(hostiles[i]->GetCollider(), true);
+		bool hit = player->GetArrowHandler().CheckCollision(hostiles[i]->GetCollider(), true);
 
 		if (hit)
 		{
 			std::cout << "HIT BARB" << std::endl;
-			SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
-			SoundEffect::SetVolume(0.5, 2);
-			SoundEffect::StartAudio(2);
+			//SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
+			//SoundEffect::SetVolume(0.5, 2);
+			//SoundEffect::StartAudio(2);
 			hostiles[i]->TakeDamage();
 			if (hostiles[i]->IsDead())
 			{
 				std::cout << "BARB DEAD" << std::endl;
-				SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
-				SoundEffect::SetVolume(0.8, 2);
-				SoundEffect::StartAudio(2);
+				//SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
+				//SoundEffect::SetVolume(0.8, 2);
+				//SoundEffect::StartAudio(2);
 				hostiles[i]->TakeDamage();
 				player->Stats().barbariansKilled++;
 				AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0,-3,0));
+				hostiles[i]->GetArrowHandler().ClearArrows(modelRenderer, colliderRenderer);
 				colliderRenderer.Unbind(hostiles[i]->GetCollider());
 				modelRenderer.Unbind(hostiles[i]);
 				scene.DeleteDrawable(hostiles[i]->GetName());
