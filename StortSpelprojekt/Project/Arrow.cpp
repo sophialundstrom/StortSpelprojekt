@@ -1,9 +1,10 @@
 #include "Arrow.h"
 
 Arrow::Arrow()
-	:Model("arrowModel", "arrowModel"), speed(150.f), lifeTime(4.f)
+	:Model("arrowModel", "arrowModel"), speed(150.f), lifeTime(100.f)
 {
 	collider = std::make_shared<BoundingBox>();
+	rayCollider = std::make_shared<RayCollider>();
 }
 
 void Arrow::Update()
@@ -17,6 +18,10 @@ void Arrow::Update()
 		{
 			direction.y -= 0.05f * Time::GetDelta();
 			SetPosition(GetPosition() + (direction * speed * Time::GetDelta()));
+			rayCollider->origin = lastPosition;
+			rayCollider->direction = position - lastPosition;
+			rayCollider->length = rayCollider->direction.Length();
+			rayCollider->direction.Normalize();
 		}
 	}
 	else
@@ -26,4 +31,5 @@ void Arrow::Update()
 
 	Model::Update();
 	collider->Update();
+	rayCollider->Update();
 }

@@ -330,6 +330,16 @@ namespace Collision
 		return box.GetBounds().Intersects(frustum.GetBounds());
 	}
 
+	inline bool Contains(const BoundingBox& box, const Vector3& point)
+	{
+		return box.GetBounds().Contains(point);
+	}
+
+	inline bool Contains(const BoundingSphere& sphere, const Vector3& point)
+	{
+		return sphere.GetBounds().Contains(point);
+	}
+
 	inline bool Intersection(const BoundingSphere& sphere, const FrustumCollider& frustum)
 	{
 		return sphere.GetBounds().Intersects(frustum.GetBounds());

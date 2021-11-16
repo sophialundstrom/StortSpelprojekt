@@ -8,6 +8,7 @@ private:
 public:
 	std::vector<std::shared_ptr<Arrow>> arrows;
 
+
 	// Call this function when you want to create a new arrow and add it to the vector.
 	// This function creates an arrow instance and adds it to the vector of arrows. It is also bound to the model and collider renderer.
 	void AddArrow(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const Vector3& direction, const Vector3& startPos, const Vector3& rotation);

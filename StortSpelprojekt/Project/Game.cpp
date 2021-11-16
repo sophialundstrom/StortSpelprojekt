@@ -609,6 +609,16 @@ APPSTATE Game::Run()
 			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 			lastClick = Time::Get();
 		}
+		if (Event::KeyIsPressed('1'))
+		{
+			Graphics::Inst().ActivateWireframe();
+			lastClick = Time::Get();
+		}
+		if (Event::KeyIsPressed('2'))
+		{
+			Graphics::Inst().DeactivateWireframe();
+			lastClick = Time::Get();
+		}
 		if (Event::KeyIsPressed(79))
 		{
 			Audio::StopEngine();

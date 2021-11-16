@@ -79,7 +79,7 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
 {
     static float lastClick = 0;
 
-    Vector3 aimDir = player->GetPosition() + Vector3(0.f,2.f,0.f) - position;
+    Vector3 aimDir = player->GetPosition() + Vector3(0.f,3.5f,0.f) - position;
 
     if (aimDir.Length() <= enemyShootDetectionRadius)
     {

@@ -7,11 +7,12 @@ void ArrowHandler::AddArrow(ModelRenderer& mRenderer, ColliderRenderer& cRendere
     arrow->direction = direction;
     arrow->SetPosition(startPos);
     arrow->isShot = true;
-    arrow->GetCollider()->SetParent(arrow);
-    arrow->GetCollider()->SetScale(0.4f);
-    arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
+    //arrow->GetCollider()->SetParent(arrow);
+    //arrow->GetCollider()->SetScale(0.4f);
+    //arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
+    cRenderer.Bind(arrow->rayCollider);
     mRenderer.Bind(arrow);
-    cRenderer.Bind(arrow->GetCollider());
+    //cRenderer.Bind(arrow->GetCollider());
     arrows.emplace_back(arrow);
 }
 
@@ -25,6 +26,7 @@ void ArrowHandler::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
         {
             std::cout << "Arrow destroyed!" << std::endl;
             cRenderer.Unbind(arrows[i]->GetCollider());
+            cRenderer.Unbind(arrows[i]->rayCollider);
             mRenderer.Unbind(arrows[i]);
             arrows[i] = arrows[arrows.size() - 1];
             arrows.resize(arrows.size() - 1);
@@ -42,14 +44,40 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDyn
         bool hit = false;
 
         auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+        Collision::RayResults rayResult;
+        Vector3 point;
         if (box)
-            hit = Collision::Intersection(box, arrow->GetCollider());
+        {
+            rayResult = Collision::Intersection(*box, *arrow->rayCollider);
+           
+            point = arrow->rayCollider->origin + arrow->rayCollider->direction */* rayResult.distance*/arrow->rayCollider->length;
+            if (Collision::Contains(*box, point))
+            {
+                Vector3 temp = arrow->rayCollider->origin + arrow->rayCollider->direction * arrow->rayCollider->length;
+                std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
+                hit = true;
+            }
+        }
+        /*if (box)
+            hit = Collision::Intersection(box, arrow->GetCollider());*/
 
         auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
         if (sphere)
-            hit = Collision::Intersection(sphere, arrow->GetCollider());
+        {
+            rayResult = Collision::Intersection(*sphere, *arrow->rayCollider);
+            point = arrow->rayCollider->origin + arrow->rayCollider->direction * rayResult.distance;
+            if (Collision::Contains(*sphere, point))
+            {
+                Vector3 temp = arrow->rayCollider->origin + arrow->rayCollider->direction * arrow->rayCollider->length;
+                std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
+                hit = true;
+            }
 
-        if (hit)
+        }
+
+        
+
+        if (/*rayResult.didHit*/hit)
         {
             if (isDynamic)
             {
@@ -58,12 +86,21 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDyn
             }
             else
             {
-                std::cout << "HIT on static object" << std::endl;
+                std::cout << "DISTANCE THIS FRAME: " << rayResult.distance << std::endl;
+                //std::cout << "HIT on static object" << std::endl;
+                // 
+                // WHY IS POSITION AND POINT THE SAME????
+                Vector3 pullBackVector = point - arrow->GetPosition();
+                std::cout << "POINT: " << point.x << " " << point.y << " " << point.z << std::endl;
+                std::cout << "ARROW POS: " << arrow->GetPosition().x << " " << arrow->GetPosition().y << " " << arrow->GetPosition().z << std::endl;
+                std::cout << "PULLBACK: " << pullBackVector.x << " " << pullBackVector.y << " " << pullBackVector.z << std::endl;
+                arrow->SetPosition(arrow->GetPosition() + pullBackVector);
                 arrow->isStuck = true;
                 arrow->canCollide = false;
             }
         }
         return hit;
+
 
     }
 
@@ -75,7 +112,7 @@ void ArrowHandler::ClearArrows(ModelRenderer& mRenderer, ColliderRenderer& cRend
     for (auto& arrow : arrows)
     {
         mRenderer.Unbind(arrow);
-        cRenderer.Unbind(arrow);
+        cRenderer.Unbind(arrow->GetCollider());
 
     }
 }
