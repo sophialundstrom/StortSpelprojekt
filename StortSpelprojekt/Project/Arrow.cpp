@@ -1,7 +1,7 @@
 #include "Arrow.h"
 
 Arrow::Arrow()
-	:Model("arrowModel", "arrowModel"), speed(150.f), lifeTime(100.f)
+	:Model("ArrowPivotFront", "ArrowPivotFront"), speed(150.f), lifeTime(100.f)
 {
 	collider = std::make_shared<BoundingBox>();
 	rayCollider = std::make_shared<RayCollider>();

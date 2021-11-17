@@ -4,6 +4,7 @@
 class ArrowHandler
 {
 private:
+	float pullbackFactor = 1.f;
 
 public:
 	std::vector<std::shared_ptr<Arrow>> arrows;
@@ -22,5 +23,8 @@ public:
 	bool CheckCollision(std::shared_ptr<Collider> collider, bool isDynamic = false);
 
 	void ClearArrows(ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
+
+	void SetPullbackFactor(const float& newFactor) { pullbackFactor = newFactor; }
+	const float& GetPullbackFactor() { return this->pullbackFactor; }
 };
 

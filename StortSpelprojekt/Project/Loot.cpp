@@ -28,8 +28,8 @@ Loot::Loot(LOOTTYPE inType, const Vector3& position)
 		case LOOTTYPE::ARROWS:
 		{
 			this->type = inType;
-			ApplyMesh("arrowModel");
-			ApplyMaterial("arrowModel");
+			ApplyMesh("ArrowPivotMiddle");
+			ApplyMaterial("ArrowPivotMiddle");
 			SetScale(2, 2, 2);
 			numArrows = Random::Integer(3, maxItemsPerType + 10);
 			break;

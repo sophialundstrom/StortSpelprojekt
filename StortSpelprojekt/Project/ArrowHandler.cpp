@@ -49,38 +49,30 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDyn
         if (box)
         {
             rayResult = Collision::Intersection(*box, *arrow->rayCollider);
-            if (rayResult.didHit)
-            {
-                std::cout << "";
-            }
 
             point = arrow->rayCollider->origin + arrow->rayCollider->direction * rayResult.distance;
 
-            if (Collision::Contains(*box, point))
-            {
-                Vector3 temp = arrow->rayCollider->origin + arrow->rayCollider->direction * arrow->rayCollider->length;
-                //std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
-                hit = true;
-            }
+            //if (Collision::Contains(*box, point))
+            //{
+            //    Vector3 temp = arrow->rayCollider->origin + arrow->rayCollider->direction * arrow->rayCollider->length;
+            //    //std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
+            //    hit = true;
+            //}
         }
-        /*if (box)
-            hit = Collision::Intersection(box, arrow->GetCollider());*/
 
         auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
         if (sphere)
         {
             rayResult = Collision::Intersection(*sphere, *arrow->rayCollider);
             point = arrow->rayCollider->origin + arrow->rayCollider->direction * rayResult.distance;
-            if (Collision::Contains(*sphere, point))
-            {
-                Vector3 temp = arrow->rayCollider->origin + arrow->rayCollider->direction * arrow->rayCollider->length;
-                //std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
-                hit = true;
-            }
+            //if (Collision::Contains(*sphere, point))
+            //{
+            //    Vector3 temp = arrow->rayCollider->origin + arrow->rayCollider->direction * arrow->rayCollider->length;
+            //    //std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
+            //    hit = true;
+            //}
 
         }
-
-        
 
         if (rayResult.didHit)
         {
@@ -92,13 +84,10 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDyn
             else
             {
                 std::cout << "DISTANCE THIS FRAME: " << rayResult.distance << std::endl;
-                //std::cout << "HIT on static object" << std::endl;
-                // 
-                // WHY IS POSITION AND POINT THE SAME????
-                Vector3 pullBackVector = point - arrow->GetPosition();
+                Vector3 pullBackVector = (point - arrow->GetPosition()) * this->pullbackFactor;
                 //std::cout << "POINT: " << point.x << " " << point.y << " " << point.z << std::endl;
                 //std::cout << "ARROW POS: " << arrow->GetPosition().x << " " << arrow->GetPosition().y << " " << arrow->GetPosition().z << std::endl;
-                //std::cout << "PULLBACK: " << pullBackVector.x << " " << pullBackVector.y << " " << pullBackVector.z << std::endl;
+                std::cout << "PULLBACK: " << pullBackVector.x << " " << pullBackVector.y << " " << pullBackVector.z << std::endl;
                 arrow->SetPosition(arrow->GetPosition() + pullBackVector);
                 arrow->isStuck = true;
                 arrow->canCollide = false;

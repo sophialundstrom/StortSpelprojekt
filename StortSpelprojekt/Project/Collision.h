@@ -298,10 +298,12 @@ namespace Collision
 
 		else
 		{
-			if ((sphere.GetPosition() - ray.origin).Length() > ray.length)
+			/*if ((sphere.GetPosition() - ray.origin).Length() > ray.length)
 				result.didHit = false;
-			else
+			else*/
 				result.didHit = sphere.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
+				if (result.distance > ray.length)
+					result.didHit = false;
 		}
 
 		return result;

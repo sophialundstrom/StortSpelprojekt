@@ -6,6 +6,8 @@ Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> i
 	isRightPressed = false;
 	isLeftPressed = false;
 
+	arrowHandler.SetPullbackFactor(0.6f);
+
 	//this->arrows = arrows;
 	bounds = std::make_shared<BoundingBox>();
 
