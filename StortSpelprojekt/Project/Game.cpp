@@ -437,6 +437,7 @@ void Game::CheckQuestInteraction()
 				if (Event::KeyIsPressed('E'))
 				{
 					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
+
 					if (!dialogueOverlay->IsDone())
 						return;
 

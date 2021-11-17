@@ -127,10 +127,11 @@ void QuestLog::ShutDown()
 
 void QuestLog::Activate(Quest* quest)
 {
-	quest->Activate();
 	for (auto q : activeQuests)
-		if (q = quest)
+		if (q == quest)
 			return;
+
+	quest->Activate();
 	activeQuests.emplace_back(quest);
 }
 
@@ -151,6 +152,7 @@ void QuestLog::Complete(Quest* quest)
 	for (auto child : quest->GetChildQuests())
 	{
 		activeQuests.emplace_back(child);
+		Print(child->GetName() + " UNLOCKED");
 		child->Unlock();
 	}
 }

@@ -63,9 +63,12 @@ void FriendlyNPC::Update()
 			currentDialogueState = DialogueState::HANDIN;
 			if (finishedDialogue)
 			{
+				Print(currentQuest->GetName() + " COMPLETED");
 				QuestLog::Complete(currentQuest);
+
 				currentQuestID++;
 				currentQuest = nullptr;
+				finishedDialogue = false;
 				return;
 			}
 		}

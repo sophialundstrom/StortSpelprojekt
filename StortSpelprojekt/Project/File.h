@@ -28,7 +28,7 @@ public:
 			
 		else
 		{
-			this->output.open(path, binary ? std::ios::binary : std::ios::beg);
+			this->output.open(path, binary ? std::ios::binary : std::ios::beg | std::ios::trunc);
 			if (!this->output.is_open())
 			{
 				Print("FAILED TO OPEN FILE: " + path);

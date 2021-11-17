@@ -16,6 +16,7 @@ Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> i
 	frustum->SetPosition(0, 3, 0);
 
 	Load(file);
+
 	UpdateHealthUI();
 
 	PlayAnimation("Idle", true, 0.2f);
