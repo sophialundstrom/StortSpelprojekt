@@ -51,8 +51,11 @@ void QuadTree::GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawab
 	}
 	else
 	{
-		for (auto& [name, drawable] : collectedDrawables)
-			drawablesToBeRendered.emplace(drawable);
+		if (quadTreeBoundsCollider.Intersects(frustrumCollider.bounds))
+		{
+			for (auto& [name, drawable] : collectedDrawables)
+				drawablesToBeRendered.emplace(name, drawable);
+		}
 	}
 }
 

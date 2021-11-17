@@ -6,10 +6,7 @@
 struct FrustrumCollider
 {
     DirectX::BoundingFrustum bounds;
-    FrustrumCollider(Camera camera)
-    {
-        bounds = DirectX::BoundingFrustum(camera.GetProjectionMatrix());
-    }
+
     void Update(Camera camera)
     {
         bounds = DirectX::BoundingFrustum(camera.GetProjectionMatrix());

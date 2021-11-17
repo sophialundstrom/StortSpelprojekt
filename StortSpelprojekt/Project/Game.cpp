@@ -16,6 +16,11 @@ void Game::Update()
 
 	scene.GetCamera()->Update();
 
+	drawablesToBeRendered.clear();
+	frustrumCollider.Update(*scene.GetCamera());
+	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+	//std::cout << drawablesToBeRendered.size() << std::endl;
+
 	CheckItemCollision();
 
 	CheckNearbyCollision();

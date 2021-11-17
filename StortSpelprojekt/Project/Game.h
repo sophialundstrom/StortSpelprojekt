@@ -33,6 +33,8 @@ class Game : public ApplicationState
 private:
     GameState state = GameState::ACTIVE;
     QuadTree* quadTree;
+    FrustrumCollider frustrumCollider;
+    std::map<std::string, std::shared_ptr<Drawable>> drawablesToBeRendered;
 
     bool hovering = false;
     bool done = false;
