@@ -19,7 +19,12 @@ void Game::Update()
 	drawablesToBeRendered.clear();
 	frustrumCollider.Update(*scene.GetCamera());
 	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
-	//std::cout << drawablesToBeRendered.size() << std::endl;
+	if (Event::KeyIsPressed('K'))
+	{
+		std::cout << drawablesToBeRendered.size() << std::endl;
+		std::cout << player->GetPosition().x << "			" << player->GetPosition().y << "			" << player->GetPosition().z << std::endl << std::endl;
+	}
+	
 
 	CheckItemCollision();
 
@@ -241,7 +246,7 @@ void Game::UpdateAndHandleLoot()
 			SoundEffect::AddAudio(L"Audio/Loot.wav", 2);
 			SoundEffect::SetVolume(0.5, 2);
 			SoundEffect::StartAudio(2);
-			std::cout << "Loot destoyed\n";
+			//std::cout << "Loot destoyed\n";
 		}
 		
 	}

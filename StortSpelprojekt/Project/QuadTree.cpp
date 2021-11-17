@@ -20,6 +20,13 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 	drawableBounds.CreateFromPoints(drawableBounds, 2, drawableAsModel->GetMeshBoundingBoxValues(), sizeof(Vector3));
 	
 	drawableBounds.Transform(drawableBounds, drawableAsModel->GetMatrix());
+	
+	Vector3 boundTransform{
+		drawableBounds.Center.x + drawable->GetPosition().x, 
+		drawableBounds.Center.y + drawable->GetPosition().y,
+		drawableBounds.Center.z + drawable->GetPosition().z
+	};
+	drawableBounds.Center = boundTransform;
 
 	bool insideLeaf = drawableBounds.Intersects(quadTreeBoundsCollider);
 

@@ -170,8 +170,9 @@ void Player::Update(HeightMap* heightMap)
 		if (airTime >= 1.5f)
 			PlayAnimation("Falling", true);
 
-		else
-			std::cout << "Startup" << std::endl;
+
+		/*else
+			std::cout << "Startup" << std::endl;*/
 
 		newPlayerPos.y = -powf(airTime, 2) + jumpHeight * airTime + preJumpGroundLevel;
 	}

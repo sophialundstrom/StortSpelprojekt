@@ -56,7 +56,7 @@ void NPC::Die()
 
 void NPC::TakeDamage()
 {
-	std::cout << "DamageTaken\n";
+	//std::cout << "DamageTaken\n";
 	hp--;
 	if (hp <= 0)
 		Die();
