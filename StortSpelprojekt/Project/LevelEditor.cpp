@@ -63,6 +63,11 @@ void LevelEditor::BindDrawables()
 	}
 }
 
+void LevelEditor::Save(const std::string& file)
+{
+
+}
+
 void LevelEditor::Load(const std::string& file)
 {
 	std::filesystem::path path = std::filesystem::path(file);
@@ -549,16 +554,21 @@ void LevelEditor::RemoveItem(std::string name)
 			if (drawableName.find(name) != std::string::npos)
 				sameNameArray.emplace_back(drawable);
 		}
+
+		for (auto& drawable : sameNameArray)
+		{
+			scene.DeleteDrawable(drawable->GetName());
+		}
+
 		for (int i = 0; i < sameNameArray.size(); i++)
 		{
-			scene.DeleteDrawable(sameNameArray[i]->GetName());
 			std::string newName;
 			if (i != 0)
 				newName = name + std::to_string(i);
 			else
 				newName = name;
 			sameNameArray[i]->SetName(newName);
-			scene.AddDrawable(sameNameArray[i]);
+			drawables[newName] = sameNameArray[i];
 		}
 
 		auto& names = scene.GetObjectNames();
