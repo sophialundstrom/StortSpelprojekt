@@ -75,7 +75,7 @@ void HostileNPC::Update()
    
 }
 
-void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player, bool test)
+void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player)
 {
     // This stops multiple instances of this class from shooting at once. All instances of the same class has the same static variable... 
     // static float lastClick = 0;
@@ -122,10 +122,6 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
 
         if (Time::Get() - lastShot > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
         {
-            if (test)
-            {
-                std::cout << "";
-            }
             arrowHandler.AddArrow(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             //Shoot(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             lastShot = Time::Get();

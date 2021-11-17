@@ -76,9 +76,14 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDyn
 
         if (rayResult.didHit)
         {
+            SoundEffect::AddAudio(L"Audio/arrowHit.wav", 2);
+            SoundEffect::SetVolume(0.8, 2);
+            SoundEffect::StartAudio(2);
             if (isDynamic)
             {
                 arrow->isDestroyed = true;
+                arrow->isStuck = true;
+                arrow->canCollide = true;
                 std::cout << "HIT on dynamic object" << std::endl;
             }
             else

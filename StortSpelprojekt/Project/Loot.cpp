@@ -97,6 +97,9 @@ void Loot::Update(std::shared_ptr<Player> player)
 				player->numArrows += numArrows;
 
 				std::cout << "Destroyed by collision\n";
+				SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
+				SoundEffect::SetVolume(0.8, 2);
+				SoundEffect::StartAudio(2);
 				destroy = true;
 			}
 		}

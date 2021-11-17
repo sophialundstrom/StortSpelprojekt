@@ -38,7 +38,7 @@ public:
 
 	void SwapCombatStyle(CombatStyle newCombatStyle);
 	virtual void Update() override;
-	void Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player, bool test);
+	void Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void CheckPlayerCollision(std::shared_ptr<Player> player);
 	//bool CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynamic = false);

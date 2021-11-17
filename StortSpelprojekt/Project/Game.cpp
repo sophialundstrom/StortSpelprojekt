@@ -256,7 +256,7 @@ void Game::CheckNearbyCollision()
 	{
 		for (auto& hostile : hostiles)
 		{
-			hostile->GetArrowHandler().CheckCollision(collider, true);
+			hostile->GetArrowHandler().CheckCollision(collider);
 		}
 
 		player->GetArrowHandler().CheckCollision(collider);
@@ -621,6 +621,9 @@ APPSTATE Game::Run()
 		}
 		if (Event::KeyIsPressed('K'))
 		{
+			Audio::AddAudio(L"Audio/arrowHit.wav", 0);
+			Audio::SetVolume(0.3, 0);
+			Audio::StartAudio(0);
 			hostiles[0]->TakeDamage();
 			player->Stats().barbariansKilled++;
 			hostiles[0]->GetArrowHandler().ClearArrows(modelRenderer, colliderRenderer);
@@ -730,11 +733,8 @@ void Game::CheckNearbyEnemies()
 {
 	for (int i = 0; i < hostiles.size(); i++)
 	{
-		if (i == 1)
-		{
-			hostiles[i]->Update(modelRenderer, colliderRenderer, player, true);
-		}
-		hostiles[i]->Update(modelRenderer, colliderRenderer, player, false);
+		
+		hostiles[i]->Update(modelRenderer, colliderRenderer, player);
 
 		
 		hostiles[i]->CheckPlayerCollision(player);
