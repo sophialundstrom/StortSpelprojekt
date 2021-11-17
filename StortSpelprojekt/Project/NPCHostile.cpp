@@ -75,9 +75,10 @@ void HostileNPC::Update()
    
 }
 
-void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player)
+void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player, bool test)
 {
-    static float lastClick = 0;
+    // This stops multiple instances of this class from shooting at once. All instances of the same class has the same static variable... 
+    // static float lastClick = 0;
 
     Vector3 aimDir = player->GetPosition() + Vector3(0.f,3.5f,0.f) - position;
 
@@ -119,20 +120,28 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
 
         SetRotation({ 0, movementYRadiant, 0 });
 
-        if (Time::Get() - lastClick > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
+        if (Time::Get() - lastShot > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
         {
+            if (test)
+            {
+                std::cout << "";
+            }
             arrowHandler.AddArrow(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             //Shoot(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-            lastClick = Time::Get();
+            lastShot = Time::Get();
         }
-        else if (Time::Get() - lastClick > 3 && combatStyle == CombatStyle::wideArrow)
+        else if (Time::Get() - lastShot > 3 && combatStyle == CombatStyle::wideArrow)
         {
             float arrowWidth = PI / 32.f;
             //arrows.at(0)->Shoot(aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             //arrows.at(1)->Shoot(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
             //arrows.at(2)->Shoot(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
+            arrowHandler.AddArrow(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            arrowHandler.AddArrow(mRenderer, cRenderer, DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
+            arrowHandler.AddArrow(mRenderer, cRenderer, DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
+
             DirectX::XMMatrixRotationX(-arrowWidth);
-            lastClick = Time::Get();
+            lastShot = Time::Get();
 
         }
 

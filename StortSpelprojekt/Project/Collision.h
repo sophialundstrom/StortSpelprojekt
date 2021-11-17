@@ -317,11 +317,14 @@ namespace Collision
 
 		else
 		{
-			if ((box.GetPosition() - ray.origin).Length() > ray.length)
+			/*if ((box.GetPosition() - ray.origin).Length() > ray.length)
 				result.didHit = false;
-			else
+			else*/
 				result.didHit = box.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
+				if (result.distance > ray.length)
+					result.didHit = false;
 		}
+
 		return result;
 	}
 

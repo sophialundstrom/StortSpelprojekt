@@ -544,8 +544,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -85, 20, -608 });
 
 	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
-	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
-	AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
+	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(15,6,0) }, CombatStyle::consistantDelay);
+	//AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPC
 	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
@@ -606,7 +606,7 @@ APPSTATE Game::Run()
 		}
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::wideArrow);
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('1'))
@@ -617,6 +617,18 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('2'))
 		{
 			Graphics::Inst().DeactivateWireframe();
+			lastClick = Time::Get();
+		}
+		if (Event::KeyIsPressed('K'))
+		{
+			hostiles[0]->TakeDamage();
+			player->Stats().barbariansKilled++;
+			hostiles[0]->GetArrowHandler().ClearArrows(modelRenderer, colliderRenderer);
+			colliderRenderer.Unbind(hostiles[0]->GetCollider());
+			modelRenderer.Unbind(hostiles[0]);
+			scene.DeleteDrawable(hostiles[0]->GetName());
+			hostiles[0] = hostiles[hostiles.size() - 1];
+			hostiles.resize(hostiles.size() - 1);
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed(79))
@@ -718,11 +730,17 @@ void Game::CheckNearbyEnemies()
 {
 	for (int i = 0; i < hostiles.size(); i++)
 	{
+		if (i == 1)
+		{
+			hostiles[i]->Update(modelRenderer, colliderRenderer, player, true);
+		}
+		hostiles[i]->Update(modelRenderer, colliderRenderer, player, false);
+
+		
 		hostiles[i]->CheckPlayerCollision(player);
-		hostiles[i]->Update(modelRenderer, colliderRenderer, player);
 		//bool hit = player->CheckArrowHit(hostiles[i]->GetCollider(), true);
 		bool hit = player->GetArrowHandler().CheckCollision(hostiles[i]->GetCollider(), true);
-
+		
 		if (hit)
 		{
 			std::cout << "HIT BARB" << std::endl;

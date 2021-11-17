@@ -49,12 +49,17 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDyn
         if (box)
         {
             rayResult = Collision::Intersection(*box, *arrow->rayCollider);
-           
-            point = arrow->rayCollider->origin + arrow->rayCollider->direction */* rayResult.distance*/arrow->rayCollider->length;
+            if (rayResult.didHit)
+            {
+                std::cout << "";
+            }
+
+            point = arrow->rayCollider->origin + arrow->rayCollider->direction * rayResult.distance;
+
             if (Collision::Contains(*box, point))
             {
                 Vector3 temp = arrow->rayCollider->origin + arrow->rayCollider->direction * arrow->rayCollider->length;
-                std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
+                //std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
                 hit = true;
             }
         }
@@ -69,7 +74,7 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDyn
             if (Collision::Contains(*sphere, point))
             {
                 Vector3 temp = arrow->rayCollider->origin + arrow->rayCollider->direction * arrow->rayCollider->length;
-                std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
+                //std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
                 hit = true;
             }
 
@@ -77,7 +82,7 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDyn
 
         
 
-        if (/*rayResult.didHit*/hit)
+        if (rayResult.didHit)
         {
             if (isDynamic)
             {
@@ -91,9 +96,9 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDyn
                 // 
                 // WHY IS POSITION AND POINT THE SAME????
                 Vector3 pullBackVector = point - arrow->GetPosition();
-                std::cout << "POINT: " << point.x << " " << point.y << " " << point.z << std::endl;
-                std::cout << "ARROW POS: " << arrow->GetPosition().x << " " << arrow->GetPosition().y << " " << arrow->GetPosition().z << std::endl;
-                std::cout << "PULLBACK: " << pullBackVector.x << " " << pullBackVector.y << " " << pullBackVector.z << std::endl;
+                //std::cout << "POINT: " << point.x << " " << point.y << " " << point.z << std::endl;
+                //std::cout << "ARROW POS: " << arrow->GetPosition().x << " " << arrow->GetPosition().y << " " << arrow->GetPosition().z << std::endl;
+                //std::cout << "PULLBACK: " << pullBackVector.x << " " << pullBackVector.y << " " << pullBackVector.z << std::endl;
                 arrow->SetPosition(arrow->GetPosition() + pullBackVector);
                 arrow->isStuck = true;
                 arrow->canCollide = false;
@@ -113,6 +118,7 @@ void ArrowHandler::ClearArrows(ModelRenderer& mRenderer, ColliderRenderer& cRend
     {
         mRenderer.Unbind(arrow);
         cRenderer.Unbind(arrow->GetCollider());
+        cRenderer.Unbind(arrow->rayCollider);
 
     }
 }

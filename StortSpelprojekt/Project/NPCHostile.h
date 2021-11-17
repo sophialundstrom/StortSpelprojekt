@@ -31,13 +31,14 @@ private:
 
 	ModelRenderer* mRend = nullptr;
 	ColliderRenderer* cRend = nullptr;
+	float lastShot = 0.f;
 public:
 	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
 	HostileNPC(const Model& model);
 
 	void SwapCombatStyle(CombatStyle newCombatStyle);
 	virtual void Update() override;
-	void Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player);
+	void Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player, bool test);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void CheckPlayerCollision(std::shared_ptr<Player> player);
 	//bool CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynamic = false);
