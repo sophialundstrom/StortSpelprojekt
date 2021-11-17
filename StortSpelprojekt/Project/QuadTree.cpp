@@ -1,15 +1,20 @@
 #include "QuadTree.h"
 
-QuadTree::QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int currentLevel)
+QuadTree::QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int currentLevel, std::string nameTag)
 {
 	this->currentLevel = currentLevel;
 	this->maxLevel = maxlevel;
 	maxCap = maxCapacity;
 	bounds = newBounds;
-	//Vector3 minMaxVals[2] = { {bounds.xPos, 500, bounds.zPos}, { bounds.xPos + bounds.width, -500, bounds.zPos + bounds.depth } };
-	//quadTreeBoundsCollider.CreateFromPoints(quadTreeBoundsCollider, 2, minMaxVals, sizeof(Vector3));
-	quadTreeBoundsCollider.Center = { bounds.xPos + bounds.width / 2.f, 0, bounds.zPos + bounds.depth / 2.f };
-	quadTreeBoundsCollider.Extents = { bounds.width / 2.f, 500.f, bounds.depth / 2.f };
+	this->nameTag = nameTag;
+
+	quadTreeBoundsCollider = DirectX::BoundingBox(
+		{ bounds.xPos + (bounds.width / 2.f), 0, bounds.zPos + (bounds.depth / 2.f) },
+		{ bounds.width / 2.f, 1000.f, bounds.depth / 2.f }
+	);
+		if (currentLevel == 0)
+			DivideQuadTree();
+
 }
 
 void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
@@ -64,6 +69,7 @@ void QuadTree::GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawab
 
 		if (quadTreeBoundsCollider.Intersects(frustrumCollider.bounds))
 		{
+			std::cout << "Intersects " + nameTag << std::endl;
 			for (auto& [name, drawable] : collectedDrawables)
 				drawablesToBeRendered.emplace(name, drawable);
 		}
@@ -110,10 +116,10 @@ void QuadTree::PrintTree()
 
 void QuadTree::DivideQuadTree()
 {
-	TopL = new QuadTree(QuadTreeBounds(bounds.xPos, bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1);
-	TopR = new QuadTree(QuadTreeBounds(bounds.xPos + bounds.width / 2.f, bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1);
-	BotL = new QuadTree(QuadTreeBounds(bounds.xPos, bounds.zPos + bounds.depth / 2.f, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1);
-	BotR = new QuadTree(QuadTreeBounds(bounds.xPos + bounds.width / 2.f, bounds.zPos + bounds.depth / 2.f, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1);
+	TopL = new QuadTree(QuadTreeBounds(bounds.xPos, bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1, "TOPLEFT");
+	TopR = new QuadTree(QuadTreeBounds(bounds.xPos + (bounds.width / 2.f), bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1, "TOPRIGHT");
+	BotL = new QuadTree(QuadTreeBounds(bounds.xPos, (bounds.zPos + bounds.depth / 2.f), bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1, "BOTLEFT");
+	BotR = new QuadTree(QuadTreeBounds((bounds.xPos + bounds.width / 2.f), (bounds.zPos + bounds.depth / 2.f), bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1, "BOTRIGHT");
 
 	for (auto& [name, drawable] : collectedDrawables)
 		InsertModelInChild(drawable);

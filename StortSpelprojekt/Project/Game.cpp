@@ -18,14 +18,23 @@ void Game::Update()
 
 	drawablesToBeRendered.clear();
 	frustrumCollider.Update(*scene.GetCamera());
-	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+	
 	if (Event::KeyIsPressed('K'))
 	{
-		std::cout << drawablesToBeRendered.size() << std::endl;
-		std::cout << frustrumCollider.bounds.Origin.x << "			" << frustrumCollider.bounds.Origin.y << "			" << frustrumCollider.bounds.Origin.z << std::endl;
-		std::cout << frustrumCollider.bounds.Orientation.x << "			" << frustrumCollider.bounds.Orientation.y << "			" << frustrumCollider.bounds.Orientation.z << std::endl;
+		std::cout << "EntitiesAddedToList" << drawablesToBeRendered.size() << std::endl;
+		std::cout << "FrustrumOrigin " << frustrumCollider.bounds.Origin.x << "			" << frustrumCollider.bounds.Origin.y << "			" << frustrumCollider.bounds.Origin.z << std::endl;
+		std::cout << "FrustrumOrientation " << frustrumCollider.bounds.Orientation.x << "			" << frustrumCollider.bounds.Orientation.y << "			" << frustrumCollider.bounds.Orientation.z << "			" << frustrumCollider.bounds.Orientation.w << std::endl;
+		std::cout << "PlayerPosition " << player->GetPosition().x << "			" << player->GetPosition().y << "			" << player->GetPosition().z << "			" << std::endl;
+		std::cout << "\nFrustrumRelated Collisions:\n";
+		quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+		std::cout << "--\n";
 	}
 	
+	if (Event::KeyIsPressed('L'))
+	{
+		player->SetPosition({ 0, 0, 0 });
+		
+	}
 
 	CheckItemCollision();
 
@@ -581,12 +590,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	
 
 
-	QuadTreeBounds qtBounds(-700.f, -600.f, 1300.f, 1600.f);
-	quadTree = new QuadTree(qtBounds, 4, 5, 0);
+	QuadTreeBounds qtBounds(-1000.f, -1000.f, 2000.f, 2000.f);
+	quadTree = new QuadTree(qtBounds, 4, 5, 0, "Master");
+	frustrumCollider.SetupFrustrum(*scene.GetCamera());
 
 	Vector3 positions[]{ {168.f, 54.f, -331.f}, {170.f, 54.f, -331.f}, {172.f, 54.f, -331.f}, {174.f, 54.f, -331.f}, {176.f, 54.f, -331.f} };
 	std::string keys[]{ "tk1", "tk2" , "tk3" , "tk4" , "tk5" };
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		auto tempModel = std::make_shared<Model>("Tent", keys[i]);
 		auto tempModelAsDrawable = std::dynamic_pointer_cast<Drawable>(tempModel);

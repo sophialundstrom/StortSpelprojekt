@@ -6,15 +6,19 @@
 struct FrustrumCollider
 {
     DirectX::BoundingFrustum bounds;
+    DirectX::XMMATRIX viewMatrixData;
+
+    void SetupFrustrum(Camera camera)
+    {
+        bounds = DirectX::BoundingFrustum();
+        bounds.CreateFromMatrix(bounds, camera.GetProjectionMatrix());
+    }
 
     void Update(Camera camera)
     {
-        
-        
-        bounds.CreateFromMatrix(bounds, camera.GetMatrix().Transpose());
-        //bounds = DirectX::BoundingFrustum(camera.GetProjectionMatrix());
+        bounds.Transform(bounds, camera.GetViewMatrix().Transpose());
         bounds.Origin = { camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z };
-        bounds.Orientation = Quaternion::CreateFromYawPitchRoll(camera.GetDirection().y, camera.GetDirection().x, camera.GetDirection().z);
+        bounds.Orientation = Quaternion::CreateFromYawPitchRoll(camera.GetDirection().x, camera.GetDirection().y, camera.GetDirection().z);
     }
 };
 
@@ -46,7 +50,7 @@ class QuadTree
 {
 
 public:
-    QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int currentLevel);
+    QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int currentLevel, std::string nameTag);
     void InsertModel(std::shared_ptr<Drawable>& drawable);
     void GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider);
     void PrintTree();
@@ -56,6 +60,7 @@ private:
     void DivideQuadTree();
     void DeleteMemory();
     
+    std::string nameTag;
     //CREATE FROM MATRIX på frustrummet jag vill ha collision check med
 
     int maxCap;
@@ -63,7 +68,7 @@ private:
     //Unorderd Map
     //
 
-    DirectX::BoundingOrientedBox quadTreeBoundsCollider;
+    DirectX::BoundingBox quadTreeBoundsCollider;
     QuadTreeBounds bounds;
 
     int maxLevel;
