@@ -9,7 +9,12 @@ struct FrustrumCollider
 
     void Update(Camera camera)
     {
-        bounds = DirectX::BoundingFrustum(camera.GetProjectionMatrix());
+        
+        
+        bounds.CreateFromMatrix(bounds, camera.GetMatrix().Transpose());
+        //bounds = DirectX::BoundingFrustum(camera.GetProjectionMatrix());
+        bounds.Origin = { camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z };
+        bounds.Orientation = Quaternion::CreateFromYawPitchRoll(camera.GetDirection().y, camera.GetDirection().x, camera.GetDirection().z);
     }
 };
 

@@ -22,7 +22,8 @@ void Game::Update()
 	if (Event::KeyIsPressed('K'))
 	{
 		std::cout << drawablesToBeRendered.size() << std::endl;
-		std::cout << player->GetPosition().x << "			" << player->GetPosition().y << "			" << player->GetPosition().z << std::endl << std::endl;
+		std::cout << frustrumCollider.bounds.Origin.x << "			" << frustrumCollider.bounds.Origin.y << "			" << frustrumCollider.bounds.Origin.z << std::endl;
+		std::cout << frustrumCollider.bounds.Orientation.x << "			" << frustrumCollider.bounds.Orientation.y << "			" << frustrumCollider.bounds.Orientation.z << std::endl;
 	}
 	
 

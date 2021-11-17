@@ -58,6 +58,10 @@ void QuadTree::GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawab
 	}
 	else
 	{
+
+	
+
+
 		if (quadTreeBoundsCollider.Intersects(frustrumCollider.bounds))
 		{
 			for (auto& [name, drawable] : collectedDrawables)
