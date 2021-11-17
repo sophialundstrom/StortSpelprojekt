@@ -523,7 +523,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	wRatioX = (float)clientWidth / GetSystemMetrics(SM_CXSCREEN);
 	wRatioY = (float)clientHeight / GetSystemMetrics(SM_CYSCREEN);
 
-	terrain = new Terrain();
+	terrain = new Terrain(2);
 
 	(void*)Run();
 }
