@@ -1,6 +1,20 @@
 #pragma once
 #include "Math.h"
 #include "Model.h"
+#include "Camera.h"
+
+struct FrustrumCollider
+{
+    DirectX::BoundingFrustum bounds;
+    FrustrumCollider(Camera camera)
+    {
+        bounds = DirectX::BoundingFrustum(camera.GetProjectionMatrix());
+    }
+    void Update(Camera camera)
+    {
+        bounds = DirectX::BoundingFrustum(camera.GetProjectionMatrix());
+    }
+};
 
 struct QuadTreeBounds
 {
@@ -32,10 +46,11 @@ class QuadTree
 public:
     QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int currentLevel);
     void InsertModel(std::shared_ptr<Drawable>& drawable);
-    void InsertModelInChild(std::shared_ptr<Drawable>& drawable);
+    void GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider);
     void PrintTree();
 
 private:
+    void InsertModelInChild(std::shared_ptr<Drawable>& drawable);
     void DivideQuadTree();
     void DeleteMemory();
     
@@ -43,6 +58,8 @@ private:
 
     int maxCap;
     std::map<std::string, std::shared_ptr<Drawable>> collectedDrawables;
+    //Unorderd Map
+    //
 
     DirectX::BoundingOrientedBox quadTreeBoundsCollider;
     QuadTreeBounds bounds;

@@ -573,14 +573,19 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	QuadTreeBounds qtBounds(-700.f, -600.f, 1300.f, 1600.f);
 	quadTree = new QuadTree(qtBounds, 4, 5, 0);
 
+	Vector3 positions[]{ {168.f, 54.f, -331.f}, {170.f, 54.f, -331.f}, {172.f, 54.f, -331.f}, {174.f, 54.f, -331.f}, {176.f, 54.f, -331.f} };
+	std::string keys[]{ "tk1", "tk2" , "tk3" , "tk4" , "tk5" };
+	for (int i = 0; i < 5; i++)
+	{
+		auto tempModel = std::make_shared<Model>("Tent", keys[i]);
+		auto tempModelAsDrawable = std::dynamic_pointer_cast<Drawable>(tempModel);
+		tempModelAsDrawable->SetPosition(positions[i]);
+		tempModel->Update();
+		modelRenderer.Bind(tempModel);
+		quadTree->InsertModel(tempModelAsDrawable);
+	}
 	
-	auto tempModel = std::make_shared<Model>("Tent", "TentNameKey");
-	auto tempModelAsDrawable = std::dynamic_pointer_cast<Drawable>(tempModel);
-	tempModelAsDrawable->SetPosition(168.f, 54.f, -331.f);
-	tempModel->Update();
-	modelRenderer.Bind(tempModel);
 
-	quadTree->InsertModel(tempModelAsDrawable);
 	quadTree->PrintTree();
 
 	(void)Run();

@@ -6,8 +6,10 @@ QuadTree::QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int 
 	this->maxLevel = maxlevel;
 	maxCap = maxCapacity;
 	bounds = newBounds;
-	Vector3 minMaxVals[2] = { {bounds.xPos, -500, bounds.zPos}, { bounds.xPos + bounds.width, 500, bounds.zPos + bounds.depth } };
-	quadTreeBoundsCollider.CreateFromPoints(quadTreeBoundsCollider, 2, minMaxVals, sizeof(Vector3));
+	//Vector3 minMaxVals[2] = { {bounds.xPos, 500, bounds.zPos}, { bounds.xPos + bounds.width, -500, bounds.zPos + bounds.depth } };
+	//quadTreeBoundsCollider.CreateFromPoints(quadTreeBoundsCollider, 2, minMaxVals, sizeof(Vector3));
+	quadTreeBoundsCollider.Center = { bounds.xPos + bounds.width / 2.f, 0, bounds.zPos + bounds.depth / 2.f };
+	quadTreeBoundsCollider.Extents = { bounds.width / 2.f, 500.f, bounds.depth / 2.f };
 }
 
 void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
@@ -17,16 +19,7 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 	DirectX::BoundingOrientedBox drawableBounds;
 	drawableBounds.CreateFromPoints(drawableBounds, 2, drawableAsModel->GetMeshBoundingBoxValues(), sizeof(Vector3));
 	
-	
-	/*Quaternion quat = drawableBounds.Orientation;
-	quat.Normalize();
-	drawableBounds.Orientation = quat;*/
-	
 	drawableBounds.Transform(drawableBounds, drawableAsModel->GetMatrix());
-	
-	/*quat = drawableBounds.Orientation;
-	quat.Normalize();
-	drawableBounds.Orientation = quat;*/
 
 	bool insideLeaf = drawableBounds.Intersects(quadTreeBoundsCollider);
 
@@ -44,6 +37,22 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 		}
 		else
 			InsertModelInChild(drawable);
+	}
+}
+
+void QuadTree::GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider)
+{
+	if (divided)
+	{
+		TopL->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+		TopR->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+		BotL->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+		TopR->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+	}
+	else
+	{
+		for (auto& [name, drawable] : collectedDrawables)
+			drawablesToBeRendered.emplace(drawable);
 	}
 }
 
