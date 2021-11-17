@@ -18,6 +18,8 @@ class LevelEditor : public Editor, public ApplicationState
 private:
 	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
 
+	int totalVertexCountLastFrame;
+	int totalVertexCount;
 	std::string selectedObject;
 	HWND appWindow;
 	float wRatioX;
@@ -31,10 +33,8 @@ private:
 	Water water;
 
 	//ADD RENDERERS
-	AnimatedModelRenderer animatedModelRenderer;
 	TerrainRenderer terrainRenderer;
 	ModelRenderer modelRenderer;
-	ColliderRenderer colliderRenderer;
 	IDRenderer idRenderer;
 	VolumeRenderer volumeRenderer;
 	WaterRenderer waterRenderer;
