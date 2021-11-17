@@ -68,8 +68,6 @@ void main(
        // output.color = input[0].color;
         outputStream.Append(output);
     }
-    
-  
-    
+        
   
 }

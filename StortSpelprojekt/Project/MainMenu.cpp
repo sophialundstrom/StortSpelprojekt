@@ -160,8 +160,8 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddPointLight({ -41.9f, 33.0f, -687.4f }, 30, { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
 
 
-	auto menuFireSystem = std::make_shared<ParticleSystem>("fire.ps");
-	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 32, -687 });
+	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
+	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 34, -687 });
 	particleRenderer.Bind(menuFireSystem);
 		
 	(void)Run();
