@@ -180,7 +180,7 @@ void MainMenu::Initialize()
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
-	gameLoader.Load("Main Menu", scene.GetDrawables());
+	gameLoader.Load("Default", scene.GetDrawables());
 
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
