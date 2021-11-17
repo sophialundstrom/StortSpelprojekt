@@ -577,9 +577,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
-	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
-	building->SetScale(5);
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -107.5, 20.0, -608.5 }, scene, particleRenderer);
+	building->SetRotation(0, -DirectX::XM_PI, 0);
+	building->SetScale(5.85);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
@@ -609,7 +609,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	friendlyNPC->AddQuestID(6);
 
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
-	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
+	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -100.743, 18.736, -648.154 });
 	particleRenderer.Bind(campFireSystem);
 
 	//ANIMATION
