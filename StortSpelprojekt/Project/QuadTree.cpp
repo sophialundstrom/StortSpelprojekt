@@ -59,7 +59,7 @@ void QuadTree::GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawab
 		TopL->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
 		TopR->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
 		BotL->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
-		TopR->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+		BotR->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
 	}
 	else
 	{
@@ -116,10 +116,17 @@ void QuadTree::PrintTree()
 
 void QuadTree::DivideQuadTree()
 {
-	TopL = new QuadTree(QuadTreeBounds(bounds.xPos, bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1, "TOPLEFT");
-	TopR = new QuadTree(QuadTreeBounds(bounds.xPos + (bounds.width / 2.f), bounds.zPos, bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1, "TOPRIGHT");
-	BotL = new QuadTree(QuadTreeBounds(bounds.xPos, (bounds.zPos + bounds.depth / 2.f), bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1, "BOTLEFT");
-	BotR = new QuadTree(QuadTreeBounds((bounds.xPos + bounds.width / 2.f), (bounds.zPos + bounds.depth / 2.f), bounds.width / 2.f, bounds.depth / 2.f), maxCap, maxLevel, currentLevel + 1, "BOTRIGHT");
+	float newWidth = bounds.width / 2.f;
+	float newDepth = bounds.depth / 2.f;
+	QuadTreeBounds TopLB(bounds.xPos, bounds.zPos, newWidth, newDepth);
+	QuadTreeBounds TopRB(bounds.xPos + newWidth, bounds.zPos, newWidth, newDepth);
+	QuadTreeBounds BotLB(bounds.xPos, bounds.zPos + newDepth, newWidth, newDepth);
+	QuadTreeBounds BotRB(bounds.xPos + newWidth, bounds.zPos + newDepth, newWidth, newDepth);
+
+	TopL = new QuadTree(TopLB, maxCap, maxLevel, currentLevel + 1, "TOPLEFT");
+	TopR = new QuadTree(TopRB, maxCap, maxLevel, currentLevel + 1, "TOPRIGHT");
+	BotL = new QuadTree(BotLB, maxCap, maxLevel, currentLevel + 1, "BOTLEFT");
+	BotR = new QuadTree(BotRB, maxCap, maxLevel, currentLevel + 1, "BOTRIGHT");
 
 	for (auto& [name, drawable] : collectedDrawables)
 		InsertModelInChild(drawable);

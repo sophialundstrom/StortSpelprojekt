@@ -19,6 +19,7 @@ struct FrustrumCollider
         bounds.Transform(bounds, camera.GetViewMatrix().Transpose());
         bounds.Origin = { camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z };
         bounds.Orientation = Quaternion::CreateFromYawPitchRoll(camera.GetDirection().x, camera.GetDirection().y, camera.GetDirection().z);
+        //bounds.Far = 5;
     }
 };
 
