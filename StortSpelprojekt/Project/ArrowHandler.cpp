@@ -25,7 +25,7 @@ void ArrowHandler::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
         if (arrows[i]->isDestroyed)
         {
             std::cout << "Arrow destroyed!" << std::endl;
-            cRenderer.Unbind(arrows[i]->GetCollider());
+            //cRenderer.Unbind(arrows[i]->GetCollider());
             cRenderer.Unbind(arrows[i]->rayCollider);
             mRenderer.Unbind(arrows[i]);
             arrows[i] = arrows[arrows.size() - 1];
@@ -93,7 +93,7 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDyn
                 arrow->canCollide = false;
             }
         }
-        return hit;
+        return rayResult.didHit;
 
 
     }
@@ -106,7 +106,7 @@ void ArrowHandler::ClearArrows(ModelRenderer& mRenderer, ColliderRenderer& cRend
     for (auto& arrow : arrows)
     {
         mRenderer.Unbind(arrow);
-        cRenderer.Unbind(arrow->GetCollider());
+        //cRenderer.Unbind(arrow->GetCollider());
         cRenderer.Unbind(arrow->rayCollider);
 
     }

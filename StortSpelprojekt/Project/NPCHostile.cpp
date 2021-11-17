@@ -136,9 +136,9 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
             //arrows.at(0)->Shoot(aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             //arrows.at(1)->Shoot(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
             //arrows.at(2)->Shoot(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
-            //arrowHandler.AddArrow(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-            //arrowHandler.AddArrow(mRenderer, cRenderer, DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
-            //arrowHandler.AddArrow(mRenderer, cRenderer, DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
+            arrowHandler.AddArrow(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            arrowHandler.AddArrow(mRenderer, cRenderer, DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
+            arrowHandler.AddArrow(mRenderer, cRenderer, DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
 
             DirectX::XMMatrixRotationX(-arrowWidth);
             lastShot = Time::Get();

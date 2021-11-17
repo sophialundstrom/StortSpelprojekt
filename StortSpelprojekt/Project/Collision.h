@@ -293,6 +293,9 @@ namespace Collision
 	{
 		RayResults result;
 
+		if (ray.direction == Vector3(0.f, 0.f, 0.f))
+			return result;
+
 		if (ray.length == 0)
 			result.didHit = sphere.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
 
@@ -313,6 +316,9 @@ namespace Collision
 	inline RayResults Intersection(const BoundingBox& box, const RayCollider& ray)
 	{
 		RayResults result;
+
+		if (ray.direction == Vector3(0.f, 0.f, 0.f))
+			return result;
 
 		if (ray.length == 0)
 			result.didHit = box.GetBounds().Intersects(ray.origin, ray.direction, result.distance);

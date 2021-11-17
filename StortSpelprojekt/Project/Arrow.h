@@ -9,7 +9,7 @@ class Arrow : public Model
 private:
 	float lifeTime;
 	float xRadius = 0;
-	std::shared_ptr<BoundingBox> collider;
+	//std::shared_ptr<BoundingBox> collider;
 
 public:
 	float speed;
@@ -24,7 +24,7 @@ public:
 	Arrow();
 	~Arrow() {};
 
-	std::shared_ptr<BoundingBox> GetCollider() { return collider; }
+	//std::shared_ptr<BoundingBox> GetCollider() { return collider; }
 	bool IsShot() { return isShot; }
 	void Update();
 };

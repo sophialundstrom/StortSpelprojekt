@@ -422,34 +422,34 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 	}
 }
 
-bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
-{
-	bool collided = false;
-	if (Collision::Intersection(this->bounds, arrow->GetCollider()))
-	{
-		collided = true;
-		//Print("ARROW HIT PLAYER");
-		//arrow->DisableArrow();
-		if (stats.healthPoints == 0)
-		{
-			return collided;
-		}
-		if (stats.healthPoints - 1 == 0)
-		{
-			stats.healthPoints--;
-			std::cout << "GAME OVER" << std::endl;
-			UpdateHealthUI();
-			gameOver = true;
-			return collided;
-		}
-		//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
-		//SoundEffect::SetVolume(0.5, 2);
-		//SoundEffect::StartAudio(2);
-		stats.healthPoints--;
-		UpdateHealthUI();
-	}
-	return collided;
-}
+//bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
+//{
+//	bool collided = false;
+//	if (Collision::Intersection(this->bounds, arrow->GetCollider()))
+//	{
+//		collided = true;
+//		//Print("ARROW HIT PLAYER");
+//		//arrow->DisableArrow();
+//		if (stats.healthPoints == 0)
+//		{
+//			return collided;
+//		}
+//		if (stats.healthPoints - 1 == 0)
+//		{
+//			stats.healthPoints--;
+//			std::cout << "GAME OVER" << std::endl;
+//			UpdateHealthUI();
+//			gameOver = true;
+//			return collided;
+//		}
+//		//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
+//		//SoundEffect::SetVolume(0.5, 2);
+//		//SoundEffect::StartAudio(2);
+//		stats.healthPoints--;
+//		UpdateHealthUI();
+//	}
+//	return collided;
+//}
 
 void Player::Save(const std::string file)
 {

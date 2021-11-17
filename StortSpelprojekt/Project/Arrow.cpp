@@ -3,7 +3,7 @@
 Arrow::Arrow()
 	:Model("ArrowPivotFront", "ArrowPivotFront"), speed(150.f), lifeTime(100.f)
 {
-	collider = std::make_shared<BoundingBox>();
+	//collider = std::make_shared<BoundingBox>();
 	rayCollider = std::make_shared<RayCollider>();
 }
 
@@ -17,7 +17,7 @@ void Arrow::Update()
 		if (!isStuck)
 		{
 			direction.y -= 0.05f * Time::GetDelta();
-			SetPosition(GetPosition() + (direction * speed * Time::GetDelta()));
+			SetPosition(position + (direction * speed * Time::GetDelta()));
 			rayCollider->origin = lastPosition;
 			rayCollider->direction = position - lastPosition;
 			rayCollider->length = rayCollider->direction.Length();
@@ -30,6 +30,6 @@ void Arrow::Update()
 	}
 
 	Model::Update();
-	collider->Update();
+	//collider->Update();
 	rayCollider->Update();
 }

@@ -212,12 +212,12 @@ void Game::AddArrow(const std::string fileName)
 	arrows.emplace_back(arrow);
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
-	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetScale(0.15f);
-	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
+	//arrow->GetCollider()->SetParent(arrow);
+	//arrow->GetCollider()->SetScale(0.15f);
+	//arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	modelRenderer.Bind(arrow);
 	//shadowRenderer.Bind(arrow);
-	colliderRenderer.Bind(arrow->GetCollider());
+	//colliderRenderer.Bind(arrow->GetCollider());
 	arrow->Update();
 }
 
@@ -606,7 +606,7 @@ APPSTATE Game::Run()
 		}
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::wideArrow);
+			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('1'))

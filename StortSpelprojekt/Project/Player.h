@@ -167,7 +167,7 @@ public:
 		std::cout << "BARBARIANS KILLED " << stats.barbariansKilled << std::endl;
 	}
 
-	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
+	//bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 	bool GetGameOver() { return this->gameOver; }
 	std::shared_ptr<BoundingBox> GetBounds() { return bounds; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
