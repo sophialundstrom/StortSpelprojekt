@@ -38,7 +38,6 @@ private:
 	void BindDrawables();
 
 	// Inherited via Editor
-	virtual void Save(const std::string& file) override;
 	virtual void Load(const std::string& file) override;
 	virtual void Update() override;
 	virtual void Render() override;

@@ -63,11 +63,6 @@ void LevelEditor::BindDrawables()
 	}
 }
 
-void LevelEditor::Save(const std::string& file)
-{
-
-}
-
 void LevelEditor::Load(const std::string& file)
 {
 	std::filesystem::path path = std::filesystem::path(file);
