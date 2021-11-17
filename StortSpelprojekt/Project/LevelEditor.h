@@ -1,14 +1,9 @@
 #pragma once
 #include "Editor.h"
 #include "Scene.h"
-#include "AnimatedModelRenderer.h"
 #include "ModelRenderer.h"
 #include "TerrainRenderer.h"
 #include "ApplicationState.h"
-#include "Building.h"
-#include "PRay.h"
-#include "Collision.h"
-#include "ColliderRenderer.h"
 #include "IDRenderer.h"
 #include "VolumeRenderer.h"
 #include "WaterRenderer.h"
@@ -29,7 +24,6 @@ private:
 	Scene scene;
 	std::map<std::string, std::shared_ptr<BoundingSphere>> pickBoxes;
 	Terrain* terrain;
-	std::shared_ptr<Building> building;
 	Water water;
 
 	//ADD RENDERERS
