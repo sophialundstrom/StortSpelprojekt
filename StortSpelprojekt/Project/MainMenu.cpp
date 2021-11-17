@@ -96,7 +96,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	auto menuCanvas = new Canvas();
 	
 	// LOGO
-	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "ArcusLogo", "ArcusLogo.png", 0.5f, 1.0f);
+	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "ArcusLogo", "Logotype.png", 1.0f, 1.0f);
 
 	// NEW GAME
 	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f }, "NewGameButton", 365, 50, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringNewGame(); });
