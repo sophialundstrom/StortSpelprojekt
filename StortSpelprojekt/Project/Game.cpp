@@ -843,7 +843,7 @@ void Game::UpdateQuadTree()
 	drawablesToBeRendered.clear();
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
-	std::cout << drawablesToBeRendered.size() << std::endl;
+	//std::cout << drawablesToBeRendered.size() << std::endl;
 
 	if (Event::KeyIsPressed('K'))
 	{

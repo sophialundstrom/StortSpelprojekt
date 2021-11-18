@@ -15,15 +15,22 @@ struct FrustrumCollider
 
     void Update(Camera* camera)
     {
-        bounds.Origin = { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z };
-        bounds.Orientation = Quaternion::CreateFromYawPitchRoll(camera->GetDirection().x, camera->GetDirection().y, camera->GetDirection().z);
-        /*bounds.Transform(
+        //bounds.Origin = { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z };
+        //bounds.Orientation = Quaternion::CreateFromYawPitchRoll(camera->GetDirection().x, camera->GetDirection().y, camera->GetDirection().z);
+        bounds = DirectX::BoundingFrustum();
+        bounds.CreateFromMatrix(bounds, camera->GetProjectionMatrix());
+        bounds.Transform(
             bounds, 
             1, 
             Quaternion::CreateFromYawPitchRoll(camera->GetDirection().x, camera->GetDirection().y, camera->GetDirection().z), 
             { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z }
-        );*/
+        );
 
+        Quaternion q = Quaternion::CreateFromYawPitchRoll(camera->GetDirection().x, camera->GetDirection().y, camera->GetDirection().z);
+        //std::cout << "--\n";
+        //std::cout << q.x << "           " << q.y << "           " << q.z << "           " << q.w << std::endl;
+        //std::cout << bounds.Orientation.x << "           " << bounds.Orientation.y << "           " << bounds.Orientation.z << "           " << bounds.Orientation.w << std::endl;
+        //std::cout << "--\n";
         //std::cout << bounds.Far << std::endl;
         
     }
