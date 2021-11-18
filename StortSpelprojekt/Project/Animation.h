@@ -34,6 +34,7 @@ struct Animation
 			aiNodeAnim* aiChannel = animation->mChannels[i];
 
 			std::string jointName = aiChannel->mNodeName.C_Str();
+			Print(jointName);
 			jointName = jointName.substr(0, jointName.find_first_of('_'));
 
 			for (UINT j = 0; j < aiChannel->mNumPositionKeys; ++j)
