@@ -12,8 +12,10 @@ QuadTree::QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int 
 		{ bounds.xPos + (bounds.width / 2.f), 0, bounds.zPos + (bounds.depth / 2.f) },
 		{ bounds.width / 2.f, 1000.f, bounds.depth / 2.f }
 	);
-		if (currentLevel == 0)
-			DivideQuadTree();
+
+
+	/*if (currentLevel == 0)
+		DivideQuadTree();*/
 
 }
 
@@ -69,7 +71,7 @@ void QuadTree::GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawab
 
 		if (quadTreeBoundsCollider.Intersects(frustrumCollider.bounds))
 		{
-			std::cout << "Intersects " + nameTag << std::endl;
+			//std::cout << "Intersects " + nameTag << std::endl;
 			for (auto& [name, drawable] : collectedDrawables)
 				drawablesToBeRendered.emplace(name, drawable);
 		}

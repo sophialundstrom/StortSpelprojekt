@@ -1,8 +1,8 @@
 #pragma once
-#include<string>
-#include<fstream>
-#include"Scene.h"
-#include"FileSystem.h"
+#include <string>
+#include <fstream>
+#include "Scene.h"
+#include "FileSystem.h"
 #include "BoundingVolumes.h"
 
 #define MAX_STR 64

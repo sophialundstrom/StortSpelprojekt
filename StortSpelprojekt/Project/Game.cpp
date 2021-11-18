@@ -18,23 +18,9 @@ void Game::Update()
 
 	drawablesToBeRendered.clear();
 	frustrumCollider.Update(*scene.GetCamera());
+	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+	std::cout << drawablesToBeRendered.size() << std::endl;
 	
-	if (Event::KeyIsPressed('K'))
-	{
-		std::cout << "EntitiesAddedToList" << drawablesToBeRendered.size() << std::endl;
-		std::cout << "FrustrumOrigin " << frustrumCollider.bounds.Origin.x << "			" << frustrumCollider.bounds.Origin.y << "			" << frustrumCollider.bounds.Origin.z << std::endl;
-		std::cout << "FrustrumOrientation " << frustrumCollider.bounds.Orientation.x << "			" << frustrumCollider.bounds.Orientation.y << "			" << frustrumCollider.bounds.Orientation.z << "			" << frustrumCollider.bounds.Orientation.w << std::endl;
-		std::cout << "PlayerPosition " << player->GetPosition().x << "			" << player->GetPosition().y << "			" << player->GetPosition().z << "			" << std::endl;
-		std::cout << "\nFrustrumRelated Collisions:\n";
-		quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
-		std::cout << "--\n";
-	}
-	
-	if (Event::KeyIsPressed('L'))
-	{
-		player->SetPosition({ 0, 0, 0 });
-		
-	}
 
 	CheckItemCollision();
 
@@ -118,11 +104,25 @@ void Game::MainMenu()
 
 void Game::Initialize()
 {
+	QuadTreeBounds qtBounds(-1000.f, -1000.f, 2000.f, 2000.f);
+	quadTree = new QuadTree(qtBounds, 4, 5, 0, "Master");
+	frustrumCollider.SetupFrustrum(*scene.GetCamera());
+
 	//LOAD SCENE
 	FBXLoader meshLoader("Models");
-
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
+	
+	//Transfer drawables to quadTree
+	for (auto& [name, drawable] : scene.GetDrawables())
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if(model)
+			quadTree->InsertModel(drawable);
+	}
+	
+
+	quadTree->PrintTree();
 
 	//SAVE STATIONS
 	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
@@ -456,11 +456,12 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	animatedModelRenderer(FORWARD, true),
 	water(5000), terrain(2)
 {
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(100, { 1, 1, 1, 1 }, 4, 4);
+
 	//LOAD SCENE
 	Initialize();
 
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(100, { 1, 1, 1, 1 }, 4, 4);
 
 
 	//INGAME CANVAS
@@ -589,25 +590,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	Audio::StartAudio(0);
 	
 
-
-	QuadTreeBounds qtBounds(-1000.f, -1000.f, 2000.f, 2000.f);
-	quadTree = new QuadTree(qtBounds, 4, 5, 0, "Master");
-	frustrumCollider.SetupFrustrum(*scene.GetCamera());
-
-	Vector3 positions[]{ {168.f, 54.f, -331.f}, {170.f, 54.f, -331.f}, {172.f, 54.f, -331.f}, {174.f, 54.f, -331.f}, {176.f, 54.f, -331.f} };
-	std::string keys[]{ "tk1", "tk2" , "tk3" , "tk4" , "tk5" };
-	for (int i = 0; i < 4; i++)
-	{
-		auto tempModel = std::make_shared<Model>("Tent", keys[i]);
-		auto tempModelAsDrawable = std::dynamic_pointer_cast<Drawable>(tempModel);
-		tempModelAsDrawable->SetPosition(positions[i]);
-		tempModel->Update();
-		modelRenderer.Bind(tempModel);
-		quadTree->InsertModel(tempModelAsDrawable);
-	}
 	
-
-	quadTree->PrintTree();
 
 	(void)Run();
 }
@@ -660,6 +643,7 @@ APPSTATE Game::Run()
 		{
 			Audio::StopEngine();
 		}
+
 		/*if (Event::KeyIsPressed('U'))
 		{
 			QuestLog::Inst().Complete(0);
@@ -680,7 +664,7 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}*/
 
-	/*	if (Event::KeyIsPressed('I'))
+		/*	if (Event::KeyIsPressed('I'))
 		{
 			Print("-Added Items-");
 			player->Inventory().AddItem(RESOURCE::WOOD);
@@ -699,6 +683,7 @@ APPSTATE Game::Run()
 			building->Upgrade();
 			lastClick = Time::Get();
 		}*/
+
 	}
 
 	UpdateInventoryUI();
