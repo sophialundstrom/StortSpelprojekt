@@ -113,6 +113,8 @@ void Game::Initialize()
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
 	
+	actualDrawablePipeline = scene.GetDrawables();
+
 	//Transfer drawables to quadTree
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{

@@ -35,6 +35,7 @@ private:
     QuadTree* quadTree;
     FrustrumCollider frustrumCollider;
     std::map<std::string, std::shared_ptr<Drawable>> drawablesToBeRendered;
+    std::map<std::string, std::shared_ptr<Drawable>> actualDrawablePipeline;
 
     bool hovering = false;
     bool done = false;
