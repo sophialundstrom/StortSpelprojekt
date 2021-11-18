@@ -52,6 +52,7 @@ private:
 	ID3D11Buffer* vertexBuffer = nullptr;
 	Texture* firstTexture;
 	Texture* secondTexture;
+	Texture* opacityTexture;
 
 	bool done = false;
 	bool stopSpawn = false;
@@ -88,6 +89,7 @@ public:
 	bool IsDone() { return this->done; }
 	void ChangeFirstTexture(std::string path, std::string fileName);
 	void ChangeSecondTexture(std::string path, std::string fileName);
+	void ChangeOpacityTexture(std::string path, std::string fileName);
 
 	ID3D11ShaderResourceView* GetFirstTexture() { return firstTexture->Get(); }
 	std::string GetFirstTexturePath() { return firstTexture->GetPath(); }
@@ -96,6 +98,11 @@ public:
 	ID3D11ShaderResourceView* GetSecondTexture() { return secondTexture->Get(); }
 	std::string GetSecondTexturePath() { return secondTexture->GetPath(); }
 	std::string GetSecondTextureFile() { return secondTexture->GetFile(); }
+
+	//Opacity
+	ID3D11ShaderResourceView* GetOpacityTexture() { return opacityTexture->Get(); }
+	std::string GetOpacityTexturePath() { return opacityTexture->GetPath(); }
+	std::string GetOpacityTextureFile() { return opacityTexture->GetFile(); }
 
 	Vector2 GetParticleExtents() const { return this->particleExtents; }
 	EmitterType GetType() const { return this->type; }

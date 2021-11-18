@@ -1,8 +1,7 @@
 #include "Image.h"
-
 #include "FileSystem.h"
 
-Image::Image(const std::string& filename, D2D_VECTOR_2F position, float scale, float opacity, bool visible)
+Image::Image(const std::string& filename, D2D_VECTOR_2F position, float scale, float opacity, bool visible, bool centered)
 	:scale(1), opacity(1), sourceWidth(0), sourceHeight(0), bitMap(nullptr), UIComponent(0, 0, visible), filename(filename)
 {
 	HRESULT hr;
@@ -41,12 +40,27 @@ Image::Image(const std::string& filename, D2D_VECTOR_2F position, float scale, f
 	this->sourceHeight = bitMap->GetSize().height;
 	this->width = scale * sourceWidth;
 	this->height = scale * sourceHeight;
-	this->bounds = {
-		position.x - width / 2,
-		position.y - height / 2,
-		position.x + width / 2,
-		position.y + height / 2
-	};
+	if (centered)
+	{
+		this->bounds = {
+			position.x - width / 2,
+			position.y - height / 2,
+			position.x + width / 2,
+			position.y + height / 2
+		};
+
+	}
+
+	else
+	{
+		this->bounds =
+		{
+			position.x,
+			position.y,
+			position.x + width,
+			position.y + height
+		};
+	}
 
 	decoder->Release();
 	source->Release();
