@@ -30,7 +30,6 @@ Loot::Loot(LOOTTYPE inType, const Vector3& position)
 			this->type = inType;
 			ApplyMesh("ArrowPivotMiddle");
 			ApplyMaterial("ArrowPivotMiddle");
-			SetScale(2, 2, 2);
 			numArrows = Random::Integer(3, maxItemsPerType + 10);
 			break;
 		}
@@ -56,7 +55,7 @@ void Loot::Update(std::shared_ptr<Player> player)
 	currentRotation += Time::GetDelta();
 	if (!isTaken)
 	{
-		float sin = std::sin(currentRotation * floatingSpeed) * 2;
+		float sin = std::sin(currentRotation * floatingSpeed);
 		SetPosition(originalPosition + Vector3(0, sin, 0));
 	}
 	rotation = Quaternion::CreateFromRotationMatrix(Matrix::CreateRotationY(currentRotation * rotationSpeed));

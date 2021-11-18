@@ -771,15 +771,15 @@ void Game::CheckNearbyEnemies()
 			if (hit)
 			{
 				std::cout << "BARBARIAN " << i << " HIT!" << std::endl;
-				//SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
-				//SoundEffect::SetVolume(0.5, 2);
-				//SoundEffect::StartAudio(2);
+				SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
+				SoundEffect::SetVolume(0.5, 2);
+				SoundEffect::StartAudio(2);
 				hostiles[i]->TakeDamage();
 				if (hostiles[i]->IsDead())
 				{
-					//SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
-					//SoundEffect::SetVolume(0.8, 2);
-					//SoundEffect::StartAudio(2);
+					SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
+					SoundEffect::SetVolume(0.8, 2);
+					SoundEffect::StartAudio(2);
 					hostiles[i]->TakeDamage();
 					player->Stats().barbariansKilled++;
 					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));

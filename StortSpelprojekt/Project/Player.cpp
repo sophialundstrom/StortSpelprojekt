@@ -271,10 +271,10 @@ void Player::TakeDamage()
 		gameOver = true;
 		return; // Return here because hp will be -1. This leads to a hp image not being found which in turn leads to a crash during Draw().
 	}
-	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
-	//SoundEffect::SetVolume(0.5, 2);
-	//SoundEffect::StartAudio(2);
-	//stats.healthPoints--;
+	SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
+	SoundEffect::SetVolume(0.5, 2);
+	SoundEffect::StartAudio(2);
+	stats.healthPoints--;
 	
 	UpdateHealthUI();
 }
