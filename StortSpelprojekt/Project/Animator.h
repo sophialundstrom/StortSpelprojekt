@@ -102,6 +102,8 @@ public:
 
 		Matrix matrix = Matrix::Identity;
 
+		currentAnimation->UpdateTime();
+
 		ReadNodeHeriarchy(root, skeleton, matrix);
 
 		skeleton.SetBuffer(root);

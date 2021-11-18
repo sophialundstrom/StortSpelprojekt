@@ -50,13 +50,13 @@ void Game::Render()
 
 	animatedModelRenderer.Render();
 
+	skeletonRenderer.Render();
+
 	colliderRenderer.Render();
 
 	terrainRenderer.Render(terrain);
 
 	waterRenderer.Render(water);
-
-	//skeletonRenderer.Render();
 
 	currentCanvas->Render();
 
@@ -553,6 +553,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
+	skeletonRenderer.Bind(player);
 	animatedModelRenderer.Bind(player);
 
 	colliderRenderer.Bind(player->GetFrustum());
