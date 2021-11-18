@@ -35,8 +35,8 @@ public:
 	void AddButton(D2D_VECTOR_2F position, const std::string name, float width, float height, UI::COLOR color, std::function<void()> onClickFunction = NULL, std::function<void()> onHoverFunction = NULL, bool visible = true) 
 	{ buttons.emplace(name, new Button(position, width, height, UI::Inst().GetBrush(color), onClickFunction, onHoverFunction, visible)); }
 	
-	void AddImage(D2D_VECTOR_2F position, const std::string name, const std::string fileName, float scale = 1.0f, float opacity = 1.0f, bool visible = true) 
-	{ images[name] = new Image(fileName, position, scale, opacity, visible); }
+	void AddImage(D2D_VECTOR_2F position, const std::string name, const std::string fileName, float scale = 1.0f, float opacity = 1.0f, bool visible = true, bool centered = true) 
+	{ images[name] = new Image(fileName, position, scale, opacity, visible, centered); }
 	
 	void AddText(D2D_VECTOR_2F position, const std::string name, const std::string string, UI::COLOR color, UI::TEXTFORMAT format, bool visible = true) 
 	{ texts.emplace(name, new Text(to_wstr(string), position, format, UI::Inst().GetBrush(color), visible)); }

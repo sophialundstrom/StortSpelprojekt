@@ -20,8 +20,12 @@ private:
 	ID3D11DepthStencilView* dsView;
 	IDXGISurface* UISurface;
 
-	ID3D11RasterizerState* wireframeState;
+	ID3D11BlendState* blendState = nullptr;
 
+	ID3D11RasterizerState* wireframeState;
+	
+
+	HRESULT CreateBlendState();
 	HRESULT CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed);
 	HRESULT CreateRenderTarget();
 	HRESULT CreateDepthStencil(UINT clientWidth, UINT clientHeight);
@@ -34,6 +38,9 @@ public:
 	void BeginFrame();
 	void BeginFrame(ID3D11RenderTargetView* rtv, ID3D11DepthStencilView* dsv, D3D11_VIEWPORT viewport);
 	void EndFrame() { swapChain->Present(0, 0); }
+
+	void EnableAlpha() { Graphics::Inst().GetContext().OMSetBlendState(blendState, nullptr, 0Xffffffff); }
+	void DisableAlpha() { Graphics::Inst().GetContext().OMSetBlendState(nullptr, nullptr, 0Xffffffff); }
 
 	void ActivateWireframe() { context->RSSetState(wireframeState); }
 	void DeactivateWireframe() { context->RSSetState(nullptr); }

@@ -39,9 +39,6 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 
-	//BLEND STATES
-	ID3D11BlendState* blendState = nullptr; 
-
 public:
 	VolumeRenderer();
 	~VolumeRenderer();

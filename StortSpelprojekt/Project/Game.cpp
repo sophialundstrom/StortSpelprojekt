@@ -233,12 +233,11 @@ void Game::UpdateAndHandleLoot()
 			colliderRenderer.Unbind(loot[i]->GetCollider());
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
-			//SoundEffect::AddAudio(L"Audio/Loot.wav", 2);
-			//SoundEffect::SetVolume(0.5, 2);
-			//SoundEffect::StartAudio(2);
+			SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
+			SoundEffect::SetVolume(0.1, 2);
+			SoundEffect::StartAudio(2);
 			std::cout << "Loot destoyed\n";
 		}
-		
 	}
 }
 
@@ -383,9 +382,9 @@ void Game::CheckItemCollision()
 
 			if (Event::KeyIsPressed('E'))
 			{
-				//SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
-				//SoundEffect::SetVolume(0.5, 2);
-				//SoundEffect::StartAudio(2);
+				SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
+				SoundEffect::SetVolume(0.005, 2);
+				SoundEffect::StartAudio(2);
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
@@ -409,9 +408,9 @@ void Game::CheckQuestInteraction()
 				if (Event::KeyIsPressed('E'))
 				{
 					state = GameState::DIALOGUE;
-					//SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
-					//SoundEffect::SetVolume(0.5, 2);
-					//SoundEffect::StartAudio(2);
+					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
+					SoundEffect::SetVolume(0.004, 2);
+					SoundEffect::StartAudio(2);
 					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
 					dialogueOverlay->Set("GILBERT", "Lorem.");
 					currentCanvas = dialogueOverlay;
@@ -574,9 +573,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
 	particleRenderer.Bind(campFireSystem);
 	
-	//Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	//Audio::SetVolume(0.3, 0);
-	//Audio::StartAudio(0);
+	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
+	Audio::SetVolume(0.0005, 0);
+	Audio::StartAudio(0);
 	
 	(void)Run();
 }

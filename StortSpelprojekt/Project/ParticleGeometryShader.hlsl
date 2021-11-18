@@ -31,13 +31,16 @@ void main(
     point GS_INPUT input[1],
     inout TriangleStream<GS_OUTPUT> outputStream)
 {
-    const float3 up = float3(0.0f, 1.0f, 0.0f);
+    float3 up = float3(0.0f, 1.0f, 0.0f);
     float3 lookAt = cameraPosition - input[0].position.xyz;
 
-    lookAt.y = 0.0f;
+    //lookAt.y = 0.0f;
     lookAt = normalize(lookAt);
     float3 right = cross(up, lookAt);
-
+    right = normalize(right);
+    up = cross(lookAt, right);
+    up = normalize(up);
+    
     float4 corners[] =
     {
         { input[0].position.xyz + extents.x * right + extents.y * up, 1.0f },
@@ -68,8 +71,6 @@ void main(
        // output.color = input[0].color;
         outputStream.Append(output);
     }
-    
-  
-    
+        
   
 }
