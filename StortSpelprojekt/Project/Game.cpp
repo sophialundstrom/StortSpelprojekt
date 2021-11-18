@@ -573,8 +573,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
 	particleRenderer.Bind(campFireSystem);
 	
-	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	Audio::SetVolume(0.0005, 0);
+	Audio::AddAudio(L"Audio/totallyRPGMusic.wav", 0);
+	Audio::SetVolume(0.005, 0);
 	Audio::StartAudio(0);
 	
 	(void)Run();
