@@ -156,7 +156,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			jumping = true;
 			SoundEffect::AddAudio(L"Audio/Jump.wav", 2);
-			SoundEffect::SetVolume(0.5, 2);
+			SoundEffect::SetVolume(0.005, 2);
 			SoundEffect::StartAudio(2);
 			preJumpGroundLevel = currentGroundLevel; 
 			PlayAnimation("Jump", false, 0.5f);
@@ -233,7 +233,6 @@ void Player::Update(HeightMap* heightMap)
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
 		sceneCamera->SetPosition(newCameraPos);
-		
 		if (Time::Get() - lastClick > 0.2f)
 		{
 			if (Event::LeftIsClicked() && numArrows > 0)
@@ -249,7 +248,7 @@ void Player::Update(HeightMap* heightMap)
 					currentIndex++;
 				}
 				SoundEffect::AddAudio(L"Audio/Fire.wav", 1);
-				SoundEffect::SetVolume(0.3, 1);
+				SoundEffect::SetVolume(0.005, 1);
 				SoundEffect::StartAudio(1);
 
 				numArrows--;
@@ -263,7 +262,6 @@ void Player::Update(HeightMap* heightMap)
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 		sceneCamera->MoveTowards(newCameraPos);
 	}
-		
 
 	for (int i = 0; i < arrows.size(); i++)
 	{
@@ -400,7 +398,7 @@ bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 			return collided;
 		}
 		SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
-		SoundEffect::SetVolume(0.5, 2);
+		SoundEffect::SetVolume(0.005, 2);
 		SoundEffect::StartAudio(2);
 		stats.healthPoints--;
 		UpdateHealthUI();
