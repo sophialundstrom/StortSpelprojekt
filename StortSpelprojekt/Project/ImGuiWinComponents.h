@@ -325,6 +325,11 @@ struct ListBoxComponent : public ImGuiWinComponent
 		ImGui::EndListBox();
 	}
 
+	void Clear()
+	{
+		names.clear();
+	}
+
 	void AddName(const std::string& name)
 	{
 		names.emplace_back(name);

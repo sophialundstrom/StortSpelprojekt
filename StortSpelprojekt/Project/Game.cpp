@@ -83,7 +83,7 @@ void Game::Options()
 
 void Game::HowToPlay()
 {
-	currentCanvas = canvases["HOW TO PLAY"];
+	currentCanvas = canvases["HTP"];
 }
 
 void Game::BacktoPause()
@@ -94,6 +94,51 @@ void Game::BacktoPause()
 void Game::MainMenu()
 {
 	mainMenu = true;
+}
+
+void Game::HoveringResume()
+{
+	canvases["PAUSED"]->GetImage("ResumeLeaves")->Show();
+}
+
+void Game::HoveringOptions()
+{
+	canvases["PAUSED"]->GetImage("OptionsLeaves")->Show();
+}
+
+void Game::HoveringHowToPlay()
+{
+	canvases["PAUSED"]->GetImage("HTPLeaves")->Show();
+}
+
+void Game::HoveringQuit()
+{
+	canvases["PAUSED"]->GetImage("QuitLeaves")->Show();
+}
+
+void Game::HoveringBackHowToPlay()
+{
+	canvases["HTP"]->GetImage("BackHTPLeaves")->Show();
+}
+
+void Game::HoveringBackQuit()
+{
+	canvases["QUIT"]->GetImage("BackQuitLeaves")->Show();
+}
+
+void Game::HoveringBackOptions()
+{
+	canvases["OPTIONS"]->GetImage("BackOptionsLeaves")->Show();
+}
+
+void Game::HoveringYes()
+{
+	canvases["QUIT"]->GetImage("YesLeaves")->Show();
+}
+
+void Game::HoveringNo()
+{
+	canvases["QUIT"]->GetImage("NoLeaves")->Show();
 }
 
 void Game::Initialize()
@@ -471,36 +516,45 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 200.0f }, "INTERACT", "INTERACT [E]", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
 
 	ingameCanvas->AddImage({ (float)clientWidth / 2.0f, (float)clientHeight / 2 }, "CrossHair", "CrossHair.png");
-	
+
 
 	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 50 }, "ArrowCount", "Arrows:" + std::to_string(0), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 
-	//PAUSED CANVAS
+	// PAUSED CANVAS
 	auto pauseCanvas = std::make_shared<Canvas>();
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "PauseBackground", "PauseBackground.png", 1.0f, 1.0f);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "APauseBackground", "PauseBackground.png", 1.0f, 1.0f);
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 8.0f }, "PauseTitle", "PAUSED.png", 1.0f, 1.0f);
 
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "RESUME", 350, 95, UI::COLOR::GRAY, [this] { Resume(); });
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100}, "ResumeButton", "ResumeButton.png", 0.50f, 1.0f);
+	// RESUME
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "ResumeButton", 350, 50, UI::COLOR::GRAY, [this] { Resume(); }, [this] {HoveringResume(); });
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "Resume", "Resume.png", 1.0f, 1.0f);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "ResumeLeaves", "ResumeLeaves.png", 1.0f, 1.0f);
 
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlayButton", "HowToPlayButton.png", 0.50f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlay", 350, 95, UI::COLOR::GRAY, [this] { HowToPlay(); });
+	// HTP
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "HTPButton", 450, 50, UI::COLOR::GRAY, [this] { HowToPlay(); }, [this] {HoveringHowToPlay(); });
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "HTP", "HowToPlay.png", 1.0f, 1.0f);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "HTPLeaves", "HowToPlayLeaves.png", 1.0f, 1.0f);
 
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "BackToMainMenu", "MainMenuButton.png", 0.50f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100}, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, [this] { MainMenu(); });
+	// QUIT
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "Quit", "Quit.png", 1.0f, 1.0f);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "QuitLeaves", "QuitLeaves.png", 1.0f, 1.0f);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "QuitButton", 180, 50, UI::COLOR::GRAY, [this] { MainMenu(); }, [this] {HoveringQuit(); });
 
 	canvases["PAUSED"] = pauseCanvas;
 
 	//HOW TO PLAY
 	auto howToPlayCanvas = std::make_shared<Canvas>();
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "ControlImage", "Controls.png", 2.0f, 1.0f);
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackHowToPlay", "BackButton.png", 0.5f, 1.0f);
-	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackButtonHowToPlay", 340, 90, UI::COLOR::GRAY, [this] { BacktoPause(); });
+	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "ABPauseBackground", "PauseBackground.png", 1.0f, 1.0f);
+	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 350 }, "HowToPlayTitle", "HowToPlay.png", 2.0f, 1.0f);
+	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 350 }, "HowToPlayTitleLeaves", "HowToPlayLeaves.png", 2.0f, 1.0f);
+	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "BackHTP", "Back.png", 1.0f, 1.0f);
+	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "BackHTPLeaves", "BackLeaves.png", 1.0f, 1.0f);
+	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "HowToPlayBackButton", 180, 50, UI::COLOR::GRAY, [this] { BacktoPause(); }, [this] {HoveringBackHowToPlay(); });
 
-	canvases["HOW TO PLAY"] = howToPlayCanvas;
+	canvases["HTP"] = howToPlayCanvas;
 
 	canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
 
@@ -525,9 +579,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
-	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
-	building->SetScale(5);
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -107.5, 20.0, -608.5 }, scene, particleRenderer);
+	building->SetRotation(0, -DirectX::XM_PI, 0);
+	building->SetScale(5.85);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
@@ -556,7 +610,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	friendlyNPC->AddQuestID(6);
 
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
-	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
+	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38, 20.37, -574.5 });
 	particleRenderer.Bind(campFireSystem);
 	
 	//Audio::AddAudio(L"Audio/Sonrie.wav", 0);
@@ -574,8 +628,18 @@ Game::~Game()
 
 APPSTATE Game::Run()
 {
+
 	if (state != GameState::PAUSED)
 		Update();
+
+	if (state == GameState::PAUSED)
+	{
+		canvases["PAUSED"]->GetImage("ResumeLeaves")->Hide();
+		canvases["PAUSED"]->GetImage("HTPLeaves")->Hide(); 
+		canvases["HTP"]->GetImage("BackHTPLeaves")->Hide();
+
+
+	}
 
 	currentCanvas->Update();
 
