@@ -12,8 +12,8 @@ struct PlaneWithNormals
 	{
 		Vector3 position;
 		Vector2 texCoords;
-		Vector3 normals;
-		Vector3 tangets;
+		Vector3 normal;
+		Vector3 tanget;
 	};
 
 	UINT size = 0;
