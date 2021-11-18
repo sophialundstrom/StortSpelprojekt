@@ -89,57 +89,80 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 {
 	Initialize();
 	
-	float Volume = 0.4;
 	Audio::AddAudio(L"Audio/Menu.wav", 0);
-	Audio::SetVolume(Volume, 0);
+	Audio::SetVolume(0.005, 0);
 	Audio::StartAudio(0);
 
 	auto menuCanvas = new Canvas();
-	
+	float xPos = 75;
 	// LOGO
-	menuCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 5.0f }, "ArcusLogo", "Logotype.png", 1.0f, 1.0f);
+	menuCanvas->AddImage({ clientWidth / 2.0f, 150 }, "ArcusLogo", "Logotype.png", 1.0f, 1.0f, true, true);
+	menuCanvas->AddImage({ 25, clientHeight / 2.0f }, "MenuStick", "MenuStick.png", 0.8f, 1.0f, true, true);
 
-	// NEW GAME
-	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f }, "NewGameButton", 365, 50, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringNewGame(); });
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f }, "NewGame", "NewGame.png", 1.f, 1.0f);
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f }, "NewGameLeaves", "NewGameLeaves.png", 1.f, 1.0f);
+	{
+		// CONTINUE
+		menuCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "Continue", "Continue.png", 1.f, 1.0f, true, false);
+		menuCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f, true, false);
+		auto image = menuCanvas->GetImage("Continue");
+		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "ContinueButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringContinue(); });
+	}
 
-	// CONTINUE
-	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f - 75 }, "ContinueButton", 375, 50, UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringContinue(); });
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f - 75 }, "Continue", "Continue.png", 1.f, 1.0f);
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f - 75 }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f);
+	{
+		// NEW GAME
+		menuCanvas->AddImage({ xPos, clientHeight / 2.0f }, "NewGame", "NewGame.png", 1.f, 1.0f, true, false);
+		menuCanvas->AddImage({ xPos, clientHeight / 2.0f }, "NewGameLeaves", "NewGameLeaves.png", 1.f, 1.0f, true, false);
+		auto image = menuCanvas->GetImage("NewGame");
+		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "NewGameButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringNewGame(); });
+	}
+
+	{
+		// HOW TO PLAY
+		menuCanvas->AddImage({ xPos, clientHeight / 2.0f + 75 }, "HowToPlay", "HowToPlay.png", 1.0f, 1.0f, true, false);
+		menuCanvas->AddImage({ xPos, clientHeight / 2.0f + 75 }, "HowToPlayLeaves", "HowToPlayLeaves.png", 1.0f, 1.0f, true, false);
+		auto image = menuCanvas->GetImage("HowToPlay");
+		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "HowToPlayButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { HowToPlay(); }, [this] { HoveringHowToPlay(); });
+	}
 	
-	// HOW TO PLAY
-	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 75 }, "HowToPlayButton", 450, 50, UI::COLOR::GRAY, [this] { HowToPlay(); }, [this] { HoveringHowToPlay(); });
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 75}, "HowToPlay", "HowToPlay.png", 1.0f, 1.0f);
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 75 }, "HowToPlayLeaves", "HowToPlayLeaves.png", 1.0f, 1.0f);
+	{
+		// OPTIONS
+		menuCanvas->AddImage({ xPos, clientHeight / 2.0f + 150 }, "Options", "Options.png", 1.0f, 1.0f, true, false);
+		menuCanvas->AddImage({ xPos, clientHeight / 2.0f + 150 }, "OptionsLeaves", "OptionsLeaves.png", 1.0f, 1.0f, true, false);
+		auto image = menuCanvas->GetImage("Options");
+		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "OptionsButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Options(); }, [this] { HoveringOptions(); });
+	}
 
-	// OPTIONS
-	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 150 }, "OptionsButton", 310, 50, UI::COLOR::GRAY, [this] { Options(); }, [this] { HoveringOptions(); });
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 150 }, "Options", "Options.png", 1.0f, 1.0f);
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 150 }, "OptionsLeaves", "OptionsLeaves.png", 1.0f, 1.0f);
+	{
+		// QUIT
+		menuCanvas->AddImage({ xPos, clientHeight / 2.0f + 225 }, "Quit", "Quit.png", 1.f, 1.0f, true, false);
+		menuCanvas->AddImage({ xPos, clientHeight / 2.0f + 225 }, "QuitLeaves", "QuitLeaves.png", 1.f, 1.0f, true, false);
+		auto image = menuCanvas->GetImage("Quit");
+		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "QuitButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Quit(); }, [this] { HoveringQuit(); });
+		}
 
-	// QUIT
-	menuCanvas->AddButton({ clientWidth / 7.5f, clientHeight / 2.0f + 225}, "QuitButton", 180, 50, UI::COLOR::GRAY, [this] { Quit(); }, [this] { HoveringQuit(); });
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 225}, "Quit", "Quit.png", 1.f, 1.0f);
-	menuCanvas->AddImage({ clientWidth / 7.5f, clientHeight / 2.0f + 225}, "QuitLeaves", "QuitLeaves.png", 1.f, 1.0f);
-
-	// FORM
-	menuCanvas->AddButton({ clientWidth / 1.1f, clientHeight / 2.0f + 450 }, "FormButton", 200, 50, UI::COLOR::GRAY, [this] { Form(); }, [this] {HoveringForm(); });
-	menuCanvas->AddImage({ clientWidth / 1.1f, clientHeight / 2.0f + 450 }, "Form", "Form.png", 1.0f, true);
-	menuCanvas->AddImage({ clientWidth / 1.1f, clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.0f, true);
+	{
+		// FORM
+		menuCanvas->AddImage({ clientWidth - (float)250, clientHeight / 2.0f + 450 }, "Form", "Form.png", 1.0f, 1.0f, true, false);
+		menuCanvas->AddImage({ clientWidth - (float)250, clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.0f, 1.0f, true, false);
+		auto image = menuCanvas->GetImage("Form");
+		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "FormButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Form(); }, [this] {HoveringForm(); });
+	}
 
 	canvases["MAIN MENU"] = menuCanvas; 
 	currentCanvas = menuCanvas;
 
 	// HOW TO PLAY CANVAS
 	auto howToPlayCanvas = new Canvas();
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Controls", "Controls.png", 2.0f, 1.0f);
+	{
+		howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Controls", "Controls.png", 2.0f, 1.0f);
 
-	// BACK
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "BackControls", "Back.png", 1.0f, 1.0f);
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "BackLeavesControls", "BackLeaves.png", 1.f, 1.0f);
-	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "BackButtonControls", 180, 50, UI::COLOR::GRAY, [this] { BacktoMenu(); }, [this] { HoveringBackControls(); });
+		// BACK
+		howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "BackControls", "Back.png", 1.0f, 1.0f);
+		howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "BackLeavesControls", "BackLeaves.png", 1.f, 1.0f);
+		auto image = howToPlayCanvas->GetImage("BackControls");
+		howToPlayCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "BackButtonControls", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { BacktoMenu(); }, [this] { HoveringBackControls(); });
+	}
+
+	
 
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
@@ -161,8 +184,8 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddPointLight({ -41.9f, 33.0f, -687.4f }, 30, { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
 
 
-	auto menuFireSystem = std::make_shared<ParticleSystem>("fire.ps");
-	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 32, -687 });
+	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
+	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 34, -687 });
 	particleRenderer.Bind(menuFireSystem);
 		
 	(void)Run();

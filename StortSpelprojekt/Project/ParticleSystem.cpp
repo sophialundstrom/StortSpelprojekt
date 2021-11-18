@@ -67,6 +67,10 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 	std::string secondImagePath = FileSystem::ProjectDirectory::path + "\\ParticleTextures\\" + secondImageFile;
 	secondTexture = new Texture(secondImagePath, secondImageFile);
 
+	std::string opacityImageFile = GetNthString(line, 3);
+	std::string opacityImagePath = FileSystem::ProjectDirectory::path + "\\ParticleTextures\\" + opacityImageFile;
+	opacityTexture = new Texture(opacityImagePath, opacityImageFile);
+
 
 	if (preview)
 		CreateDynamicVertexBuffer(vertexBuffer, sizeof(Particle), sizeof(Particle) * ABSOLUTE_MAX_PARTICLES);
@@ -92,6 +96,7 @@ void ParticleSystem::Draw() const
 {
 	firstTexture->Bind();
 	secondTexture->Bind(1);
+	opacityTexture->Bind(2);
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 	Graphics::Inst().GetContext().Draw(particleCount, 0);
 }
@@ -223,4 +228,12 @@ void ParticleSystem::ChangeFirstTexture(std::string path, std::string fileName)
 		delete firstTexture;
 
 	firstTexture = new Texture(path, fileName);
+}
+
+void ParticleSystem::ChangeOpacityTexture(std::string path, std::string fileName)
+{
+	if (opacityTexture)
+		delete opacityTexture;
+
+	opacityTexture = new Texture(path, fileName);
 }
