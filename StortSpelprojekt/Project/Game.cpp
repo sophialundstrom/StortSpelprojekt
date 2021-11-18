@@ -279,7 +279,7 @@ void Game::UpdateAndHandleLoot()
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 			SoundEffect::AddAudio(L"Audio/Loot.wav", 2);
-			SoundEffect::SetVolume(0.002, 2);
+			SoundEffect::SetVolume(0.5, 2);
 			SoundEffect::StartAudio(2);
 			std::cout << "Loot destoyed\n";
 		}
@@ -408,7 +408,7 @@ void Game::CheckItemCollision()
 			if (Event::KeyIsPressed('E'))
 			{
 				SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
-				SoundEffect::SetVolume(0.002, 2);
+				SoundEffect::SetVolume(0.5, 2);
 				SoundEffect::StartAudio(2);
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
@@ -434,7 +434,7 @@ void Game::CheckQuestInteraction()
 				{
 					state = GameState::DIALOGUE;
 					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
-					SoundEffect::SetVolume(0.002, 2);
+					SoundEffect::SetVolume(0.5, 2);
 					SoundEffect::StartAudio(2);
 					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
 					dialogueOverlay->Set("GILBERT", "Lorem.");
@@ -577,9 +577,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
-	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
-	building->SetScale(5);
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -107.5, 20.0, -608.5 }, scene, particleRenderer);
+	building->SetRotation(0, -DirectX::XM_PI, 0);
+	building->SetScale(5.85);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
@@ -609,7 +609,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	friendlyNPC->AddQuestID(6);
 
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
-	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
+	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38, 20.37, -574.5 });
 	particleRenderer.Bind(campFireSystem);
 
 	//ANIMATION
@@ -620,7 +620,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//animatedModelRenderer.Bind(animated);
 	
 	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	Audio::SetVolume(0.002, 0);
+	Audio::SetVolume(0.3, 0);
 	Audio::StartAudio(0);
 	
 	(void)Run();
@@ -792,13 +792,13 @@ void Game::CheckNearbyEnemies()
 		if (hit)
 		{
 			SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
-			SoundEffect::SetVolume(0.002, 2);
+			SoundEffect::SetVolume(0.5, 2);
 			SoundEffect::StartAudio(2);
 			hostiles[i]->TakeDamage();
 			if (hostiles[i]->IsDead())
 			{
 				SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
-				SoundEffect::SetVolume(0.002, 2);
+				SoundEffect::SetVolume(0.8, 2);
 				SoundEffect::StartAudio(2);
 				hostiles[i]->TakeDamage();
 				player->Stats().barbariansKilled++;
