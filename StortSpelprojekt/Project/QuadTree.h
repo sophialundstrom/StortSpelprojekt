@@ -13,11 +13,19 @@ struct FrustrumCollider
         bounds.CreateFromMatrix(bounds, camera.GetProjectionMatrix());
     }
 
-    void Update(Camera camera)
+    void Update(Camera* camera)
     {
-        bounds.Origin = { camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z };
-        bounds.Orientation = Quaternion::CreateFromYawPitchRoll(camera.GetDirection().x, camera.GetDirection().y, camera.GetDirection().z);
-        //bounds.Far = 5;
+        bounds.Origin = { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z };
+        bounds.Orientation = Quaternion::CreateFromYawPitchRoll(camera->GetDirection().x, camera->GetDirection().y, camera->GetDirection().z);
+        /*bounds.Transform(
+            bounds, 
+            1, 
+            Quaternion::CreateFromYawPitchRoll(camera->GetDirection().x, camera->GetDirection().y, camera->GetDirection().z), 
+            { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z }
+        );*/
+
+        //std::cout << bounds.Far << std::endl;
+        
     }
 
 

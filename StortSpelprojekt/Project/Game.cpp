@@ -841,7 +841,35 @@ void Game::CheckNearbyEnemies()
 void Game::UpdateQuadTree()
 {
 	drawablesToBeRendered.clear();
-	frustrumCollider.Update(*scene.GetCamera());
+	frustrumCollider.Update(scene.GetCamera());
 	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
 	std::cout << drawablesToBeRendered.size() << std::endl;
+
+	if (Event::KeyIsPressed('K'))
+	{
+		modelRenderer.Clear();
+		for (auto& [name, drawable] : drawablesToBeRendered)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+				modelRenderer.Bind(drawable);
+		}
+
+	}
+
+	if (Event::KeyIsPressed('L'))
+	{
+		modelRenderer.Clear();
+		for (auto& [name, drawable] : actualDrawablePipeline)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+				modelRenderer.Bind(drawable);
+		}
+
+	}
+		
+
+	
+
 }
