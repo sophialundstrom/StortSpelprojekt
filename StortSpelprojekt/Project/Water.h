@@ -2,7 +2,7 @@
 #include "DynamicPlane.h"
 #include "Texture.h"
 
-class Water
+class Water : public Drawable
 {
 private:
 	DynamicPlane* plane;

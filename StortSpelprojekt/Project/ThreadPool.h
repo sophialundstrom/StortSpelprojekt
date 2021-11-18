@@ -19,15 +19,7 @@ public:
 	{
 		Start(numThreads);
 	}
-
-	//ThreadPool& operator =(const ThreadPool other)
-	//{
-	//	if (this != other)
-	//	{
-
-	//	}
-	//}
-
+	  
 	~ThreadPool()
 	{
 		Stop();

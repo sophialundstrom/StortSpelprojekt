@@ -1,6 +1,5 @@
 #include "ParticleSystem.h"
 
-#include "RenderGraph.h"
 #include "FileSystem.h"
 #include "Time.h"
 #include <fstream>
@@ -23,11 +22,6 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 {
 	std::string path = file;
 	std::string line = "";
-
-
-	//texture = new Texture("ParticleTextures/Gatos.png", "Gatos.png");
-
-
 
 	if (file == "default.ps" || file.find("\\") == std::string::npos)
 		path = FileSystem::ProjectDirectory::path + "\\ParticleSystems\\" + file;
@@ -90,6 +84,8 @@ ParticleSystem::ParticleSystem(unsigned int maxParticles, float timeBetweenParti
 ParticleSystem::~ParticleSystem()
 {
 	vertexBuffer->Release();
+	delete firstTexture;
+	delete secondTexture;
 }
 
 void ParticleSystem::Draw() const

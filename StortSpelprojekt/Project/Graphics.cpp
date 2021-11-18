@@ -46,6 +46,7 @@ Graphics::~Graphics()
 	context->Release();
 	device->Release();
 	UISurface->Release();
+	wireframeState->Release();
 }
 
 HRESULT Graphics::CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed)
@@ -65,7 +66,7 @@ HRESULT Graphics::CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWN
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.BufferCount = 1;
 	swapChainDesc.OutputWindow = hWnd;
-	swapChainDesc.Windowed = windowed;
+	swapChainDesc.Windowed = true;
 
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;

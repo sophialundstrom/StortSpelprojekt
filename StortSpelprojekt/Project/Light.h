@@ -21,11 +21,12 @@ public:
 	} data;
 public:
 	DirectionalLight() = default;
-	DirectionalLight(float range, float startAngle = 0.5f, int startDir = 1)
+	DirectionalLight(float range, Vector4 color, float startAngle = 0.5f, int startDir = 1)
 		:range(range), dir(startDir), currentAngle(startAngle)
 	{
 		data.direction = { 1.0f, -1.0f, 0.0f };
 		data.direction.Normalize();
+		data.color = color;
 
 		this->ortoMatrix = Matrix::CreateOrthographicOffCenter(-range, range, -range, range, 0.1f, range * 2);
 		this->viewMatrix = Matrix::CreateLookAt(position + -data.direction * range, position, { 0.0f, 1.0f, 0.0f });

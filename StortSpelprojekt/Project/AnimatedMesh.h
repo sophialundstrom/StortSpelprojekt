@@ -64,9 +64,9 @@ struct AnimatedMesh
 			}
 		}
 
-		vertexCount = vertices.size();
+		vertexCount = (UINT)vertices.size();
 
-		bufferID = Resources::Inst().NumBuffers();
+		bufferID = (UINT)Resources::Inst().NumBuffers();
 
 		ID3D11Buffer* buffer;
 		CreateVertexBuffer(buffer, sizeof(AnimatedVertex), sizeof(AnimatedVertex) * vertexCount, vertices.data());

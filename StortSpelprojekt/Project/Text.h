@@ -1,8 +1,5 @@
 #pragma once
 #include "UIComponent.h"
-#include <d2d1helper.h>
-#include <string>
-#include <dwrite.h>
 
 inline std::string to_str(const std::wstring& wstr)
 {
@@ -24,13 +21,17 @@ class Text : public UIComponent
 {
 private:
 	ID2D1SolidColorBrush* brush = nullptr;
+	ID2D1SolidColorBrush* backgroundBrush = nullptr;
 	IDWriteTextFormat* format = nullptr;
+	IDWriteTextFormat* backgroundFormat = nullptr;
+
 	std::wstring string;
 	void SetWidth();
 public:
 	Text() = default;
-	Text(std::wstring string, D2D_VECTOR_2F position, IDWriteTextFormat* format, ID2D1SolidColorBrush* brush, bool visible = true);
-	void SetString(const std::string newString);
+	Text(std::wstring string, D2D_VECTOR_2F position, UI::TEXTFORMAT format, ID2D1SolidColorBrush* brush, bool visible = true);
+	Text(std::wstring string, D2D_VECTOR_2F position, UI::TEXTFORMAT format, ID2D1SolidColorBrush* brush, FLOAT width, FLOAT height, bool visible = true);
+	void SetString(const std::string newString, bool bound = false);
 	std::string GetString() { return to_str(string); }
-	void Draw();
+	void Draw(bool allCharacters = true, UINT numCharacters = 0);
 };

@@ -30,10 +30,10 @@ public:
 	template <typename T>
 	auto Get(const std::string& name) { return std::dynamic_pointer_cast<T>(drawables[name]); }
 
-	const std::map<std::string, std::shared_ptr<Drawable>>& GetSortedMap() const;
-	std::vector<std::string> &GetObjectNames();
+	std::vector<std::string>& GetObjectNames();
 
 	std::string AddDrawable(const std::string& name, std::shared_ptr<Drawable> drawable);
+	std::string AddDrawable(std::shared_ptr<Drawable> drawable);
 	std::string AddModel(const std::string& file, const std::string path);
 	void AddModel(const std::string& name,std::shared_ptr <Drawable> drawable);
 	void AddBoundingVolume(const std::string& name, std::shared_ptr <Drawable> drawable);
@@ -46,6 +46,8 @@ public:
 	//void AddHostileNPC(const std::string& file, std::vector<std::shared_ptr<Arrow>> hostileArrows, std::shared_ptr<Player> player);
 	//void AddHostileNPC(const std::string& name, std::shared_ptr<Drawable> drawable);
 
+	DirectionalLight GetDirectionalLight() { return directionalLight; }
+
 	void AddAnimatedModel(const std::string& file);
 
 	void AddParticleSystem(const std::string name, std::shared_ptr<ParticleSystem> system, Vector3 pos);
@@ -53,8 +55,10 @@ public:
 	void AddParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type);
 	
 	void AddPointLight(Vector3 position, float range, Vector3 attenuation = { 0.05f, 0.05f, 0.05f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
-	
+	PointLight* GetPointLights() { return pointLights.data(); }
+	UINT GetNumberOfPointlights() { return (UINT)pointLights.size(); }
+
 	void UpdateDirectionalLight(const Vector3& position) { directionalLight.SetTargetPosition(position); }
-	void SetDirectionalLight(float range, float startAngle = 0.0f, int startDir = 1);
+	void SetDirectionalLight(float range, Vector4 color = { 1, 1, 1, 1 }, float startAngle = 0.0f, int startDir = 1);
 	void SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 forward = { 0.0f, 0.0f, 1.0f }, Vector3 up = { 0.0f, 1.0f, 0.0f });
 };

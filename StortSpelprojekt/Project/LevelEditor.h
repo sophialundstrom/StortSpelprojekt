@@ -1,14 +1,9 @@
 #pragma once
 #include "Editor.h"
 #include "Scene.h"
-#include "AnimatedModelRenderer.h"
 #include "ModelRenderer.h"
 #include "TerrainRenderer.h"
 #include "ApplicationState.h"
-#include "Building.h"
-#include "PRay.h"
-#include "Collision.h"
-#include "ColliderRenderer.h"
 #include "IDRenderer.h"
 #include "VolumeRenderer.h"
 #include "WaterRenderer.h"
@@ -18,6 +13,8 @@ class LevelEditor : public Editor, public ApplicationState
 private:
 	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
 
+	int totalVertexCountLastFrame;
+	int totalVertexCount;
 	std::string selectedObject;
 	HWND appWindow;
 	float wRatioX;
@@ -27,14 +24,11 @@ private:
 	Scene scene;
 	std::map<std::string, std::shared_ptr<BoundingSphere>> pickBoxes;
 	Terrain* terrain;
-	std::shared_ptr<Building> building;
 	Water water;
 
 	//ADD RENDERERS
-	AnimatedModelRenderer animatedModelRenderer;
 	TerrainRenderer terrainRenderer;
 	ModelRenderer modelRenderer;
-	ColliderRenderer colliderRenderer;
 	IDRenderer idRenderer;
 	VolumeRenderer volumeRenderer;
 	WaterRenderer waterRenderer;
@@ -50,11 +44,12 @@ private:
 	virtual void Render() override;
 	void CreateBoundingBox();
 	void CreateBoundingSphere();
-	void RemoveItem(const std::string name);
+	void RemoveItem(std::string name);
 	void ClearToolUI();
 	void UpdateToolUI(std::string name);
 	void FocusObject();
 	void DuplicateObject();
+	void DuplicateVolume();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

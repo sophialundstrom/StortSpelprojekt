@@ -21,17 +21,20 @@
 #include "NPCFriendly.h"
 #include "Audio.h"
 #include "NPCHostile.h"
+#include "Loot.h"
+#include "MainMenu.h"
 
-//PlayerClassLib
-#include <math.h>
+enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
 // The state subclass for the level/game
 class Game : public ApplicationState
 {
 private:
+    GameState state = GameState::ACTIVE;
+
     bool hovering = false;
     bool done = false;
-    bool paused = false;
+    //bool paused = false;
     const std::string file = "Default"; //"Test"
 
     //-----TEMP-----//
@@ -43,10 +46,9 @@ private:
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
    // ShadowRenderer shadowRenderer;
-   // DeferredRenderer deferredRenderer;
     TerrainRenderer terrainRenderer;
-    //ColliderRenderer colliderRenderer;
-    //SkeletonRenderer skeletonRenderer;
+    ColliderRenderer colliderRenderer;
+    SkeletonRenderer skeletonRenderer;
     WaterRenderer waterRenderer;
 
     SaveStation saveStations[2];
@@ -54,8 +56,8 @@ private:
     Terrain terrain;
     Water water;
 
-    Canvas* currentCanvas;
-    std::map<std::string, Canvas*> canvases;
+    std::shared_ptr<Canvas> currentCanvas;
+    std::map<std::string, std::shared_ptr<Canvas>> canvases;
 
     std::shared_ptr<Player> player;
     std::vector<std::shared_ptr<Arrow>> arrows;
@@ -70,17 +72,33 @@ private:
     std::vector<std::shared_ptr<Collider>> colliders;
 
     std::vector<std::shared_ptr<HostileNPC>> hostiles;
+    UINT hostileID = 0;
+
+    std::vector<std::shared_ptr<Loot>> loot;
+    UINT lootID = 0;
 
     void Update();
     void Render();
 
-    // PAUSE & UI
+    // UI FUNC
     void Pause();
     void Resume();
     void Options();
     void HowToPlay();
     void BacktoPause();
     void MainMenu();
+
+    // LEAVES
+    void HoveringResume();
+    void HoveringOptions();
+    void HoveringHowToPlay();
+    void HoveringQuit();
+    void HoveringBackHowToPlay();
+    void HoveringBackQuit();
+    void HoveringBackOptions();
+    void HoveringYes();
+    void HoveringNo();
+
   
     bool mainMenu = false;
 
@@ -88,11 +106,13 @@ private:
     void AddItem(RESOURCE resource, Vector3 position);
 
     std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string fileName, Vector3 position);
+
     void AddArrow(const std::string fileName);
-    //void AddHostileArrow(const std::string fileName);
 
     void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
+    void AddLoot(LOOTTYPE type, const Vector3& position);
 
+    void UpdateAndHandleLoot();
     void CheckNearbyCollision();
     void CheckSaveStationCollision();
     void CheckItemCollision();
@@ -106,7 +126,7 @@ private:
 public:
     Game() = delete;
     Game(UINT clientWidth, UINT clientHeight, HWND window);
-    ~Game(); // Removes drawables and resources
+    ~Game();
 
     // Inherited via GameState
     virtual APPSTATE Run() override;

@@ -51,7 +51,7 @@ bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
 void NPC::Die()
 {
 	dead = true;
-	position = { 0,-100,0 };
+	//position = { 0,-100,0 };
 }
 
 void NPC::TakeDamage()

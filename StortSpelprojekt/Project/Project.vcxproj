@@ -29,13 +29,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>PROJECT_DIR="($(ProjectDir))";WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir)ImGui\include;$(ProjectDir)Assimp\include;$(ProjectDir)DirectXTK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -110,7 +110,7 @@
       <PreprocessorDefinitions>PROJECT_DIR="($(ProjectDir))";WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)ImGui\include;$(ProjectDir)Assimp\include;$(ProjectDir)DirectXTK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -156,12 +156,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimatedModelRenderer.cpp" />
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioChunks.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Canvas.cpp" />
+    <ClCompile Include="ColliderRenderer.cpp" />
+    <ClCompile Include="DialogueOverlay.cpp" />
     <ClCompile Include="DockSpacePanel.cpp" />
+    <ClCompile Include="DynamicPlane.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="GameOver.cpp" />
@@ -173,21 +178,30 @@
     <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
-    <ClCompile Include="Main Menu.cpp" />
+    <ClCompile Include="Loot.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ModelRenderer.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NPCBase.cpp" />
     <ClCompile Include="NPCFriendly.cpp" />
     <ClCompile Include="NPCHostile.cpp" />
     <ClCompile Include="ParticleEditor.cpp" />
+    <ClCompile Include="ParticleRenderer.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ShadowRenderer.cpp" />
+    <ClCompile Include="SkeletonRenderer.cpp" />
+    <ClCompile Include="SoundEffect.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="TerrainRenderer.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="VolumeRenderer.cpp" />
+    <ClCompile Include="WaterRenderer.cpp" />
     <ClCompile Include="Win.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -201,6 +215,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="CollectQuest.h" />
+    <ClInclude Include="DialogueOverlay.h" />
     <ClInclude Include="DockSpacePanel.h" />
     <ClInclude Include="DynamicPlane.h" />
     <ClInclude Include="FBXLoader.h" />
@@ -214,7 +229,8 @@
     <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="LoadingScreen.h" />
-    <ClInclude Include="Main Menu.h" />
+    <ClInclude Include="Loot.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Pathfinding.h" />
@@ -271,6 +287,7 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonRenderer.h" />
+    <ClInclude Include="SoundEffect.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Mesh.h" />

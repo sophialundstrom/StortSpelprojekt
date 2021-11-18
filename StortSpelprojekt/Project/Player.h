@@ -56,8 +56,8 @@ struct Inventory
 struct Stats
 {
 	UINT barbariansKilled = 0;
-	float movementSpeed = 30.0f;
-	float sprintSpeed = 50.0f;
+	float movementSpeed = 20.0f;
+	float sprintSpeed = 70.0f;
 	UINT maxHealthPoints = 1;
 	UINT healthPoints = 1;
 	UINT level = 1;
@@ -78,15 +78,19 @@ private:
 
 	Camera* sceneCamera;
 
-	Canvas* ingameCanvas;
+	std::shared_ptr<Canvas> ingameCanvas;
 	//ARROW STUFF
 	std::vector<std::shared_ptr<Arrow>> arrows;
+
+	bool hasCollided;
 
 	float movementYRadiant = 0;
 	float movementXRadiant = 0;
 
-	float preJumpGroundLevel = 0;
-	float heightMapGroundLevel = 20.0f;
+	float preJumpGroundLevel = 0.0f;
+	float currentGroundLevel = 0.0f;
+	float heightMapGroundLevel = 0.0f;
+
 	const float mouseDefaultSensitivity = 3.f;
 	const float mouseAimSensitivity = 2.f;
 	float mouseCurrentSensitivity = mouseDefaultSensitivity;
@@ -106,9 +110,11 @@ private:
 	float defaultCameraDistance = 17.0f;
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
-	Vector3 cameraLocationSocket = { 1.3f, 2.7f, -2.f };
+	float closestColliderToCam = 9999;
+	Vector3 cameraLocationSocket = { 1.3f, 5.0, -2.f };
 
 	void CalcHeight(HeightMap* heightMap);
+	float CalcHeightForCamera(HeightMap* heightMap);
 	void Load(std::string file);
 
 	std::shared_ptr<BoundingBox> bounds;
@@ -138,28 +144,12 @@ private:
 		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
 	}
 public:
+	UINT maxArrows = 10;
+	UINT numArrows = 5;
 	void Update(HeightMap* heightMap);
 
-	Player(const std::string file, Camera* camera, Canvas* ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows)
-		:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
-	{
-		isRightPressed = false;
-		isLeftPressed = false;
+	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows, const UINT& maxArrows);
 
-		this->arrows = arrows;
-		bounds = std::make_shared<BoundingBox>();
-
-		bounds->SetScale(0.8f, 2.5f, 0.8f);
-		bounds->SetPosition(0, 3, 0);
-
-		frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
-		frustum->SetPosition(0, 3, 0);
-
-		Load(file);
-		UpdateHealthUI();
-
-		PlayAnimation("Idle", true, 0.2f);
-	}
 public:
 	// TEMP STATS PRINT
 	void GetStats()
@@ -184,8 +174,13 @@ public:
 
 	bool CheckArrowHit(std::shared_ptr<Collider> collider);
 
+	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void MoveTowards(const Vector3& position);
 	void ResetToLastPosition() { position = lastPosition; }
 	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
 	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
+	void SetClosestColliderToCam(float range)
+	{
+		closestColliderToCam = range;
+	}
 };

@@ -30,6 +30,13 @@ std::string Scene::AddDrawable(const std::string& name, std::shared_ptr<Drawable
 	return finalName;
 }
 
+std::string Scene::AddDrawable(std::shared_ptr<Drawable> drawable)
+{
+	drawables[drawable->GetName()] = drawable;
+
+	return drawable->GetName();
+}
+
 std::string Scene::AddModel(const std::string& file, const std::string path)
 {
 	UINT numInstances = 0;
@@ -121,9 +128,9 @@ void Scene::AddPointLight(Vector3 position, float range, Vector3 attenuation, Ve
 }
 
 
-void Scene::SetDirectionalLight(float range, float startAngle, int startDir)
+void Scene::SetDirectionalLight(float range, Vector4 color, float startAngle, int startDir)
 {
-	directionalLight = DirectionalLight(range, startAngle, startDir);
+	directionalLight = DirectionalLight(range, color, startAngle, startDir);
 }
 
 void Scene::SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position, Vector3 forward, Vector3 up)
@@ -131,19 +138,15 @@ void Scene::SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, flo
 	camera = new Camera(FOV, aspectRatio, nearZ, farZ, rotationSpeed, moveSpeed, position, forward, up);
 }
 
-//OPEN FILE
-Scene::Scene(const std::string& file)
-{
-	//TO DO: READ FROM FILE TO CREATE SCENE FROM STORED DATA
-}
-
 void Scene::Update()
 {
-	camera->Update();
+	//camera->Update();
 	//directionalLight.Update();
 
 	for (auto& [name, drawable] : drawables)
+	{
 		drawable->Update();
+	}
 
-	ShaderData::Inst().Update(*camera, directionalLight, (UINT)pointLights.size(), nullptr);
+	//ShaderData::Inst().Update(*camera, directionalLight, (UINT)pointLights.size(), nullptr);
 }

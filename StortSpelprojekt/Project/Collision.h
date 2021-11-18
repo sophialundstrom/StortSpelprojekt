@@ -149,6 +149,22 @@ public:
 
 		UpdateDynamicVertexBuffer(vertexBuffer, sizeof(Vector3) * NUM_VERTICES, corners);
 	}
+
+	void GetPlanes(Plane* planes)
+	{
+		Vector3 points[8];
+		bounds.GetCorners(points);
+
+		planes[0] = Plane(points[0], points[2], points[3]);
+		planes[1] = Plane(points[4], points[0], points[3]);
+		planes[2] = Plane(points[7], points[2], points[6]);
+		planes[3] = Plane(points[5], points[4], points[7]);
+		planes[4] = Plane(points[1], points[5], points[6]);
+		planes[5] = Plane(points[0], points[4], points[5]);
+
+		for (UINT i = 0; i < 6; ++i)
+			planes[i].Normalize();
+	}
 };
 
 //========================================================SPHERE========================================================
@@ -278,37 +294,48 @@ namespace Collision
 			return sphere.GetBounds().Intersects(rayOrigin, rayDirection, temp);
 		}
 	}
+	struct RayResults
+	{
+		bool didHit = false;
+		float distance;
+	};
+
 
 	//RAY LENGTH = 0 WILL CHECK FOR INTERSECTION INFINITELY
-	inline bool Intersection(const BoundingSphere& sphere, const RayCollider& ray)
+	inline RayResults Intersection(const BoundingSphere& sphere, const RayCollider& ray)
 	{
-		float temp;
+		RayResults result;
 
 		if (ray.length == 0)
-			return sphere.GetBounds().Intersects(ray.origin, ray.direction, temp);
+			result.didHit = sphere.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
 
 		else
 		{
 			if ((sphere.GetPosition() - ray.origin).Length() > ray.length)
-				return false;
-			return sphere.GetBounds().Intersects(ray.origin, ray.direction, temp);
+				result.didHit = false;
+			else
+				result.didHit = sphere.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
 		}
+
+		return result;
 	}
 
 	//RAY LENGTH = 0 WILL CHECK FOR INTERSECTION INFINITELY
-	inline bool Intersection(const BoundingBox& box, const RayCollider& ray)
+	inline RayResults Intersection(const BoundingBox& box, const RayCollider& ray)
 	{
-		float temp;
+		RayResults result;
 
 		if (ray.length == 0)
-			return box.GetBounds().Intersects(ray.origin, ray.direction, temp);
+			result.didHit = box.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
 
 		else
 		{
 			if ((box.GetPosition() - ray.origin).Length() > ray.length)
-				return false;
-			return box.GetBounds().Intersects(ray.origin, ray.direction, temp);
+				result.didHit = false;
+			else
+				result.didHit = box.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
 		}
+		return result;
 	}
 
 	inline bool Intersection(const BoundingBox& box, const FrustumCollider& frustum)

@@ -1,6 +1,5 @@
 #pragma once
 #include "UI.h"
-#include "GameState.h"
 #include "ParticleRenderer.h"
 #include "ModelRenderer.h"
 #include "Canvas.h"
@@ -8,6 +7,7 @@
 #include "GameLoader.h"
 #include "ParticleRenderer.h"
 #include "ShadowRenderer.h"
+#include "ApplicationState.h"
 
 class Win : public ApplicationState
 {
