@@ -609,7 +609,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	friendlyNPC->AddQuestID(6);
 
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
-	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -100.743, 18.736, -648.154 });
+	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38, 20.37, -574.5 });
 	particleRenderer.Bind(campFireSystem);
 
 	//ANIMATION
