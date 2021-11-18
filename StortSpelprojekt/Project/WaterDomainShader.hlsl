@@ -5,12 +5,16 @@ struct DS_INPUT
 {
     float4 position : SV_POSITION;
     float2 texCoords : TEXTURECOORDS;
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
 };
 
 struct DS_OUTPUT
 {
     float4 position : SV_POSITION;
     float2 texCoords : TEXTURECOORDS;
+    float3 normal : NORMAL;
+    float3 tangent : TANGENT;
     float3 worldPosition : WORLDPOSITION;
 };
 
@@ -42,6 +46,8 @@ DS_OUTPUT main(
     //BARYCENTRIC COORDINATES
     output.position = patch[0].position * domain.x + patch[1].position * domain.y + patch[2].position * domain.z;
     output.texCoords = patch[0].texCoords * domain.x + patch[1].texCoords * domain.y + patch[2].texCoords * domain.z;
+    //output.normal = patch[0].normal * domain.x + patch[1].normal * domain.y + patch[2].normal * domain.z;
+    //output.tangent = patch[0].tangent * domain.x + patch[1].tangent * domain.y + patch[2].tangent * domain.z;
     
     const int amplitude = 6;
     const float multiplier = 2.0f;

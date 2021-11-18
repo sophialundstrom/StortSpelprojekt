@@ -13,23 +13,23 @@ private:
 
 	//SHADER PATHS
 #ifdef _DEBUG
-	const std::string vs_path = "../x64/Debug/TerrainVertexShader.cso";
+	const std::string vs_path = "../x64/Debug/WaterVertexShader.cso";
 
-	const std::string hs_path = "../x64/Debug/TerrainHullShader.cso";
+	const std::string hs_path = "../x64/Debug/WaterHullShader.cso";
 
 	const std::string ds_path = "../x64/Debug/WaterDomainShader.cso";
 
-	const std::string gs_path = "../x64/Debug/TerrainGeometryShader.cso";
+	const std::string gs_path = "../x64/Debug/WaterGeometryShader.cso";
 
 	const std::string ps_path = "../x64/Debug/WaterPixelShader.cso";
 #else
-	const std::string vs_path = "../x64/Release/TerrainVertexShader.cso";
+	const std::string vs_path = "../x64/Release/WaterVertexShader.cso";
 
-	const std::string hs_path = "../x64/Release/TerrainHullShader.cso";
+	const std::string hs_path = "../x64/Release/WaterHullShader.cso";
 
 	const std::string ds_path = "../x64/Release/WaterDomainShader.cso";
 
-	const std::string gs_path = "../x64/Release/TerrainGeometryShader.cso";
+	const std::string gs_path = "../x64/Release/WaterGeometryShader.cso";
 
 	const std::string ps_path = "../x64/Release/WaterPixelShader.cso";
 #endif

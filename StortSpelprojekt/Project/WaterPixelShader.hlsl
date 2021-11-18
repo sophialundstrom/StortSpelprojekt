@@ -1,4 +1,5 @@
 Texture2D diffuseTexture : register(t0);
+Texture2D normalMap : register(t1);
 
 sampler wrapSampler : register(s0);
 
@@ -7,6 +8,7 @@ struct PS_INPUT
     float4 position : SV_POSITION;
     float2 texCoords : TEXTURECOORDS;
     float3 normal : NORMAL;
+    float3 tangent : TANGENT;
     float3 worldPosition : WORLDPOSITION;
 };
 
@@ -38,6 +40,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     const float2 newTex = input.texCoords * 30.0f;
 
     float4 color = diffuseTexture.Sample(wrapSampler, newTex) * 0.8;
+    //float4 normalMap = normalMap.Sample(wrapSampler, newTex);
 
     //FOG
     float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
