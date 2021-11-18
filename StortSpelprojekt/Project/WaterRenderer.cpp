@@ -1,5 +1,4 @@
 #include "WaterRenderer.h"
-
 #include "Water.h"
 
 WaterRenderer::WaterRenderer(float tesselationAmount)

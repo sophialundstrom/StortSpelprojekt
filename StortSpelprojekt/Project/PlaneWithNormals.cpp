@@ -9,8 +9,8 @@ PlaneWithNormals::PlaneWithNormals(UINT subdivisions, UINT size)
 
 	Vector3 position;
 	Vector2 texCoords;
-	Vector3 normals;
-	Vector3 tangents;
+	Vector3 normal;
+	Vector3 tangent;
 	std::vector<Vertex> vertices;
 
 	for (UINT i = 0; i < cells + 1; ++i)
@@ -19,9 +19,11 @@ PlaneWithNormals::PlaneWithNormals(UINT subdivisions, UINT size)
 		{
 			position = { triSize * i - (size / 2) , 0, triSize * j - (size / 2) };
 			texCoords = { texSize * i + (1.0f / size), texSize * j };
-			//ADD NORMALS AND TANGENTS HERE
+			//ADD VALUE FOR NORMAL AND TANGENT
+			normal = { 0,1,0 };
+			tangent = { 0,0,0 };
 
-			vertices.emplace_back(Vertex{ position, texCoords });
+			vertices.emplace_back(Vertex{ position, texCoords, normal, tangent });
 		}
 	}
 
