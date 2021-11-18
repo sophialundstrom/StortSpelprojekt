@@ -74,7 +74,52 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 	fs.write(std::string(std::to_string(time)).c_str(), sizeof(std::string(std::to_string(time)).c_str()));
 	fs.write(std::string("\n").c_str(), sizeof(std::string("\n").c_str()));
 	fs.close();
-	exit(0);
+	//exit(0);
+}
+
+void Grid::UpdateGrid(Vector3 worldPoint, std::vector<std::shared_ptr<Collider>>& colliders)
+{
+	std::vector<Node*> neighbours;
+
+	Node* node = NodeFromWorldPoint(worldPoint);
+	for (int x = -2; x <= 2; x++) {
+		for (int y = -2; y <= 2; y++) {
+			if (x == 0 && y == 0)
+				continue;
+			for (auto& collider : colliders)
+			{
+				if (Vector3::Distance(worldPoint, collider->GetPosition()) < 50.0f)
+				{
+					auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+					if (box)
+					{
+						if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), box->GetBounds()))
+						{
+							grid[x][y].walkable = false;
+						}
+						else
+						{
+							grid[x][y].walkable = false;
+						}
+						continue;
+					}
+					auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
+					if (sphere)
+					{
+						if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), sphere->GetBounds()))
+						{
+							grid[x][y].walkable = false;
+						}
+						else
+						{
+							grid[x][y].walkable = false;
+						}
+						continue;
+					}
+				}
+			}
+		}
+	}
 }
 
 Node* Grid::NodeFromWorldPoint(Vector3 worldPoint)
