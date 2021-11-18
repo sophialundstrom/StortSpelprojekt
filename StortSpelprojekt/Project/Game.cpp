@@ -16,12 +16,6 @@ void Game::Update()
 
 	scene.GetCamera()->Update();
 
-	drawablesToBeRendered.clear();
-	frustrumCollider.Update(*scene.GetCamera());
-	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
-	std::cout << drawablesToBeRendered.size() << std::endl;
-	
-
 	CheckItemCollision();
 
 	CheckNearbyCollision();
@@ -35,6 +29,8 @@ void Game::Update()
 	UpdateAndHandleLoot();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
+
+	UpdateQuadTree(); //Something in here makes the game run twice as fast
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
@@ -158,9 +154,10 @@ void Game::Initialize()
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
 	
-	actualDrawablePipeline = scene.GetDrawables();
 
+	
 	//Transfer drawables to quadTree
+	actualDrawablePipeline = scene.GetDrawables();
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
@@ -839,4 +836,12 @@ void Game::CheckNearbyEnemies()
 			}
 		}
 	}
+}
+
+void Game::UpdateQuadTree()
+{
+	drawablesToBeRendered.clear();
+	frustrumCollider.Update(*scene.GetCamera());
+	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+	std::cout << drawablesToBeRendered.size() << std::endl;
 }

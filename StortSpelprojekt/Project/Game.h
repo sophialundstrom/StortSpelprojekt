@@ -32,6 +32,8 @@ class Game : public ApplicationState
 {
 private:
     GameState state = GameState::ACTIVE;
+
+    //QuadTreeStuff stuff
     QuadTree* quadTree;
     FrustrumCollider frustrumCollider;
     std::map<std::string, std::shared_ptr<Drawable>> drawablesToBeRendered;
@@ -123,6 +125,7 @@ private:
     void CheckItemCollision();
     void CheckQuestInteraction();
     void CheckNearbyEnemies();
+    void UpdateQuadTree();
 
     void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
     void UpdateInventoryUI();
