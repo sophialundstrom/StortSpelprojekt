@@ -479,7 +479,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	animatedModelRenderer(FORWARD, true),
 	water(5000), terrain(2)
 {
-	QuestLog::CreateQuests();
+	//QuestLog::CreateQuests();
 	//QuestLog::Load("Default");
 
 	//LOAD SCENE
@@ -488,13 +488,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(100, { 1, 1, 1, 1 }, 4, 4);
 
-
 	//INGAME CANVAS
 	auto ingameCanvas = std::make_shared<Canvas>();
 	ingameCanvas->HideCursor();
 	ingameCanvas->AddImage({ 250, 365 }, "QuestBorder", "QuestBorder.png");
 	ingameCanvas->AddText({ 250, 65 }, "AQ", "Active Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
-
 	//const UINT offset = 162;
 	//for (UINT i = 0; i < ARRAYSIZE(Item::Names); ++i)
 	//{
@@ -561,8 +559,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	player->GetFrustum()->SetParent(player);
 
 	colliderRenderer.Bind(scene.GetCamera()->GetCamRay());
-	
-
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
@@ -592,7 +588,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPC
-	AddFriendlyNPCs();
+	//AddFriendlyNPCs();
 
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });

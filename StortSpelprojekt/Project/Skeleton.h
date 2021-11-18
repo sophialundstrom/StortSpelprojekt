@@ -2,7 +2,7 @@
 #include "Math.h"
 #include <vector>
 
-#define MAX_JOINTS 20
+#define MAX_JOINTS 30
 
 struct Joint
 {

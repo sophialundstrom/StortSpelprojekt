@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows, const UINT& maxArrows)
-	:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
+	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
 {
 	isRightPressed = false;
 	isLeftPressed = false;
@@ -19,7 +19,7 @@ Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> i
 
 	UpdateHealthUI();
 
-	PlayAnimation("Idle", true, 0.2f);
+	PlayAnimation("Run", true);
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 }
@@ -158,7 +158,7 @@ void Player::Update(HeightMap* heightMap)
 			SoundEffect::SetVolume(0.5, 2);
 			SoundEffect::StartAudio(2);
 			preJumpGroundLevel = currentGroundLevel; 
-			PlayAnimation("Jump", false, 0.5f);
+			//PlayAnimation("Jump", false, 0.5f);
 		}
 	}
 
@@ -166,8 +166,8 @@ void Player::Update(HeightMap* heightMap)
 	{
 		airTime += Time::GetDelta() * 8.0f;
 
-		if (airTime >= 1.5f)
-			PlayAnimation("Falling", true);
+		/*if (airTime >= 1.5f)
+			PlayAnimation("Falling", true);*/
 
 		/*else
 			std::cout << "Startup" << std::endl;*/
@@ -216,10 +216,10 @@ void Player::Update(HeightMap* heightMap)
 	if (sinceLastShot > shootingAnimationLenght) {
 
 		bool hasMoved = (position == lastPosition) ? false : true;
-		if (!hasMoved)
-			PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
-		else if (hasMoved && !jumping)
-			PlayAnimation("Walk", true); // ADD WALKING ANIMATION
+		//if (!hasMoved)
+		//	PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
+		//else if (hasMoved && !jumping)
+		//	PlayAnimation("Walk", true); // ADD WALKING ANIMATION
 		//else if (jumping)
 			 // ADD IN AIR JUMP ANIMATION
 	}
