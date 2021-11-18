@@ -30,7 +30,7 @@ void Game::Update()
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
-	UpdateQuadTree(); //Something in here makes the game run twice as fast
+	//UpdateQuadTree(); //Something in here makes the game run twice as fast
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
