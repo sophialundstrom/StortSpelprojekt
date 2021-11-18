@@ -27,8 +27,6 @@ private:
 	float shootDeelayPattern[3];
 	int shootPatternIndex = 0;
 
-	void Shoot(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const Vector3& direction, Vector3 startPos, Vector3 rotation);
-
 	ModelRenderer* mRend = nullptr;
 	ColliderRenderer* cRend = nullptr;
 	float lastShot = 0.f;
@@ -41,7 +39,6 @@ public:
 	void Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void CheckPlayerCollision(std::shared_ptr<Player> player);
-	//bool CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynamic = false);
 private:
 	void WeaponSlash();
 };

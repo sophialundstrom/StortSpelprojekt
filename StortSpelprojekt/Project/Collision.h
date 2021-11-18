@@ -298,15 +298,11 @@ namespace Collision
 
 		if (ray.length == 0)
 			result.didHit = sphere.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
-
 		else
 		{
-			/*if ((sphere.GetPosition() - ray.origin).Length() > ray.length)
+			result.didHit = sphere.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
+			if (result.distance > ray.length)
 				result.didHit = false;
-			else*/
-				result.didHit = sphere.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
-				if (result.distance > ray.length)
-					result.didHit = false;
 		}
 
 		return result;
@@ -322,15 +318,11 @@ namespace Collision
 
 		if (ray.length == 0)
 			result.didHit = box.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
-
 		else
 		{
-			/*if ((box.GetPosition() - ray.origin).Length() > ray.length)
+			result.didHit = box.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
+			if (result.distance > ray.length)
 				result.didHit = false;
-			else*/
-				result.didHit = box.GetBounds().Intersects(ray.origin, ray.direction, result.distance);
-				if (result.distance > ray.length)
-					result.didHit = false;
 		}
 
 		return result;

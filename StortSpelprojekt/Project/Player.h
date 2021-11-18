@@ -167,7 +167,6 @@ public:
 		std::cout << "BARBARIANS KILLED " << stats.barbariansKilled << std::endl;
 	}
 
-	//bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 	bool GetGameOver() { return this->gameOver; }
 	std::shared_ptr<BoundingBox> GetBounds() { return bounds; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
@@ -177,10 +176,7 @@ public:
 
 	void Save(const std::string file);
 
-	bool CheckArrowHit(std::shared_ptr<Collider> collider, bool isDynamic = false);
-
 	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
-	void MoveTowards(const Vector3& position);
 	void ResetToLastPosition() { position = lastPosition; }
 	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
 	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
