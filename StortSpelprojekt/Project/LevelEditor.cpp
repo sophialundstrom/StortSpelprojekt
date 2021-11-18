@@ -16,6 +16,7 @@ void LevelEditor::BindDrawables()
 			idRenderer.Bind(model);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 			component->AddName(name);
+			totalVertexCount += model->mesh.vertexCount;
 		}
 
 		auto box = std::dynamic_pointer_cast<BoundingBox>(drawable);
@@ -26,6 +27,7 @@ void LevelEditor::BindDrawables()
 			volume->SetPosition(box->GetPosition());
 			volume->SetRotation(box->GetRotation());
 			volume->SetScale(box->GetScale());
+			volume->SetName(name);
 			scene.GetDrawables()[name] = volume;
 			scene.GetObjectNames().push_back(name);
 			volume->SetID((UINT)scene.GetObjectNames().size());
@@ -43,6 +45,7 @@ void LevelEditor::BindDrawables()
 			volume->SetPosition(sphere->GetPosition());
 			volume->SetRotation(sphere->GetRotation());
 			volume->SetScale(sphere->GetScale());
+			volume->SetName(name);
 			scene.GetDrawables()[name] = volume;
 			scene.GetObjectNames().push_back(name);
 			volume->SetID((UINT)scene.GetObjectNames().size());
@@ -74,12 +77,12 @@ void LevelEditor::Load(const std::string& file)
 	std::string fileName = path.stem().string();
 	fileName = scene.AddModel(fileName, path.string());
 	auto model = scene.Get<Model>(fileName);
-	scene.GetObjectNames().push_back(model->GetName());
 	model->SetID((UINT)scene.GetObjectNames().size());
 	idRenderer.Bind(model);
 	modelRenderer.Bind(model);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(fileName);
+	totalVertexCount += model->mesh.vertexCount;
 }
 
 void LevelEditor::DuplicateObject()
@@ -103,16 +106,14 @@ void LevelEditor::DuplicateObject()
 		std::string modelName = model->GetName();
 
 		scene.AddModel(modelName, model);
-		scene.GetObjectNames().push_back(modelName);
 		model->SetID((UINT)scene.GetObjectNames().size());
 		idRenderer.Bind(model);
 		modelRenderer.Bind(model);
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->AddName(modelName);
-
+		totalVertexCount += model->mesh.vertexCount;
 		selectedObject = modelName;
 	}
-		
 }
 
 void LevelEditor::DuplicateVolume()
@@ -189,7 +190,7 @@ void LevelEditor::CreateBoundingBox()
 			numInstances++;
 	std::string name = "BoxVolume";
 	if (numInstances > 0)
-		name += std::to_string(numInstances) + "b";
+		name += std::to_string(numInstances);
 	
 	scene.AddBoundingVolume(name, box);
 	selectedObject = name;
@@ -222,7 +223,7 @@ void LevelEditor::CreateBoundingSphere()
 			numInstances++;
 	std::string name = "SphereVolume";
 	if (numInstances > 0)
-		name += std::to_string(numInstances) + "b";
+		name += std::to_string(numInstances);
 
 	scene.AddBoundingVolume(name, sphere);
 	selectedObject = name;
@@ -382,7 +383,6 @@ void LevelEditor::Update()
 		{
 			RemoveItem(selectedObject);
 			ClearToolUI();
-			selectedObject = "";
 		}
 	}
 
@@ -455,8 +455,6 @@ void LevelEditor::Render()
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(FORWARD, false),
 	terrainRenderer(FORWARD),
-	animatedModelRenderer(FORWARD, false),
-	colliderRenderer(FORWARD),
 	water(5000)
 {
 	//WINDOWS
@@ -464,6 +462,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];
 		window.AddTextComponent("FPS");
+		window.AddTextComponent("SCENE VERTEX COUNT");
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
@@ -477,6 +476,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		AddWindow("GAME OBJECT");
 		auto& window = windows["GAME OBJECT"];
 		window.AddTextComponent("ObjectName");
+		window.AddTextComponent("VertexCount");
 		window.AddTextComponent("Position");
 		window.AddSliderFloatComponent("X", -700, 700, 0, false);
 		window.AddSliderFloatComponent("Y", -50, 200, 0, false);
@@ -522,22 +522,127 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	wRatioX = (float)clientWidth / GetSystemMetrics(SM_CXSCREEN);
 	wRatioY = (float)clientHeight / GetSystemMetrics(SM_CYSCREEN);
 
-	terrain = new Terrain();
+	terrain = new Terrain(2);
 
 	(void*)Run();
 }
 
-void LevelEditor::RemoveItem(const std::string name)
+void LevelEditor::RemoveItem(std::string name)
 {
-	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
-	component->RemoveName(name);
-	auto model = scene.Get<Drawable>(name);
-	volumeRenderer.Unbind(model);
-	modelRenderer.Unbind(model);
-	idRenderer.Unbind(model);
+	selectedObject = "";
+	std::vector<std::shared_ptr <Drawable>> sameNameArray;
 
-	scene.DeleteDrawable(name);
-	scene.GetObjectNames()[model.get()->GetID() -1] = "";
+	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+	component->Clear();
+
+	auto deleted = scene.Get<Drawable>(name);
+
+	scene.GetObjectNames().clear();
+
+	auto model = std::dynamic_pointer_cast<Model>(deleted);
+	if (model)
+	{
+		totalVertexCount -= model->mesh.vertexCount;
+		modelRenderer.Unbind(model);
+		idRenderer.Unbind(model);
+		scene.DeleteDrawable(name);
+		name = Resources::Inst().GetBufferNameFromID(model->mesh.bufferID);
+
+		auto& drawables = scene.GetDrawables();
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			if (drawableName.find(name) != std::string::npos)
+				sameNameArray.emplace_back(drawable);
+		}
+
+		for (auto& drawable : sameNameArray)
+		{
+			scene.DeleteDrawable(drawable->GetName());
+		}
+
+		for (int i = 0; i < sameNameArray.size(); i++)
+		{
+			std::string newName;
+			if (i != 0)
+				newName = name + std::to_string(i);
+			else
+				newName = name;
+			sameNameArray[i]->SetName(newName);
+			drawables[newName] = sameNameArray[i];
+		}
+
+		auto& names = scene.GetObjectNames();
+		int ID = 0;
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			drawable->SetID(ID + 1);
+			ID++;
+			names.emplace_back(drawableName);
+			component->AddName(drawableName);
+		}
+	}
+
+	else
+	{
+		auto box = std::dynamic_pointer_cast<BoxVolume>(deleted);
+		if (box)
+		{
+			volumeRenderer.Unbind(box);
+			idRenderer.Unbind(box);
+			scene.DeleteDrawable(name);
+			name = "BoxVolume";
+		}
+
+		auto sphere = std::dynamic_pointer_cast<SphereVolume>(deleted);
+		if (sphere)
+		{
+			volumeRenderer.Unbind(sphere);
+			idRenderer.Unbind(sphere);
+			scene.DeleteDrawable(name);
+			name = "SphereVolume";
+		}
+
+		auto& drawables = scene.GetDrawables();
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			if (drawableName.find(name) != std::string::npos)
+				sameNameArray.emplace_back(drawable);
+		}
+
+		for (auto& drawable : sameNameArray)
+		{
+			scene.DeleteDrawable(drawable->GetName());
+		}
+
+		for (int i = 0; i < sameNameArray.size(); i++)
+		{
+			std::string newName;
+			if (i != 0)
+				newName = name + std::to_string(i);
+			else
+				newName = name;
+			sameNameArray[i]->SetName(newName);
+			drawables[newName] = sameNameArray[i];
+		}
+
+		for (int i = 0; i < sameNameArray.size(); i++)
+			Print(sameNameArray[i]->GetName());
+
+		for (auto& [drawableName, drawable] : drawables)
+			Print(drawable->GetName());
+	
+		auto& names = scene.GetObjectNames();
+		int ID = 0;
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			drawable->SetID(ID + 1);
+			ID++;
+			names.emplace_back(drawableName);
+			component->AddName(drawableName);
+		}
+	}
+
+
 }
 
 void LevelEditor::ClearToolUI()
@@ -545,6 +650,7 @@ void LevelEditor::ClearToolUI()
 	auto& window = windows["GAME OBJECT"];
 
 	window.SetValue<TextComponent, std::string>("ObjectName", "");
+	window.SetValue<TextComponent, std::string>("VertexCount", "");
 	window.SetValue<SliderFloatComponent, float>("X", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Y", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Z", 0.0f);
@@ -566,6 +672,11 @@ void LevelEditor::UpdateToolUI(std::string name)
 	auto& window = windows["GAME OBJECT"];
 
 	window.SetValue<TextComponent, std::string>("ObjectName", name);
+	auto modelmodel = std::dynamic_pointer_cast<Model>(model);
+	if (modelmodel)
+	{
+		window.SetValue<TextComponent, std::string>("VertexCount", "VertexCount: " + std::to_string(modelmodel->mesh.vertexCount));
+	}
 
 	window.SetValue<SliderFloatComponent, float>("X", model->GetPosition().x);
 	window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
@@ -617,6 +728,11 @@ APPSTATE LevelEditor::Run()
 			frames = 0;
 			time = 0.0f;
 		}
+		if (totalVertexCount > totalVertexCountLastFrame || totalVertexCount < totalVertexCountLastFrame)
+		{
+			window.SetValue<TextComponent, std::string>("SCENE VERTEX COUNT", "SCENE VERTEX COUNT: " + std::to_string(totalVertexCount));
+			totalVertexCountLastFrame = totalVertexCount;
+		}
 		if (window.GetValue<ButtonComponent>("LOAD FBX"))
 			Load(FileSystem::LoadFile("Models"));
 
@@ -650,12 +766,15 @@ APPSTATE LevelEditor::Run()
 		auto &window = windows["GAME OBJECT"];
 		if (window.GetValue<ButtonComponent>("Duplicate"))
 		{
-			auto selected = scene.Get<Drawable>(selectedObject);
-			auto model = std::dynamic_pointer_cast<Model>(selected);
-			if (model)
-				DuplicateObject();
-			else
-				DuplicateVolume();
+			if (selectedObject != "")
+			{
+				auto selected = scene.Get<Drawable>(selectedObject);
+				auto model = std::dynamic_pointer_cast<Model>(selected);
+				if (model)
+					DuplicateObject();
+				else
+					DuplicateVolume();
+			}
 		}
 	}
 
