@@ -28,24 +28,13 @@ VolumeRenderer::VolumeRenderer()
 
 	Print("SUCCEEDED LOADING SHADERS", "VOLUME RENDERER");
 
-	//BLEND STATE
-	D3D11_BLEND_DESC blendDesc = {};
-	blendDesc.RenderTarget[0].BlendEnable = true;
-	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
-	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].RenderTargetWriteMask = 0X0f;
-	HRESULT hr = Graphics::Inst().GetDevice().CreateBlendState(&blendDesc, &blendState);
-
+	
 
 	//INPUT LAYOUT
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
 	{ {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0} };
 
-	hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE INPUT LAYOUT", "VOLUME RENDERER");
@@ -65,7 +54,6 @@ VolumeRenderer::~VolumeRenderer()
 	vertexShader->Release();
 	pixelShader->Release();
 	inputLayout->Release();
-	blendState->Release();
 	sphereVertexBuffer->Release();
 	boxVertexBuffer->Release();
 }
@@ -79,7 +67,7 @@ void VolumeRenderer::Render()
 	Graphics::Inst().GetContext().IASetInputLayout(inputLayout);
 
 	//BLEND STATE
-	Graphics::Inst().GetContext().OMSetBlendState(blendState, nullptr, 0Xffffffff);
+	Graphics::Inst().EnableAlpha();
 
 	//TOPOLOGY
 	Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -119,5 +107,5 @@ void VolumeRenderer::Render()
 		}
 	}
 
-	Graphics::Inst().GetContext().OMSetBlendState(nullptr, nullptr, 0Xffffffff);
+	Graphics::Inst().DisableAlpha();
 }
