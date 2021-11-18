@@ -1,14 +1,13 @@
 #include "Player.h"
 
-Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas/*, std::vector<std::shared_ptr<Arrow>> arrows*/, const UINT& maxArrows)
+Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, const UINT& maxArrows)
 	:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
 {
 	isRightPressed = false;
 	isLeftPressed = false;
 
-	arrowHandler.SetPullbackFactor(0.6f);
+	arrowHandler.SetPullbackFactor(1.f);
 
-	//this->arrows = arrows;
 	bounds = std::make_shared<BoundingBox>();
 
 	bounds->SetScale(0.8f, 2.5f, 0.8f);
@@ -73,21 +72,6 @@ float Get2DAngle(Vector2 a, Vector2 b)
 
 	return acos(a.x * b.x + a.y * b.y);
 };
-
-//void Player::Shoot(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const Vector3& direction, Vector3 startPos, Vector3 rotation)
-//{
-//	std::shared_ptr<Arrow> arrow = std::make_shared<Arrow>();
-//	arrow->SetRotation({ rotation.x, rotation.y + PI, rotation.z });
-//	arrow->direction = direction;
-//	arrow->SetPosition(startPos);
-//	arrow->isShot = true;
-//	arrow->GetCollider()->SetParent(arrow);
-//	arrow->GetCollider()->SetScale(0.4f);
-//	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
-//	mRenderer.Bind(arrow);
-//	cRenderer.Bind(arrow->GetCollider());
-//	arrows.emplace_back(arrow);
-//}
 
 void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
 {
@@ -252,16 +236,8 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 			if (Event::LeftIsClicked() && numArrows > 0)
 			{
 				arrowHandler.AddArrow(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-				//Shoot(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 } );
 				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				int currentIndex = 0;
-				//bool isPlayerShootingArrow = false;
-				//while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
-				//{
-				//	isPlayerShootingArrow = arrows.at(currentIndex)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-				//	lastClick = Time::Get();
-				//	currentIndex++;
-				//}
 				numArrows--;
 				sinceLastShot = 0.f;
 				lastClick = Time::Get();
@@ -283,12 +259,11 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	frustum->Update();
 }
 
-void Player::TakeDamage(const int& damage)
+void Player::TakeDamage()
 {
 	if (stats.healthPoints - 1 == 0)
 	{
 		stats.healthPoints--;
-		TakeDamage();
 		std::cout << "GAME OVER" << std::endl;
 		UpdateHealthUI();
 		gameOver = true;
@@ -297,7 +272,7 @@ void Player::TakeDamage(const int& damage)
 	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
 	//SoundEffect::SetVolume(0.5, 2);
 	//SoundEffect::StartAudio(2);
-	stats.healthPoints--;
+	//stats.healthPoints--;
 	
 	UpdateHealthUI();
 }
@@ -386,35 +361,6 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 		bounds->Update();
 	}
 }
-
-//bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
-//{
-//	bool collided = false;
-//	if (Collision::Intersection(this->bounds, arrow->GetCollider()))
-//	{
-//		collided = true;
-//		//Print("ARROW HIT PLAYER");
-//		//arrow->DisableArrow();
-//		if (stats.healthPoints == 0)
-//		{
-//			return collided;
-//		}
-//		if (stats.healthPoints - 1 == 0)
-//		{
-//			stats.healthPoints--;
-//			std::cout << "GAME OVER" << std::endl;
-//			UpdateHealthUI();
-//			gameOver = true;
-//			return collided;
-//		}
-//		//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
-//		//SoundEffect::SetVolume(0.5, 2);
-//		//SoundEffect::StartAudio(2);
-//		stats.healthPoints--;
-//		UpdateHealthUI();
-//	}
-//	return collided;
-//}
 
 void Player::Save(const std::string file)
 {

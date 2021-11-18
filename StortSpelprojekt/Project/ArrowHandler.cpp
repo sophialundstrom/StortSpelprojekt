@@ -6,13 +6,8 @@ void ArrowHandler::AddArrow(ModelRenderer& mRenderer, ColliderRenderer& cRendere
     arrow->SetRotation({ rotation.x, rotation.y + PI, rotation.z });
     arrow->direction = direction;
     arrow->SetPosition(startPos);
-    arrow->isShot = true;
-    //arrow->GetCollider()->SetParent(arrow);
-    //arrow->GetCollider()->SetScale(0.4f);
-    //arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
     cRenderer.Bind(arrow->rayCollider);
     mRenderer.Bind(arrow);
-    //cRenderer.Bind(arrow->GetCollider());
     arrows.emplace_back(arrow);
 }
 
@@ -21,43 +16,35 @@ void ArrowHandler::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
     for (int i = 0; i < arrows.size(); i++)
     {
         arrows[i]->Update();
+        if (!arrows[i]->canCollide)
+            PrintS("CANT COLLIDE!");
 
         if (arrows[i]->isDestroyed)
         {
-            std::cout << "Arrow destroyed!" << std::endl;
-            //cRenderer.Unbind(arrows[i]->GetCollider());
             cRenderer.Unbind(arrows[i]->rayCollider);
             mRenderer.Unbind(arrows[i]);
-            arrows[i] = arrows[arrows.size() - 1];
+            //arrows.erase(arrows.begin() + i);
+            arrows[i] = std::move(arrows[arrows.size() - 1]);
             arrows.resize(arrows.size() - 1);
         }
     }
 }
 
-bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDynamic)
+bool ArrowHandler::CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<Collider> collider, bool isDynamic)
 {
-    for (auto& arrow : arrows)
-    {
-        if (!arrow->canCollide)
-            continue;
+    /*for (auto& arrow : arrows)
+    {*/
+        //if (!arrow->canCollide)
+        //    continue;
 
-        bool hit = false;
-
-        auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
         Collision::RayResults rayResult;
         Vector3 point;
+
+        auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
         if (box)
         {
             rayResult = Collision::Intersection(*box, *arrow->rayCollider);
-
             point = arrow->rayCollider->origin + arrow->rayCollider->direction * rayResult.distance;
-
-            //if (Collision::Contains(*box, point))
-            //{
-            //    Vector3 temp = arrow->rayCollider->origin + arrow->rayCollider->direction * arrow->rayCollider->length;
-            //    //std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
-            //    hit = true;
-            //}
         }
 
         auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
@@ -65,43 +52,31 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Collider> collider, bool isDyn
         {
             rayResult = Collision::Intersection(*sphere, *arrow->rayCollider);
             point = arrow->rayCollider->origin + arrow->rayCollider->direction * rayResult.distance;
-            //if (Collision::Contains(*sphere, point))
-            //{
-            //    Vector3 temp = arrow->rayCollider->origin + arrow->rayCollider->direction * arrow->rayCollider->length;
-            //    //std::cout << "BOX CONTAINS: " << temp.x << " " << temp.y << " " << temp.z << std::endl;
-            //    hit = true;
-            //}
-
         }
 
         if (rayResult.didHit)
         {
-            SoundEffect::AddAudio(L"Audio/arrowHit.wav", 2);
-            SoundEffect::SetVolume(0.8, 2);
-            SoundEffect::StartAudio(2);
+            //SoundEffect::AddAudio(L"Audio/arrowHit.wav", 2);
+            //SoundEffect::SetVolume(0.8, 2);
+            //SoundEffect::StartAudio(2);
             if (isDynamic)
             {
                 arrow->isDestroyed = true;
                 arrow->isStuck = true;
-                arrow->canCollide = true;
-                std::cout << "HIT on dynamic object" << std::endl;
+                arrow->canCollide = false;
             }
             else
             {
-                std::cout << "DISTANCE THIS FRAME: " << rayResult.distance << std::endl;
                 Vector3 pullBackVector = (point - arrow->GetPosition()) * this->pullbackFactor;
-                //std::cout << "POINT: " << point.x << " " << point.y << " " << point.z << std::endl;
-                //std::cout << "ARROW POS: " << arrow->GetPosition().x << " " << arrow->GetPosition().y << " " << arrow->GetPosition().z << std::endl;
-                std::cout << "PULLBACK: " << pullBackVector.x << " " << pullBackVector.y << " " << pullBackVector.z << std::endl;
                 arrow->SetPosition(arrow->GetPosition() + pullBackVector);
                 arrow->isStuck = true;
                 arrow->canCollide = false;
             }
         }
-        return rayResult.didHit;
+        
+        return rayResult.didHit; // this creates the problem. if an arrow returns false (misses) no other will hit either. if it hits all others will hit.
 
-
-    }
+    //}
 
     return false;
 }
@@ -111,8 +86,6 @@ void ArrowHandler::ClearArrows(ModelRenderer& mRenderer, ColliderRenderer& cRend
     for (auto& arrow : arrows)
     {
         mRenderer.Unbind(arrow);
-        //cRenderer.Unbind(arrow->GetCollider());
         cRenderer.Unbind(arrow->rayCollider);
-
     }
 }

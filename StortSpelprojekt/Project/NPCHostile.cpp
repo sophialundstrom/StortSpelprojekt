@@ -9,6 +9,7 @@ HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, 
     mRend = &mRenderer;
     cRend = &cRenderer;
 
+    arrowHandler.SetPullbackFactor(0.6f);
 }
 
 HostileNPC::HostileNPC(const Model& model)
@@ -128,10 +129,16 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
 
 void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
 {
-    if (arrowHandler.CheckCollision(player->GetBounds(), true))
+    for (auto& arrow : arrowHandler.arrows)
     {
-        std::cout << "PLAYER HIT" << std::endl;
-        player->TakeDamage(2);
+        if (!arrow->canCollide)
+            continue;
+        if (arrowHandler.CheckCollision(arrow, player->GetBounds(), true))
+        {
+            std::cout << "PLAYER HIT" << std::endl;
+            player->TakeDamage();
+        }
+        
     }
 }
 

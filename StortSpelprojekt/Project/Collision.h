@@ -3,6 +3,7 @@
 #include <DirectXCollision.h>
 #include "DirectXHelp.h"
 #include "Math.h"
+#include "Event.h"
 
 enum class ColliderType { SPHERE, BOX, FRUSTUM, RAY };
 
@@ -309,10 +310,22 @@ namespace Collision
 	}
 
 	//RAY LENGTH = 0 WILL CHECK FOR INTERSECTION INFINITELY
-	inline RayResults Intersection(const BoundingBox& box, const RayCollider& ray)
+	inline RayResults Intersection(/*std::shared_ptr<Player> player,*/ const BoundingBox& box, const RayCollider& ray/*, bool print = true*/)
 	{
 		RayResults result;
+		//PrintVector3("DIR", ray.direction);
+		//if (print)
+		//{
 
+		//	PrintVector3("ORI", ray.origin);
+		//	PrintVector3("BOX", box.GetPosition());
+		//	//if(player != nullptr)
+		//		//PrintNumber("", ((player->GetPosition() + box.GetPosition()) - ray.origin).Length());
+		//	if ((box.GetPosition() - ray.origin).Length() < 6.f || Event::KeyIsPressed('5'))
+		//	{
+		//		PrintS("CHECKING INTERSECTION");
+		//	}
+		//}
 		if (ray.direction == Vector3(0.f, 0.f, 0.f))
 			return result;
 
@@ -324,7 +337,17 @@ namespace Collision
 			if (result.distance > ray.length)
 				result.didHit = false;
 		}
+		/*if (print)
+		{
 
+			if ((box.GetPosition() - ray.origin).Length() < 3.f)
+			{
+				PrintVector3("ORIGIN", ray.origin);
+				PrintVector3("DIRECTION", ray.direction);
+				PrintVector3("RAY WITH RESULT LENGTH", ray.origin + ray.direction * result.distance);
+				PrintVector3("RAY WITH OWN LENGTH", ray.origin + ray.direction * ray.length);
+			}
+		}*/
 		return result;
 	}
 

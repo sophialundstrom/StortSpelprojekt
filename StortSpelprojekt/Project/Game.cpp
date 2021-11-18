@@ -83,7 +83,7 @@ void Game::Options()
 
 void Game::HowToPlay()
 {
-	currentCanvas = canvases["HTP"];
+	currentCanvas = canvases["HOW TO PLAY"];
 }
 
 void Game::BacktoPause()
@@ -94,51 +94,6 @@ void Game::BacktoPause()
 void Game::MainMenu()
 {
 	mainMenu = true;
-}
-
-void Game::HoveringResume()
-{
-	canvases["PAUSED"]->GetImage("ResumeLeaves")->Show();
-}
-
-void Game::HoveringOptions()
-{
-	canvases["PAUSED"]->GetImage("OptionsLeaves")->Show();
-}
-
-void Game::HoveringHowToPlay()
-{
-	canvases["PAUSED"]->GetImage("HTPLeaves")->Show();
-}
-
-void Game::HoveringQuit()
-{
-	canvases["PAUSED"]->GetImage("QuitLeaves")->Show();
-}
-
-void Game::HoveringBackHowToPlay()
-{
-	canvases["HTP"]->GetImage("BackHTPLeaves")->Show();
-}
-
-void Game::HoveringBackQuit()
-{
-	canvases["QUIT"]->GetImage("BackQuitLeaves")->Show();
-}
-
-void Game::HoveringBackOptions()
-{
-	canvases["OPTIONS"]->GetImage("BackOptionsLeaves")->Show();
-}
-
-void Game::HoveringYes()
-{
-	canvases["QUIT"]->GetImage("YesLeaves")->Show();
-}
-
-void Game::HoveringNo()
-{
-	canvases["QUIT"]->GetImage("NoLeaves")->Show();
 }
 
 void Game::Initialize()
@@ -301,10 +256,23 @@ void Game::CheckNearbyCollision()
 	{
 		for (auto& hostile : hostiles)
 		{
-			hostile->GetArrowHandler().CheckCollision(collider);
+			for (auto& arrow : hostile->GetArrowHandler().arrows)
+			{
+				if (!arrow->canCollide)
+					continue;
+				hostile->GetArrowHandler().CheckCollision(arrow, collider);
+			}
 		}
 
-		player->GetArrowHandler().CheckCollision(collider);
+		
+		for (auto& arrow : player->GetArrowHandler().arrows)
+		{
+			if (!arrow->canCollide)
+				continue;
+
+			player->GetArrowHandler().CheckCollision(arrow, collider);
+		}
+
 		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
 		if (box)
 		{
@@ -317,6 +285,7 @@ void Game::CheckNearbyCollision()
 				
 
 			Collision::RayResults colliderResult = Collision::Intersection(*box, *scene.GetCamera()->GetCamRay());
+			
 			if (colliderResult.didHit)
 			{
 				if (colliderResult.distance < closestCamCollision)
@@ -516,45 +485,36 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 200.0f }, "INTERACT", "INTERACT [E]", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
 
 	ingameCanvas->AddImage({ (float)clientWidth / 2.0f, (float)clientHeight / 2 }, "CrossHair", "CrossHair.png");
-
+	
 
 	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 50 }, "ArrowCount", "Arrows:" + std::to_string(0), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 
-	// PAUSED CANVAS
+	//PAUSED CANVAS
 	auto pauseCanvas = std::make_shared<Canvas>();
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "APauseBackground", "PauseBackground.png", 1.0f, 1.0f);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "PauseBackground", "PauseBackground.png", 1.0f, 1.0f);
 	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 8.0f }, "PauseTitle", "PAUSED.png", 1.0f, 1.0f);
 
-	// RESUME
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "ResumeButton", 350, 50, UI::COLOR::GRAY, [this] { Resume(); }, [this] {HoveringResume(); });
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "Resume", "Resume.png", 1.0f, 1.0f);
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "ResumeLeaves", "ResumeLeaves.png", 1.0f, 1.0f);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "RESUME", 350, 95, UI::COLOR::GRAY, [this] { Resume(); });
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100}, "ResumeButton", "ResumeButton.png", 0.50f, 1.0f);
 
-	// HTP
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "HTPButton", 450, 50, UI::COLOR::GRAY, [this] { HowToPlay(); }, [this] {HoveringHowToPlay(); });
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "HTP", "HowToPlay.png", 1.0f, 1.0f);
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "HTPLeaves", "HowToPlayLeaves.png", 1.0f, 1.0f);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlayButton", "HowToPlayButton.png", 0.50f, 1.0f);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlay", 350, 95, UI::COLOR::GRAY, [this] { HowToPlay(); });
 
-	// QUIT
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "Quit", "Quit.png", 1.0f, 1.0f);
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "QuitLeaves", "QuitLeaves.png", 1.0f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "QuitButton", 180, 50, UI::COLOR::GRAY, [this] { MainMenu(); }, [this] {HoveringQuit(); });
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "BackToMainMenu", "MainMenuButton.png", 0.50f, 1.0f);
+	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100}, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, [this] { MainMenu(); });
 
 	canvases["PAUSED"] = pauseCanvas;
 
 	//HOW TO PLAY
 	auto howToPlayCanvas = std::make_shared<Canvas>();
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "ABPauseBackground", "PauseBackground.png", 1.0f, 1.0f);
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 350 }, "HowToPlayTitle", "HowToPlay.png", 2.0f, 1.0f);
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 350 }, "HowToPlayTitleLeaves", "HowToPlayLeaves.png", 2.0f, 1.0f);
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "BackHTP", "Back.png", 1.0f, 1.0f);
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "BackHTPLeaves", "BackLeaves.png", 1.0f, 1.0f);
-	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "HowToPlayBackButton", 180, 50, UI::COLOR::GRAY, [this] { BacktoPause(); }, [this] {HoveringBackHowToPlay(); });
+	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "ControlImage", "Controls.png", 2.0f, 1.0f);
+	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackHowToPlay", "BackButton.png", 0.5f, 1.0f);
+	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackButtonHowToPlay", 340, 90, UI::COLOR::GRAY, [this] { BacktoPause(); });
 
-	canvases["HTP"] = howToPlayCanvas;
+	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
 	canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
 
@@ -579,9 +539,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -107.5, 20.0, -608.5 }, scene, particleRenderer);
-	building->SetRotation(0, -DirectX::XM_PI, 0);
-	building->SetScale(5.85);
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
+	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
+	building->SetScale(5);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
@@ -597,7 +557,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -91, 20, -593 });
 	AddItem(WOOD, { -85, 20, -608 });
 
-	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { Vector3(5.686, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+	//AddHostileNPC("BarbarianBow", { Vector3(0, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(15,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
@@ -610,7 +571,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	friendlyNPC->AddQuestID(6);
 
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
-	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38, 20.37, -574.5 });
+	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
 	particleRenderer.Bind(campFireSystem);
 	
 	//Audio::AddAudio(L"Audio/Sonrie.wav", 0);
@@ -628,18 +589,8 @@ Game::~Game()
 
 APPSTATE Game::Run()
 {
-
 	if (state != GameState::PAUSED)
 		Update();
-
-	if (state == GameState::PAUSED)
-	{
-		canvases["PAUSED"]->GetImage("ResumeLeaves")->Hide();
-		canvases["PAUSED"]->GetImage("HTPLeaves")->Hide(); 
-		canvases["HTP"]->GetImage("BackHTPLeaves")->Hide();
-
-
-	}
 
 	currentCanvas->Update();
 
@@ -681,6 +632,13 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('2'))
 		{
 			Graphics::Inst().DeactivateWireframe();
+			lastClick = Time::Get();
+		}
+
+		if (Event::KeyIsPressed('V'))
+		{
+			PrintNumber("Player Arrows", player->GetArrowHandler().arrows.size());
+			PrintNumber("Barb Arrows", hostiles[0]->GetArrowHandler().arrows.size());
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('K'))
@@ -800,34 +758,43 @@ void Game::CheckNearbyEnemies()
 		
 		hostiles[i]->Update(modelRenderer, colliderRenderer, player);
 
-		
 		hostiles[i]->CheckPlayerCollision(player);
-		//bool hit = player->CheckArrowHit(hostiles[i]->GetCollider(), true);
-		bool hit = player->GetArrowHandler().CheckCollision(hostiles[i]->GetCollider(), true);
-		
-		if (hit)
+
+		for (auto& arrow : player->GetArrowHandler().arrows)
 		{
-			std::cout << "HIT BARB" << std::endl;
-			//SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
-			//SoundEffect::SetVolume(0.5, 2);
-			//SoundEffect::StartAudio(2);
-			hostiles[i]->TakeDamage();
-			if (hostiles[i]->IsDead())
+			if (!arrow->canCollide)
+				continue;
+
+			bool isDead = false;
+			// CRASHES HERE IF TWO ARROWS HIT IT IN THE SAME FRAME...
+			bool hit = player->GetArrowHandler().CheckCollision(arrow, hostiles[i]->GetCollider(), true);
+
+			if (hit)
 			{
-				std::cout << "BARB DEAD" << std::endl;
-				//SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
-				//SoundEffect::SetVolume(0.8, 2);
+				std::cout << "BARBARIAN " << i << " HIT!" << std::endl;
+				//SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
+				//SoundEffect::SetVolume(0.5, 2);
 				//SoundEffect::StartAudio(2);
 				hostiles[i]->TakeDamage();
-				player->Stats().barbariansKilled++;
-				AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0,-3,0));
-				hostiles[i]->GetArrowHandler().ClearArrows(modelRenderer, colliderRenderer);
-				colliderRenderer.Unbind(hostiles[i]->GetCollider());
-				modelRenderer.Unbind(hostiles[i]);
-				scene.DeleteDrawable(hostiles[i]->GetName());
-				hostiles[i] = hostiles[hostiles.size() - 1];
-				hostiles.resize(hostiles.size() - 1);
+				if (hostiles[i]->IsDead())
+				{
+					//SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
+					//SoundEffect::SetVolume(0.8, 2);
+					//SoundEffect::StartAudio(2);
+					hostiles[i]->TakeDamage();
+					player->Stats().barbariansKilled++;
+					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));
+					hostiles[i]->GetArrowHandler().ClearArrows(modelRenderer, colliderRenderer);
+					colliderRenderer.Unbind(hostiles[i]->GetCollider());
+					modelRenderer.Unbind(hostiles[i]);
+					scene.DeleteDrawable(hostiles[i]->GetName());
+					hostiles[i] = hostiles[hostiles.size() - 1];
+					hostiles.resize(hostiles.size() - 1);
+					isDead = true;
+				}
 			}
+			if (isDead)
+				break;
 		}
 	}
 }

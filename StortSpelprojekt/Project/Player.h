@@ -145,13 +145,12 @@ private:
 		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
 	}
 
-	void Shoot(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const Vector3& direction, Vector3 startPos, Vector3 rotation);
 public:
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
 	void Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
-	void TakeDamage(const int& damage);
+	void TakeDamage();
 
 	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas/*, std::vector<std::shared_ptr<Arrow>> arrows*/, const UINT& maxArrows);
 
@@ -178,7 +177,6 @@ public:
 
 	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void ResetToLastPosition() { position = lastPosition; }
-	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
 	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
 	void SetClosestColliderToCam(float range)
 	{
