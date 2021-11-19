@@ -47,7 +47,11 @@ float4 main(PS_INPUT input) : SV_TARGET
     float4 color = diffuseTexture.Sample(wrapSampler, newTex) * 0.8;
     float3 normalMap = normalMapTex.Sample(wrapSampler, newTex).xyz;
 
-    normalMap = (2.0f * normalMap) - 1.0f; //Range from [0, 1] to [-1, 1]
+    //Range from [0, 1] to [-1, 1]
+    normalMap.x = (2.0f * normalMap.x) - 1.0f;
+    normalMap.y = (2.0f * normalMap.y) - 1.0f;
+    normalMap.z = -normalMap.z;
+
     input.tangent = normalize(input.tangent - dot(input.tangent, input.normal) * input.normal);
     float3 biTangent = cross(input.normal, input.tangent);
     float3x3 texSpace = float3x3(input.tangent, biTangent, input.normal);
