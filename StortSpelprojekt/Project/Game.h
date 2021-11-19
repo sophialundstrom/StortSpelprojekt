@@ -32,6 +32,7 @@ class Game : public ApplicationState
 private:
     GameState state = GameState::ACTIVE;
 
+    
     bool hovering = false;
     bool done = false;
     //bool paused = false;

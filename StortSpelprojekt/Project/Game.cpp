@@ -636,8 +636,6 @@ APPSTATE Game::Run()
 
 		if (Event::KeyIsPressed('V'))
 		{
-			PrintNumber("Player Arrows", player->GetArrowHandler().arrows.size());
-			PrintNumber("Barb Arrows", hostiles[0]->GetArrowHandler().arrows.size());
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('K'))
@@ -752,8 +750,10 @@ APPSTATE Game::Run()
 
 void Game::CheckNearbyEnemies()
 {
+	bool inCombat = false;
 	for (int i = 0; i < hostiles.size(); i++)
 	{
+		float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
 		
 		hostiles[i]->Update(modelRenderer, colliderRenderer, player);
 
@@ -771,15 +771,15 @@ void Game::CheckNearbyEnemies()
 			if (hit)
 			{
 				std::cout << "BARBARIAN " << i << " HIT!" << std::endl;
-				SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
-				SoundEffect::SetVolume(0.5, 2);
-				SoundEffect::StartAudio(2);
+				//SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
+				//SoundEffect::SetVolume(0.5, 2);
+				//SoundEffect::StartAudio(2);
 				hostiles[i]->TakeDamage();
 				if (hostiles[i]->IsDead())
 				{
-					SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
-					SoundEffect::SetVolume(0.8, 2);
-					SoundEffect::StartAudio(2);
+					//SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
+					//SoundEffect::SetVolume(0.8, 2);
+					//SoundEffect::StartAudio(2);
 					hostiles[i]->TakeDamage();
 					player->Stats().barbariansKilled++;
 					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));
@@ -793,7 +793,42 @@ void Game::CheckNearbyEnemies()
 				}
 			}
 			if (isDead)
+			{
+				distanceToHostile = 100000.f;
 				break;
+			}
+
+		}
+		if (distanceToHostile < 70.f) // Should be compared to if the hostile "sees" the player instead of a hardcoded value.
+		{
+			inCombat = true;
+		}
+		
+	}
+	if (!player->inCombat)
+	{
+		if (inCombat)
+		{
+			player->inCombat = true;
+			int rand = Random::Integer(0, 1);
+			if(rand == 0)
+				Audio::AddAudio(L"Audio/Combat1.wav", 0);
+			else
+				Audio::AddAudio(L"Audio/Combat2.wav", 0);
+			Audio::SetVolume(0.05, 0);
+			Audio::StartAudio(0);
 		}
 	}
+	else
+	{
+		if (!inCombat)
+		{
+			player->inCombat = false;
+			Audio::StopAudio(0);
+			Audio::AddAudio(L"Audio/Sonrie.wav", 0);
+			Audio::SetVolume(0.005, 0);
+			Audio::StartAudio(0);
+		}
+	}
+
 }

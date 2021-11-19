@@ -106,6 +106,14 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	//SPRINTING
 	if (Event::KeyIsPressed(VK_SHIFT))
 	{
+		// IF PLAYER SPRINTS AND JUMPS THE SOUND WILL STOP UNTIL SHIFT IS PRESSED AGAIN...
+		if (!isSprinting)
+		{
+			SoundEffect::AddAudio(L"Audio/Running.wav", 3, true);
+			SoundEffect::SetVolume(0.5, 3);
+			SoundEffect::StartAudio(3);
+			isSprinting = true;
+		}
 		stats.currentSpeed += 50.0f * Time::GetDelta();
 		if (stats.currentSpeed > stats.sprintSpeed)
 			stats.currentSpeed = stats.sprintSpeed;
@@ -114,9 +122,10 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		if (currentCameraDistance > maxCameraDistance)
 			currentCameraDistance = maxCameraDistance;
 	}
-
 	else
 	{
+		isSprinting = false;
+		SoundEffect::StopAudio(3);
 		stats.currentSpeed -= 12.0f * Time::GetDelta();
 		if (stats.currentSpeed < stats.movementSpeed)
 			stats.currentSpeed = stats.movementSpeed;
@@ -227,6 +236,14 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	//std::cout << "NUM ARROWS: " << numArrows << std::endl;
 	if(Event::RightIsClicked())
 	{
+		if (!isAiming)
+		{
+			SoundEffect::AddAudio(L"Audio/Bow.wav", 1);
+			SoundEffect::SetVolume(0.5, 1);
+			SoundEffect::StartAudio(1);
+			isAiming = true;
+		}
+
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
 		sceneCamera->SetPosition(newCameraPos);
@@ -246,13 +263,16 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 			}
 		}
 	}
-
 	else
 	{
+		SoundEffect::StopAudio(1);
+		isAiming = false;
+		
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 		sceneCamera->MoveTowards(newCameraPos);
 	}
 		
+	
 	arrowHandler.Update(mRenderer, cRenderer);
 
 	AnimatedModel::Update();
@@ -263,7 +283,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 
 void Player::TakeDamage()
 {
-	if (stats.healthPoints - 1 == 0)
+	if (stats.healthPoints - 1 == 0 /*|| stats.healthPoints < 0*/)
 	{
 		stats.healthPoints--;
 		std::cout << "GAME OVER" << std::endl;
@@ -271,6 +291,7 @@ void Player::TakeDamage()
 		gameOver = true;
 		return; // Return here because hp will be -1. This leads to a hp image not being found which in turn leads to a crash during Draw().
 	}
+
 	SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
 	SoundEffect::SetVolume(0.5, 2);
 	SoundEffect::StartAudio(2);

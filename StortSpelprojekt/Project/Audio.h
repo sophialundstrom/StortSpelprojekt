@@ -18,6 +18,7 @@ private:
 public:
 	static void Initialize();
 	static void AddAudio(std::wstring fileName, int slot);
+	static void StopAudio(int slot);
 	static void StartEngine();
 	static void StopEngine();
 	static void SetVolume(float volume, int slot);

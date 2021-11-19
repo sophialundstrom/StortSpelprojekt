@@ -83,3 +83,12 @@ void Audio::AddAudio(std::wstring fileName, int slot)
 
 	pSourceVoice[slot]->SetVolume(volume);
 }
+
+void Audio::StopAudio(int slot)
+{
+	if (pSourceVoice[slot] == nullptr)
+		return;
+	HRESULT hr;
+	if (FAILED(hr = pSourceVoice[slot]->Stop(0)))
+		std::cout << "COULD NOT START AUDIO" << std::endl;
+}

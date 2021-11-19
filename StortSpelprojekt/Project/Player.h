@@ -103,7 +103,7 @@ private:
 	bool jumping = false;
 	bool maxJumpHeight = false;
 	bool pressed = false;
-	bool sprint = false;
+	bool isSprinting = false;
 
 	float airTime = 0;
 	float jumpHeight = 5.0f;
@@ -133,6 +133,8 @@ private:
 	float currentLerp = 0.f;
 	float duration = 1.f;
 	bool inAir = false;
+	bool isAiming = false;
+
 
 	void UpdateHealthUI()
 	{
@@ -151,6 +153,7 @@ public:
 	void Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void TakeDamage();
+	bool inCombat = false;
 
 	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas/*, std::vector<std::shared_ptr<Arrow>> arrows*/, const UINT& maxArrows);
 
