@@ -574,7 +574,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer.Bind(campFireSystem);
 	
 	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	Audio::SetVolume(0.1, 0);
+	Audio::SetVolume(0.005, 0);
+	//Audio::SetVolume(0.1, 0);
 	Audio::StartAudio(0);
 	
 	(void)Run();
