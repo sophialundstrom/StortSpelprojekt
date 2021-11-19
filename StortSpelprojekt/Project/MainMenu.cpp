@@ -203,7 +203,7 @@ void MainMenu::Initialize()
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
-	gameLoader.Load("Main Menu", scene.GetDrawables());
+	gameLoader.Load("MainMenu", scene.GetDrawables());
 
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
@@ -259,7 +259,7 @@ APPSTATE MainMenu::Run()
 	canvases["OPTIONS"]->GetImage("BackLeavesOptions")->Hide();
 
 	currentCanvas->Update();
-	scene.GetCamera()->RotateAroundPoint({ -41.0f, 37.0f, -687.0f }, 30, (Vector3{ 0, -0.6f, -1 } / Vector3(0, -0.6f, -1).Length()));
+	scene.GetCamera()->RotateAroundPoint({ -41.0f, 37.0f, -687.0f }, 40, (Vector3{ 0, -0.6f, -1 } / Vector3(0, -0.6f, -1).Length()));
 	scene.UpdateDirectionalLight(scene.GetCamera()->GetPosition());
 	scene.Update();
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), scene.GetNumberOfPointlights(), (PointLight::Data*)scene.GetPointLights());
