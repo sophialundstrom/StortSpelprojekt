@@ -41,16 +41,14 @@ cbuffer CAMERA : register(b2)
 float4 main(PS_INPUT input) : SV_TARGET
 {
     PS_OUTPUT output;
-
-    const float2 newTex = input.texCoords * 30.0f;
-
-    float4 color = diffuseTexture.Sample(wrapSampler, newTex) * 0.8;
-    float3 normalMap = normalMapTex.Sample(wrapSampler, newTex).xyz;
+    input.texCoords.x += 0.5f;
+    float4 color = diffuseTexture.Sample(wrapSampler, input.texCoords * 50.0f);
+    float4 normalMap = normalMapTex.Sample(wrapSampler, input.texCoords * 100.0f);
 
     //Range from [0, 1] to [-1, 1]
     normalMap.x = (2.0f * normalMap.x) - 1.0f;
     normalMap.y = (2.0f * normalMap.y) - 1.0f;
-    normalMap.z = -normalMap.z;
+    normalMap.z = normalMap.z;
 
     input.tangent = normalize(input.tangent - dot(input.tangent, input.normal) * input.normal);
     float3 biTangent = cross(input.normal, input.tangent);
@@ -65,7 +63,6 @@ float4 main(PS_INPUT input) : SV_TARGET
     float fogFactor = saturate((fogDistance - fogStart) / fogRange);
 
     float3 finalColor;
-    float3 ambient = float3(0.8f, 0.8f, 0.8f);
     finalColor = color * directionalLight.lightColor;
     finalColor += saturate(dot(directionalLight.lightDirection, input.normal) * directionalLight.lightColor * color);
 
