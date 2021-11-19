@@ -1,6 +1,6 @@
 #include "LightCalculations.hlsli"
 Texture2D diffuseTexture : register(t0);
-Texture2D normalMapTex : register(t1);
+Texture2D normalMapTex : register(t11);
 sampler wrapSampler : register(s0);
 
 cbuffer DIRECTIONALLIGHT : register(b1)
@@ -45,7 +45,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     const float2 newTex = input.texCoords * 30.0f;
 
     float4 color = diffuseTexture.Sample(wrapSampler, newTex) * 0.8;
-    float4 normalMap = normalMapTex.Sample(wrapSampler, newTex);
+    float3 normalMap = normalMapTex.Sample(wrapSampler, newTex).xyz;
 
     normalMap = (2.0f * normalMap) - 1.0f; //Range from [0, 1] to [-1, 1]
     input.tangent = normalize(input.tangent - dot(input.tangent, input.normal) * input.normal);

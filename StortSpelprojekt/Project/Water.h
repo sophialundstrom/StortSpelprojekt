@@ -27,7 +27,7 @@ public:
 
 	void Draw() const
 	{
-		normalMap->Bind(1);
+		normalMap->Bind(11);
 		texture->Bind();
 		plane->Draw();
 	}

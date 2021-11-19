@@ -46,8 +46,8 @@ DS_OUTPUT main(
     //BARYCENTRIC COORDINATES
     output.position = patch[0].position * domain.x + patch[1].position * domain.y + patch[2].position * domain.z;
     output.texCoords = patch[0].texCoords * domain.x + patch[1].texCoords * domain.y + patch[2].texCoords * domain.z;
-    //output.normal = patch[0].normal * domain.x + patch[1].normal * domain.y + patch[2].normal * domain.z;
-    //output.tangent = patch[0].tangent * domain.x + patch[1].tangent * domain.y + patch[2].tangent * domain.z;
+    output.normal = patch[0].normal * domain.x + patch[1].normal * domain.y + patch[2].normal * domain.z;
+    output.tangent = patch[0].tangent * domain.x + patch[1].tangent * domain.y + patch[2].tangent * domain.z;
     
     const int amplitude = 6;
     const float multiplier = 2.0f;
