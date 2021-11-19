@@ -28,8 +28,8 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 
 			for (auto& collider : colliders)
 			{
-				//if (Vector3::Distance(worldPoint, collider->GetPosition()) < 64.0f)
-				//{
+				if (Vector3::Distance(worldPoint, collider->GetPosition()) < 64.0f)
+				{
 					//0.75
 					auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
 					if (box)
@@ -41,7 +41,7 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 						}
 
 						continue;
-					};
+					}
 					//0.350245
 					auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
 					if (sphere)
@@ -53,16 +53,8 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 						}
 
 						continue;
-					};
-				//}
-				//if (Vector3::Distance(worldPoint, drawable->GetPosition()) < 4.0f)
-				//{
-				//	BoundingSphere tmpSphere = { {Matrix::Identity}, {drawable->GetPosition()}, {1.0f} }; // tempporary solution to a colliding issue
-				//	if (grid[x][y].BSphere.GetBounds().Intersects(tmpSphere.GetBounds()))
-				//	{
-				//		grid[x][y].walkable = false;
-				//	}
-				//}
+					}
+				}
 			}
 		}
 	}
@@ -79,42 +71,50 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 
 void Grid::UpdateGrid(Vector3 worldPoint, std::vector<std::shared_ptr<Collider>>& colliders)
 {
-	std::vector<Node*> neighbours;
-
 	Node* node = NodeFromWorldPoint(worldPoint);
+
 	for (int x = -2; x <= 2; x++) {
 		for (int y = -2; y <= 2; y++) {
 			if (x == 0 && y == 0)
 				continue;
-			for (auto& collider : colliders)
-			{
-				if (Vector3::Distance(worldPoint, collider->GetPosition()) < 50.0f)
+
+			int checkX = node->gridX + x;
+			int checkY = node->gridY + y;
+
+			// check if node exist in existing grid
+			if (checkX >= 0 && checkX < gridSizeX && checkY >= 0 && checkY < gridSizeY) {
+			
+				for (auto& collider : colliders)
 				{
-					auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
-					if (box)
+					// reduce the amount colliders
+					if (Vector3::Distance(worldPoint, collider->GetPosition()) < 50.0f)
 					{
-						if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), box->GetBounds()))
+						auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
+						if (box)
 						{
-							grid[x][y].walkable = false;
+							if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), box->GetBounds()))
+							{
+								grid[x][y].walkable = false;
+							}
+							else
+							{
+								grid[x][y].walkable = false;
+							}
+							continue;
 						}
-						else
+						auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
+						if (sphere)
 						{
-							grid[x][y].walkable = false;
+							if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), sphere->GetBounds()))
+							{
+								grid[x][y].walkable = false;
+							}
+							else
+							{
+								grid[x][y].walkable = false;
+							}
+							continue;
 						}
-						continue;
-					}
-					auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
-					if (sphere)
-					{
-						if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), sphere->GetBounds()))
-						{
-							grid[x][y].walkable = false;
-						}
-						else
-						{
-							grid[x][y].walkable = false;
-						}
-						continue;
 					}
 				}
 			}

@@ -35,4 +35,15 @@ public:
 
 private:
 	void WeaponSlash();
+
+
+	// Remove if we don't use pathing for these NPC's later
+public:
+	void SetPathVar(Pathfinding* path)				{ this->pathing = path; }
+	void SetPlayerPtr(std::shared_ptr<Player> p)	{ this->player = p; }
+private:
+	float speed = 9.0f;
+	std::vector<Vector3> path;
+	Pathfinding* pathing;
+	std::shared_ptr<Player> player;
 };

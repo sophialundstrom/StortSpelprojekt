@@ -88,7 +88,4 @@ void FriendlyNPC::Walking()
 	}
 }
 
-void FriendlyNPC::SetPlayerPtr(std::shared_ptr<Player> p)
-{
-	player = p;
-}
+

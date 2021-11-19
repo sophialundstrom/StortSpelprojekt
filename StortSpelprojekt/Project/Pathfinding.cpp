@@ -71,12 +71,7 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 
 		for (auto neighbour : grid.GetNeighbours(node))
 		{
-			// check if the neighbour is in the closed set or is walkable
-			// would like to use .contains for the set but that is c++20 code
-			//if (!neighbour->walkable || closedSet.find(neighbour) != closedSet.end()) //!(std::none_of(closedSet.begin(), closedSet.end(), neighbour))) {
-			//{
-			//	continue; 
-			//}
+
 			if (neighbour->walkable == false)
 			{
 				continue;
@@ -93,7 +88,6 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 				if ((std::find(openSet.begin(), openSet.end(), neighbour) == openSet.end()))//	!std::any_of(openSet.begin(), openSet.end(), (Node)*neighbour))
 					openSet.push_back(neighbour);
 			}
-			//grid.SetGridNode(neighbour->gridX, neighbour->gridY, *neighbour);
 		}
 	}
 }

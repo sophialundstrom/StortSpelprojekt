@@ -37,13 +37,5 @@ private:
 
 	Vector3 moveDirection;
 
-	// Remove if we don't use pathing for these NPC's later
-public:
-	void SetPathVar(Pathfinding* path) { this->pathing = path; }
-	void SetPlayerPtr(std::shared_ptr<Player>);
-private:
-	float speed = 9.0f;
-	std::vector<Vector3> path;
-	Pathfinding* pathing;
-	std::shared_ptr<Player> player;
+
 };
