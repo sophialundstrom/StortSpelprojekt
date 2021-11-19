@@ -93,7 +93,16 @@ void Loot::Update(std::shared_ptr<Player> player)
 					player->Inventory().AddItem(RESOURCE::FOOD);
 				}
 				// GIVE ARROWS HERE....
-				player->numArrows += numArrows;
+
+				short int totalArrows = player->numArrows + numArrows;
+				if (totalArrows > player->maxArrows)
+				{
+					short int num = player->maxArrows - player->numArrows;
+					player->numArrows += num;
+				}
+				else
+					player->numArrows += numArrows;
+				
 
 				std::cout << "Destroyed by collision\n";
 				SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
