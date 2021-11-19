@@ -538,9 +538,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
-	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
-	building->SetScale(5);
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -107.5f, 20.0f, -608.5f }, scene, particleRenderer);
+	building->SetRotation(0, -DirectX::XM_PI, 0);
+	building->SetScale(5.85);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
@@ -562,7 +562,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPC
-	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70, 20.0f, -596 });
+	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70.0f, 20.0f, -596.0f });
 	friendlyNPC->BindBuilding(building);
 	friendlyNPC->AddQuestID(0);
 	friendlyNPC->AddQuestID(2);
@@ -570,7 +570,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	friendlyNPC->AddQuestID(6);
 
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
-	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
+	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	particleRenderer.Bind(campFireSystem);
 	
 	Audio::AddAudio(L"Audio/totallyRPGMusic.wav", 0);
