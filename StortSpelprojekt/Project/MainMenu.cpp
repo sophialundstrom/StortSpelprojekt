@@ -180,12 +180,12 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	canvases["OPTIONS"] = optionsCanvas;
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { -41.0f, 37.0f, -687.0f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(500, { 0.2f, 0.2f, 0.2f ,1 }, 1);
-	scene.AddPointLight({ -41.9f, 33.0f, -687.4f }, 30, { 0.5f, 0.5f, 0.5f }, { 1.0f, 0.0f, 0.0f, 1.0f });
+	scene.SetDirectionalLight(100, { 0.1f, 0.1f, 0.1f ,1 }, 1);
+	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 10, { 1.f, 1.f, 1.f }, { 0.0f, 0.0f, 1.0f, 1.0f });
 
 
 	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
-	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 34, -687 });
+	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 35, -687 });
 	particleRenderer.Bind(menuFireSystem);
 		
 	(void)Run();
@@ -211,7 +211,7 @@ void MainMenu::Initialize()
 		if (model)
 		{
 			modelRenderer.Bind(model);
-			//shadowRenderer.Bind(model);
+			shadowRenderer.Bind(model);
 			continue;
 		}
 
@@ -227,17 +227,15 @@ void MainMenu::Initialize()
 
 void MainMenu::Render()
 {
-	ShaderData::Inst().BindFrameConstants();
+	shadowRenderer.Render();
 
 	Graphics::Inst().BeginFrame();
+
+	ShaderData::Inst().BindFrameConstants();
 
 	modelRenderer.Render();
 
 	particleRenderer.Render();
-
-	//terrainRenderer.Render(terrain);
-
-	//shadowRenderer.Render();
 
 	currentCanvas->Render();
 
@@ -262,7 +260,7 @@ APPSTATE MainMenu::Run()
 	scene.GetCamera()->RotateAroundPoint({ -41.0f, 37.0f, -687.0f }, 40, (Vector3{ 0, -0.6f, -1 } / Vector3(0, -0.6f, -1).Length()));
 	scene.UpdateDirectionalLight(scene.GetCamera()->GetPosition());
 	scene.Update();
-	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), scene.GetNumberOfPointlights(), (PointLight::Data*)scene.GetPointLights());
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), scene.GetNumberOfPointlights(), scene.GetPointLights());
 
 	Render();
 

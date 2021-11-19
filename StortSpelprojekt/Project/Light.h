@@ -2,6 +2,8 @@
 #include "Drawable.h"
 #include "Time.h"
 
+#define MAX_LIGHTS 10
+
 class DirectionalLight
 {
 private:
@@ -71,7 +73,6 @@ public:
 	Matrix GetMatrix() const { return this->matrix; }
 };
 
-#define MAX_LIGHTS 8
 struct Light : public Drawable
 {
 	Light(Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 rotation = { 0.0f, 0.0f, 0.0f }, Vector3 scale = { 0.0f, 0.0f, 0.0f })
@@ -83,13 +84,13 @@ struct PointLight : public Light
 	struct Data
 	{
 		Vector4 color;
+		Vector3 position;
 		float range;
 		Vector3 attenuation;
-		Vector3 position;
 	} data;
 
 	PointLight(float range = 10.0f, Vector3 attenuation = { 1.0f, 1.0f, 1.0f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f }, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 rotation = { 0.0f, 0.0f, 0.0f }, Vector3 scale = { 0.0f, 0.0f, 0.0f })
-		:Light(position, rotation, scale) { data = { color, range, attenuation, position }; }
+		:Light(position, rotation, scale) { data = { color, position, range, attenuation }; }
 
 	// Inherited via Drawable
 	virtual void Update() override
