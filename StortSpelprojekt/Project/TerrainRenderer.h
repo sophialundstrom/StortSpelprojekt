@@ -5,6 +5,12 @@
 class TerrainRenderer
 {
 private:
+
+	struct Matrices
+	{
+		Matrix viewPerspective;
+		Matrix lightViewPerspective;
+	}matrices; 
 	//BUFFERS
 	ID3D11Buffer* matrixBuf = nullptr;
 	ID3D11Buffer* lightBuf = nullptr;
