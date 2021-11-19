@@ -10,7 +10,7 @@ QuadTree::QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int 
 
 	quadTreeBoundsCollider = DirectX::BoundingBox(
 		{ bounds.xPos + (bounds.width / 2.f), 0, bounds.zPos + (bounds.depth / 2.f) },
-		{ bounds.width / 2.f, 1000.f, bounds.depth / 2.f }
+		{ bounds.width / 2.f, 4000.f, bounds.depth / 2.f }
 	);
 
 

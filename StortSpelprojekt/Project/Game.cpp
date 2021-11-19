@@ -30,7 +30,7 @@ void Game::Update()
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
-	//UpdateQuadTree(); //Something in here makes the game run twice as fast
+	UpdateQuadTree(); //Something in here makes the game run twice as fast
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
@@ -614,8 +614,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -91, 20, -593 });
 	AddItem(WOOD, { -85, 20, -608 });
 
-	//AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
-	AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+	
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
 	AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
@@ -843,7 +842,7 @@ void Game::UpdateQuadTree()
 	drawablesToBeRendered.clear();
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
-	//std::cout << drawablesToBeRendered.size() << std::endl;
+	std::cout << drawablesToBeRendered.size() << std::endl;
 
 	if (Event::KeyIsPressed('K'))
 	{
