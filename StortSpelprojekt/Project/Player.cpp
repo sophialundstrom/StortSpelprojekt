@@ -1,12 +1,13 @@
 #include "Player.h"
 
-Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows, const UINT& maxArrows)
+Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, const UINT& maxArrows)
 	:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
 {
 	isRightPressed = false;
 	isLeftPressed = false;
 
-	this->arrows = arrows;
+	arrowHandler.SetPullbackFactor(1.f);
+
 	bounds = std::make_shared<BoundingBox>();
 
 	bounds->SetScale(0.8f, 2.5f, 0.8f);
@@ -72,7 +73,7 @@ float Get2DAngle(Vector2 a, Vector2 b)
 	return acos(a.x * b.x + a.y * b.y);
 };
 
-void Player::Update(HeightMap* heightMap)
+void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
 {
 	lastPosition = position;
 
@@ -207,7 +208,7 @@ void Player::Update(HeightMap* heightMap)
 	
 	static float lastClick = 0;
 
-	if (Event::KeyIsPressed('R'))
+	if (Event::KeyIsPressed('R') && numArrows < maxArrows)
 	{
 		numArrows++;
 	}
@@ -223,7 +224,7 @@ void Player::Update(HeightMap* heightMap)
 		//else if (jumping)
 			 // ADD IN AIR JUMP ANIMATION
 	}
-	std::cout << "NUM ARROWS: " << numArrows << std::endl;
+	//std::cout << "NUM ARROWS: " << numArrows << std::endl;
 	if(Event::RightIsClicked())
 	{
 		newCameraPos = position + camSocketUpdate;
@@ -233,22 +234,15 @@ void Player::Update(HeightMap* heightMap)
 		{
 			if (Event::LeftIsClicked() && numArrows > 0)
 			{
-
+				arrowHandler.AddArrow(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
-				int currentIndex = 0;
-				bool isPlayerShootingArrow = false;
-				while(currentIndex < arrows.size() && isPlayerShootingArrow == false)
-				{
-					isPlayerShootingArrow = arrows.at(currentIndex)->Shoot(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-					lastClick = Time::Get();
-					currentIndex++;
-				}
 				SoundEffect::AddAudio(L"Audio/Fire.wav", 1);
 				SoundEffect::SetVolume(0.005, 1);
 				SoundEffect::StartAudio(1);
-
+				int currentIndex = 0;
 				numArrows--;
 				sinceLastShot = 0.f;
+				lastClick = Time::Get();
 			}
 		}
 	}
@@ -258,16 +252,31 @@ void Player::Update(HeightMap* heightMap)
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 		sceneCamera->MoveTowards(newCameraPos);
 	}
-
-	for (int i = 0; i < arrows.size(); i++)
-	{
-		arrows.at(i)->Update();
-	}
+		
+	arrowHandler.Update(mRenderer, cRenderer);
 
 	AnimatedModel::Update();
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 	bounds->Update();
 	frustum->Update();
+}
+
+void Player::TakeDamage()
+{
+	if (stats.healthPoints - 1 == 0)
+	{
+		stats.healthPoints--;
+		std::cout << "GAME OVER" << std::endl;
+		UpdateHealthUI();
+		gameOver = true;
+		return; // Return here because hp will be -1. This leads to a hp image not being found which in turn leads to a crash during Draw().
+	}
+	SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
+	SoundEffect::SetVolume(0.5, 2);
+	SoundEffect::StartAudio(2);
+	stats.healthPoints--;
+	
+	UpdateHealthUI();
 }
 
 void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders)
@@ -307,7 +316,7 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 						{
 							stuck = false;
 							force += plane.Normal();
-							std::cout << "NORMAL: " << plane.Normal().x << " " << plane.Normal().y << " " << plane.Normal().z << std::endl;
+							//std::cout << "NORMAL: " << plane.Normal().x << " " << plane.Normal().y << " " << plane.Normal().z << std::endl;
 						}
 
 					if (stuck)
@@ -321,17 +330,6 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 			if (sphere)
 			{
 				auto& bounds = sphere->GetBounds();
-
-				//auto incomingDirection = lastPos - bounds.Center;
-
-				//if (incomingDirection.Length() < bounds.Radius)
-				//{
-				//	incomingDirection.Normalize();
-
-				//	auto point = bounds.Center + incomingDirection * bounds.Radius;
-				//	if (highestPoint > bounds.Center.y)
-				//		highestPoint = point.y;
-				//}
 
 				if (!Collision::Intersection(sphere, this->bounds))
 					numNotCollided++;
@@ -351,13 +349,9 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 
 		if (numNotCollided == (UINT)colliders.size())
 		{
-		/*	if (highestPoint != lastPos.y)
-				position.y = highestPoint;*/
 			Transform::UpdateMatrix();
 			bounds->Update();
 			sceneCamera->updatecamRay(position, 1000);
-			//if (highestPoint > currentGroundLevel)
-			//	currentGroundLevel = highestPoint;
 			return;
 		}
 
@@ -365,41 +359,9 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 
 		position += force * Time::GetDelta();
 
-		//if (highestPoint > lastPos.y)
-		//	position.y = highestPoint;
-
 		Transform::UpdateMatrix();
 		bounds->Update();
 	}
-}
-
-bool Player::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
-{
-	bool collided = false;
-	if (Collision::Intersection(this->bounds, arrow->GetCollider()))
-	{
-		collided = true;
-		//Print("ARROW HIT PLAYER");
-		arrow->DisableArrow();
-		if (stats.healthPoints == 0)
-		{
-			return collided;
-		}
-		if (stats.healthPoints - 1 == 0)
-		{
-			stats.healthPoints--;
-			std::cout << "GAME OVER" << std::endl;
-			UpdateHealthUI();
-			gameOver = true;
-			return collided;
-		}
-		SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
-		SoundEffect::SetVolume(0.005, 2);
-		SoundEffect::StartAudio(2);
-		stats.healthPoints--;
-		UpdateHealthUI();
-	}
-	return collided;
 }
 
 void Player::Save(const std::string file)
@@ -435,34 +397,6 @@ void Player::Save(const std::string file)
 
 	writer.close();
 	Print("SUCCEEDED SAVING PLAYER FILE");
-}
-
-bool Player::CheckArrowHit(std::shared_ptr<Collider> collider)
-{
-	for (auto& arrow : arrows)
-	{
-		if (!arrow->IsShot())
-			continue;
-
-		bool hit = false;
-
-		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
-		if (box)
-			hit = Collision::Intersection(box, arrow->GetCollider());
-
-		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
-		if (sphere)
-			hit = Collision::Intersection(sphere, arrow->GetCollider());
-
-		if (hit)
-		{
-			arrow->DisableArrow();
-		}
-		
-		return hit;
-	}
-
-	return false;
 }
 
 void Player::Load(const std::string file)
