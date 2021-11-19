@@ -31,6 +31,7 @@ cbuffer MATERIAL : register(b0)
     float specularPower;
 }
 
+
 float ShadowCalculation(float4 LCP)
 {
     LCP.xyz /= LCP.w; //PERSPECTIVE DIVIDE (NDC-COORDS)
@@ -52,17 +53,21 @@ float ShadowCalculation(float4 LCP)
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
-    const float shadow = ShadowCalculation(input.lightClipPosition);
-
+	const float shadow = ShadowCalculation(input.lightClipPosition);
+	const float4 globalAmbient = 0.2f;
+	const float4 finalLighting = LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition) * shadow + globalAmbient + ambient;
+	const float4 T = diffuseTexture.Sample(wrapSampler, input.texCoords);
     //FOG
-    float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
-    float fogStart = 100.0f;
-    float fogRange = 2000.0f;
-    float fogDistance = distance(cameraPosition, input.worldPosition.xyz);
-    float fogFactor = saturate((fogDistance - fogStart) / fogRange);
+    
+	float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
+	float fogStart = 100.0f;
+	float fogRange = 2000.0f;
+	float fogDistance = distance(cameraPosition, input.worldPosition.xyz);
+	float fogFactor = saturate((fogDistance - fogStart) / fogRange);
 
     //RESULT
-    return lerp((diffuseTexture.Sample(wrapSampler, input.texCoords)) * (saturate(LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, /*lights, 2,*/ cameraPosition))), fogColor, fogFactor);
-    //return float4 (shadow, shadow, shadow, 0.1f);
-    //return diffuseTexture.Sample(wrapSampler, input.texCoords) * LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition);
+	const float4 finalColor = lerp((T * (saturate(finalLighting))), fogColor, fogFactor);
+
+
+	return finalColor;
 }

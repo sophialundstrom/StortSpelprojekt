@@ -37,11 +37,11 @@ void Game::Update()
 
 void Game::Render()
 {
-	//shadowRenderer.Render();
-
-	ShaderData::Inst().BindFrameConstants();
+	shadowRenderer.Render();
 
 	Graphics::Inst().BeginFrame();
+
+	ShaderData::Inst().BindFrameConstants();
 
 	particleRenderer.Render();
 
@@ -118,7 +118,7 @@ void Game::Initialize()
 		if (model)
 		{
 			modelRenderer.Bind(model);
-			//shadowRenderer.Bind(model);
+			shadowRenderer.Bind(model);
 			continue;
 		}
 			
@@ -157,7 +157,7 @@ void Game::RemoveItem(const std::string name)
 		{
 			auto item = scene.Get<Item>(name);
 			modelRenderer.Unbind(item);
-			//shadowRenderer.Unbind(item);
+			shadowRenderer.Unbind(item);
 			colliderRenderer.Unbind(item->GetBounds());
 			auto it = items.begin() + i;
 			items.erase(it);
@@ -178,7 +178,7 @@ void Game::AddItem(RESOURCE resource, Vector3 position)
 	item->SetPosition(position);
 	item->GetBounds()->Update();
 	modelRenderer.Bind(item);
-	//shadowRenderer.Bind(item);
+	shadowRenderer.Bind(item);
 	colliderRenderer.Bind(item->GetBounds());
 }
 
@@ -193,7 +193,7 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Ve
 	colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
-	//shadowRenderer.Bind(NPC);
+	shadowRenderer.Bind(NPC);
 
 	scene.AddDrawable("FriendlyNPC", NPC);
 
@@ -216,7 +216,7 @@ void Game::AddArrow(const std::string fileName)
 	//arrow->GetCollider()->SetScale(0.15f);
 	//arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	modelRenderer.Bind(arrow);
-	//shadowRenderer.Bind(arrow);
+	shadowRenderer.Bind(arrow);
 	//colliderRenderer.Bind(arrow->GetCollider());
 	arrow->Update();
 }
@@ -332,7 +332,7 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 	colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
-	//shadowRenderer.Bind(NPC);
+	shadowRenderer.Bind(NPC);
 	const std::string name = "hostileNPC" + std::to_string(hostileID);
 	scene.AddDrawable(name, NPC);
 	hostileID++;
@@ -460,7 +460,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	Initialize();
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(100, { 1, 1, 1, 1 }, 4, 4);
+	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
 
 	//INGAME CANVAS
 	auto ingameCanvas = std::make_shared<Canvas>();
@@ -544,7 +544,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
-	//shadowRenderer.Bind(building);
+	shadowRenderer.Bind(building);
 
 	//QUEST LOG
 	questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);

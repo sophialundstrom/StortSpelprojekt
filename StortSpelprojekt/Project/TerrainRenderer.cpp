@@ -5,7 +5,7 @@
 TerrainRenderer::TerrainRenderer(RenderMethod method, float tesselationAmount)
 {
 	//BUFFER
-	CreateBuffer(matrixBuf, sizeof(Matrix));
+	CreateBuffer(matrixBuf, sizeof(Matrices));
 	CreateBuffer(lightBuf, sizeof(Matrix));
 
 	BindBuffer(matrixBuf, Shader::DS);
@@ -103,7 +103,10 @@ void TerrainRenderer::Render(const Terrain& terrain)
 	UpdateBuffer(lightBuf, ShaderData::Inst().lightMatrix);
 	BindBuffer(lightBuf, Shader::PS);
 
-	UpdateBuffer(matrixBuf, ShaderData::Inst().cameraMatrix);
+	matrices.viewPerspective = ShaderData::Inst().cameraMatrix;
+	matrices.lightViewPerspective = ShaderData::Inst().lightMatrix;
+
+	UpdateBuffer(matrixBuf, matrices);
 	BindBuffer(matrixBuf, Shader::DS);
 
 	BindBuffer(tesselationBuf, Shader::HS);

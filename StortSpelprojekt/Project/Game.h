@@ -45,7 +45,7 @@ private:
     AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
-   // ShadowRenderer shadowRenderer;
+    ShadowRenderer shadowRenderer;
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
     SkeletonRenderer skeletonRenderer;
