@@ -13,6 +13,8 @@ enum CombatStyle
 class HostileNPC : public NPC
 {
 private:
+	Vector3 spawnPosition;
+
 	std::vector<std::shared_ptr<Arrow>> arrows;
 	std::vector<std::shared_ptr<Arrow>> playerArrows;
 	std::shared_ptr<Player> player;

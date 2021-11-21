@@ -109,8 +109,8 @@ struct Animation
 		auto lower = map.upper_bound(frameTime - 1);
 		auto higher = map.upper_bound(frameTime);
 
-		Print(lower->first, "LOWER");
-		Print(higher->first, "HIGHER");
+		//Print(lower->first, "LOWER");
+		//Print(higher->first, "HIGHER");
 
 		float lowerTimestamp = lower->first;
 		float higherTimestamp = higher->first;

@@ -40,6 +40,12 @@ void FriendlyNPC::ActivateCurrentQuest()
 	QuestLog::Activate(currentQuest);
 }
 
+const std::string FriendlyNPC::GetCurrentDialogue()
+{
+	auto ID = (3 * currentQuestID) + UINT(currentDialogueState);
+	return dialogues[ID];
+}
+
 void FriendlyNPC::Update()
 {
 	NPC::Update();
@@ -49,17 +55,17 @@ void FriendlyNPC::Update()
 		if (!currentQuest->Unlocked())
 			return;
 
-		Print(currentQuest->GetName(), "========");
+		//Print(currentQuest->GetName(), "========");
 
 		if (currentQuest->Unlocked() && currentQuest->IsActive() && !currentQuest->IsCompleted())
 		{
-			Print("HELP");
+			//Print("HELP");
 			currentDialogueState = DialogueState::HELP;
 		}
 
 		else if (currentQuest->IsCompleted())
 		{
-			Print("HANDIN");
+			//Print("HANDIN");
 			currentDialogueState = DialogueState::HANDIN;
 			if (finishedDialogue)
 			{
@@ -68,14 +74,12 @@ void FriendlyNPC::Update()
 
 				currentQuestID++;
 				currentQuest = nullptr;
-				finishedDialogue = false;
-				return;
 			}
 		}
 
 		else
 		{
-			Print("HANDOUT");
+			//Print("HANDOUT");
 			currentDialogueState = DialogueState::HANDOUT;
 		}
 
@@ -87,4 +91,6 @@ void FriendlyNPC::Update()
 	{
 		currentQuest = quests[currentQuestID];
 	}
+
+	finishedDialogue = false;
 }

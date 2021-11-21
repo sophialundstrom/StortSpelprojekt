@@ -68,7 +68,9 @@ private:
     std::shared_ptr<Building> building;
 
     std::vector<BarbarianCamp> camps;
+
     std::vector<std::shared_ptr<Target>> targets;
+
     std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs;
     
     std::vector<std::shared_ptr<Collider>> colliders;
@@ -102,11 +104,13 @@ private:
     void AddFriendlyNPCs();
     void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
     void AddLoot(LOOTTYPE type, const Vector3& position);
+    void AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation);
 
     void UpdateAndHandleLoot();
     void CheckNearbyCollision();
     void CheckSaveStationCollision();
     void CheckItemCollision();
+    void CheckTargetCollision();
     void CheckQuestInteraction();
     void CheckNearbyEnemies();
 

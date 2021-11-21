@@ -23,6 +23,8 @@ void Game::Update()
 
 	CheckNearbyEnemies();
 
+	CheckTargetCollision();
+
 	CheckQuestInteraction();
 
 	UpdateAndHandleLoot();
@@ -253,19 +255,19 @@ void Game::AddFriendlyNPCs()
 		auto NPC = AddFriendlyNPC("Gilbert", "Priest", { -134, 25, -594 });
 
 		NPC->AddQuest("A Helping Hand.");
-		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING OUT THE QUEST");
-		NPC->AddDialogue("INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
-		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING IN THE QUEST");
+		NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+		NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+		NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
 
 		NPC->AddQuest("Target Aquired.");
-		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING OUT THE QUEST");
-		NPC->AddDialogue("INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
-		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING IN THE QUEST");
+		NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+		NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+		NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
 
 		NPC->AddQuest("We're Under Attack!");
-		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING OUT THE QUEST");
-		NPC->AddDialogue("INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
-		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING IN THE QUEST");
+		NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+		NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+		NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
 
 		NPC->AddDialogue("INSERT DIALOGUE FOR WHEN NPC HAS NO QUESTS LEFT");
 
@@ -277,9 +279,9 @@ void Game::AddFriendlyNPCs()
 		auto NPC = AddFriendlyNPC("Gilbert2", "Priest", { -144, 25, -594 });
 
 		NPC->AddQuest("FIRST QUEST FOR NPC2");
-		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING OUT THE QUEST");
-		NPC->AddDialogue("INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
-		NPC->AddDialogue("INSERT DIALOGUE FOR HANDING IN THE QUEST");
+		NPC->AddDialogue("FIRST QUEST FOR NPC2 >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+		NPC->AddDialogue("FIRST QUEST FOR NPC2 >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+		NPC->AddDialogue("FIRST QUEST FOR NPC2 >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
 
 		NPC->AddDialogue("INSERT DIALOGUE FOR WHEN NPC HAS NO QUESTS LEFT");
 
@@ -289,6 +291,34 @@ void Game::AddFriendlyNPCs()
 	//NPC3
 
 	//NPC4
+}
+
+void Game::AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation)
+{
+	auto target = std::make_shared<Target>(file, position, rotation, targets.size());
+	modelRenderer.Bind(target);
+
+	auto collider = target->GetCollider();
+	colliders.emplace_back(collider);
+	colliderRenderer.Bind(collider);
+	//SHADOW RENDERER
+
+	targets.emplace_back(target);
+}
+
+void Game::CheckTargetCollision()
+{
+	for (auto& target : targets)
+	{
+		bool hit = player->CheckArrowHit(target->GetCollider());
+
+		if (hit)
+		{
+			target->Hit();
+			Print("TARGET " + std::to_string(target->GetID()) + " GOT HIT");
+			return;
+		}
+	}
 }
 
 void Game::CheckNearbyCollision()
@@ -479,7 +509,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	animatedModelRenderer(FORWARD, true),
 	water(5000), terrain(2)
 {
-	//QuestLog::CreateQuests();
+	QuestLog::CreateQuests();
 	//QuestLog::Load("Default");
 
 	//LOAD SCENE
@@ -573,28 +603,32 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	modelRenderer.Bind(building);
 	//shadowRenderer.Bind(building);
 
-	//QUEST LOG
-	//questLog = std::make_unique<QuestLog>(file, player, ingameCanvas);
-
-	//Item
+	//ITEMS
 	AddItem(Item::Type::Stick, { -134, 22, -594 });
 	AddItem(Item::Type::Stick, { -113, 22, -582 });
 	AddItem(Item::Type::Stick, { -116, 20, -609 });
 	AddItem(Item::Type::Stick, { -91, 20, -593 });
 	AddItem(Item::Type::Stick, { -85, 20, -608 });
 
-	//AddHostileNPC("BarbarianBow", { 335, 194, -22 }, CombatStyle::consistantDelay);
+	//HOSTILES NPC
 	AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
 	AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPC
-	//AddFriendlyNPCs();
+	AddFriendlyNPCs();
 
+	//TARGETS
+	AddTarget("TargetDummy", { -150, 30, -600 }, { 0,0,0 });
+	AddTarget("TargetDummy", { -170, 30, -600 }, { 0,0,0 });
+	AddTarget("TargetDummy", { -190, 30, -600 }, { 0,0,0 });
+
+	//PARTICLE SYSTEM
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
 	particleRenderer.Bind(campFireSystem);
 	
+	//AUDIO
 	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
 	Audio::SetVolume(0.3, 0);
 	Audio::StartAudio(0);

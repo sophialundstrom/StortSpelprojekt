@@ -1,5 +1,16 @@
 #include "QuestLog.h"
 
+void QuestLog::LoadQuest(Quest* quest)
+{
+	quests.emplace_back(quest);
+
+	if (quest->IsActive())
+		activeQuests.emplace_back(quest);
+
+	for (auto child : quest->GetChildQuests())
+		LoadQuest(child);
+}
+
 void QuestLog::Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets)
 {
 	for (UINT i = 0; i < activeQuests.size(); ++i)
@@ -64,18 +75,7 @@ void QuestLog::Load(const std::string& fileName)
 	{
 		auto quest = new Quest();
 		quest->LoadFromFile(file);
-
-		quests.emplace_back(quest);
-
-		if (quest->IsActive())
-			activeQuests.emplace_back(quest);
-
-		for (auto child : quest->GetChildQuests())
-		{
-			quests.emplace_back(child);
-			if (child->IsActive())
-				activeQuests.emplace_back(child);
-		}
+		LoadQuest(quest);
 	}
 
 	file.Close();
@@ -113,9 +113,9 @@ void QuestLog::CreateQuests()
 
 	Save("Default");
 
-	ShutDown();
+	//ShutDown();
 
-	Load("Default");
+	//Load("Default");
 	//AFTER QUESTS ARE MADE (OR READ FROM EXISTING FILE) ASSIGN TO NPCs
 }
 
@@ -150,11 +150,7 @@ void QuestLog::Complete(Quest* quest)
 	}
 
 	for (auto child : quest->GetChildQuests())
-	{
-		activeQuests.emplace_back(child);
-		Print(child->GetName() + " UNLOCKED");
 		child->Unlock();
-	}
 }
 
 Quest* QuestLog::Get(const std::string& name)

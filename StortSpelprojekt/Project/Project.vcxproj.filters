@@ -356,6 +356,7 @@
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="LocationObjective.cpp" />
     <ClCompile Include="TalkObjective.cpp" />
+    <ClCompile Include="Target.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">

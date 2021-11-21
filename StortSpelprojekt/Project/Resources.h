@@ -102,6 +102,8 @@ public:
 	void BindMaterial(UINT materialID, bool useMaterial)
 	{
 		std::shared_ptr<Material> material = materials[materialID];
+		if (!material)
+			return;
 
 		if (currentMaterial != material)
 		{
@@ -119,6 +121,9 @@ public:
 	//BIND VERTEX BUFFER AND DRAW
 	void Draw(UINT vertexCount, UINT bufferID)
 	{
+		if (bufferID > 999999999)
+			return;
+
 		ID3D11Buffer* vertexBuffer = std::next(vertexBuffers.begin(), bufferID)->second;
 
 		if (currentVertexBuffer != vertexBuffer)

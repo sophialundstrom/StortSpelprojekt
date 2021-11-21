@@ -21,7 +21,7 @@ public:
 	void ActivateCurrentQuest();
 
 	std::shared_ptr<QuestMarker> GetQuestMarker()	{ return questMarker; }
-	const std::string GetCurrentDialogue()			{ return dialogues[currentQuestID + UINT(currentDialogueState)]; }
+	const std::string GetCurrentDialogue();
 
 	virtual void Update() override;
 private:
@@ -29,7 +29,7 @@ private:
 
 	enum class DialogueState { HANDOUT, HELP, HANDIN, DONE };
 	DialogueState currentDialogueState;
-	bool finishedDialogue;
+	bool finishedDialogue = false;
 
 	UINT currentQuestID = 0;
 	Quest* currentQuest = nullptr;
