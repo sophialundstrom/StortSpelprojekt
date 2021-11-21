@@ -45,7 +45,7 @@ private:
     AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
-   // ShadowRenderer shadowRenderer;
+    ShadowRenderer shadowRenderer;
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
     SkeletonRenderer skeletonRenderer;
@@ -91,6 +91,18 @@ private:
     void HowToPlay();
     void BacktoPause();
     void MainMenu();
+
+    // LEAVES
+    void HoveringResume();
+    void HoveringOptions();
+    void HoveringHowToPlay();
+    void HoveringQuit();
+    void HoveringBackHowToPlay();
+    void HoveringBackQuit();
+    void HoveringBackOptions();
+    void HoveringYes();
+    void HoveringNo();
+
   
     bool mainMenu = false;
 

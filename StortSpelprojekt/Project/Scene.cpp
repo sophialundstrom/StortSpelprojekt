@@ -30,6 +30,13 @@ std::string Scene::AddDrawable(const std::string& name, std::shared_ptr<Drawable
 	return finalName;
 }
 
+std::string Scene::AddDrawable(std::shared_ptr<Drawable> drawable)
+{
+	drawables[drawable->GetName()] = drawable;
+
+	return drawable->GetName();
+}
+
 std::string Scene::AddModel(const std::string& file, const std::string path)
 {
 	UINT numInstances = 0;

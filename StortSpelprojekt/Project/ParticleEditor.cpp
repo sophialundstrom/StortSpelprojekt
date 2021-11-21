@@ -27,11 +27,9 @@ void ParticleEditor::Save(const std::string& file)
 	writer << particleSystem->GetPosition().y << space;
 	writer << particleSystem->GetPosition().z << space;
 
-
-
-	//writer << "'" << particleSystem->GetTexturePath() <<"'" << space;
 	writer << "'" << particleSystem->GetFirstTextureFile() << "'" << space;
-	writer << "'" << particleSystem->GetSecondTextureFile() << "'";
+	writer << "'" << particleSystem->GetSecondTextureFile() << "'" << space;
+	writer << "'" << particleSystem->GetOpacityTextureFile() << "'";
 
 	writer.close();
 }
@@ -56,7 +54,6 @@ void ParticleEditor::Load(const std::string& file)
 	window.SetValue<SliderFloatComponent, float>("MAX VELOCITY", particleSystem->GetMaxVelocity());
 
 
-
 	if (particleSystem->GetParticleWidth() == particleSystem->GetParticleHeight())
 		window.SetValue<CheckBoxComponent, bool>("KEEP SQUARE", true);
 	else
@@ -68,6 +65,7 @@ void ParticleEditor::Load(const std::string& file)
 
 	window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("First Image", particleSystem->GetFirstTexture());
 	window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Second Image", particleSystem->GetSecondTexture());
+	window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Opacity Image", particleSystem->GetOpacityTexture());
 
 	source->SetPosition(particleSystem->GetPosition());
 
@@ -165,6 +163,12 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	window.AddImageComponent("Second Image", true, nullptr, 75, 75);
 	window.AddSeperatorComponent();
 
+	// CHANGE OPACITY BUTTON
+	window.AddButtonComponent("CHANGE OPACITY IMAGE", 100, 50);
+	window.AddTextComponent("\t\t\t\t\t", true);
+	window.AddImageComponent("Opacity Image", true, nullptr, 75, 75);
+	window.AddSeperatorComponent();
+
 	window.AddButtonComponent("LOAD", 100, 50);
 	window.AddTextComponent("\t\t\t\t\t", true);
 	window.AddButtonComponent("SAVE AS", 100, 50, true);
@@ -216,6 +220,17 @@ APPSTATE ParticleEditor::Run()
 		particleSystem->ChangeSecondTexture(filePath.string(), filePath.filename().string());
 
 		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Second Image", particleSystem->GetSecondTexture());
+
+		return APPSTATE::NO_CHANGE;
+	}
+
+	else if (window.GetValue<ButtonComponent>("CHANGE OPACITY IMAGE"))
+	{
+		std::filesystem::path filePath = FileSystem::LoadFile("ParticleTextures");
+
+		particleSystem->ChangeOpacityTexture(filePath.string(), filePath.filename().string());
+
+		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Opacity Image", particleSystem->GetOpacityTexture());
 
 		return APPSTATE::NO_CHANGE;
 	}

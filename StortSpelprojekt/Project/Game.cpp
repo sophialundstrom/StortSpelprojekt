@@ -40,11 +40,11 @@ void Game::Update()
 
 void Game::Render()
 {
-	//shadowRenderer.Render();
-
-	ShaderData::Inst().BindFrameConstants();
+	shadowRenderer.Render();
 
 	Graphics::Inst().BeginFrame();
+
+	ShaderData::Inst().BindFrameConstants();
 
 	particleRenderer.Render();
 
@@ -121,7 +121,7 @@ void Game::Initialize()
 		if (model)
 		{
 			modelRenderer.Bind(model);
-			//shadowRenderer.Bind(model);
+			shadowRenderer.Bind(model);
 			continue;
 		}
 			
@@ -160,8 +160,8 @@ void Game::RemoveItem(const std::string name)
 		{
 			auto item = scene.Get<Item>(name);
 			modelRenderer.Unbind(item);
-			//shadowRenderer.Unbind(item);
-			colliderRenderer.Unbind(item->GetCollider());
+			shadowRenderer.Unbind(item);
+			colliderRenderer.Unbind(item->GetBounds());
 			auto it = items.begin() + i;
 			items.erase(it);
 			scene.DeleteDrawable(name);
@@ -180,12 +180,8 @@ void Game::AddItem(Item::Type type, Vector3 position)
 	scene.AddDrawable(name, item);
 	items.emplace_back(item);
 	modelRenderer.Bind(item);
-	//shadowRenderer.Bind(item);
-	item->SetPosition(position);
-
-	collider->SetParent(item);
-	collider->Update();
-	colliderRenderer.Bind(collider);
+	shadowRenderer.Bind(item);
+	colliderRenderer.Bind(item->GetBounds());
 }
 
 std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position)
@@ -199,7 +195,7 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const
 	colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
-	//shadowRenderer.Bind(NPC);
+	shadowRenderer.Bind(NPC);
 
 	scene.AddDrawable(name, NPC);
 
@@ -218,12 +214,12 @@ void Game::AddArrow(const std::string fileName)
 	arrows.emplace_back(arrow);
 	arrow->SetPosition(0, -100, 0);
 	arrow->SetScale(2);
-	arrow->GetCollider()->SetParent(arrow);
-	arrow->GetCollider()->SetScale(0.15f);
-	arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
+	//arrow->GetCollider()->SetParent(arrow);
+	//arrow->GetCollider()->SetScale(0.15f);
+	//arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
 	modelRenderer.Bind(arrow);
-	//shadowRenderer.Bind(arrow);
-	colliderRenderer.Bind(arrow->GetCollider());
+	shadowRenderer.Bind(arrow);
+	//colliderRenderer.Bind(arrow->GetCollider());
 	arrow->Update();
 }
 
@@ -239,12 +235,11 @@ void Game::UpdateAndHandleLoot()
 			colliderRenderer.Unbind(loot[i]->GetCollider());
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
-			SoundEffect::AddAudio(L"Audio/Loot.wav", 2);
-			SoundEffect::SetVolume(0.5, 2);
+			SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
+			SoundEffect::SetVolume(0.1, 2);
 			SoundEffect::StartAudio(2);
 			std::cout << "Loot destoyed\n";
 		}
-		
 	}
 }
 
@@ -333,9 +328,29 @@ void Game::CheckNearbyCollision()
 
 	for (auto& collider : colliders)
 	{
+		for (auto& hostile : hostiles)
+		{
+			for (auto& arrow : hostile->GetArrowHandler().arrows)
+			{
+				if (!arrow->canCollide)
+					continue;
+				hostile->GetArrowHandler().CheckCollision(arrow, collider);
+			}
+		}
+
+		
+		for (auto& arrow : player->GetArrowHandler().arrows)
+		{
+			if (!arrow->canCollide)
+				continue;
+
+			player->GetArrowHandler().CheckCollision(arrow, collider);
+		}
+
 		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
 		if (box)
 		{
+
 			if (Collision::Intersection(box, playerCollider))
 			{
 				collided = true;
@@ -344,6 +359,7 @@ void Game::CheckNearbyCollision()
 				
 
 			Collision::RayResults colliderResult = Collision::Intersection(*box, *scene.GetCamera()->GetCamRay());
+			
 			if (colliderResult.didHit)
 			{
 				if (colliderResult.distance < closestCamCollision)
@@ -380,9 +396,9 @@ void Game::CheckNearbyCollision()
 
 void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
 {
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle);
+	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, modelRenderer, colliderRenderer);
 	NPC->SetPosition(position);
-	NPC->BindArrows(modelRenderer);
+	//NPC->BindArrows(modelRenderer);
 
 	auto collider = NPC->GetCollider();
 	collider->SetParent(NPC);
@@ -391,7 +407,7 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 	colliderRenderer.Bind(collider);
 
 	modelRenderer.Bind(NPC);
-	//shadowRenderer.Bind(NPC);
+	shadowRenderer.Bind(NPC);
 	const std::string name = "hostileNPC" + std::to_string(hostileID);
 	scene.AddDrawable(name, NPC);
 	hostileID++;
@@ -442,7 +458,7 @@ void Game::CheckItemCollision()
 			if (Event::KeyIsPressed('E'))
 			{
 				SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
-				SoundEffect::SetVolume(0.5, 2);
+				SoundEffect::SetVolume(0.005, 2);
 				SoundEffect::StartAudio(2);
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
@@ -474,7 +490,7 @@ void Game::CheckQuestInteraction()
 					state = GameState::DIALOGUE;
 
 					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
-					SoundEffect::SetVolume(0.5, 2);
+					SoundEffect::SetVolume(0.004, 2);
 					SoundEffect::StartAudio(2);
 
 					dialogueOverlay->Set(NPC);
@@ -516,7 +532,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	Initialize();
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(100, { 1, 1, 1, 1 }, 4, 4);
+	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
 
 	//INGAME CANVAS
 	auto ingameCanvas = std::make_shared<Canvas>();
@@ -561,6 +577,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100}, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, [this] { MainMenu(); });
 
 	canvases["PAUSED"] = pauseCanvas;
+
 	//HOW TO PLAY
 	auto howToPlayCanvas = std::make_shared<Canvas>();
 	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "ControlImage", "Controls.png", 2.0f, 1.0f);
@@ -573,12 +590,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 
 	// THE WILL BE A PROBLEM IF MORE ARROWS THAN MAXARROWS IS IN THE AIR AT THE SAME TIME (NO ARROW WILL BE RENDERED). THIS IS BECAUSE THERE ARE ONLY AS MANY ARROW MODELS AS MAXARROWS.
-	UINT maxArrows = 50;
-	for (int i = 0; i < maxArrows; i++)
-		AddArrow("arrowModel");
 
 	//PLAYER
-	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, arrows, maxArrows);
+	UINT maxArrows = 5;
+	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, maxArrows);
 	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
@@ -590,18 +605,17 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	player->GetFrustum()->SetParent(player);
 
 	colliderRenderer.Bind(scene.GetCamera()->GetCamRay());
-
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -70, 20.5f, -566 }, scene, particleRenderer);
-	building->SetRotation(0, -DirectX::XM_PIDIV2, 0);
-	building->SetScale(5);
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -107.5f, 20.0f, -608.5f }, scene, particleRenderer);
+	building->SetRotation(0, -DirectX::XM_PI, 0);
+	building->SetScale(5.85);
 
 	scene.AddModel("Building", building);
 	modelRenderer.Bind(building);
-	//shadowRenderer.Bind(building);
+	shadowRenderer.Bind(building);
 
 	//ITEMS
 	AddItem(Item::Type::Stick, { -134, 22, -594 });
@@ -625,12 +639,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//PARTICLE SYSTEM
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
-	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ -80, 20, -600 });
+	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	particleRenderer.Bind(campFireSystem);
 	
 	//AUDIO
 	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	Audio::SetVolume(0.3, 0);
+	Audio::SetVolume(0.005, 0);
+	//Audio::SetVolume(0.1, 0);
 	Audio::StartAudio(0);
 	
 	(void)Run();
@@ -681,7 +696,38 @@ APPSTATE Game::Run()
 			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 			lastClick = Time::Get();
 		}
+		if (Event::KeyIsPressed('1'))
+		{
+			Graphics::Inst().ActivateWireframe();
+			lastClick = Time::Get();
+		}
+		if (Event::KeyIsPressed('2'))
+		{
+			Graphics::Inst().DeactivateWireframe();
+			lastClick = Time::Get();
+		}
 
+		if (Event::KeyIsPressed('V'))
+		{
+			PrintNumber("Player Arrows", player->GetArrowHandler().arrows.size());
+			PrintNumber("Barb Arrows", hostiles[0]->GetArrowHandler().arrows.size());
+			lastClick = Time::Get();
+		}
+		if (Event::KeyIsPressed('K'))
+		{
+			Audio::AddAudio(L"Audio/arrowHit.wav", 0);
+			Audio::SetVolume(0.3, 0);
+			Audio::StartAudio(0);
+			hostiles[0]->TakeDamage();
+			player->Stats().barbariansKilled++;
+			hostiles[0]->GetArrowHandler().ClearArrows(modelRenderer, colliderRenderer);
+			colliderRenderer.Unbind(hostiles[0]->GetCollider());
+			modelRenderer.Unbind(hostiles[0]);
+			scene.DeleteDrawable(hostiles[0]->GetName());
+			hostiles[0] = hostiles[hostiles.size() - 1];
+			hostiles.resize(hostiles.size() - 1);
+			lastClick = Time::Get();
+		}
 		if (Event::KeyIsPressed(79))
 		{
 			Audio::StopEngine();
@@ -731,15 +777,6 @@ APPSTATE Game::Run()
 		player->Inventory().AddItem(Item::Type::Hammer);
 
 	UpdateInventoryUI();
-
-	int nrOfFreeArrows = 0;
-	for (int i = 0; i < arrows.size(); i++)
-	{
-		if (!arrows[i]->IsShot())
-		{
-			nrOfFreeArrows++;
-		}
-	}
 
 	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(player->numArrows));
 	
@@ -793,28 +830,46 @@ void Game::CheckNearbyEnemies()
 {
 	for (int i = 0; i < hostiles.size(); i++)
 	{
-		bool hit = player->CheckArrowHit(hostiles[i]->GetCollider());
+		
+		hostiles[i]->Update(modelRenderer, colliderRenderer, player);
 
-		if (hit)
+		hostiles[i]->CheckPlayerCollision(player);
+
+		for (auto& arrow : player->GetArrowHandler().arrows)
 		{
-			SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
-			SoundEffect::SetVolume(0.5, 2);
-			SoundEffect::StartAudio(2);
-			hostiles[i]->TakeDamage();
-			if (hostiles[i]->IsDead())
+			if (!arrow->canCollide)
+				continue;
+
+			bool isDead = false;
+			// CRASHES HERE IF TWO ARROWS HIT IT IN THE SAME FRAME...
+			bool hit = player->GetArrowHandler().CheckCollision(arrow, hostiles[i]->GetCollider(), true);
+
+			if (hit)
 			{
-				SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
-				SoundEffect::SetVolume(0.8, 2);
+				std::cout << "BARBARIAN " << i << " HIT!" << std::endl;
+				SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
+				SoundEffect::SetVolume(0.5, 2);
 				SoundEffect::StartAudio(2);
 				hostiles[i]->TakeDamage();
-				player->Stats().barbariansKilled++;
-				AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0,-3,0));
-				colliderRenderer.Unbind(hostiles[i]->GetCollider());
-				modelRenderer.Unbind(hostiles[i]);
-				scene.DeleteDrawable(hostiles[i]->GetName());
-				hostiles[i] = hostiles[hostiles.size() - 1];
-				hostiles.resize(hostiles.size() - 1);
+				if (hostiles[i]->IsDead())
+				{
+					SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
+					SoundEffect::SetVolume(0.8, 2);
+					SoundEffect::StartAudio(2);
+					hostiles[i]->TakeDamage();
+					player->Stats().barbariansKilled++;
+					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));
+					hostiles[i]->GetArrowHandler().ClearArrows(modelRenderer, colliderRenderer);
+					colliderRenderer.Unbind(hostiles[i]->GetCollider());
+					modelRenderer.Unbind(hostiles[i]);
+					scene.DeleteDrawable(hostiles[i]->GetName());
+					hostiles[i] = hostiles[hostiles.size() - 1];
+					hostiles.resize(hostiles.size() - 1);
+					isDead = true;
+				}
 			}
+			if (isDead)
+				break;
 		}
 	}
 }

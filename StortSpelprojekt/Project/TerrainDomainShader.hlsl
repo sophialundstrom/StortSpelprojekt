@@ -12,6 +12,7 @@ struct DS_OUTPUT
     float4 position : SV_POSITION;
     float2 texCoords : TEXTURECOORDS;
     float3 worldPosition : WORLDPOSITION;
+	float4 lightClipPosition : LIGHTPOSITION;
 };
 
 struct HS_CONSTANT_DATA_OUTPUT
@@ -20,9 +21,10 @@ struct HS_CONSTANT_DATA_OUTPUT
     float InsideTessFactor : SV_InsideTessFactor;
 };
 
-cbuffer MATRIX : register(b0)
+cbuffer MATRICES : register(b0)
 {
     float4x4 viewPerspective;
+	float4x4 lightViewPerspective;
 }
 
 #define NUM_CONTROL_POINTS 3
@@ -47,6 +49,8 @@ DS_OUTPUT main(
 
 	//TRANSFORM FINAL POSITION
     output.position = mul(output.position, viewPerspective);
+    
+	output.lightClipPosition = mul(float4(output.worldPosition, 1.0f), lightViewPerspective);
 
     return output;
 }

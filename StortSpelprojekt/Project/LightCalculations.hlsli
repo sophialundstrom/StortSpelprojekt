@@ -102,8 +102,7 @@ float4 LightCalculation(float4 P, float3 N, float4 D, float4 S, float4 A, Direct
 {
     const LightResult dlResult = DirectionalLightCalculation(P, N, D, S, dirLight.lightColor, dirLight.lightDirection, cameraPosition);
     //const LightResult pResult = PointLightCalculation(P, N, D, S, lights, numLights, cameraPosition);
-    const float4 globalAmbient = 0.2f;
 
 
-    return float4(dlResult.diffuse + dlResult.specular) * dlResult.color + globalAmbient + A;
+    return float4(dlResult.diffuse + dlResult.specular * dlResult.color);
 }
