@@ -61,7 +61,7 @@ float4 main(PS_INPUT input) : SV_TARGET
 {
    	const float shadow = ShadowCalculation(input.lightClipPosition);
 	const float4 globalAmbient = 0.2f;
-	const float4 finalLighting = LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition) * shadow + globalAmbient + ambient;
+
 	const float4 T = diffuseTexture.Sample(wrapSampler, input.texCoords);
     
 	LightResult pResult = { { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
@@ -74,7 +74,15 @@ float4 main(PS_INPUT input) : SV_TARGET
 		pResult.diffuse += result.diffuse;
 		pResult.color *= result.color;
 		pResult.specular += result.specular;
+        
 	}
+    
+    pResult.diffuse = saturate(pResult.diffuse);
+    pResult.color = saturate(pResult.color);
+    pResult.specular = saturate(pResult.specular);
+    
+    const float4 finalLighting = LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition) * shadow +
+                                (pResult.diffuse + pResult.specular * pResult.color) + globalAmbient + ambient;
     
     //FOG
 	float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
@@ -87,5 +95,5 @@ float4 main(PS_INPUT input) : SV_TARGET
 	const float4 finalColor = lerp((T * (saturate(finalLighting))), fogColor, fogFactor);
 
 
-	return pResult.color;
+    return finalColor;
 }

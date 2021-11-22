@@ -59,7 +59,7 @@ public:
 		CreateBuffer(matrices_buf, sizeof(Matrices));
 		CreateBuffer(lightDataBuf, sizeof(DirectionalLight::Data));
 		CreateBuffer(numPointLightsBuffer);
-		CreateStructuredBuffer(pointLightBuffer, pointLightSRV, sizeof(PointLight::Data), sizeof(PointLight::Data) * MAX_LIGHTS);
+		CreateStructuredBuffer(pointLightBuffer, pointLightSRV, sizeof(PointLight), sizeof(PointLight) * MAX_LIGHTS);
 		shadowMap = ShadowMap(4096, 10);
 
 		//SAMPLER

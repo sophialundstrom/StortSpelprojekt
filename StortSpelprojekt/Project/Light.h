@@ -79,7 +79,7 @@ struct Light : public Drawable
 		:Drawable(position, rotation, scale) {}
 };
 
-struct PointLight : public Light
+struct PointLight
 {
 	struct Data
 	{
@@ -90,14 +90,7 @@ struct PointLight : public Light
 	} data;
 
 	PointLight(float range = 10.0f, Vector3 attenuation = { 1.0f, 1.0f, 1.0f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f }, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 rotation = { 0.0f, 0.0f, 0.0f }, Vector3 scale = { 0.0f, 0.0f, 0.0f })
-		:Light(position, rotation, scale) { data = { color, position, range, attenuation }; }
-
-	// Inherited via Drawable
-	virtual void Update() override
-	{
-		UpdateMatrix();
-		data.position = position;
-	}
+		{ data = { color, position, range, attenuation }; }
 };
 
 struct SpotLight : public Light

@@ -85,11 +85,6 @@ LightResult PointLightCalculation(float4 P, float3 N, float4 D, float4 S, float4
 
     result.color *= lightColor;
     
-
-    result.diffuse = saturate(result.diffuse);
-    result.specular = saturate(result.specular);
-    result.color = saturate(result.color);
-
     return result;
 }
 
