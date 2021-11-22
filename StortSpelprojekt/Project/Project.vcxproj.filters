@@ -667,6 +667,12 @@
       <Filter>ARCUS\Audio</Filter>
     </ClInclude>
     <ClInclude Include="ArrowHandler.h" />
+    <ClInclude Include="Biome.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
+    <ClInclude Include="BiomeEnum.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">

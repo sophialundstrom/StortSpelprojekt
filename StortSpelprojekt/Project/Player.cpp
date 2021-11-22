@@ -22,6 +22,8 @@ Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> i
 	PlayAnimation("Idle", true, 0.2f);
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
+
+	currentBiome = BIOME::DEFAULT;
 }
 
 void Player::CalcHeight(HeightMap* heightMap)

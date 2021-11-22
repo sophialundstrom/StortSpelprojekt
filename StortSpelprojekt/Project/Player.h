@@ -8,6 +8,7 @@
 #include "Canvas.h"
 #include "ArrowHandler.h"
 #include "AnimatedModel.h"
+#include "Biome.h"
 
 #undef Ray
 
@@ -148,6 +149,7 @@ private:
 	}
 
 public:
+	BIOME currentBiome;
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
 	void Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);

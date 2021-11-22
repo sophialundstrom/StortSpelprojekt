@@ -3,6 +3,7 @@
 #include "FBXLoader.h"
 #include "GameLoader.h"
 #include "DialogueOverlay.h"
+#include "Biome.h"
 
 void Game::Update()
 {
@@ -27,6 +28,8 @@ void Game::Update()
 	CheckQuestInteraction();
 
 	UpdateAndHandleLoot();
+
+	HandleBiomes();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
@@ -577,6 +580,15 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	Audio::SetVolume(0.3, 0);
 	//Audio::SetVolume(0.1, 0);
 	Audio::StartAudio(0);
+
+	auto desert = std::make_shared<Biome>(Vector3(-400, 160, 500), 50.f, "totallyRPGMusic.wav", BIOME::DESERT);
+	biomes.emplace_back(desert);
+	colliderRenderer.Bind(desert->collider);
+
+	auto woodlands = std::make_shared<Biome>(Vector3(-300, 150, 500), 50.f, "Rainy.wav", BIOME::WOODLANDS);
+	biomes.emplace_back(woodlands);
+	colliderRenderer.Bind(woodlands->collider);
+
 	
 	(void)Run();
 }
@@ -641,18 +653,7 @@ APPSTATE Game::Run()
 		}
 		if (Event::KeyIsPressed('K'))
 		{
-			Audio::AddAudio(L"Audio/arrowHit.wav", 0);
-			Audio::SetVolume(0.3, 0);
-			Audio::StartAudio(0);
-			hostiles[0]->TakeDamage();
-			player->Stats().barbariansKilled++;
-			hostiles[0]->GetArrowHandler().ClearArrows(modelRenderer, colliderRenderer);
-			colliderRenderer.Unbind(hostiles[0]->GetCollider());
-			modelRenderer.Unbind(hostiles[0]);
-			scene.DeleteDrawable(hostiles[0]->GetName());
-			hostiles[0] = hostiles[hostiles.size() - 1];
-			hostiles.resize(hostiles.size() - 1);
-			lastClick = Time::Get();
+			PrintVector3(player->GetPosition());
 		}
 		if (Event::KeyIsPressed(79))
 		{
@@ -747,6 +748,33 @@ APPSTATE Game::Run()
 		return APPSTATE::EXIT;
 	}
 	return APPSTATE::NO_CHANGE;
+}
+
+void Game::HandleBiomes()
+{
+
+	for (auto& biome : biomes)
+	{
+		bool hit = Collision::Contains(*biome->collider, player->GetPosition());
+		if (hit)
+		{
+			
+			if (biome->type == BIOME::DESERT)
+			{
+				PrintS("HIT DESERT");
+			}
+			if (biome->type == BIOME::WOODLANDS)
+			{
+				PrintS("HIT WOODLANDS");
+			}
+			if (biome->type == BIOME::DEFAULT)
+			{
+				PrintS("HIT DEFAULT");
+			}
+
+		}
+	}
+
 }
 
 void Game::CheckNearbyEnemies()

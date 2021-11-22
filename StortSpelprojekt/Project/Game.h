@@ -78,6 +78,8 @@ private:
     std::vector<std::shared_ptr<Loot>> loot;
     UINT lootID = 0;
 
+    std::vector<std::shared_ptr<Biome>> biomes;
+
     void Update();
     void Render();
 
@@ -119,6 +121,7 @@ private:
     void CheckItemCollision();
     void CheckQuestInteraction();
     void CheckNearbyEnemies();
+    void HandleBiomes();
 
     void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
     void UpdateInventoryUI();
