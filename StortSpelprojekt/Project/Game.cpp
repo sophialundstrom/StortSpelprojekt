@@ -233,9 +233,9 @@ void Game::UpdateAndHandleLoot()
 			colliderRenderer.Unbind(loot[i]->GetCollider());
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
-			SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
-			SoundEffect::SetVolume(0.1, 2);
-			SoundEffect::StartAudio(2);
+			SoundEffect::AddAudio(L"Audio/PickupPop.wav", 3);
+			SoundEffect::SetVolume(0.5, 3);
+			SoundEffect::StartAudio(3);
 			std::cout << "Loot destoyed\n";
 		}
 	}
@@ -382,9 +382,9 @@ void Game::CheckItemCollision()
 
 			if (Event::KeyIsPressed('E'))
 			{
-				SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
-				SoundEffect::SetVolume(0.005, 2);
-				SoundEffect::StartAudio(2);
+				SoundEffect::AddAudio(L"Audio/Pickup.wav", 1);
+				SoundEffect::SetVolume(0.5, 1);
+				SoundEffect::StartAudio(1);
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
@@ -409,7 +409,7 @@ void Game::CheckQuestInteraction()
 				{
 					state = GameState::DIALOGUE;
 					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
-					SoundEffect::SetVolume(0.004, 2);
+					SoundEffect::SetVolume(0.3, 2);
 					SoundEffect::StartAudio(2);
 					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
 					dialogueOverlay->Set("GILBERT", "Lorem.");
@@ -574,7 +574,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	particleRenderer.Bind(campFireSystem);
 	
 	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	Audio::SetVolume(0.005, 0);
+	Audio::SetVolume(0.3, 0);
 	//Audio::SetVolume(0.1, 0);
 	Audio::StartAudio(0);
 	
@@ -751,7 +751,7 @@ APPSTATE Game::Run()
 
 void Game::CheckNearbyEnemies()
 {
-	bool inCombat = false;
+	short int numInCombat = 0;
 	for (int i = 0; i < hostiles.size(); i++)
 	{
 		float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
@@ -766,20 +766,18 @@ void Game::CheckNearbyEnemies()
 				continue;
 
 			bool isDead = false;
-			// CRASHES HERE IF TWO ARROWS HIT IT IN THE SAME FRAME...
 			bool hit = player->GetArrowHandler().CheckCollision(arrow, hostiles[i]->GetCollider(), true);
 
 			if (hit)
 			{
-				std::cout << "BARBARIAN " << i << " HIT!" << std::endl;
 				//SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
-				//SoundEffect::SetVolume(0.5, 2);
+				//SoundEffect::SetVolume(0.3, 2);
 				//SoundEffect::StartAudio(2);
 				hostiles[i]->TakeDamage();
 				if (hostiles[i]->IsDead())
 				{
 					//SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
-					//SoundEffect::SetVolume(0.8, 2);
+					//SoundEffect::SetVolume(0.2, 2);
 					//SoundEffect::StartAudio(2);
 					hostiles[i]->TakeDamage();
 					player->Stats().barbariansKilled++;
@@ -802,34 +800,28 @@ void Game::CheckNearbyEnemies()
 		}
 		if (distanceToHostile < 70.f) // Should be compared to if the hostile "sees" the player instead of a hardcoded value.
 		{
-			inCombat = true;
-		}
-		
-	}
-	if (!player->inCombat)
-	{
-		if (inCombat)
-		{
-			player->inCombat = true;
-			int rand = Random::Integer(0, 1);
-			if(rand == 0)
-				Audio::AddAudio(L"Audio/Combat1.wav", 0);
-			else
-				Audio::AddAudio(L"Audio/Combat2.wav", 0);
-			Audio::SetVolume(0.05, 0);
-			Audio::StartAudio(0);
+			numInCombat++;
 		}
 	}
-	else
+	if (!player->inCombat && numInCombat > 0)
 	{
-		if (!inCombat)
-		{
-			player->inCombat = false;
-			Audio::StopAudio(0);
-			Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-			Audio::SetVolume(0.005, 0);
-			Audio::StartAudio(0);
-		}
+		player->inCombat = true;
+		short int rand = Random::Integer(0, 1);
+		if(rand == 0)
+			Audio::AddAudio(L"Audio/Combat1.wav", 0);
+		else
+			Audio::AddAudio(L"Audio/Combat2.wav", 0);
+		Audio::SetVolume(0.3, 0);
+		Audio::StartAudio(0);
+	}
+	else if (player->inCombat && numInCombat == 0)
+	{
+		player->inCombat = false;
+		Audio::StopAudio(0);
+		//Current biomeMusic here
+		Audio::AddAudio(L"Audio/Sonrie.wav", 0);
+		Audio::SetVolume(0.3, 0);
+		Audio::StartAudio(0);
 	}
 
 }

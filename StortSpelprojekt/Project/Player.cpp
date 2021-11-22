@@ -165,7 +165,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		{
 			jumping = true;
 			SoundEffect::AddAudio(L"Audio/Jump.wav", 2);
-			SoundEffect::SetVolume(0.005, 2);
+			SoundEffect::SetVolume(0.3, 2);
 			SoundEffect::StartAudio(2);
 			preJumpGroundLevel = currentGroundLevel; 
 			PlayAnimation("Jump", false, 0.5f);
@@ -238,9 +238,9 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	{
 		if (!isAiming)
 		{
-			SoundEffect::AddAudio(L"Audio/Bow.wav", 1);
-			SoundEffect::SetVolume(0.5, 1);
-			SoundEffect::StartAudio(1);
+			SoundEffect::AddAudio(L"Audio/Bow.wav", 4);
+			SoundEffect::SetVolume(0.5, 4);
+			SoundEffect::StartAudio(4);
 			isAiming = true;
 		}
 
@@ -253,9 +253,9 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 			{
 				arrowHandler.AddArrow(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
-				SoundEffect::AddAudio(L"Audio/Fire.wav", 1);
-				SoundEffect::SetVolume(0.005, 1);
-				SoundEffect::StartAudio(1);
+				SoundEffect::AddAudio(L"Audio/Fire.wav", 5);
+				SoundEffect::SetVolume(0.5, 5);
+				SoundEffect::StartAudio(5);
 				int currentIndex = 0;
 				numArrows--;
 				sinceLastShot = 0.f;
