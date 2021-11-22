@@ -559,7 +559,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -91, 20, -593 });
 	AddItem(WOOD, { -85, 20, -608 });
 
-	AddHostileNPC("BarbarianBow", { Vector3(5.686, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+	//AddHostileNPC("BarbarianBow", { Vector3(5.686, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { Vector3(0, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(15,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
@@ -581,11 +581,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//Audio::SetVolume(0.1, 0);
 	Audio::StartAudio(0);
 
-	auto desert = std::make_shared<Biome>(Vector3(-400, 160, 500), 50.f, "totallyRPGMusic.wav", BIOME::DESERT);
+	auto desert = std::make_shared<Biome>(Vector3(-37, 22, -556), 50.f, L"Audio/totallyRPGMusic.wav", BIOME::DESERT);
 	biomes.emplace_back(desert);
 	colliderRenderer.Bind(desert->collider);
 
-	auto woodlands = std::make_shared<Biome>(Vector3(-300, 150, 500), 50.f, "Rainy.wav", BIOME::WOODLANDS);
+	auto woodlands = std::make_shared<Biome>(Vector3(23, 20, -588), 50.f, L"Audio/Rain.wav", BIOME::WOODLANDS);
 	biomes.emplace_back(woodlands);
 	colliderRenderer.Bind(woodlands->collider);
 
@@ -753,28 +753,46 @@ APPSTATE Game::Run()
 void Game::HandleBiomes()
 {
 
+	bool hit = false;
+	BIOME type = BIOME::DEFAULT;
 	for (auto& biome : biomes)
 	{
-		bool hit = Collision::Contains(*biome->collider, player->GetPosition());
+		hit = Collision::Contains(*biome->collider, player->GetPosition());
 		if (hit)
 		{
-			
-			if (biome->type == BIOME::DESERT)
-			{
-				PrintS("HIT DESERT");
-			}
-			if (biome->type == BIOME::WOODLANDS)
-			{
-				PrintS("HIT WOODLANDS");
-			}
-			if (biome->type == BIOME::DEFAULT)
-			{
-				PrintS("HIT DEFAULT");
-			}
+			type = biome->type;
+		}
+		
+	}
 
+	player->currentBiome = type;
+
+	if (player->currentBiome != player->previousBiome)
+	{
+		switch (player->currentBiome)
+		{
+		case BIOME::DESERT:
+			PrintS("DESERT");
+			Audio::AddAudio(L"Audio/totallyRPGMusic.wav", 6);
+			Audio::SetVolume(0.8, 6);
+			Audio::StartAudio(6);
+			break;
+		case BIOME::WOODLANDS:
+			PrintS("WOODLANDS");
+			Audio::AddAudio(L"Audio/Camelot.wav", 5);
+			Audio::SetVolume(0.8, 5);
+			Audio::StartAudio(5);
+			break;
+		case BIOME::DEFAULT:
+			PrintS("DEFAULT");
+			Audio::AddAudio(L"Audio/Sonrie.wav", 4);
+			Audio::SetVolume(0.8, 4);
+			Audio::StartAudio(4);
+			break;
 		}
 	}
 
+	player->previousBiome = player->currentBiome;
 }
 
 void Game::CheckNearbyEnemies()

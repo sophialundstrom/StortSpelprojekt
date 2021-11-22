@@ -150,6 +150,10 @@ private:
 
 public:
 	BIOME currentBiome;
+	BIOME previousBiome;
+	bool test = false;
+	bool biomeChanged = false;
+
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
 	void Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);

@@ -4,7 +4,7 @@
 
 struct Biome
 {
-	Biome(const Vector3& position, const float& radius, const std::string& wavPath, BIOME type)
+	Biome(const Vector3& position, const float& radius, const std::wstring& wavPath, BIOME type)
 	{
 		collider = std::make_shared<BoundingSphere>();
 		collider->SetScale(radius);
@@ -15,7 +15,7 @@ struct Biome
 	}
 
 	std::shared_ptr<BoundingSphere> collider;
-	std::string musicName;
+	std::wstring musicName;
 	BIOME type;
 
 };

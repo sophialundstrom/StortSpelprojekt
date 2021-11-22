@@ -7,7 +7,7 @@
 class Audio
 {
 private:
-	static const int CAP = 5;
+	static const int CAP = 8;
 	static Microsoft::WRL::ComPtr<IXAudio2> MusicEngine;
 	static IXAudio2MasteringVoice* pMasterVoice;
 	static IXAudio2SourceVoice* pSourceVoice[CAP];
