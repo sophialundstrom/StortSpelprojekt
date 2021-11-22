@@ -345,6 +345,7 @@
     <ClCompile Include="SoundEffect.cpp">
       <Filter>ARCUS\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="ArrowHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -665,6 +666,7 @@
     <ClInclude Include="SoundEffect.h">
       <Filter>ARCUS\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="ArrowHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">

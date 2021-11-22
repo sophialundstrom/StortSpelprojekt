@@ -31,22 +31,22 @@ bool NPC::Collided(Player& player)
 	return false;
 }
 
-bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
-{
-
-	if (Collision::Intersection(this->boundingBox, arrow->GetCollider()) && arrow->IsShot() == true)
-	{
-		Print("ARROW HIT");
-		arrow->DisableArrow();
-		hp--;
-		if (hp <= 0)
-		{
-			Die();
-		}
-		return true;
-	}
-	return false;
-}
+//bool NPC::ProjectileCollided(std::shared_ptr<Arrow>& arrow)
+//{
+//
+//	if (Collision::Intersection(this->boundingBox, arrow->GetCollider()) && arrow->IsShot() == true)
+//	{
+//		Print("ARROW HIT");
+//		//arrow->DisableArrow();
+//		hp--;
+//		if (hp <= 0)
+//		{
+//			Die();
+//		}
+//		return true;
+//	}
+//	return false;
+//}
 
 void NPC::Die()
 {
@@ -56,7 +56,7 @@ void NPC::Die()
 
 void NPC::TakeDamage()
 {
-	std::cout << "DamageTaken\n";
+	//std::cout << "DamageTaken\n";
 	hp--;
 	if (hp <= 0)
 		Die();
