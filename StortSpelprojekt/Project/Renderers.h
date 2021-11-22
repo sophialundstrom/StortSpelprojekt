@@ -24,6 +24,9 @@ private:
 	static VolumeRenderer* vr;
 	static WaterRenderer* wr;
 public:
+	Renderers() :Singleton(this) {}
+	~Renderers() { ShutDown(); }
+
 	static void InitAnimatedModelRenderer()							{ amr = new AnimatedModelRenderer(); }
 	static void InitColliderRenderer()								{ cr = new ColliderRenderer(); }
 	static void InitIDRenderer()									{ idr = new IDRenderer(); }
@@ -31,9 +34,9 @@ public:
 	static void InitParticleRenderer()								{ pr = new ParticleRenderer(); }
 	static void InitShadowRenderer()								{ sr = new ShadowRenderer(); }
 	static void InitSkeletonRenderer()								{ skr = new SkeletonRenderer(); }
-	static void InitTerrainRenderer(UINT tesselationAmount = 63)	{ tr = new TerrainRenderer(tesselationAmount); }
+	static void InitTerrainRenderer(float tesselationAmount = 63.0f){ tr = new TerrainRenderer(tesselationAmount); }
 	static void InitVolumeRenderer()								{ vr = new VolumeRenderer(); }
-	static void InitWaterRenderer(UINT tesselationAmount = 63)		{ wr = new WaterRenderer(tesselationAmount); }
+	static void InitWaterRenderer(float tesselationAmount = 63.0f)	{ wr = new WaterRenderer(tesselationAmount); }
 
 	static AnimatedModelRenderer* AMR() { return amr; }
 	static ColliderRenderer* CR()		{ return cr; }
@@ -67,7 +70,7 @@ public:
 		if (wr)
 			wr->Clear();
 	}
-	static void Shutdown()
+	static void ShutDown()
 	{
 		if (amr)
 		{
@@ -141,45 +144,45 @@ inline TerrainRenderer*			Renderers::tr	= nullptr;
 inline VolumeRenderer*			Renderers::vr	= nullptr;
 inline WaterRenderer*			Renderers::wr	= nullptr;
 
-Renderers& GetRenderersInstance() { return Renderers::Inst(); }
+inline Renderers& GetRenderersInstance() { return Renderers::Inst(); }
 #define RND GetRenderersInstance()
 
-AnimatedModelRenderer* RendererAMR() { return RND.AMR(); }
+inline AnimatedModelRenderer* RendererAMR() { return RND.AMR(); }
 //ANIMATED MODEL RENDERER
 #define AMR RendererAMR()
 
-ColliderRenderer* RendererCR() { return RND.CR(); }
+inline ColliderRenderer* RendererCR() { return RND.CR(); }
 //COLLIDER RENDERER
 #define CR RendererCR()
 
-IDRenderer* RendererIDR() { return RND.IDR(); }
+inline IDRenderer* RendererIDR() { return RND.IDR(); }
 //ANIMATED MODEL RENDERER
 #define IDR RendererIDR()
 
-ModelRenderer* RendererMR() { return RND.MR(); }
+inline ModelRenderer* RendererMR() { return RND.MR(); }
 //MODEL RENDERER
 #define MR RendererMR()
 
-ParticleRenderer* RendererPR() { return RND.PR(); }
+inline ParticleRenderer* RendererPR() { return RND.PR(); }
 //PARTICLE RENDERER
 #define PR RendererPR()
 
-ShadowRenderer* RendererSR() { return RND.SR(); }
+inline ShadowRenderer* RendererSR() { return RND.SR(); }
 //SHADOW RENDERER
 #define SR RendererSR()
 
-SkeletonRenderer* RendererSKR() { return RND.SKR(); }
+inline SkeletonRenderer* RendererSKR() { return RND.SKR(); }
 //SKELETON RENDERER
 #define SKR RendererSKR()
 
-TerrainRenderer* RendererTR() { return RND.TR(); }
+inline TerrainRenderer* RendererTR() { return RND.TR(); }
 //TERRAIN RENDERER
 #define TR RendererTR()
 
-VolumeRenderer* RendererVR() { return RND.VR(); }
-//VOLUME RENDERER
+inline VolumeRenderer* RendererVR() { return RND.VR(); }
+//VOLUME RENDERER	
 #define VR RendererVR()
 
-WaterRenderer* RendererWR() { return RND.WR(); }
+inline WaterRenderer* RendererWR() { return RND.WR(); }
 //WATER RENDERER
 #define WR RendererWR()

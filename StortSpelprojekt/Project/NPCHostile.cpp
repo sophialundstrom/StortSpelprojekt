@@ -1,14 +1,11 @@
 #include "NPCHostile.h"
 
-HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
+HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle)
 	:NPC(file)
 {
     this->player = player;
     this->combatStyle = combatStyle;
     SwapCombatStyle(combatStyle);
-    mRend = &mRenderer;
-    cRend = &cRenderer;
-
     arrowHandler.SetPullbackFactor(0.6f);
 }
 
@@ -58,7 +55,7 @@ void HostileNPC::Update()
    
 }
 
-void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player)
+void HostileNPC::Update(const std::shared_ptr<Player> player)
 {
     // This stops multiple instances of this class from shooting at once. All instances of the same class has the same static variable... 
     // static float lastClick = 0;
@@ -105,15 +102,15 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
 
         if (Time::Get() - lastShot > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
         {
-            arrowHandler.AddArrow(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            arrowHandler.AddArrow(aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             lastShot = Time::Get();
         }
         else if (Time::Get() - lastShot > 3 && combatStyle == CombatStyle::wideArrow)
         {
             float arrowWidth = PI / 32.f;
-            arrowHandler.AddArrow(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-            arrowHandler.AddArrow(mRenderer, cRenderer, DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
-            arrowHandler.AddArrow(mRenderer, cRenderer, DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
+            arrowHandler.AddArrow(aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            arrowHandler.AddArrow(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
+            arrowHandler.AddArrow(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
 
             DirectX::XMMatrixRotationX(-arrowWidth);
             lastShot = Time::Get();
@@ -122,7 +119,7 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
 
     }
 
-    arrowHandler.Update(mRenderer, cRenderer);
+    arrowHandler.Update();
 
     NPC::Update();
 }
@@ -150,7 +147,6 @@ void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
             std::cout << "PLAYER HIT" << std::endl;
             player->TakeDamage();
         }
-        
     }
 }
 

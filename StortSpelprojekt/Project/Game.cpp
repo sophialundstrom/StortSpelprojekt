@@ -11,7 +11,7 @@ void Game::Update()
 	scene.Update();
 
 	if (state != GameState::DIALOGUE)
-		player->Update(terrain.GetHeightMap(), modelRenderer, colliderRenderer);
+		player->Update(terrain.GetHeightMap());
 
 	scene.GetCamera()->Update();
 
@@ -35,34 +35,30 @@ void Game::Update()
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
-	//std::cout << TESTING;
-
-	//RND.WR()->Bind(nullptr);
-
 	Event::ClearRawDelta();
 }
 
 void Game::Render()
 {
-	shadowRenderer.Render();
+	SR->Render();
 
 	Graphics::Inst().BeginFrame();
 
 	ShaderData::Inst().BindFrameConstants();
 
-	particleRenderer.Render();
+	PR->Render();
 
-	modelRenderer.Render();
+	MR->Render();
 
-	animatedModelRenderer.Render();
+	AMR->Render();
 
-	skeletonRenderer.Render();
+	SKR->Render();
 
-	colliderRenderer.Render();
+	CR->Render();
 
-	terrainRenderer.Render(terrain);
+	TR->Render(terrain);
 
-	waterRenderer.Render(water);
+	WR->Render(water);
 
 	currentCanvas->Render();
 
@@ -113,10 +109,10 @@ void Game::Initialize()
 
 	//SAVE STATIONS
 	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
-	colliderRenderer.Bind(saveStations[0].Collider());
+	CR->Bind(saveStations[0].Collider());
 
 	saveStations[1] = SaveStation({ 20, 0, -20 }, 1, scene.GetDrawables());
-	colliderRenderer.Bind(saveStations[1].Collider());
+	CR->Bind(saveStations[1].Collider());
 
 	//MODELS & COLLIDERS
 	for (auto& [name, drawable] : scene.GetDrawables())
@@ -124,8 +120,8 @@ void Game::Initialize()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
-			modelRenderer.Bind(model);
-			shadowRenderer.Bind(model);
+			MR->Bind(model);
+			SR->Bind(model);
 			continue;
 		}
 			
@@ -139,7 +135,7 @@ void Game::Initialize()
 		if (boundingBox)
 		{
 			colliders.emplace_back(boundingBox);
-			colliderRenderer.Bind(boundingBox);
+			CR->Bind(boundingBox);
 			continue;
 		}
 
@@ -147,7 +143,7 @@ void Game::Initialize()
 		if (boundingSphere)
 		{
 			colliders.emplace_back(boundingSphere);
-			colliderRenderer.Bind(boundingSphere);
+			CR->Bind(boundingSphere);
 			continue;
 		}
 	}
@@ -163,9 +159,9 @@ void Game::RemoveItem(const std::string name)
 		if (items[i]->GetName() == name)
 		{
 			auto item = scene.Get<Item>(name);
-			modelRenderer.Unbind(item);
-			shadowRenderer.Unbind(item);
-			colliderRenderer.Unbind(item->GetCollider());
+			MR->Unbind(item);
+			SR->Unbind(item);
+			CR->Unbind(item->GetCollider());
 			auto it = items.begin() + i;
 			items.erase(it);
 			scene.DeleteDrawable(name);
@@ -183,9 +179,9 @@ void Game::AddItem(Item::Type type, Vector3 position)
 
 	scene.AddDrawable(name, item);
 	items.emplace_back(item);
-	modelRenderer.Bind(item);
-	shadowRenderer.Bind(item);
-	colliderRenderer.Bind(item->GetCollider());
+	MR->Bind(item);
+	SR->Bind(item);
+	CR->Bind(item->GetCollider());
 }
 
 std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position)
@@ -196,10 +192,10 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const
 	auto collider = NPC->GetCollider();
 	collider->SetParent(NPC);
 	collider->Update();
-	colliderRenderer.Bind(collider);
+	CR->Bind(collider);
 
-	modelRenderer.Bind(NPC);
-	shadowRenderer.Bind(NPC);
+	MR->Bind(NPC);
+	SR->Bind(NPC);
 
 	scene.AddDrawable(name, NPC);
 
@@ -207,24 +203,9 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const
 
 	auto marker = NPC->GetQuestMarker();
 	marker->SetParent(NPC);
-	modelRenderer.Bind(marker);
+	MR->Bind(marker);
 
 	return NPC;
-}
-
-void Game::AddArrow(const std::string fileName)
-{
-	auto arrow = std::make_shared<Arrow>();
-	arrows.emplace_back(arrow);
-	arrow->SetPosition(0, -100, 0);
-	arrow->SetScale(2);
-	//arrow->GetCollider()->SetParent(arrow);
-	//arrow->GetCollider()->SetScale(0.15f);
-	//arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
-	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
-	//colliderRenderer.Bind(arrow->GetCollider());
-	arrow->Update();
 }
 
 void Game::UpdateAndHandleLoot()
@@ -235,8 +216,8 @@ void Game::UpdateAndHandleLoot()
 		if (loot[i]->IsDestroyed())
 		{
 			scene.DeleteDrawable(loot[i]->GetName());
-			modelRenderer.Unbind(loot[i]);
-			colliderRenderer.Unbind(loot[i]->GetCollider());
+			MR->Unbind(loot[i]);
+			CR->Unbind(loot[i]->GetCollider());
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 			SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
@@ -324,12 +305,12 @@ void Game::AddFriendlyNPCs()
 void Game::AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation)
 {
 	auto target = std::make_shared<Target>(file, position, rotation, targets.size());
-	modelRenderer.Bind(target);
-	shadowRenderer.Bind(target); 
+	MR->Bind(target);
+	SR->Bind(target); 
 
 	auto collider = target->GetCollider();
 	colliders.emplace_back(collider);
-	colliderRenderer.Bind(collider);
+	CR->Bind(collider);
 
 	targets.emplace_back(target);
 }
@@ -340,9 +321,10 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp(BarbarianCamp::Location::South, 30.0f);
-		camp->AddBarbarian("BarbarianBow", { -582.0f, 72.0f + towerHeight, -269.0f }, false);
-		camp->AddBarbarian("BarbarianBow", { -577.0f, 72.0f + towerHeight, -213.0f }, false);
+		//camp->AddBarbarian("BarbarianBow", { 392, 182, -44 }, hostiles, player, CombatStyle::consistantDelay, false);
+		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, false);
 		//ADD MORE BARBARIANS AND CAMPS
+
 
 		camps[BarbarianCamp::Location::South] = camp;
 	}
@@ -475,7 +457,7 @@ void Game::CheckNearbyCollision()
 
 void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
 {
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, modelRenderer, colliderRenderer);
+	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle);
 	NPC->SetPosition(position);
 	//NPC->BindArrows(modelRenderer);
 
@@ -483,10 +465,10 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 	collider->SetParent(NPC);
 	collider->Update();
 	collider->SetScale(2, 7, 2);
-	colliderRenderer.Bind(collider);
+	CR->Bind(collider);
 
-	modelRenderer.Bind(NPC);
-	shadowRenderer.Bind(NPC);
+	MR->Bind(NPC);
+	SR->Bind(NPC);
 	const std::string name = "hostileNPC" + std::to_string(hostileID);
 	scene.AddDrawable(name, NPC);
 	hostileID++;
@@ -495,16 +477,15 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 
 void Game::AddLoot(LOOTTYPE type, const Vector3& position)
 {
-
 	auto LOOT = std::make_shared<Loot>(type, position);
-	modelRenderer.Bind(LOOT);
+	MR->Bind(LOOT);
 	auto collider = LOOT->GetCollider();
 	const std::string name = "loot" + std::to_string(lootID);
 	LOOT->SetName(name);
 	scene.AddDrawable(name, LOOT);
 	loot.emplace_back(LOOT);
 	lootID++;
-	//colliderRenderer.Bind(LOOT->GetCollider());
+	//CR->Bind(LOOT->GetCollider());
 }
 
 void Game::CheckSaveStationCollision()
@@ -581,11 +562,6 @@ void Game::CheckQuestInteraction()
 		}
 	}
 }
-
-void Game::UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect)
-{
-	effect->Unbind(scene, particleRenderer);
-}
   
 void Game::UpdateInventoryUI()
 {
@@ -599,6 +575,15 @@ void Game::UpdateInventoryUI()
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:water(5000), terrain(2)
 {
+	RND.InitAnimatedModelRenderer();
+	RND.InitColliderRenderer();
+	RND.InitModelRenderer();
+	RND.InitParticleRenderer();
+	RND.InitShadowRenderer();
+	RND.InitSkeletonRenderer();
+	RND.InitTerrainRenderer();
+	RND.InitWaterRenderer();
+
 	QuestLog::CreateQuests();
 	//QuestLog::Load("Default");
 
@@ -671,25 +656,25 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
-	colliderRenderer.Bind(player->GetBounds());
-	skeletonRenderer.Bind(player);
-	animatedModelRenderer.Bind(player);
+	CR->Bind(player->GetBounds());
+	SKR->Bind(player);
+	AMR->Bind(player);
 
-	colliderRenderer.Bind(player->GetFrustum());
+	CR->Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
 
-	colliderRenderer.Bind(scene.GetCamera()->GetCamRay());
+	CR->Bind(scene.GetCamera()->GetCamRay());
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -107.5f, 20.0f, -608.5f }, scene, particleRenderer);
+	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -107.5f, 20.0f, -608.5f }, scene);
 	building->SetRotation(0, -DirectX::XM_PI, 0);
 	building->SetScale(5.85);
 
 	scene.AddModel("Building", building);
-	modelRenderer.Bind(building);
-	shadowRenderer.Bind(building);
+	MR->Bind(building);
+	SR->Bind(building);
 
 	//ITEMS
 	AddItem(Item::Type::Stick, { -134, 22, -594 });
@@ -699,12 +684,15 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(Item::Type::Stick, { -85, 20, -608 });
 
 	//HOSTILES NPC
-	AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
-	AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
-	AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
+	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+	//AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
+	//AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
-	//FRIENDLY NPC
+	//FRIENDLY NPCS
 	AddFriendlyNPCs();
+
+	//BARBARIAN CAMPS
+	AddBarbarianCamps();
 
 	//TARGETS
 	AddTarget("TargetDummy", { -150, 30, -600 }, { 0,0,0 });
@@ -714,7 +702,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//PARTICLE SYSTEM
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
-	particleRenderer.Bind(campFireSystem);
+	PR->Bind(campFireSystem);
 	
 	//AUDIO
 	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
@@ -794,9 +782,9 @@ APPSTATE Game::Run()
 			Audio::StartAudio(0);
 			hostiles[0]->TakeDamage();
 			player->Stats().barbariansKilled++;
-			hostiles[0]->GetArrowHandler().ClearArrows(modelRenderer, colliderRenderer);
-			colliderRenderer.Unbind(hostiles[0]->GetCollider());
-			modelRenderer.Unbind(hostiles[0]);
+			hostiles[0]->GetArrowHandler().ClearArrows();
+			CR->Unbind(hostiles[0]->GetCollider());
+			MR->Unbind(hostiles[0]);
 			scene.DeleteDrawable(hostiles[0]->GetName());
 			hostiles[0] = hostiles[hostiles.size() - 1];
 			hostiles.resize(hostiles.size() - 1);
@@ -910,8 +898,7 @@ void Game::CheckNearbyEnemies()
 {
 	for (int i = 0; i < hostiles.size(); i++)
 	{
-		
-		hostiles[i]->Update(modelRenderer, colliderRenderer, player);
+		hostiles[i]->Update(player);
 
 		hostiles[i]->CheckPlayerCollision(player);
 
@@ -939,9 +926,9 @@ void Game::CheckNearbyEnemies()
 					hostiles[i]->TakeDamage();
 					player->Stats().barbariansKilled++;
 					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));
-					hostiles[i]->GetArrowHandler().ClearArrows(modelRenderer, colliderRenderer);
-					colliderRenderer.Unbind(hostiles[i]->GetCollider());
-					modelRenderer.Unbind(hostiles[i]);
+					hostiles[i]->GetArrowHandler().ClearArrows();
+					CR->Unbind(hostiles[i]->GetCollider());
+					MR->Unbind(hostiles[i]);
 					scene.DeleteDrawable(hostiles[i]->GetName());
 					hostiles[i] = hostiles[hostiles.size() - 1];
 					hostiles.resize(hostiles.size() - 1);

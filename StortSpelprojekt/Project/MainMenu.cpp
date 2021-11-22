@@ -1,5 +1,4 @@
 #include "MainMenu.h"
-#include "Renderers.h"
 
 void MainMenu::Options()
 {
@@ -87,6 +86,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 {
 	RND.InitModelRenderer();
 	RND.InitParticleRenderer();
+	RND.InitShadowRenderer();
 
 	Initialize();
 	
@@ -194,8 +194,6 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 MainMenu::~MainMenu()
 {
-	RND.Shutdown();
-
 	for (auto& [name, canvas] : canvases)
 		delete canvas;
 }
@@ -214,7 +212,7 @@ void MainMenu::Initialize()
 		if (model)
 		{
 			MR->Bind(model);
-			//shadowRenderer.Bind(model);
+			SR->Bind(model);
 			continue;
 		}
 
@@ -230,7 +228,7 @@ void MainMenu::Initialize()
 
 void MainMenu::Render()
 {
-	shadowRenderer.Render();
+	SR->Render();
 
 	Graphics::Inst().BeginFrame();
 

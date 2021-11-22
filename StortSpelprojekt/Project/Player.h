@@ -80,7 +80,6 @@ private:
 
 	std::shared_ptr<Canvas> ingameCanvas;
 
-	//std::vector<std::shared_ptr<Arrow>>arrows;
 	ArrowHandler arrowHandler;
 
 	bool hasCollided;
@@ -148,10 +147,10 @@ private:
 public:
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
-	void Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
+	void Update(HeightMap* heightMap);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void TakeDamage();
-	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas/*, std::vector<std::shared_ptr<Arrow>> arrows*/, const UINT& maxArrows);
+	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, const UINT& maxArrows);
 
 public:
 	// TEMP STATS PRINT
@@ -166,6 +165,7 @@ public:
 	}
 
 	bool GetGameOver() { return this->gameOver; }
+
 	std::shared_ptr<BoundingBox> GetBounds() { return bounds; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 

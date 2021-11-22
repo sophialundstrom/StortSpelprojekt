@@ -89,7 +89,7 @@ void QuestLog::CreateQuests()
 	quests.emplace_back(q2);
 
 	auto q3 = q2->AddChildQuest("We're Under Attack!");			//FIGHT THE BARBARIANS ATTACKING THE VILLAGE
-	q3->AddFightObjective(BarbarianCamp::Location::Village);
+	q3->AddFightObjective(BarbarianCamp::Location::South);
 	quests.emplace_back(q3);
 
 	//=====================================================

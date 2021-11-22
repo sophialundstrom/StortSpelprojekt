@@ -74,7 +74,7 @@ float Get2DAngle(Vector2 a, Vector2 b)
 	return acos(a.x * b.x + a.y * b.y);
 };
 
-void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
+void Player::Update(HeightMap* heightMap)
 {
 	lastPosition = position;
 
@@ -234,7 +234,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		{
 			if (Event::LeftIsClicked() && numArrows > 0)
 			{
-				arrowHandler.AddArrow(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+				arrowHandler.AddArrow(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				SoundEffect::AddAudio(L"Audio/Fire.wav", 1);
 				SoundEffect::SetVolume(0.005, 1);
@@ -253,7 +253,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		sceneCamera->MoveTowards(newCameraPos);
 	}
 		
-	arrowHandler.Update(mRenderer, cRenderer);
+	arrowHandler.Update();
 
 	AnimatedModel::Update();
 
@@ -424,18 +424,6 @@ void Player::Load(const std::string file)
 	reader >> stats.healthPoints;
 	reader >> stats.level;
 	stats.currentSpeed = stats.movementSpeed;
-
-	////INVENTORY
-	//UINT numItems;
-	//reader >> numItems;
-	//for (UINT i = 0; i < numItems; ++i)
-	//{
-	//	UINT resourceID, num;
-	//	reader >> resourceID;
-	//	reader >> num;
-
-	//	inventory.items[(RESOURCE)resourceID] = num;
-	//}
 
 	reader.close();
 }

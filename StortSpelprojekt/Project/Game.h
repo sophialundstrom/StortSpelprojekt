@@ -1,14 +1,5 @@
 #pragma once
 #include "ApplicationState.h"
-#include "AnimatedModelRenderer.h"
-#include "ModelRenderer.h"
-#include "ParticleRenderer.h"
-#include "ShadowRenderer.h"
-#include "DeferredRenderer.h"
-#include "ColliderRenderer.h"
-#include "TerrainRenderer.h"
-#include "SkeletonRenderer.h"
-#include "WaterRenderer.h"
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
@@ -23,6 +14,7 @@
 #include "NPCHostile.h"
 #include "Loot.h"
 #include "MainMenu.h"
+#include "Renderers.h"
 
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
@@ -39,17 +31,6 @@ private:
 
     //-----TEMP-----//
     Pathfinding pathing;
-
-    //std::unique_ptr<QuestLog> questLog;
-
-    AnimatedModelRenderer animatedModelRenderer;
-    ParticleRenderer particleRenderer;
-    ModelRenderer modelRenderer;
-    ShadowRenderer shadowRenderer;
-    TerrainRenderer terrainRenderer;
-    ColliderRenderer colliderRenderer;
-    SkeletonRenderer skeletonRenderer;
-    WaterRenderer waterRenderer;
 
     SaveStation saveStations[2];
 
@@ -110,8 +91,6 @@ private:
     void AddItem(Item::Type type, Vector3 position);
 
     std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position);
-
-    void AddArrow(const std::string fileName);
 
     void AddFriendlyNPCs();
     void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);

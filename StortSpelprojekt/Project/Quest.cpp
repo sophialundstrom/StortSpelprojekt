@@ -125,12 +125,7 @@ void Quest::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Locat
 	}
 
 	if (numCompleted == objectives.size())
-	{
-		for (auto child : childQuests)
-			child->Unlock();
-
 		completed = true;
-	}
 }
 
 void Quest::SaveToFile(File& file)

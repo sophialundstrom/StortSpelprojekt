@@ -61,8 +61,6 @@ void FriendlyNPC::Update()
 		if (!currentQuest->Unlocked())
 			return;
 
-		questMarker->Update();
-
 		if (currentQuest->Unlocked() && currentQuest->IsActive() && !currentQuest->IsCompleted())
 		{
 			currentDialogueState = DialogueState::HELP;
@@ -106,5 +104,6 @@ void FriendlyNPC::Update()
 		questMarker->SetPosition(0, 9.0f, 0);
 	}
 
+	questMarker->Update();
 	finishedDialogue = false;
 }
