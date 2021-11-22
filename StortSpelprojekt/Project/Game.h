@@ -92,7 +92,7 @@ private:
     void HoveringResume();
     void HoveringOptions();
     void HoveringHowToPlay();
-    void HoveringQuit();
+    void HoveringMainMenu();
     void HoveringBackHowToPlay();
     void HoveringBackQuit();
     void HoveringBackOptions();

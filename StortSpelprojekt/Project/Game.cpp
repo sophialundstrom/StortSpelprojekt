@@ -485,35 +485,78 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	ingameCanvas->AddImage({ (float)clientWidth / 2.0f, (float)clientHeight / 2 }, "CrossHair", "CrossHair.png");
 	
-
 	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 50 }, "ArrowCount", "Arrows:" + std::to_string(0), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
 	canvases["INGAME"] = ingameCanvas;
 	currentCanvas = ingameCanvas;
 
+	// BUTTON POSISTION
+	float xPos = 75;
+
 	//PAUSED CANVAS
 	auto pauseCanvas = std::make_shared<Canvas>();
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "PauseBackground", "PauseBackground.png", 1.0f, 1.0f);
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 8.0f }, "PauseTitle", "PAUSED.png", 1.0f, 1.0f);
 
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "RESUME", 350, 95, UI::COLOR::GRAY, [this] { Resume(); });
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100}, "ResumeButton", "ResumeButton.png", 0.50f, 1.0f);
+	// PAUSED
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "APauseBackground", "PauseBackground.png", 1.0f, 1.0f);
+	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 7.0f }, "PauseTitle", "PAUSED.png", 0.75f, 1.0f);
+	pauseCanvas->AddImage({ 25, clientHeight / 2.0f }, "MenuStick", "MenuStick.png", 0.8f, 1.0f, true, true);
 
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlayButton", "HowToPlayButton.png", 0.50f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlay", 350, 95, UI::COLOR::GRAY, [this] { HowToPlay(); });
-
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "BackToMainMenu", "MainMenuButton.png", 0.50f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100}, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, [this] { MainMenu(); });
-
+	{
+		// RESUME
+		pauseCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "Resume", "Resume.png", 1.0f, 1.0f, true, false);
+		pauseCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "ResumeLeaves", "ResumeLeaves.png", 1.0f, 1.0f, true, false);
+		auto image = pauseCanvas->GetImage("Resume");
+		pauseCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "RESUME", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Resume(); }, [this] {HoveringResume(); });
+	}
+	{
+		// HOW TO PLAY
+		pauseCanvas->AddImage({ xPos, clientHeight / 2.0f }, "HowToPlay", "HowToPlay.png", 1.0f, 1.0f, true, false);
+		pauseCanvas->AddImage({ xPos, clientHeight / 2.0f }, "HowToPlayLeaves", "HowToPlayLeaves.png", 1.0f, 1.0f, true, false);
+		auto image = pauseCanvas->GetImage("HowToPlay");
+		pauseCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "HowToPlay", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { HowToPlay(); }, [this] {HoveringHowToPlay(); });
+	}
+	{
+		// MAIN MENU
+		pauseCanvas->AddImage({ xPos, clientHeight / 2.0f + 75 }, "Options", "Options.png", 1.0f, 1.0f, true, false);
+		pauseCanvas->AddImage({ xPos, clientHeight / 2.0f + 75 }, "OptionsLeaves", "OptionsLeaves.png", 1.0f, 1.0f, true, false);
+		auto image = pauseCanvas->GetImage("Options");
+		pauseCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "OptionsButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Options(); }, [this] {HoveringOptions(); });
+	}
+	{
+		// MAIN MENU
+		pauseCanvas->AddImage({ xPos, clientHeight / 2.0f + 150 }, "BackToMainMenu", "MainMenu.png", 1.0f, 1.0f, true, false);
+		pauseCanvas->AddImage({ xPos, clientHeight / 2.0f + 150 }, "BackToMainMenuLeaves", "MainMenuLeaves.png", 1.0f, 1.0f, true, false);
+		auto image = pauseCanvas->GetImage("BackToMainMenu");
+		pauseCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "BackToMainMenuButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { MainMenu(); }, [this] {HoveringMainMenu(); });
+	}
 	canvases["PAUSED"] = pauseCanvas;
 
 	//HOW TO PLAY
 	auto howToPlayCanvas = std::make_shared<Canvas>();
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "ControlImage", "Controls.png", 2.0f, 1.0f);
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackHowToPlay", "BackButton.png", 0.5f, 1.0f);
-	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackButtonHowToPlay", 340, 90, UI::COLOR::GRAY, [this] { BacktoPause(); });
-
+	{
+		howToPlayCanvas->AddImage({ 25, clientHeight / 2.0f }, "MenuStick", "MenuStick.png", 0.8f, 1.0f, true, true);
+		howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "APauseBackground", "PauseBackground.png", 1.0f, 1.0f);
+		howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "ControlImage", "Controls.png", 2.0f, 1.0f);
+		howToPlayCanvas->AddImage({ xPos, clientHeight / 1.1f }, "BackHowToPlay", "Back.png", 1.0f, 1.0f, true, false);
+		howToPlayCanvas->AddImage({ xPos, clientHeight / 1.1f }, "BackLeavesHowToPlay", "BackLeaves.png", 1.0f, 1.0f, true, false);
+		auto image = howToPlayCanvas->GetImage("BackHowToPlay");
+		howToPlayCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "BackButtonHowToPlay", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { BacktoPause(); }, [this] {HoveringBackHowToPlay(); });
+	}
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
+
+	// OPTIONS
+	auto optionsCanvas = std::make_shared<Canvas>();
+	{
+		optionsCanvas->AddImage({ 25, clientHeight / 2.0f }, "MenuStick", "MenuStick.png", 0.8f, 1.0f, true, true);
+		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "APauseBackground", "PauseBackground.png", 1.0f, 1.0f);
+		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 7.0f }, "OptionsTitle", "OptionsTitle.png", 0.75f, 1.0f);
+		optionsCanvas->AddImage({ xPos, clientHeight / 1.1f }, "BackHowToPlay", "Back.png", 1.0f, 1.0f, true, false);
+		optionsCanvas->AddImage({ xPos, clientHeight / 1.1f }, "BackLeavesHowToPlay", "BackLeaves.png", 1.0f, 1.0f, true, false);
+		auto image = howToPlayCanvas->GetImage("BackHowToPlay");
+		optionsCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "BackButtonHowToPlay", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { BacktoPause(); }, [this] {HoveringBackHowToPlay(); });
+	}
+	canvases["OPTIONS"] = optionsCanvas;
+
 
 	canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
 
@@ -591,6 +634,16 @@ APPSTATE Game::Run()
 {
 	if (state != GameState::PAUSED)
 		Update();
+
+	if (state == GameState::PAUSED)
+	{
+		canvases["HOW TO PLAY"]->GetImage("BackLeavesHowToPlay")->Hide();
+		canvases["PAUSED"]->GetImage("ResumeLeaves")->Hide();
+		canvases["PAUSED"]->GetImage("HowToPlayLeaves")->Hide();
+		canvases["PAUSED"]->GetImage("BackToMainMenuLeaves")->Hide();
+		canvases["PAUSED"]->GetImage("OptionsLeaves")->Hide();
+
+	}
 
 	currentCanvas->Update();
 
@@ -797,4 +850,34 @@ void Game::CheckNearbyEnemies()
 				break;
 		}
 	}
+}
+
+void Game::HoveringBackHowToPlay()
+{
+	canvases["HOW TO PLAY"]->GetImage("BackLeavesHowToPlay")->Show();
+}
+
+void Game::HoveringBackOptions()
+{
+	canvases["OPTIONS"]->GetImage("BackLeavesHowToPlay")->Show();
+}
+
+void Game::HoveringOptions()
+{
+	canvases["PAUSED"]->GetImage("OptionsLeaves")->Show();
+}
+
+void Game::HoveringResume()
+{
+	canvases["PAUSED"]->GetImage("ResumeLeaves")->Show();
+}
+
+void Game::HoveringHowToPlay()
+{
+	canvases["PAUSED"]->GetImage("HowToPlayLeaves")->Show();
+}
+
+void Game::HoveringMainMenu()
+{
+	canvases["PAUSED"]->GetImage("BackToMainMenuLeaves")->Show();
 }

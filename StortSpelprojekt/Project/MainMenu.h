@@ -11,7 +11,6 @@
 #include "UI.h"
 #include "TerrainRenderer.h"
 #include "Terrain.h"
-#include "DeferredRenderer.h"
 
 class MainMenu : public ApplicationState
 {
