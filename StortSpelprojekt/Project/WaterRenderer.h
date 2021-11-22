@@ -10,6 +10,16 @@ private:
 	ID3D11Buffer* lightBuf = nullptr;
 	ID3D11Buffer* tesselationBuf = nullptr;
 	ID3D11Buffer* timeBuf = nullptr;
+	ID3D11Buffer* translationBuf = nullptr;
+
+	//VARIABLES
+	struct textureTranslation
+	{
+		float offset;
+		float padding1;
+		float padding2;
+		float padding3;
+	}translationOffset;
 
 	//SHADER PATHS
 #ifdef _DEBUG

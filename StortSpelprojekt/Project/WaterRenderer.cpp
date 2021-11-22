@@ -7,6 +7,7 @@ WaterRenderer::WaterRenderer(float tesselationAmount)
 	CreateBuffer(matrixBuf, sizeof(Matrix));
 	CreateBuffer(lightBuf, sizeof(Matrix));
 	CreateBuffer(timeBuf);
+	CreateBuffer(translationBuf, sizeof(textureTranslation));
 
 	//SHADERS
 	std::string byteCode;
@@ -53,6 +54,7 @@ WaterRenderer::WaterRenderer(float tesselationAmount)
 
 WaterRenderer::~WaterRenderer()
 {
+	translationBuf->Release();
 	tesselationBuf->Release();
 	matrixBuf->Release();
 	timeBuf->Release();
@@ -88,6 +90,10 @@ void WaterRenderer::Render()
 	UpdateBuffer(timeBuf, Time::Get());
 	BindBuffer(timeBuf, Shader::DS, 1);
 
+	translationOffset.offset += 0.0005f;
+	UpdateBuffer(translationBuf, translationOffset);
+	BindBuffer(translationBuf, Shader::PS, 10);
+
 	//DRAW
 	for (auto& drawable : drawables)
 	{
@@ -121,6 +127,14 @@ void WaterRenderer::Render(const Water& water)
 
 	UpdateBuffer(timeBuf, Time::Get());
 	BindBuffer(timeBuf, Shader::DS, 1);
+
+	UpdateBuffer(translationBuf, translationOffset);
+	BindBuffer(translationBuf, Shader::PS, 10);
+	translationOffset.offset += 0.0005f * Time::GetDelta();
+	if (translationOffset.offset >= 1)
+	{
+		translationOffset.offset = 0;
+	}
 
 	//DRAW
 	water.Draw();
