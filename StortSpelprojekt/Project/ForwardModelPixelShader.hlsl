@@ -60,7 +60,7 @@ StructuredBuffer<POINT_LIGHT> lights : register(t9);
 float4 main(PS_INPUT input) : SV_TARGET
 {
    	const float shadow = ShadowCalculation(input.lightClipPosition);
-	const float4 globalAmbient = 0.2f;
+	const float4 globalAmbient = 0.09f;
 
 	const float4 T = diffuseTexture.Sample(wrapSampler, input.texCoords);
     
@@ -82,7 +82,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     pResult.specular = saturate(pResult.specular);
     
     const float4 finalLighting = LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition) * shadow +
-                                (pResult.diffuse + pResult.specular * pResult.color) + globalAmbient + ambient;
+                                (pResult.diffuse * 5+ pResult.specular * pResult.color) + globalAmbient + ambient;
     
     //FOG
 	float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);

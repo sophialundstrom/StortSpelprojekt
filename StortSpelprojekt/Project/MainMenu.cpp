@@ -180,10 +180,10 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	canvases["OPTIONS"] = optionsCanvas;
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { -41.0f, 37.0f, -687.0f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(100, { 0.1f, 0.1f, 0.1f ,1 }, 1);
-	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 20, { 0.2f, 0.2f, 0.2f }, { 1.0f, 0.0f, 0.0f, 1.0f });
+	scene.SetDirectionalLight(200, { 0.03f, 0.03f, 0.03f ,1 }, 1);
+	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
 
-
+	//186 95 42 
 	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
 	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 35, -687 });
 	particleRenderer.Bind(menuFireSystem);
