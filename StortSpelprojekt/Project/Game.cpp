@@ -53,7 +53,7 @@ void Game::Render()
 
 	terrainRenderer.Render(terrain);
 
-	waterRenderer.Render(water);
+	//waterRenderer.Render(water);
 
 	//skeletonRenderer.Render();
 

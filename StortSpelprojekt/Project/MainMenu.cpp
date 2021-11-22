@@ -222,7 +222,6 @@ void MainMenu::Initialize()
 			continue;
 		}
 	}
-
 }
 
 void MainMenu::Render()
