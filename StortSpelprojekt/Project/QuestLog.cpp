@@ -11,7 +11,7 @@ void QuestLog::LoadQuest(Quest* quest)
 		LoadQuest(child);
 }
 
-void QuestLog::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets)
+void QuestLog::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets)
 {
 	for (UINT i = 0; i < activeQuests.size(); ++i)
 	{
@@ -19,7 +19,7 @@ void QuestLog::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Lo
 		if (!quest->Unlocked())
 			continue;
 
-		quest->Update(player, camps, friendlyNPCs, targets);
+		quest->Update(player, camps, targets);
 	}
 
 	if (Event::KeyIsPressed('O'))
@@ -95,7 +95,15 @@ void QuestLog::CreateQuests()
 	//=====================================================
 	//NPC2
 	auto q4 = q3->AddChildQuest("FIRST QUEST FOR NPC2");
+	q4->AddTalkObjective("Gilbert3", "INSERT STRING CUSTOM MADE FOR QUEST ANSWER");
 	quests.emplace_back(q4);
+
+	//=====================================================
+	//NPC3
+	auto q5 = q3->AddChildQuest("FIRST QUEST FOR NPC3");
+	q5->AddCollectObjective(Item::Type::Stick, 3);
+	quests.emplace_back(q5);
+
 	//SAME STUFF HERE KINDA I THIK U GET IT, IF ANY QUEST DEPENDS ON ANOTHER (CANT BE TWO) YOU HAVE TO CREATE THE FIRST ONE FIRST, 
 	//AND ALL QUESTS THAT SHOULD BE "UNLOCKED" AFTER THE ATTACK SHOULD BE CHILD OF Q3
 
@@ -137,6 +145,7 @@ void QuestLog::Complete(Quest* quest)
 		}
 	}
 
+	quest->TriggerOnCompleteFunction();
 	for (auto child : quest->GetChildQuests())
 		child->Unlock();
 }
@@ -147,6 +156,18 @@ Quest* QuestLog::Get(const std::string& name)
 	{
 		if (quest->GetName() == name)
 			return quest;
+	}
+
+	return nullptr;
+}
+
+Objective* QuestLog::GetTalkObjective(const std::string& NPC)
+{
+	for (auto quest : activeQuests)
+	{
+		auto objective = quest->GetTalkObjective(NPC);
+		if (objective)
+			return objective;
 	}
 
 	return nullptr;

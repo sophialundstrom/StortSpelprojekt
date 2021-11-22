@@ -42,7 +42,7 @@ public:
 	Quest* AddChildQuest(const std::string& name);
 
 	void AddCollectObjective(Item::Type type, UINT amount);
-	void AddTalkObjective(const std::string& NPC);
+	void AddTalkObjective(const std::string& NPC, const std::string& string);
 	void AddTargetObjective(UINT targetID);
 	void AddFightObjective(BarbarianCamp::Location location);
 	void AddLocationObjective(const Vector3& location, float radius);
@@ -55,9 +55,11 @@ public:
 	void TriggerOnActivateFunction() { if (onActivateFunction != NULL) onActivateFunction(); }
 	void TriggerOnCompleteFunction() { if (onCompleteFunction != NULL) onCompleteFunction(); }
 
-	void ResetObjectiveResources(std::shared_ptr<Player>, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets);
-	void Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets);
+	void ResetObjectiveResources(std::shared_ptr<Player>, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets);
+	void Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets);
 
 	void SaveToFile(File& file);
 	void LoadFromFile(File& file);
+
+	Objective* GetTalkObjective(const std::string& NPC);
 };

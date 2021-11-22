@@ -1,13 +1,7 @@
 #include "TalkObjective.h"
 
-TalkObjective::TalkObjective(const std::string& NPC)
-	:Objective(Type::TALK, false), NPC(NPC) {}
-
-void TalkObjective::Update(std::shared_ptr<FriendlyNPC> NPC)
-{
-	if (NPC->CompletedConversation())
-		completed = true;
-}
+TalkObjective::TalkObjective(const std::string& NPC, const std::string& string)
+	:Objective(Type::TALK, false), NPC(NPC), string(string) {}
 
 std::string TalkObjective::Info()
 {
@@ -19,6 +13,7 @@ void TalkObjective::WriteToFile(File& file)
 	Objective::WriteToFile(file);
 
 	file.WriteString(NPC.c_str());
+	file.WriteString(string.c_str());
 }
 
 void TalkObjective::ReadFromFile(File& file)
@@ -29,8 +24,9 @@ void TalkObjective::ReadFromFile(File& file)
 
 	//IF LUCKY WE MIGHT BE ABLE TO USE THIS->NPC = READSTRING AND STRING DELETE IN DESTRUCTOR FOR US
 	char* string = file.ReadString();
-
 	this->NPC = string;
-
 	delete[] string;
+
+	string = file.ReadString();
+	this->string = string;
 }

@@ -32,6 +32,12 @@ bool FriendlyNPC::Interactable()
 	if (!currentQuest)
 		return false;
 
+	if (completedAllQuests)
+		return true;
+
+	if (dialogueOverride)
+		return true;
+
 	return currentQuest->Unlocked();
 }
 
@@ -56,10 +62,21 @@ void FriendlyNPC::Update()
 {
 	NPC::Update();
 
+	if (dialogueOverride)
+	{
+		questMarker->SetPosition(0, 9.0f, 0);
+		questMarker->SetAsComplete();
+		questMarker->Update();
+		return;
+	}
+		
 	if (currentQuest)
 	{
 		if (!currentQuest->Unlocked())
+		{
+			questMarker->SetPosition(0, -1000.0f, 0);
 			return;
+		}
 
 		questMarker->SetPosition(0, 9.0f, 0);
 
@@ -77,7 +94,6 @@ void FriendlyNPC::Update()
 			if (finishedDialogue)
 			{
 				Print(currentQuest->GetName() + " COMPLETED");
-				currentQuest->TriggerOnCompleteFunction();
 				QuestLog::Complete(currentQuest);
 
 				currentQuestID++;

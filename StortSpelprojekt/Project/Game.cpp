@@ -31,7 +31,7 @@ void Game::Update()
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
-	QuestLog::Update(player, camps, friendlyNPCs, targets);
+	QuestLog::Update(player, camps, targets);
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
@@ -244,7 +244,7 @@ void Game::AddFriendlyNPCs()
 
 			auto onCompleteFunc = [this, quest]() mutable
 			{
-				quest->ResetObjectiveResources(player, camps, friendlyNPCs, targets);
+				quest->ResetObjectiveResources(player, camps, targets);
 			};
 
 			quest->AddOnCompleteFunction(onCompleteFunc);
@@ -258,7 +258,7 @@ void Game::AddFriendlyNPCs()
 
 			auto onCompleteFunc = [this, quest]() mutable
 			{
-				quest->ResetObjectiveResources(player, camps, friendlyNPCs, targets);
+				quest->ResetObjectiveResources(player, camps, targets);
 			};
 
 			quest->AddOnCompleteFunction(onCompleteFunc);
@@ -272,7 +272,7 @@ void Game::AddFriendlyNPCs()
 
 			auto onCompleteFunc = [this, quest]() mutable
 			{
-				quest->ResetObjectiveResources(player, camps, friendlyNPCs, targets);
+				quest->ResetObjectiveResources(player, camps, targets);
 			};
 
 			quest->AddOnCompleteFunction(onCompleteFunc);
@@ -287,10 +287,26 @@ void Game::AddFriendlyNPCs()
 	{
 		auto NPC = AddFriendlyNPC("Gilbert2", "Priest", { -144, 25, -594 });
 
-		NPC->AddQuest("FIRST QUEST FOR NPC2");
-		NPC->AddDialogue("FIRST QUEST FOR NPC2 >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
-		NPC->AddDialogue("FIRST QUEST FOR NPC2 >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
-		NPC->AddDialogue("FIRST QUEST FOR NPC2 >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
+		{
+			Quest* quest = NPC->AddQuest("FIRST QUEST FOR NPC2");
+			NPC->AddDialogue("FIRST QUEST FOR NPC2 >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+			NPC->AddDialogue("FIRST QUEST FOR NPC2 >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+			NPC->AddDialogue("FIRST QUEST FOR NPC2 >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
+
+			auto onActivateFunc = [this, quest]() mutable
+			{
+				for (auto& FNPC : friendlyNPCs)
+				{
+					if (FNPC->GetName() == "Gilbert3")
+					{
+						FNPC->ApplyDialogueOverride();
+						break;
+					}
+				}
+			};
+
+			quest->AddOnActivateFunction(onActivateFunc);
+		}
 
 		NPC->AddDialogue("INSERT DIALOGUE FOR WHEN NPC HAS NO QUESTS LEFT");
 
@@ -298,6 +314,18 @@ void Game::AddFriendlyNPCs()
 	}
 
 	//NPC3
+	{
+		auto NPC = AddFriendlyNPC("Gilbert3", "Priest", { -154, 25, -594 });
+
+		NPC->AddQuest("FIRST QUEST FOR NPC3");
+		NPC->AddDialogue("FIRST QUEST FOR NPC3 >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+		NPC->AddDialogue("FIRST QUEST FOR NPC3 >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+		NPC->AddDialogue("FIRST QUEST FOR NPC3 >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
+
+		NPC->AddDialogue("INSERT DIALOGUE FOR WHEN NPC HAS NO QUESTS LEFT");
+
+		friendlyNPCs.emplace_back(NPC);
+	}
 
 	//NPC4
 }
@@ -324,7 +352,6 @@ void Game::AddBarbarianCamps()
 		//camp->AddBarbarian("BarbarianBow", { 392, 182, -44 }, hostiles, player, CombatStyle::consistantDelay, false);
 		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, false);
 		//ADD MORE BARBARIANS AND CAMPS
-
 
 		camps[BarbarianCamp::Location::South] = camp;
 	}
@@ -553,7 +580,8 @@ void Game::CheckQuestInteraction()
 					SoundEffect::SetVolume(0.004, 2);
 					SoundEffect::StartAudio(2);
 
-					dialogueOverlay->Set(NPC);
+					auto objective = QuestLog::GetTalkObjective(NPC->GetName());
+					dialogueOverlay->Set(NPC, (TalkObjective*)objective);
 
 					currentCanvas = dialogueOverlay;
 					return;

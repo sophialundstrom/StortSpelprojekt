@@ -46,8 +46,20 @@ void DialogueOverlay::Update()
 		if (delay > doneDelay && Event::KeyIsPressed('E'))
 		{
 			lastInteraction = Time::Get();
-			NPC->SetCompletedConversation();
-			NPC->ActivateCurrentQuest();
+
+			if (objective)
+			{
+				NPC->RemoveDialogueOverride();
+				objective->Complete();
+				objective = nullptr;
+			}
+
+			else
+			{
+				NPC->SetCompletedConversation();
+				NPC->ActivateCurrentQuest();
+			}
+
 			NPC = nullptr;
 			done = true;
 		}
@@ -66,15 +78,23 @@ void DialogueOverlay::Render()
 	UI::Inst().EndFrame();
 }
 
-void DialogueOverlay::Set(std::shared_ptr<FriendlyNPC> NPC)
+void DialogueOverlay::Set(std::shared_ptr<FriendlyNPC> NPC, TalkObjective* objective)
 {
-	if (Time::Get() - lastInteraction < 2.0f)
+	if (Time::Get() - lastInteraction < 1.0f)
 		return;
 
-	this->NPC = NPC;
 	delay = 0;
 	numCharacters = 0;
 	done = false;
+	this->NPC = NPC;
 	dialogueName->SetString(NPC->GetName(), true);
-	dialogueText->SetString(NPC->GetCurrentDialogue(), true);
+
+	if (objective && !objective->IsCompleted())
+	{
+		this->objective = objective;
+		dialogueText->SetString(objective->GetString(), true);
+	}
+	
+	else
+		dialogueText->SetString(NPC->GetCurrentDialogue(), true);
 }

@@ -1,11 +1,13 @@
 #pragma once
 #include "Canvas.h"
 #include "NPCFriendly.h"
+#include "TalkObjective.h"
 
 class DialogueOverlay : public Canvas
 {
 private:
 	std::shared_ptr<FriendlyNPC> NPC;
+	Objective* objective;
 
 	Text* dialogueName;
 	Text* dialogueText;
@@ -31,5 +33,5 @@ public:
 
 	bool IsDone()	{ return done; }
 
-	void Set(std::shared_ptr<FriendlyNPC> NPC);
+	void Set(std::shared_ptr<FriendlyNPC> NPC, TalkObjective* objective = nullptr);
 };

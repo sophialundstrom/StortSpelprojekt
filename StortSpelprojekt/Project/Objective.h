@@ -13,6 +13,7 @@ public:
 	Objective() = default;
 	Objective(Type type, bool completed);
 
+	void Complete() { completed = true; }
 	bool IsCompleted() { return completed; }
 
 	virtual std::string Info() = 0;

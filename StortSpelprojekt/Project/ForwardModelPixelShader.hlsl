@@ -31,12 +31,14 @@ cbuffer MATERIAL : register(b0)
     float specularPower;
 }
 
-
 float ShadowCalculation(float4 LCP)
 {
     LCP.xyz /= LCP.w; //PERSPECTIVE DIVIDE (NDC-COORDS)
+    
     const float2 tx = float2(0.5f * LCP.x + 0.5f, -0.5f * LCP.y + 0.5f); // [-1,1] => [0, 1]
+    
     const float sm = shadowMap.Sample(wrapSampler, tx).r;
+    
     float shadow = (sm + 0.005 < LCP.z) ? 0.0f : 1.0f; //if closest depth (sample) < pixel-depth there is a primitive in front castings shadow.
 
     if (tx.x > 1.0f || tx.x < 0.0f ||

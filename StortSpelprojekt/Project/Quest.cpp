@@ -22,9 +22,9 @@ void Quest::AddCollectObjective(Item::Type type, UINT amount)
 	objectives.emplace_back(new CollectObjective(type, amount));
 }
 
-void Quest::AddTalkObjective(const std::string& NPC)
+void Quest::AddTalkObjective(const std::string& NPC, const std::string& string)
 {
-	objectives.emplace_back(new TalkObjective(NPC));
+	objectives.emplace_back(new TalkObjective(NPC, string));
 }
 
 void Quest::AddTargetObjective(UINT targetID)
@@ -42,7 +42,7 @@ void Quest::AddLocationObjective(const Vector3& location, float radius)
 	objectives.emplace_back(new LocationObjective(location, radius));
 }
 
-void Quest::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets)
+void Quest::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets)
 {
 	UINT numCompleted = 0;
 
@@ -79,15 +79,6 @@ void Quest::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Locat
 		auto talk = dynamic_cast<TalkObjective*>(objective);
 		if (talk)
 		{
-			for (auto& NPC : friendlyNPCs)
-			{
-				if (NPC->GetName() == talk->GetNPCName())
-				{
-					talk->Update(NPC);
-					break;
-				}
-			}
-
 			if (talk->IsCompleted())
 				numCompleted++;
 
@@ -252,7 +243,7 @@ void Quest::LoadFromFile(File& file)
 	}
 }
 
-void Quest::ResetObjectiveResources(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets)
+void Quest::ResetObjectiveResources(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets)
 {
 	for (auto& objective : objectives)
 	{
@@ -270,21 +261,6 @@ void Quest::ResetObjectiveResources(std::shared_ptr<Player> player, std::map<Bar
 			continue;
 		}
 
-		//auto talk = dynamic_cast<TalkObjective*>(objective);
-		//if (talk)
-		//{
-		//	for (auto& NPC : friendlyNPCs)
-		//	{
-		//		if (NPC->GetName() == talk->GetNPCName())
-		//		{
-		//			//DO SMTH?
-		//			break;
-		//		}
-		//	}
-
-		//	continue;
-		//}
-
 		auto target = dynamic_cast<TargetObjective*>(objective);
 		if (target)
 		{
@@ -300,4 +276,16 @@ void Quest::ResetObjectiveResources(std::shared_ptr<Player> player, std::map<Bar
 			continue;
 		}
 	}
+}
+
+Objective* Quest::GetTalkObjective(const std::string& NPC)
+{
+	for (auto objective : objectives)
+	{
+		auto talk = dynamic_cast<TalkObjective*>(objective);
+		if (talk && talk->GetNPCName() == NPC)
+			return talk;
+	}
+
+	return nullptr;
 }
