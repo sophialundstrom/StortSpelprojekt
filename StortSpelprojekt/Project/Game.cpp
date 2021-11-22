@@ -581,13 +581,16 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//Audio::SetVolume(0.1, 0);
 	Audio::StartAudio(0);
 
-	auto desert = std::make_shared<Biome>(Vector3(-37, 22, -556), 50.f, L"Audio/totallyRPGMusic.wav", BIOME::DESERT);
+	auto desert = std::make_shared<Biome>(L"Audio/totallyRPGMusic.wav", BIOME::DESERT);
+	desert->AddCollider(Vector3(-46.f, 20.f, -578.f), 50.f);
+	desert->AddCollider(Vector3(0.6f, 24.f, -542.f), 50.f);
+	desert->Bind(colliderRenderer);
 	biomes.emplace_back(desert);
-	colliderRenderer.Bind(desert->collider);
 
-	auto woodlands = std::make_shared<Biome>(Vector3(23, 20, -588), 50.f, L"Audio/Rain.wav", BIOME::WOODLANDS);
+	auto woodlands = std::make_shared<Biome>( L"Audio/Rain.wav", BIOME::WOODLANDS);
+	woodlands->AddCollider(Vector3(3.4f, 20.f, -591.f), 50.f);
+	woodlands->Bind(colliderRenderer);
 	biomes.emplace_back(woodlands);
-	colliderRenderer.Bind(woodlands->collider);
 
 	
 	(void)Run();
@@ -757,10 +760,13 @@ void Game::HandleBiomes()
 	BIOME type = BIOME::DEFAULT;
 	for (auto& biome : biomes)
 	{
-		hit = Collision::Contains(*biome->collider, player->GetPosition());
-		if (hit)
+		for (auto& collider : biome->colliders)
 		{
-			type = biome->type;
+			hit = Collision::Contains(*collider, player->GetPosition());
+			if (hit)
+			{
+				type = biome->type;
+			}
 		}
 		
 	}
