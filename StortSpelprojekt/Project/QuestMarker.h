@@ -10,9 +10,9 @@ public:
 		position = { 0, -1000, 0 };
 	}
 
-	void SetAsGive()	 { ApplyMesh("QuestionMarkYellow"); }
+	void SetAsGive()	 { ApplyMesh("ExclamationMark"); }
 	void SetAsHelp()	 { ApplyMesh("QuestionMarkGray"); }
-	void SetAsDone()	 { ApplyMesh("ExclamationMark"); }
+	void SetAsDone()	 { ApplyMesh("QuestionMarkYellow"); }
 	void SetAsComplete() { ApplyMesh("ChatBubble"); }
 
 	void Update()
