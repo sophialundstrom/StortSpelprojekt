@@ -28,9 +28,8 @@ Loot::Loot(LOOTTYPE inType, const Vector3& position)
 		case LOOTTYPE::ARROWS:
 		{
 			this->type = inType;
-			ApplyMesh("arrowModel");
-			ApplyMaterial("arrowModel");
-			SetScale(2, 2, 2);
+			ApplyMesh("ArrowPivotMiddle");
+			ApplyMaterial("ArrowPivotMiddle");
 			numArrows = Random::Integer(3, maxItemsPerType + 10);
 			break;
 		}
@@ -56,7 +55,7 @@ void Loot::Update(std::shared_ptr<Player> player)
 	currentRotation += Time::GetDelta();
 	if (!isTaken)
 	{
-		float sin = std::sin(currentRotation * floatingSpeed) * 2;
+		float sin = std::sin(currentRotation * floatingSpeed);
 		SetPosition(originalPosition + Vector3(0, sin, 0));
 	}
 	rotation = Quaternion::CreateFromRotationMatrix(Matrix::CreateRotationY(currentRotation * rotationSpeed));
@@ -94,9 +93,23 @@ void Loot::Update(std::shared_ptr<Player> player)
 					player->Inventory().AddItem(RESOURCE::FOOD);
 				}
 				// GIVE ARROWS HERE....
-				player->numArrows += numArrows;
 
-				//std::cout << "Destroyed by collision\n";
+				short int totalArrows = player->numArrows + numArrows;
+				if (totalArrows > player->maxArrows)
+				{
+					short int num = player->maxArrows - player->numArrows;
+					player->numArrows += num;
+				}
+				else
+					player->numArrows += numArrows;
+				
+
+
+
+				std::cout << "Destroyed by collision\n";
+				SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
+				SoundEffect::SetVolume(0.8, 2);
+				SoundEffect::StartAudio(2);
 				destroy = true;
 			}
 		}

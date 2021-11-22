@@ -1,20 +1,15 @@
 #include "NPCHostile.h"
 
-
-HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle)
+HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
 	:NPC(file)
 {
     this->player = player;
     this->combatStyle = combatStyle;
     SwapCombatStyle(combatStyle);
+    mRend = &mRenderer;
+    cRend = &cRenderer;
 
-    for (int i = 0; i < 3; i++)
-    {
-        auto arrow = std::make_shared<Arrow>();
-        arrow->GetCollider()->SetParent(arrow);
-        arrows.emplace_back(arrow);
-    }
-
+    arrowHandler.SetPullbackFactor(0.6f);
 }
 
 HostileNPC::HostileNPC(const Model& model)
@@ -23,21 +18,8 @@ HostileNPC::HostileNPC(const Model& model)
 
 }
 
-void HostileNPC::BindPlayerArrows(std::vector<std::shared_ptr<Arrow>> playerArrows)
-{
-    this->playerArrows = playerArrows;
-}
-
-void HostileNPC::BindArrows(ModelRenderer& modelrenderer)
-{
-    for (auto arrow : arrows)
-        modelrenderer.Bind(arrow);
-}
-
 void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
 {
-    //speed(330.0f), lifeTime(3.0f)
-
     combatStyle = newCombatStyle;
     shootPatternIndex = 0;
 
@@ -73,18 +55,17 @@ void HostileNPC::SwapCombatStyle(CombatStyle newCombatStyle)
 
 void HostileNPC::Update()
 {
-    if (IsDead() == true)
-    {
-        return;
-    }
-     static float lastClick = 0;
+   
+}
 
-     Vector3 aimDir = player->GetPosition() - position;
+void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player)
+{
+    // This stops multiple instances of this class from shooting at once. All instances of the same class has the same static variable... 
+    // static float lastClick = 0;
 
-    
+    Vector3 aimDir = player->GetPosition() + Vector3(0.f,3.5f,0.f) - position;
 
-
-    if (aimDir.Length() <=  enemyShootDetectionRadius)
+    if (aimDir.Length() <= enemyShootDetectionRadius)
     {
 
         aimDir.Normalize();
@@ -92,7 +73,7 @@ void HostileNPC::Update()
         float additionalRadians = 0;
 
         Vector3 yRadiantVecReference;
-        //std::cout << aimDir.x << std::endl;
+
         float aimDirXIgnoranceLevel = 0.2f;
 
         if (aimDir.x > -aimDirXIgnoranceLevel && aimDir.x < aimDirXIgnoranceLevel)
@@ -102,7 +83,7 @@ void HostileNPC::Update()
                 yRadiantVecReference = { 1, 0, 0 };
                 additionalRadians = PI_DIV2;
             }
-            else if(aimDir.z > 0)
+            else if (aimDir.z > 0)
             {
                 yRadiantVecReference = { -1, 0, 0 };
                 additionalRadians = -PI_DIV2;
@@ -123,44 +104,47 @@ void HostileNPC::Update()
 
         SetRotation({ 0, movementYRadiant, 0 });
 
-        if (Time::Get() - lastClick > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow)
+        if (Time::Get() - lastShot > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
         {
-            for (int i = 0; i < arrows.size(); i++)
-            {
-                if (arrows[i]->IsShot())
-                    continue;
-
-                arrows.at(i)->Shoot(aimDir, position, {PI_DIV2 - movementXRadiant, movementYRadiant, 0});
-                lastClick = Time::Get();
-                break;
-            }
+            arrowHandler.AddArrow(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            lastShot = Time::Get();
         }
-        else if (Time::Get() - lastClick > 3 && combatStyle == CombatStyle::wideArrow)
+        else if (Time::Get() - lastShot > 3 && combatStyle == CombatStyle::wideArrow)
         {
-            float arrowWidth = PI/32.f;
-            arrows.at(0)->Shoot(aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-            arrows.at(1)->Shoot(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
-            arrows.at(2)->Shoot(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
+            float arrowWidth = PI / 32.f;
+            arrowHandler.AddArrow(mRenderer, cRenderer, aimDir, position, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            arrowHandler.AddArrow(mRenderer, cRenderer, DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
+            arrowHandler.AddArrow(mRenderer, cRenderer, DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), position, { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
+
             DirectX::XMMatrixRotationX(-arrowWidth);
-            lastClick = Time::Get();
-           
+            lastShot = Time::Get();
+
+        }
+
+    }
+
+    arrowHandler.Update(mRenderer, cRenderer);
+
+    NPC::Update();
+}
+
+void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
+{
+    for (auto& arrow : arrowHandler.arrows)
+    {
+        if (!arrow->canCollide)
+            continue;
+        if (arrowHandler.CheckCollision(arrow, player->GetBounds(), true))
+        {
+            std::cout << "PLAYER HIT" << std::endl;
+            player->TakeDamage();
         }
         
     }
-
-    for (auto arrow : arrows)
-    {
-        if (!arrow->IsShot())
-            continue;
-        arrow->Update();
-        player->ProjectileCollided(arrow);
-    }
-
-	NPC::Update();
 }
 
 void HostileNPC::WeaponSlash()
 {
-	//Highly prototype only
+	// Highly prototype only
 	// need some kind of way to do a weapon slash in the future
 }

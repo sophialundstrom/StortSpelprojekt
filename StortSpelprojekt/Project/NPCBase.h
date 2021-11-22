@@ -17,7 +17,7 @@ public:
 
 	virtual void Update() override;
 	bool Collided(Player &player);
-	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
+	//bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 	void Die();
 	bool IsDead() { return dead; }
 	void TakeDamage();

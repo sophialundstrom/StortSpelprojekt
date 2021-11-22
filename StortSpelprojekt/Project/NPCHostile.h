@@ -1,6 +1,7 @@
 #pragma once
 #include "NPCBase.h"
 #include "ModelRenderer.h"
+#include "ArrowHandler.h"
 
 enum CombatStyle
 {
@@ -13,8 +14,8 @@ enum CombatStyle
 class HostileNPC : public NPC
 {
 private:
-	std::vector<std::shared_ptr<Arrow>> arrows;
-	std::vector<std::shared_ptr<Arrow>> playerArrows;
+	
+	ArrowHandler arrowHandler;
 	std::shared_ptr<Player> player;
 	float movementXRadiant;
 	float movementYRadiant;
@@ -25,14 +26,19 @@ private:
 
 	float shootDeelayPattern[3];
 	int shootPatternIndex = 0;
+
+	ModelRenderer* mRend = nullptr;
+	ColliderRenderer* cRend = nullptr;
+	float lastShot = 0.f;
 public:
-	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle);
+	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
 	HostileNPC(const Model& model);
-	void BindPlayerArrows(std::vector<std::shared_ptr<Arrow>> playerArrows);
-	void BindArrows(ModelRenderer& modelrenderer);
+
 	void SwapCombatStyle(CombatStyle newCombatStyle);
 	virtual void Update() override;
-
+	void Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player);
+	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
+	void CheckPlayerCollision(std::shared_ptr<Player> player);
 private:
 	void WeaponSlash();
 };
