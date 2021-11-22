@@ -20,20 +20,20 @@ struct FrustrumCollider
         
         bounds = DirectX::BoundingFrustum();
         bounds.CreateFromMatrix(bounds, camera->GetProjectionMatrix());
-        bounds.Origin = { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z };
+        /*bounds.Origin = { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z };
         camDirQ.Normalize();
-        bounds.Orientation = camDirQ;
+        bounds.Orientation = camDirQ;*/
         
         
 
 
        
-        /*bounds.Transform(
+        bounds.Transform(
             bounds,
             1,
             camDirQ,
             { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z }
-        );*/
+        );
         
     }
 
