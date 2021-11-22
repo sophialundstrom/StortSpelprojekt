@@ -841,9 +841,20 @@ void Game::CheckNearbyEnemies()
 
 void Game::UpdateQuadTree()
 {
-	
-	
+	drawablesToBeRendered.clear();
+	staticMeshModelRender.Clear();
+	frustrumCollider.Update(scene.GetCamera());
+	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
 
+	for (auto& [name, drawable] : drawablesToBeRendered)
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if (model)
+			staticMeshModelRender.Bind(drawable);
+	}
+	
+	//DebugVariant
+	/*
 	int click;
 	static float lastClick = 0;
 	if (Time::Get() - lastClick > 0.5f)
@@ -916,8 +927,7 @@ void Game::UpdateQuadTree()
 		}
 
 	}
-		
+	*/
 
-	
 
 }

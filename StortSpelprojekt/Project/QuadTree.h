@@ -15,48 +15,25 @@ struct FrustrumCollider
 
     void Update(Camera* camera)
     {
-        //https://stackoverflow.com/questions/58469297/how-do-i-calculate-the-yaw-pitch-and-roll-of-a-point-in-3d
-        //Yaw/Heading Pitch/Pitch Roll/Bank
-        //float heading, pitch, bank;
-
-        ////Calculate Heading
-        //DirectX::XMFLOAT3 camDir = camera->GetDirection();
-        //float magnitude = (sqrtf(pow(camDir.x, 2) + pow(camDir.y, 2) + pow(camDir.z, 2)));
-        //float redAdjacent = camDir.x;
-        //float redOpposite = camDir.z;
-        //heading = atan2f(redOpposite, redAdjacent);
-
-        ////Calculate Pitch
-        //DirectX::XMFLOAT3 origin = { 0, 0, 0 };
-        //DirectX::XMFLOAT3 xzPlane = { redAdjacent, 0, redOpposite };
-
-        //float greenHypotenuse = magnitude;
-        //float greenOpposite = camDir.y;
-
-
-
+        
         Quaternion camDirQ = Quaternion::CreateFromYawPitchRoll(camera->GetJaw(), camera->GetPitch(), 0.f);
         
-
         bounds = DirectX::BoundingFrustum();
         bounds.CreateFromMatrix(bounds, camera->GetProjectionMatrix());
-        bounds.Transform(
+        bounds.Origin = { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z };
+        camDirQ.Normalize();
+        bounds.Orientation = camDirQ;
+        
+        
+
+
+       
+        /*bounds.Transform(
             bounds,
             1,
             camDirQ,
             { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z }
-        );
-        
-        
-
-        bounds.Far = camera->GetFarZ();
-        bounds.Near = camera->GetNearZ();
-        
-        //std::cout << "--\n";
-        //std::cout << q.x << "           " << q.y << "           " << q.z << "           " << q.w << std::endl;
-        //std::cout << bounds.Orientation.x << "           " << bounds.Orientation.y << "           " << bounds.Orientation.z << "           " << bounds.Orientation.w << std::endl;
-        //std::cout << "--\n";
-        //std::cout << bounds.Far << std::endl;
+        );*/
         
     }
 

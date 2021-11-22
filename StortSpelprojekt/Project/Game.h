@@ -38,6 +38,11 @@ private:
     FrustrumCollider frustrumCollider;
     std::map<std::string, std::shared_ptr<Drawable>> drawablesToBeRendered;
     std::map<std::string, std::shared_ptr<Drawable>> noCullingDrawables;
+    /*
+    The following 3 variables: useQuadTreeCulling, updateFrustrum and cullingProfile
+    are intended only be used for debugging. Relecvant code that they are used for are currently uncommented
+    in a attempt to get rid of the gamespeed x2 glitch.
+    */
     bool useQuadTreeCulling = true;
     bool updateFrustrum = true;
     int cullingProfile = 0;
