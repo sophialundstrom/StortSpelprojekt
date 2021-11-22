@@ -49,6 +49,8 @@ void Game::Render()
 
 	modelRenderer.Render();
 
+	staticMeshModelRender.Render();
+
 	animatedModelRenderer.Render();
 
 	colliderRenderer.Render();
@@ -157,7 +159,6 @@ void Game::Initialize()
 
 	
 	//Transfer drawables to quadTree
-	actualDrawablePipeline = scene.GetDrawables();
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
@@ -165,7 +166,7 @@ void Game::Initialize()
 			quadTree->InsertModel(drawable);
 	}
 	
-
+	quadTree->GetAllDrawables(noCullingDrawables);
 	quadTree->PrintTree();
 
 	//SAVE STATIONS
@@ -181,7 +182,7 @@ void Game::Initialize()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
-			modelRenderer.Bind(model);
+			//modelRenderer.Bind(model);
 			//shadowRenderer.Bind(model);
 			continue;
 		}
@@ -493,6 +494,7 @@ void Game::UpdateInventoryUI()
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(FORWARD, true),
+	staticMeshModelRender(FORWARD, true),
 	particleRenderer(FORWARD),
 	terrainRenderer(FORWARD),
 	colliderRenderer(FORWARD),
@@ -839,31 +841,78 @@ void Game::CheckNearbyEnemies()
 
 void Game::UpdateQuadTree()
 {
-	drawablesToBeRendered.clear();
-	frustrumCollider.Update(scene.GetCamera());
-	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
-	std::cout << drawablesToBeRendered.size() << std::endl;
+	
+	
 
-	if (Event::KeyIsPressed('K'))
+	int click;
+	static float lastClick = 0;
+	if (Time::Get() - lastClick > 0.5f)
 	{
-		modelRenderer.Clear();
-		for (auto& [name, drawable] : drawablesToBeRendered)
+		if (Event::KeyIsPressed('K'))
 		{
-			auto model = std::dynamic_pointer_cast<Model>(drawable);
-			if (model)
-				modelRenderer.Bind(drawable);
+			lastClick = Time::Get();
+			cullingProfile++;
+			cullingProfile = cullingProfile % 3;
+
+			switch (cullingProfile)
+			{
+			case 0:
+				std::cout << "Use culling\nFrustrum update \n";
+				useQuadTreeCulling = true;
+				updateFrustrum = true;
+				break;
+
+			case 1:
+				std::cout << "Use culling\nNo frustrum update \n";
+				useQuadTreeCulling = true;
+				updateFrustrum = false;
+				break;
+
+			case 2:
+				std::cout << "No culling\n";
+				useQuadTreeCulling = false;
+				updateFrustrum = false;
+				break;
+			default:
+				break;
+			}
+			std::cout << "Culling PROFILE: " << cullingProfile << std::endl;
+		}
+
+		if (Event::KeyIsPressed('L'))
+		{
+			lastClick = Time::Get();
+			std::cout << drawablesToBeRendered.size() << std::endl;
 		}
 
 	}
 
-	if (Event::KeyIsPressed('L'))
+	if(updateFrustrum)
+		frustrumCollider.Update(scene.GetCamera());
+
+	drawablesToBeRendered.clear();
+	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+
+	if (useQuadTreeCulling)
 	{
-		modelRenderer.Clear();
-		for (auto& [name, drawable] : actualDrawablePipeline)
+		staticMeshModelRender.Clear();
+		for (auto& [name, drawable] : drawablesToBeRendered)
 		{
 			auto model = std::dynamic_pointer_cast<Model>(drawable);
 			if (model)
-				modelRenderer.Bind(drawable);
+				staticMeshModelRender.Bind(drawable);
+		}
+
+	}
+	else
+	{
+		staticMeshModelRender.Clear();
+		for (auto& [name, drawable] : noCullingDrawables)
+		{
+			//std::cout << noCullingDrawables.size() << std::endl;
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+				staticMeshModelRender.Bind(drawable);
 		}
 
 	}

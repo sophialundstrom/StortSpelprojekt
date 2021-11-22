@@ -37,7 +37,10 @@ private:
     QuadTree* quadTree;
     FrustrumCollider frustrumCollider;
     std::map<std::string, std::shared_ptr<Drawable>> drawablesToBeRendered;
-    std::map<std::string, std::shared_ptr<Drawable>> actualDrawablePipeline;
+    std::map<std::string, std::shared_ptr<Drawable>> noCullingDrawables;
+    bool useQuadTreeCulling = true;
+    bool updateFrustrum = true;
+    int cullingProfile = 0;
 
     bool hovering = false;
     bool done = false;
@@ -52,6 +55,7 @@ private:
     AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;
     ModelRenderer modelRenderer;
+    ModelRenderer staticMeshModelRender;
    // ShadowRenderer shadowRenderer;
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;

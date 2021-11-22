@@ -95,6 +95,7 @@ public:
     QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int currentLevel, std::string nameTag);
     void InsertModel(std::shared_ptr<Drawable>& drawable);
     void GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider);
+    void GetAllDrawables(std::map<std::string, std::shared_ptr<Drawable>>& allDrawables);
     void PrintTree();
 
 private:

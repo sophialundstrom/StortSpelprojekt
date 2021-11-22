@@ -66,8 +66,6 @@ void QuadTree::GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawab
 	else
 	{
 
-	
-
 
 		if (quadTreeBoundsCollider.Intersects(frustrumCollider.bounds))
 		{
@@ -75,6 +73,22 @@ void QuadTree::GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawab
 			for (auto& [name, drawable] : collectedDrawables)
 				drawablesToBeRendered.emplace(name, drawable);
 		}
+	}
+}
+
+void QuadTree::GetAllDrawables(std::map<std::string, std::shared_ptr<Drawable>>& allDrawables)
+{
+	if (divided)
+	{
+		TopL->GetAllDrawables(allDrawables);
+		TopR->GetAllDrawables(allDrawables);
+		BotL->GetAllDrawables(allDrawables);
+		BotR->GetAllDrawables(allDrawables);
+	}
+	else
+	{
+		for (auto& [name, drawable] : collectedDrawables)
+			allDrawables.emplace(name, drawable);
 	}
 }
 
