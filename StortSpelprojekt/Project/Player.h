@@ -6,7 +6,7 @@
 #include "Terrain.h"
 #include "Item.h"
 #include "Canvas.h"
-#include "Arrow.h"
+#include "ArrowHandler.h"
 #include "AnimatedModel.h"
 
 #undef Ray
@@ -79,8 +79,9 @@ private:
 	Camera* sceneCamera;
 
 	std::shared_ptr<Canvas> ingameCanvas;
-	//ARROW STUFF
-	std::vector<std::shared_ptr<Arrow>> arrows;
+
+	//std::vector<std::shared_ptr<Arrow>>arrows;
+	ArrowHandler arrowHandler;
 
 	bool hasCollided;
 
@@ -143,12 +144,15 @@ private:
 		ingameCanvas->RemoveImage("hp");
 		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
 	}
+
 public:
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
-	void Update(HeightMap* heightMap);
+	void Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
+	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
+	void TakeDamage();
 
-	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, std::vector<std::shared_ptr<Arrow>> arrows, const UINT& maxArrows);
+	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas/*, std::vector<std::shared_ptr<Arrow>> arrows*/, const UINT& maxArrows);
 
 public:
 	// TEMP STATS PRINT
@@ -162,7 +166,6 @@ public:
 		std::cout << "BARBARIANS KILLED " << stats.barbariansKilled << std::endl;
 	}
 
-	bool ProjectileCollided(std::shared_ptr<Arrow>& arrow);
 	bool GetGameOver() { return this->gameOver; }
 	std::shared_ptr<BoundingBox> GetBounds() { return bounds; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
@@ -172,12 +175,8 @@ public:
 
 	void Save(const std::string file);
 
-	bool CheckArrowHit(std::shared_ptr<Collider> collider);
-
 	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
-	void MoveTowards(const Vector3& position);
 	void ResetToLastPosition() { position = lastPosition; }
-	void TakeDamage() { stats.DecreaseHealthPoint(); UpdateHealthUI(); }
 	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
 	void SetClosestColliderToCam(float range)
 	{
