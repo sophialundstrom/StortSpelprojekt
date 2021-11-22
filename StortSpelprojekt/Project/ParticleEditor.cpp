@@ -110,7 +110,6 @@ void ParticleEditor::Render()
 }
 
 ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
-	:renderer(FORWARD), colliderRenderer(FORWARD)
 {
 	camera = new Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0, 0, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
 

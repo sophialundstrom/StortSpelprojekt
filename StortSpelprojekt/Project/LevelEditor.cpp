@@ -453,7 +453,7 @@ void LevelEditor::Render()
 }
 
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
-	:modelRenderer(FORWARD, false),
+	:modelRenderer(false),
 	terrainRenderer(FORWARD),
 	water(5000)
 {

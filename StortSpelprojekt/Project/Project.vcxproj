@@ -297,6 +297,7 @@
     <ClInclude Include="Random.h" />
     <ClInclude Include="PRay.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Renderers.h" />
     <ClInclude Include="SaveStation.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderData.h" />

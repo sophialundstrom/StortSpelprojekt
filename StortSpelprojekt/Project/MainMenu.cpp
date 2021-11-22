@@ -1,4 +1,5 @@
 #include "MainMenu.h"
+#include "Renderers.h"
 
 void MainMenu::Options()
 {
@@ -83,10 +84,10 @@ void Hovering()
 }
 
 MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
-	:modelRenderer(FORWARD, true),
-	particleRenderer(FORWARD),
-	terrainRenderer(FORWARD, 40)
 {
+	RND.InitModelRenderer();
+	RND.InitParticleRenderer();
+
 	Initialize();
 	
 	Audio::AddAudio(L"Audio/Menu.wav", 0);
@@ -186,13 +187,15 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
 	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 34, -687 });
-	particleRenderer.Bind(menuFireSystem);
+	PR->Bind(menuFireSystem);
 		
 	(void)Run();
 }
 
 MainMenu::~MainMenu()
 {
+	RND.Shutdown();
+
 	for (auto& [name, canvas] : canvases)
 		delete canvas;
 }
@@ -210,7 +213,7 @@ void MainMenu::Initialize()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
-			modelRenderer.Bind(model);
+			MR->Bind(model);
 			//shadowRenderer.Bind(model);
 			continue;
 		}
@@ -231,9 +234,9 @@ void MainMenu::Render()
 
 	Graphics::Inst().BeginFrame();
 
-	modelRenderer.Render();
+	MR->Render();
 
-	particleRenderer.Render();
+	PR->Render();
 
 	//terrainRenderer.Render(terrain);
 

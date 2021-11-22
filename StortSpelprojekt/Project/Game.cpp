@@ -35,6 +35,10 @@ void Game::Update()
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
+	//std::cout << TESTING;
+
+	//RND.WR()->Bind(nullptr);
+
 	Event::ClearRawDelta();
 }
 
@@ -593,12 +597,7 @@ void Game::UpdateInventoryUI()
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
-	:modelRenderer(FORWARD, true),
-	particleRenderer(FORWARD),
-	terrainRenderer(FORWARD),
-	colliderRenderer(FORWARD),
-	animatedModelRenderer(FORWARD, true),
-	water(5000), terrain(2)
+	:water(5000), terrain(2)
 {
 	QuestLog::CreateQuests();
 	//QuestLog::Load("Default");

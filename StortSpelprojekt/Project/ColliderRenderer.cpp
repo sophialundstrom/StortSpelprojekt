@@ -2,7 +2,7 @@
 
 #include "Collision.h"
 
-ColliderRenderer::ColliderRenderer(RenderMethod method)
+ColliderRenderer::ColliderRenderer()
 {
 	//INDEX BUFFERS
 	static const UINT sIndices[] =
@@ -49,17 +49,8 @@ ColliderRenderer::ColliderRenderer(RenderMethod method)
 	if (!LoadShader(vertexShader, vs_path, byteCode))
 		return;
 
-	if (method == FORWARD)
-	{
-		if (!LoadShader(pixelShader, forward_ps_path))
-			return;
-	}
-
-	else
-	{
-		if (!LoadShader(pixelShader, deferred_ps_path))
-			return;
-	}
+	if (!LoadShader(pixelShader, forward_ps_path))
+		return;
 
 	Print("SUCCEEDED LOADING SHADERS", "COLLIDER RENDERER");
 
