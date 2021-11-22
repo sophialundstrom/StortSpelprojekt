@@ -7,6 +7,7 @@ d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\grid.obj
 d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\graphics.obj
 d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\gameover.obj
 d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\gameloader.obj
+d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\game.obj
 d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\dynamicplane.obj
 d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\dockspacepanel.obj
 d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\dialogueoverlay.obj
@@ -49,7 +50,6 @@ d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\text.obj
 d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\terrainrenderer.obj
 d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\terrain.obj
 d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\soundeffect.obj
-d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\game.obj
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\animatedmodelvertexshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\deferredcolliderpixelshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\deferredterrainpixelshader.cso
@@ -57,8 +57,10 @@ d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\colliderpixelshade
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\collidervertexshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\deferredpixelshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\deferredvertexshader.cso
+d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\forwardmodelpixelshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\forwardparticlepixelshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\deferredmodelpixelshader.cso
+d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\forwardterrainpixelshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\idpixelshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\idvertexshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\loadingps.cso
@@ -69,6 +71,8 @@ d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\particlevertexshad
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\shadowvertexshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\skeletonpixelshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\skeletonvertexshader.cso
+d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\terraindomainshader.cso
+d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\terraingeometryshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\terrainhullshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\terrainvertexshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\unlitanimatedmodelvertexshader.cso
@@ -80,10 +84,6 @@ d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\volumepixelshader.
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\volumevertexshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\waterdomainshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\waterpixelshader.cso
-d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\forwardmodelpixelshader.cso
-d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\forwardterrainpixelshader.cso
-d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\terraindomainshader.cso
-d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\terraingeometryshader.cso
 d:\projekt\github\stortspelprojekt\stortspelprojekt\project\x64\debug\project.ilk
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\project.exe
 d:\projekt\github\stortspelprojekt\stortspelprojekt\x64\debug\project.pdb
