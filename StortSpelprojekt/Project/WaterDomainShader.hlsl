@@ -49,9 +49,11 @@ DS_OUTPUT main(
     output.normal = patch[0].normal * domain.x + patch[1].normal * domain.y + patch[2].normal * domain.z;
     output.tangent = patch[0].tangent * domain.x + patch[1].tangent * domain.y + patch[2].tangent * domain.z;
     
-    const int amplitude = 6;
-    const float multiplier = 2.0f;
+    const int amplitude = 4;
+    const float multiplier = 1.5f;
     const float PI = 3.14159265359f;
+    float frequency = 1.5f;
+    float period;
     
     if (round(output.position.x) % 2 == 0 && round(output.position.z) % 3 == 0)
         output.position.y += sin(time * multiplier) * amplitude;

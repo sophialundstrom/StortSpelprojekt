@@ -346,6 +346,7 @@
       <Filter>ARCUS\Audio</Filter>
     </ClCompile>
     <ClCompile Include="ArrowHandler.cpp" />
+    <ClCompile Include="PlaneWithNormals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -667,6 +668,8 @@
       <Filter>ARCUS\Audio</Filter>
     </ClInclude>
     <ClInclude Include="ArrowHandler.h" />
+    <ClInclude Include="NormalMap.h" />
+    <ClInclude Include="PlaneWithNormals.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -770,6 +773,15 @@
     </FxCompile>
     <FxCompile Include="LoadingVS.hlsl">
       <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterGeometryShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\WaterRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterHullShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\WaterRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterVertexShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\WaterRenderer\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
