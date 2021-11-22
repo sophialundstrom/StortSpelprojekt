@@ -4,6 +4,7 @@
 
 class LocationObjective : public Objective
 {
+	friend class Quest;
 private:
 	Vector3 location;
 	float radius;

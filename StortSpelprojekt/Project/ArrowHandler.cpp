@@ -16,8 +16,6 @@ void ArrowHandler::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
     for (int i = 0; i < arrows.size(); i++)
     {
         arrows[i]->Update();
-        if (!arrows[i]->canCollide)
-            PrintS("CANT COLLIDE!");
 
         if (arrows[i]->isDestroyed)
         {

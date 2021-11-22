@@ -4,6 +4,7 @@
 
 class CollectObjective : public Objective
 {
+	friend class Quest;
 private:
 	UINT numCollected;
 	UINT numToCollect;

@@ -12,6 +12,7 @@ private:
 	UINT numBarbarians;
 	std::vector<std::shared_ptr<HostileNPC>> barbarians;
 public:
+	BarbarianCamp() = default;
 	BarbarianCamp(Location location, float radius);
 
 	void AddBarbarian(const std::string& file, const Vector3& position, bool dynamic = true);

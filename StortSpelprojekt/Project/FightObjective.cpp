@@ -3,10 +3,10 @@
 FightObjective::FightObjective(BarbarianCamp::Location location)
 	:Objective(Type::FIGHT, false), location(location) {}
 
-void FightObjective::Update(BarbarianCamp& camp)
+void FightObjective::Update(BarbarianCamp* camp)
 {
-	cleared = camp.NumDead();
-	total = camp.NumBarbarians();
+	cleared = camp->NumDead();
+	total = camp->NumBarbarians();
 
 	if (cleared == total)
 		completed = true;

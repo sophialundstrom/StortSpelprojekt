@@ -55,7 +55,8 @@ public:
 	void TriggerOnActivateFunction() { if (onActivateFunction != NULL) onActivateFunction(); }
 	void TriggerOnCompleteFunction() { if (onCompleteFunction != NULL) onCompleteFunction(); }
 
-	void Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets);
+	void ResetObjectiveResources(std::shared_ptr<Player>, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets);
+	void Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets);
 
 	void SaveToFile(File& file);
 	void LoadFromFile(File& file);

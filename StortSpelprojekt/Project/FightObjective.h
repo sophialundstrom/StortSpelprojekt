@@ -4,6 +4,7 @@
 
 class FightObjective : public Objective
 {
+	friend class Quest;
 private:
 	UINT cleared;
 	UINT total;
@@ -11,7 +12,7 @@ private:
 public:
 	FightObjective() = default;
 	FightObjective(BarbarianCamp::Location location);
-	void Update(BarbarianCamp& camp);
+	void Update(BarbarianCamp* camp);
 
 	BarbarianCamp::Location CampLocation() { return location; }
 

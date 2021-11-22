@@ -11,7 +11,7 @@ void QuestLog::LoadQuest(Quest* quest)
 		LoadQuest(child);
 }
 
-void QuestLog::Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets)
+void QuestLog::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets)
 {
 	for (UINT i = 0; i < activeQuests.size(); ++i)
 	{
@@ -20,17 +20,6 @@ void QuestLog::Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp>
 			continue;
 
 		quest->Update(player, camps, friendlyNPCs, targets);
-
-		/*if (quest->IsCompleted())
-		{
-			activeQuests.erase(activeQuests.begin() + i);
-
-			for (auto child : quest->GetChildQuests())
-			{
-				activeQuests.emplace_back(child);
-				child->Activate();
-			}
-		}*/
 	}
 
 	if (Event::KeyIsPressed('O'))

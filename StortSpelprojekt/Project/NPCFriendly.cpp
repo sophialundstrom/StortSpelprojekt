@@ -61,17 +61,19 @@ void FriendlyNPC::Update()
 		if (!currentQuest->Unlocked())
 			return;
 
-		questMarker->SetPosition(position.x, position.y + 5.0f, position.z);
 		questMarker->Update();
 
 		if (currentQuest->Unlocked() && currentQuest->IsActive() && !currentQuest->IsCompleted())
 		{
 			currentDialogueState = DialogueState::HELP;
+			questMarker->SetAsHelp();
 		}
 			
 		else if (currentQuest->IsCompleted())
 		{
 			currentDialogueState = DialogueState::HANDIN;
+			questMarker->SetAsDone();
+
 			if (finishedDialogue)
 			{
 				Print(currentQuest->GetName() + " COMPLETED");
@@ -85,18 +87,24 @@ void FriendlyNPC::Update()
 				{
 					completedAllQuests = true;
 					currentDialogueState = DialogueState::DONE;
+					questMarker->SetAsComplete();
 				}
 			}
 		}
 
 		else
 		{
+			questMarker->SetAsGive();
 			currentDialogueState = DialogueState::HANDOUT;
 		}
 	}
 
 	if (!currentQuest && !completedAllQuests)
+	{
 		currentQuest = quests[currentQuestID];
+		questMarker->SetAsGive();
+		questMarker->SetPosition(0, 9.0f, 0);
+	}
 
 	finishedDialogue = false;
 }

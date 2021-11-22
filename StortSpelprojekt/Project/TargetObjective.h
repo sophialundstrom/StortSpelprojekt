@@ -4,6 +4,7 @@
 
 class TargetObjective : public Objective
 {
+	friend class Quest;
 private:
 	UINT targetID;
 public:

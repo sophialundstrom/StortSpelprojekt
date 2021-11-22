@@ -4,6 +4,7 @@
 
 class TalkObjective : public Objective
 {
+	friend class Quest;
 private:
 	std::string NPC;
 public:

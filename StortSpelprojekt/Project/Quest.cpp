@@ -42,7 +42,7 @@ void Quest::AddLocationObjective(const Vector3& location, float radius)
 	objectives.emplace_back(new LocationObjective(location, radius));
 }
 
-void Quest::Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets)
+void Quest::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets)
 {
 	UINT numCompleted = 0;
 
@@ -68,14 +68,7 @@ void Quest::Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> ca
 		auto fight = dynamic_cast<FightObjective*>(objective);
 		if (fight)
 		{
-			for (auto& camp : camps)
-			{
-				if (camp.GetLocation() == fight->CampLocation())
-				{
-					fight->Update(camp);
-					break;
-				}
-			}
+			fight->Update(camps[fight->CampLocation()]);
 
 			if (fight->IsCompleted())
 				numCompleted++;
@@ -261,5 +254,55 @@ void Quest::LoadFromFile(File& file)
 		auto child = new Quest();
 		child->LoadFromFile(file);
 		childQuests.emplace_back(child);
+	}
+}
+
+void Quest::ResetObjectiveResources(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets)
+{
+	for (auto& objective : objectives)
+	{
+		auto collect = dynamic_cast<CollectObjective*>(objective);
+		if (collect)
+		{
+			player->Inventory().RemoveItem(collect->itemType, collect->numToCollect);
+			continue;
+		}
+
+		auto fight = dynamic_cast<FightObjective*>(objective);
+		if (fight)
+		{
+			camps[fight->CampLocation()]->Reset();
+			continue;
+		}
+
+		//auto talk = dynamic_cast<TalkObjective*>(objective);
+		//if (talk)
+		//{
+		//	for (auto& NPC : friendlyNPCs)
+		//	{
+		//		if (NPC->GetName() == talk->GetNPCName())
+		//		{
+		//			//DO SMTH?
+		//			break;
+		//		}
+		//	}
+
+		//	continue;
+		//}
+
+		auto target = dynamic_cast<TargetObjective*>(objective);
+		if (target)
+		{
+			for (auto& t : targets)
+			{
+				if (target->GetTargetID() == t->GetID())
+				{
+					t->Reset();
+					break;
+				}
+			}
+
+			continue;
+		}
 	}
 }

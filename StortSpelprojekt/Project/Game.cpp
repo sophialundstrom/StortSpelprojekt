@@ -255,13 +255,14 @@ void Game::AddFriendlyNPCs()
 			NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
 			NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
 
-			auto onQuestComplete = [this]()
+			// EXISTS ON ACTIVATE/UNLOCKED/COMPLETE SAME THING JUST DIFFERENT NAMES
+
+			auto onCompleteFunc = [this, quest]() mutable
 			{
-				friendlyNPCs[0]->SetName("=========TESTING==========");
-				Print(friendlyNPCs[0]->GetName());
+				quest->ResetObjectiveResources(player, camps, friendlyNPCs, targets);
 			};
 
-			quest->AddOnCompleteFunction(onQuestComplete);
+			quest->AddOnCompleteFunction(onCompleteFunc);
 		}
 
 		{
@@ -269,6 +270,13 @@ void Game::AddFriendlyNPCs()
 			NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
 			NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
 			NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
+
+			auto onCompleteFunc = [this, quest]() mutable
+			{
+				quest->ResetObjectiveResources(player, camps, friendlyNPCs, targets);
+			};
+
+			quest->AddOnCompleteFunction(onCompleteFunc);
 		}
 
 		{
@@ -276,6 +284,13 @@ void Game::AddFriendlyNPCs()
 			NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
 			NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
 			NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
+
+			auto onCompleteFunc = [this, quest]() mutable
+			{
+				quest->ResetObjectiveResources(player, camps, friendlyNPCs, targets);
+			};
+
+			quest->AddOnCompleteFunction(onCompleteFunc);
 		}
 
 		NPC->AddDialogue("INSERT DIALOGUE FOR WHEN NPC HAS NO QUESTS LEFT");
@@ -306,13 +321,51 @@ void Game::AddTarget(const std::string& file, const Vector3& position, const Vec
 {
 	auto target = std::make_shared<Target>(file, position, rotation, targets.size());
 	modelRenderer.Bind(target);
+	shadowRenderer.Bind(target); 
 
 	auto collider = target->GetCollider();
 	colliders.emplace_back(collider);
 	colliderRenderer.Bind(collider);
-	//SHADOW RENDERER
 
 	targets.emplace_back(target);
+}
+
+void Game::AddBarbarianCamps()
+{
+	const float towerHeight = 20.0f;
+
+	{ // SOUTHERN CAMP
+		auto camp = new BarbarianCamp(BarbarianCamp::Location::South, 30.0f);
+		camp->AddBarbarian("BarbarianBow", { -582.0f, 72.0f + towerHeight, -269.0f }, false);
+		camp->AddBarbarian("BarbarianBow", { -577.0f, 72.0f + towerHeight, -213.0f }, false);
+		//ADD MORE BARBARIANS AND CAMPS
+
+		camps[BarbarianCamp::Location::South] = camp;
+	}
+
+	{ // EASTERN CAMP
+		auto camp = new BarbarianCamp(BarbarianCamp::Location::East, 40.0f);
+
+		camps[BarbarianCamp::Location::East] = camp;
+	}
+
+	{ // NORTHERN CAMP
+		auto camp = new BarbarianCamp(BarbarianCamp::Location::North, 40.0f);
+
+		camps[BarbarianCamp::Location::North] = camp;
+	}
+
+	{ // WESTERN CAMP
+		auto camp = new BarbarianCamp(BarbarianCamp::Location::West, 40.0f);
+
+		camps[BarbarianCamp::Location::West] = camp;
+	}
+
+	{ // VILLAGE INVADERS
+		auto camp = new BarbarianCamp(BarbarianCamp::Location::Village, 40.0f);
+
+		camps[BarbarianCamp::Location::Village] = camp;
+	}
 }
 
 void Game::CheckTargetCollision()
@@ -321,11 +374,11 @@ void Game::CheckTargetCollision()
 
 	for (auto& arrow : handler.arrows)
 	{
-		if (!arrow->canCollide)
-			continue;
-
 		for (auto& target : targets)
 		{
+			if (target->GotHit())
+				continue;
+
 			bool hit = handler.CheckCollision(arrow, target->GetCollider());
 
 			if (hit)
@@ -795,6 +848,11 @@ APPSTATE Game::Run()
 		}*/
 	}
 
+	if (Event::KeyIsPressed('P'))
+	{
+		PrintVector3("PLAYER POSITION: ", player->GetPosition());
+	}
+
 	if (Event::KeyIsPressed('L'))
 		player->Inventory().AddItem(Item::Type::Hammer);
 
@@ -845,6 +903,7 @@ APPSTATE Game::Run()
 	{
 		return APPSTATE::EXIT;
 	}
+
 	return APPSTATE::NO_CHANGE;
 }
 
