@@ -7,8 +7,8 @@
 #include "TalkObjective.h"
 #include "LocationObjective.h"
 
-Quest::Quest(const std::string& name, bool active, bool completed)
-	:name(name), active(active), completed(completed) {}
+Quest::Quest(const std::string& name, bool active, bool completed, bool unlocked)
+	:name(name), active(active), completed(completed), unlocked(unlocked) {}
 
 Quest* Quest::AddChildQuest(const std::string& name)
 {

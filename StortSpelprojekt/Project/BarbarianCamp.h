@@ -13,7 +13,6 @@ private:
 	std::vector<std::shared_ptr<HostileNPC>> barbarians;
 public:
 	BarbarianCamp(Location location, float radius);
-	~BarbarianCamp();
 
 	void AddBarbarian(const std::string& file, const Vector3& position, bool dynamic = true);
 

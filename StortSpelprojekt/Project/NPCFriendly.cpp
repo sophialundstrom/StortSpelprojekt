@@ -10,16 +10,16 @@ FriendlyNPC::FriendlyNPC(const std::string& name, const std::string& file)
 	boundingBox->SetScale(2, 4, 2);
 }
 
-const std::string FriendlyNPC::AddQuest(const std::string& name)
+Quest* FriendlyNPC::AddQuest(const std::string& name)
 {
 	auto quest = QuestLog::Get(name);
 	if (quest)
 	{
 		quests.emplace_back(quest);
-		return quest->GetName();
+		return quest;
 	}
 	
-	return "";
+	return nullptr;
 }
 
 void FriendlyNPC::AddDialogue(const std::string& string)
@@ -42,8 +42,14 @@ void FriendlyNPC::ActivateCurrentQuest()
 
 const std::string FriendlyNPC::GetCurrentDialogue()
 {
-	auto ID = (3 * currentQuestID) + UINT(currentDialogueState);
-	return dialogues[ID];
+	if (!completedAllQuests)
+	{
+		auto ID = (3 * currentQuestID) + UINT(currentDialogueState);
+		return dialogues[ID];
+	}
+
+	else
+		return dialogues.back();
 }
 
 void FriendlyNPC::Update()
@@ -55,42 +61,42 @@ void FriendlyNPC::Update()
 		if (!currentQuest->Unlocked())
 			return;
 
-		//Print(currentQuest->GetName(), "========");
+		questMarker->SetPosition(position.x, position.y + 5.0f, position.z);
+		questMarker->Update();
 
 		if (currentQuest->Unlocked() && currentQuest->IsActive() && !currentQuest->IsCompleted())
 		{
-			//Print("HELP");
 			currentDialogueState = DialogueState::HELP;
 		}
-
+			
 		else if (currentQuest->IsCompleted())
 		{
-			//Print("HANDIN");
 			currentDialogueState = DialogueState::HANDIN;
 			if (finishedDialogue)
 			{
 				Print(currentQuest->GetName() + " COMPLETED");
+				currentQuest->TriggerOnCompleteFunction();
 				QuestLog::Complete(currentQuest);
 
 				currentQuestID++;
 				currentQuest = nullptr;
+
+				if (currentQuestID == quests.size())
+				{
+					completedAllQuests = true;
+					currentDialogueState = DialogueState::DONE;
+				}
 			}
 		}
 
 		else
 		{
-			//Print("HANDOUT");
 			currentDialogueState = DialogueState::HANDOUT;
 		}
-
-		questMarker->SetPosition(position.x, position.y + 5.0f, position.z);
-		questMarker->Update();
 	}
 
-	if (!currentQuest)
-	{
+	if (!currentQuest && !completedAllQuests)
 		currentQuest = quests[currentQuestID];
-	}
 
 	finishedDialogue = false;
 }

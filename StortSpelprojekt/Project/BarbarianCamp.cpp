@@ -3,13 +3,19 @@
 BarbarianCamp::Location BarbarianCamp::GetLocation()    { return location; }
 UINT BarbarianCamp::NumBarbarians()                     { return numBarbarians; }
 
+void BarbarianCamp::Reset()
+{
+    for (auto& barbarian : barbarians)
+        barbarian->Reset();
+}
+
 BarbarianCamp::BarbarianCamp(Location location,  float radius)
     :location(location), radius(radius), numBarbarians(0) {}
 
 void BarbarianCamp::AddBarbarian(const std::string& file, const Vector3& position, bool dynamic)
 {
-    auto barbarian = std::make_shared<HostileNPC>(file, Locations[UINT(location)] + "_Barbarian_" + std::to_string(numBarbarians));
-    barbarians.emplace_back(barbarian);
+    //auto barbarian = std::make_shared<HostileNPC>(file, Locations[UINT(location)] + "_Barbarian_" + std::to_string(numBarbarians));
+    //barbarians.emplace_back(barbarian);
     numBarbarians++;
 }
 

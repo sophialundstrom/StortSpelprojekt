@@ -6,8 +6,9 @@
 
 class NPC : public Model
 {
-private:
+protected:
 	int hp;
+	int maxHP;
 	bool dead = false;
 protected:
 	std::shared_ptr<BoundingBox> boundingBox;

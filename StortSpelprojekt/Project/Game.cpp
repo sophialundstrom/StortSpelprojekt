@@ -11,7 +11,7 @@ void Game::Update()
 	scene.Update();
 
 	if (state != GameState::DIALOGUE)
-		player->Update(terrain.GetHeightMap());
+		player->Update(terrain.GetHeightMap(), modelRenderer, colliderRenderer);
 
 	scene.GetCamera()->Update();
 
@@ -161,7 +161,7 @@ void Game::RemoveItem(const std::string name)
 			auto item = scene.Get<Item>(name);
 			modelRenderer.Unbind(item);
 			shadowRenderer.Unbind(item);
-			colliderRenderer.Unbind(item->GetBounds());
+			colliderRenderer.Unbind(item->GetCollider());
 			auto it = items.begin() + i;
 			items.erase(it);
 			scene.DeleteDrawable(name);
@@ -181,7 +181,7 @@ void Game::AddItem(Item::Type type, Vector3 position)
 	items.emplace_back(item);
 	modelRenderer.Bind(item);
 	shadowRenderer.Bind(item);
-	colliderRenderer.Bind(item->GetBounds());
+	colliderRenderer.Bind(item->GetCollider());
 }
 
 std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position)
@@ -249,20 +249,34 @@ void Game::AddFriendlyNPCs()
 	{
 		auto NPC = AddFriendlyNPC("Gilbert", "Priest", { -134, 25, -594 });
 
-		NPC->AddQuest("A Helping Hand.");
-		NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
-		NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
-		NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
+		{
+			auto quest = NPC->AddQuest("A Helping Hand.");
+			NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+			NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+			NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
 
-		NPC->AddQuest("Target Aquired.");
-		NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
-		NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
-		NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
+			auto onQuestComplete = [this]()
+			{
+				friendlyNPCs[0]->SetName("=========TESTING==========");
+				Print(friendlyNPCs[0]->GetName());
+			};
 
-		NPC->AddQuest("We're Under Attack!");
-		NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
-		NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
-		NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
+			quest->AddOnCompleteFunction(onQuestComplete);
+		}
+
+		{
+			auto quest = NPC->AddQuest("Target Aquired.");
+			NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+			NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+			NPC->AddDialogue("Target Aquired. >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
+		}
+
+		{
+			auto quest = NPC->AddQuest("We're Under Attack!");
+			NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+			NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+			NPC->AddDialogue("We're Under Attack! >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
+		}
 
 		NPC->AddDialogue("INSERT DIALOGUE FOR WHEN NPC HAS NO QUESTS LEFT");
 
@@ -303,15 +317,23 @@ void Game::AddTarget(const std::string& file, const Vector3& position, const Vec
 
 void Game::CheckTargetCollision()
 {
-	for (auto& target : targets)
-	{
-		bool hit = player->CheckArrowHit(target->GetCollider());
+	auto handler = player->GetArrowHandler();
 
-		if (hit)
+	for (auto& arrow : handler.arrows)
+	{
+		if (!arrow->canCollide)
+			continue;
+
+		for (auto& target : targets)
 		{
-			target->Hit();
-			Print("TARGET " + std::to_string(target->GetID()) + " GOT HIT");
-			return;
+			bool hit = handler.CheckCollision(arrow, target->GetCollider());
+
+			if (hit)
+			{
+				target->Hit();
+				Print("TARGET " + std::to_string(target->GetID()) + " GOT HIT");
+				return;
+			}
 		}
 	}
 }
@@ -334,11 +356,11 @@ void Game::CheckNearbyCollision()
 			{
 				if (!arrow->canCollide)
 					continue;
+
 				hostile->GetArrowHandler().CheckCollision(arrow, collider);
 			}
 		}
 
-		
 		for (auto& arrow : player->GetArrowHandler().arrows)
 		{
 			if (!arrow->canCollide)

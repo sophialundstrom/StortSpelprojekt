@@ -89,9 +89,8 @@ void QuestLog::CreateQuests()
 
 	//=====================================================
 	//NPC1
-	auto q1 = new Quest("A Helping Hand.", false, false);		//COLLECTING A HAMMER (MAYBE TO FINISH BUILDING BOW HUT OR SMTH)
+	auto q1 = new Quest("A Helping Hand.", false, false, true);		//COLLECTING A HAMMER (MAYBE TO FINISH BUILDING BOW HUT OR SMTH)
 	q1->AddCollectObjective(Item::Type::Hammer, 1);
-	q1->Unlock();
 	quests.emplace_back(q1);
 	
 	auto q2 = q1->AddChildQuest("Target Aquired.");				//SHOOT THREE TARGETS WITH GIVEN ARROWS FROM LAST QUEST

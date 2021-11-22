@@ -14,9 +14,12 @@ enum CombatStyle
 class HostileNPC : public NPC
 {
 private:
-	
+	Vector3 spawnPosition;
+
 	ArrowHandler arrowHandler;
+
 	std::shared_ptr<Player> player;
+
 	float movementXRadiant;
 	float movementYRadiant;
 
@@ -38,6 +41,8 @@ public:
 	virtual void Update() override;
 	void Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
+	void SetSpawnPosition(const Vector3& position);
+	void Reset();
 	void CheckPlayerCollision(std::shared_ptr<Player> player);
 private:
 	void WeaponSlash();

@@ -12,22 +12,28 @@ class Quest
 {
 protected:
 	std::string name;
+
 	bool unlocked;
 	bool active;
 	bool completed;
+
 	std::vector<Objective*> objectives;
 	std::vector<Quest*> childQuests;
+
+	std::function<void()> onUnlockedFunction = NULL;
+	std::function<void()> onActivateFunction = NULL;
+	std::function<void()> onCompleteFunction = NULL;
 public:
 	Quest() = default;
-	Quest(const std::string& name, bool active, bool completed);
+	Quest(const std::string& name, bool active, bool completed, bool unlocked = false);
 
 	const std::vector<Objective*> GetObjectives() { return objectives; }
 
 	const std::string GetName()				{ return name; }
 
-	void Unlock()		{ unlocked = true; }
+	void Unlock()		{ if (!unlocked) TriggerOnUnlockedFunction(); unlocked = true; }
 	bool Unlocked()		{ return unlocked; }
-	void Activate()		{ active = true; }
+	void Activate()		{ if (!active) TriggerOnActivateFunction(); active = true; }
 	bool IsCompleted()	{ return completed; }
 	bool IsActive()		{ return active; }
 
@@ -40,6 +46,14 @@ public:
 	void AddTargetObjective(UINT targetID);
 	void AddFightObjective(BarbarianCamp::Location location);
 	void AddLocationObjective(const Vector3& location, float radius);
+
+	void AddOnUnlockedFunction(std::function<void()> function) { onUnlockedFunction = function; }
+	void AddOnActivateFunction(std::function<void()> function) { onActivateFunction = function; }
+	void AddOnCompleteFunction(std::function<void()> function) { onCompleteFunction = function; }
+
+	void TriggerOnUnlockedFunction() { if (onUnlockedFunction != NULL) onUnlockedFunction(); }
+	void TriggerOnActivateFunction() { if (onActivateFunction != NULL) onActivateFunction(); }
+	void TriggerOnCompleteFunction() { if (onCompleteFunction != NULL) onCompleteFunction(); }
 
 	void Update(std::shared_ptr<Player> player, std::vector<BarbarianCamp> camps, std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs, std::vector<std::shared_ptr<Target>> targets);
 

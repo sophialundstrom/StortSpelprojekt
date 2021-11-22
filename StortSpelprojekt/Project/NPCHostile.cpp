@@ -127,6 +127,18 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
     NPC::Update();
 }
 
+void HostileNPC::SetSpawnPosition(const Vector3& position)
+{
+    this->spawnPosition = position;
+}
+
+void HostileNPC::Reset()
+{
+    position = spawnPosition;
+    dead = false;
+    hp = maxHP;
+}
+
 void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
 {
     for (auto& arrow : arrowHandler.arrows)

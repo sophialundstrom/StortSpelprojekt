@@ -10,7 +10,7 @@ class FriendlyNPC : public NPC
 public:
 	FriendlyNPC(const std::string& name, const std::string& file);
 
-	const std::string AddQuest(const std::string& name);
+	Quest* AddQuest(const std::string& name);
 
 	void AddDialogue(const std::string& string);
 
@@ -34,6 +34,7 @@ private:
 	UINT currentQuestID = 0;
 	Quest* currentQuest = nullptr;
 	std::vector<Quest*> quests;
+	bool completedAllQuests = false;
 
 	std::shared_ptr<QuestMarker> questMarker;
 };
