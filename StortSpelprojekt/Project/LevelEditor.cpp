@@ -506,6 +506,9 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
+	//GAME
+	//gameLoader.Load("Default", scene.GetDrawables());
+	//MAIN MENU
 	gameLoader.Load("Default", scene.GetDrawables());
 	BindDrawables();
 

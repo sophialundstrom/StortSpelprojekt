@@ -30,8 +30,11 @@ private:
 
 	//POINT LIGHTS
 	UINT numPointLights = 0;
-	PointLight::Data* pointLightsData = nullptr;
-
+	PointLight* pointLightsData = nullptr;
+	
+	ID3D11ShaderResourceView* pointLightSRV = nullptr;
+	ID3D11Buffer* pointLightBuffer = nullptr;
+	ID3D11Buffer* numPointLightsBuffer = nullptr;
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 
@@ -55,7 +58,8 @@ public:
 		CreateBuffer(cameraPositionBuf);
 		CreateBuffer(matrices_buf, sizeof(Matrices));
 		CreateBuffer(lightDataBuf, sizeof(DirectionalLight::Data));
-
+		CreateBuffer(numPointLightsBuffer);
+		CreateStructuredBuffer(pointLightBuffer, pointLightSRV, sizeof(PointLight), sizeof(PointLight) * MAX_LIGHTS);
 		shadowMap = ShadowMap(4096, 10);
 
 		//SAMPLER
@@ -88,6 +92,9 @@ public:
 	~ShaderData()
 	{
 		cameraPositionBuf->Release();
+		pointLightBuffer->Release();
+		numPointLightsBuffer->Release();
+		pointLightSRV->Release();
 		matrices_buf->Release();
 		if (inputLayout)
 			inputLayout->Release();
@@ -96,7 +103,7 @@ public:
 		shadowMap.ShutDown();
 	}
 
-	void Update(const Camera& camera, const DirectionalLight& directionalLight, const UINT& numPointLights, PointLight::Data* pointLightsData)
+	void Update(const Camera& camera, const DirectionalLight& directionalLight, const UINT& numPointLights, PointLight* pointLightsData)
 	{
 		//CAMERA
 		cameraMatrix = camera.GetMatrix();
@@ -110,10 +117,12 @@ public:
 		lightMatrix = directionalLight.GetMatrix();
 		lightData = directionalLight.data;
 		UpdateBuffer(lightDataBuf, lightData);
-
+		//hej
 		//POINT LIGHTS
 		ShaderData::pointLightsData = pointLightsData;
 		ShaderData::numPointLights = numPointLights;
+		UpdateBuffer(numPointLightsBuffer, numPointLights);
+		UpdateBuffer(pointLightBuffer, pointLightsData, sizeof(PointLight) * numPointLights);
 	}
 
 	void Update(const Camera& camera)
@@ -129,6 +138,8 @@ public:
 	{
 		Graphics::Inst().GetContext().PSSetConstantBuffers(1, 1, &lightDataBuf);
 		Graphics::Inst().GetContext().PSSetConstantBuffers(2, 1, &cameraPositionBuf);
+		BindBuffer(numPointLightsBuffer, Shader::PS, 3);
+		Graphics::Inst().GetContext().PSSetShaderResources(9, 1, &pointLightSRV);
 		shadowMap.BindAsResource();
 	}
 };
