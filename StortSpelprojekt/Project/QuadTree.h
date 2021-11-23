@@ -15,18 +15,10 @@ struct FrustrumCollider
 
     void Update(Camera* camera)
     {
-        
         Quaternion camDirQ = Quaternion::CreateFromYawPitchRoll(camera->GetJaw(), camera->GetPitch(), 0.f);
         
         bounds = DirectX::BoundingFrustum();
         bounds.CreateFromMatrix(bounds, camera->GetProjectionMatrix());
-        /*bounds.Origin = { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z };
-        camDirQ.Normalize();
-        bounds.Orientation = camDirQ;*/
-        
-        
-
-
        
         bounds.Transform(
             bounds,
@@ -71,7 +63,7 @@ class QuadTree
 public:
     QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int currentLevel, std::string nameTag);
     void InsertModel(std::shared_ptr<Drawable>& drawable);
-    void GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider);
+    void CheckModelsWithinFustrum(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider);
     void GetAllDrawables(std::map<std::string, std::shared_ptr<Drawable>>& allDrawables);
     void PrintTree();
 

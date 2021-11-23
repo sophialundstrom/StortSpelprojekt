@@ -54,14 +54,14 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 	}
 }
 
-void QuadTree::GetRelevantDrawables(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider)
+void QuadTree::CheckModelsWithinFustrum(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider)
 {
 	if (divided)
 	{
-		TopL->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
-		TopR->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
-		BotL->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
-		BotR->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+		TopL->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
+		TopR->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
+		BotL->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
+		BotR->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
 	}
 	else
 	{
