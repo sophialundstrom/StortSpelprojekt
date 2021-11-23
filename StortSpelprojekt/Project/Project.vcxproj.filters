@@ -199,6 +199,12 @@
     <Filter Include="ARCUS\ApplicationStates\GameStates\Game\Overlays">
       <UniqueIdentifier>{a9aa3fa1-a6b5-4dba-8f5e-1d16a8b714bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\InteractableRenderer">
+      <UniqueIdentifier>{35391c32-dc46-4158-95cf-57336463276e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\InteractableRenderer\Shaders">
+      <UniqueIdentifier>{6d5e65d4-bd34-44f4-adaf-e4a1a5821ead}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Terrain.cpp">
@@ -360,6 +366,9 @@
     <ClCompile Include="TargetObjective.cpp" />
     <ClCompile Include="InGameOverlay.cpp">
       <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractableRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\InteractableRenderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -691,6 +700,9 @@
     <ClInclude Include="Overlay.h">
       <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
     </ClInclude>
+    <ClInclude Include="InteractableRenderer.h">
+      <Filter>ARCUS\Graphics\Renderers\InteractableRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -794,6 +806,12 @@
     </FxCompile>
     <FxCompile Include="LoadingVS.hlsl">
       <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="InteractableVertexShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\InteractableRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="InteractablePixelShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\InteractableRenderer\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

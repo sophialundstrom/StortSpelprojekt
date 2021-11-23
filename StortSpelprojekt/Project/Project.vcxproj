@@ -181,6 +181,7 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="InGameOverlay.cpp" />
+    <ClCompile Include="InteractableRenderer.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h" />
     <ClInclude Include="InGameOverlay.h" />
+    <ClInclude Include="InteractableRenderer.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="LoadingScreen.h" />
     <ClInclude Include="LocationObjective.h" />
@@ -466,6 +468,18 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="InteractablePixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="InteractableVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="LoadingPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

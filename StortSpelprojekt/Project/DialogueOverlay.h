@@ -28,11 +28,10 @@ public:
 	DialogueOverlay();
 	~DialogueOverlay();
 
+	bool HasRecentDialogue() { return (Time::Get() - lastInteraction < 1.0f); }
+	void Set(std::shared_ptr<FriendlyNPC> NPC, TalkObjective* objective = nullptr);
+
 	// Inherited via Overlay
 	virtual void Render() override;
 	virtual OVERLAYSTATE Update() override;
-
-	bool IsDone()	{ return done; }
-
-	void Set(std::shared_ptr<FriendlyNPC> NPC, TalkObjective* objective = nullptr);
 };

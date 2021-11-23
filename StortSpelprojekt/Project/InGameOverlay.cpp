@@ -87,10 +87,19 @@ void InGameOverlay::UpdateQuests(const std::vector<Quest*>& quests)
 		auto name = new Text(to_wstr(quest->GetName()), position, questFormat, color);
 		std::vector<Text*> objectives;
 
-		for (auto objective : quest->GetObjectives())
+		if (quest->IsCompleted())
 		{
 			position.y += objectiveOffset;
-			objectives.emplace_back(new Text(to_wstr(objective->Info()), position, objectiveFormat, color));
+			objectives.emplace_back(new Text(L"Return to " + to_wstr(quest->GetQuestHolder()) + L".", position, objectiveFormat, color));
+		}
+
+		else
+		{
+			for (auto objective : quest->GetObjectives())
+			{
+				position.y += objectiveOffset;
+				objectives.emplace_back(new Text(to_wstr(objective->Info()), position, objectiveFormat, color));
+			}
 		}
 
 		auto pair = std::make_pair(name, objectives);

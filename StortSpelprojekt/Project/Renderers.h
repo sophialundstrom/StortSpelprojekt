@@ -9,6 +9,7 @@
 #include "TerrainRenderer.h"			//TR
 #include "VolumeRenderer.h"				//VR
 #include "WaterRenderer.h"				//WR
+#include "InteractableRenderer.h"		//IR
 
 class Renderers : public Singleton<Renderers>
 {
@@ -23,6 +24,7 @@ private:
 	static TerrainRenderer* tr;
 	static VolumeRenderer* vr;
 	static WaterRenderer* wr;
+	static InteractableRenderer* ir;
 public:
 	Renderers() :Singleton(this) {}
 	~Renderers() { ShutDown(); }
@@ -37,6 +39,7 @@ public:
 	static void InitTerrainRenderer(float tesselationAmount = 63.0f){ tr = new TerrainRenderer(tesselationAmount); }
 	static void InitVolumeRenderer()								{ vr = new VolumeRenderer(); }
 	static void InitWaterRenderer(float tesselationAmount = 63.0f)	{ wr = new WaterRenderer(tesselationAmount); }
+	static void InitInteractableRenderer()							{ ir = new InteractableRenderer(); }
 
 	static AnimatedModelRenderer* AMR() { return amr; }
 	static ColliderRenderer* CR()		{ return cr; }
@@ -48,6 +51,7 @@ public:
 	static TerrainRenderer* TR()		{ return tr; }
 	static VolumeRenderer* VR()			{ return vr; }
 	static WaterRenderer* WR()			{ return wr; }
+	static InteractableRenderer* IR()	{ return ir; }
 
 	static void Clear()
 	{
@@ -143,6 +147,7 @@ inline SkeletonRenderer*		Renderers::skr	= nullptr;
 inline TerrainRenderer*			Renderers::tr	= nullptr;
 inline VolumeRenderer*			Renderers::vr	= nullptr;
 inline WaterRenderer*			Renderers::wr	= nullptr;
+inline InteractableRenderer*	Renderers::ir   = nullptr;
 
 inline Renderers& GetRenderersInstance() { return Renderers::Inst(); }
 #define RND GetRenderersInstance()
@@ -186,3 +191,7 @@ inline VolumeRenderer* RendererVR() { return RND.VR(); }
 inline WaterRenderer* RendererWR() { return RND.WR(); }
 //WATER RENDERER
 #define WR RendererWR()
+
+inline InteractableRenderer* RendererIR() { return RND.IR(); }
+//INTERACTABLE RENDERER
+#define IR RendererIR()

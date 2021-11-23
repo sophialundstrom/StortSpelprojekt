@@ -59,7 +59,9 @@ void Game::Render()
 
 	SKR->Render();
 
-	CR->Render();
+	//CR->Render();
+
+	IR->Render();
 
 	TR->Render(terrain);
 
@@ -342,6 +344,7 @@ void Game::AddTarget(const std::string& file, const Vector3& position, const Vec
 	auto target = std::make_shared<Target>(file, position, rotation, targets.size());
 	MR->Bind(target);
 	SR->Bind(target); 
+	IR->Bind(target);
 
 	auto collider = target->GetCollider();
 	colliders.emplace_back(collider);
@@ -576,7 +579,7 @@ void Game::CheckQuestInteraction()
 
 				if (Event::KeyIsPressed('E'))
 				{
-					if (overlay == dialogueOverlay)
+					if (overlay == dialogueOverlay || dialogueOverlay->HasRecentDialogue())
 						return;
 
 					overlay = dialogueOverlay;
@@ -614,6 +617,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitSkeletonRenderer();
 	RND.InitTerrainRenderer();
 	RND.InitWaterRenderer();
+	RND.InitInteractableRenderer();
 
 	QuestLog::CreateQuests();
 	//QuestLog::Load("Default");
@@ -718,9 +722,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddBarbarianCamps();
 
 	//TARGETS
-	AddTarget("TargetDummy", { -150, 30, -600 }, { 0,0,0 });
-	AddTarget("TargetDummy", { -170, 30, -600 }, { 0,0,0 });
-	AddTarget("TargetDummy", { -190, 30, -600 }, { 0,0,0 });
+	AddTarget("TargetDummy", { -150, 23, -600 }, { 0,0,0 });
+	AddTarget("TargetDummy", { -170, 23, -600 }, { 0,0,0 });
+	AddTarget("TargetDummy", { -190, 23, -600 }, { 0,0,0 });
 
 	//PARTICLE SYSTEM
 	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");

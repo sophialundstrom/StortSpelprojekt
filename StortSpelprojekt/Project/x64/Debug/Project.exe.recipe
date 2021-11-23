@@ -46,6 +46,12 @@
       <FullPath>C:\Users\sophi\OneDrive\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\IDVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\sophi\OneDrive\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\InteractablePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\sophi\OneDrive\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\InteractableVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\sophi\OneDrive\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\LoadingPS.cso</FullPath>
     </ContentFile>
     <ContentFile>

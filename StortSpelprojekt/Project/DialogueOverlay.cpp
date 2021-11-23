@@ -87,9 +87,6 @@ void DialogueOverlay::Render()
 
 void DialogueOverlay::Set(std::shared_ptr<FriendlyNPC> NPC, TalkObjective* objective)
 {
-	if (Time::Get() - lastInteraction < 1.0f)
-		return;
-
 	delay = 0;
 	numCharacters = 0;
 	done = false;

@@ -1,6 +1,6 @@
 #include "ModelRenderer.h"
 
-#include "Model.h"
+#include "QuestMarker.h"
 
 ModelRenderer::ModelRenderer(bool isLit)
 	:isLit(isLit)
