@@ -2,6 +2,7 @@
 #include "Math.h"
 #include "Model.h"
 #include "Camera.h"
+#include "Light.h"
 
 struct FrustrumCollider
 {
@@ -25,6 +26,21 @@ struct FrustrumCollider
             1,
             camDirQ,
             { camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z }
+        );
+        
+    }
+
+    void Update(DirectionalLight dirLight)
+    {
+
+        Quaternion camDirQ;
+
+        bounds = DirectX::BoundingFrustum();
+        bounds.Transform(
+            bounds,
+            1,
+            camDirQ,
+            { dirLight.GetRepresentativePosition().x, dirLight.GetRepresentativePosition().y, dirLight.GetRepresentativePosition().z }
         );
         
     }

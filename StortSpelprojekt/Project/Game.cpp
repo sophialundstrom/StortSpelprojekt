@@ -838,9 +838,9 @@ void Game::UpdateQuadTree()
 	staticMeshModelRender.Clear();
 	shadowRenderer.ClearStatic();
 
-
-
-	frustrumCollider.Update(scene.GetCamera());
+	//frustrumCollider.Update(scene.GetCamera());
+	//quadTree->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
+	frustrumCollider.Update(scene.GetDirectionalLight());
 	quadTree->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
