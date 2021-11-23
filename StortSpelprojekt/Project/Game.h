@@ -123,6 +123,8 @@ private:
     void CheckNearbyEnemies();
     void HandleBiomes();
 
+    void SetupAudio();
+
     void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
     void UpdateInventoryUI();
 

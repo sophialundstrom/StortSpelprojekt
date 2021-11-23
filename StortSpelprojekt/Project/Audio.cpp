@@ -3,7 +3,7 @@
 Microsoft::WRL::ComPtr<IXAudio2> Audio::MusicEngine;
 IXAudio2MasteringVoice* Audio::pMasterVoice = nullptr;
 WAVEFORMATEXTENSIBLE Audio::wfx = { 0 };
-XAUDIO2_BUFFER Audio::audioBuffer[CAP] = { 0, 0, 0, 0,0,0,0,0,0,0, 0,0,0,0,0 };
+XAUDIO2_BUFFER Audio::audioBuffer[CAP] = { 0 };
 IXAudio2SourceVoice* Audio::pSourceVoice[CAP] = { nullptr };
 float Audio::volume = 0.5f;
 

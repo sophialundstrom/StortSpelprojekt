@@ -456,24 +456,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 {
 	//LOAD SCENE
 	Initialize();
-	Audio::Initialize();
-	Audio::StartEngine();
-
-	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	Audio::AddAudio(L"Audio/Combat1.wav", 1);
-	Audio::AddAudio(L"Audio/Combat2.wav", 2);
-	Audio::AddAudio(L"Audio/Camelot.wav", 3);
-	Audio::AddAudio(L"Audio/totallyRPGMusic.wav", 4);
-	Audio::AddAudio(L"Audio/Running.wav", 6, true);
-	Audio::AddAudio(L"Audio/Jump.wav", 7);
-	Audio::AddAudio(L"Audio/Bow.wav", 8);
-	Audio::AddAudio(L"Audio/Fire.wav", 9);
-	Audio::AddAudio(L"Audio/Welcome.wav", 10, true);
-	Audio::AddAudio(L"Audio/PickupPop.wav", 11);
-
-	Audio::SetVolume(0.8, 0);
-	Audio::StartAudio(0);
-
+	SetupAudio();
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
@@ -591,13 +574,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	
 	
 
-	auto desert = std::make_shared<Biome>(L"Audio/totallyRPGMusic.wav", BIOME::DESERT);
+	auto desert = std::make_shared<Biome>(3U, BIOME::DESERT);
 	desert->AddCollider(Vector3(-46.f, 20.f, -578.f), 50.f);
 	desert->AddCollider(Vector3(0.6f, 24.f, -542.f), 50.f);
 	desert->Bind(colliderRenderer);
 	biomes.emplace_back(desert);
 
-	auto woodlands = std::make_shared<Biome>( L"Audio/Rain.wav", BIOME::WOODLANDS);
+	auto woodlands = std::make_shared<Biome>(12U, BIOME::WOODLANDS);
 	woodlands->AddCollider(Vector3(3.4f, 20.f, -591.f), 50.f);
 	woodlands->Bind(colliderRenderer);
 	biomes.emplace_back(woodlands);
@@ -611,6 +594,28 @@ Game::~Game()
 	scene.Clear();
 	Audio::StopEngine();
 	Resources::Inst().Clear();
+}
+
+void Game::SetupAudio()
+{
+	Audio::Initialize();
+	Audio::StartEngine();
+
+	Audio::AddAudio(L"Audio/Sonrie.wav", 0);					   // Default music
+	Audio::AddAudio(L"Audio/Combat1.wav", 1);					   // Combat Version 1 Music
+	Audio::AddAudio(L"Audio/Combat2.wav", 2);					   // Combat Version 2 Music
+	Audio::AddAudio(L"Audio/Camelot.wav", 3);					   // Desert Music
+	Audio::AddAudio(L"Audio/totallyRPGMusic.wav", 4);			   // Woodlands Music
+	Audio::AddAudio(L"Audio/Running.wav", 6, true);				   // Player Running Sound Effect
+	Audio::AddAudio(L"Audio/Jump.wav", 7);						   // Player Jumping Sound Effect
+	Audio::AddAudio(L"Audio/Bow.wav", 8);						   // Player Aiming Sound Effect
+	Audio::AddAudio(L"Audio/Fire.wav", 9);						   // Player Shooting Sound Effect
+	Audio::AddAudio(L"Audio/Welcome.wav", 10, true);			   // ????
+	Audio::AddAudio(L"Audio/PickupPop.wav", 11);				   // Collecting Pickup Sound Effect
+	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 12);	   // :)
+
+	Audio::SetVolume(0.8, 0);
+	Audio::StartAudio(0);
 }
 
 APPSTATE Game::Run()
@@ -768,6 +773,7 @@ void Game::HandleBiomes()
 {
 
 	bool hit = false;
+	UINT slot = 100;
 	BIOME type = BIOME::DEFAULT;
 	for (auto& biome : biomes)
 	{
@@ -777,6 +783,7 @@ void Game::HandleBiomes()
 			if (hit)
 			{
 				type = biome->type;
+				slot = biome->musicSlot;
 			}
 		}
 		
@@ -790,28 +797,22 @@ void Game::HandleBiomes()
 		{
 		case BIOME::DESERT:
 			PrintS("DESERT");
-			//Audio::AddAudio(L"Audio/totallyRPGMusic.wav", 6);
-			//Audio::SetVolume(0.8, 6);
 			Audio::StopAudio(0);
 			Audio::StopAudio(2);
 			Audio::StopAudio(3);
 			Audio::StopAudio(1);
-			Audio::StartAudio(4); // desert
+			Audio::StartAudio(slot);
 			break;
 		case BIOME::WOODLANDS:
 			PrintS("WOODLANDS");
-			//Audio::AddAudio(L"Audio/Camelot.wav", 5);
-			//Audio::SetVolume(0.8, 5);
 			Audio::StopAudio(0);
 			Audio::StopAudio(2);
 			Audio::StopAudio(1);
 			Audio::StopAudio(4);
-			Audio::StartAudio(3); // woodlands
+			Audio::StartAudio(slot);
 			break;
 		case BIOME::DEFAULT:
 			PrintS("DEFAULT");
-			//Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-			//Audio::SetVolume(0.8, 0);
 			Audio::StopAudio(1);
 			Audio::StopAudio(2);
 			Audio::StopAudio(3);
@@ -882,19 +883,16 @@ void Game::CheckNearbyEnemies()
 			Audio::StopAudio(2);
 			Audio::StopAudio(3);
 			Audio::StopAudio(4);
-			Audio::StartAudio(1); // combat1
+			Audio::StartAudio(1);
 		}
-			//Audio::AddAudio(L"Audio/Combat1.wav", 1);
 		else
 		{
-			//Audio::SetVolume(0.3, 1);
 			Audio::StopAudio(0);
 			Audio::StopAudio(1);
 			Audio::StopAudio(3);
 			Audio::StopAudio(4);
-			Audio::StartAudio(2); // combat2
+			Audio::StartAudio(2);
 		}
-			//Audio::AddAudio(L"Audio/Combat2.wav", 1);
 		
 	}
 	else if (player->inCombat && numInCombat == 0)
@@ -904,9 +902,6 @@ void Game::CheckNearbyEnemies()
 		Audio::StopAudio(2);
 		Audio::StopAudio(3);
 		Audio::StopAudio(4);
-		//Current biomeMusic here
-		//Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-		//Audio::SetVolume(0.3, 0);
 		Audio::StartAudio(0);
 	}
 
