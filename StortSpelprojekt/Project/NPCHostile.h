@@ -2,6 +2,9 @@
 #include "NPCBase.h"
 #include "ModelRenderer.h"
 #include "ArrowHandler.h"
+#include "State.h"
+
+class NPCState;
 
 enum CombatStyle
 {
@@ -11,34 +14,32 @@ enum CombatStyle
 	Defenseless
 };
 
+
+
 class HostileNPC : public NPC
 {
 private:
 	
-	ArrowHandler arrowHandler;
 	std::shared_ptr<Player> player;
-	float movementXRadiant;
-	float movementYRadiant;
 
-	CombatStyle combatStyle;
-	float enemyShootDetectionRadius = 150;
-	float shootDeelay = 0.2f;
 
-	float shootDeelayPattern[3];
-	int shootPatternIndex = 0;
+	ArrowHandler arrowHandler;
 
 	ModelRenderer* mRend = nullptr;
 	ColliderRenderer* cRend = nullptr;
-	float lastShot = 0.f;
+	State state;
+	void HandleStates();
 public:
 	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
 	HostileNPC(const Model& model);
 
-	void SwapCombatStyle(CombatStyle newCombatStyle);
 	virtual void Update() override;
 	void Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player);
-	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void CheckPlayerCollision(std::shared_ptr<Player> player);
+	ArrowHandler& GetArrowHandler() { return this->arrowHandler; }
+	std::shared_ptr<Player> GetPlayer() { return this->player; }
+	ModelRenderer* GetMRenderer() { return this->mRend; }
+	ColliderRenderer* GetCRenderer() {	return this->cRend;	}
 private:
 	void WeaponSlash();
 
@@ -47,9 +48,11 @@ private:
 public:
 	void SetPathVar(Pathfinding* path)				{ this->pathing = path; }
 	void SetPlayerPtr(std::shared_ptr<Player> p)	{ this->player = p; }
+	void SetState(NPCState *newState)				{ this->currentState = newState; }
 private:
+	NPCState* currentState;
 	float speed = 9.0f;
 	std::vector<Vector3> path;
 	Pathfinding* pathing;
-	std::shared_ptr<Player> player;
+	std::shared_ptr<Player> player;                                                                                                                                                                                                                                                                
 };
