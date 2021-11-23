@@ -88,6 +88,8 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	terrainRenderer(FORWARD, 40)
 {
 	Initialize();
+	Audio::Initialize();
+	Audio::StartEngine();
 	
 	Audio::AddAudio(L"Audio/Menu.wav", 0);
 	Audio::SetVolume(0.005, 0);
@@ -195,6 +197,8 @@ MainMenu::~MainMenu()
 {
 	for (auto& [name, canvas] : canvases)
 		delete canvas;
+
+	Audio::StopEngine();
 }
 
 void MainMenu::Initialize()

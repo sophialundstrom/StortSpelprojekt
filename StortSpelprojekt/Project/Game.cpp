@@ -236,9 +236,8 @@ void Game::UpdateAndHandleLoot()
 			colliderRenderer.Unbind(loot[i]->GetCollider());
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
-			SoundEffect::AddAudio(L"Audio/PickupPop.wav", 3);
-			SoundEffect::SetVolume(0.5, 3);
-			SoundEffect::StartAudio(3);
+			
+			Audio::StartAudio(11);
 			std::cout << "Loot destoyed\n";
 		}
 	}
@@ -385,9 +384,7 @@ void Game::CheckItemCollision()
 
 			if (Event::KeyIsPressed('E'))
 			{
-				SoundEffect::AddAudio(L"Audio/Pickup.wav", 1);
-				SoundEffect::SetVolume(0.5, 1);
-				SoundEffect::StartAudio(1);
+				Audio::StartAudio(10);
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
@@ -411,9 +408,7 @@ void Game::CheckQuestInteraction()
 				if (Event::KeyIsPressed('E'))
 				{
 					state = GameState::DIALOGUE;
-					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
-					SoundEffect::SetVolume(0.3, 2);
-					SoundEffect::StartAudio(2);
+					Audio::AddAudio(L"Audio/Welcome.wav", 10);
 					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
 					dialogueOverlay->Set("GILBERT", "Lorem.");
 					currentCanvas = dialogueOverlay;
@@ -461,6 +456,24 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 {
 	//LOAD SCENE
 	Initialize();
+	Audio::Initialize();
+	Audio::StartEngine();
+
+	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
+	Audio::AddAudio(L"Audio/Combat1.wav", 1);
+	Audio::AddAudio(L"Audio/Combat2.wav", 2);
+	Audio::AddAudio(L"Audio/Camelot.wav", 3);
+	Audio::AddAudio(L"Audio/totallyRPGMusic.wav", 4);
+	Audio::AddAudio(L"Audio/Running.wav", 6, true);
+	Audio::AddAudio(L"Audio/Jump.wav", 7);
+	Audio::AddAudio(L"Audio/Bow.wav", 8);
+	Audio::AddAudio(L"Audio/Fire.wav", 9);
+	Audio::AddAudio(L"Audio/Welcome.wav", 10, true);
+	Audio::AddAudio(L"Audio/PickupPop.wav", 11);
+
+	Audio::SetVolume(0.8, 0);
+	Audio::StartAudio(0);
+
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
@@ -576,18 +589,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	particleRenderer.Bind(campFireSystem);
 	
-	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	Audio::AddAudio(L"Audio/Combat1.wav", 1);
-	Audio::AddAudio(L"Audio/Combat2.wav", 2);
-	Audio::AddAudio(L"Audio/Camelot.wav", 3);
-	Audio::AddAudio(L"Audio/totallyRPGMusic.wav", 4);
-	Audio::SetVolume(0.8, 0);
-	/*Audio::SetVolume(0.8, 1);
-	Audio::SetVolume(0.8, 2);
-	Audio::SetVolume(0.8, 3);
-	Audio::SetVolume(0.8, 4);*/
-	//Audio::SetVolume(0.1, 0);
-	Audio::StartAudio(0);
+	
 
 	auto desert = std::make_shared<Biome>(L"Audio/totallyRPGMusic.wav", BIOME::DESERT);
 	desert->AddCollider(Vector3(-46.f, 20.f, -578.f), 50.f);
@@ -607,6 +609,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 Game::~Game()
 {
 	scene.Clear();
+	Audio::StopEngine();
 	Resources::Inst().Clear();
 }
 
@@ -842,15 +845,9 @@ void Game::CheckNearbyEnemies()
 
 			if (hit)
 			{
-				//SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
-				//SoundEffect::SetVolume(0.3, 2);
-				//SoundEffect::StartAudio(2);
 				hostiles[i]->TakeDamage();
 				if (hostiles[i]->IsDead())
 				{
-					//SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
-					//SoundEffect::SetVolume(0.2, 2);
-					//SoundEffect::StartAudio(2);
 					hostiles[i]->TakeDamage();
 					player->Stats().barbariansKilled++;
 					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));

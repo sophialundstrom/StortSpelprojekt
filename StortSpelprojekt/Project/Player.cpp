@@ -25,6 +25,8 @@ Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> i
 
 	currentBiome = BIOME::DEFAULT;
 	previousBiome = currentBiome;
+
+
 }
 
 void Player::CalcHeight(HeightMap* heightMap)
@@ -112,9 +114,8 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		// IF PLAYER SPRINTS AND JUMPS THE SOUND WILL STOP UNTIL SHIFT IS PRESSED AGAIN...
 		if (!isSprinting)
 		{
-			SoundEffect::AddAudio(L"Audio/Running.wav", 3, true);
-			SoundEffect::SetVolume(0.5, 3);
-			SoundEffect::StartAudio(3);
+			
+			Audio::StartAudio(6);
 			isSprinting = true;
 		}
 		stats.currentSpeed += 50.0f * Time::GetDelta();
@@ -128,7 +129,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	else
 	{
 		isSprinting = false;
-		SoundEffect::StopAudio(3);
+		Audio::StopAudio(6);
 		stats.currentSpeed -= 12.0f * Time::GetDelta();
 		if (stats.currentSpeed < stats.movementSpeed)
 			stats.currentSpeed = stats.movementSpeed;
@@ -167,9 +168,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		if (Event::KeyIsPressed(VK_SPACE))
 		{
 			jumping = true;
-			SoundEffect::AddAudio(L"Audio/Jump.wav", 2);
-			SoundEffect::SetVolume(0.3, 2);
-			SoundEffect::StartAudio(2);
+			Audio::StartAudio(7);
 			preJumpGroundLevel = currentGroundLevel; 
 			PlayAnimation("Jump", false, 0.5f);
 		}
@@ -241,9 +240,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	{
 		if (!isAiming)
 		{
-			SoundEffect::AddAudio(L"Audio/Bow.wav", 4);
-			SoundEffect::SetVolume(0.5, 4);
-			SoundEffect::StartAudio(4);
+			Audio::StartAudio(8);
 			isAiming = true;
 		}
 
@@ -256,9 +253,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 			{
 				arrowHandler.AddArrow(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
-				SoundEffect::AddAudio(L"Audio/Fire.wav", 5);
-				SoundEffect::SetVolume(0.5, 5);
-				SoundEffect::StartAudio(5);
+				Audio::StartAudio(9);
 				int currentIndex = 0;
 				numArrows--;
 				sinceLastShot = 0.f;
@@ -268,7 +263,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	}
 	else
 	{
-		SoundEffect::StopAudio(1);
+		Audio::StopAudio(8);
 		isAiming = false;
 		
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
@@ -295,9 +290,9 @@ void Player::TakeDamage()
 		return; // Return here because hp will be -1. This leads to a hp image not being found which in turn leads to a crash during Draw().
 	}
 
-	SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
-	SoundEffect::SetVolume(0.5, 2);
-	SoundEffect::StartAudio(2);
+	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
+	//SoundEffect::SetVolume(0.5, 2);
+	//SoundEffect::StartAudio(2);
 	stats.healthPoints--;
 	
 	UpdateHealthUI();
