@@ -836,6 +836,7 @@ void Game::UpdateQuadTree()
 {
 	drawablesToBeRendered.clear();
 	staticMeshModelRender.Clear();
+	shadowRenderer.ClearStatic();
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
 
@@ -843,7 +844,10 @@ void Game::UpdateQuadTree()
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
+		{
 			staticMeshModelRender.Bind(drawable);
+			shadowRenderer.BindStatic(drawable);
+		}
 	}
 	
 	//DebugVariant

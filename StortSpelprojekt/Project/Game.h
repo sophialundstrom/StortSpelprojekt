@@ -59,8 +59,8 @@ private:
 
     AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;
+    
     ModelRenderer modelRenderer;
-
     ModelRenderer staticMeshModelRender;
     ShadowRenderer shadowRenderer;
 
