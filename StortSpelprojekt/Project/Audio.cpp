@@ -24,6 +24,7 @@ void Audio::SetVolume(float volume, int slot)
 
 void Audio::StartAudio(int slot)
 {
+	//pSourceVoice[slot]->FlushSourceBuffers();
 	HRESULT hr;
 	if(FAILED(hr=pSourceVoice[slot]->Start(0)))
 		std::cout << "COULD NOT START AUDIO" << std::endl;
