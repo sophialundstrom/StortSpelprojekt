@@ -2,6 +2,7 @@
 Texture2D diffuseTexture : register(t0);
 Texture2D normalMapTex1 : register(t11);
 Texture2D normalMapTex2 : register(t12);
+Texture2D noiseTexture : register(t13);
 sampler wrapSampler : register(s0);
 
 cbuffer DIRECTIONALLIGHT : register(b1)
@@ -56,6 +57,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     float4 color = diffuseTexture.Sample(wrapSampler, input.texCoords * 50.0f);
     float4 normalMap1 = normalMapTex1.Sample(wrapSampler, nm1 * 100.0f);
     float4 normalMap2 = normalMapTex2.Sample(wrapSampler, nm2 * 50.0f);
+    float4 noiseTex = noiseTexture.Sample(wrapSampler, -nm2 * 25.0f);
 
     //Range from [0, 1] to [-1, 1]
     normalMap1.x = (2.0f * normalMap1.x) - 1.0f;
@@ -80,6 +82,8 @@ float4 main(PS_INPUT input) : SV_TARGET
     float3 finalColor;
     finalColor = color * directionalLight.lightColor;
     finalColor += saturate(dot(directionalLight.lightDirection, input.normal) * directionalLight.lightColor * color);
+
+    finalColor += ((input.worldPosition.y + 1) * (noiseTex * 1.5f) * 0.1f);
 
     return float4((lerp((input.worldPosition, 1.0f) * saturate(finalColor), fogColor, fogFactor)), color.a);
 }

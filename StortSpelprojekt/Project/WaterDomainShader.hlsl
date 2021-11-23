@@ -34,6 +34,11 @@ cbuffer TIME : register(b1)
     float time;
 }
 
+cbuffer thetaOffset : register(b2)
+{
+    float theta;
+}
+
 #define NUM_CONTROL_POINTS 3
 [domain("tri")]
 DS_OUTPUT main(
@@ -49,20 +54,20 @@ DS_OUTPUT main(
     output.normal = patch[0].normal * domain.x + patch[1].normal * domain.y + patch[2].normal * domain.z;
     output.tangent = patch[0].tangent * domain.x + patch[1].tangent * domain.y + patch[2].tangent * domain.z;
     
-    const int amplitude = 4;
+    const int amplitude = 4.0f;
     const float multiplier = 1.5f;
     const float PI = 3.14159265359f;
-    float frequency = 1.5f;
-    float period;
     
     if (round(output.position.x) % 2 == 0 && round(output.position.z) % 3 == 0)
-        output.position.y += sin(time * multiplier) * amplitude;
-    
+        output.position.y += sin(time * (multiplier * 1.1f)) * amplitude;
+
     else if (round(output.position.x) % 3 == 0 && round(output.position.z) % 2 == 0)
-        output.position.y += sin(time * multiplier + PI) * amplitude;
+        output.position.y += cos(time * multiplier + PI) * amplitude;
     
     else
-        output.position.y += sin(time * multiplier + PI / 2.0f) * amplitude / 2.0f;
+        output.position.y += sin(time * (multiplier * 0.8) + PI / 2.0f) * (amplitude / 2.0f);
+    //else
+    //    output.position.y += cos(time * multiplier) * (amplitude / 2.0f);
 
 	output.worldPosition = output.position.xyz;
 

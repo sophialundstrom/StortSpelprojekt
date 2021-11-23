@@ -10,6 +10,7 @@ private:
 	Texture* texture;
 	Texture* normalMap1;
 	Texture* normalMap2;
+	Texture* noiseTexture;
 
 public:
 	Water() = default;
@@ -19,6 +20,7 @@ public:
 		texture = new Texture("Textures/Ocean.png");
 		normalMap1 = new Texture("Textures/NormalMaps/WaterNormalMap2Seamless.jpg");
 		normalMap2 = new Texture("Textures/NormalMaps/WaterNormalMap3Seamless.jpg");
+		noiseTexture = new Texture("Textures/NormalMaps/FoamMask2Seamless.jpg");
 	}
 
 	~Water()
@@ -27,10 +29,12 @@ public:
 		delete texture;
 		delete normalMap1;
 		delete normalMap2;
+		delete noiseTexture;
 	}
 
 	void Draw() const
 	{		
+		noiseTexture->Bind(13);
 		normalMap2->Bind(12);
 		normalMap1->Bind(11);
 		texture->Bind();
