@@ -17,8 +17,9 @@
 class GameOver : public ApplicationState
 {
 private:
-	Canvas* currentCanvas;
-	std::map<std::string, Canvas*> canvases;
+
+	std::shared_ptr<Canvas> currentCanvas;
+	std::map<std::string, std::shared_ptr<Canvas>> canvases;
 	TerrainRenderer terrainRenderer;
 	ParticleRenderer particleRenderer;
 	ModelRenderer modelRenderer;
@@ -29,8 +30,25 @@ private:
 	void Render();
 	void Initialize();
 
+	void Continue();
+	void HoveringContinue();
+
 	void MainMenu();
+	void BackToMainMenu();
+	void HoveringMainMenu();
+
 	void QuitGame();
+	void HoveringQuit();
+
+	void Form();
+	void HoveringForm();
+
+	void Exit();
+	void Back();
+
+	void HoveringYes();
+	void HoveringNo();
+
 
 	Terrain terrain;
 	Water water;

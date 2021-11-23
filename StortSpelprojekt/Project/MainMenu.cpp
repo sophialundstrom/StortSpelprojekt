@@ -141,8 +141,8 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	{
 		// FORM
-		menuCanvas->AddImage({ clientWidth - (float)250, clientHeight / 2.0f + 450 }, "Form", "Form.png", 1.0f, 1.0f, true, false);
-		menuCanvas->AddImage({ clientWidth - (float)250, clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.0f, 1.0f, true, false);
+		menuCanvas->AddImage({ clientWidth - 250.f, clientHeight / 2.0f + 450 }, "Form", "Form.png", 1.0f, 1.0f, true, false);
+		menuCanvas->AddImage({ clientWidth - 250.f, clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.0f, 1.0f, true, false);
 		auto image = menuCanvas->GetImage("Form");
 		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "FormButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Form(); }, [this] {HoveringForm(); });
 	}

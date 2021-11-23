@@ -96,6 +96,11 @@ void Game::MainMenu()
 	mainMenu = true;
 }
 
+void Game::QuitCanvas()
+{
+	currentCanvas = canvases["QUIT"];
+}
+
 void Game::Initialize()
 {
 	//LOAD SCENE
@@ -527,7 +532,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 		pauseCanvas->AddImage({ xPos, clientHeight / 2.0f + 150 }, "BackToMainMenu", "MainMenu.png", 1.0f, 1.0f, true, false);
 		pauseCanvas->AddImage({ xPos, clientHeight / 2.0f + 150 }, "BackToMainMenuLeaves", "MainMenuLeaves.png", 1.0f, 1.0f, true, false);
 		auto image = pauseCanvas->GetImage("BackToMainMenu");
-		pauseCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "BackToMainMenuButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { MainMenu(); }, [this] {HoveringMainMenu(); });
+		pauseCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "BackToMainMenuButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { QuitCanvas(); }, [this] {HoveringMainMenu(); });
 	}
 	canvases["PAUSED"] = pauseCanvas;
 
@@ -557,6 +562,20 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	}
 	canvases["OPTIONS"] = optionsCanvas;
 
+	auto quitCanvas = std::make_shared<Canvas>();
+	{
+		quitCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "APauseBackground", "PauseBackground.png", 1.0f, 1.0f);
+		quitCanvas->AddImage({ clientWidth / 2.0f,  clientHeight / 2.0f - 200 }, "AreYouSure", "AreYouSure.png", 1.f, 1.0f, true, true);
+		quitCanvas->AddImage({ clientWidth / 2.0f + 180, clientHeight / 2.0f + 50 }, "Yes", "Yes.png", 1.0f, 1.0f, true, true);
+		quitCanvas->AddImage({ clientWidth / 2.0f + 180, clientHeight / 2.0f + 50 }, "YesLeaves", "YesLeaves.png", 1.0f, 1.0f, true, true);
+		quitCanvas->AddImage({ clientWidth / 2.0f - 180, clientHeight / 2.0f + 50 }, "No", "No.png", 1.0f, 1.0f, true, true);
+		quitCanvas->AddImage({ clientWidth / 2.0f - 180, clientHeight / 2.0f + 50 }, "NoLeaves", "NoLeaves.png", 1.0f, 1.0f, true, true);
+		auto yesImage = quitCanvas->GetImage("Yes");
+		auto noImage = quitCanvas->GetImage("No");
+		quitCanvas->AddButton({ yesImage->GetLeftSidePosition().x + yesImage->GetWidth() / 2, yesImage->GetLeftSidePosition().y + yesImage->GetHeight() / 2 }, "YesButton", yesImage->GetWidth(), yesImage->GetHeight(), UI::COLOR::GRAY, [this] { MainMenu(); }, [this] { HoveringYes(); });
+		quitCanvas->AddButton({ noImage->GetLeftSidePosition().x + noImage->GetWidth() / 2, noImage->GetLeftSidePosition().y + noImage->GetHeight() / 2 }, "NoButton", noImage->GetWidth(), noImage->GetHeight(), UI::COLOR::GRAY, [this] { BacktoPause(); }, [this] { HoveringNo(); });
+	}
+	canvases["QUIT"] = quitCanvas;
 
 	canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
 
@@ -627,6 +646,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 Game::~Game()
 {
 	scene.Clear();
+
 	Resources::Inst().Clear();
 }
 
@@ -642,6 +662,10 @@ APPSTATE Game::Run()
 		canvases["PAUSED"]->GetImage("HowToPlayLeaves")->Hide();
 		canvases["PAUSED"]->GetImage("BackToMainMenuLeaves")->Hide();
 		canvases["PAUSED"]->GetImage("OptionsLeaves")->Hide();
+		canvases["QUIT"]->GetImage("YesLeaves")->Hide();
+		canvases["QUIT"]->GetImage("NoLeaves")->Hide();
+
+
 
 	}
 
@@ -860,6 +884,18 @@ void Game::HoveringBackHowToPlay()
 void Game::HoveringBackOptions()
 {
 	canvases["OPTIONS"]->GetImage("BackLeavesHowToPlay")->Show();
+}
+
+void Game::HoveringYes()
+{
+	canvases["QUIT"]->GetImage("YesLeaves")->Show();
+
+}
+
+void Game::HoveringNo()
+{
+	canvases["QUIT"]->GetImage("NoLeaves")->Show();
+
 }
 
 void Game::HoveringOptions()

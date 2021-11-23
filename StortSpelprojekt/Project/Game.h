@@ -87,6 +87,7 @@ private:
     void HowToPlay();
     void BacktoPause();
     void MainMenu();
+    void QuitCanvas();
 
     // LEAVES
     void HoveringResume();
@@ -94,12 +95,10 @@ private:
     void HoveringHowToPlay();
     void HoveringMainMenu();
     void HoveringBackHowToPlay();
-    void HoveringBackQuit();
     void HoveringBackOptions();
     void HoveringYes();
     void HoveringNo();
-
-  
+      
     bool mainMenu = false;
 
     void RemoveItem(const std::string name);
