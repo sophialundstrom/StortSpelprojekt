@@ -59,13 +59,13 @@ DS_OUTPUT main(
     const float PI = 3.14159265359f;
     
     if (round(output.position.x) % 2 == 0 && round(output.position.z) % 3 == 0)
-        output.position.y += sin(time * (multiplier * 1.1f)) * amplitude;
+        output.position.y += sin(time * multiplier - 0.5f) * amplitude;
 
     else if (round(output.position.x) % 3 == 0 && round(output.position.z) % 2 == 0)
         output.position.y += cos(time * multiplier + PI) * amplitude;
     
     else
-        output.position.y += sin(time * (multiplier * 0.8) + PI / 2.0f) * (amplitude / 2.0f);
+        output.position.y += sin(time * multiplier + PI / 2.0f) * (amplitude / 2.0f);
     //else
     //    output.position.y += cos(time * multiplier) * (amplitude / 2.0f);
 
