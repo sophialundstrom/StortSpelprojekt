@@ -59,7 +59,7 @@ struct FrustrumCollider
 
         
 
-        
+        /*
 
         Quaternion camDirQ = Quaternion::CreateFromYawPitchRoll(yaw, pitch, 0);
         std::cout << dirLight.GetRepresentativePosition().z << std::endl;
@@ -69,7 +69,7 @@ struct FrustrumCollider
             1,
             {0.854, 0.353, -0.353, -0.146},
             { dirLight.GetRepresentativePosition().x, dirLight.GetRepresentativePosition().y, dirLight.GetRepresentativePosition().z }
-        );
+        );*/
         
     }
 
