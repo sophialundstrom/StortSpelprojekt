@@ -15,6 +15,7 @@ Quest* FriendlyNPC::AddQuest(const std::string& name)
 	auto quest = QuestLog::Get(name);
 	if (quest)
 	{
+		quest->SetQuestHolder(this->name);
 		quests.emplace_back(quest);
 		return quest;
 	}

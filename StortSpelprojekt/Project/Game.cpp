@@ -10,7 +10,7 @@ void Game::Update()
 	
 	scene.Update();
 
-	if (state != GameState::DIALOGUE)
+	if (overlay != dialogueOverlay)
 		player->Update(terrain.GetHeightMap());
 
 	scene.GetCamera()->Update();
@@ -32,6 +32,11 @@ void Game::Update()
 	scene.UpdateDirectionalLight(player->GetPosition());
 
 	QuestLog::Update(player, camps, targets);
+
+	ingameOverlay->UpdateArrowCounter(player->numArrows);
+	ingameOverlay->UpdateHealth(player->Stats().healthPoints);
+	ingameOverlay->UpdateInventory(player->Inventory());
+	ingameOverlay->UpdateQuests(QuestLog::GetActiveQuests());
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
@@ -60,7 +65,9 @@ void Game::Render()
 
 	WR->Render(water);
 
-	currentCanvas->Render();
+	//currentCanvas->Render();
+
+	overlay->Render();
 
 	Graphics::Inst().EndFrame();
 
@@ -569,12 +576,10 @@ void Game::CheckQuestInteraction()
 
 				if (Event::KeyIsPressed('E'))
 				{
-					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
-
-					if (!dialogueOverlay->IsDone())
+					if (overlay == dialogueOverlay)
 						return;
 
-					state = GameState::DIALOGUE;
+					overlay = dialogueOverlay;
 
 					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
 					SoundEffect::SetVolume(0.004, 2);
@@ -582,8 +587,6 @@ void Game::CheckQuestInteraction()
 
 					auto objective = QuestLog::GetTalkObjective(NPC->GetName());
 					dialogueOverlay->Set(NPC, (TalkObjective*)objective);
-
-					currentCanvas = dialogueOverlay;
 					return;
 				}
 			}
@@ -618,22 +621,21 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//LOAD SCENE
 	Initialize();
 
+	//SET SCENE CAMERA + DIRECTIONAL LIGHT
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
+
+	//OVERLAYS
+	ingameOverlay = new InGameOverlay();
+	dialogueOverlay = new DialogueOverlay();
+
+	overlay = ingameOverlay;
 
 	//INGAME CANVAS
 	auto ingameCanvas = std::make_shared<Canvas>();
 	ingameCanvas->HideCursor();
 	ingameCanvas->AddImage({ 250, 365 }, "QuestBorder", "QuestBorder.png");
 	ingameCanvas->AddText({ 250, 65 }, "AQ", "Active Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
-	//const UINT offset = 162;
-	//for (UINT i = 0; i < ARRAYSIZE(Item::Names); ++i)
-	//{
-	//	D2D_VECTOR_2F position = { (float)clientWidth - 90 - offset * i, 80.0f };
-	//	ingameCanvas->AddImage(position, Item::Names[i] + "inventorySlot", "InventorySlot.png");
-	//	ingameCanvas->AddImage(position, Item::Names[i] + "inventoryValue", Item::Names[i] + ".png");
-	//	ingameCanvas->AddText({ position.x, position.y + 70 }, Item::Names[i], "0", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
-	//}
 
 	ingameCanvas->AddImage({ 355, clientHeight - 64.0f }, "hp", "HP10.png");
 
@@ -643,7 +645,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	ingameCanvas->AddImage({ (float)clientWidth / 2.0f, (float)clientHeight / 2 }, "CrossHair", "CrossHair.png");
 	
-
 	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 50 }, "ArrowCount", "Arrows:" + std::to_string(0), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
 	canvases["INGAME"] = ingameCanvas;
@@ -673,14 +674,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
-	canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
-
+	//canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
 
 	// THE WILL BE A PROBLEM IF MORE ARROWS THAN MAXARROWS IS IN THE AIR AT THE SAME TIME (NO ARROW WILL BE RENDERED). THIS IS BECAUSE THERE ARE ONLY AS MANY ARROW MODELS AS MAXARROWS.
 
 	//PLAYER
 	UINT maxArrows = 5;
-	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, maxArrows);
+	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
 	player->SetPosition(-75, 20, -630);
 	scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
@@ -710,11 +710,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(Item::Type::Stick, { -116, 20, -609 });
 	AddItem(Item::Type::Stick, { -91, 20, -593 });
 	AddItem(Item::Type::Stick, { -85, 20, -608 });
-
-	//HOSTILES NPC
-	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
-	//AddHostileNPC("BarbarianBow", { 392, 182, -44 }, CombatStyle::Burst);
-	//AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
 
 	//FRIENDLY NPCS
 	AddFriendlyNPCs();
@@ -750,20 +745,39 @@ Game::~Game()
 
 APPSTATE Game::Run()
 {
+	switch (overlay->Update())
+	{
+	case OVERLAYSTATE::NO_CHANGE:
+		break;
+
+	case OVERLAYSTATE::MAIN_MENU:
+		return APPSTATE::MAIN_MENU;
+
+	case OVERLAYSTATE::PAUSE:
+	{
+		state = GameState::PAUSED;
+		break;
+	}
+
+	case OVERLAYSTATE::RETURN:
+	{
+		state = GameState::ACTIVE;
+		overlay = ingameOverlay;
+		break;
+	}
+	}
+
 	if (state != GameState::PAUSED)
 		Update();
-
-	currentCanvas->Update();
-
-	if (state == GameState::DIALOGUE)
-	{
-		auto overlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
-		if (overlay->IsDone())
-		{
-			state = GameState::ACTIVE;
-			currentCanvas = canvases["INGAME"];
-		}
-	}
+	//if (state == GameState::DIALOGUE)
+	//{
+	//	auto overlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
+	//	if (overlay->IsDone())
+	//	{
+	//		state = GameState::ACTIVE;
+	//		currentCanvas = canvases["INGAME"];
+	//	}
+	//}
 
 	Render();
 
@@ -963,6 +977,7 @@ void Game::CheckNearbyEnemies()
 					isDead = true;
 				}
 			}
+
 			if (isDead)
 				break;
 		}

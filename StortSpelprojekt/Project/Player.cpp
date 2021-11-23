@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, const UINT& maxArrows)
-	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
+Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
+	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera)
 {
 	isRightPressed = false;
 	isLeftPressed = false;
@@ -17,8 +17,6 @@ Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> i
 	frustum->SetPosition(0, 3, 0);
 
 	Load(file);
-
-	UpdateHealthUI();
 
 	PlayAnimation("Run", true);
 
@@ -268,8 +266,6 @@ void Player::TakeDamage()
 	if (stats.healthPoints - 1 == 0)
 	{
 		stats.healthPoints--;
-		std::cout << "GAME OVER" << std::endl;
-		UpdateHealthUI();
 		gameOver = true;
 		return; // Return here because hp will be -1. This leads to a hp image not being found which in turn leads to a crash during Draw().
 	}
@@ -277,8 +273,6 @@ void Player::TakeDamage()
 	SoundEffect::SetVolume(0.5, 2);
 	SoundEffect::StartAudio(2);
 	stats.healthPoints--;
-	
-	UpdateHealthUI();
 }
 
 void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders)

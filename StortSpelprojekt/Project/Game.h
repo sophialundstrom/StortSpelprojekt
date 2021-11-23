@@ -15,6 +15,8 @@
 #include "Loot.h"
 #include "MainMenu.h"
 #include "Renderers.h"
+#include "DialogueOverlay.h"
+#include "InGameOverlay.h"
 
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
@@ -36,6 +38,11 @@ private:
 
     Terrain terrain;
     Water water;
+
+    Overlay* overlay;
+
+    InGameOverlay* ingameOverlay;
+    DialogueOverlay* dialogueOverlay;
 
     std::shared_ptr<Canvas> currentCanvas;
     std::map<std::string, std::shared_ptr<Canvas>> canvases;
@@ -74,15 +81,15 @@ private:
     void MainMenu();
 
     // LEAVES
-    void HoveringResume();
-    void HoveringOptions();
-    void HoveringHowToPlay();
-    void HoveringQuit();
-    void HoveringBackHowToPlay();
-    void HoveringBackQuit();
-    void HoveringBackOptions();
-    void HoveringYes();
-    void HoveringNo();
+    //void HoveringResume();
+    //void HoveringOptions();
+    //void HoveringHowToPlay();
+    //void HoveringQuit();
+    //void HoveringBackHowToPlay();
+    //void HoveringBackQuit();
+    //void HoveringBackOptions();
+    //void HoveringYes();
+    //void HoveringNo();
 
   
     bool mainMenu = false;
@@ -106,7 +113,6 @@ private:
     void CheckQuestInteraction();
     void CheckNearbyEnemies();
 
-    void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
     void UpdateInventoryUI();
 
     void Initialize();

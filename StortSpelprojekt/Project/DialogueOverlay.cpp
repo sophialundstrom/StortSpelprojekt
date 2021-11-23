@@ -21,10 +21,12 @@ DialogueOverlay::~DialogueOverlay()
 	delete dialogueText;
 }
 
-void DialogueOverlay::Update()
+OVERLAYSTATE DialogueOverlay::Update()
 {
+	returnState = OVERLAYSTATE::NO_CHANGE;
+
 	if (!NPC)
-		return;
+		return OVERLAYSTATE::RETURN;
 
 	if (Event::KeyIsPressed('E'))
 		speed = holdSpeed;
@@ -64,8 +66,11 @@ void DialogueOverlay::Update()
 
 			NPC = nullptr;
 			done = true;
+			returnState = OVERLAYSTATE::RETURN;
 		}
 	}
+
+	return returnState;
 }
 
 void DialogueOverlay::Render()

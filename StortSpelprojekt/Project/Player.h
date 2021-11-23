@@ -78,8 +78,6 @@ private:
 
 	Camera* sceneCamera;
 
-	std::shared_ptr<Canvas> ingameCanvas;
-
 	ArrowHandler arrowHandler;
 
 	bool hasCollided;
@@ -132,25 +130,13 @@ private:
 	float currentLerp = 0.f;
 	float duration = 1.f;
 	bool inAir = false;
-
-	void UpdateHealthUI()
-	{
-		auto image = ingameCanvas->GetImage("hp");
-		if (image->FileName() == "HP" + std::to_string(stats.healthPoints) + ".png")
-			return;
-
-		auto position = image->GetPosition();
-		ingameCanvas->RemoveImage("hp");
-		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
-	}
-
 public:
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
 	void Update(HeightMap* heightMap);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void TakeDamage();
-	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, const UINT& maxArrows);
+	Player(const std::string file, Camera* camera, const UINT& maxArrows);
 
 public:
 	// TEMP STATS PRINT
@@ -176,7 +162,7 @@ public:
 
 	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void ResetToLastPosition() { position = lastPosition; }
-	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
+	void AddHealthPoint() { stats.IncreaseHealthPoints(); }
 	void SetClosestColliderToCam(float range)
 	{
 		closestColliderToCam = range;

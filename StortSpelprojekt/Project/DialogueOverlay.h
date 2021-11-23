@@ -1,9 +1,9 @@
 #pragma once
-#include "Canvas.h"
+#include "Overlay.h"
 #include "NPCFriendly.h"
 #include "TalkObjective.h"
 
-class DialogueOverlay : public Canvas
+class DialogueOverlay : public Overlay
 {
 private:
 	std::shared_ptr<FriendlyNPC> NPC;
@@ -28,8 +28,9 @@ public:
 	DialogueOverlay();
 	~DialogueOverlay();
 
-	void Update();
-	void Render();
+	// Inherited via Overlay
+	virtual void Render() override;
+	virtual OVERLAYSTATE Update() override;
 
 	bool IsDone()	{ return done; }
 

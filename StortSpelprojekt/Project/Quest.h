@@ -11,6 +11,7 @@ class FriendlyNPC;
 class Quest
 {
 protected:
+	std::string questHolderNPC;
 	std::string name;
 
 	bool unlocked;
@@ -36,6 +37,9 @@ public:
 	void Activate()		{ if (!active) TriggerOnActivateFunction(); active = true; }
 	bool IsCompleted()	{ return completed; }
 	bool IsActive()		{ return active; }
+
+	void SetQuestHolder(const std::string& NPC) { questHolderNPC = NPC; }
+	const std::string GetQuestHolder() { return questHolderNPC; }
 
 	std::vector<Quest*>& GetChildQuests()	{ return childQuests; }
 

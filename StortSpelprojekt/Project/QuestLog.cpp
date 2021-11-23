@@ -32,6 +32,12 @@ void QuestLog::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Lo
 				continue;
 
 			Print(quest->GetName(), "==================");
+			if (quest->IsCompleted())
+			{
+				Print("Return to " + quest->GetQuestHolder() + ".");
+				continue;
+			}
+
 			for (auto objective : quest->GetObjectives())
 				Print(objective->Info());
 		}
@@ -101,7 +107,7 @@ void QuestLog::CreateQuests()
 	//=====================================================
 	//NPC3
 	auto q5 = q3->AddChildQuest("FIRST QUEST FOR NPC3");
-	q5->AddCollectObjective(Item::Type::Stick, 3);
+	q5->AddLocationObjective({ 38.0f, 20.3f, -574.5f }, 10);
 	quests.emplace_back(q5);
 
 	//SAME STUFF HERE KINDA I THIK U GET IT, IF ANY QUEST DEPENDS ON ANOTHER (CANT BE TWO) YOU HAVE TO CREATE THE FIRST ONE FIRST, 

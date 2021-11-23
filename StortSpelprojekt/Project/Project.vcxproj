@@ -180,6 +180,7 @@
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp" />
+    <ClCompile Include="InGameOverlay.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h" />
+    <ClInclude Include="InGameOverlay.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="LoadingScreen.h" />
     <ClInclude Include="LocationObjective.h" />
@@ -251,6 +253,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Objective.h" />
+    <ClInclude Include="Overlay.h" />
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
