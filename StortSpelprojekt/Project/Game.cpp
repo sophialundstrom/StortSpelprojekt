@@ -580,10 +580,20 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	desert->Bind(colliderRenderer);
 	biomes.emplace_back(desert);
 
-	auto woodlands = std::make_shared<Biome>(12U, BIOME::WOODLANDS);
+	auto woodlands = std::make_shared<Biome>(4U, BIOME::WOODLANDS);
 	woodlands->AddCollider(Vector3(3.4f, 20.f, -591.f), 50.f);
 	woodlands->Bind(colliderRenderer);
 	biomes.emplace_back(woodlands);
+
+	auto mountain = std::make_shared<Biome>(13U, BIOME::MOUNTAIN);
+	mountain->AddCollider(Vector3(-130.f, 16.f, -690.f), 50.f);
+	mountain->Bind(colliderRenderer);
+	biomes.emplace_back(mountain);
+
+	auto ocean = std::make_shared<Biome>(14U, BIOME::OCEAN);
+	ocean->AddCollider(Vector3(-48.f, 18.f, -748.f), 50.f);
+	ocean->Bind(colliderRenderer);
+	biomes.emplace_back(ocean);
 
 	
 	(void)Run();
@@ -601,20 +611,22 @@ void Game::SetupAudio()
 	Audio::Initialize();
 	Audio::StartEngine();
 
-	Audio::AddAudio(L"Audio/Sonrie.wav", 0);					   // Default music
-	Audio::AddAudio(L"Audio/Combat1.wav", 1);					   // Combat Version 1 Music
-	Audio::AddAudio(L"Audio/Combat2.wav", 2);					   // Combat Version 2 Music
-	Audio::AddAudio(L"Audio/Camelot.wav", 3);					   // Desert Music
-	Audio::AddAudio(L"Audio/totallyRPGMusic.wav", 4);			   // Woodlands Music
-	Audio::AddAudio(L"Audio/Running.wav", 6, true);				   // Player Running Sound Effect
-	Audio::AddAudio(L"Audio/Jump.wav", 7);						   // Player Jumping Sound Effect
-	Audio::AddAudio(L"Audio/Bow.wav", 8);						   // Player Aiming Sound Effect
-	Audio::AddAudio(L"Audio/Fire.wav", 9);						   // Player Shooting Sound Effect
-	Audio::AddAudio(L"Audio/Welcome.wav", 10, true);			   // ????
-	Audio::AddAudio(L"Audio/PickupPop.wav", 11);				   // Collecting Pickup Sound Effect
-	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 12);	   // :)
+	Audio::AddAudio(L"Audio/Sonrie.wav", 0, true);						// Default music
+	Audio::AddAudio(L"Audio/Combat1.wav", 1, true);						// Combat Version 1 Music
+	Audio::AddAudio(L"Audio/Combat2.wav", 2, true);						// Combat Version 2 Music
+	Audio::AddAudio(L"Audio/Camelot.wav", 3, true);						// Desert Music
+	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 4, true);		// Woodlands Music
+	Audio::AddAudio(L"Audio/Running.wav", 6, true);						// Player Running Sound Effect
+	Audio::AddAudio(L"Audio/Jump.wav", 7);								// Player Jumping Sound Effect
+	Audio::AddAudio(L"Audio/Bow.wav", 8);								// Player Aiming Sound Effect
+	Audio::AddAudio(L"Audio/Fire.wav", 9);								// Player Shooting Sound Effect
+	Audio::AddAudio(L"Audio/Welcome.wav", 10, true);					// ????
+	Audio::AddAudio(L"Audio/PickupPop.wav", 11);						// Collecting Pickup Sound Effect
+	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 12, true);	// :)
+	Audio::AddAudio(L"Audio/Menu.wav", 13, true);	// Mountain Music
+	Audio::AddAudio(L"Audio/Win.wav", 14, true);	// Ocean / Beach Music
 
-	Audio::SetVolume(0.8, 0);
+	Audio::SetVolume(0.5, 0);
 	Audio::StartAudio(0);
 }
 
@@ -799,8 +811,10 @@ void Game::HandleBiomes()
 			PrintS("DESERT");
 			Audio::StopAudio(0);
 			Audio::StopAudio(2);
-			Audio::StopAudio(3);
+			Audio::StopAudio(4);
 			Audio::StopAudio(1);
+			Audio::StopAudio(13);
+			Audio::StopAudio(14);
 			Audio::StartAudio(slot);
 			break;
 		case BIOME::WOODLANDS:
@@ -808,7 +822,29 @@ void Game::HandleBiomes()
 			Audio::StopAudio(0);
 			Audio::StopAudio(2);
 			Audio::StopAudio(1);
+			Audio::StopAudio(3);
+			Audio::StopAudio(13);
+			Audio::StopAudio(14);
+			Audio::StartAudio(slot);
+			break;
+		case BIOME::MOUNTAIN:
+			PrintS("MOUNTAIN");
+			Audio::StopAudio(3);
+			Audio::StopAudio(0);
+			Audio::StopAudio(2);
+			Audio::StopAudio(1);
 			Audio::StopAudio(4);
+			Audio::StopAudio(14);
+			Audio::StartAudio(slot);
+			break;
+		case BIOME::OCEAN:
+			PrintS("OCEAN");
+			Audio::StopAudio(3);
+			Audio::StopAudio(0);
+			Audio::StopAudio(2);
+			Audio::StopAudio(1);
+			Audio::StopAudio(4);
+			Audio::StopAudio(13);
 			Audio::StartAudio(slot);
 			break;
 		case BIOME::DEFAULT:
@@ -817,6 +853,8 @@ void Game::HandleBiomes()
 			Audio::StopAudio(2);
 			Audio::StopAudio(3);
 			Audio::StopAudio(4);
+			Audio::StopAudio(13);
+			Audio::StopAudio(14);
 			Audio::StartAudio(0);
 			break;
 		}

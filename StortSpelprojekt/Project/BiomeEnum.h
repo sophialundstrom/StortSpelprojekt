@@ -1,3 +1,3 @@
 #pragma once
 
-enum class BIOME { DEFAULT, DESERT, WOODLANDS };
+enum class BIOME { DEFAULT, DESERT, WOODLANDS, MOUNTAIN, OCEAN };
