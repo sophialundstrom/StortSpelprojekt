@@ -32,14 +32,45 @@ struct FrustrumCollider
 
     void Update(DirectionalLight dirLight)
     {
+        // https://stackoverflow.com/questions/58469297/how-do-i-calculate-the-yaw-pitch-and-roll-of-a-point-in-3d
+        /*
+        //YAW                          Heading
+        //PITCH                        Pitch
+        //ROLL                         Bank
 
-        Quaternion camDirQ;
+        //Calculating magnitude
+        Vector3 dir = dirLight.data.direction;
+        float magnitude = sqrtf((dir.x * dir.x) + (dir.y * dir.y) + (dir.z * dir.z));
 
+        //Calculate heading
+        float redAdjacent = dir.x;
+        float redOpposite = dir.z;
+        float heading = atan2f(redOpposite, redAdjacent);
+
+        //Calculating pitch
+        //float greenHypotenuse = magnitude;
+        float greenOpposite = dir.y;
+        float greenAdjacent = sqrtf((dir.x * dir.x) + (dir.z * dir.z));
+        float pitch = atan2(greenOpposite, greenAdjacent);
+        */
+        
+        Vector3 startDir = { 0, 0, 1 };
+
+        Vector2 a = {dirLight.data.direction.y, dirLight.data.direction.z};
+        Vector2 b = {startDir.y, startDir.z};
+        float yaw = acos(a.Dot(b));
+
+        a = { dirLight.data.direction.x, dirLight.data.direction.z };
+        b = { startDir.x, startDir.z };
+        float pitch = acos(a.Dot(b));
+
+        Quaternion camDirQ = Quaternion::CreateFromYawPitchRoll(yaw, pitch, 0);
+        std::cout << dirLight.GetRepresentativePosition().z << std::endl;
         bounds = DirectX::BoundingFrustum();
         bounds.Transform(
             bounds,
             1,
-            camDirQ,
+            {0.880, 0.325, 0.325, 0.120},
             { dirLight.GetRepresentativePosition().x, dirLight.GetRepresentativePosition().y, dirLight.GetRepresentativePosition().z }
         );
         
