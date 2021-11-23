@@ -29,14 +29,11 @@ void FriendlyNPC::AddDialogue(const std::string& string)
 
 bool FriendlyNPC::Interactable()
 {
+	if (completedAllQuests || dialogueOverride)
+		return true;
+
 	if (!currentQuest)
 		return false;
-
-	if (completedAllQuests)
-		return true;
-
-	if (dialogueOverride)
-		return true;
 
 	return currentQuest->Unlocked();
 }
@@ -62,14 +59,15 @@ void FriendlyNPC::Update()
 {
 	NPC::Update();
 
+	questMarker->Update();
+
 	if (dialogueOverride)
 	{
 		questMarker->SetPosition(0, 9.0f, 0);
-		questMarker->SetAsComplete();
-		questMarker->Update();
+		questMarker->SetAsObjective();
 		return;
 	}
-		
+
 	if (currentQuest)
 	{
 		if (!currentQuest->Unlocked())
@@ -93,7 +91,6 @@ void FriendlyNPC::Update()
 
 			if (finishedDialogue)
 			{
-				Print(currentQuest->GetName() + " COMPLETED");
 				QuestLog::Complete(currentQuest);
 
 				currentQuestID++;
@@ -121,6 +118,5 @@ void FriendlyNPC::Update()
 		questMarker->SetAsGive();
 	}
 
-	questMarker->Update();
 	finishedDialogue = false;
 }

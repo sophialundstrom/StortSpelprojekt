@@ -31,9 +31,10 @@ public:
 
 	bool Interactable();
 
-	bool CompletedConversation()					{ return finishedDialogue; }
 	void SetCompletedConversation()					{ finishedDialogue = true; }
 	void ActivateCurrentQuest();
+	
+	bool HasQuestsLeft() { return (currentQuestID < quests.size()); }
 
 	std::shared_ptr<QuestMarker> GetQuestMarker()	{ return questMarker; }
 	const std::string GetCurrentDialogue();

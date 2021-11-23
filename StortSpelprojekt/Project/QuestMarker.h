@@ -14,6 +14,7 @@ public:
 	void SetAsHelp()	 { ApplyMesh("QuestionMarkGray"); }
 	void SetAsDone()	 { ApplyMesh("QuestionMarkYellow"); }
 	void SetAsComplete() { ApplyMesh("ChatBubble"); }
+	void SetAsObjective(){ ApplyMesh("ChatBubbleYellow"); }
 
 	void Update()
 	{

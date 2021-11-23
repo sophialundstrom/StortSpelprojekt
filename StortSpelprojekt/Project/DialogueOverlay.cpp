@@ -57,7 +57,9 @@ void DialogueOverlay::Update()
 			else
 			{
 				NPC->SetCompletedConversation();
-				NPC->ActivateCurrentQuest();
+
+				if (NPC->HasQuestsLeft())
+					NPC->ActivateCurrentQuest();
 			}
 
 			NPC = nullptr;
