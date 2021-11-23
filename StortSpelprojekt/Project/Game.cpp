@@ -919,7 +919,7 @@ APPSTATE Game::Run()
 
 	if (time >= 1.0f)
 	{
-		canvases["INGAME"]->UpdateText("FPS", std::to_string(frames));
+		ingameOverlay->UpdateFPS(frames);
 		frames = 0;
 		time = 0;
 	}

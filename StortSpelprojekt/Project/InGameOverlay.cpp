@@ -46,13 +46,13 @@ InGameOverlay::InGameOverlay()
 
 	//QUESTS
 	AddImage({ 250, 365 }, "QuestBorder", "QuestBorder.png");
-	AddText({ 250, 65 }, "AQ", "Active Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
+	AddText({ 250, 65 }, "AQ", "Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
 
 	//HEALTH
 	AddImage({ 355, Window::ClientHeight() - 64.0f }, "hp", "HP10.png");
 
 	//FPS
-	AddText({ (float)Window::ClientWidth() - 50, (float)Window::ClientHeight() - 30 }, "FPS", "0", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
+	AddText({ (float)Window::ClientWidth() - 100, (float)Window::ClientHeight() - 30 }, "FPS", "FPS: 0", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_SMALL);
 
 	//CROSSHAIR
 	AddImage({ (float)Window::ClientWidth() / 2.0f, (float)Window::ClientHeight() / 2 }, "CrossHair", "CrossHair.png");
@@ -74,9 +74,9 @@ void InGameOverlay::UpdateQuests(const std::vector<Quest*>& quests)
 	auto questFormat = UI::TEXTFORMAT::TITLE_SMALL;
 	auto objectiveFormat = UI::TEXTFORMAT::DEFAULT;
 
-	D2D_VECTOR_2F position = { 70.0f, 50.0f };
+	D2D_VECTOR_2F position = { 70.0f, 60.0f };
 	const UINT objectiveOffset = 30;
-	const UINT questOffset = 50;
+	const UINT questOffset = 60;
 
 	for (UINT i = 0; i < quests.size(); ++i)
 	{
@@ -127,4 +127,9 @@ void InGameOverlay::UpdateHealth(UINT amount)
 	auto position = image->GetPosition();
 	RemoveImage("hp");
 	AddImage(position, "hp", "HP" + std::to_string(amount) + ".png");
+}
+
+void InGameOverlay::UpdateFPS(UINT FPS)
+{
+	UpdateText("FPS", "FPS: " + std::to_string(FPS));
 }

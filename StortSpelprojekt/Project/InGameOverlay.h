@@ -17,6 +17,7 @@ public:
 	void UpdateInventory(Inventory& inventory);
 	void UpdateArrowCounter(UINT amount);
 	void UpdateHealth(UINT amount);
+	void UpdateFPS(UINT FPS);
 
 	// Inherited via Overlay
 	virtual void Render() override;
