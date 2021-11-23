@@ -54,15 +54,12 @@ struct FrustrumCollider
         float pitch = atan2(greenOpposite, greenAdjacent);
         */
         
-        Vector3 startDir = { 0, 0, 1 };
+        std::cout << dirLight.GetRepresentativePosition().x << dirLight.GetRepresentativePosition().y << dirLight.GetRepresentativePosition().z << std::endl;
+        dirLight.data.direction;
 
-        Vector2 a = {dirLight.data.direction.y, dirLight.data.direction.z};
-        Vector2 b = {startDir.y, startDir.z};
-        float yaw = acos(a.Dot(b));
+        
 
-        a = { dirLight.data.direction.x, dirLight.data.direction.z };
-        b = { startDir.x, startDir.z };
-        float pitch = acos(a.Dot(b));
+        
 
         Quaternion camDirQ = Quaternion::CreateFromYawPitchRoll(yaw, pitch, 0);
         std::cout << dirLight.GetRepresentativePosition().z << std::endl;
@@ -70,7 +67,7 @@ struct FrustrumCollider
         bounds.Transform(
             bounds,
             1,
-            {0.880, 0.325, 0.325, 0.120},
+            {0.854, 0.353, -0.353, -0.146},
             { dirLight.GetRepresentativePosition().x, dirLight.GetRepresentativePosition().y, dirLight.GetRepresentativePosition().z }
         );
         
