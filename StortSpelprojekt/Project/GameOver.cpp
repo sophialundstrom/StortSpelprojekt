@@ -132,25 +132,25 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 
 	auto quitGameCanvas = std::make_shared<Canvas>();
 	{
-		quitGameCanvas->AddImage({ clientWidth / 2.0f,  clientHeight / 2.0f - 200 }, "AreYouSure", "AreYouSure.png", 1.f, 1.0f, true, true);
-		quitGameCanvas->AddImage({ clientWidth / 2.0f + 180, clientHeight / 2.0f + 50}, "Yes", "Yes.png", 1.0f, 1.0f, true, true);
-		quitGameCanvas->AddImage({ clientWidth / 2.0f + 180, clientHeight / 2.0f + 50}, "YesLeaves", "YesLeaves.png", 1.0f, 1.0f, true, true);
-		quitGameCanvas->AddImage({ clientWidth / 2.0f - 180, clientHeight / 2.0f + 50}, "No", "No.png", 1.0f, 1.0f, true, true);
-		quitGameCanvas->AddImage({ clientWidth / 2.0f - 180, clientHeight / 2.0f + 50}, "NoLeaves", "NoLeaves.png", 1.0f, 1.0f, true, true);
+		quitGameCanvas->AddImage({ clientWidth / 2.0f,  clientHeight / 2.0f - 200.0f }, "AreYouSure", "AreYouSure.png", 1.f, 1.0f, true, true);
+		quitGameCanvas->AddImage({ clientWidth / 2.0f + 180.0f, clientHeight / 2.0f + 50.0f }, "Yes", "Yes.png", 1.0f, 1.0f, true, true);
+		quitGameCanvas->AddImage({ clientWidth / 2.0f + 180.0f, clientHeight / 2.0f + 50.0f }, "YesLeaves", "YesLeaves.png", 1.0f, 1.0f, true, true);
+		quitGameCanvas->AddImage({ clientWidth / 2.0f - 180.0f, clientHeight / 2.0f + 50.0f }, "No", "No.png", 1.0f, 1.0f, true, true);
+		quitGameCanvas->AddImage({ clientWidth / 2.0f - 180.0f, clientHeight / 2.0f + 50.0f }, "NoLeaves", "NoLeaves.png", 1.0f, 1.0f, true, true);
 		auto yesImage = quitGameCanvas->GetImage("Yes");
 		auto noImage = quitGameCanvas->GetImage("No");
-		quitGameCanvas->AddButton({ yesImage->GetLeftSidePosition().x + yesImage->GetWidth() / 2, yesImage->GetLeftSidePosition().y + yesImage->GetHeight() / 2 }, "YesButton", yesImage->GetWidth(), yesImage->GetHeight(), UI::COLOR::GRAY, [this] { Exit(); }, [this] { HoveringYes(); });
-		quitGameCanvas->AddButton({ noImage->GetLeftSidePosition().x + noImage->GetWidth() / 2, noImage->GetLeftSidePosition().y + noImage->GetHeight() / 2 }, "NoButton", noImage->GetWidth(), noImage->GetHeight(), UI::COLOR::GRAY, [this] { Back(); }, [this] { HoveringNo(); });
+		quitGameCanvas->AddButton({ yesImage->GetLeftSidePosition().x + yesImage->GetWidth() / 2.0f, yesImage->GetLeftSidePosition().y + yesImage->GetHeight() / 2 }, "YesButton", yesImage->GetWidth(), yesImage->GetHeight(), UI::COLOR::GRAY, [this] { Exit(); }, [this] { HoveringYes(); });
+		quitGameCanvas->AddButton({ noImage->GetLeftSidePosition().x + noImage->GetWidth() / 2.0f, noImage->GetLeftSidePosition().y + noImage->GetHeight() / 2 }, "NoButton", noImage->GetWidth(), noImage->GetHeight(), UI::COLOR::GRAY, [this] { Back(); }, [this] { HoveringNo(); });
 
 	}
 	canvases["QUIT"] = quitGameCanvas;
 
 	auto mainMenuCanvas = std::make_shared<Canvas>();
 	{
-		mainMenuCanvas->AddImage({ clientWidth / 2.0f,  clientHeight / 2.0f - 200 }, "AreYouSure", "AreYouSure.png", 1.f, 1.0f, true, true);
-		mainMenuCanvas->AddImage({ clientWidth / 2.0f + 180, clientHeight / 2.0f + 50 }, "Yes", "Yes.png", 1.0f, 1.0f, true, true);
-		mainMenuCanvas->AddImage({ clientWidth / 2.0f + 180, clientHeight / 2.0f + 50 }, "YesLeaves", "YesLeaves.png", 1.0f, 1.0f, true, true);
-		mainMenuCanvas->AddImage({ clientWidth / 2.0f - 180, clientHeight / 2.0f + 50 }, "No", "No.png", 1.0f, 1.0f, true, true);
+		mainMenuCanvas->AddImage({ clientWidth / 2.0f,  clientHeight / 2.0f - 200.0f }, "AreYouSure", "AreYouSure.png", 1.f, 1.0f, true, true);
+		mainMenuCanvas->AddImage({ clientWidth / 2.0f + 180.0f, clientHeight / 2.0f + 50.0f }, "Yes", "Yes.png", 1.0f, 1.0f, true, true);
+		mainMenuCanvas->AddImage({ clientWidth / 2.0f + 180.0f, clientHeight / 2.0f + 50.0f }, "YesLeaves", "YesLeaves.png", 1.0f, 1.0f, true, true);
+		mainMenuCanvas->AddImage({ clientWidth / 2.0f - 180.0f, clientHeight / 2.0f + 50.0f }, "No", "No.png", 1.0f, 1.0f, true, true);
 		mainMenuCanvas->AddImage({ clientWidth / 2.0f - 180, clientHeight / 2.0f + 50 }, "NoLeaves", "NoLeaves.png", 1.0f, 1.0f, true, true);
 		auto yesImage = mainMenuCanvas->GetImage("Yes");
 		auto noImage = mainMenuCanvas->GetImage("No");

@@ -62,12 +62,17 @@ public:
 		Vector3 direction = position - this->position;
 		direction.Normalize();
 		const Vector3 distance = moveSpeed * direction * Time::GetDelta();
-		Print(distance.Length());
-		//float weight = 1 - (1 / distance.Length() * 100);
+		
+
+		float multiplier = -pow((distance.Length() - 1.6667f) * 0.6f, 2.0f) + 1;
+		
+		Print(distance.Length(), "Distance");
+		Print(multiplier, "Multiplier");
 		if ((this->position - position).Length() < distance.Length())
 			this->position = position;
 		else
-			this->position += moveSpeed * direction *  Time::GetDelta();
+			//this->position += moveSpeed * direction *  Time::GetDelta();
+			this->position = Vector3::Lerp(position, this->position, multiplier);
 	}
 
 	float GetNearZ() {return nearZ;}
