@@ -59,8 +59,11 @@ public:
 
 	void MoveTowards(Vector3 position)
 	{
-		const Vector3 direction = position - this->position;
+		Vector3 direction = position - this->position;
+		direction.Normalize();
 		const Vector3 distance = moveSpeed * direction * Time::GetDelta();
+		Print(distance.Length());
+		//float weight = 1 - (1 / distance.Length() * 100);
 		if ((this->position - position).Length() < distance.Length())
 			this->position = position;
 		else

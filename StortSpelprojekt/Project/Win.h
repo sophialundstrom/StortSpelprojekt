@@ -35,13 +35,9 @@ private:
 	void Render();
 	void Initialize();
 
-	void Continue();
-	void HoveringContinue();
-
 	void MainMenu();
 	void BackToMainMenu();
 	void HoveringMainMenu();
-
 
 	void Form();
 	void HoveringForm();

@@ -70,6 +70,7 @@ Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
 		auto image = winCanvas->GetImage("Form");
 		winCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "FormButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Form(); }, [this] { HoveringForm(); });
 	}
+	canvases["WIN"] = winCanvas;
 
 	auto quitGameCanvas = std::make_shared<Canvas>();
 	{
@@ -86,16 +87,15 @@ Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
 	}
 	canvases["QUIT"] = quitGameCanvas;
 
-	canvases["WIN"] = winCanvas;
 	currentCanvas = winCanvas;
 
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { -41.0f, 37.0f, -687.0f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(200, { 0.03f, 0.03f, 0.03f ,1 }, 1);
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 38.055f, 20.367f, -594.542f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(500, { 1.0f, 1.0f, 1.0f, 1 }, 4, 4);
 	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
 
 	//186 95 42 
 	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
-	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 35, -687 });
+	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ 38.055f, 20.367f, -594.542f });
 	particleRenderer.Bind(menuFireSystem);
 
 	(void)Run();
@@ -115,6 +115,10 @@ void Win::Render()
 
 	modelRenderer.Render();
 
+	terrainRenderer.Render(terrain);
+	
+	waterRenderer.Render(water);
+
 	particleRenderer.Render();
 
 	currentCanvas->Render();
@@ -130,7 +134,7 @@ void Win::Initialize()
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
-	gameLoader.Load("MainMenu", scene.GetDrawables());
+	gameLoader.Load("GameOver", scene.GetDrawables());
 
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
@@ -160,7 +164,7 @@ APPSTATE Win::Run()
 	canvases["QUIT"]->GetImage("NoLeaves")->Hide();
 
 	currentCanvas->Update();
-	scene.GetCamera()->RotateAroundPoint({ -41.0f, 37.0f, -687.0f }, 40, (Vector3{ 0, -0.6f, -1 } / Vector3(0, -0.6f, -1).Length()));
+	scene.GetCamera()->RotateAroundPoint({ -27.991f, 17.551f, -632.529f }, 150, (Vector3{ 0, -0.6f, -1 } / Vector3(0, -0.6f, -1).Length()));
 	scene.UpdateDirectionalLight(scene.GetCamera()->GetPosition());
 	scene.Update();
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), scene.GetNumberOfPointlights(), scene.GetPointLights());

@@ -74,7 +74,7 @@ void ParticleRenderer::Render()
 	Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	//BLEND
-	Graphics::Inst().EnableAlpha();
+	Graphics::Inst().EnableATCAlpha();
 
 	//SHADERS
 	BindShaders(vertexShader, nullptr, nullptr, geometryShader, pixelShader);
