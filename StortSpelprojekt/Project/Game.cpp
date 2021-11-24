@@ -644,7 +644,7 @@ void Game::SetupAudio()
 	Audio::AddAudio(L"Audio/SoundForest.wav", 0, true);					// Default music
 	Audio::AddAudio(L"Audio/Combat1.wav", 1, true);						// Combat Version 1 Music
 	Audio::AddAudio(L"Audio/Combat2.wav", 2, true);						// Combat Version 2 Music
-	Audio::AddAudio(L"Audio/DesertSound.wav", 3, true);					// Desert Music
+	Audio::AddAudio(L"Audio/SoundDesert.wav", 3, true);					// Desert Music
 	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 4, true);		// Woodlands Music
 	Audio::AddAudio(L"Audio/Running.wav", 6, true);						// Player Running Sound Effect
 	Audio::AddAudio(L"Audio/Jump.wav", 7);								// Player Jumping Sound Effect
