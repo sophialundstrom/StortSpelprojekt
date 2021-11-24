@@ -13,9 +13,9 @@ QuadTree::QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int 
 		{ bounds.width / 2.f, 4000.f, bounds.depth / 2.f }
 	);
 
+	lowestY = D3D11_FLOAT32_MAX;
+	highestY = -D3D11_FLOAT32_MAX;
 
-	/*if (currentLevel == 0)
-		DivideQuadTree();*/
 
 }
 
@@ -47,27 +47,57 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 				InsertModelInChild(drawable);
 			}
 			else
+			{
+				if (highestY < (drawableBounds.Center.y + (drawableBounds.Extents.y * 0.5f)))
+					highestY = (drawableBounds.Center.y + (drawableBounds.Extents.y * 0.5f));
+
+				if (lowestY > (drawableBounds.Center.y - (drawableBounds.Extents.y * 0.5f)))
+					highestY = (drawableBounds.Center.y - (drawableBounds.Extents.y * 0.5f));
+
 				collectedDrawables.emplace(drawable->GetName(), drawable);
+			}
 		}
 		else
 			InsertModelInChild(drawable);
 	}
 }
 
-void QuadTree::CheckModelsWithinFustrum(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider)
+void QuadTree::CheckModelsWithinView(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider)
 {
 	if (divided)
 	{
-		TopL->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
-		TopR->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
-		BotL->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
-		BotR->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
+		TopL->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+		TopR->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+		BotL->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+		BotR->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
 	}
 	else
 	{
 
 
 		if (quadTreeBoundsCollider.Intersects(frustrumCollider.bounds))
+		{
+			//std::cout << "Intersects " + nameTag << std::endl;
+			for (auto& [name, drawable] : collectedDrawables)
+				drawablesToBeRendered.emplace(name, drawable);
+		}
+	}
+}
+
+void QuadTree::CheckModelsWithinView(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, OrthographicCollider orthographicCollider)
+{
+	if (divided)
+	{
+		TopL->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
+		TopR->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
+		BotL->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
+		BotR->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
+	}
+	else
+	{
+
+
+		if (quadTreeBoundsCollider.Intersects(orthographicCollider.bounds))
 		{
 			//std::cout << "Intersects " + nameTag << std::endl;
 			for (auto& [name, drawable] : collectedDrawables)
@@ -128,6 +158,26 @@ void QuadTree::PrintTree()
 		std::cout << "MaxEntityCount: " << maxCap << std::endl;
 	}
 
+}
+
+void QuadTree::OptimizeBounds()
+{
+	if (divided)
+	{
+		TopL->PrintTree();
+		TopR->PrintTree();
+		BotL->PrintTree();
+		BotR->PrintTree();
+	}
+	else
+	{
+		float extentY = highestY - lowestY;
+		float centerY = lowestY + (extentY / 2.f);
+		Vector3 newBounds = { quadTreeBoundsCollider.Extents.x, extentY, quadTreeBoundsCollider.Extents.z };
+		Vector3 newCenterPos = { quadTreeBoundsCollider.Center.x, centerY, quadTreeBoundsCollider.Center.z };
+		quadTreeBoundsCollider.Extents = newBounds;
+		quadTreeBoundsCollider.Center = newCenterPos;
+	}
 }
 
 void QuadTree::DivideQuadTree()
