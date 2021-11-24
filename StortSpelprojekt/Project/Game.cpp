@@ -644,7 +644,7 @@ void Game::SetupAudio()
 	Audio::AddAudio(L"Audio/SoundForest.wav", 0, true);					// Default music
 	Audio::AddAudio(L"Audio/Combat1.wav", 1, true);						// Combat Version 1 Music
 	Audio::AddAudio(L"Audio/Combat2.wav", 2, true);						// Combat Version 2 Music
-	Audio::AddAudio(L"Audio/GoldRush.wav", 3, true);						// Desert Music
+	Audio::AddAudio(L"Audio/DesertSound.wav", 3, true);					// Desert Music
 	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 4, true);		// Woodlands Music
 	Audio::AddAudio(L"Audio/Running.wav", 6, true);						// Player Running Sound Effect
 	Audio::AddAudio(L"Audio/Jump.wav", 7);								// Player Jumping Sound Effect
@@ -654,7 +654,7 @@ void Game::SetupAudio()
 	Audio::AddAudio(L"Audio/PickupPop.wav", 11);						// Collecting Pickup Sound Effect
 	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 12, true);	// :)
 	Audio::AddAudio(L"Audio/Menu.wav", 13, true);						// Mountain Music
-	Audio::AddAudio(L"Audio/SoundOcean.wav", 14, true);					// Ocean / Beach Music
+	Audio::AddAudio(L"Audio/SandyBeach.wav", 14, true);					// Ocean / Beach Music
 
 	Audio::SetVolume(0.5, 0);
 	Audio::StartAudio(0);
