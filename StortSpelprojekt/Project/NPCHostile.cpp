@@ -1,14 +1,14 @@
 #include "NPCHostile.h"
+#include "ConcreteStates.h"
 
 
-
-HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
+HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
 	:NPC(file)
 {
     this->player = player;
-    this->state = NPCState
-    this->combatStyle = combatStyle;
-    SwapCombatStyle(combatStyle);
+   // this->currentState = &NPCState::idling;
+    currentState = &IdlingState::GetInstance();
+   // SetState(IdlingState::)
     mRend = &mRenderer;
     cRend = &cRenderer;
 
@@ -23,7 +23,9 @@ HostileNPC::HostileNPC(const Model& model)
 
 void HostileNPC::Update()
 {
-    state->update(*this);
+    currentState->Update(*this);
+    arrowHandler.Update(*mRend, *cRend);
+
     NPC::Update();
    
 }

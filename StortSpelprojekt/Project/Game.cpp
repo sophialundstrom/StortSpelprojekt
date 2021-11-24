@@ -319,9 +319,9 @@ void Game::CheckNearbyCollision()
 	player->HandleCollidedObjects(collidedColliders);
 }
 
-void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
+void Game::AddHostileNPC(const std::string& filename, Vector3 position)
 {
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, modelRenderer, colliderRenderer);
+	auto NPC = std::make_shared<HostileNPC>(filename, player, modelRenderer, colliderRenderer);
 	NPC->SetPosition(position);
 	//NPC->BindArrows(modelRenderer);
 
@@ -556,7 +556,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -91, 20, -593 });
 	AddItem(WOOD, { -85, 20, -608 });
 
-	AddHostileNPC("BarbarianBow", { Vector3(5.686, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { Vector3(5.686, 20, -592.456) + Vector3(0,6,0) });
 	//AddHostileNPC("BarbarianBow", { Vector3(0, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(15,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
@@ -621,7 +621,7 @@ APPSTATE Game::Run()
 		}
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) });
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('1'))

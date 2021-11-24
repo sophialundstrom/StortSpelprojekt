@@ -352,6 +352,9 @@
     <ClCompile Include="State.cpp">
       <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClCompile>
+    <ClCompile Include="ConcreteStates.cpp">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -674,6 +677,9 @@
       <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClInclude>
     <ClInclude Include="State.h">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="ConcreteStates.h">
       <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClInclude>
   </ItemGroup>

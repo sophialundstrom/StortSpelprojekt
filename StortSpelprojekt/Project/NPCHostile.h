@@ -6,31 +6,20 @@
 
 class NPCState;
 
-enum CombatStyle
-{
-	consistantDelay,
-	Burst,
-	wideArrow,
-	Defenseless
-};
-
-
-
 class HostileNPC : public NPC
 {
 private:
 	
-	std::shared_ptr<Player> player;
+	//std::shared_ptr<Player> player;
 
 
 	ArrowHandler arrowHandler;
 
 	ModelRenderer* mRend = nullptr;
 	ColliderRenderer* cRend = nullptr;
-	State state;
 	void HandleStates();
 public:
-	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
+	HostileNPC(const std::string& file, std::shared_ptr<Player> player, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
 	HostileNPC(const Model& model);
 
 	virtual void Update() override;
@@ -48,7 +37,7 @@ private:
 public:
 	void SetPathVar(Pathfinding* path)				{ this->pathing = path; }
 	void SetPlayerPtr(std::shared_ptr<Player> p)	{ this->player = p; }
-	void SetState(NPCState *newState)				{ this->currentState = newState; }
+	void SetState(NPCState &newState)				{ currentState = &newState; }
 private:
 	NPCState* currentState;
 	float speed = 9.0f;
