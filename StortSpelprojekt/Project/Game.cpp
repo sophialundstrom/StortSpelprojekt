@@ -598,26 +598,26 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	particleRenderer.Bind(campFireSystem);
 	
-	
-
-	auto desert = std::make_shared<Biome>(3U, BIOME::DESERT);
-	desert->AddCollider(Vector3(-46.f, 20.f, -578.f), 50.f);
-	desert->AddCollider(Vector3(0.6f, 24.f, -542.f), 50.f);
-	//desert->Bind(colliderRenderer);
-	biomes.emplace_back(desert);
-
-	auto woodlands = std::make_shared<Biome>(4U, BIOME::WOODLANDS);
-	woodlands->AddCollider(Vector3(3.4f, 20.f, -591.f), 50.f);
-	//woodlands->Bind(colliderRenderer);
-	biomes.emplace_back(woodlands);
-
 	auto mountain = std::make_shared<Biome>(13U, BIOME::MOUNTAIN);
-	mountain->AddCollider(Vector3(-130.f, 16.f, -690.f), 50.f);
-	//mountain->Bind(colliderRenderer);
+	mountain->AddCollider(Vector3(-294, 108, 978), 534);
+	mountain->AddCollider(Vector3(312, 110, 790), 460);
+	mountain->AddCollider(Vector3(523, 110, 525), 460);
+	mountain->AddCollider(Vector3(708, 110, 456), 460);
+	mountain->Bind(colliderRenderer);
 	biomes.emplace_back(mountain);
 
+	auto desert = std::make_shared<Biome>(3U, BIOME::DESERT);
+	desert->AddCollider(Vector3(-311, 31, 380), 433);
+	desert->AddCollider(Vector3(-39, 35, 258), 286);
+	desert->AddCollider(Vector3(-556, 31, 459), 397);
+	desert->Bind(colliderRenderer);
+	biomes.emplace_back(desert);
+
 	auto ocean = std::make_shared<Biome>(14U, BIOME::OCEAN);
-	ocean->AddCollider(Vector3(-497.f, 18.f, -635.f), 100.f);
+	ocean->AddCollider(Vector3(444, 18, -1089), 463);
+	ocean->AddCollider(Vector3(-46, 18, -1114), 389);
+	ocean->AddCollider(Vector3(-264, 18, -852), 280);
+	ocean->AddCollider(Vector3(-507, 18, -754), 345);
 	ocean->Bind(colliderRenderer);
 	biomes.emplace_back(ocean);
 
@@ -712,47 +712,50 @@ APPSTATE Game::Run()
 		{
 			lastClick = Time::Get();
 		}
+		int y = 0;
+		int b = 0;
 		if (Event::KeyIsPressed('K'))
 		{
-			PrintVector3(player->GetPosition());
+			PrintVector3(biomes[3]->colliders[y]->GetPosition());
 		}
 		if (Event::KeyIsPressed(79))
 		{
 			Audio::StopEngine();
 		}
 		bool x = false;
+		
 		if (Event::KeyIsPressed(VK_LEFT))
 		{
-			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(-100.f * Time::GetDelta(), 0.f, 0.f));
+			biomes[b]->colliders[y]->SetPosition(biomes[b]->colliders[y]->GetPosition() + Vector3(-100.f * Time::GetDelta(), 0.f, 0.f));
 			x = true;
 		}
 		if (Event::KeyIsPressed(VK_RIGHT))
 		{
-			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(100.f * Time::GetDelta(), 0.f, 0.f));
+			biomes[b]->colliders[y]->SetPosition(biomes[b]->colliders[y]->GetPosition() + Vector3(100.f * Time::GetDelta(), 0.f, 0.f));
 			x = true;
 		}
 		if (Event::KeyIsPressed(VK_UP))
 		{
-			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(0.f, 0.f, 100.f * Time::GetDelta()));
+			biomes[b]->colliders[y]->SetPosition(biomes[b]->colliders[y]->GetPosition() + Vector3(0.f, 0.f, 100.f * Time::GetDelta()));
 			x = true;
 		}
 		if (Event::KeyIsPressed(VK_DOWN))
 		{
-			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(0.f, 0.f, -100.f * Time::GetDelta()));
+			biomes[b]->colliders[y]->SetPosition(biomes[b]->colliders[y]->GetPosition() + Vector3(0.f, 0.f, -100.f * Time::GetDelta()));
 			x = true;
 		}
 		if (Event::KeyIsPressed('V'))
 		{
-			biomes[3]->colliders[0]->SetScale(biomes[3]->colliders[0]->GetScale() * 10 * Time::GetDelta());
+			biomes[b]->colliders[y]->SetScale(biomes[b]->colliders[y]->GetScale() * 10 * Time::GetDelta());
 			x = true;
 		}
 		if (Event::KeyIsPressed('B'))
 		{
-			biomes[3]->colliders[0]->SetScale(biomes[3]->colliders[0]->GetScale() * -10 * Time::GetDelta());
+			biomes[b]->colliders[y]->SetScale(biomes[b]->colliders[y]->GetScale() * -10 * Time::GetDelta());
 			x = true;
 		}
 		if (x)
-			biomes[3]->colliders[0]->Update();
+			biomes[b]->colliders[y]->Update();
 		/*if (Event::KeyIsPressed('U'))
 		{
 			QuestLog::Inst().Complete(0);
