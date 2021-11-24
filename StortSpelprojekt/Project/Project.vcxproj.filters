@@ -370,6 +370,9 @@
     <ClCompile Include="InteractableRenderer.cpp">
       <Filter>ARCUS\Graphics\Renderers\InteractableRenderer</Filter>
     </ClCompile>
+    <ClCompile Include="PauseOverlay.cpp">
+      <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -702,6 +705,9 @@
     </ClInclude>
     <ClInclude Include="InteractableRenderer.h">
       <Filter>ARCUS\Graphics\Renderers\InteractableRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseOverlay.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

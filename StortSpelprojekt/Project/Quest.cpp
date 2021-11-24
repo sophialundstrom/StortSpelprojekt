@@ -121,11 +121,10 @@ void Quest::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Locat
 		if (!waiting)
 		{
 			waiting = true;
-			std::thread thread([=]
+			std::thread thread([&]
 				{
 					Sleep(2000);
 					completed.store(true);
-					//completed = true;
 				});
 
 			thread.detach();

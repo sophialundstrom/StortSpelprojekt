@@ -67,8 +67,6 @@ void Game::Render()
 
 	WR->Render(water);
 
-	//currentCanvas->Render();
-
 	overlay->Render();
 
 	Graphics::Inst().EndFrame();
@@ -773,15 +771,6 @@ APPSTATE Game::Run()
 
 	if (state != GameState::PAUSED)
 		Update();
-	//if (state == GameState::DIALOGUE)
-	//{
-	//	auto overlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
-	//	if (overlay->IsDone())
-	//	{
-	//		state = GameState::ACTIVE;
-	//		currentCanvas = canvases["INGAME"];
-	//	}
-	//}
 
 	Render();
 
@@ -789,16 +778,6 @@ APPSTATE Game::Run()
 
 	if (Time::Get() - lastClick > 0.5f)
 	{
-		if (Event::KeyIsPressed(VK_TAB))
-		{
-			if (state == GameState::PAUSED)
-				Resume();
-			else
-				Pause();
-
-			lastClick = Time::Get();
-		}
-
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
 			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
@@ -836,49 +815,11 @@ APPSTATE Game::Run()
 			hostiles.resize(hostiles.size() - 1);
 			lastClick = Time::Get();
 		}
+
 		if (Event::KeyIsPressed(79))
 		{
 			Audio::StopEngine();
 		}
-		/*if (Event::KeyIsPressed('U'))
-		{
-			QuestLog::Inst().Complete(0);
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('Y'))
-		{
-			QuestLog::Inst().Complete(3);
-			lastClick = Time::Get();
-		}*/
-
-		/*if (Event::KeyIsPressed('B'))
-		{
-			Print("Killed barbarian!");
-			player->Stats().barbariansKilled++;
-			player->TakeDamage();
-			lastClick = Time::Get();
-		}*/
-
-	/*	if (Event::KeyIsPressed('I'))
-		{
-			Print("-Added Items-");
-			player->Inventory().AddItem(RESOURCE::WOOD);
-			player->Inventory().GetResources(RESOURCE::WOOD);
-			player->Inventory().AddItem(RESOURCE::STONE);
-			player->Inventory().GetResources(RESOURCE::STONE);
-			player->Inventory().AddItem(RESOURCE::FOOD);
-			player->Inventory().GetResources(RESOURCE::FOOD);
-			UpdateInventoryUI();
-			lastClick = Time::Get();
-		}*/
-
-		/*if (Event::KeyIsPressed('R'))
-		{
-			building->effect->Bind(scene, particleRenderer);
-			building->Upgrade();
-			lastClick = Time::Get();
-		}*/
 	}
 
 	if (Event::KeyIsPressed('P'))

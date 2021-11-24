@@ -162,7 +162,7 @@ void Text::SetString(const std::string newString, bool bound)
 
 void Text::Draw(bool allCharacters, UINT numCharacters)
 {
-	UI::Inst().GetRenderTarget()->DrawRectangle(bounds, brush);
+	//UI::Inst().GetRenderTarget()->DrawRectangle(bounds, brush);
 
 	if (allCharacters)
 	{

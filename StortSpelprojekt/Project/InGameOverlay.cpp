@@ -15,9 +15,6 @@ void InGameOverlay::ClearQuests()
 
 OVERLAYSTATE InGameOverlay::Update()
 {
-	if (!quests.empty() && quests[0].first->GetString().find("NPC3") != std::wstring::npos)
-		Print(lines.size());
-
 	for (auto& [info, line] : lines)
 	{
 		if (line.progress < 1.0f)
@@ -28,6 +25,8 @@ OVERLAYSTATE InGameOverlay::Update()
 			line.p2.x = line.p1.x + line.progress * line.width;
 		}
 	}
+
+	GetText("Interact")->Hide();
 
 	returnState = OVERLAYSTATE::NO_CHANGE;
 
@@ -76,6 +75,9 @@ InGameOverlay::InGameOverlay()
 
 	//ARROWS
 	AddText({ (float)Window::ClientWidth() / 2.0f, (float)Window::ClientHeight() - 50 }, "ArrowCount", "Arrows:" + std::to_string(0), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
+
+	//INTERACT
+	AddText({ (float)Window::ClientWidth() / 2.0f, (float)Window::ClientHeight() - 200.0f }, "Interact", "Interact [E]", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
 
 	//LINE BRUSH
 	lineBrush = UI::Inst().GetBrush(UI::COLOR::BROWN);
@@ -133,38 +135,44 @@ void InGameOverlay::UpdateQuests(const std::vector<Quest*>& quests)
 			}
 		}
 
-		if (!lines.empty())
+		auto pair = std::make_pair(name, objectives);
+
+		this->quests.emplace_back(pair);
+	}
+
+	if (!lines.empty())
+	{
+		for (UINT i = lines.size(); i > 0; i--)
 		{
-			for (UINT i = lines.size(); i > 0; i--)
+			auto ID = i - 1;
+			auto line = std::next(lines.begin(), ID);
+
+			Quest* foundQuest = nullptr;
+
+			for (auto quest : quests)
 			{
-				auto ID = i - 1;
-
-				bool found = false;
-				auto line = std::next(lines.begin(), ID);
-
 				UINT count = 0;
 				for (auto objective : quest->GetObjectives())
 				{
 					if (quest->GetName() + objective->Info() + std::to_string(count) == line->first)
 					{
-						found = true;
+						foundQuest = quest;
 						break;
 					}
 
 					count++;
 				}
 
-				if (quest->IsCompleted())
-					found = false;
+				if (foundQuest)
+					break;
+			}
 
-				if (!found)
-					lines.erase(line->first);
+			if (!foundQuest || (foundQuest && foundQuest->IsCompleted()))
+			{
+				Print(line->first, "REMOVED");
+				lines.erase(line->first);
 			}
 		}
-
-		auto pair = std::make_pair(name, objectives);
-
-		this->quests.emplace_back(pair);
 	}
 }
 
@@ -192,4 +200,9 @@ void InGameOverlay::UpdateHealth(UINT amount)
 void InGameOverlay::UpdateFPS(UINT FPS)
 {
 	UpdateText("FPS", "FPS: " + std::to_string(FPS));
+}
+
+void InGameOverlay::ShowInteract()
+{
+	GetText("Interact")->Show();
 }

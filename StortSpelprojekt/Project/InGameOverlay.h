@@ -27,6 +27,7 @@ public:
 	void UpdateArrowCounter(UINT amount);
 	void UpdateHealth(UINT amount);
 	void UpdateFPS(UINT FPS);
+	void ShowInteract();
 
 	// Inherited via Overlay
 	virtual void Render() override;

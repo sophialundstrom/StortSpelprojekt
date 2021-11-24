@@ -200,6 +200,7 @@
     <ClCompile Include="ParticleRenderer.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
+    <ClCompile Include="PauseOverlay.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="QuestLog.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Objective.h" />
     <ClInclude Include="Overlay.h" />
     <ClInclude Include="Pathfinding.h" />
+    <ClInclude Include="PauseOverlay.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
     <ClInclude Include="AnimatedModel.h" />
