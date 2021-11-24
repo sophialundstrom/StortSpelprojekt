@@ -74,14 +74,6 @@ void MainMenu::HoveringNewGame()
 	canvases["MAIN MENU"]->GetImage("NewGameLeaves")->Show();
 }
 
-
-
-void Hovering()
-{
-	
-	//Print("HOVERING");
-}
-
 MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(FORWARD, true),
 	particleRenderer(FORWARD),
@@ -161,8 +153,6 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 		auto image = howToPlayCanvas->GetImage("BackControls");
 		howToPlayCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "BackButtonControls", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { BacktoMenu(); }, [this] { HoveringBackControls(); });
 	}
-
-	
 
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 

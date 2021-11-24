@@ -25,7 +25,6 @@ private:
 	ModelRenderer modelRenderer;
 	ShadowRenderer shadowRenderer;
 	WaterRenderer waterRenderer;
-	std::shared_ptr<Building> building;
 
 	void Render();
 	void Initialize();

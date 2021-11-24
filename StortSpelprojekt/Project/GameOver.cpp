@@ -1,16 +1,6 @@
 #include "GameOver.h"
 
-void hovering()
-{
-	Print("Hovering");
-}
-
-void hovering2()
-{
-	Print("Quit");
-}
-void
-GameOver::Form()
+void GameOver::Form()
 {
 	ShellExecute(0, 0, L"https://docs.google.com/forms/d/1wSGU7CwBNTTCu50nsunQX2Q9DC06SEi5SAqbgJstgb0/viewform?edit_requested=true", 0, 0, SW_SHOW);
 }
@@ -134,6 +124,7 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 	}
 	{
 		gameOverCanvas->AddImage({ 25, clientHeight / 2.0f }, "MenuStick", "MenuStick.png", 0.8f, 1.0f, true, true);
+		//gameOverCanvas->AddImage({ clientWidth - 25.0f, clientHeight / 2.0f }, "MenuStick2", "MenuStick.png", -0.8f, 1.0f, true, true);
 		gameOverCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight / 7.0f }, "GameOver", "GameOver.png", 0.8f, 1.0f, true, true);
 	}
 	canvases["GAMEOVER"] = gameOverCanvas;

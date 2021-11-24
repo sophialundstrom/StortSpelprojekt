@@ -38,7 +38,7 @@ public:
 
 		//SWAP TO MAINMENU TO NOT SKIP IT
 		Window::DeactivateCursor();
-		state = new GameOver(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
+		state = new Win(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 	}
 
 	~Application()
