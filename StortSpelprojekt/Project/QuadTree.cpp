@@ -13,7 +13,7 @@ QuadTree::QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int 
 		{ bounds.width / 2.f, 4000.f, bounds.depth / 2.f }
 	);
 
-
+	
 	/*if (currentLevel == 0)
 		DivideQuadTree();*/
 
@@ -54,20 +54,42 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 	}
 }
 
-void QuadTree::CheckModelsWithinFustrum(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider)
+void QuadTree::CheckModelsWithinView(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, FrustrumCollider frustrumCollider)
 {
 	if (divided)
 	{
-		TopL->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
-		TopR->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
-		BotL->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
-		BotR->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
+		TopL->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+		TopR->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+		BotL->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+		BotR->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
 	}
 	else
 	{
 
 
 		if (quadTreeBoundsCollider.Intersects(frustrumCollider.bounds))
+		{
+			//std::cout << "Intersects " + nameTag << std::endl;
+			for (auto& [name, drawable] : collectedDrawables)
+				drawablesToBeRendered.emplace(name, drawable);
+		}
+	}
+}
+
+void QuadTree::CheckModelsWithinView(std::map<std::string, std::shared_ptr<Drawable>>& drawablesToBeRendered, OrthographicCollider orthographicCollider)
+{
+	if (divided)
+	{
+		TopL->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
+		TopR->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
+		BotL->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
+		BotR->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
+	}
+	else
+	{
+
+
+		if (quadTreeBoundsCollider.Intersects(orthographicCollider.bounds))
 		{
 			//std::cout << "Intersects " + nameTag << std::endl;
 			for (auto& [name, drawable] : collectedDrawables)
