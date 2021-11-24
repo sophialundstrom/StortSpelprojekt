@@ -690,30 +690,39 @@ APPSTATE Game::Run()
 		{
 			Audio::StopEngine();
 		}
+		bool x = false;
 		if (Event::KeyIsPressed(VK_LEFT))
 		{
-			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(-10.f * Time::GetDelta(), 0.f, 0.f));
+			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(-100.f * Time::GetDelta(), 0.f, 0.f));
+			x = true;
 		}
 		if (Event::KeyIsPressed(VK_RIGHT))
 		{
-			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(10.f * Time::GetDelta(), 0.f, 0.f));
+			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(100.f * Time::GetDelta(), 0.f, 0.f));
+			x = true;
 		}
 		if (Event::KeyIsPressed(VK_UP))
 		{
-			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(0.f, 0.f, 10.f * Time::GetDelta()));
+			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(0.f, 0.f, 100.f * Time::GetDelta()));
+			x = true;
 		}
 		if (Event::KeyIsPressed(VK_DOWN))
 		{
-			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(0.f, 0.f, -10.f * Time::GetDelta()));
+			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(0.f, 0.f, -100.f * Time::GetDelta()));
+			x = true;
 		}
 		if (Event::KeyIsPressed('V'))
 		{
 			biomes[3]->colliders[0]->SetScale(biomes[3]->colliders[0]->GetScale() * 10 * Time::GetDelta());
+			x = true;
 		}
 		if (Event::KeyIsPressed('B'))
 		{
 			biomes[3]->colliders[0]->SetScale(biomes[3]->colliders[0]->GetScale() * -10 * Time::GetDelta());
+			x = true;
 		}
+		if (x)
+			biomes[3]->colliders[0]->Update();
 		/*if (Event::KeyIsPressed('U'))
 		{
 			QuestLog::Inst().Complete(0);

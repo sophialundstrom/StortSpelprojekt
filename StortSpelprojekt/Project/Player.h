@@ -77,7 +77,7 @@ class Player : public AnimatedModel
 private:
 	Stats stats;
 
-	Camera* sceneCamera;
+
 
 	std::shared_ptr<Canvas> ingameCanvas;
 
@@ -149,6 +149,7 @@ private:
 	}
 
 public:
+	Camera* sceneCamera;
 	BIOME currentBiome;
 	BIOME previousBiome;
 	bool test = false;
