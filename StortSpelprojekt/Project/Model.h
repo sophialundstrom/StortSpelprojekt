@@ -60,6 +60,11 @@ public:
 		}
 	}
 
+	Vector3* GetMeshBoundingBoxValues()
+	{
+		return Resources::Inst().GetMinMaxBoundsFromID(mesh.bufferID);
+	}
+
 	// Inherited via Drawable
 	virtual void Update() override
 	{

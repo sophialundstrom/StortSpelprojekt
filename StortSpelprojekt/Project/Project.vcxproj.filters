@@ -349,6 +349,9 @@
       <Filter>ARCUS\Audio</Filter>
     </ClCompile>
     <ClCompile Include="ArrowHandler.cpp" />
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>ARCUS</Filter>
+    </ClCompile>
     <ClCompile Include="State.cpp">
       <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClCompile>
@@ -379,6 +382,9 @@
       <Filter>ARCUS\Scene\Game</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
+      <Filter>ARCUS\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
       <Filter>ARCUS\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Event.h">
@@ -673,6 +679,9 @@
       <Filter>ARCUS\Audio</Filter>
     </ClInclude>
     <ClInclude Include="ArrowHandler.h" />
+    <ClInclude Include="QuadTree.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClInclude>
