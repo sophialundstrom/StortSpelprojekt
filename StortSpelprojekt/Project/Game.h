@@ -23,6 +23,7 @@
 #include "NPCHostile.h"
 #include "Loot.h"
 #include "MainMenu.h"
+#include "QuadTree.h"
 
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
@@ -32,7 +33,20 @@ class Game : public ApplicationState
 private:
     GameState state = GameState::ACTIVE;
 
-    
+    //QuadTreeStuff stuff
+    QuadTree* quadTree;
+    FrustrumCollider frustrumCollider;
+    std::map<std::string, std::shared_ptr<Drawable>> drawablesToBeRendered;
+    std::map<std::string, std::shared_ptr<Drawable>> noCullingDrawables;
+    /*
+    The following 3 variables: useQuadTreeCulling, updateFrustrum and cullingProfile
+    are intended only be used for debugging. Relecvant code that they are used for are currently uncommented
+    in a attempt to get rid of the gamespeed x2 glitch.
+    */
+    bool useQuadTreeCulling = true;
+    bool updateFrustrum = true;
+    int cullingProfile = 0;
+
     bool hovering = false;
     bool done = false;
     //bool paused = false;
@@ -45,8 +59,11 @@ private:
 
     AnimatedModelRenderer animatedModelRenderer;
     ParticleRenderer particleRenderer;
+    
     ModelRenderer modelRenderer;
+    ModelRenderer staticMeshModelRender;
     ShadowRenderer shadowRenderer;
+
     TerrainRenderer terrainRenderer;
     ColliderRenderer colliderRenderer;
     SkeletonRenderer skeletonRenderer;
@@ -124,6 +141,7 @@ private:
     void HandleBiomes();
 
     void SetupAudio();
+    void UpdateQuadTree();
 
     void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
     void UpdateInventoryUI();

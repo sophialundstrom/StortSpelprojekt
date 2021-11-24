@@ -104,6 +104,8 @@ void Loot::Update(std::shared_ptr<Player> player)
 					player->numArrows += numArrows;
 				
 
+
+
 				std::cout << "Destroyed by collision\n";
 				
 				destroy = true;

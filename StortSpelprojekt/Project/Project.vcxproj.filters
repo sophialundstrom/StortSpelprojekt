@@ -346,6 +346,9 @@
       <Filter>ARCUS\Audio</Filter>
     </ClCompile>
     <ClCompile Include="ArrowHandler.cpp" />
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>ARCUS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -667,10 +670,7 @@
       <Filter>ARCUS\Audio</Filter>
     </ClInclude>
     <ClInclude Include="ArrowHandler.h" />
-    <ClInclude Include="Biome.h">
-      <Filter>ARCUS</Filter>
-    </ClInclude>
-    <ClInclude Include="BiomeEnum.h">
+    <ClInclude Include="QuadTree.h">
       <Filter>ARCUS</Filter>
     </ClInclude>
   </ItemGroup>

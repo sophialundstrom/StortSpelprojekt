@@ -80,6 +80,7 @@ float Get2DAngle(Vector2 a, Vector2 b)
 
 void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
 {
+	//std::cout << position.x << "		" << position.y << "		" << position.z << std::endl;
 	lastPosition = position;
 
 	CalcHeight(heightMap);
@@ -181,8 +182,9 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		if (airTime >= 1.5f)
 			PlayAnimation("Falling", true);
 
-		else
-			std::cout << "Startup" << std::endl;
+
+		/*else
+			std::cout << "Startup" << std::endl;*/
 
 		newPlayerPos.y = -powf(airTime, 2) + jumpHeight * airTime + preJumpGroundLevel;
 	}
@@ -235,7 +237,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		//else if (jumping)
 			 // ADD IN AIR JUMP ANIMATION
 	}
-	//std::cout << "NUM ARROWS: " << numArrows << std::endl;
+
 	if(Event::RightIsClicked())
 	{
 		if (!isAiming)

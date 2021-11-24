@@ -192,6 +192,7 @@
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SkeletonRenderer.cpp" />
@@ -238,6 +239,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Pathfinding.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
     <ClInclude Include="AnimatedModel.h" />
