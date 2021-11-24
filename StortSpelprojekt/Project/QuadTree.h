@@ -51,6 +51,7 @@ struct OrthographicCollider
         float pitch = atan2(greenOpposite, greenAdjacent);
         */
         
+        float downSacle = 0.01;
         float lightRange = dirLight.GetRange();
         Vector3 direction = dirLight.data.direction;
         Vector3 lightPos = dirLight.GetRepresentativePosition();
@@ -58,7 +59,7 @@ struct OrthographicCollider
         float yaw = atan2f(direction.x, direction.z);
 
         Quaternion camDirQ = Quaternion::CreateFromYawPitchRoll(yaw, pitch, 0);
-        bounds.Extents = { lightRange, lightRange, lightRange * 2 };
+        bounds.Extents = { lightRange * downSacle, lightRange * downSacle, lightRange * 2 };
         bounds.Orientation = camDirQ;
         bounds.Center = lightPos + (direction * (-lightRange * 0.5f));
         
