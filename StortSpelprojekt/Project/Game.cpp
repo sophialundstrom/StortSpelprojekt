@@ -121,8 +121,10 @@ void Game::Initialize()
 			quadTree->InsertModel(drawable);
 	}
 	
-	quadTree->GetAllDrawables(noCullingDrawables);
-	quadTree->PrintTree();
+	//For Future work do not remove atm:
+	/*quadTree->GetAllDrawables(noCullingDrawables);
+	//quadTree->OptimizeBounds();
+	quadTree->PrintTree();*/
 
 	//SAVE STATIONS
 	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());

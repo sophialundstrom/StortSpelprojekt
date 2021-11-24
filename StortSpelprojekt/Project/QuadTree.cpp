@@ -13,9 +13,9 @@ QuadTree::QuadTree(QuadTreeBounds newBounds, int maxCapacity, int maxlevel, int 
 		{ bounds.width / 2.f, 4000.f, bounds.depth / 2.f }
 	);
 
-	
-	/*if (currentLevel == 0)
-		DivideQuadTree();*/
+	lowestY = D3D11_FLOAT32_MAX;
+	highestY = -D3D11_FLOAT32_MAX;
+
 
 }
 
@@ -47,7 +47,15 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 				InsertModelInChild(drawable);
 			}
 			else
+			{
+				if (highestY < (drawableBounds.Center.y + (drawableBounds.Extents.y * 0.5f)))
+					highestY = (drawableBounds.Center.y + (drawableBounds.Extents.y * 0.5f));
+
+				if (lowestY > (drawableBounds.Center.y - (drawableBounds.Extents.y * 0.5f)))
+					highestY = (drawableBounds.Center.y - (drawableBounds.Extents.y * 0.5f));
+
 				collectedDrawables.emplace(drawable->GetName(), drawable);
+			}
 		}
 		else
 			InsertModelInChild(drawable);
@@ -150,6 +158,26 @@ void QuadTree::PrintTree()
 		std::cout << "MaxEntityCount: " << maxCap << std::endl;
 	}
 
+}
+
+void QuadTree::OptimizeBounds()
+{
+	if (divided)
+	{
+		TopL->PrintTree();
+		TopR->PrintTree();
+		BotL->PrintTree();
+		BotR->PrintTree();
+	}
+	else
+	{
+		float extentY = highestY - lowestY;
+		float centerY = lowestY + (extentY / 2.f);
+		Vector3 newBounds = { quadTreeBoundsCollider.Extents.x, extentY, quadTreeBoundsCollider.Extents.z };
+		Vector3 newCenterPos = { quadTreeBoundsCollider.Center.x, centerY, quadTreeBoundsCollider.Center.z };
+		quadTreeBoundsCollider.Extents = newBounds;
+		quadTreeBoundsCollider.Center = newCenterPos;
+	}
 }
 
 void QuadTree::DivideQuadTree()
