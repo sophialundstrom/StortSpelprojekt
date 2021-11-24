@@ -577,21 +577,21 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	auto desert = std::make_shared<Biome>(3U, BIOME::DESERT);
 	desert->AddCollider(Vector3(-46.f, 20.f, -578.f), 50.f);
 	desert->AddCollider(Vector3(0.6f, 24.f, -542.f), 50.f);
-	desert->Bind(colliderRenderer);
+	//desert->Bind(colliderRenderer);
 	biomes.emplace_back(desert);
 
 	auto woodlands = std::make_shared<Biome>(4U, BIOME::WOODLANDS);
 	woodlands->AddCollider(Vector3(3.4f, 20.f, -591.f), 50.f);
-	woodlands->Bind(colliderRenderer);
+	//woodlands->Bind(colliderRenderer);
 	biomes.emplace_back(woodlands);
 
 	auto mountain = std::make_shared<Biome>(13U, BIOME::MOUNTAIN);
 	mountain->AddCollider(Vector3(-130.f, 16.f, -690.f), 50.f);
-	mountain->Bind(colliderRenderer);
+	//mountain->Bind(colliderRenderer);
 	biomes.emplace_back(mountain);
 
 	auto ocean = std::make_shared<Biome>(14U, BIOME::OCEAN);
-	ocean->AddCollider(Vector3(-48.f, 18.f, -748.f), 50.f);
+	ocean->AddCollider(Vector3(-497.f, 18.f, -635.f), 100.f);
 	ocean->Bind(colliderRenderer);
 	biomes.emplace_back(ocean);
 
@@ -689,6 +689,30 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed(79))
 		{
 			Audio::StopEngine();
+		}
+		if (Event::KeyIsPressed(VK_LEFT))
+		{
+			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(-10.f * Time::GetDelta(), 0.f, 0.f));
+		}
+		if (Event::KeyIsPressed(VK_RIGHT))
+		{
+			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(10.f * Time::GetDelta(), 0.f, 0.f));
+		}
+		if (Event::KeyIsPressed(VK_UP))
+		{
+			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(0.f, 0.f, 10.f * Time::GetDelta()));
+		}
+		if (Event::KeyIsPressed(VK_DOWN))
+		{
+			biomes[3]->colliders[0]->SetPosition(biomes[3]->colliders[0]->GetPosition() + Vector3(0.f, 0.f, -10.f * Time::GetDelta()));
+		}
+		if (Event::KeyIsPressed('V'))
+		{
+			biomes[3]->colliders[0]->SetScale(biomes[3]->colliders[0]->GetScale() * 10 * Time::GetDelta());
+		}
+		if (Event::KeyIsPressed('B'))
+		{
+			biomes[3]->colliders[0]->SetScale(biomes[3]->colliders[0]->GetScale() * -10 * Time::GetDelta());
 		}
 		/*if (Event::KeyIsPressed('U'))
 		{
