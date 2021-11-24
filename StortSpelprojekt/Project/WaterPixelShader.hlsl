@@ -83,7 +83,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     finalColor = color * directionalLight.lightColor;
     finalColor += saturate(dot(directionalLight.lightDirection, input.normal) * directionalLight.lightColor * color);
 
-    finalColor += ((input.worldPosition.y + 0.5f) * (noiseTex * 1.5f) * 0.2f);
+    finalColor += ((input.worldPosition.y + 0.5f) /** (noiseTex)*/ * 0.2f);
 
     return float4((lerp((input.worldPosition, 1.0f) * saturate(finalColor), fogColor, fogFactor)), color.a);
 }

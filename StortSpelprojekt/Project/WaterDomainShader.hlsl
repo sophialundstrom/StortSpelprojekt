@@ -75,8 +75,10 @@ DS_OUTPUT main(
     output.position.z += direction.y * (amplitude * cos(f));
 
     //RECALCULATE NORMAL AND TANGENT
-    output.tangent = normalize(float3(1 - k * amplitude * sin(f), k * amplitude * cos(f), 0));
-    output.normal = float3(-output.tangent.y, output.tangent.x, 0);
+    output.tangent = float3(1 - direction.x * direction.x * (amplitude * sin(f)), direction.x * (amplitude * cos(f)), -direction.x * direction.y * (amplitude * sin(f)));
+    //Skulle kunna ta med binormal härifrån och slippa räkna ut den i pixelshader
+    float3 binormal = float3(-direction.x * direction.y * (amplitude * sin(f)), direction.y * (amplitude * cos(f)), 1 - direction.y * direction.y * (amplitude * sin(f)));
+    output.normal = normalize(float3(cross(binormal, output.tangent)));
 
     output.worldPosition = output.position.xyz;
 
