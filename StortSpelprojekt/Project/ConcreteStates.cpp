@@ -49,7 +49,7 @@ void ShootingState::Update(HostileNPC& hostile)
     // hostile.state = &NPCState::shooting;
          // This stops multiple instances of this class from shooting at once. All instances of the same class has the same static variable... 
      // static float lastClick = 0;
-
+    SwapCombatStyle(CombatStyle::consistantDelay);
     Vector3 aimDir = hostile.GetPlayer()->GetPosition() + Vector3(0.f, 3.5f, 0.f) - hostile.GetPosition();
 
     if (aimDir.Length() <= enemyShootDetectionRadius)

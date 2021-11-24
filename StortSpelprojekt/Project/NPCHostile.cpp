@@ -7,7 +7,7 @@ HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, 
 {
     this->player = player;
    // this->currentState = &NPCState::idling;
-    currentState = &IdlingState::GetInstance();
+    currentState = &ShootingState::GetInstance();
    // SetState(IdlingState::)
     mRend = &mRenderer;
     cRend = &cRenderer;

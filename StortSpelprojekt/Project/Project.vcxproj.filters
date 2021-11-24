@@ -348,7 +348,9 @@
     <ClCompile Include="SoundEffect.cpp">
       <Filter>ARCUS\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="ArrowHandler.cpp" />
+    <ClCompile Include="ArrowHandler.cpp">
+      <Filter>ARCUS</Filter>
+    </ClCompile>
     <ClCompile Include="QuadTree.cpp">
       <Filter>ARCUS</Filter>
     </ClCompile>
@@ -678,7 +680,9 @@
     <ClInclude Include="SoundEffect.h">
       <Filter>ARCUS\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowHandler.h" />
+    <ClInclude Include="ArrowHandler.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
     <ClInclude Include="QuadTree.h">
       <Filter>ARCUS</Filter>
     </ClInclude>
