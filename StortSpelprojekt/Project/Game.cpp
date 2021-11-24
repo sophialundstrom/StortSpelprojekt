@@ -30,6 +30,8 @@ void Game::Update()
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
+	UpdateQuadTree(); //Something in here makes the game run twice as fast
+
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
 	Event::ClearRawDelta();
@@ -46,6 +48,8 @@ void Game::Render()
 	particleRenderer.Render();
 
 	modelRenderer.Render();
+
+	staticMeshModelRender.Render();
 
 	animatedModelRenderer.Render();
 
@@ -98,11 +102,27 @@ void Game::MainMenu()
 
 void Game::Initialize()
 {
+	QuadTreeBounds qtBounds(-1000.f, -1000.f, 2000.f, 2000.f);
+	quadTree = new QuadTree(qtBounds, 4, 5, 0, "Master");
+	frustrumCollider.SetupFrustrum(*scene.GetCamera());
+
 	//LOAD SCENE
 	FBXLoader meshLoader("Models");
-
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
+	
+
+	
+	//Transfer drawables to quadTree
+	for (auto& [name, drawable] : scene.GetDrawables())
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if(model)
+			quadTree->InsertModel(drawable);
+	}
+	
+	quadTree->GetAllDrawables(noCullingDrawables);
+	quadTree->PrintTree();
 
 	//SAVE STATIONS
 	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
@@ -117,8 +137,10 @@ void Game::Initialize()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
-			modelRenderer.Bind(model);
-			shadowRenderer.Bind(model);
+
+			//modelRenderer.Bind(model);
+			//shadowRenderer.Bind(model);
+
 			continue;
 		}
 			
@@ -236,7 +258,7 @@ void Game::UpdateAndHandleLoot()
 			SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
 			SoundEffect::SetVolume(0.1, 2);
 			SoundEffect::StartAudio(2);
-			std::cout << "Loot destoyed\n";
+			//std::cout << "Loot destoyed\n";
 		}
 	}
 }
@@ -450,17 +472,20 @@ void Game::UpdateInventoryUI()
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:modelRenderer(FORWARD, true),
+	staticMeshModelRender(FORWARD, true),
 	particleRenderer(FORWARD),
 	terrainRenderer(FORWARD),
 	colliderRenderer(FORWARD),
 	animatedModelRenderer(FORWARD, true),
 	water(5000), terrain(2)
 {
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
+
 	//LOAD SCENE
 	Initialize();
 
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
+
 
 	//INGAME CANVAS
 	auto ingameCanvas = std::make_shared<Canvas>();
@@ -556,10 +581,12 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -91, 20, -593 });
 	AddItem(WOOD, { -85, 20, -608 });
 
+
 	AddHostileNPC("BarbarianBow", { Vector3(5.686, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { Vector3(0, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(15,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
+
 
 	//FRIENDLY NPC
 	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70.0f, 20.0f, -596.0f });
@@ -578,11 +605,15 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//Audio::SetVolume(0.1, 0);
 	Audio::StartAudio(0);
 	
+
+	
+
 	(void)Run();
 }
 
 Game::~Game()
 {
+	delete quadTree;
 	scene.Clear();
 	Resources::Inst().Clear();
 }
@@ -660,6 +691,7 @@ APPSTATE Game::Run()
 		{
 			Audio::StopEngine();
 		}
+
 		/*if (Event::KeyIsPressed('U'))
 		{
 			QuestLog::Inst().Complete(0);
@@ -680,7 +712,7 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}*/
 
-	/*	if (Event::KeyIsPressed('I'))
+		/*	if (Event::KeyIsPressed('I'))
 		{
 			Print("-Added Items-");
 			player->Inventory().AddItem(RESOURCE::WOOD);
@@ -699,6 +731,7 @@ APPSTATE Game::Run()
 			building->Upgrade();
 			lastClick = Time::Get();
 		}*/
+
 	}
 
 	UpdateInventoryUI();
@@ -797,4 +830,106 @@ void Game::CheckNearbyEnemies()
 				break;
 		}
 	}
+}
+
+void Game::UpdateQuadTree()
+{
+	drawablesToBeRendered.clear();
+	staticMeshModelRender.Clear();
+	shadowRenderer.ClearStatic();
+
+	frustrumCollider.Update(scene.GetCamera());
+	quadTree->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
+	//frustrumCollider.Update(scene.GetDirectionalLight());
+	//quadTree->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
+
+	for (auto& [name, drawable] : drawablesToBeRendered)
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if (model)
+		{
+			staticMeshModelRender.Bind(drawable);
+			shadowRenderer.BindStatic(drawable);
+		}
+	}
+
+	//scene.GetDirectionalLight().GetMatrix()
+	
+	//DebugVariant
+	/*
+	int click;
+	static float lastClick = 0;
+	if (Time::Get() - lastClick > 0.5f)
+	{
+		if (Event::KeyIsPressed('K'))
+		{
+			lastClick = Time::Get();
+			cullingProfile++;
+			cullingProfile = cullingProfile % 3;
+
+			switch (cullingProfile)
+			{
+			case 0:
+				std::cout << "Use culling\nFrustrum update \n";
+				useQuadTreeCulling = true;
+				updateFrustrum = true;
+				break;
+
+			case 1:
+				std::cout << "Use culling\nNo frustrum update \n";
+				useQuadTreeCulling = true;
+				updateFrustrum = false;
+				break;
+
+			case 2:
+				std::cout << "No culling\n";
+				useQuadTreeCulling = false;
+				updateFrustrum = false;
+				break;
+			default:
+				break;
+			}
+			std::cout << "Culling PROFILE: " << cullingProfile << std::endl;
+		}
+
+		if (Event::KeyIsPressed('L'))
+		{
+			lastClick = Time::Get();
+			std::cout << drawablesToBeRendered.size() << std::endl;
+		}
+
+	}
+
+	if(updateFrustrum)
+		frustrumCollider.Update(scene.GetCamera());
+
+	drawablesToBeRendered.clear();
+	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+
+	if (useQuadTreeCulling)
+	{
+		staticMeshModelRender.Clear();
+		for (auto& [name, drawable] : drawablesToBeRendered)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+				staticMeshModelRender.Bind(drawable);
+		}
+
+	}
+	else
+	{
+		staticMeshModelRender.Clear();
+		for (auto& [name, drawable] : noCullingDrawables)
+		{
+			//std::cout << noCullingDrawables.size() << std::endl;
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+				staticMeshModelRender.Bind(drawable);
+		}
+
+	}
+	*/
+
+
 }
