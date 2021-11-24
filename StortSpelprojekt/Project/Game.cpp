@@ -838,7 +838,7 @@ void Game::UpdateQuadTree()
 	staticMeshModelRender.Clear();
 	shadowRenderer.ClearStatic();
 
-	frustrumCollider.Update(scene.GetCamera());
+	/*frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
@@ -848,7 +848,7 @@ void Game::UpdateQuadTree()
 		{
 			staticMeshModelRender.Bind(drawable);
 		}
-	}
+	}*/
 	//std::cout << "Meshes drawn " << drawablesToBeRendered.size() << std::endl;
 
 	orthographicCollider.Update(scene.GetDirectionalLight());
@@ -859,10 +859,12 @@ void Game::UpdateQuadTree()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
+			staticMeshModelRender.Bind(drawable);
 			shadowRenderer.BindStatic(drawable);
 		}
 	}
-	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
+	std::cout << "DrawCalls " << drawablesToBeRendered.size() << std::endl << std::endl;
+	
 
 	
 	//DebugVariant

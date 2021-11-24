@@ -51,18 +51,17 @@ struct OrthographicCollider
         float pitch = atan2(greenOpposite, greenAdjacent);
         */
         
-        float lightRange = 300;
+        float lightRange = dirLight.GetRange();
         Vector3 direction = dirLight.data.direction;
+        Vector3 lightPos = dirLight.GetRepresentativePosition();
         float pitch = asinf(direction.y);
         float yaw = atan2f(direction.x, direction.z);
 
         Quaternion camDirQ = Quaternion::CreateFromYawPitchRoll(yaw, pitch, 0);
-        std::cout << dirLight.GetRepresentativePosition().z << std::endl;
-        bounds = DirectX::BoundingOrientedBox(
-            { dirLight.GetRepresentativePosition().x, dirLight.GetRepresentativePosition().y, dirLight.GetRepresentativePosition().z }, 
-            {40, 40, lightRange },
-            camDirQ);
-        bounds.Center = (bounds.Center + (direction * (lightRange * 0.5f)));
+        bounds.Extents = { lightRange, lightRange, lightRange * 2 };
+        bounds.Orientation = camDirQ;
+        bounds.Center = lightPos + (direction * (-lightRange * 0.5f));
+        
         
     }
 };
