@@ -653,11 +653,13 @@ void Game::SetupAudio()
 	Audio::AddAudio(L"Audio/Welcome.wav", 10, true);					// ????
 	Audio::AddAudio(L"Audio/PickupPop.wav", 11);						// Collecting Pickup Sound Effect
 	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 12, true);	// :)
-	Audio::AddAudio(L"Audio/Menu.wav", 13, true);						// Mountain Music
+	Audio::AddAudio(L"Audio/EpicHeart.wav", 13, true);						// Mountain Music
 	Audio::AddAudio(L"Audio/SandyBeach.wav", 14, true);					// Ocean / Beach Music
+	Audio::AddAudio(L"Audio/Camelot.wav", 15, true);					// Combat Version 3 Music
 
-	Audio::SetVolume(0.5, 0);
-	Audio::StartAudio(0);
+	Audio::SetVolume(0.5, slot);
+	Audio::StartAudio(slot);
+	lastAudioSlot = slot;
 }
 
 APPSTATE Game::Run()
@@ -710,12 +712,10 @@ APPSTATE Game::Run()
 
 		if (Event::KeyIsPressed('V'))
 		{
-			lastClick = Time::Get();
+			PrintNumber(slot, "SLOT: ");
+			PrintNumber(lastAudioSlot, "LAST SLOT: ");
 		}
-		if (Event::KeyIsPressed(79))
-		{
-			Audio::StopEngine();
-		}
+	
 		/*if (Event::KeyIsPressed('U'))
 		{
 			QuestLog::Inst().Complete(0);
@@ -812,7 +812,6 @@ void Game::HandleBiomes()
 {
 
 	bool hit = false;
-	UINT slot = 100;
 	BIOME type = BIOME::DEFAULT;
 	for (auto& biome : biomes)
 	{
@@ -836,33 +835,40 @@ void Game::HandleBiomes()
 		{
 		case BIOME::DESERT:
 			PrintS("DESERT");
-			Audio::StopAudio(0);
-			Audio::StopAudio(2);
-			Audio::StopAudio(4);
-			Audio::StopAudio(1);
-			Audio::StopAudio(13);
-			Audio::StopAudio(14);
+			//Audio::StopAudio(0);
+			//Audio::StopAudio(2);
+			//Audio::StopAudio(4);
+			//Audio::StopAudio(1);
+			//Audio::StopAudio(13);
+			//Audio::StopAudio(14);
+			Audio::StopAudio(lastAudioSlot);
 			Audio::StartAudio(slot);
+			lastAudioSlot = slot;
 			break;
 		case BIOME::OCEAN:
 			PrintS("OCEAN");
-			Audio::StopAudio(3);
+			/*Audio::StopAudio(3);
 			Audio::StopAudio(0);
 			Audio::StopAudio(2);
 			Audio::StopAudio(1);
 			Audio::StopAudio(4);
-			Audio::StopAudio(13);
+			Audio::StopAudio(13);*/
+			Audio::StopAudio(lastAudioSlot);
 			Audio::StartAudio(slot);
+			lastAudioSlot = slot;
 			break;
 		case BIOME::DEFAULT:
 			PrintS("DEFAULT");
-			Audio::StopAudio(1);
-			Audio::StopAudio(2);
-			Audio::StopAudio(3);
-			Audio::StopAudio(4);
-			Audio::StopAudio(13);
-			Audio::StopAudio(14);
-			Audio::StartAudio(0);
+			//Audio::StopAudio(1);
+			//Audio::StopAudio(2);
+			//Audio::StopAudio(3);
+			//Audio::StopAudio(4);
+			//Audio::StopAudio(13);
+			//Audio::StopAudio(14);
+			Audio::StopAudio(lastAudioSlot);
+			slot = 0;
+			Audio::StartAudio(slot);
+			lastAudioSlot = slot;
 			break;
 		}
 	}
@@ -873,6 +879,7 @@ void Game::HandleBiomes()
 void Game::CheckNearbyEnemies()
 {
 	short int numInCombat = 0;
+	int numDead = 0;
 	for (int i = 0; i < hostiles.size(); i++)
 	{
 		float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
@@ -886,7 +893,7 @@ void Game::CheckNearbyEnemies()
 			if (!arrow->canCollide)
 				continue;
 
-			bool isDead = false;
+			//bool isDead = false;
 			bool hit = player->GetArrowHandler().CheckCollision(arrow, hostiles[i]->GetCollider(), true);
 
 			if (hit)
@@ -902,15 +909,17 @@ void Game::CheckNearbyEnemies()
 					modelRenderer.Unbind(hostiles[i]);
 					scene.DeleteDrawable(hostiles[i]->GetName());
 					hostiles[i] = hostiles[hostiles.size() - 1];
-					hostiles.resize(hostiles.size() - 1);
-					isDead = true;
+					numDead++;
+					distanceToHostile = 100000.f;
+					//isDead = true;
+					break;
 				}
 			}
-			if (isDead)
-			{
-				distanceToHostile = 100000.f;
-				break;
-			}
+			//if (isDead)
+			//{
+			//	distanceToHostile = 100000.f;
+			//	break;
+			//}
 
 		}
 		if (distanceToHostile < 70.f) // Should be compared to if the hostile "sees" the player instead of a hardcoded value.
@@ -918,36 +927,56 @@ void Game::CheckNearbyEnemies()
 			numInCombat++;
 		}
 	}
-	if (!player->inCombat && numInCombat > 0)
+	hostiles.resize(hostiles.size() - numDead);
+
+	if (!player->inCombat && numInCombat > 0) // combat music isnt played if leaving and entering combat
 	{
 		player->inCombat = true;
-		short int rand = Random::Integer(0, 1);
-		if (rand == 0)
+		short int rand = Random::Integer(0, 2);
+		switch (rand)
 		{
-			Audio::StopAudio(0);
-			Audio::StopAudio(2);
-			Audio::StopAudio(3);
-			Audio::StopAudio(4);
+		case 0:
+			//Audio::StopAudio(15);
+			//Audio::StopAudio(2);
+			Audio::StopAudio(lastAudioSlot);
 			Audio::StartAudio(1);
-		}
-		else
-		{
-			Audio::StopAudio(0);
-			Audio::StopAudio(1);
-			Audio::StopAudio(3);
-			Audio::StopAudio(4);
+			lastAudioSlot = 1;
+			break;
+
+		case 1:
+			//Audio::StopAudio(15);
+			//Audio::StopAudio(1);
+			Audio::StopAudio(lastAudioSlot);
 			Audio::StartAudio(2);
+			lastAudioSlot = 2;
+			break;
+
+		case 2:
+			//Audio::StopAudio(1);
+			//Audio::StopAudio(2);
+			Audio::StopAudio(lastAudioSlot);
+			Audio::StartAudio(15);
+			lastAudioSlot = 15;
+			break;
 		}
 		
+		
+		//Audio::StopAudio(3);
+		//Audio::StopAudio(0);
+		//Audio::StopAudio(14);
+		//Audio::StopAudio(13);
 	}
 	else if (player->inCombat && numInCombat == 0)
 	{
 		player->inCombat = false;
-		Audio::StopAudio(1);
-		Audio::StopAudio(2);
-		Audio::StopAudio(3);
-		Audio::StopAudio(4);
-		Audio::StartAudio(0);
+		Audio::StopAudio(lastAudioSlot);
+		//Audio::StopAudio(2);
+		//Audio::StopAudio(3);
+		//Audio::StopAudio(15);
+		//Audio::StopAudio(13);
+		//Audio::StopAudio(14);
+		Audio::StartAudio(slot);
+		lastAudioSlot = slot;
 	}
 }
 
