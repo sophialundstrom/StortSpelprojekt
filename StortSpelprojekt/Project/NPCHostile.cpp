@@ -73,6 +73,7 @@ void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, c
         float additionalRadians = 0;
 
         Vector3 yRadiantVecReference;
+
         float aimDirXIgnoranceLevel = 0.2f;
 
         if (aimDir.x > -aimDirXIgnoranceLevel && aimDir.x < aimDirXIgnoranceLevel)

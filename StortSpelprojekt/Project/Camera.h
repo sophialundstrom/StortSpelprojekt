@@ -67,6 +67,11 @@ public:
 			this->position += moveSpeed * direction *  Time::GetDelta();
 	}
 
+	float GetNearZ() {return nearZ;}
+	float GetFarZ() { return farZ; }
+	float GetJaw() { return yaw; }
+	float GetPitch() { return pitch; }
+
 	void SetPosition(Vector3 newPosition) { position = newPosition; };
 	Vector3 GetDirection() const { return this->direction; }
 	Vector3 GetPosition() const { return this->position; }
