@@ -21,29 +21,6 @@ void QuestLog::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Lo
 
 		quest->Update(player, camps, targets);
 	}
-
-	if (Event::KeyIsPressed('O'))
-	{
-		Print("\n>>>>>>>>>>>>>>> CURRENT QUESTS <<<<<<<<<<<<<<");
-
-		for (auto quest : activeQuests)
-		{
-			if (!quest->Unlocked())
-				continue;
-
-			Print(quest->GetName(), "==================");
-			if (quest->IsCompleted())
-			{
-				Print("Return to " + quest->GetQuestHolder() + ".");
-				continue;
-			}
-
-			for (auto objective : quest->GetObjectives())
-				Print(objective->Info());
-		}
-	}
-
-	//UPDATE UI
 }
 
 void QuestLog::Save(const std::string& fileName)

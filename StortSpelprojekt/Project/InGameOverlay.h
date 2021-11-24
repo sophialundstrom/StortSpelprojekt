@@ -7,6 +7,15 @@ class InGameOverlay : public Overlay
 {
 private:
 	std::vector<std::pair<Text*, std::vector<Text*>>> quests;
+	
+	struct Line
+	{
+		D2D_POINT_2F p1, p2;
+		float width;
+		float progress;
+	};
+	std::map<std::string, Line> lines;
+	ID2D1SolidColorBrush* lineBrush;
 
 	void ClearQuests();
 public:

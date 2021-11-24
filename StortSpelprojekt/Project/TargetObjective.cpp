@@ -6,7 +6,7 @@ TargetObjective::TargetObjective(UINT targetID)
 void TargetObjective::Update(std::shared_ptr<Target> target)
 {
 	if (target->GotHit())
-		completed = true;
+		Complete();
 }
 
 std::string TargetObjective::Info()

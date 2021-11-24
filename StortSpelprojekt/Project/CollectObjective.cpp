@@ -8,7 +8,7 @@ void CollectObjective::Update(Inventory& inventory)
     numCollected = inventory.NumOf(itemType);
 
     if (numCollected >= numToCollect)
-        completed = true;
+        Complete();
 }
 
 std::string CollectObjective::Info()

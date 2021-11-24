@@ -6,7 +6,7 @@ LocationObjective::LocationObjective(const Vector3& location, float radius)
 void LocationObjective::Update(const Vector3& playerPosition)
 {
 	if ((playerPosition - location).Length() < radius)
-		completed = true;
+		Complete();
 }
 
 std::string LocationObjective::Info()

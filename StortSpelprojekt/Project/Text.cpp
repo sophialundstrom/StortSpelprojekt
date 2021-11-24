@@ -4,6 +4,8 @@
 void Text::SetWidth()
 {
 	width = format->GetFontSize() * string.length();
+	if (format->GetTextAlignment() == DWRITE_TEXT_ALIGNMENT_LEADING)
+		width -= width / 4.0f;
 }
 
 FLOAT Text::ConvertPointSizeToDIP(FLOAT points)
@@ -49,7 +51,7 @@ void Text::CalculateOutline()
 		Print("FAILED TO OPEN GEOMETRY SINK", "TEXT");
 		return;
 	}
-
+	
 	hr = fontFace->GetGlyphRunOutline(ConvertPointSizeToDIP(format->GetFontSize()), indices, NULL, NULL, stringLength, FALSE, FALSE, outline);
 	if FAILED(hr)
 	{
@@ -160,20 +162,18 @@ void Text::SetString(const std::string newString, bool bound)
 
 void Text::Draw(bool allCharacters, UINT numCharacters)
 {
+	UI::Inst().GetRenderTarget()->DrawRectangle(bounds, brush);
+
 	if (allCharacters)
 	{
 		if (format->GetTextAlignment() == DWRITE_TEXT_ALIGNMENT_LEADING)
 			UI::Inst().GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Translation(GetLeftSidePosition().x, GetLeftSidePosition().y));
 		else
-			//UI::Inst().GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Translation(GetLeftSidePosition().x, GetLeftSidePosition().y));
 			UI::Inst().GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Translation(GetPosition().x - (width / 4.0f), GetPosition().y + height / 2.0f));
 
 		UI::Inst().GetRenderTarget()->DrawGeometry(geometry, backgroundBrush, 2.0f);
 		UI::Inst().GetRenderTarget()->FillGeometry(geometry, brush);
 		UI::Inst().GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-		//UI::Inst().GetRenderTarget()->DrawTextW(string.c_str(), (UINT32)string.size(), backgroundFormat, bounds, backgroundBrush);
-		//UI::Inst().GetRenderTarget()->DrawTextW(string.c_str(), (UINT32)string.size(), format, bounds, brush);
-
 	}
 
 	else

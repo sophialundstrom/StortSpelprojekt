@@ -6,6 +6,7 @@
 #include "TargetObjective.h"
 #include "TalkObjective.h"
 #include "LocationObjective.h"
+#include "InGameOverlay.h"
 
 Quest::Quest(const std::string& name, bool active, bool completed, bool unlocked)
 	:name(name), active(active), completed(completed), unlocked(unlocked) {}
@@ -116,7 +117,20 @@ void Quest::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Locat
 	}
 
 	if (numCompleted == objectives.size())
-		completed = true;
+	{
+		if (!waiting)
+		{
+			waiting = true;
+			std::thread thread([=]
+				{
+					Sleep(2000);
+					completed.store(true);
+					//completed = true;
+				});
+
+			thread.detach();
+		}
+	}
 }
 
 void Quest::SaveToFile(File& file)
@@ -124,7 +138,7 @@ void Quest::SaveToFile(File& file)
 	file.WriteString(name.c_str());
 	file.Write(unlocked);
 	file.Write(active);
-	file.Write(completed);
+	file.Write((bool)completed);
 
 	file.Write((UINT)objectives.size());
 

@@ -15,6 +15,20 @@ void InGameOverlay::ClearQuests()
 
 OVERLAYSTATE InGameOverlay::Update()
 {
+	if (!quests.empty() && quests[0].first->GetString().find("NPC3") != std::wstring::npos)
+		Print(lines.size());
+
+	for (auto& [info, line] : lines)
+	{
+		if (line.progress < 1.0f)
+		{
+			line.progress += 2.0f * Time::GetDelta();
+			if (line.progress > 1.0f)
+				line.progress = 1.0f;
+			line.p2.x = line.p1.x + line.progress * line.width;
+		}
+	}
+
 	returnState = OVERLAYSTATE::NO_CHANGE;
 
 	if (Event::KeyIsPressed(VK_ESCAPE))
@@ -36,6 +50,9 @@ void InGameOverlay::Render()
 		for (auto objective : quest.second)
 			objective->Draw();
 	}
+
+	for (auto& [info, line] : lines)
+		UI::Inst().GetRenderTarget()->DrawLine(line.p1, line.p2, lineBrush, 2.0f);
 
 	UI::Inst().EndFrame();
 }
@@ -59,6 +76,9 @@ InGameOverlay::InGameOverlay()
 
 	//ARROWS
 	AddText({ (float)Window::ClientWidth() / 2.0f, (float)Window::ClientHeight() - 50 }, "ArrowCount", "Arrows:" + std::to_string(0), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
+
+	//LINE BRUSH
+	lineBrush = UI::Inst().GetBrush(UI::COLOR::BROWN);
 }
 
 InGameOverlay::~InGameOverlay()
@@ -98,7 +118,47 @@ void InGameOverlay::UpdateQuests(const std::vector<Quest*>& quests)
 			for (auto objective : quest->GetObjectives())
 			{
 				position.y += objectiveOffset;
+				const std::string completeName = quest->GetName() + objective->Info() + std::to_string(objectives.size());
 				objectives.emplace_back(new Text(to_wstr(objective->Info()), position, objectiveFormat, color));
+				
+				if (objective->IsCompleted() && lines.find(completeName) == lines.end())
+				{
+					Line line = {};
+					line.width = objectives.back()->GetWidth() - 10.0f;
+					line.progress = 0.0f;
+					line.p1 = { position.x - 10.0f, position.y - objectives.back()->GetHeight() / 2.0f };
+					line.p2 = line.p1;
+					lines[completeName] = line;
+				}
+			}
+		}
+
+		if (!lines.empty())
+		{
+			for (UINT i = lines.size(); i > 0; i--)
+			{
+				auto ID = i - 1;
+
+				bool found = false;
+				auto line = std::next(lines.begin(), ID);
+
+				UINT count = 0;
+				for (auto objective : quest->GetObjectives())
+				{
+					if (quest->GetName() + objective->Info() + std::to_string(count) == line->first)
+					{
+						found = true;
+						break;
+					}
+
+					count++;
+				}
+
+				if (quest->IsCompleted())
+					found = false;
+
+				if (!found)
+					lines.erase(line->first);
 			}
 		}
 

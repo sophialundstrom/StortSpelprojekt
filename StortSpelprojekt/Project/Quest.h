@@ -6,6 +6,8 @@
 #include "BarbarianCamp.h"
 #include "Target.h"
 
+class InGameOverlay;
+
 class FriendlyNPC;
 
 class Quest
@@ -16,7 +18,9 @@ protected:
 
 	bool unlocked;
 	bool active;
-	bool completed;
+	std::atomic<bool> completed;
+	//bool completed;
+	bool waiting;
 
 	std::vector<Objective*> objectives;
 	std::vector<Quest*> childQuests;
@@ -35,7 +39,7 @@ public:
 	void Unlock()		{ if (!unlocked) TriggerOnUnlockedFunction(); unlocked = true; }
 	bool Unlocked()		{ return unlocked; }
 	void Activate()		{ if (!active) TriggerOnActivateFunction(); active = true; }
-	bool IsCompleted()	{ return completed; }
+	bool IsCompleted()	{ return completed.load(); }
 	bool IsActive()		{ return active; }
 
 	void SetQuestHolder(const std::string& NPC) { questHolderNPC = NPC; }

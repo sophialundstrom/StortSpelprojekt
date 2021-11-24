@@ -9,7 +9,7 @@ void FightObjective::Update(BarbarianCamp* camp)
 	total = camp->NumBarbarians();
 
 	if (cleared == total)
-		completed = true;
+		Complete();
 }
 
 std::string FightObjective::Info()
