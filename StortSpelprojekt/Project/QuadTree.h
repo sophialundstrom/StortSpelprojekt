@@ -27,7 +27,7 @@ struct OrthographicCollider
     DirectX::BoundingOrientedBox bounds;
     void Update(DirectionalLight dirLight)
     {   
-        float downSacle = 0.01;
+        float downSacle = 0.25;
         float lightRange = dirLight.GetRange();
         Vector3 direction = dirLight.data.direction;
         Vector3 lightPos = dirLight.GetRepresentativePosition();

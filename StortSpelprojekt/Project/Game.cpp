@@ -851,7 +851,7 @@ void Game::UpdateQuadTree()
 			staticMeshModelRender.Bind(drawable);
 		}
 	}
-	std::cout << "Meshes drawn " << drawablesToBeRendered.size() << std::endl;
+	//std::cout << "Meshes drawn " << drawablesToBeRendered.size() << std::endl;
 
 	orthographicCollider.Update(scene.GetDirectionalLight());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
@@ -861,11 +861,10 @@ void Game::UpdateQuadTree()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
-			staticMeshModelRender.Bind(drawable);
 			shadowRenderer.BindStatic(drawable);
 		}
 	}
-	std::cout << "DrawCalls " << drawablesToBeRendered.size() << std::endl << std::endl;
+	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
 	
 
 	
