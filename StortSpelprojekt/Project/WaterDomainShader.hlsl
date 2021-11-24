@@ -52,24 +52,33 @@ DS_OUTPUT main(
     output.position = patch[0].position * domain.x + patch[1].position * domain.y + patch[2].position * domain.z;
     output.texCoords = patch[0].texCoords * domain.x + patch[1].texCoords * domain.y + patch[2].texCoords * domain.z;
     output.normal = patch[0].normal * domain.x + patch[1].normal * domain.y + patch[2].normal * domain.z;
-    output.tangent = patch[0].tangent * domain.x + patch[1].tangent * domain.y + patch[2].tangent * domain.z;
     
-    const int amplitude = 4.0f;
-    const float multiplier = 1.5f;
+    
+    const int amplitude = 2.0f;
+    const float multiplier = 30.0f;
     const float PI = 3.14159265359f;
-    
-    if (round(output.position.x) % 2 == 0 && round(output.position.z) % 3 == 0)
-        output.position.y += sin(time * multiplier - 0.5f) * amplitude;
+    float k = 2 * PI / multiplier;
+    float phaseSpeed = sqrt(9.8 / k);
+    float2 direction = normalize(float2(-1, -1));
 
-    else if (round(output.position.x) % 3 == 0 && round(output.position.z) % 2 == 0)
-        output.position.y += cos(time * multiplier + PI) * amplitude;
-    
-    else
-        output.position.y += sin(time * multiplier + PI / 2.0f) * (amplitude / 2.0f);
+    //RECALCULATE NORMALS OF WAVES
+    //if (round(output.position.x) % 2 == 0 && round(output.position.z) % 3 == 0)
+    //    output.position.y += amplitude * sin((2 * PI * multiplier * time) + theta);
+    //else if (round(output.position.x) % 3 == 0 && round(output.position.z) % 2 == 0)
+    //    output.position.y += amplitude * sin((2 * PI * multiplier * time) + theta + 0.2f);
     //else
-    //    output.position.y += cos(time * multiplier) * (amplitude / 2.0f);
+    //    output.position.y += amplitude * cos((2 * PI * multiplier * time) + theta + 0.5f);
 
-	output.worldPosition = output.position.xyz;
+    float f = k * (dot(direction, output.position.xz) - phaseSpeed * time);
+    output.position.x += direction.x * (amplitude * cos(f));
+    output.position.y = amplitude * sin(f);
+    output.position.z += direction.y * (amplitude * cos(f));
+
+    //RECALCULATE NORMAL AND TANGENT
+    output.tangent = normalize(float3(1 - k * amplitude * sin(f), k * amplitude * cos(f), 0));
+    output.normal = float3(-output.tangent.y, output.tangent.x, 0);
+
+    output.worldPosition = output.position.xyz;
 
     //TRANSFORM FINAL POSITION
 	output.position = mul(output.position, viewPerspective);

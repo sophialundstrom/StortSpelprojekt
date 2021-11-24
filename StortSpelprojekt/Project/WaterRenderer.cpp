@@ -92,13 +92,18 @@ void WaterRenderer::Render()
 	UpdateBuffer(timeBuf, Time::Get());
 	BindBuffer(timeBuf, Shader::DS, 1);
 
-	translationOffset.offset += 0.0005f;
-	UpdateBuffer(translationBuf, translationOffset);
-	BindBuffer(translationBuf, Shader::PS, 10);
 
-	thetaOffset.offset += 0.02f;
+	UpdateBuffer(translationBuf, translationOffset);
+	BindBuffer(translationBuf, Shader::PS, 10);	
+	translationOffset.offset += 0.0005f;
+	if (translationOffset.offset >= 1)
+	{
+		translationOffset.offset = 0;
+	}
+
 	UpdateBuffer(thetaBuf, thetaOffset);
-	BindBuffer(thetaBuf, Shader::DS, 2);
+	BindBuffer(thetaBuf, Shader::DS, 2);	
+	thetaOffset.offset += 0.01f;
 
 
 	//DRAW
@@ -142,6 +147,10 @@ void WaterRenderer::Render(const Water& water)
 	{
 		translationOffset.offset = 0;
 	}
+
+	UpdateBuffer(thetaBuf, thetaOffset);
+	BindBuffer(thetaBuf, Shader::DS, 2);
+	thetaOffset.offset += 0.01f;
 
 	//DRAW
 	water.Draw();
