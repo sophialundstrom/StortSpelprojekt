@@ -138,7 +138,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 		menuCanvas->AddImage({ xPos, clientHeight / 2.0f + 225 }, "QuitLeaves", "QuitLeaves.png", 1.f, 1.0f, true, false);
 		auto image = menuCanvas->GetImage("Quit");
 		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "QuitButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Quit(); }, [this] { HoveringQuit(); });
-		}
+	}
 
 	{
 		// FORM

@@ -1,4 +1,5 @@
 #include "Target.h"
+#include "Renderers.h"
 
 Target::Target(const std::string& file, const Vector3& position, const Vector3& rotation, UINT ID)
 	:Model(file, "Target"), hit(false)

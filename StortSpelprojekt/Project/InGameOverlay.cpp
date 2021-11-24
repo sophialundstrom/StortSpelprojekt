@@ -126,9 +126,9 @@ void InGameOverlay::UpdateQuests(const std::vector<Quest*>& quests)
 				if (objective->IsCompleted() && lines.find(completeName) == lines.end())
 				{
 					Line line = {};
-					line.width = objectives.back()->GetWidth() - 10.0f;
+					line.width = objectives.back()->GetExactWidth();
 					line.progress = 0.0f;
-					line.p1 = { position.x - 10.0f, position.y - objectives.back()->GetHeight() / 2.0f };
+					line.p1 = { position.x, position.y - objectives.back()->GetHeight() / 2.0f };
 					line.p2 = line.p1;
 					lines[completeName] = line;
 				}

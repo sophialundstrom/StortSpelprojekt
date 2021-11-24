@@ -160,6 +160,13 @@ void Text::SetString(const std::string newString, bool bound)
 	CalculateOutline();
 }
 
+FLOAT Text::GetExactWidth()
+{
+	D2D1_RECT_F bounds = {};
+	geometry->GetBounds(D2D1::Matrix3x2F::Identity(), &bounds);
+	return bounds.right - bounds.left;
+}
+
 void Text::Draw(bool allCharacters, UINT numCharacters)
 {
 	//UI::Inst().GetRenderTarget()->DrawRectangle(bounds, brush);

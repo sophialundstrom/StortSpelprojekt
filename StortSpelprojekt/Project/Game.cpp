@@ -80,12 +80,6 @@ void Game::Pause()
 	currentCanvas = canvases["PAUSED"];
 }
 
-void Game::Resume()
-{
-	state = GameState::ACTIVE;
-	currentCanvas = canvases["INGAME"];
-}
-
 void Game::Options()
 {
 	currentCanvas = canvases["OPTIONS"];
@@ -342,7 +336,7 @@ void Game::AddTarget(const std::string& file, const Vector3& position, const Vec
 	auto target = std::make_shared<Target>(file, position, rotation, targets.size());
 	MR->Bind(target);
 	SR->Bind(target); 
-	IR->Bind(target);
+	//IR->Bind(target);
 
 	auto collider = target->GetCollider();
 	colliders.emplace_back(collider);
@@ -548,17 +542,18 @@ void Game::CheckItemCollision()
 	{
 		if (Collision::Intersection(*item->GetCollider(), *player->GetFrustum()))
 		{
-			hovering = true;
+			ingameOverlay->ShowInteract();
 
 			if (Event::KeyIsPressed('E'))
 			{
 				SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
 				SoundEffect::SetVolume(0.005, 2);
 				SoundEffect::StartAudio(2);
-				Print("PICKED UP ITEM");
+
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
 				UpdateInventoryUI();
+
 				return;
 			}
 		}
@@ -573,7 +568,7 @@ void Game::CheckQuestInteraction()
 		{
 			if (Collision::Intersection(*NPC->GetCollider(), *player->GetFrustum()))
 			{
-				hovering = true;
+				ingameOverlay->ShowInteract();
 
 				if (Event::KeyIsPressed('E'))
 				{
@@ -597,8 +592,6 @@ void Game::CheckQuestInteraction()
   
 void Game::UpdateInventoryUI()
 {
-	auto& canvas = canvases["INGAME"];
-
 	/*canvas->UpdateText("WOOD", std::to_string(player->Inventory().NumOf(RESOURCE::WOOD)));
 	canvas->UpdateText("STONE", std::to_string(player->Inventory().NumOf(RESOURCE::STONE)));
 	canvas->UpdateText("FOOD", std::to_string(player->Inventory().NumOf(RESOURCE::FOOD)));*/
@@ -630,55 +623,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//OVERLAYS
 	ingameOverlay = new InGameOverlay();
 	dialogueOverlay = new DialogueOverlay();
+	pauseOverlay = new PauseOverlay();
 
 	overlay = ingameOverlay;
-
-	//INGAME CANVAS
-	auto ingameCanvas = std::make_shared<Canvas>();
-	ingameCanvas->HideCursor();
-	ingameCanvas->AddImage({ 250, 365 }, "QuestBorder", "QuestBorder.png");
-	ingameCanvas->AddText({ 250, 65 }, "AQ", "Active Quests", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
-
-	ingameCanvas->AddImage({ 355, clientHeight - 64.0f }, "hp", "HP10.png");
-
-	ingameCanvas->AddText({ (float)clientWidth - 50, (float)clientHeight - 30 }, "FPS", "0", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
-
-	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 200.0f }, "INTERACT", "INTERACT [E]", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
-
-	ingameCanvas->AddImage({ (float)clientWidth / 2.0f, (float)clientHeight / 2 }, "CrossHair", "CrossHair.png");
-	
-	ingameCanvas->AddText({ (float)clientWidth / 2.0f, (float)clientHeight - 50 }, "ArrowCount", "Arrows:" + std::to_string(0), UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED);
-
-	canvases["INGAME"] = ingameCanvas;
-	currentCanvas = ingameCanvas;
-
-	//PAUSED CANVAS
-	auto pauseCanvas = std::make_shared<Canvas>();
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "PauseBackground", "PauseBackground.png", 1.0f, 1.0f);
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 8.0f }, "PauseTitle", "PAUSED.png", 1.0f, 1.0f);
-
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f - 100 }, "RESUME", 350, 95, UI::COLOR::GRAY, [this] { Resume(); });
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 100}, "ResumeButton", "ResumeButton.png", 0.50f, 1.0f);
-
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlayButton", "HowToPlayButton.png", 0.50f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f }, "HowToPlay", 350, 95, UI::COLOR::GRAY, [this] { HowToPlay(); });
-
-	pauseCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 100 }, "BackToMainMenu", "MainMenuButton.png", 0.50f, 1.0f);
-	pauseCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 2.0f + 100}, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, [this] { MainMenu(); });
-
-	canvases["PAUSED"] = pauseCanvas;
-
-	//HOW TO PLAY
-	auto howToPlayCanvas = std::make_shared<Canvas>();
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "ControlImage", "Controls.png", 2.0f, 1.0f);
-	howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackHowToPlay", "BackButton.png", 0.5f, 1.0f);
-	howToPlayCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackButtonHowToPlay", 340, 90, UI::COLOR::GRAY, [this] { BacktoPause(); });
-
-	canvases["HOW TO PLAY"] = howToPlayCanvas;
-
-	//canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
-
-	// THE WILL BE A PROBLEM IF MORE ARROWS THAN MAXARROWS IS IN THE AIR AT THE SAME TIME (NO ARROW WILL BE RENDERED). THIS IS BECAUSE THERE ARE ONLY AS MANY ARROW MODELS AS MAXARROWS.
 
 	//PLAYER
 	UINT maxArrows = 5;
@@ -692,8 +639,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	CR->Bind(player->GetFrustum());
 	player->GetFrustum()->SetParent(player);
-
 	CR->Bind(scene.GetCamera()->GetCamRay());
+
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
@@ -758,6 +705,8 @@ APPSTATE Game::Run()
 	case OVERLAYSTATE::PAUSE:
 	{
 		state = GameState::PAUSED;
+		overlay = pauseOverlay;
+		overlay->ShowCursor();
 		break;
 	}
 
@@ -765,6 +714,7 @@ APPSTATE Game::Run()
 	{
 		state = GameState::ACTIVE;
 		overlay = ingameOverlay;
+		overlay->HideCursor();
 		break;
 	}
 	}
@@ -831,18 +781,6 @@ APPSTATE Game::Run()
 		player->Inventory().AddItem(Item::Type::Hammer);
 
 	UpdateInventoryUI();
-
-	canvases["INGAME"]->UpdateText("ArrowCount", "Arrows: " + std::to_string(player->numArrows));
-	
-	if (hovering)
-		canvases["INGAME"]->GetText("INTERACT")->Show();
-	else
-		canvases["INGAME"]->GetText("INTERACT")->Hide();
-
-	if (Event::RightIsClicked())
-		canvases["INGAME"]->GetImage("CrossHair")->Show();
-	else
-		canvases["INGAME"]->GetImage("CrossHair")->Hide();
 
 	static float counter = 0;
 	if (done)

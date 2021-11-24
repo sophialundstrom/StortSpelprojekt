@@ -17,6 +17,7 @@
 #include "Renderers.h"
 #include "DialogueOverlay.h"
 #include "InGameOverlay.h"
+#include "PauseOverlay.h"
 
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
@@ -43,6 +44,7 @@ private:
 
     InGameOverlay* ingameOverlay;
     DialogueOverlay* dialogueOverlay;
+    PauseOverlay* pauseOverlay;
 
     std::shared_ptr<Canvas> currentCanvas;
     std::map<std::string, std::shared_ptr<Canvas>> canvases;
@@ -74,7 +76,6 @@ private:
 
     // UI FUNC
     void Pause();
-    void Resume();
     void Options();
     void HowToPlay();
     void BacktoPause();

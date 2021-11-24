@@ -37,6 +37,14 @@ public:
 			}
 	}
 
+	bool IsBound(std::shared_ptr<Drawable> drawable)
+	{
+		for (UINT i = 0; i < drawables.size(); ++i)
+			if (drawables[i] == drawable)
+				return true;
+		return false;
+	}
+
 	void Clear() { drawables.clear(); }
 	virtual void Render() = 0;
 	virtual void OnResize(float width, float height) {}
