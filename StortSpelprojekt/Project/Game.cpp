@@ -641,10 +641,10 @@ void Game::SetupAudio()
 	Audio::Initialize();
 	Audio::StartEngine();
 
-	Audio::AddAudio(L"Audio/SoundForest.wav", 0, true);						// Default music
+	Audio::AddAudio(L"Audio/SoundForest.wav", 0, true);					// Default music
 	Audio::AddAudio(L"Audio/Combat1.wav", 1, true);						// Combat Version 1 Music
 	Audio::AddAudio(L"Audio/Combat2.wav", 2, true);						// Combat Version 2 Music
-	Audio::AddAudio(L"Audio/Camelot.wav", 3, true);						// Desert Music
+	Audio::AddAudio(L"Audio/GoldRush.wav", 3, true);						// Desert Music
 	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 4, true);		// Woodlands Music
 	Audio::AddAudio(L"Audio/Running.wav", 6, true);						// Player Running Sound Effect
 	Audio::AddAudio(L"Audio/Jump.wav", 7);								// Player Jumping Sound Effect
@@ -653,8 +653,8 @@ void Game::SetupAudio()
 	Audio::AddAudio(L"Audio/Welcome.wav", 10, true);					// ????
 	Audio::AddAudio(L"Audio/PickupPop.wav", 11);						// Collecting Pickup Sound Effect
 	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 12, true);	// :)
-	Audio::AddAudio(L"Audio/Menu.wav", 13, true);	// Mountain Music
-	Audio::AddAudio(L"Audio/SoundOcean.wav", 14, true);	// Ocean / Beach Music
+	Audio::AddAudio(L"Audio/Menu.wav", 13, true);						// Mountain Music
+	Audio::AddAudio(L"Audio/SoundOcean.wav", 14, true);					// Ocean / Beach Music
 
 	Audio::SetVolume(0.5, 0);
 	Audio::StartAudio(0);
@@ -712,50 +712,10 @@ APPSTATE Game::Run()
 		{
 			lastClick = Time::Get();
 		}
-		int y = 0;
-		int b = 0;
-		if (Event::KeyIsPressed('K'))
-		{
-			PrintVector3(biomes[3]->colliders[y]->GetPosition());
-		}
 		if (Event::KeyIsPressed(79))
 		{
 			Audio::StopEngine();
 		}
-		bool x = false;
-		
-		if (Event::KeyIsPressed(VK_LEFT))
-		{
-			biomes[b]->colliders[y]->SetPosition(biomes[b]->colliders[y]->GetPosition() + Vector3(-100.f * Time::GetDelta(), 0.f, 0.f));
-			x = true;
-		}
-		if (Event::KeyIsPressed(VK_RIGHT))
-		{
-			biomes[b]->colliders[y]->SetPosition(biomes[b]->colliders[y]->GetPosition() + Vector3(100.f * Time::GetDelta(), 0.f, 0.f));
-			x = true;
-		}
-		if (Event::KeyIsPressed(VK_UP))
-		{
-			biomes[b]->colliders[y]->SetPosition(biomes[b]->colliders[y]->GetPosition() + Vector3(0.f, 0.f, 100.f * Time::GetDelta()));
-			x = true;
-		}
-		if (Event::KeyIsPressed(VK_DOWN))
-		{
-			biomes[b]->colliders[y]->SetPosition(biomes[b]->colliders[y]->GetPosition() + Vector3(0.f, 0.f, -100.f * Time::GetDelta()));
-			x = true;
-		}
-		if (Event::KeyIsPressed('V'))
-		{
-			biomes[b]->colliders[y]->SetScale(biomes[b]->colliders[y]->GetScale() * 10 * Time::GetDelta());
-			x = true;
-		}
-		if (Event::KeyIsPressed('B'))
-		{
-			biomes[b]->colliders[y]->SetScale(biomes[b]->colliders[y]->GetScale() * -10 * Time::GetDelta());
-			x = true;
-		}
-		if (x)
-			biomes[b]->colliders[y]->Update();
 		/*if (Event::KeyIsPressed('U'))
 		{
 			QuestLog::Inst().Complete(0);
@@ -863,13 +823,11 @@ void Game::HandleBiomes()
 			{
 				type = biome->type;
 				slot = biome->musicSlot;
-				goto exit;
 			}
 		}
 		
 	}
 
-	exit:
 	player->currentBiome = type;
 
 	if (player->currentBiome != player->previousBiome)
