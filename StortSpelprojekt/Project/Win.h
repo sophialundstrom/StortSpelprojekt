@@ -18,8 +18,8 @@
 class Win : public ApplicationState
 {
 private:
-	Canvas* currentCanvas;
-	std::map<std::string, Canvas*> canvases;
+	std::shared_ptr<Canvas> currentCanvas;
+	std::map<std::string, std::shared_ptr<Canvas>> canvases;
 
 	ShadowRenderer shadowRenderer;
 	WaterRenderer waterRenderer;
@@ -30,10 +30,7 @@ private:
 	Terrain terrain;
 	Water water;
 
-	bool play = false;
-	bool quit = false;
 	bool backToMenu = false;
-
 
 	void Render();
 	void Initialize();
@@ -45,21 +42,15 @@ private:
 	void BackToMainMenu();
 	void HoveringMainMenu();
 
-	void QuitGame();
-	void HoveringQuit();
 
 	void Form();
 	void HoveringForm();
 
-	void Exit();
-	void Back();
+	void QuitCanvas();
 
 	void HoveringYes();
 	void HoveringNo();;
-
-
 public:
-
 	Win() = default;
 	Win(UINT clientWidth, UINT clientHeight, HWND window);
 	~Win();

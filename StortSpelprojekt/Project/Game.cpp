@@ -950,6 +950,7 @@ void Game::HoveringHowToPlay()
 void Game::HoveringMainMenu()
 {
 	canvases["PAUSED"]->GetImage("BackToMainMenuLeaves")->Show();
+}
 
 void Game::UpdateQuadTree()
 {
