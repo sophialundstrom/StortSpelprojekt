@@ -62,6 +62,14 @@ void FriendlyNPC::Update()
 
 	questMarker->Update();
 
+	static bool walking = false;
+	if (Event::KeyIsPressed('G'))
+		walking = true;
+	else if (Event::KeyIsPressed('H'))
+		walking = false;
+	if(walking)
+		Walking();
+
 	if (dialogueOverride)
 	{
 		questMarker->SetPosition(0, 9.0f, 0);
@@ -69,7 +77,8 @@ void FriendlyNPC::Update()
 		return;
 	}
 
-	if (currentQuest)
+	UINT completedQuests = 0;
+	for (auto& ID : questIDs)
 	{
 		if (!currentQuest->Unlocked())
 		{
@@ -120,4 +129,41 @@ void FriendlyNPC::Update()
 	}
 
 	finishedDialogue = false;
+}
+
+void FriendlyNPC::Walking()
+{
+	//TODO: Implement walking behaviour
+	//static int pathIndex = 0;
+	//if (Vector3::Distance(position, player->GetPosition()) > 4.0f)
+	//{
+	//	if (pathIndex < pathing->GetGrid()->GetPath().size())
+	//	{
+	//		moveDirection = pathing->GetGrid()->GetPath()[pathIndex] - position;
+	//		moveDirection.Normalize();
+
+	//		position += (moveDirection * speed * Time::GetDelta());
+
+	//		if (Vector3::Distance(pathing->GetGrid()->GetPath()[pathIndex], position) < 0.2f)
+	//		{
+	//			pathIndex++;
+
+	//		}
+	//	}
+	//	else
+	//	{
+	//		pathIndex = 0;
+	//		if (Vector3::Distance(pathing->GetGrid()->GetPosition(), position) > 8.0f)
+	//		{
+	//			//pathing->CreateGrid(Vector3((int)position.x, (int)position.y, (int)position.z));
+	//		}
+	//		pathing->FindPath(position, player->GetPosition());
+	//		return;
+	//	}
+	//}
+	//else // delete path because we want to stop before collision 
+	//{
+	//	pathing->GetGrid()->GetPathRef().clear();
+	//	//path.clear();
+	//}
 }

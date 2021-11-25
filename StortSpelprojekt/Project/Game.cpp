@@ -37,6 +37,7 @@ void Game::Update()
 	ingameOverlay->UpdateHealth(player->Stats().healthPoints);
 	ingameOverlay->UpdateInventory(player->Inventory());
 	ingameOverlay->UpdateQuests(QuestLog::GetActiveQuests());
+	UpdateQuadTree(); //Something in here makes the game run twice as fast
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
@@ -58,6 +59,10 @@ void Game::Render()
 	AMR->Render();
 
 	SKR->Render();
+	
+	staticMeshModelRender.Render();
+
+	animatedModelRenderer.Render();
 
 	//CR->Render();
 
@@ -102,11 +107,29 @@ void Game::MainMenu()
 
 void Game::Initialize()
 {
+	QuadTreeBounds qtBounds(-1000.f, -1000.f, 2000.f, 2000.f);
+	quadTree = new QuadTree(qtBounds, 4, 5, 0, "Master");
+	
+
 	//LOAD SCENE
 	FBXLoader meshLoader("Models");
-
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
+	
+
+	
+	//Transfer drawables to quadTree
+	for (auto& [name, drawable] : scene.GetDrawables())
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if(model)
+			quadTree->InsertModel(drawable);
+	}
+	
+	//For Future work do not remove atm:
+	/*quadTree->GetAllDrawables(noCullingDrawables);
+	//quadTree->OptimizeBounds();
+	quadTree->PrintTree();*/
 
 	//SAVE STATIONS
 	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
@@ -123,9 +146,13 @@ void Game::Initialize()
 		{
 			MR->Bind(model);
 			SR->Bind(model);
+
+			//modelRenderer.Bind(model);
+			//shadowRenderer.Bind(model);
+
 			continue;
 		}
-			
+
 		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
 		if (particleSystem)
 		{
@@ -224,7 +251,7 @@ void Game::UpdateAndHandleLoot()
 			SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
 			SoundEffect::SetVolume(0.1, 2);
 			SoundEffect::StartAudio(2);
-			std::cout << "Loot destoyed\n";
+			//std::cout << "Loot destoyed\n";
 		}
 	}
 }
@@ -467,7 +494,7 @@ void Game::CheckNearbyCollision()
 
 			continue;
 		};
-		
+
 		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
 		if (sphere)
 		{
@@ -493,7 +520,7 @@ void Game::CheckNearbyCollision()
 	player->HandleCollidedObjects(collidedColliders);
 }
 
-void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
+void Game::AddHostileNPC(const std::string& filename, Vector3 position)
 {
 	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle);
 	NPC->SetPosition(position);
@@ -547,7 +574,7 @@ void Game::CheckSaveStationCollision()
 
 void Game::CheckItemCollision()
 {
-	for (auto &item : items)
+	for (auto& item : items)
 	{
 		if (Collision::Intersection(*item->GetCollider(), *player->GetFrustum()))
 		{
@@ -640,7 +667,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
 	player->SetPosition(-75, 20, -630);
-	scene.AddModel("Player", player);
+	//scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
 	CR->Bind(player->GetBounds());
 	SKR->Bind(player);
@@ -697,6 +724,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 Game::~Game()
 {
 	QuestLog::ShutDown();
+	delete quadTree;
 	scene.Clear();
 	Resources::Inst().Clear();
 }
@@ -739,7 +767,7 @@ APPSTATE Game::Run()
 	{
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) });
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('1'))
@@ -875,4 +903,117 @@ void Game::CheckNearbyEnemies()
 				break;
 		}
 	}
+}
+
+void Game::UpdateQuadTree()
+{
+	drawablesToBeRendered.clear();
+	staticMeshModelRender.Clear();
+	shadowRenderer.ClearStatic();
+
+	frustrumCollider.Update(scene.GetCamera());
+	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+
+	for (auto& [name, drawable] : drawablesToBeRendered)
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if (model)
+		{
+			staticMeshModelRender.Bind(drawable);
+		}
+	}
+	//std::cout << "Meshes drawn " << drawablesToBeRendered.size() << std::endl;
+
+	orthographicCollider.Update(scene.GetDirectionalLight());
+	quadTree->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
+
+	for (auto& [name, drawable] : drawablesToBeRendered)
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if (model)
+		{
+			shadowRenderer.BindStatic(drawable);
+		}
+	}
+	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
+	
+
+	
+	//DebugVariant
+	/*
+	int click;
+	static float lastClick = 0;
+	if (Time::Get() - lastClick > 0.5f)
+	{
+		if (Event::KeyIsPressed('K'))
+		{
+			lastClick = Time::Get();
+			cullingProfile++;
+			cullingProfile = cullingProfile % 3;
+
+			switch (cullingProfile)
+			{
+			case 0:
+				std::cout << "Use culling\nFrustrum update \n";
+				useQuadTreeCulling = true;
+				updateFrustrum = true;
+				break;
+
+			case 1:
+				std::cout << "Use culling\nNo frustrum update \n";
+				useQuadTreeCulling = true;
+				updateFrustrum = false;
+				break;
+
+			case 2:
+				std::cout << "No culling\n";
+				useQuadTreeCulling = false;
+				updateFrustrum = false;
+				break;
+			default:
+				break;
+			}
+			std::cout << "Culling PROFILE: " << cullingProfile << std::endl;
+		}
+
+		if (Event::KeyIsPressed('L'))
+		{
+			lastClick = Time::Get();
+			std::cout << drawablesToBeRendered.size() << std::endl;
+		}
+
+	}
+
+	if(updateFrustrum)
+		frustrumCollider.Update(scene.GetCamera());
+
+	drawablesToBeRendered.clear();
+	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
+
+	if (useQuadTreeCulling)
+	{
+		staticMeshModelRender.Clear();
+		for (auto& [name, drawable] : drawablesToBeRendered)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+				staticMeshModelRender.Bind(drawable);
+		}
+
+	}
+	else
+	{
+		staticMeshModelRender.Clear();
+		for (auto& [name, drawable] : noCullingDrawables)
+		{
+			//std::cout << noCullingDrawables.size() << std::endl;
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+				staticMeshModelRender.Bind(drawable);
+		}
+
+	}
+	*/
+
+
 }

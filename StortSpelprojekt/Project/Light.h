@@ -37,7 +37,8 @@ public:
 
 	void SetTargetPosition(const Vector3& position)
 	{
-		this->viewMatrix = Matrix::CreateLookAt(position + -data.direction * range, position, { 0.0f, 1.0f, 0.0f });
+		this->position = position + -data.direction * range;
+		this->viewMatrix = Matrix::CreateLookAt(this->position, position, { 0.0f, 1.0f, 0.0f });
 		this->matrix = (viewMatrix * ortoMatrix).Transpose();
 	}
 
@@ -67,9 +68,8 @@ public:
 
 		this->matrix = (viewMatrix * ortoMatrix).Transpose();
 	}
-
+	float GetRange() { return this->range; }
 	Vector3 GetRepresentativePosition() const { return this->position; }
-
 	Matrix GetMatrix() const { return this->matrix; }
 };
 

@@ -74,6 +74,7 @@ float Get2DAngle(Vector2 a, Vector2 b)
 
 void Player::Update(HeightMap* heightMap)
 {
+	//std::cout << position.x << "		" << position.y << "		" << position.z << std::endl;
 	lastPosition = position;
 
 	CalcHeight(heightMap);
@@ -222,7 +223,7 @@ void Player::Update(HeightMap* heightMap)
 		//else if (jumping)
 			 // ADD IN AIR JUMP ANIMATION
 	}
-	//std::cout << "NUM ARROWS: " << numArrows << std::endl;
+
 	if(Event::RightIsClicked())
 	{
 		newCameraPos = position + camSocketUpdate;

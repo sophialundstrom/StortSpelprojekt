@@ -11,6 +11,13 @@ typedef enum { ID_INVALID = 9999 } ID_FLAG;
 class Resources : public Singleton<Resources>
 {
 private:
+	struct MinMaxBounds
+	{
+		Vector3 maxBounds;
+		Vector3 minBounds;
+	};
+	std::vector<MinMaxBounds> minMaxBounds;
+
 	const UINT animatedStride = sizeof(AnimatedVertex);
 	const UINT stride = sizeof(Vertex);
 	const UINT offset = 0;
@@ -50,11 +57,20 @@ public:
 	void AddMaterial(Material* material) { materials.emplace(NumMaterials(), material); }
 
 	//ADD NEW VERTEX BUFFER
-	void AddVertexBuffer(const std::string& name, ID3D11Buffer* buffer, UINT vertexCount) 
+	void AddVertexBuffer(const std::string& name, ID3D11Buffer* buffer, UINT vertexCount, Vector3 maxBounds, Vector3 minBounds)
 	{ 
 		vertexBuffers.emplace(NumBuffers(), buffer); 
 		bufferNames.emplace_back(name); 
-		vertexCounts.emplace_back(vertexCount); 
+		vertexCounts.emplace_back(vertexCount);
+		minMaxBounds.emplace_back(MinMaxBounds{ maxBounds, minBounds });
+	}
+
+	Vector3* GetMinMaxBoundsFromID(UINT ID)
+	{
+		if (vertexBuffers.find(ID) != vertexBuffers.end())
+			return (Vector3*)&minMaxBounds[ID];
+
+		return nullptr;
 	}
 
 	UINT GetVertexCountFromID(UINT ID) 

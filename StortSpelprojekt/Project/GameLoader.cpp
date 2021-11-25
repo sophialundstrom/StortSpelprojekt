@@ -28,6 +28,7 @@ void GameLoader::Load(const std::string& filename, std::map<std::string, std::sh
 			{
 				auto model = ReadModel();
 				drawables.emplace(model->name, model);
+			
 				break;
 			}
 			

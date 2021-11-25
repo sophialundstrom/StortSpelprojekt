@@ -2,8 +2,10 @@
 #include "NPCBase.h"
 #include "Model.h"
 #include "Building.h"
+#include "Event.h"
 #include "QuestMarker.h"
 #include "Quest.h"
+
 
 class FriendlyNPC : public NPC
 {
@@ -22,6 +24,11 @@ private:
 	bool completedAllQuests = false;
 
 	std::shared_ptr<QuestMarker> questMarker;
+
+	void Walking();
+	float timeMeasurement = 0;
+	Timer timer;
+	Vector3 moveDirection;
 public:
 	FriendlyNPC(const std::string& name, const std::string& file);
 

@@ -330,10 +330,6 @@ void LevelEditor::Update()
 		float newYPos = window.GetValue<SliderFloatComponent>("Y");
 		float newZPos = window.GetValue<SliderFloatComponent>("Z");
 
-		//float newXRot = window.GetValue<SliderFloatComponent>("Around X");
-		//float newYRot = window.GetValue<SliderFloatComponent>("Around Y");
-		//float newZRot = window.GetValue<SliderFloatComponent>("Around Z");
-
 		float newXScale = window.GetValue<SliderFloatComponent>("X-axis");
 		float newYScale = window.GetValue<SliderFloatComponent>("Y-axis");
 		float newZScale = window.GetValue<SliderFloatComponent>("Z-axis");
@@ -481,11 +477,6 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("X", -700, 700, 0, false);
 		window.AddSliderFloatComponent("Y", -50, 200, 0, false);
 		window.AddSliderFloatComponent("Z", -700, 700, 0, false);
-
-		//window.AddTextComponent("Rotation");
-		//window.AddSliderFloatComponent("Around X", -180, 180, 0, false);
-		//window.AddSliderFloatComponent("Around Y", -180, 180, 0, false);
-		//window.AddSliderFloatComponent("Around Z", -180, 180, 0, false);
 
 		window.AddTextComponent("Scale");
 		window.AddSliderFloatComponent("X-axis", -1, 50, 0, false);

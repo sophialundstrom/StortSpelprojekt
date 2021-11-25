@@ -204,6 +204,8 @@
     </Filter>
     <Filter Include="ARCUS\Graphics\Renderers\InteractableRenderer\Shaders">
       <UniqueIdentifier>{6d5e65d4-bd34-44f4-adaf-e4a1a5821ead}</UniqueIdentifier>
+    <Filter Include="ARCUS\Scene\Game\NPC\FSM">
+      <UniqueIdentifier>{68b091f1-0a79-4bb7-aec4-3c4dca9294ce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +374,14 @@
     </ClCompile>
     <ClCompile Include="PauseOverlay.cpp">
       <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
+    <ClCompile Include="ArrowHandler.cpp">
+      <Filter>ARCUS</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>ARCUS</Filter>
+    </ClCompile>
+    <ClCompile Include="ConcreteStates.cpp">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -708,6 +718,20 @@
     </ClInclude>
     <ClInclude Include="PauseOverlay.h">
       <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
+    <ClInclude Include="ArrowHandler.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="ConcreteStates.h">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -167,6 +167,7 @@
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="CollectObjective.cpp" />
     <ClCompile Include="ColliderRenderer.cpp" />
+    <ClCompile Include="ConcreteStates.cpp" />
     <ClCompile Include="DialogueOverlay.cpp" />
     <ClCompile Include="DockSpacePanel.cpp" />
     <ClCompile Include="DynamicPlane.cpp" />
@@ -204,6 +205,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="QuestLog.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SkeletonRenderer.cpp" />
@@ -233,6 +235,8 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="CollectObjective.h" />
+    <ClInclude Include="CollectQuest.h" />
+    <ClInclude Include="ConcreteStates.h" />
     <ClInclude Include="DialogueOverlay.h" />
     <ClInclude Include="DockSpacePanel.h" />
     <ClInclude Include="DynamicPlane.h" />
@@ -259,6 +263,7 @@
     <ClInclude Include="Overlay.h" />
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="PauseOverlay.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
     <ClInclude Include="AnimatedModel.h" />
@@ -314,6 +319,7 @@
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonRenderer.h" />
     <ClInclude Include="SoundEffect.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Mesh.h" />
