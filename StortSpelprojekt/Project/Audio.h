@@ -22,8 +22,9 @@ public:
 	static std::map<std::string, IXAudio2SourceVoice*> sMusic;
 	static std::map<std::string, IXAudio2SourceVoice*> sEffects;
 	static std::map<std::string, IXAudio2SourceVoice*> sVoices;
-	static void Initialize();
-	static short int AddAudio(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat = false);
+	static void Initialize(bool mtLoading = true, const int& numThreads = 6);
+	static void AddAudio(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat = false);
+	static void AddAudioNoneMT(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat = false);
 	static void StopMusic(const std::string& name);
 	static void StopEffect(const std::string& name);
 	static void StopVoice(const std::string& name);

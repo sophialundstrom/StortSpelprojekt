@@ -101,6 +101,7 @@ private:
 		{
 			thread.join();
 		}
+		std::cout << "THREADPOOL DESTROYED" << std::endl;
 	}
 
 };

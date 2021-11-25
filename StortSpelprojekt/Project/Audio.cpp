@@ -1,6 +1,9 @@
 #include "Audio.h"
 #include "FileSystem.h"
 #include "Text.h"
+#include "ThreadPool.h"
+#include "Time.h"
+#include "Print.h"
 
 Microsoft::WRL::ComPtr<IXAudio2> Audio::MusicEngine;
 IXAudio2MasteringVoice* Audio::pMasterVoice = nullptr;
@@ -74,7 +77,7 @@ void Audio::StartVoice(const std::string& name)
 		std::cout << "COULD NOT START AUDIO" << std::endl;
 }
 
-void Audio::Initialize()
+void Audio::Initialize(bool mtLoading, const int& numThreads)
 {	
 	HRESULT hr;
 
@@ -88,43 +91,95 @@ void Audio::Initialize()
 
 	using directory_iterator = std::filesystem::directory_iterator;
 
-	for (const auto& dirEntry : directory_iterator("Audio/Music/"))
+	if (mtLoading)
 	{
-		if (dirEntry.path().extension() == ".wav")
+		Timer timer;
+		timer.Start();
+
+		ThreadPool tp(numThreads);
+
+		for (const auto& dirEntry : directory_iterator("Audio/Music/"))
 		{
-			PrintS(dirEntry.path().string());
-			std::string fileName = dirEntry.path().filename().string();
-			std::wstring path = to_wstr("Audio/Music/" + fileName);
-			AddAudio(path, fileName, 0, AUDIOTYPE::MUSIC, true);
+			if (dirEntry.path().extension() == ".wav")
+			{
+				PrintS(dirEntry.path().string());
+				std::string fileName = dirEntry.path().filename().string();
+				std::wstring path = to_wstr("Audio/Music/" + fileName);
+				tp.Enqueue([=] {
+
+					AddAudio(path, fileName, 0, AUDIOTYPE::MUSIC, true);
+					});
+			}
 		}
+		for (const auto& dirEntry : directory_iterator("Audio/EffectsOnce/"))
+		{
+			if (dirEntry.path().extension() == ".wav")
+			{
+				std::string fileName = dirEntry.path().filename().string();
+				std::wstring path = to_wstr("Audio/EffectsOnce/" + fileName);
+				tp.Enqueue([=] {
+
+					AddAudio(path, fileName, 0, AUDIOTYPE::EFFECT);
+					});
+			}
+		}
+		for (const auto& dirEntry : directory_iterator("Audio/EffectsRepeat/"))
+		{
+			if (dirEntry.path().extension() == ".wav")
+			{
+				std::string fileName = dirEntry.path().filename().string();
+				std::wstring path = to_wstr("Audio/EffectsRepeat/" + fileName);
+				tp.Enqueue([=] {
+
+					AddAudio(path, fileName, 0, AUDIOTYPE::EFFECT, true);
+					});
+			}
+		}
+		PrintNumber(timer.DeltaTime(), "MULTITHREADED TIME: ");
 	}
-	for (const auto& dirEntry : directory_iterator("Audio/EffectsOnce/"))
+	else
 	{
-		if (dirEntry.path().extension() == ".wav")
+		Timer timer;
+		timer.Start();
+		for (const auto& dirEntry : directory_iterator("Audio/Music/"))
 		{
-			std::string fileName = dirEntry.path().filename().string();
-			std::wstring path = to_wstr("Audio/EffectsOnce/" + fileName);
-			AddAudio(path, fileName, 0, AUDIOTYPE::EFFECT);
+			if (dirEntry.path().extension() == ".wav")
+			{
+				PrintS(dirEntry.path().string());
+				std::string fileName = dirEntry.path().filename().string();
+				std::wstring path = to_wstr("Audio/Music/" + fileName);
+				AddAudioNoneMT(path, fileName, 0, AUDIOTYPE::MUSIC, true);
+			}
 		}
-	}
-	for (const auto& dirEntry : directory_iterator("Audio/EffectsRepeat/"))
-	{
-		if (dirEntry.path().extension() == ".wav")
+		for (const auto& dirEntry : directory_iterator("Audio/EffectsOnce/"))
 		{
-			//std::wstring wstr(dirEntry.path().string().begin(), dirEntry.path().string().end());
-			std::string fileName = dirEntry.path().filename().string();
-			std::wstring path = to_wstr("Audio/EffectsRepeat/" + fileName);
-			AddAudio(path, fileName, 0, AUDIOTYPE::EFFECT, true);
+			if (dirEntry.path().extension() == ".wav")
+			{
+				std::string fileName = dirEntry.path().filename().string();
+				std::wstring path = to_wstr("Audio/EffectsOnce/" + fileName);
+				AddAudioNoneMT(path, fileName, 0, AUDIOTYPE::EFFECT);
+			}
 		}
+		for (const auto& dirEntry : directory_iterator("Audio/EffectsRepeat/"))
+		{
+			if (dirEntry.path().extension() == ".wav")
+			{
+				std::string fileName = dirEntry.path().filename().string();
+				std::wstring path = to_wstr("Audio/EffectsRepeat/" + fileName);
+				AddAudioNoneMT(path, fileName, 0, AUDIOTYPE::EFFECT, true);
+			}
+		}
+		PrintNumber(timer.DeltaTime(), "SINGLETHREADED TIME: ");
 	}
+
 
 }
 
-short int Audio::AddAudio(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat)
+void Audio::AddAudioNoneMT(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat)
 {
-	
+
 	LPCWSTR strFileName = path.c_str();
-	
+
 	HANDLE hFile = CreateFile(strFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (INVALID_HANDLE_VALUE == hFile)
 		ERROR("INVALID HANDLE VALUE");
@@ -165,6 +220,77 @@ short int Audio::AddAudio(const std::wstring& path, const std::string& name, sho
 	{
 		ERROR("FAILED TO CREATE SOURCE VOICE");
 	}
+	if (FAILED(hr = pSource->SubmitSourceBuffer(&audioBuffer)))
+		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
+
+	pSource->SetVolume(volume);
+
+	audioBuffers[name] = audioBuffer;
+
+
+	switch (type)
+	{
+	case AUDIOTYPE::MUSIC:
+		sMusic[name] = pSource;
+		break;
+	case AUDIOTYPE::EFFECT:
+		sEffects[name] = pSource;
+		break;
+	case AUDIOTYPE::VOICE:
+		sVoices[name] = pSource;
+		break;
+
+	}
+
+}
+
+void Audio::AddAudio(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat)
+{
+	static std::mutex lock;
+
+	LPCWSTR strFileName = path.c_str();
+	
+	HANDLE hFile = CreateFile(strFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	if (INVALID_HANDLE_VALUE == hFile)
+		ERROR("INVALID HANDLE VALUE");
+
+	if (INVALID_SET_FILE_POINTER == SetFilePointer(hFile, 0, NULL, FILE_BEGIN))
+		ERROR("INVALID SET FILE POINTER");
+
+	DWORD audioChunkSize;
+	DWORD audioChunkPosition;
+	FindChunk(hFile, fourccRIFF, audioChunkSize, audioChunkPosition);
+	DWORD fileType;
+	ReadChunkData(hFile, &fileType, sizeof(DWORD), audioChunkPosition);
+	if (fileType != fourccWAVE)
+		ERROR("This isn't WAVE file!\n");
+	else ERROR("WAVE format!\n");
+
+	FindChunk(hFile, fourccFMT, audioChunkSize, audioChunkPosition);
+	ReadChunkData(hFile, &wfx, audioChunkSize, audioChunkPosition);
+
+	FindChunk(hFile, fourccDATA, audioChunkSize, audioChunkPosition);
+	BYTE* dataBuffer = new BYTE[audioChunkSize];
+	ReadChunkData(hFile, dataBuffer, audioChunkSize, audioChunkPosition);
+
+	XAUDIO2_BUFFER audioBuffer = {};
+
+	audioBuffer.AudioBytes = audioChunkSize;
+	audioBuffer.pAudioData = dataBuffer;
+	audioBuffer.Flags = XAUDIO2_END_OF_STREAM;
+	if (repeat)
+		audioBuffer.LoopCount = XAUDIO2_MAX_LOOP_COUNT;
+	else
+		audioBuffer.LoopCount = 0;
+
+	IXAudio2SourceVoice* pSource = nullptr;
+
+	lock.lock();
+	HRESULT hr;
+	if (FAILED(hr = MusicEngine->CreateSourceVoice(&pSource, (WAVEFORMATEX*)&wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
+	{
+		ERROR("FAILED TO CREATE SOURCE VOICE");
+	}
 	if(FAILED(hr = pSource->SubmitSourceBuffer(&audioBuffer)))
 		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
 
@@ -186,8 +312,8 @@ short int Audio::AddAudio(const std::wstring& path, const std::string& name, sho
 		break;
 
 	}	
+	lock.unlock();
 
-	return slot;
 }
 
 void Audio::StopMusic(const std::string& name)

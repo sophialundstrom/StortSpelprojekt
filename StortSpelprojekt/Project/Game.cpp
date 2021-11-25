@@ -635,28 +635,8 @@ Game::~Game()
 
 void Game::SetupAudio()
 {
-	Audio::Initialize();
+	Audio::Initialize(true, 6);
 	Audio::StartEngine();
-	std::cout << Audio::audioBuffers.size() << std::endl;
-	std::cout << Audio::sMusic.size() << std::endl;
-	std::cout << Audio::sEffects.size() << std::endl;
-	std::cout << Audio::sVoices.size() << std::endl;
-	//Audio::AddAudio(L"Audio/SoundForest.wav", 0, AUDIOTYPE::MUSIC, true);					// Default music
-	//Audio::AddAudio(L"Audio/Combat1.wav", 1, AUDIOTYPE::MUSIC, true);						// Combat Version 1 Music
-	//Audio::AddAudio(L"Audio/Combat2.wav", 2, AUDIOTYPE::MUSIC, true);						// Combat Version 2 Music
-	//Audio::AddAudio(L"Audio/SoundDesert.wav", 3, AUDIOTYPE::MUSIC, true);					// Desert Music
-	//Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 4, AUDIOTYPE::MUSIC, true);		// Woodlands Music
-	//Audio::AddAudio(L"Audio/Running.wav", 6, AUDIOTYPE::EFFECT, true);						// Player Running Sound Effect
-	//Audio::AddAudio(L"Audio/Jump.wav", 7, AUDIOTYPE::EFFECT);								// Player Jumping Sound Effect
-	//Audio::AddAudio(L"Audio/Bow.wav", 8, AUDIOTYPE::EFFECT);								// Player Aiming Sound Effect
-	//Audio::AddAudio(L"Audio/Fire.wav", 9, AUDIOTYPE::EFFECT);								// Player Shooting Sound Effect
-	//Audio::AddAudio(L"Audio/Welcome.wav", 10, AUDIOTYPE::EFFECT, true);						// ????
-	//Audio::AddAudio(L"Audio/PickupPop.wav", 11, AUDIOTYPE::EFFECT);							// Collecting Pickup Sound Effect
-	//Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 12, AUDIOTYPE::MUSIC, true);		// :)
-	//Audio::AddAudio(L"Audio/EpicHeart.wav", 13, AUDIOTYPE::MUSIC, true);					// Mountain Music
-	//Audio::AddAudio(L"Audio/SandyBeach.wav", 14, AUDIOTYPE::MUSIC, true);					// Ocean / Beach Music
-	//Audio::AddAudio(L"Audio/Camelot.wav", 15, AUDIOTYPE::MUSIC, true);						// Combat Version 3 Music
-	//Audio::AddAudio(L"Audio/Fireplace.wav", 16, AUDIOTYPE::EFFECT, true);						// Fireplace
 
 	lastMusicSlot = 0;
 	Audio::StartMusic("Sonrie.wav");
