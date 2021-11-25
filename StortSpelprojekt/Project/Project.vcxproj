@@ -227,6 +227,7 @@
     <ClInclude Include="DynamicPlane.h" />
     <ClInclude Include="FBXLoader.h" />
     <ClInclude Include="FightQuest.h" />
+    <ClInclude Include="AudioSource.h" />
     <ClInclude Include="GameLoader.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="Grid.h" />

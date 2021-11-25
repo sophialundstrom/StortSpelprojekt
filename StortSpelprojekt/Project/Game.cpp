@@ -31,6 +31,8 @@ void Game::Update()
 
 	HandleBiomes();
 
+	HandleAudioSources();
+
 	scene.UpdateDirectionalLight(player->GetPosition());
 
 	UpdateQuadTree(); //Something in here makes the game run twice as fast
@@ -617,6 +619,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ocean->Bind(colliderRenderer);
 	biomes.emplace_back(ocean);
 
+	audioSources.emplace_back(AudioSource(Vector3(-15.8f, 23, -588.f), 10.f, 16));
+
 	
 	(void)Run();
 }
@@ -649,9 +653,21 @@ void Game::SetupAudio()
 	Audio::AddAudio(L"Audio/EpicHeart.wav", 13, AUDIOTYPE::MUSIC, true);					// Mountain Music
 	Audio::AddAudio(L"Audio/SandyBeach.wav", 14, AUDIOTYPE::MUSIC, true);					// Ocean / Beach Music
 	Audio::AddAudio(L"Audio/Camelot.wav", 15, AUDIOTYPE::MUSIC, true);						// Combat Version 3 Music
+	Audio::AddAudio(L"Audio/Fireplace.wav", 16, AUDIOTYPE::EFFECT, true);						// Fireplace
 
 	lastMusicSlot = 0;
 	Audio::StartAudio(lastMusicSlot);
+}
+
+void Game::HandleAudioSources()
+{
+	for (auto& audioSource : audioSources)
+	{
+		if (audioSource.CheckActive(player->GetPosition()))
+		{
+			//PrintS("AUDIO ON");
+		}
+	}
 }
 
 APPSTATE Game::Run()
@@ -699,6 +715,11 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('2'))
 		{
 			Graphics::Inst().DeactivateWireframe();
+			lastClick = Time::Get();
+		}
+		if (Event::KeyIsPressed('K'))
+		{
+			PrintVector3(player->GetPosition());
 			lastClick = Time::Get();
 		}
 
@@ -758,7 +779,7 @@ void Game::HandleBiomes()
 {
 
 	bool hit = false;
-	BIOME type = BIOME::DEFAULT;
+	BIOME type = BIOME::DEFAULT; // IF NO BIOME IS HIT -> DEFAULT IS PLAYED
 	for (auto& biome : biomes)
 	{
 		for (auto& collider : biome->colliders)
@@ -766,42 +787,61 @@ void Game::HandleBiomes()
 			hit = Collision::Contains(*collider, player->GetPosition());
 			if (hit)
 			{
-				type = biome->type;
+				type = biome->type; // GETS BIOME TYPE
 				slot = biome->musicSlot;
 			}
 		}
 		
 	}
 
-	player->currentBiome = type;
+	player->currentBiome = type; // CURRENT BIOME SET
 
-	if (player->currentBiome != player->previousBiome)
-	{
-		switch (player->currentBiome)
+		if (player->currentBiome != player->previousBiome) // IF NEW BIOME != LAST BIOME
 		{
-		case BIOME::DESERT:
-			PrintS("DESERT");
-			for (auto& slot : Audio::musicSlots)
-				Audio::StopAudio(slot);
-			Audio::StartAudio(3);
-			lastMusicSlot = 3;
-			break;
-		case BIOME::OCEAN:
-			PrintS("OCEAN");
-			for (auto& slot : Audio::musicSlots)
-				Audio::StopAudio(slot);
-			Audio::StartAudio(14);
-			lastMusicSlot = 14;
-			break;
-		case BIOME::DEFAULT:
-			PrintS("DEFAULT");
-			for (auto& slot : Audio::musicSlots)
-				Audio::StopAudio(slot);
-			Audio::StartAudio(0);
-			lastMusicSlot = 0;
-			break;
+			if (!player->inCombat)
+			{
+				for (auto& slot : Audio::musicSlots)
+					Audio::StopAudio(slot);
+
+				switch (player->currentBiome)
+				{
+				case BIOME::DESERT:
+					PrintS("DESERT");
+
+					Audio::StartAudio(3);
+					lastMusicSlot = 3; // SETS THE MUSIC SLOT FOR THE NEW MUSIC
+					break;
+				case BIOME::OCEAN:
+					PrintS("OCEAN");
+					/*for (auto& slot : Audio::musicSlots)
+						Audio::StopAudio(slot);*/
+					Audio::StartAudio(14);
+					lastMusicSlot = 14;
+					break;
+				case BIOME::DEFAULT:
+					PrintS("DEFAULT");
+					/*for (auto& slot : Audio::musicSlots)
+						Audio::StopAudio(slot);*/
+					Audio::StartAudio(0);
+					lastMusicSlot = 0;
+					break;
+				}
+			}
 		}
-	}
+	
+	
+	/*switch (player->previousBiome)
+	{
+	case BIOME::DESERT:
+		lastMusicSlot = 3;
+		break;
+	case BIOME::OCEAN:
+		lastMusicSlot = 14;
+		break;
+	case BIOME::DEFAULT:
+		lastMusicSlot = 0;
+		break;
+	}*/
 
 	player->previousBiome = player->currentBiome;
 }
@@ -839,7 +879,7 @@ void Game::CheckNearbyEnemies()
 					modelRenderer.Unbind(hostiles[i]);
 					shadowRenderer.Unbind(hostiles[i]);
 					scene.DeleteDrawable(hostiles[i]->GetName());
-					hostiles[i] = hostiles[hostiles.size() - 1];
+					hostiles[i] = hostiles[hostiles.size() - 1 - numDead];
 					numDead++;
 					distanceToHostile = 100000.f;
 					break;
@@ -859,35 +899,76 @@ void Game::CheckNearbyEnemies()
 
 	if (!player->inCombat && numInCombat > 0) 
 	{
+		PrintS("ENTERED COMBAT");
 		player->inCombat = true;
 		short int rand = Random::Integer(0, 2);
+		for (auto& slot : Audio::musicSlots)
+			Audio::StopAudio(slot);
+
 		switch (rand)
 		{
 		case 0:
-			for (auto& slot : Audio::musicSlots)
-				Audio::StopAudio(slot);
 			Audio::StartAudio(1);
 			break;
 
 		case 1:
-			for (auto& slot : Audio::musicSlots)
-				Audio::StopAudio(slot);
 			Audio::StartAudio(2);
 			break;
 
 		case 2:
-			for (auto& slot : Audio::musicSlots)
-				Audio::StopAudio(slot);
 			Audio::StartAudio(15);
 			break;
 		}
 	}
 	else if (player->inCombat && numInCombat == 0)
 	{
+		PrintS("OUT OF COMBAT"); 
 		player->inCombat = false;
-		for (auto& slot : Audio::musicSlots)
-			Audio::StopAudio(slot);
-		Audio::StartAudio(lastMusicSlot);
+
+		bool hit = false;
+		BIOME type = BIOME::DEFAULT;
+		for (auto& biome : biomes)
+		{
+			for (auto& collider : biome->colliders)
+			{
+				hit = Collision::Contains(*collider, player->GetPosition());
+				if (hit)
+				{
+					type = biome->type;
+					slot = biome->musicSlot;
+				}
+			}
+
+		}
+
+		player->currentBiome = type;
+
+		if (player->currentBiome != player->previousBiome)
+		{
+			for (auto& slot : Audio::musicSlots)	
+				Audio::StopAudio(slot);
+
+			switch (player->currentBiome)
+			{
+			case BIOME::DESERT:
+				PrintS("DESERT");
+
+				Audio::StartAudio(3);
+				lastMusicSlot = 3;
+				break;
+			case BIOME::OCEAN:
+				PrintS("OCEAN");
+				Audio::StartAudio(14);
+				lastMusicSlot = 14;
+				break;
+			case BIOME::DEFAULT:
+				PrintS("DEFAULT");
+				Audio::StartAudio(0);
+				lastMusicSlot = 0;
+				break;
+			}
+		}
+		
 	}
 }
 

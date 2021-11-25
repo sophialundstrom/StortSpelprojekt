@@ -24,6 +24,7 @@
 #include "Loot.h"
 #include "MainMenu.h"
 #include "QuadTree.h"
+#include "AudioSource.h"
 
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
@@ -120,6 +121,7 @@ private:
     void HoveringYes();
     void HoveringNo();
 
+    std::vector<AudioSource>audioSources;
   
     bool mainMenu = false;
     UINT slot = 0;
@@ -142,6 +144,7 @@ private:
     void CheckQuestInteraction();
     void CheckNearbyEnemies();
     void HandleBiomes();
+    void HandleAudioSources();
 
     void SetupAudio();
     void UpdateQuadTree();

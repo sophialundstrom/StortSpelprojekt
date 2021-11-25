@@ -692,6 +692,11 @@
     <ClInclude Include="ConcreteStates.h">
       <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClInclude>
+    <ClInclude Include="Biome.h" />
+    <ClInclude Include="BiomeEnum.h" />
+    <ClInclude Include="AudioSource.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
