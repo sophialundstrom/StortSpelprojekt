@@ -16,6 +16,7 @@ struct PS_INPUT
     float2 texCoords : TEXTURECOORDS;
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
+    float3 biNormal : BINORMAL;
     float3 worldPosition : WORLDPOSITION;
 };
 
@@ -67,9 +68,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     normalMap2.y = (2.0f * normalMap2.y) - 1.0f;
     normalMap2.z = normalMap2.z;
 
-    input.tangent = normalize(input.tangent - dot(input.tangent, input.normal) * input.normal);
-    float3 biTangent = cross(input.normal, input.tangent);
-    float3x3 texSpace = float3x3(input.tangent, biTangent, input.normal);
+    float3x3 texSpace = float3x3(input.tangent, input.biNormal, input.normal);
     input.normal = normalize(mul(normalMap1 + normalMap2, texSpace));
 
     //FOG
@@ -83,7 +82,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     finalColor = color * directionalLight.lightColor;
     finalColor += saturate(dot(directionalLight.lightDirection, input.normal) * directionalLight.lightColor * color);
 
-    finalColor += ((input.worldPosition.y + 0.5f) /** (noiseTex)*/ * 0.2f);
+    finalColor += (input.worldPosition.y * (noiseTex) * 0.2f);
 
     return float4((lerp((input.worldPosition, 1.0f) * saturate(finalColor), fogColor, fogFactor)), color.a);
 }

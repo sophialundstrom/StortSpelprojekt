@@ -21,7 +21,7 @@ PlaneWithNormals::PlaneWithNormals(UINT subdivisions, UINT size)
 			texCoords = { texSize * i + (1.0f / size), texSize * j };
 			//ADD VALUE FOR NORMAL AND TANGENT
 			normal = { 0,0,1 };
-			tangent = { 0,0,-1 };
+			tangent = { 1,0,0 };
 
 			vertices.emplace_back(Vertex{ position, texCoords, normal, tangent });
 		}
