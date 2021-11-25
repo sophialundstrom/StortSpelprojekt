@@ -40,6 +40,10 @@ void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
     {
         if (!arrow->canCollide)
             continue;
+
+        if ((arrow->GetPosition() - player->GetPosition()).Length() > 10.f)
+            continue;
+
         if (arrowHandler.CheckCollision(arrow, player->GetBounds(), true))
         {
             std::cout << "PLAYER HIT" << std::endl;

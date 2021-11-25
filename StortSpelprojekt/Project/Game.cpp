@@ -285,6 +285,9 @@ void Game::CheckNearbyCollision()
 			{
 				if (!arrow->canCollide)
 					continue;
+				if ((arrow->GetPosition() - collider->GetPosition()).Length() > 50.f)
+					continue;
+
 				hostile->GetArrowHandler().CheckCollision(arrow, collider);
 			}
 		}
@@ -294,7 +297,8 @@ void Game::CheckNearbyCollision()
 		{
 			if (!arrow->canCollide)
 				continue;
-
+			if ((arrow->GetPosition() - collider->GetPosition()).Length() > 50.f)
+				continue;
 			player->GetArrowHandler().CheckCollision(arrow, collider);
 		}
 
