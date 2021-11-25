@@ -203,6 +203,9 @@ MainMenu::~MainMenu()
 
 void MainMenu::Initialize()
 {
+	Audio::Initialize();
+	Audio::StartMusic("Menu.wav");
+
 	//LOAD SCENE
 	FBXLoader levelLoader("Models");
 

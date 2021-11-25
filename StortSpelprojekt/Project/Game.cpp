@@ -636,7 +636,7 @@ Game::~Game()
 void Game::SetupAudio()
 {
 	Audio::Initialize(true, 6);
-	Audio::StartEngine();
+	//Audio::StartEngine();
 
 	lastMusicSlot = 0;
 	Audio::StartMusic("Sonrie.wav");

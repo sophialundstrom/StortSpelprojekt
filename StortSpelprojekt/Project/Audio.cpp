@@ -79,6 +79,7 @@ void Audio::StartVoice(const std::string& name)
 
 void Audio::Initialize(bool mtLoading, const int& numThreads)
 {	
+
 	HRESULT hr;
 
 	if(FAILED(hr = XAudio2Create(&MusicEngine, 0 , XAUDIO2_DEFAULT_PROCESSOR)))
@@ -172,6 +173,7 @@ void Audio::Initialize(bool mtLoading, const int& numThreads)
 		PrintNumber(timer.DeltaTime(), "SINGLETHREADED TIME: ");
 	}
 
+	StartEngine();
 
 }
 
