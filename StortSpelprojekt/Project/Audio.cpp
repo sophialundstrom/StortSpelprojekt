@@ -1,15 +1,15 @@
 #include "Audio.h"
+#include "FileSystem.h"
+#include "Text.h"
 
 Microsoft::WRL::ComPtr<IXAudio2> Audio::MusicEngine;
 IXAudio2MasteringVoice* Audio::pMasterVoice = nullptr;
 WAVEFORMATEXTENSIBLE Audio::wfx = { 0 };
-XAUDIO2_BUFFER Audio::audioBuffer[CAP] = { 0 };
-IXAudio2SourceVoice* Audio::pSourceVoice[CAP] = { nullptr };
-std::vector<short int> Audio::musicSlots = {};
-std::vector<short int> Audio::effectSlots = {};
-std::vector<short int> Audio::voiceSlots = {};
+std::map<std::string, IXAudio2SourceVoice*> Audio::sMusic;
+std::map<std::string, IXAudio2SourceVoice*> Audio::sEffects;
+std::map<std::string, IXAudio2SourceVoice*> Audio::sVoices;
+std::map<std::string, XAUDIO2_BUFFER> Audio::audioBuffers;
 float Audio::volume = 0.5f;
-
 
 void Audio::StartEngine()
 {
@@ -21,19 +21,56 @@ void Audio::StopEngine()
 	MusicEngine->StopEngine();
 }
 
-void Audio::SetVolume(float volume, int slot)
+void Audio::SetVolume(const std::string& name, float volume)
 {
-	pSourceVoice[slot]->SetVolume(volume);
+	if (sMusic.count(name) == 1)
+	{
+		sMusic[name]->SetVolume(volume);
+		return;
+	}
+	if (sEffects.count(name) == 1)
+	{
+		sEffects[name]->SetVolume(volume);
+		return;
+	}
+	if (sVoices.count(name) == 1)
+	{
+		sVoices[name]->SetVolume(volume);
+		return;
+	}
 }
 
-void Audio::StartAudio(int slot)
+void Audio::StartMusic(const std::string& name)
 {
-	pSourceVoice[slot]->Stop(0);
-	pSourceVoice[slot]->FlushSourceBuffers();
+
+	sMusic[name]->Stop(0);
+	sMusic[name]->FlushSourceBuffers();
 	HRESULT hr;
-	if (FAILED(hr = pSourceVoice[slot]->SubmitSourceBuffer(&audioBuffer[slot])))
+	if (FAILED(hr = sMusic[name]->SubmitSourceBuffer(&audioBuffers[name])))
+		std::cout << "COULD NOT START MUSIC - SOURCE BUFFER FAILED" << std::endl;
+	if (FAILED(hr = sMusic[name]->Start(0)))
+		std::cout << "COULD NOT START MUSIC - COULD NOT START AUDIO" << std::endl;
+}
+
+void Audio::StartEffect(const std::string& name)
+{
+	sEffects[name]->Stop(0);
+	sEffects[name]->FlushSourceBuffers();
+	HRESULT hr;
+	if (FAILED(hr = sEffects[name]->SubmitSourceBuffer(&audioBuffers[name])))
 		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
-	if(FAILED(hr = pSourceVoice[slot]->Start(0)))
+	if (FAILED(hr = sEffects[name]->Start(0)))
+		std::cout << "COULD NOT START AUDIO" << std::endl;
+}
+
+void Audio::StartVoice(const std::string& name)
+{
+	sVoices[name]->Stop(0);
+	sVoices[name]->FlushSourceBuffers();
+	HRESULT hr;
+	if (FAILED(hr = sVoices[name]->SubmitSourceBuffer(&audioBuffers[name])))
+		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
+	if (FAILED(hr = sVoices[name]->Start(0)))
 		std::cout << "COULD NOT START AUDIO" << std::endl;
 }
 
@@ -46,11 +83,47 @@ void Audio::Initialize()
 
 	if (FAILED(hr = MusicEngine->CreateMasteringVoice(&pMasterVoice)))
 		std::cout << "COULD NOT CREATE MASTERING VOICE" << std::endl;
+
+	std::vector<std::string> names;
+
+	using directory_iterator = std::filesystem::directory_iterator;
+
+	for (const auto& dirEntry : directory_iterator("Audio/Music/"))
+	{
+		if (dirEntry.path().extension() == ".wav")
+		{
+			PrintS(dirEntry.path().string());
+			std::string fileName = dirEntry.path().filename().string();
+			std::wstring path = to_wstr("Audio/Music/" + fileName);
+			AddAudio(path, fileName, 0, AUDIOTYPE::MUSIC, true);
+		}
+	}
+	for (const auto& dirEntry : directory_iterator("Audio/EffectsOnce/"))
+	{
+		if (dirEntry.path().extension() == ".wav")
+		{
+			std::string fileName = dirEntry.path().filename().string();
+			std::wstring path = to_wstr("Audio/EffectsOnce/" + fileName);
+			AddAudio(path, fileName, 0, AUDIOTYPE::EFFECT);
+		}
+	}
+	for (const auto& dirEntry : directory_iterator("Audio/EffectsRepeat/"))
+	{
+		if (dirEntry.path().extension() == ".wav")
+		{
+			//std::wstring wstr(dirEntry.path().string().begin(), dirEntry.path().string().end());
+			std::string fileName = dirEntry.path().filename().string();
+			std::wstring path = to_wstr("Audio/EffectsRepeat/" + fileName);
+			AddAudio(path, fileName, 0, AUDIOTYPE::EFFECT, true);
+		}
+	}
+
 }
 
-short int Audio::AddAudio(std::wstring fileName, short int slot, AUDIOTYPE type, bool repeat)
+short int Audio::AddAudio(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat)
 {
-	LPCWSTR strFileName = fileName.c_str();
+	
+	LPCWSTR strFileName = path.c_str();
 	
 	HANDLE hFile = CreateFile(strFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (INVALID_HANDLE_VALUE == hFile)
@@ -75,34 +148,41 @@ short int Audio::AddAudio(std::wstring fileName, short int slot, AUDIOTYPE type,
 	BYTE* dataBuffer = new BYTE[audioChunkSize];
 	ReadChunkData(hFile, dataBuffer, audioChunkSize, audioChunkPosition);
 
-	audioBuffer[slot].AudioBytes = audioChunkSize;
-	audioBuffer[slot].pAudioData = dataBuffer;
-	audioBuffer[slot].Flags = XAUDIO2_END_OF_STREAM;
+	XAUDIO2_BUFFER audioBuffer = {};
+
+	audioBuffer.AudioBytes = audioChunkSize;
+	audioBuffer.pAudioData = dataBuffer;
+	audioBuffer.Flags = XAUDIO2_END_OF_STREAM;
 	if (repeat)
-		audioBuffer[slot].LoopCount = XAUDIO2_MAX_LOOP_COUNT;
+		audioBuffer.LoopCount = XAUDIO2_MAX_LOOP_COUNT;
 	else
-		audioBuffer[slot].LoopCount = 0;
+		audioBuffer.LoopCount = 0;
+
+	IXAudio2SourceVoice* pSource = nullptr;
 
 	HRESULT hr;
-	if (FAILED(hr = MusicEngine->CreateSourceVoice(&pSourceVoice[slot], (WAVEFORMATEX*)&wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
+	if (FAILED(hr = MusicEngine->CreateSourceVoice(&pSource, (WAVEFORMATEX*)&wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
 	{
 		ERROR("FAILED TO CREATE SOURCE VOICE");
 	}
-	if(FAILED(hr = pSourceVoice[slot]->SubmitSourceBuffer(&audioBuffer[slot])))
+	if(FAILED(hr = pSource->SubmitSourceBuffer(&audioBuffer)))
 		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
 
-	pSourceVoice[slot]->SetVolume(volume);
+	pSource->SetVolume(volume);
+	
+	audioBuffers[name] = audioBuffer;
+	
 
 	switch (type)
 	{
 	case AUDIOTYPE::MUSIC:
-		musicSlots.emplace_back(slot);
+		sMusic[name] = pSource;
 		break;
 	case AUDIOTYPE::EFFECT:
-		effectSlots.emplace_back(slot);
+		sEffects[name] = pSource;
 		break;
 	case AUDIOTYPE::VOICE:
-		voiceSlots.emplace_back(slot);
+		sVoices[name] = pSource;
 		break;
 
 	}	
@@ -110,11 +190,29 @@ short int Audio::AddAudio(std::wstring fileName, short int slot, AUDIOTYPE type,
 	return slot;
 }
 
-void Audio::StopAudio(int slot)
+void Audio::StopMusic(const std::string& name)
 {
-	if (pSourceVoice[slot] == nullptr)
+	if (sMusic[name] == nullptr)
 		return;
 	HRESULT hr;
-	if (FAILED(hr = pSourceVoice[slot]->Stop(0)))
+	if (FAILED(hr = sMusic[name]->Stop(0)))
+		std::cout << "COULD NOT START AUDIO" << std::endl;
+}
+
+void Audio::StopEffect(const std::string& name)
+{
+	if (sEffects[name] == nullptr)
+		return;
+	HRESULT hr;
+	if (FAILED(hr = sEffects[name]->Stop(0)))
+		std::cout << "COULD NOT START AUDIO" << std::endl;
+}
+
+void Audio::StopVoice(const std::string& name)
+{
+	if (sVoices[name] == nullptr)
+		return;
+	HRESULT hr;
+	if (FAILED(hr = sVoices[name]->Stop(0)))
 		std::cout << "COULD NOT START AUDIO" << std::endl;
 }

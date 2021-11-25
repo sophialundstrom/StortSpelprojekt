@@ -263,7 +263,7 @@ void Game::UpdateAndHandleLoot()
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 			
-			Audio::StartAudio(11);
+			//Audio::StartAudio(11);
 			std::cout << "Loot destoyed\n";
 		}
 	}
@@ -415,7 +415,7 @@ void Game::CheckItemCollision()
 
 			if (Event::KeyIsPressed('E'))
 			{
-				Audio::StartAudio(10);
+				//Audio::StartAudio(10);
 				Print("PICKED UP ITEM");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
@@ -619,7 +619,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ocean->Bind(colliderRenderer);
 	biomes.emplace_back(ocean);
 
-	audioSources.emplace_back(AudioSource(Vector3(-15.8f, 23, -588.f), 10.f, 16));
+	//audioSources.emplace_back(AudioSource(Vector3(-15.8f, 23, -588.f), 10.f, 16));
 
 	
 	(void)Run();
@@ -637,26 +637,29 @@ void Game::SetupAudio()
 {
 	Audio::Initialize();
 	Audio::StartEngine();
-
-	Audio::AddAudio(L"Audio/SoundForest.wav", 0, AUDIOTYPE::MUSIC, true);					// Default music
-	Audio::AddAudio(L"Audio/Combat1.wav", 1, AUDIOTYPE::MUSIC, true);						// Combat Version 1 Music
-	Audio::AddAudio(L"Audio/Combat2.wav", 2, AUDIOTYPE::MUSIC, true);						// Combat Version 2 Music
-	Audio::AddAudio(L"Audio/SoundDesert.wav", 3, AUDIOTYPE::MUSIC, true);					// Desert Music
-	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 4, AUDIOTYPE::MUSIC, true);		// Woodlands Music
-	Audio::AddAudio(L"Audio/Running.wav", 6, AUDIOTYPE::EFFECT, true);						// Player Running Sound Effect
-	Audio::AddAudio(L"Audio/Jump.wav", 7, AUDIOTYPE::EFFECT);								// Player Jumping Sound Effect
-	Audio::AddAudio(L"Audio/Bow.wav", 8, AUDIOTYPE::EFFECT);								// Player Aiming Sound Effect
-	Audio::AddAudio(L"Audio/Fire.wav", 9, AUDIOTYPE::EFFECT);								// Player Shooting Sound Effect
-	Audio::AddAudio(L"Audio/Welcome.wav", 10, AUDIOTYPE::EFFECT, true);						// ????
-	Audio::AddAudio(L"Audio/PickupPop.wav", 11, AUDIOTYPE::EFFECT);							// Collecting Pickup Sound Effect
-	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 12, AUDIOTYPE::MUSIC, true);		// :)
-	Audio::AddAudio(L"Audio/EpicHeart.wav", 13, AUDIOTYPE::MUSIC, true);					// Mountain Music
-	Audio::AddAudio(L"Audio/SandyBeach.wav", 14, AUDIOTYPE::MUSIC, true);					// Ocean / Beach Music
-	Audio::AddAudio(L"Audio/Camelot.wav", 15, AUDIOTYPE::MUSIC, true);						// Combat Version 3 Music
-	Audio::AddAudio(L"Audio/Fireplace.wav", 16, AUDIOTYPE::EFFECT, true);						// Fireplace
+	std::cout << Audio::audioBuffers.size() << std::endl;
+	std::cout << Audio::sMusic.size() << std::endl;
+	std::cout << Audio::sEffects.size() << std::endl;
+	std::cout << Audio::sVoices.size() << std::endl;
+	//Audio::AddAudio(L"Audio/SoundForest.wav", 0, AUDIOTYPE::MUSIC, true);					// Default music
+	//Audio::AddAudio(L"Audio/Combat1.wav", 1, AUDIOTYPE::MUSIC, true);						// Combat Version 1 Music
+	//Audio::AddAudio(L"Audio/Combat2.wav", 2, AUDIOTYPE::MUSIC, true);						// Combat Version 2 Music
+	//Audio::AddAudio(L"Audio/SoundDesert.wav", 3, AUDIOTYPE::MUSIC, true);					// Desert Music
+	//Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 4, AUDIOTYPE::MUSIC, true);		// Woodlands Music
+	//Audio::AddAudio(L"Audio/Running.wav", 6, AUDIOTYPE::EFFECT, true);						// Player Running Sound Effect
+	//Audio::AddAudio(L"Audio/Jump.wav", 7, AUDIOTYPE::EFFECT);								// Player Jumping Sound Effect
+	//Audio::AddAudio(L"Audio/Bow.wav", 8, AUDIOTYPE::EFFECT);								// Player Aiming Sound Effect
+	//Audio::AddAudio(L"Audio/Fire.wav", 9, AUDIOTYPE::EFFECT);								// Player Shooting Sound Effect
+	//Audio::AddAudio(L"Audio/Welcome.wav", 10, AUDIOTYPE::EFFECT, true);						// ????
+	//Audio::AddAudio(L"Audio/PickupPop.wav", 11, AUDIOTYPE::EFFECT);							// Collecting Pickup Sound Effect
+	//Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 12, AUDIOTYPE::MUSIC, true);		// :)
+	//Audio::AddAudio(L"Audio/EpicHeart.wav", 13, AUDIOTYPE::MUSIC, true);					// Mountain Music
+	//Audio::AddAudio(L"Audio/SandyBeach.wav", 14, AUDIOTYPE::MUSIC, true);					// Ocean / Beach Music
+	//Audio::AddAudio(L"Audio/Camelot.wav", 15, AUDIOTYPE::MUSIC, true);						// Combat Version 3 Music
+	//Audio::AddAudio(L"Audio/Fireplace.wav", 16, AUDIOTYPE::EFFECT, true);						// Fireplace
 
 	lastMusicSlot = 0;
-	Audio::StartAudio(lastMusicSlot);
+	Audio::StartMusic("Sonrie.wav");
 }
 
 void Game::HandleAudioSources()
@@ -800,29 +803,29 @@ void Game::HandleBiomes()
 		{
 			if (!player->inCombat)
 			{
-				for (auto& slot : Audio::musicSlots)
-					Audio::StopAudio(slot);
+				for (auto& slot : Audio::sMusic)
+					Audio::StopMusic(slot.first);
 
 				switch (player->currentBiome)
 				{
 				case BIOME::DESERT:
 					PrintS("DESERT");
 
-					Audio::StartAudio(3);
+					Audio::StartMusic("SoundDesert.wav");
 					lastMusicSlot = 3; // SETS THE MUSIC SLOT FOR THE NEW MUSIC
 					break;
 				case BIOME::OCEAN:
 					PrintS("OCEAN");
 					/*for (auto& slot : Audio::musicSlots)
 						Audio::StopAudio(slot);*/
-					Audio::StartAudio(14);
+					Audio::StartMusic("SoundOcean.wav");
 					lastMusicSlot = 14;
 					break;
 				case BIOME::DEFAULT:
 					PrintS("DEFAULT");
 					/*for (auto& slot : Audio::musicSlots)
 						Audio::StopAudio(slot);*/
-					Audio::StartAudio(0);
+					Audio::StartMusic("Sonrie.wav");
 					lastMusicSlot = 0;
 					break;
 				}
@@ -902,21 +905,22 @@ void Game::CheckNearbyEnemies()
 		PrintS("ENTERED COMBAT");
 		player->inCombat = true;
 		short int rand = Random::Integer(0, 2);
-		for (auto& slot : Audio::musicSlots)
-			Audio::StopAudio(slot);
+
+		for (auto& slot : Audio::sMusic)
+			Audio::StopMusic(slot.first);
 
 		switch (rand)
 		{
 		case 0:
-			Audio::StartAudio(1);
+			Audio::StartMusic("Camelot.wav");
 			break;
 
 		case 1:
-			Audio::StartAudio(2);
+			Audio::StartMusic("combat1.wav");
 			break;
 
 		case 2:
-			Audio::StartAudio(15);
+			Audio::StartMusic("combat2.wav");
 			break;
 		}
 	}
@@ -945,25 +949,29 @@ void Game::CheckNearbyEnemies()
 
 		if (player->currentBiome != player->previousBiome)
 		{
-			for (auto& slot : Audio::musicSlots)	
-				Audio::StopAudio(slot);
+			for (auto& slot : Audio::sMusic)
+				Audio::StopMusic(slot.first);
 
 			switch (player->currentBiome)
 			{
 			case BIOME::DESERT:
 				PrintS("DESERT");
 
-				Audio::StartAudio(3);
-				lastMusicSlot = 3;
+				Audio::StartMusic("SoundDesert.wav");
+				lastMusicSlot = 3; // SETS THE MUSIC SLOT FOR THE NEW MUSIC
 				break;
 			case BIOME::OCEAN:
 				PrintS("OCEAN");
-				Audio::StartAudio(14);
+				/*for (auto& slot : Audio::musicSlots)
+					Audio::StopAudio(slot);*/
+				Audio::StartMusic("SoundOcean.wav");
 				lastMusicSlot = 14;
 				break;
 			case BIOME::DEFAULT:
 				PrintS("DEFAULT");
-				Audio::StartAudio(0);
+				/*for (auto& slot : Audio::musicSlots)
+					Audio::StopAudio(slot);*/
+				Audio::StartMusic("Sonrie.wav");
 				lastMusicSlot = 0;
 				break;
 			}

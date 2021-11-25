@@ -116,7 +116,8 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		if (!isSprinting)
 		{
 			
-			Audio::StartAudio(6);
+			Audio::StartEffect("Running.wav");
+			Audio::SetVolume("Running.wav", 4.f);
 			isSprinting = true;
 		}
 		stats.currentSpeed += 50.0f * Time::GetDelta();
@@ -130,7 +131,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	else
 	{
 		isSprinting = false;
-		Audio::StopAudio(6);
+		Audio::StopEffect("Running.wav");
 		stats.currentSpeed -= 12.0f * Time::GetDelta();
 		if (stats.currentSpeed < stats.movementSpeed)
 			stats.currentSpeed = stats.movementSpeed;
@@ -169,7 +170,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		if (Event::KeyIsPressed(VK_SPACE))
 		{
 			jumping = true;
-			Audio::StartAudio(7);
+			Audio::StartEffect("Jump.wav");
 			preJumpGroundLevel = currentGroundLevel; 
 			PlayAnimation("Jump", false, 0.5f);
 		}
@@ -242,7 +243,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	{
 		if (!isAiming)
 		{
-			Audio::StartAudio(8);
+			Audio::StartEffect("Bow.wav");
 			isAiming = true;
 		}
 
@@ -255,7 +256,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 			{
 				arrowHandler.AddArrow(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
-				Audio::StartAudio(9);
+				Audio::StartEffect("Fire.wav");
 				int currentIndex = 0;
 				numArrows--;
 				sinceLastShot = 0.f;
@@ -265,7 +266,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	}
 	else
 	{
-		Audio::StopAudio(8);
+		Audio::StopEffect("Bow.wav");
 		isAiming = false;
 		
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
