@@ -13,8 +13,8 @@ class LevelEditor : public Editor, public ApplicationState
 private:
 	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
 
-	int totalVertexCountLastFrame;
-	int totalVertexCount;
+	int totalPolygonsLastFrame;
+	int totalPolygonCount;
 	std::string selectedObject;
 	HWND appWindow;
 	float wRatioX;
@@ -25,6 +25,7 @@ private:
 	std::map<std::string, std::shared_ptr<BoundingSphere>> pickBoxes;
 	Terrain* terrain;
 	Water water;
+	bool renderWater = true;
 
 	//ADD RENDERERS
 	TerrainRenderer terrainRenderer;
@@ -50,6 +51,7 @@ private:
 	void FocusObject();
 	void DuplicateObject();
 	void DuplicateVolume();
+	void ShowWater();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 
