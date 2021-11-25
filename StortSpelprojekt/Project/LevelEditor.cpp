@@ -365,6 +365,20 @@ void LevelEditor::ShowVolumes()
 	}
 }
 
+void LevelEditor::ShowTerrain()
+{
+	bool changed = false;
+	if (renderTerrain)
+	{
+		renderTerrain = false;
+		changed = true;
+	}
+	if (!renderTerrain && !changed)
+	{
+		renderTerrain = true;
+	}
+}
+
 void LevelEditor::Update()
 {
 	if (Event::LeftIsClicked() && !ImGuizmo::IsOver() && viewportPanel.Hovered())
@@ -443,7 +457,7 @@ void LevelEditor::Update()
 	}
 
 	if (Event::KeyIsPressed(VK_SHIFT))
-		scene.GetCamera()->SetSpeedMultiplier(4);
+		scene.GetCamera()->SetSpeedMultiplier(8);
 	else
 		scene.GetCamera()->SetSpeedMultiplier(1);
 
@@ -531,7 +545,8 @@ void LevelEditor::Render()
 
 	BeginViewportFrame();
 
-	terrainRenderer.Render(*terrain);
+	if(renderTerrain)
+		terrainRenderer.Render(*terrain);
 
 	if(renderWater)
 		waterRenderer.Render(water);
@@ -593,6 +608,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddButtonComponent("CREATE BBOX", 120, 30);
 		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
+		window.AddCheckBoxComponent("TERRAIN", true);
 		window.AddCheckBoxComponent("WATER", true);
 		window.AddCheckBoxComponent("VOLUMES", true);
 		window.AddSliderIntComponent("RENDER DIVIDE", -2000, 2000, -2000, false);
@@ -632,7 +648,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddTextComponent("Shortcuts", false);
 		window.SetValue<TextComponent, std::string>("Shortcuts", "Selecting an item brings up the gizmo.\n- Keyboard key 1: MoveTool\n- Keyboard key 2: RotateTool\n- Keyboard key 3: ScaleTool\n\nPressing F on your keyboard focuses on the selected item.\n\nYou can also modify items by using the sliders in the Game Object window.\nBy holding CTRL and pressing LMB on a slider, you can type in an exact value.\n\n");
 		window.AddTextComponent("Tools", false);
-		window.SetValue<TextComponent, std::string>("Tools","Using the 'Delete' button will remove the selected item.\nThis can also be achieved by pressing 'Del' on your keyboard.\nWhen items are removed, the Scene Component list will update and sort itself.\n\nThe 'Duplicate' button creates a copy of the selected item.\nThe copy will automatically be selected.\nThis can also be achieved by pressing CTRL + D on your keyboard.\n\nWhen an item is selected, use 'CreateBBox' or 'CreateBSphere to create an appropriate bounding-volume for the item.\nThe volume can be moved, scaled and rotated.\nThe volume is Not connected to any item, but an item must be selected to create a new box.\nLike items, bounding-volumes can also be duplicated.\n\n");
+		window.SetValue<TextComponent, std::string>("Tools","Using the 'Delete' button will remove the selected item.\nThis can also be achieved by pressing 'Del' on your keyboard.\nWhen items are removed, the Scene Component list will update and sort itself.\n\nThe 'Duplicate' button creates a copy of the selected item.\nThe copy will automatically be selected.\nThis can also be achieved by pressing CTRL + D on your keyboard.\n\nWhen an item is selected, use 'CreateBBox' or 'CreateBSphere' to create an appropriate bounding-volume for the item.\nThe volume can be moved, scaled and rotated.\nThe volume is Not connected to any item, but an item must be selected to create a new volume.\nLike items, bounding-volumes can be duplicated.\n\n");
 		window.AddTextComponent("Scene", false);
 		window.SetValue<TextComponent, std::string>("Scene", "For now the editor only has one scene-file. This scene-file is the one that the game loads.\nTo Save changes to the file, press 'Save World'.\nUse the 'Load FBX' button to import new items.");
 	}	
@@ -874,6 +890,9 @@ APPSTATE LevelEditor::Run()
 
 		if (window.Changed("WIREFRAME"))
 			Graphics::Inst().ToggleWireframe();
+
+		if (window.Changed("TERRAIN"))
+			ShowTerrain();
 
 		if (window.Changed("WATER"))
 			ShowWater();
