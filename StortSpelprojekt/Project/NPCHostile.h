@@ -33,9 +33,13 @@ private:
 	ModelRenderer* mRend = nullptr;
 	ColliderRenderer* cRend = nullptr;
 	float lastShot = 0.f;
+
+	float detectionRadius = 10.0f;
 public:
 	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle);
 	HostileNPC(const Model& model);
+
+	float DetectionRadius() { return detectionRadius; }
 
 	void SwapCombatStyle(CombatStyle newCombatStyle);
 	virtual void Update() override;

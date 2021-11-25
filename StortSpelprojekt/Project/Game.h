@@ -106,6 +106,8 @@ private:
     void AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation);
     void AddBarbarianCamps();
 
+    void SpawnInvasion();
+
     void UpdateAndHandleLoot();
     void CheckNearbyCollision();
     void CheckSaveStationCollision();

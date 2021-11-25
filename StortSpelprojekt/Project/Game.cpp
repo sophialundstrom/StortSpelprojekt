@@ -350,7 +350,7 @@ void Game::AddBarbarianCamps()
 	const float towerHeight = 20.0f;
 
 	{ // SOUTHERN CAMP
-		auto camp = new BarbarianCamp(BarbarianCamp::Location::South, 30.0f);
+		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
 		//camp->AddBarbarian("BarbarianBow", { 392, 182, -44 }, hostiles, player, CombatStyle::consistantDelay, false);
 		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, false);
 		//ADD MORE BARBARIANS AND CAMPS
@@ -359,28 +359,37 @@ void Game::AddBarbarianCamps()
 	}
 
 	{ // EASTERN CAMP
-		auto camp = new BarbarianCamp(BarbarianCamp::Location::East, 40.0f);
+		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::East, 40.0f);
 
 		camps[BarbarianCamp::Location::East] = camp;
 	}
 
 	{ // NORTHERN CAMP
-		auto camp = new BarbarianCamp(BarbarianCamp::Location::North, 40.0f);
+		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::North, 40.0f);
 
 		camps[BarbarianCamp::Location::North] = camp;
 	}
 
 	{ // WESTERN CAMP
-		auto camp = new BarbarianCamp(BarbarianCamp::Location::West, 40.0f);
+		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::West, 40.0f);
 
 		camps[BarbarianCamp::Location::West] = camp;
 	}
 
 	{ // VILLAGE INVADERS
-		auto camp = new BarbarianCamp(BarbarianCamp::Location::Village, 40.0f);
+		auto camp = new BarbarianCamp({ -11.5f, 18.0f, -126.0f }, BarbarianCamp::Location::Village, 40.0f, false);
+
+		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -126.0f }, hostiles, player, CombatStyle::consistantDelay);
+		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -136.0f }, hostiles, player, CombatStyle::consistantDelay);
+		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -146.0f }, hostiles, player, CombatStyle::consistantDelay);
 
 		camps[BarbarianCamp::Location::Village] = camp;
 	}
+}
+
+void Game::SpawnInvasion()
+{
+	camps[BarbarianCamp::Location::Village]->Reset();
 }
 
 void Game::CheckTargetCollision()
@@ -750,6 +759,7 @@ APPSTATE Game::Run()
 			PrintNumber("Barb Arrows", hostiles[0]->GetArrowHandler().arrows.size());
 			lastClick = Time::Get();
 		}
+
 		if (Event::KeyIsPressed('K'))
 		{
 			Audio::AddAudio(L"Audio/arrowHit.wav", 0);

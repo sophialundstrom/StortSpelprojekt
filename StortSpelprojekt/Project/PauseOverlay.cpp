@@ -20,11 +20,11 @@ PauseOverlay::PauseOverlay()
 	AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f }, "PauseBackground", "PauseBackground.png", 1.0f, 1.0f);
 	AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 8.0f }, "PauseTitle", "PAUSED.png", 1.0f, 1.0f);
 	
-	AddButton({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f - 100 }, "RESUME", 350, 95, UI::COLOR::GRAY, resumeFunc);
+	AddButton({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f - 100 }, "RESUME", 350, 95, UI::COLOR::DARK_YELLOW, resumeFunc);
 	AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f - 100 }, "ResumeButton", "ResumeButton.png", 0.50f, 1.0f);
 	
 	AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f + 100 }, "BackToMainMenu", "MainMenuButton.png", 0.50f, 1.0f);
-	AddButton({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f + 100 }, "BackToMainMenuButton", 350, 95, UI::COLOR::GRAY, toMainMenuChoiceFunc);
+	AddButton({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f + 100 }, "BackToMainMenuButton", 350, 95, UI::COLOR::DARK_YELLOW, toMainMenuChoiceFunc);
 
 	{
 		// HOW TO PLAY
