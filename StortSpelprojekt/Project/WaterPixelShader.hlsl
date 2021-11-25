@@ -8,6 +8,7 @@ sampler wrapSampler : register(s0);
 cbuffer DIRECTIONALLIGHT : register(b1)
 {
     DirectionalLight directionalLight;
+    LightResult lightResult;
 }
 
 struct PS_INPUT
@@ -16,7 +17,6 @@ struct PS_INPUT
     float2 texCoords : TEXTURECOORDS;
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
-    float3 biNormal : BINORMAL;
     float3 worldPosition : WORLDPOSITION;
 };
 
@@ -67,9 +67,14 @@ float4 main(PS_INPUT input) : SV_TARGET
     normalMap2.x = (2.0f * normalMap2.x) - 1.0f;
     normalMap2.y = (2.0f * normalMap2.y) - 1.0f;
     normalMap2.z = normalMap2.z;
+    //normalMap1 = (normalMap1 * 2.0f) - 1.0f;
+    //normalMap2 = (normalMap2 * 2.0f) - 1.0f;
+    float3 normalMaps = normalMap1 + normalMap2;
 
-    float3x3 texSpace = float3x3(input.tangent, input.biNormal, input.normal);
-    input.normal = normalize(mul(normalMap1 + normalMap2, texSpace));
+    input.tangent = normalize(input.tangent - dot(input.tangent, input.normal) * input.normal);
+    float3 biTangent = cross(input.normal, input.tangent);
+    float3x3 texSpace = float3x3(input.tangent, biTangent, input.normal);
+    input.normal = normalize(mul(normalMaps, texSpace));
 
     //FOG
     float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
@@ -82,7 +87,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     finalColor = color * directionalLight.lightColor;
     finalColor += saturate(dot(directionalLight.lightDirection, input.normal) * directionalLight.lightColor * color);
 
-    finalColor += (input.worldPosition.y * (noiseTex) * 0.2f);
+    finalColor += (input.worldPosition.y /** noiseTex*/ * 0.2f);
 
     return float4((lerp((input.worldPosition, 1.0f) * saturate(finalColor), fogColor, fogFactor)), color.a);
 }
