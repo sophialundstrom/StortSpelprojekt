@@ -252,7 +252,50 @@ void LevelEditor::ShowWater()
 	{
 		renderWater = true;
 	}
-};
+}
+
+void LevelEditor::DivideRendering()
+{
+	int divX = windows["TOOLS"].GetValue<SliderIntComponent>("RENDER DIVIDER");
+	auto& drawables = scene.GetDrawables();
+	for (auto& [drawableName, drawable] : drawables)
+	{
+		if (drawable->GetPosition().x < divX)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+			{
+				modelRenderer.Unbind(drawable);
+				idRenderer.Unbind(drawable);
+			}
+			else
+			{
+				volumeRenderer.Unbind(drawable);
+				idRenderer.Unbind(drawable);
+			}
+		}
+		else
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+			{
+				if (!modelRenderer.IsBound(drawable))
+				{
+					modelRenderer.Bind(drawable);
+					idRenderer.Bind(drawable);
+				}
+			}
+			else
+			{
+				if (!volumeRenderer.IsBound(drawable))
+				{
+					volumeRenderer.Bind(drawable);
+					idRenderer.Bind(drawable);
+				}
+			}
+		}
+	}
+}
 
 void LevelEditor::Update()
 {
@@ -482,6 +525,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 		window.AddCheckBoxComponent("WATER", true);
+		window.AddSliderIntComponent("RENDER DIVIDER", -2000, 2000, -2000, false);
 	}
 
 	{
@@ -678,10 +722,6 @@ void LevelEditor::ClearToolUI()
 	window.SetValue<SliderFloatComponent, float>("Y", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Z", 0.0f);
 
-	//window.SetValue<SliderFloatComponent, float>("Around X", 0.0f);
-	//window.SetValue<SliderFloatComponent, float>("Around Y", 0.0f);
-	//window.SetValue<SliderFloatComponent, float>("Around Z", 0.0f);
-
 	window.SetValue<SliderFloatComponent, float>("X-axis", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Y-axis", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Z-axis", 0.0f);
@@ -704,10 +744,6 @@ void LevelEditor::UpdateToolUI(std::string name)
 	window.SetValue<SliderFloatComponent, float>("X", model->GetPosition().x);
 	window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
 	window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
-
-	//window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x * 180 / PI);
-	//window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y * 180 / PI);
-	//window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z * 180 / PI);
 
 	window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
 	window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);

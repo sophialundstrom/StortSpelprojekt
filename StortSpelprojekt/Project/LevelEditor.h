@@ -52,6 +52,7 @@ private:
 	void DuplicateObject();
 	void DuplicateVolume();
 	void ShowWater();
+	void DivideRendering();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

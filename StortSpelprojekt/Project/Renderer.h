@@ -49,6 +49,14 @@ public:
 			}
 	}
 
+	bool IsBound(std::shared_ptr<Drawable> drawable)
+	{
+		for (UINT i = 0; i < drawables.size(); ++i)
+			if (drawables[i] == drawable)
+				return true;
+		return false;
+	}
+
 	void UnbindStatic(std::shared_ptr<Drawable> drawable)
 	{
 		for (UINT i = 0; i < staticDrawables.size(); ++i)
