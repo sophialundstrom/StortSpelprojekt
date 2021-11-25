@@ -199,6 +199,9 @@
     <Filter Include="ARCUS\Scene\Game\Loot">
       <UniqueIdentifier>{026b4804-3197-4874-97ad-f47e47e174e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ARCUS\Scene\Game\NPC\FSM">
+      <UniqueIdentifier>{68b091f1-0a79-4bb7-aec4-3c4dca9294ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Terrain.cpp">
@@ -345,9 +348,14 @@
     <ClCompile Include="SoundEffect.cpp">
       <Filter>ARCUS\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="ArrowHandler.cpp" />
+    <ClCompile Include="ArrowHandler.cpp">
+      <Filter>ARCUS</Filter>
+    </ClCompile>
     <ClCompile Include="QuadTree.cpp">
       <Filter>ARCUS</Filter>
+    </ClCompile>
+    <ClCompile Include="ConcreteStates.cpp">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -669,9 +677,20 @@
     <ClInclude Include="SoundEffect.h">
       <Filter>ARCUS\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="ArrowHandler.h" />
+    <ClInclude Include="ArrowHandler.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
     <ClInclude Include="QuadTree.h">
       <Filter>ARCUS</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="ConcreteStates.h">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

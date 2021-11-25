@@ -36,6 +36,7 @@ private:
     //QuadTreeStuff stuff
     QuadTree* quadTree;
     FrustrumCollider frustrumCollider;
+    OrthographicCollider orthographicCollider;
     std::map<std::string, std::shared_ptr<Drawable>> drawablesToBeRendered;
     std::map<std::string, std::shared_ptr<Drawable>> noCullingDrawables;
     /*
@@ -131,7 +132,7 @@ private:
 
     void AddArrow(const std::string fileName);
 
-    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
+    void AddHostileNPC(const std::string& filename, Vector3 position);
     void AddLoot(LOOTTYPE type, const Vector3& position);
 
     void UpdateAndHandleLoot();

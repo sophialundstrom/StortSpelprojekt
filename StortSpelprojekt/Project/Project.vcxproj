@@ -165,6 +165,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="ColliderRenderer.cpp" />
+    <ClCompile Include="ConcreteStates.cpp" />
     <ClCompile Include="DialogueOverlay.cpp" />
     <ClCompile Include="DockSpacePanel.cpp" />
     <ClCompile Include="DynamicPlane.cpp" />
@@ -220,6 +221,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="CollectQuest.h" />
+    <ClInclude Include="ConcreteStates.h" />
     <ClInclude Include="DialogueOverlay.h" />
     <ClInclude Include="DockSpacePanel.h" />
     <ClInclude Include="DynamicPlane.h" />
@@ -294,6 +296,7 @@
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonRenderer.h" />
     <ClInclude Include="SoundEffect.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Mesh.h" />

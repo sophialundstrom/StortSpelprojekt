@@ -68,9 +68,8 @@ public:
 
 		this->matrix = (viewMatrix * ortoMatrix).Transpose();
 	}
-
+	float GetRange() { return this->range; }
 	Vector3 GetRepresentativePosition() const { return this->position; }
-
 	Matrix GetMatrix() const { return this->matrix; }
 };
 

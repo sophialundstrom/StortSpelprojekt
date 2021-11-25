@@ -10,7 +10,7 @@ void Game::Update()
 	hovering = false;
 
 	QuestLog::Inst().Update();
-	
+
 	scene.Update();
 
 	player->Update(terrain.GetHeightMap(), modelRenderer, colliderRenderer);
@@ -107,7 +107,7 @@ void Game::Initialize()
 {
 	QuadTreeBounds qtBounds(-1000.f, -1000.f, 2000.f, 2000.f);
 	quadTree = new QuadTree(qtBounds, 4, 5, 0, "Master");
-	frustrumCollider.SetupFrustrum(*scene.GetCamera());
+	
 
 	//LOAD SCENE
 	FBXLoader meshLoader("Models");
@@ -124,8 +124,10 @@ void Game::Initialize()
 			quadTree->InsertModel(drawable);
 	}
 	
-	quadTree->GetAllDrawables(noCullingDrawables);
-	quadTree->PrintTree();
+	//For Future work do not remove atm:
+	/*quadTree->GetAllDrawables(noCullingDrawables);
+	//quadTree->OptimizeBounds();
+	quadTree->PrintTree();*/
 
 	//SAVE STATIONS
 	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
@@ -146,7 +148,7 @@ void Game::Initialize()
 
 			continue;
 		}
-			
+
 		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
 		if (particleSystem)
 		{
@@ -317,7 +319,7 @@ void Game::CheckNearbyCollision()
 
 			continue;
 		};
-		
+
 		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
 		if (sphere)
 		{
@@ -343,9 +345,9 @@ void Game::CheckNearbyCollision()
 	player->HandleCollidedObjects(collidedColliders);
 }
 
-void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
+void Game::AddHostileNPC(const std::string& filename, Vector3 position)
 {
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, modelRenderer, colliderRenderer);
+	auto NPC = std::make_shared<HostileNPC>(filename, player, modelRenderer, colliderRenderer);
 	NPC->SetPosition(position);
 	//NPC->BindArrows(modelRenderer);
 
@@ -398,7 +400,7 @@ void Game::CheckSaveStationCollision()
 
 void Game::CheckItemCollision()
 {
-	for (auto &item : items)
+	for (auto& item : items)
 	{
 		if (Collision::Intersection(*item->GetBounds(), *player->GetFrustum()))
 		{
@@ -458,7 +460,7 @@ void Game::UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect)
 {
 	effect->Unbind(scene, particleRenderer);
 }
-  
+
 void Game::UpdateInventoryUI()
 {
 	auto& canvas = canvases["INGAME"];
@@ -548,7 +550,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, maxArrows);
 	player->SetPosition(-75, 20, -630);
-	scene.AddModel("Player", player);
+	//scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
 	animatedModelRenderer.Bind(player);
@@ -622,9 +624,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	biomes.emplace_back(ocean);
 
 	
-
-	
-
 	(void)Run();
 }
 
@@ -696,7 +695,7 @@ APPSTATE Game::Run()
 		}
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) });
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('1'))
@@ -987,9 +986,7 @@ void Game::UpdateQuadTree()
 	shadowRenderer.ClearStatic();
 
 	frustrumCollider.Update(scene.GetCamera());
-	quadTree->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
-	//frustrumCollider.Update(scene.GetDirectionalLight());
-	//quadTree->CheckModelsWithinFustrum(drawablesToBeRendered, frustrumCollider);
+	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{
@@ -997,11 +994,24 @@ void Game::UpdateQuadTree()
 		if (model)
 		{
 			staticMeshModelRender.Bind(drawable);
+		}
+	}
+	//std::cout << "Meshes drawn " << drawablesToBeRendered.size() << std::endl;
+
+	orthographicCollider.Update(scene.GetDirectionalLight());
+	quadTree->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
+
+	for (auto& [name, drawable] : drawablesToBeRendered)
+	{
+		auto model = std::dynamic_pointer_cast<Model>(drawable);
+		if (model)
+		{
 			shadowRenderer.BindStatic(drawable);
 		}
 	}
+	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
+	
 
-	//scene.GetDirectionalLight().GetMatrix()
 	
 	//DebugVariant
 	/*
