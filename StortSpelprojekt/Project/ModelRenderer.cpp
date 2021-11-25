@@ -8,6 +8,7 @@ ModelRenderer::ModelRenderer(RenderMethod method, bool isLit)
 	//BUFFER
 	CreateBuffer(matricesBuf, sizeof(Matrices));
 
+
 	//SHADERS
 	std::string byteCode;
 

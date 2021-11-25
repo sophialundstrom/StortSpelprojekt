@@ -165,7 +165,7 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { -41.0f, 37.0f, -687.0f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(200, { 0.03f, 0.03f, 0.03f ,1 }, 1);
-	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
+	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 60, { 1.f, 1.0f, 1.0f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
 
 	(void)Run();
 }
