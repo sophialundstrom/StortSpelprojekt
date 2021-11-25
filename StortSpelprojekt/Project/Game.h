@@ -124,7 +124,6 @@ private:
     bool mainMenu = false;
     UINT slot = 0;
     UINT lastMusicSlot;
-    std::vector<short int> musicSlots;
 
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);

@@ -297,7 +297,8 @@ void Game::CheckNearbyCollision()
 		{
 			if (!arrow->canCollide)
 				continue;
-			if ((arrow->GetPosition() - collider->GetPosition()).Length() > 50.f)
+			if ((arrow->GetPosition() - collider->GetPosition()).Length() 
+				)
 				continue;
 			player->GetArrowHandler().CheckCollision(arrow, collider);
 		}
@@ -787,7 +788,7 @@ void Game::HandleBiomes()
 			break;
 		case BIOME::OCEAN:
 			PrintS("OCEAN");
-			for (auto& slot : musicSlots)
+			for (auto& slot : Audio::musicSlots)
 				Audio::StopAudio(slot);
 			Audio::StartAudio(14);
 			lastMusicSlot = 14;
@@ -836,6 +837,7 @@ void Game::CheckNearbyEnemies()
 					hostiles[i]->GetArrowHandler().ClearArrows(modelRenderer, colliderRenderer);
 					colliderRenderer.Unbind(hostiles[i]->GetCollider());
 					modelRenderer.Unbind(hostiles[i]);
+					shadowRenderer.Unbind(hostiles[i]);
 					scene.DeleteDrawable(hostiles[i]->GetName());
 					hostiles[i] = hostiles[hostiles.size() - 1];
 					numDead++;
@@ -852,7 +854,10 @@ void Game::CheckNearbyEnemies()
 	}
 	hostiles.resize(hostiles.size() - numDead);
 
-	if (!player->inCombat && numInCombat > 0) // combat music isnt played if leaving and entering combat
+
+	// IF STARTING COMBAT IN ONE BIOME AND LEAVING THE BIOME WHILE STILL IN COMBATS AND THEN EXITS THE OLD BIOME WILL BE PLAYED BECAUSE THAT IS THE VALUE OF THE LASTBIOMESLOT-VARIABLE
+
+	if (!player->inCombat && numInCombat > 0) 
 	{
 		player->inCombat = true;
 		short int rand = Random::Integer(0, 2);
