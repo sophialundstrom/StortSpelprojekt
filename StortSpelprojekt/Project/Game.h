@@ -36,6 +36,7 @@ private:
     //QuadTreeStuff stuff
     QuadTree* quadTree;
     FrustrumCollider frustrumCollider;
+    OrthographicCollider orthographicCollider;
     std::map<std::string, std::shared_ptr<Drawable>> drawablesToBeRendered;
     std::map<std::string, std::shared_ptr<Drawable>> noCullingDrawables;
     /*
