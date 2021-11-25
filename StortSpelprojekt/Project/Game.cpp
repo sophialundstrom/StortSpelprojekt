@@ -612,7 +612,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, maxArrows);
 	player->SetPosition(-75, 20, -630);
-	scene.AddModel("Player", player);
+	//scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
 	colliderRenderer.Bind(player->GetBounds());
 	animatedModelRenderer.Bind(player);
