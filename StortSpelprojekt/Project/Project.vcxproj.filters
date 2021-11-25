@@ -354,9 +354,6 @@
     <ClCompile Include="QuadTree.cpp">
       <Filter>ARCUS</Filter>
     </ClCompile>
-    <ClCompile Include="State.cpp">
-      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
-    </ClCompile>
     <ClCompile Include="ConcreteStates.cpp">
       <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClCompile>
