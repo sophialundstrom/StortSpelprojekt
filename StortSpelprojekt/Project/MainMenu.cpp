@@ -91,7 +91,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	Audio::Initialize();
 	Audio::StartEngine();
 	
-	Audio::AddAudio(L"Audio/Menu.wav", 0);
+	Audio::AddAudio(L"Audio/Menu.wav", 0, AUDIOTYPE::MUSIC, true);
 	Audio::SetVolume(0.005, 0);
 	Audio::StartAudio(0);
 

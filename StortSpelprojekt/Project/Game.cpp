@@ -436,7 +436,7 @@ void Game::CheckQuestInteraction()
 				if (Event::KeyIsPressed('E'))
 				{
 					state = GameState::DIALOGUE;
-					Audio::AddAudio(L"Audio/Welcome.wav", 10);
+					//Audio::AddAudio(L"Audio/Welcome.wav", 10);
 					auto dialogueOverlay = std::dynamic_pointer_cast<DialogueOverlay>(canvases["DIALOGUE"]);
 					dialogueOverlay->Set("GILBERT", "Lorem.");
 					currentCanvas = dialogueOverlay;
@@ -489,8 +489,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//LOAD SCENE
 	Initialize();
 	SetupAudio();
-
-
 
 	//INGAME CANVAS
 	auto ingameCanvas = std::make_shared<Canvas>();
@@ -547,9 +545,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	canvases["DIALOGUE"] = std::make_unique<DialogueOverlay>();
 
-
-	// THE WILL BE A PROBLEM IF MORE ARROWS THAN MAXARROWS IS IN THE AIR AT THE SAME TIME (NO ARROW WILL BE RENDERED). THIS IS BECAUSE THERE ARE ONLY AS MANY ARROW MODELS AS MAXARROWS.
-
 	//PLAYER
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), ingameCanvas, maxArrows);
@@ -585,12 +580,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -116, 20, -609 });
 	AddItem(WOOD, { -91, 20, -593 });
 	AddItem(WOOD, { -85, 20, -608 });
-
-	//AddHostileNPC("BarbarianBow", { Vector3(5.686, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
-	//AddHostileNPC("BarbarianBow", { Vector3(0, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
-	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(15,6,0) }, CombatStyle::consistantDelay);
-	//AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
-
 
 	//FRIENDLY NPC
 	auto friendlyNPC = AddFriendlyNPC("Priest", Vector3{ -70.0f, 20.0f, -596.0f });
@@ -644,25 +633,24 @@ void Game::SetupAudio()
 	Audio::Initialize();
 	Audio::StartEngine();
 
-	Audio::AddAudio(L"Audio/SoundForest.wav", 0, true);					// Default music
-	Audio::AddAudio(L"Audio/Combat1.wav", 1, true);						// Combat Version 1 Music
-	Audio::AddAudio(L"Audio/Combat2.wav", 2, true);						// Combat Version 2 Music
-	Audio::AddAudio(L"Audio/SoundDesert.wav", 3, true);					// Desert Music
-	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 4, true);		// Woodlands Music
-	Audio::AddAudio(L"Audio/Running.wav", 6, true);						// Player Running Sound Effect
-	Audio::AddAudio(L"Audio/Jump.wav", 7);								// Player Jumping Sound Effect
-	Audio::AddAudio(L"Audio/Bow.wav", 8);								// Player Aiming Sound Effect
-	Audio::AddAudio(L"Audio/Fire.wav", 9);								// Player Shooting Sound Effect
-	Audio::AddAudio(L"Audio/Welcome.wav", 10, true);					// ????
-	Audio::AddAudio(L"Audio/PickupPop.wav", 11);						// Collecting Pickup Sound Effect
-	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 12, true);	// :)
-	Audio::AddAudio(L"Audio/EpicHeart.wav", 13, true);						// Mountain Music
-	Audio::AddAudio(L"Audio/SandyBeach.wav", 14, true);					// Ocean / Beach Music
-	Audio::AddAudio(L"Audio/Camelot.wav", 15, true);					// Combat Version 3 Music
+	Audio::AddAudio(L"Audio/SoundForest.wav", 0, AUDIOTYPE::MUSIC, true);					// Default music
+	Audio::AddAudio(L"Audio/Combat1.wav", 1, AUDIOTYPE::MUSIC, true);						// Combat Version 1 Music
+	Audio::AddAudio(L"Audio/Combat2.wav", 2, AUDIOTYPE::MUSIC, true);						// Combat Version 2 Music
+	Audio::AddAudio(L"Audio/SoundDesert.wav", 3, AUDIOTYPE::MUSIC, true);					// Desert Music
+	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 4, AUDIOTYPE::MUSIC, true);		// Woodlands Music
+	Audio::AddAudio(L"Audio/Running.wav", 6, AUDIOTYPE::EFFECT, true);						// Player Running Sound Effect
+	Audio::AddAudio(L"Audio/Jump.wav", 7, AUDIOTYPE::EFFECT);								// Player Jumping Sound Effect
+	Audio::AddAudio(L"Audio/Bow.wav", 8, AUDIOTYPE::EFFECT);								// Player Aiming Sound Effect
+	Audio::AddAudio(L"Audio/Fire.wav", 9, AUDIOTYPE::EFFECT);								// Player Shooting Sound Effect
+	Audio::AddAudio(L"Audio/Welcome.wav", 10, AUDIOTYPE::EFFECT, true);						// ????
+	Audio::AddAudio(L"Audio/PickupPop.wav", 11, AUDIOTYPE::EFFECT);							// Collecting Pickup Sound Effect
+	Audio::AddAudio(L"Audio/whenthedoommusickicksin.wav", 12, AUDIOTYPE::MUSIC, true);		// :)
+	Audio::AddAudio(L"Audio/EpicHeart.wav", 13, AUDIOTYPE::MUSIC, true);					// Mountain Music
+	Audio::AddAudio(L"Audio/SandyBeach.wav", 14, AUDIOTYPE::MUSIC, true);					// Ocean / Beach Music
+	Audio::AddAudio(L"Audio/Camelot.wav", 15, AUDIOTYPE::MUSIC, true);						// Combat Version 3 Music
 
-	Audio::SetVolume(0.5, slot);
-	Audio::StartAudio(slot);
-	lastAudioSlot = slot;
+	lastMusicSlot = 0;
+	Audio::StartAudio(lastMusicSlot);
 }
 
 APPSTATE Game::Run()
@@ -712,52 +700,6 @@ APPSTATE Game::Run()
 			Graphics::Inst().DeactivateWireframe();
 			lastClick = Time::Get();
 		}
-
-		if (Event::KeyIsPressed('V'))
-		{
-			PrintNumber(slot, "SLOT: ");
-			PrintNumber(lastAudioSlot, "LAST SLOT: ");
-		}
-	
-		/*if (Event::KeyIsPressed('U'))
-		{
-			QuestLog::Inst().Complete(0);
-			lastClick = Time::Get();
-		}
-
-		if (Event::KeyIsPressed('Y'))
-		{
-			QuestLog::Inst().Complete(3);
-			lastClick = Time::Get();
-		}*/
-
-		/*if (Event::KeyIsPressed('B'))
-		{
-			Print("Killed barbarian!");
-			player->Stats().barbariansKilled++;
-			player->TakeDamage();
-			lastClick = Time::Get();
-		}*/
-
-		/*	if (Event::KeyIsPressed('I'))
-		{
-			Print("-Added Items-");
-			player->Inventory().AddItem(RESOURCE::WOOD);
-			player->Inventory().GetResources(RESOURCE::WOOD);
-			player->Inventory().AddItem(RESOURCE::STONE);
-			player->Inventory().GetResources(RESOURCE::STONE);
-			player->Inventory().AddItem(RESOURCE::FOOD);
-			player->Inventory().GetResources(RESOURCE::FOOD);
-			UpdateInventoryUI();
-			lastClick = Time::Get();
-		}*/
-
-		/*if (Event::KeyIsPressed('R'))
-		{
-			building->effect->Bind(scene, particleRenderer);
-			building->Upgrade();
-			lastClick = Time::Get();
-		}*/
 
 	}
 
@@ -838,40 +780,24 @@ void Game::HandleBiomes()
 		{
 		case BIOME::DESERT:
 			PrintS("DESERT");
-			//Audio::StopAudio(0);
-			//Audio::StopAudio(2);
-			//Audio::StopAudio(4);
-			//Audio::StopAudio(1);
-			//Audio::StopAudio(13);
-			//Audio::StopAudio(14);
-			Audio::StopAudio(lastAudioSlot);
-			Audio::StartAudio(slot);
-			lastAudioSlot = slot;
+			for (auto& slot : Audio::musicSlots)
+				Audio::StopAudio(slot);
+			Audio::StartAudio(3);
+			lastMusicSlot = 3;
 			break;
 		case BIOME::OCEAN:
 			PrintS("OCEAN");
-			/*Audio::StopAudio(3);
-			Audio::StopAudio(0);
-			Audio::StopAudio(2);
-			Audio::StopAudio(1);
-			Audio::StopAudio(4);
-			Audio::StopAudio(13);*/
-			Audio::StopAudio(lastAudioSlot);
-			Audio::StartAudio(slot);
-			lastAudioSlot = slot;
+			for (auto& slot : musicSlots)
+				Audio::StopAudio(slot);
+			Audio::StartAudio(14);
+			lastMusicSlot = 14;
 			break;
 		case BIOME::DEFAULT:
 			PrintS("DEFAULT");
-			//Audio::StopAudio(1);
-			//Audio::StopAudio(2);
-			//Audio::StopAudio(3);
-			//Audio::StopAudio(4);
-			//Audio::StopAudio(13);
-			//Audio::StopAudio(14);
-			Audio::StopAudio(lastAudioSlot);
-			slot = 0;
-			Audio::StartAudio(slot);
-			lastAudioSlot = slot;
+			for (auto& slot : Audio::musicSlots)
+				Audio::StopAudio(slot);
+			Audio::StartAudio(0);
+			lastMusicSlot = 0;
 			break;
 		}
 	}
@@ -914,15 +840,9 @@ void Game::CheckNearbyEnemies()
 					hostiles[i] = hostiles[hostiles.size() - 1];
 					numDead++;
 					distanceToHostile = 100000.f;
-					//isDead = true;
 					break;
 				}
 			}
-			//if (isDead)
-			//{
-			//	distanceToHostile = 100000.f;
-			//	break;
-			//}
 
 		}
 		if (distanceToHostile < 70.f) // Should be compared to if the hostile "sees" the player instead of a hardcoded value.
@@ -939,47 +859,30 @@ void Game::CheckNearbyEnemies()
 		switch (rand)
 		{
 		case 0:
-			//Audio::StopAudio(15);
-			//Audio::StopAudio(2);
-			Audio::StopAudio(lastAudioSlot);
+			for (auto& slot : Audio::musicSlots)
+				Audio::StopAudio(slot);
 			Audio::StartAudio(1);
-			lastAudioSlot = 1;
 			break;
 
 		case 1:
-			//Audio::StopAudio(15);
-			//Audio::StopAudio(1);
-			Audio::StopAudio(lastAudioSlot);
+			for (auto& slot : Audio::musicSlots)
+				Audio::StopAudio(slot);
 			Audio::StartAudio(2);
-			lastAudioSlot = 2;
 			break;
 
 		case 2:
-			//Audio::StopAudio(1);
-			//Audio::StopAudio(2);
-			Audio::StopAudio(lastAudioSlot);
+			for (auto& slot : Audio::musicSlots)
+				Audio::StopAudio(slot);
 			Audio::StartAudio(15);
-			lastAudioSlot = 15;
 			break;
 		}
-		
-		
-		//Audio::StopAudio(3);
-		//Audio::StopAudio(0);
-		//Audio::StopAudio(14);
-		//Audio::StopAudio(13);
 	}
 	else if (player->inCombat && numInCombat == 0)
 	{
 		player->inCombat = false;
-		Audio::StopAudio(lastAudioSlot);
-		//Audio::StopAudio(2);
-		//Audio::StopAudio(3);
-		//Audio::StopAudio(15);
-		//Audio::StopAudio(13);
-		//Audio::StopAudio(14);
-		Audio::StartAudio(slot);
-		lastAudioSlot = slot;
+		for (auto& slot : Audio::musicSlots)
+			Audio::StopAudio(slot);
+		Audio::StartAudio(lastMusicSlot);
 	}
 }
 

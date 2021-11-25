@@ -5,7 +5,11 @@ IXAudio2MasteringVoice* Audio::pMasterVoice = nullptr;
 WAVEFORMATEXTENSIBLE Audio::wfx = { 0 };
 XAUDIO2_BUFFER Audio::audioBuffer[CAP] = { 0 };
 IXAudio2SourceVoice* Audio::pSourceVoice[CAP] = { nullptr };
+std::vector<short int> Audio::musicSlots = {};
+std::vector<short int> Audio::effectSlots = {};
+std::vector<short int> Audio::voiceSlots = {};
 float Audio::volume = 0.5f;
+
 
 void Audio::StartEngine()
 {
@@ -44,7 +48,7 @@ void Audio::Initialize()
 		std::cout << "COULD NOT CREATE MASTERING VOICE" << std::endl;
 }
 
-void Audio::AddAudio(std::wstring fileName, int slot, bool repeat)
+short int Audio::AddAudio(std::wstring fileName, short int slot, AUDIOTYPE type, bool repeat)
 {
 	LPCWSTR strFileName = fileName.c_str();
 	
@@ -88,6 +92,22 @@ void Audio::AddAudio(std::wstring fileName, int slot, bool repeat)
 		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
 
 	pSourceVoice[slot]->SetVolume(volume);
+
+	switch (type)
+	{
+	case AUDIOTYPE::MUSIC:
+		musicSlots.emplace_back(slot);
+		break;
+	case AUDIOTYPE::EFFECT:
+		effectSlots.emplace_back(slot);
+		break;
+	case AUDIOTYPE::VOICE:
+		voiceSlots.emplace_back(slot);
+		break;
+
+	}	
+
+	return slot;
 }
 
 void Audio::StopAudio(int slot)

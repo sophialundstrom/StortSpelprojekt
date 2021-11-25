@@ -3,6 +3,9 @@
 #include <iostream>
 #include <wrl.h>
 #include "AudioChunks.h"
+#include <vector>
+
+enum class AUDIOTYPE {MUSIC, EFFECT, VOICE};
 
 class Audio
 {
@@ -16,8 +19,11 @@ private:
 	static float volume;
 
 public:
+	static std::vector<short int>musicSlots;
+	static std::vector<short int>effectSlots;
+	static std::vector<short int>voiceSlots;
 	static void Initialize();
-	static void AddAudio(std::wstring fileName, int slot, bool repeat = false);
+	static short int AddAudio(std::wstring fileName, short int slot, AUDIOTYPE type, bool repeat = false);
 	static void StopAudio(int slot);
 	static void StartEngine();
 	static void StopEngine();
