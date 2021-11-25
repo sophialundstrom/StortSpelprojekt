@@ -351,6 +351,20 @@ void LevelEditor::FlipRenderingDivider()
 	}
 }
 
+void LevelEditor::ShowVolumes()
+{
+	bool changed = false;
+	if (renderVolumes)
+	{
+		renderVolumes = false;
+		changed = true;
+	}
+	if (!renderVolumes && !changed)
+	{
+		renderVolumes = true;
+	}
+}
+
 void LevelEditor::Update()
 {
 	if (Event::LeftIsClicked() && !ImGuizmo::IsOver() && viewportPanel.Hovered())
@@ -524,7 +538,8 @@ void LevelEditor::Render()
 
 	modelRenderer.Render();
 	
-	volumeRenderer.Render();
+	if(renderVolumes)
+		volumeRenderer.Render();
 
 	BeginFrame();
 
@@ -579,6 +594,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 		window.AddCheckBoxComponent("WATER", true);
+		window.AddCheckBoxComponent("VOLUMES", true);
 		window.AddSliderIntComponent("RENDER DIVIDE", -2000, 2000, -2000, false);
 		window.AddCheckBoxComponent("FLIP DIVIDE", false);
 	}
@@ -861,6 +877,9 @@ APPSTATE LevelEditor::Run()
 
 		if (window.Changed("WATER"))
 			ShowWater();
+
+		if (window.Changed("VOLUMES"))
+			ShowVolumes();
 
 		if (window.Changed("TERRAIN START SUBDIVISIONS"))
 		{

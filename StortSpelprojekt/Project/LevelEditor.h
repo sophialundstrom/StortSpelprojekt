@@ -27,6 +27,7 @@ private:
 	Water water;
 	bool renderWater = true;
 	bool divideFlipped = false;
+	bool renderVolumes = true;
 
 	//ADD RENDERERS
 	TerrainRenderer terrainRenderer;
@@ -55,6 +56,7 @@ private:
 	void ShowWater();
 	void DivideRendering();
 	void FlipRenderingDivider();
+	void ShowVolumes();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 
