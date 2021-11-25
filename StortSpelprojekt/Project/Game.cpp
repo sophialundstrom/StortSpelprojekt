@@ -60,9 +60,7 @@ void Game::Render()
 
 	SKR->Render();
 	
-	staticMeshModelRender.Render();
-
-	animatedModelRenderer.Render();
+	SMR->Render();
 
 	//CR->Render();
 
@@ -109,14 +107,11 @@ void Game::Initialize()
 {
 	QuadTreeBounds qtBounds(-1000.f, -1000.f, 2000.f, 2000.f);
 	quadTree = new QuadTree(qtBounds, 4, 5, 0, "Master");
-	
 
 	//LOAD SCENE
 	FBXLoader meshLoader("Models");
 	GameLoader gameLoader;
 	gameLoader.Load("Default", scene.GetDrawables());
-	
-
 	
 	//Transfer drawables to quadTree
 	for (auto& [name, drawable] : scene.GetDrawables())
@@ -144,11 +139,8 @@ void Game::Initialize()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
-			MR->Bind(model);
-			SR->Bind(model);
-
-			//modelRenderer.Bind(model);
-			//shadowRenderer.Bind(model);
+			//MR->Bind(model);
+			//SR->Bind(model);
 
 			continue;
 		}
@@ -404,7 +396,7 @@ void Game::AddBarbarianCamps()
 	}
 
 	{ // VILLAGE INVADERS
-		auto camp = new BarbarianCamp({ -11.5f, 18.0f, -126.0f }, BarbarianCamp::Location::Village, 40.0f, false);
+		auto camp = new BarbarianCamp({ -11.5f, 18.0f, -126.0f }, BarbarianCamp::Location::Village, 40.0f, true);
 
 		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -126.0f }, hostiles, player, CombatStyle::consistantDelay);
 		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -136.0f }, hostiles, player, CombatStyle::consistantDelay);
@@ -520,7 +512,7 @@ void Game::CheckNearbyCollision()
 	player->HandleCollidedObjects(collidedColliders);
 }
 
-void Game::AddHostileNPC(const std::string& filename, Vector3 position)
+void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
 {
 	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle);
 	NPC->SetPosition(position);
@@ -639,6 +631,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitAnimatedModelRenderer();
 	RND.InitColliderRenderer();
 	RND.InitModelRenderer();
+	RND.InitStaticModelRenderer();
 	RND.InitParticleRenderer();
 	RND.InitShadowRenderer();
 	RND.InitSkeletonRenderer();
@@ -767,7 +760,7 @@ APPSTATE Game::Run()
 	{
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) });
+			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::Burst);
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('1'))
@@ -861,7 +854,7 @@ void Game::CheckNearbyEnemies()
 {
 	for (int i = 0; i < hostiles.size(); i++)
 	{
-		hostiles[i]->Update(player);
+		hostiles[i]->Update();
 
 		hostiles[i]->CheckPlayerCollision(player);
 
@@ -908,8 +901,8 @@ void Game::CheckNearbyEnemies()
 void Game::UpdateQuadTree()
 {
 	drawablesToBeRendered.clear();
-	staticMeshModelRender.Clear();
-	shadowRenderer.ClearStatic();
+	SMR->Clear();
+	SR->ClearStatic();
 
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
@@ -919,7 +912,7 @@ void Game::UpdateQuadTree()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
-			staticMeshModelRender.Bind(drawable);
+			SMR->Bind(drawable);
 		}
 	}
 	//std::cout << "Meshes drawn " << drawablesToBeRendered.size() << std::endl;
@@ -932,7 +925,7 @@ void Game::UpdateQuadTree()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
-			shadowRenderer.BindStatic(drawable);
+			SR->BindStatic(drawable);
 		}
 	}
 	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;

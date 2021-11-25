@@ -16,11 +16,11 @@ void BarbarianCamp::Update(std::shared_ptr<Player> player)
     {
         if (location == Location::Village)
         {
-            if ((player->GetPosition() - barbarian->GetPosition()).Length() < barbarian->DetectionRadius())
-                target = player->GetPosition();
+           /* if ((player->GetPosition() - barbarian->GetPosition()).Length() < barbarian->DetectionRadius())
+                target = player->GetPosition();*/
         }
 
-        barbarian->Update(player);
+       // barbarian->Update(player);
     }
 
     if (location != Location::Village)
@@ -37,7 +37,7 @@ void BarbarianCamp::Reset()
 }
 
 BarbarianCamp::BarbarianCamp(const Vector3& position, Location location,  float radius, bool active)
-    :location(location), radius(radius),active(active), numBarbarians(0) {}
+    :location(location), radius(radius), active(active), numBarbarians(0) {}
 
 void BarbarianCamp::AddBarbarian(const std::string& file, const Vector3& position, std::vector<std::shared_ptr<HostileNPC>>& hostiles, std::shared_ptr<Player> player, CombatStyle combatStyle, bool dynamic)
 {

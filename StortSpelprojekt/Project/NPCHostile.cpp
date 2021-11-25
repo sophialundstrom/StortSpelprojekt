@@ -5,9 +5,9 @@ HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, 
 	:NPC(file)
 {
     this->player = player;
-    this->combatStyle = combatStyle;
-    SwapCombatStyle(combatStyle);
-
+    //this->combatStyle = combatStyle;
+    //SwapCombatStyle(combatStyle);
+ 
     currentState = &ShootingState::GetInstance();
     //SetState(IdlingState::)
 
@@ -23,24 +23,19 @@ HostileNPC::HostileNPC(const Model& model)
 void HostileNPC::Update()
 {
     currentState->Update(*this);
-    arrowHandler.Update(*mRend, *cRend);
+    arrowHandler.Update();
 
     NPC::Update();
-   
-}
-
-void HostileNPC::Update(const std::shared_ptr<Player> player)
-{
-}
+ }
 
 void HostileNPC::SetSpawnPosition(const Vector3& position)
 {
-    this->spawnPosition = position;
+    //this->spawnPosition = position;
 }
 
 void HostileNPC::Reset()
 {
-    position = spawnPosition;
+    //position = spawnPosition;
     dead = false;
     hp = maxHP;
 }
@@ -51,9 +46,9 @@ void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
     {
         if (!arrow->canCollide)
             continue;
+
         if (arrowHandler.CheckCollision(arrow, player->GetBounds(), true))
         {
-            std::cout << "PLAYER HIT" << std::endl;
             player->TakeDamage();
         }
     }

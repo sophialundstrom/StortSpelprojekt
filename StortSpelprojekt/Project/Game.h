@@ -97,18 +97,6 @@ private:
     void BacktoPause();
     void MainMenu();
 
-    // LEAVES
-    //void HoveringResume();
-    //void HoveringOptions();
-    //void HoveringHowToPlay();
-    //void HoveringQuit();
-    //void HoveringBackHowToPlay();
-    //void HoveringBackQuit();
-    //void HoveringBackOptions();
-    //void HoveringYes();
-    //void HoveringNo();
-
-  
     bool mainMenu = false;
 
     void RemoveItem(const std::string name);
@@ -118,7 +106,6 @@ private:
 
     void AddFriendlyNPCs();
     void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
-    void AddHostileNPC(const std::string& filename, Vector3 position);
     void AddLoot(LOOTTYPE type, const Vector3& position);
     void AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation);
     void AddBarbarianCamps();

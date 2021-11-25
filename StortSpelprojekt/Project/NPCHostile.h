@@ -13,20 +13,13 @@ private:
 public:
 	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle);
 	HostileNPC(const Model& model);
-
-	float DetectionRadius() { return detectionRadius; }
-
-	void SwapCombatStyle(CombatStyle newCombatStyle);
+;
 	virtual void Update() override;
-	void Update(const std::shared_ptr<Player> player);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void SetSpawnPosition(const Vector3& position);
 	void Reset();
 	void CheckPlayerCollision(std::shared_ptr<Player> player);
-	ArrowHandler& GetArrowHandler() { return this->arrowHandler; }
 	std::shared_ptr<Player> GetPlayer() { return this->player; }
-	ModelRenderer* GetMRenderer() { return this->mRend; }
-	ColliderRenderer* GetCRenderer() {	return this->cRend;	}
 private:
 	void WeaponSlash();
 

@@ -18,6 +18,7 @@ private:
 	static ColliderRenderer* cr;
 	static IDRenderer* idr;
 	static ModelRenderer* mr;
+	static ModelRenderer* smr;
 	static ParticleRenderer* pr;
 	static ShadowRenderer* sr;
 	static SkeletonRenderer* skr;
@@ -33,6 +34,7 @@ public:
 	static void InitColliderRenderer()								{ cr = new ColliderRenderer(); }
 	static void InitIDRenderer()									{ idr = new IDRenderer(); }
 	static void InitModelRenderer(bool isLit = true)				{ mr = new ModelRenderer(isLit); }
+	static void InitStaticModelRenderer(bool isLit = true)			{ smr = new ModelRenderer(isLit); }
 	static void InitParticleRenderer()								{ pr = new ParticleRenderer(); }
 	static void InitShadowRenderer()								{ sr = new ShadowRenderer(); }
 	static void InitSkeletonRenderer()								{ skr = new SkeletonRenderer(); }
@@ -45,6 +47,7 @@ public:
 	static ColliderRenderer* CR()		{ return cr; }
 	static IDRenderer* IDR()			{ return idr; }
 	static ModelRenderer* MR()			{ return mr; }
+	static ModelRenderer* SMR()			{ return smr; }
 	static ParticleRenderer* PR()		{ return pr; }
 	static ShadowRenderer* SR()			{ return sr; }
 	static SkeletonRenderer* SKR()		{ return skr; }
@@ -63,6 +66,8 @@ public:
 			idr->Clear();
 		if (mr)
 			mr->Clear();
+		if (smr)
+			smr->Clear();
 		if (pr)
 			pr->Clear();
 		if (sr)
@@ -100,6 +105,12 @@ public:
 			mr = nullptr;
 		}
 			
+		if (smr)
+		{
+			delete smr;
+			smr = nullptr;
+		}
+
 		if (pr)
 		{
 			delete pr;
@@ -141,6 +152,7 @@ inline AnimatedModelRenderer*	Renderers::amr	= nullptr;
 inline ColliderRenderer*		Renderers::cr	= nullptr;
 inline IDRenderer*				Renderers::idr	= nullptr;
 inline ModelRenderer*			Renderers::mr	= nullptr;
+inline ModelRenderer*			Renderers::smr	= nullptr;
 inline ParticleRenderer*		Renderers::pr	= nullptr;
 inline ShadowRenderer*			Renderers::sr	= nullptr;
 inline SkeletonRenderer*		Renderers::skr	= nullptr;
@@ -167,6 +179,10 @@ inline IDRenderer* RendererIDR() { return RND.IDR(); }
 inline ModelRenderer* RendererMR() { return RND.MR(); }
 //MODEL RENDERER
 #define MR RendererMR()
+
+inline ModelRenderer* RendererSMR() { return RND.SMR(); }
+//MODEL RENDERER
+#define SMR RendererSMR()
 
 inline ParticleRenderer* RendererPR() { return RND.PR(); }
 //PARTICLE RENDERER

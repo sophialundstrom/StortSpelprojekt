@@ -78,7 +78,7 @@ void FriendlyNPC::Update()
 	}
 
 	UINT completedQuests = 0;
-	for (auto& ID : questIDs)
+	if (currentQuest)
 	{
 		if (!currentQuest->Unlocked())
 		{
