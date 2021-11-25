@@ -256,44 +256,98 @@ void LevelEditor::ShowWater()
 
 void LevelEditor::DivideRendering()
 {
-	int divX = windows["TOOLS"].GetValue<SliderIntComponent>("RENDER DIVIDER");
+	int divX = windows["TOOLS"].GetValue<SliderIntComponent>("RENDER DIVIDE");
 	auto& drawables = scene.GetDrawables();
 	for (auto& [drawableName, drawable] : drawables)
 	{
-		if (drawable->GetPosition().x < divX)
+		if (!divideFlipped)
 		{
-			auto model = std::dynamic_pointer_cast<Model>(drawable);
-			if (model)
+			if (drawable->GetPosition().x < divX)
 			{
-				modelRenderer.Unbind(drawable);
-				idRenderer.Unbind(drawable);
+				auto model = std::dynamic_pointer_cast<Model>(drawable);
+				if (model)
+				{
+					modelRenderer.Unbind(drawable);
+					idRenderer.Unbind(drawable);
+				}
+				else
+				{
+					volumeRenderer.Unbind(drawable);
+					idRenderer.Unbind(drawable);
+				}
 			}
 			else
 			{
-				volumeRenderer.Unbind(drawable);
-				idRenderer.Unbind(drawable);
+				auto model = std::dynamic_pointer_cast<Model>(drawable);
+				if (model)
+				{
+					if (!modelRenderer.IsBound(drawable))
+					{
+						modelRenderer.Bind(drawable);
+						idRenderer.Bind(drawable);
+					}
+				}
+				else
+				{
+					if (!volumeRenderer.IsBound(drawable))
+					{
+						volumeRenderer.Bind(drawable);
+						idRenderer.Bind(drawable);
+					}
+				}
 			}
 		}
 		else
 		{
-			auto model = std::dynamic_pointer_cast<Model>(drawable);
-			if (model)
+			if (drawable->GetPosition().x > divX)
 			{
-				if (!modelRenderer.IsBound(drawable))
+				auto model = std::dynamic_pointer_cast<Model>(drawable);
+				if (model)
 				{
-					modelRenderer.Bind(drawable);
-					idRenderer.Bind(drawable);
+					modelRenderer.Unbind(drawable);
+					idRenderer.Unbind(drawable);
+				}
+				else
+				{
+					volumeRenderer.Unbind(drawable);
+					idRenderer.Unbind(drawable);
 				}
 			}
 			else
 			{
-				if (!volumeRenderer.IsBound(drawable))
+				auto model = std::dynamic_pointer_cast<Model>(drawable);
+				if (model)
 				{
-					volumeRenderer.Bind(drawable);
-					idRenderer.Bind(drawable);
+					if (!modelRenderer.IsBound(drawable))
+					{
+						modelRenderer.Bind(drawable);
+						idRenderer.Bind(drawable);
+					}
+				}
+				else
+				{
+					if (!volumeRenderer.IsBound(drawable))
+					{
+						volumeRenderer.Bind(drawable);
+						idRenderer.Bind(drawable);
+					}
 				}
 			}
 		}
+	}
+}
+
+void LevelEditor::FlipRenderingDivider()
+{
+	bool changed = false;
+	if (divideFlipped)
+	{
+		divideFlipped = false;
+		changed = true;
+	}
+	if (!divideFlipped && !changed)
+	{
+		divideFlipped = true;
 	}
 }
 
@@ -525,7 +579,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 		window.AddCheckBoxComponent("WATER", true);
-		window.AddSliderIntComponent("RENDER DIVIDER", -2000, 2000, -2000, false);
+		window.AddSliderIntComponent("RENDER DIVIDE", -2000, 2000, -2000, false);
+		window.AddCheckBoxComponent("FLIP DIVIDE", false);
 	}
 
 	{
@@ -813,6 +868,13 @@ APPSTATE LevelEditor::Run()
 				delete terrain;
 			terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
 		}
+
+		if (window.Changed("RENDER DIVIDE"))
+			DivideRendering();
+
+		if (window.Changed("FLIP DIVIDE"))
+			FlipRenderingDivider();
+			DivideRendering();
 
 		if (window.GetValue<ButtonComponent>("SAVE WORLD"))
 		{
