@@ -9,7 +9,7 @@ void Game::Update()
 	hovering = false;
 
 	QuestLog::Inst().Update();
-	
+
 	scene.Update();
 
 	player->Update(terrain.GetHeightMap(), modelRenderer, colliderRenderer);
@@ -145,7 +145,7 @@ void Game::Initialize()
 
 			continue;
 		}
-			
+
 		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
 		if (particleSystem)
 		{
@@ -317,7 +317,7 @@ void Game::CheckNearbyCollision()
 
 			continue;
 		};
-		
+
 		auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
 		if (sphere)
 		{
@@ -343,9 +343,9 @@ void Game::CheckNearbyCollision()
 	player->HandleCollidedObjects(collidedColliders);
 }
 
-void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
+void Game::AddHostileNPC(const std::string& filename, Vector3 position)
 {
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, modelRenderer, colliderRenderer);
+	auto NPC = std::make_shared<HostileNPC>(filename, player, modelRenderer, colliderRenderer);
 	NPC->SetPosition(position);
 	//NPC->BindArrows(modelRenderer);
 
@@ -398,7 +398,7 @@ void Game::CheckSaveStationCollision()
 
 void Game::CheckItemCollision()
 {
-	for (auto &item : items)
+	for (auto& item : items)
 	{
 		if (Collision::Intersection(*item->GetBounds(), *player->GetFrustum()))
 		{
@@ -462,7 +462,7 @@ void Game::UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect)
 {
 	effect->Unbind(scene, particleRenderer);
 }
-  
+
 void Game::UpdateInventoryUI()
 {
 	auto& canvas = canvases["INGAME"];
@@ -583,8 +583,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(WOOD, { -91, 20, -593 });
 	AddItem(WOOD, { -85, 20, -608 });
 
-
-	AddHostileNPC("BarbarianBow", { Vector3(5.686, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+	AddHostileNPC("BarbarianBow", { Vector3(5.686, 20, -592.456) + Vector3(0,6,0) });
 	//AddHostileNPC("BarbarianBow", { Vector3(0, 20, -592.456) + Vector3(0,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(15,6,0) }, CombatStyle::consistantDelay);
 	//AddHostileNPC("BarbarianBow", { 120, 24, -700 }, CombatStyle::consistantDelay);
@@ -607,9 +606,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//Audio::SetVolume(0.1, 0);
 	Audio::StartAudio(0);
 	
-
-	
-
 	(void)Run();
 }
 
@@ -654,7 +650,7 @@ APPSTATE Game::Run()
 		}
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::consistantDelay);
+			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) });
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('1'))

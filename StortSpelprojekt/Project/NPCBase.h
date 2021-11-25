@@ -3,6 +3,7 @@
 #include "Collision.h"
 #include "Player.h"
 #include "Arrow.h"
+#include "Pathfinding.h"
 
 class NPC : public Model
 {
