@@ -171,6 +171,11 @@ void Game::Initialize()
 
 	for (auto& collider : colliders)
 		scene.DeleteDrawable(collider->GetName());
+
+	pathing.SetColliders(colliders);
+	pathing.SetDrawables(scene.GetDrawables());
+	pathing.SetHeightMap(terrain.GetHeightMap());
+	pathing.CreateGrid({ 0,0,0 });
 }
 
 void Game::RemoveItem(const std::string name)

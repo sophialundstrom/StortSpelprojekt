@@ -76,24 +76,24 @@ private:
     Water water;
 
     std::shared_ptr<Canvas> currentCanvas;
-    std::map<std::string, std::shared_ptr<Canvas>> canvases;
-
     std::shared_ptr<Player> player;
-    std::vector<std::shared_ptr<Arrow>> arrows;
-    std::vector<std::shared_ptr<Arrow>> hostileArrows;
-
-    std::vector<std::shared_ptr<Item>> items;
-
     std::shared_ptr<Building> building;
 
-    std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs;
-    
-    std::vector<std::shared_ptr<Collider>> colliders;
+    std::vector<std::shared_ptr<Arrow>>         arrows;
+    std::vector<std::shared_ptr<Arrow>>         hostileArrows;
+    std::vector<std::shared_ptr<Item>>          items;
+    std::vector<std::shared_ptr<FriendlyNPC>>   friendlyNPCs;
+    std::vector<std::shared_ptr<Collider>>      colliders;
+    std::vector<std::shared_ptr<HostileNPC>>    hostiles;
+    std::vector<std::shared_ptr<Loot>>          loot;
 
-    std::vector<std::shared_ptr<HostileNPC>> hostiles;
+    std::map<std::string, std::shared_ptr<Canvas>> canvases;
+
+
+    
+
     UINT hostileID = 0;
 
-    std::vector<std::shared_ptr<Loot>> loot;
     UINT lootID = 0;
 
     void Update();

@@ -4,7 +4,7 @@
 #include <fstream>
 #include "FileSystem.h"
 #include <iostream>
-const int size = 32;
+//const int size = 32;
 
 void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 worldPosition, HeightMap* heightMap)
 {
@@ -18,7 +18,6 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 		for (int y = 0; y < gridSizeY; y++)
 		{
 			Vector3 worldPoint = worldBottomLeft + Vector3::Right * (x * nodeDiameter + nodeRadius) + Vector3::Forward * (y * nodeDiameter + nodeRadius);
-
 			worldPoint.y = heightMap->data.at(Vector2((int)worldPoint.x, (int)worldPoint.z));
 			grid[x][y].position = worldPoint;
 			grid[x][y].BSphere.SetPosition(grid[x][y].position);
@@ -28,7 +27,7 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 
 			for (auto& collider : colliders)
 			{
-				if (Vector3::Distance(worldPoint, collider->GetPosition()) < 64.0f)
+				if (Vector3::Distance(worldPoint, collider->GetPosition()) < 40.0f)
 				{
 					//0.75
 					auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
@@ -214,7 +213,7 @@ Grid::Grid()
 	{
 		grid[i] = new Node[gridWorldSizeInt];
 	}
-	nodeRadius = 0.5f;
+	nodeRadius = 1.0f;
 	gridWorldSize = Vector2(gridWorldSizeInt, gridWorldSizeInt);
 	nodeDiameter = nodeRadius * 2;
 	gridSizeX = roundToInt(gridWorldSize.x/ nodeDiameter);
