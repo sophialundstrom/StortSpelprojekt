@@ -63,10 +63,9 @@ LightResult PointLightCalculation(float4 P, float3 N, float4 D, float4 S, float4
     if (dist > lightRange)
         return result;
 
-	float attenuation = 1.0f / (lightAttenuation[0] + dist * lightAttenuation[1] + dist * dist * lightAttenuation[2]);
-
+    float attenuation = 1.0f / (lightAttenuation[0] + (lightAttenuation[1] * dist) + (dist * dist * lightAttenuation[2]));
+        
     float diffuse = dot(N, L);
-
 
     if (diffuse < 0.0f) // IF BACKFACED
         return result;
@@ -88,6 +87,8 @@ LightResult PointLightCalculation(float4 P, float3 N, float4 D, float4 S, float4
         result.specular += specular * V * attenuation;
 
     result.color *= lightColor;
+    
+    //result.diffuse = float4(attenuation, attenuation, attenuation, 1.0f);
     
     return result;
 }

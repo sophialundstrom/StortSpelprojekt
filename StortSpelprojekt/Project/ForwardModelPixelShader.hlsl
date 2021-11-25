@@ -90,6 +90,6 @@ float4 main(PS_INPUT input) : SV_TARGET
     //RESULT
     const float4 finalColor = lerp((T * float4(pResult.color) * (saturate(finalLighting))), fogColor, fogFactor);
 
-
+    //return pResult.diffuse;
     return finalColor;
 }

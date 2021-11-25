@@ -99,7 +99,7 @@ struct PointLight
 	{
 		const float maxIntensity = 2.0f;
 		const float minIntensity = 1.5f;
-		const float maxChange = 0.15f;
+		const float maxChange = 0.05f;
 
 		float randomizedIntensity = Random::Real(minIntensity, maxIntensity);
 
