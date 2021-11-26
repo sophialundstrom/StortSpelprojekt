@@ -709,7 +709,10 @@ void LevelEditor::RemoveItem(std::string name)
 		auto& drawables = scene.GetDrawables();
 		for (auto& [drawableName, drawable] : drawables)
 		{
-			if (drawableName.find(name) != std::string::npos)
+			auto object = std::dynamic_pointer_cast<Model>(drawable);
+			if(!object)
+				continue;
+			if (name == Resources::Inst().GetBufferNameFromID(object->mesh.bufferID))
 				sameNameArray.emplace_back(drawable);
 		}
 
