@@ -56,7 +56,7 @@ public:
 				return true;
 		return false;
 	}
-	
+
 	void UnbindStatic(std::shared_ptr<Drawable> drawable)
 	{
 		for (UINT i = 0; i < staticDrawables.size(); ++i)
