@@ -5,7 +5,6 @@
 class TerrainRenderer
 {
 private:
-
 	struct Matrices
 	{
 		Matrix viewPerspective;
@@ -55,7 +54,7 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	TerrainRenderer(RenderMethod method, float tesselationAmount = 63);
+	TerrainRenderer(float tesselationAmount = 63);
 	~TerrainRenderer();
 
 	void Render(const Terrain& terrain);
