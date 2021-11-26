@@ -262,13 +262,13 @@ void LevelEditor::DivideRendering()
 				auto model = std::dynamic_pointer_cast<Model>(drawable);
 				if (model)
 				{
-					modelRenderer.Unbind(drawable);
-					idRenderer.Unbind(drawable);
+					MR->Unbind(drawable);
+					IDR->Unbind(drawable);
 				}
 				else
 				{
-					volumeRenderer.Unbind(drawable);
-					idRenderer.Unbind(drawable);
+					VR->Unbind(drawable);
+					IDR->Unbind(drawable);
 				}
 			}
 			else
@@ -276,18 +276,18 @@ void LevelEditor::DivideRendering()
 				auto model = std::dynamic_pointer_cast<Model>(drawable);
 				if (model)
 				{
-					if (!modelRenderer.IsBound(drawable))
+					if (!MR->IsBound(drawable))
 					{
-						modelRenderer.Bind(drawable);
-						idRenderer.Bind(drawable);
+						MR->Bind(drawable);
+						IDR->Bind(drawable);
 					}
 				}
 				else
 				{
-					if (!volumeRenderer.IsBound(drawable))
+					if (!VR->IsBound(drawable))
 					{
-						volumeRenderer.Bind(drawable);
-						idRenderer.Bind(drawable);
+						VR->Bind(drawable);
+						IDR->Bind(drawable);
 					}
 				}
 			}
@@ -299,13 +299,13 @@ void LevelEditor::DivideRendering()
 				auto model = std::dynamic_pointer_cast<Model>(drawable);
 				if (model)
 				{
-					modelRenderer.Unbind(drawable);
-					idRenderer.Unbind(drawable);
+					MR->Unbind(drawable);
+					IDR->Unbind(drawable);
 				}
 				else
 				{
-					volumeRenderer.Unbind(drawable);
-					idRenderer.Unbind(drawable);
+					VR->Unbind(drawable);
+					IDR->Unbind(drawable);
 				}
 			}
 			else
@@ -313,18 +313,18 @@ void LevelEditor::DivideRendering()
 				auto model = std::dynamic_pointer_cast<Model>(drawable);
 				if (model)
 				{
-					if (!modelRenderer.IsBound(drawable))
+					if (!MR->IsBound(drawable))
 					{
-						modelRenderer.Bind(drawable);
-						idRenderer.Bind(drawable);
+						MR->Bind(drawable);
+						IDR->Bind(drawable);
 					}
 				}
 				else
 				{
-					if (!volumeRenderer.IsBound(drawable))
+					if (!VR->IsBound(drawable))
 					{
-						volumeRenderer.Bind(drawable);
-						idRenderer.Bind(drawable);
+						VR->Bind(drawable);
+						IDR->Bind(drawable);
 					}
 				}
 			}
