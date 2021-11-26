@@ -25,10 +25,7 @@ VolumeRenderer::VolumeRenderer()
 	if (!LoadShader(pixelShader, forward_ps_path))
 		return;
 
-
 	Print("SUCCEEDED LOADING SHADERS", "VOLUME RENDERER");
-
-	
 
 	//INPUT LAYOUT
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] =

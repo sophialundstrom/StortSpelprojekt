@@ -1,8 +1,8 @@
 #include "ModelRenderer.h"
 
-#include "Model.h"
+#include "QuestMarker.h"
 
-ModelRenderer::ModelRenderer(RenderMethod method, bool isLit)
+ModelRenderer::ModelRenderer(bool isLit)
 	:isLit(isLit)
 {
 	//BUFFER
@@ -17,17 +17,8 @@ ModelRenderer::ModelRenderer(RenderMethod method, bool isLit)
 		if (!LoadShader(vertexShader, vs_path, byteCode))
 			return;
 
-		if (method == FORWARD)
-		{
-			if (!LoadShader(pixelShader, forward_ps_path))
-				return;
-		}
-
-		else
-		{
-			if (!LoadShader(pixelShader, deferred_ps_path))
-				return;
-		}
+		if (!LoadShader(pixelShader, forward_ps_path))
+			return;
 	}
 
 	else
@@ -35,18 +26,10 @@ ModelRenderer::ModelRenderer(RenderMethod method, bool isLit)
 		if (!LoadShader(vertexShader, unlit_vs_path, byteCode))
 			return;
 
-		if (method == FORWARD)
-		{
-			if (!LoadShader(pixelShader, unlit_forward_ps_path))
-				return;
-		}
-
-		else
-		{
-			Print("UNLIT MODEL RENDERER ONLY AVALIABLE IN FORWARD");
+		if (!LoadShader(pixelShader, unlit_forward_ps_path))
 			return;
-		}
 	}
+
 	Print("SUCCEEDED LOADING SHADERS", "MODEL RENDERER");
 
 	//INPUT LAYOUT

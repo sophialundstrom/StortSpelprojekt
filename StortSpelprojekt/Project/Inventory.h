@@ -1,31 +1,14 @@
 #pragma once
+#include "Item.h"
 #include <map>
-#include <fstream>
 
-struct Inventory
+class Inventory
 {
-	std::map<UINT, UINT> items; //ID , NUM OF ITEM
-
-	Inventory() = default;
-
-	void AddItem(UINT ID)
-	{
-		items[ID]++;
-	}
-
-	void RemoveItem(UINT ID)
-	{
-		if (items[ID] == 1)
-		{
-			items.erase(ID);
-			return;
-		}
-
-		items[ID]--;
-	}
-
-	UINT NumOf(UINT ID)
-	{
-		return items[ID];
-	}
+	friend class Player;
+private:
+	std::map<Item::Type, UINT> items;
+public:
+	void AddItem(Item::Type type, UINT amount = 1);
+	void RemoveItem(Item::Type type, UINT amount = 1);
+	UINT NumOf(Item::Type type);
 };

@@ -2,7 +2,7 @@
 
 #include "ParticleSystem.h"
 
-ParticleRenderer::ParticleRenderer(RenderMethod method)
+ParticleRenderer::ParticleRenderer()
 {
 	//BUFFERS
 	CreateBuffer(extentsBuf);
@@ -17,17 +17,9 @@ ParticleRenderer::ParticleRenderer(RenderMethod method)
 	if (!LoadShader(geometryShader, gs_path))
 		return;
 
-	if (method == FORWARD)
-	{
-		if (!LoadShader(pixelShader, forward_ps_path))
-			return;
-	}
+	if (!LoadShader(pixelShader, forward_ps_path))
+		return;
 
-	else
-	{
-		if (!LoadShader(pixelShader, deferred_ps_path))
-			return;
-	}
 	Print("SUCCEEDED LOADING SHADERS", "PARTICLE RENDERER");
 
 	//INPUT LAYOUT

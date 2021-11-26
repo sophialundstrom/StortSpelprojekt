@@ -1,11 +1,8 @@
 #pragma once
 #include "Editor.h"
 #include "Scene.h"
-#include "ModelRenderer.h"
-#include "TerrainRenderer.h"
 #include "ApplicationState.h"
-#include "IDRenderer.h"
-#include "VolumeRenderer.h"
+#include "ImGui.h"
 #include "WaterRenderer.h"
 
 class LevelEditor : public Editor, public ApplicationState
@@ -25,13 +22,6 @@ private:
 	std::map<std::string, std::shared_ptr<BoundingSphere>> pickBoxes;
 	Terrain* terrain;
 	Water water;
-
-	//ADD RENDERERS
-	TerrainRenderer terrainRenderer;
-	ModelRenderer modelRenderer;
-	IDRenderer idRenderer;
-	VolumeRenderer volumeRenderer;
-	WaterRenderer waterRenderer;
 
 	UINT wWidth, wHeight;
 

@@ -41,7 +41,7 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	ModelRenderer(RenderMethod method, bool isLit);
+	ModelRenderer(bool isLit = true);
 	~ModelRenderer();
 
 	virtual void Render() override;
