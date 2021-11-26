@@ -19,6 +19,7 @@
 #include "InGameOverlay.h"
 #include "PauseOverlay.h"
 #include "QuadTree.h"
+#include "AudioSource.h"
 
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
@@ -87,6 +88,8 @@ private:
     std::vector<std::shared_ptr<Loot>> loot;
     UINT lootID = 0;
 
+    std::vector<std::shared_ptr<Biome>> biomes;
+
     void Update();
     void Render();
 
@@ -97,6 +100,8 @@ private:
     void BacktoPause();
     void MainMenu();
 
+    std::vector<AudioSource>audioSources;
+  
     bool mainMenu = false;
 
     void RemoveItem(const std::string name);
@@ -119,6 +124,10 @@ private:
     void CheckTargetCollision();
     void CheckQuestInteraction();
     void CheckNearbyEnemies();
+    void HandleBiomes();
+    void HandleAudioSources();
+
+    void SetupAudio();
     void UpdateQuadTree();
 
     void UpdateInventoryUI();

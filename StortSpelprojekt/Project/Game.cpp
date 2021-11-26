@@ -3,6 +3,8 @@
 #include "FBXLoader.h"
 #include "GameLoader.h"
 #include "DialogueOverlay.h"
+#include "Biome.h"
+#include "HardwareSupport.h"
 
 void Game::Update()
 {
@@ -21,6 +23,8 @@ void Game::Update()
 
 	CheckSaveStationCollision();
 
+	HandleBiomes();
+
 	CheckNearbyEnemies();
 
 	CheckTargetCollision();
@@ -28,6 +32,8 @@ void Game::Update()
 	CheckQuestInteraction();
 
 	UpdateAndHandleLoot();
+
+	HandleAudioSources();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
@@ -240,10 +246,8 @@ void Game::UpdateAndHandleLoot()
 			CR->Unbind(loot[i]->GetCollider());
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
-			SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
-			SoundEffect::SetVolume(0.1, 2);
-			SoundEffect::StartAudio(2);
-			//std::cout << "Loot destoyed\n";
+			
+			Audio::StartEffect("PickupPop.wav");
 		}
 	}
 }
@@ -450,14 +454,18 @@ void Game::CheckNearbyCollision()
 			{
 				if (!arrow->canCollide)
 					continue;
+				if ((arrow->GetPosition() - collider->GetPosition()).Length() > 50.f)
+					continue;
 
 				hostile->GetArrowHandler().CheckCollision(arrow, collider);
 			}
 		}
-
+		
 		for (auto& arrow : player->GetArrowHandler().arrows)
 		{
 			if (!arrow->canCollide)
+				continue;
+			if ((arrow->GetPosition() - collider->GetPosition()).Length() > 50.f)
 				continue;
 
 			player->GetArrowHandler().CheckCollision(arrow, collider);
@@ -514,7 +522,6 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 {
 	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle);
 	NPC->SetPosition(position);
-	//NPC->BindArrows(modelRenderer);
 
 	auto collider = NPC->GetCollider();
 	collider->SetParent(NPC);
@@ -524,8 +531,6 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 
 	MR->Bind(NPC);
 	SR->Bind(NPC);
-	const std::string name = "hostileNPC" + std::to_string(hostileID);
-	scene.AddDrawable(name, NPC);
 	hostileID++;
 	hostiles.emplace_back(NPC);
 }
@@ -540,7 +545,6 @@ void Game::AddLoot(LOOTTYPE type, const Vector3& position)
 	scene.AddDrawable(name, LOOT);
 	loot.emplace_back(LOOT);
 	lootID++;
-	//CR->Bind(LOOT->GetCollider());
 }
 
 void Game::CheckSaveStationCollision()
@@ -572,10 +576,7 @@ void Game::CheckItemCollision()
 
 			if (Event::KeyIsPressed('E'))
 			{
-				SoundEffect::AddAudio(L"Audio/Pickup.wav", 2);
-				SoundEffect::SetVolume(0.005, 2);
-				SoundEffect::StartAudio(2);
-
+				Audio::StartEffect("Pickup.wav");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
 				UpdateInventoryUI();
@@ -602,10 +603,6 @@ void Game::CheckQuestInteraction()
 						return;
 
 					overlay = dialogueOverlay;
-
-					SoundEffect::AddAudio(L"Audio/Welcome.wav", 2);
-					SoundEffect::SetVolume(0.004, 2);
-					SoundEffect::StartAudio(2);
 
 					auto objective = QuestLog::GetTalkObjective(NPC->GetName());
 					dialogueOverlay->Set(NPC, (TalkObjective*)objective);
@@ -644,7 +641,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//LOAD SCENE
 	Initialize();
-
+	SetupAudio();
+	
 	//SET SCENE CAMERA + DIRECTIONAL LIGHT
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
@@ -704,11 +702,31 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	PR->Bind(campFireSystem);
 	
-	//AUDIO
-	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
-	Audio::SetVolume(0.005, 0);
-	Audio::StartAudio(0);
-	
+	auto mountain = std::make_shared<Biome>(13U, BIOME::MOUNTAIN);
+	mountain->AddCollider(Vector3(-294, 108, 978), 534);
+	mountain->AddCollider(Vector3(312, 110, 790), 460);
+	mountain->AddCollider(Vector3(523, 110, 525), 460);
+	mountain->AddCollider(Vector3(708, 110, 456), 460);
+	mountain->Bind();
+	biomes.emplace_back(mountain);
+
+	auto desert = std::make_shared<Biome>(3U, BIOME::DESERT);
+	desert->AddCollider(Vector3(-311, 31, 380), 433);
+	desert->AddCollider(Vector3(-39, 35, 258), 286);
+	desert->AddCollider(Vector3(-556, 31, 459), 397);
+	desert->Bind();
+	biomes.emplace_back(desert);
+
+	auto ocean = std::make_shared<Biome>(14U, BIOME::OCEAN);
+	ocean->AddCollider(Vector3(444, 18, -1089), 463);
+	ocean->AddCollider(Vector3(-46, 18, -1114), 389);
+	ocean->AddCollider(Vector3(-264, 18, -852), 280);
+	ocean->AddCollider(Vector3(-507, 18, -754), 345);
+	ocean->Bind();
+	biomes.emplace_back(ocean);
+
+	audioSources.emplace_back(AudioSource(Vector3(38.f, 20.f, -574.f), 60.f, "Fireplace.wav"));
+
 	(void)Run();
 }
 
@@ -718,7 +736,24 @@ Game::~Game()
 	QuestLog::ShutDown();
 	delete quadTree;
 	scene.Clear();
+	Audio::StopEngine();
 	Resources::Inst().Clear();
+}
+
+void Game::SetupAudio()
+{
+	Audio::Initialize(true, HardwareSupport::numThreads);
+
+	Audio::StartMusic("Sonrie.wav");
+	Audio::SetVolume("Sonrie.wav", 0.3f);
+}
+
+void Game::HandleAudioSources()
+{
+	for (auto& audioSource : audioSources)
+	{
+		audioSource.CheckActive(player->GetPosition());
+	}
 }
 
 APPSTATE Game::Run()
@@ -772,39 +807,18 @@ APPSTATE Game::Run()
 			Graphics::Inst().DeactivateWireframe();
 			lastClick = Time::Get();
 		}
-
-		if (Event::KeyIsPressed('V'))
-		{
-			PrintNumber("Player Arrows", player->GetArrowHandler().arrows.size());
-			PrintNumber("Barb Arrows", hostiles[0]->GetArrowHandler().arrows.size());
-			lastClick = Time::Get();
-		}
-
 		if (Event::KeyIsPressed('K'))
 		{
-			Audio::AddAudio(L"Audio/arrowHit.wav", 0);
-			Audio::SetVolume(0.3, 0);
-			Audio::StartAudio(0);
-			hostiles[0]->TakeDamage();
-			player->Stats().barbariansKilled++;
-			hostiles[0]->GetArrowHandler().ClearArrows();
-			CR->Unbind(hostiles[0]->GetCollider());
-			MR->Unbind(hostiles[0]);
-			scene.DeleteDrawable(hostiles[0]->GetName());
-			hostiles[0] = hostiles[hostiles.size() - 1];
-			hostiles.resize(hostiles.size() - 1);
+			PrintVector3(player->GetPosition());
+			lastClick = Time::Get();
+		}
+		if (Event::KeyIsPressed('H'))
+		{
+			unsigned int nthreads = std::thread::hardware_concurrency();
+			PrintNumber(nthreads);
 			lastClick = Time::Get();
 		}
 
-		if (Event::KeyIsPressed(79))
-		{
-			Audio::StopEngine();
-		}
-	}
-
-	if (Event::KeyIsPressed('P'))
-	{
-		PrintVector3("PLAYER POSITION: ", player->GetPosition());
 	}
 
 	if (Event::KeyIsPressed('L'))
@@ -849,11 +863,46 @@ APPSTATE Game::Run()
 	return APPSTATE::NO_CHANGE;
 }
 
+void Game::HandleBiomes()
+{
+
+	bool hit = false;
+	BIOME type = BIOME::DEFAULT; // IF NO BIOME IS HIT -> DEFAULT IS PLAYED
+	for (auto& biome : biomes)
+	{
+		for (auto& collider : biome->colliders)
+		{
+			hit = Collision::Contains(*collider, player->GetPosition());
+			if (hit)
+			{
+				type = biome->type; // GETS BIOME TYPE
+			}
+		}
+		
+	}
+
+	player->currentBiome = type; // CURRENT BIOME SET
+
+	if (player->currentBiome != player->previousBiome) // IF NEW BIOME != LAST BIOME
+	{
+		if (!player->inCombat)
+		{
+			player->SwitchBiomeMusic();
+		}
+	}
+
+	player->previousBiome = player->currentBiome;
+}
+
 void Game::CheckNearbyEnemies()
 {
+	short int numInCombat = 0;
+	int numDead = 0;
 	for (int i = 0; i < hostiles.size(); i++)
 	{
-		hostiles[i]->Update();
+		float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
+		
+		hostiles[i]->Update(player);
 
 		hostiles[i]->CheckPlayerCollision(player);
 
@@ -862,38 +911,62 @@ void Game::CheckNearbyEnemies()
 			if (!arrow->canCollide)
 				continue;
 
-			bool isDead = false;
-			// CRASHES HERE IF TWO ARROWS HIT IT IN THE SAME FRAME...
 			bool hit = player->GetArrowHandler().CheckCollision(arrow, hostiles[i]->GetCollider(), true);
 
 			if (hit)
 			{
-				std::cout << "BARBARIAN " << i << " HIT!" << std::endl;
-				SoundEffect::AddAudio(L"Audio/BarbarianHit.wav", 2);
-				SoundEffect::SetVolume(0.5, 2);
-				SoundEffect::StartAudio(2);
 				hostiles[i]->TakeDamage();
 				if (hostiles[i]->IsDead())
 				{
-					SoundEffect::AddAudio(L"Audio/Scream.wav", 2);
-					SoundEffect::SetVolume(0.8, 2);
-					SoundEffect::StartAudio(2);
 					hostiles[i]->TakeDamage();
 					player->Stats().barbariansKilled++;
 					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));
 					hostiles[i]->GetArrowHandler().ClearArrows();
 					CR->Unbind(hostiles[i]->GetCollider());
 					MR->Unbind(hostiles[i]);
-					scene.DeleteDrawable(hostiles[i]->GetName());
-					hostiles[i] = hostiles[hostiles.size() - 1];
-					hostiles.resize(hostiles.size() - 1);
-					isDead = true;
+					SR->Unbind(hostiles[i]);
+					hostiles[i] = hostiles[hostiles.size() - 1 - numDead];
+					numDead++;
+					distanceToHostile = 100000.f;
+					break;
 				}
 			}
 
-			if (isDead)
-				break;
 		}
+		if (distanceToHostile < 70.f) // Should be compared to if the hostile "sees" the player instead of a hardcoded value.
+		{
+			numInCombat++;
+
+		}
+	}
+	hostiles.resize(hostiles.size() - numDead);
+
+	if (!player->inCombat && numInCombat > 0) 
+	{
+		PrintS("IN COMBAT");
+		player->inCombat = true;
+		short int rand = Random::Integer(0, 2);
+
+		switch (rand)
+		{
+		case 0:
+			Audio::StartMusic("Camelot.wav");
+			break;
+
+		case 1:
+			Audio::StartMusic("combat1.wav");
+			break;
+
+		case 2:
+			Audio::StartMusic("combat2.wav");
+			break;
+		}
+	}
+	else if (player->inCombat && numInCombat == 0)
+	{
+		PrintS("OUT OF COMBAT"); 
+		player->inCombat = false;
+		player->SwitchBiomeMusic();
 	}
 }
 

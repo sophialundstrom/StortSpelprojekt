@@ -19,6 +19,7 @@ public:
 	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle);
 ;
 	virtual void Update() override;
+	void Update(const std::shared_ptr<Player> player);
 
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 
