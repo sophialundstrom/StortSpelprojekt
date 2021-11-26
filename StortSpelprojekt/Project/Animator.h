@@ -46,9 +46,8 @@ public:
 		animations.emplace(animation->mName.C_Str(), new Animation(animation));
 	}
 
-	void PlayAnimation(const std::string& name, const bool& onRepeat, const float& speedFactor = 1.f)
+	void PlayAnimation(const std::string& name, bool onRepeat, float speedFactor = 1.f)
 	{
-
 		if (currentAnimation == animations[name]) // compare if they are the same
 			return;
 
@@ -62,20 +61,24 @@ public:
 	void ReadNodeHeriarchy(const aiNode* node, Skeleton& skeleton, const Matrix& parentTransform)
 	{
 		const std::string nodeName(node->mName.C_Str());
+		Matrix globalTransform = parentTransform;
 
-		Matrix localMatrix;
+		if (nodeName.find('_') == std::string::npos)
+		{
+			Matrix localMatrix;
 
-		currentAnimation->Update(nodeName, localMatrix);
+			currentAnimation->Update(nodeName, localMatrix);
 
-		if (localMatrix == Matrix::Identity)
-			localMatrix = AssimpToDX(node->mTransformation);
+			if (localMatrix == Matrix::Identity)
+				localMatrix = AssimpToDX(node->mTransformation);
 
-		const Matrix globalTransform = localMatrix * parentTransform;
+			globalTransform = localMatrix * parentTransform;
 
-		const Matrix finalMatrix = (skeleton.FindJoint(nodeName).offsetMatrix * globalTransform).Transpose();
+			const Matrix finalMatrix = (skeleton.FindJoint(nodeName).offsetMatrix * globalTransform).Transpose();
 
-		jointMatrices.emplace_back(finalMatrix);
-		skeleton.transforms.emplace_back(globalTransform);
+			jointMatrices.emplace_back(finalMatrix);
+			skeleton.transforms.emplace_back(globalTransform);
+		}
 
 		for (UINT i = 0; i < node->mNumChildren; ++i)
 			ReadNodeHeriarchy(node->mChildren[i], skeleton, globalTransform);
@@ -101,6 +104,8 @@ public:
 			return;
 
 		Matrix matrix = Matrix::Identity;
+
+		currentAnimation->UpdateTime();
 
 		ReadNodeHeriarchy(root, skeleton, matrix);
 

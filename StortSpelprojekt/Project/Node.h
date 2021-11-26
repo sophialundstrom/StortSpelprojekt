@@ -2,21 +2,22 @@
 #include "Math.h"
 #include "Print.h"
 #include "Collision.h"
+#include <limits>
+
+#define BIG_INT 200000;
 
 class Node
 {
 private:
 
 public:
-	BoundingSphere BSphere;
-	bool walkable = true;
+	int gridX, gridY;
 	Vector3 position;
-	int heapIndex;
-
-	int gridX, gridY, gCost = 0, hCost = 0;
+	bool walkable = true;
+	int gCost = BIG_INT;
+	int hCost = 0;
+	BoundingSphere BSphere;
 	Node* parent = nullptr;
-
-	int fCost = 0;
 
 	Node();
 	virtual ~Node();
@@ -47,17 +48,7 @@ public:
 	int CompareF(Node* node);
 };
 
-struct MyHash
-{
-	std::size_t operator()(Node const* n) const noexcept
-	{
-		std::size_t h1 = std::hash<int>{}(n->gridX);
-		std::size_t h2 = std::hash<int>{}(n->gridY);
-		return h1 ^ (h2 << 1); // or use boost::hash_combine
-	}
-};
-
-inline int GetDistance(Node* n1, Node* n2)
+inline float GetDistance(Node* n1, Node* n2)
 {
 	int dstX = abs(n1->gridX - n2->gridX);
 	int dstY = abs(n1->gridY - n2->gridY);

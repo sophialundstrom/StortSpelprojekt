@@ -1,11 +1,8 @@
 #pragma once
 #include "Editor.h"
 #include "Scene.h"
-#include "ModelRenderer.h"
-#include "TerrainRenderer.h"
 #include "ApplicationState.h"
-#include "IDRenderer.h"
-#include "VolumeRenderer.h"
+#include "ImGui.h"
 #include "WaterRenderer.h"
 
 class LevelEditor : public Editor, public ApplicationState
@@ -29,13 +26,6 @@ private:
 	bool divideFlipped = false;
 	bool renderVolumes = true;
 	bool renderTerrain = true;
-
-	//ADD RENDERERS
-	TerrainRenderer terrainRenderer;
-	ModelRenderer modelRenderer;
-	IDRenderer idRenderer;
-	VolumeRenderer volumeRenderer;
-	WaterRenderer waterRenderer;
 
 	UINT wWidth, wHeight;
 

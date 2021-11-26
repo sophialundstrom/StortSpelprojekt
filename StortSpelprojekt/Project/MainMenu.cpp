@@ -83,10 +83,11 @@ void Hovering()
 }
 
 MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
-	:modelRenderer(FORWARD, true),
-	particleRenderer(FORWARD),
-	terrainRenderer(FORWARD, 40)
 {
+	RND.InitModelRenderer();
+	RND.InitParticleRenderer();
+	RND.InitShadowRenderer();
+
 	Initialize();
 	
 	Audio::AddAudio(L"Audio/Menu.wav", 0);
@@ -137,7 +138,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 		menuCanvas->AddImage({ xPos, clientHeight / 2.0f + 225 }, "QuitLeaves", "QuitLeaves.png", 1.f, 1.0f, true, false);
 		auto image = menuCanvas->GetImage("Quit");
 		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "QuitButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Quit(); }, [this] { HoveringQuit(); });
-		}
+	}
 
 	{
 		// FORM
@@ -186,7 +187,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	//186 95 42 
 	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
 	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 35, -687 });
-	particleRenderer.Bind(menuFireSystem);
+	PR->Bind(menuFireSystem);
 		
 	(void)Run();
 }
@@ -210,8 +211,8 @@ void MainMenu::Initialize()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
-			modelRenderer.Bind(model);
-			shadowRenderer.Bind(model);
+			MR->Bind(model);
+			SR->Bind(model);
 			continue;
 		}
 
@@ -227,15 +228,15 @@ void MainMenu::Initialize()
 
 void MainMenu::Render()
 {
-	shadowRenderer.Render();
+	SR->Render();
 
 	Graphics::Inst().BeginFrame();
 
 	ShaderData::Inst().BindFrameConstants();
 
-	modelRenderer.Render();
+	MR->Render();
 
-	particleRenderer.Render();
+	PR->Render();
 
 	currentCanvas->Render();
 

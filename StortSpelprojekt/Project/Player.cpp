@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, const UINT& maxArrows)
-	:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
+Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
+	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera)
 {
 	isRightPressed = false;
 	isLeftPressed = false;
@@ -17,9 +17,8 @@ Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> i
 	frustum->SetPosition(0, 3, 0);
 
 	Load(file);
-	UpdateHealthUI();
 
-	PlayAnimation("Idle", true, 0.2f);
+	PlayAnimation("Run", true);
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 }
@@ -73,7 +72,7 @@ float Get2DAngle(Vector2 a, Vector2 b)
 	return acos(a.x * b.x + a.y * b.y);
 };
 
-void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
+void Player::Update(HeightMap* heightMap)
 {
 	//std::cout << position.x << "		" << position.y << "		" << position.z << std::endl;
 	lastPosition = position;
@@ -102,7 +101,6 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		moveDirection += Vector3(1, 0, 0);
 
 	moveDirection.Normalize();
-
 
 	//SPRINTING
 	if (Event::KeyIsPressed(VK_SHIFT))
@@ -160,7 +158,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 			SoundEffect::SetVolume(0.005, 2);
 			SoundEffect::StartAudio(2);
 			preJumpGroundLevel = currentGroundLevel; 
-			PlayAnimation("Jump", false, 0.5f);
+			//PlayAnimation("Jump", false, 0.5f);
 		}
 	}
 
@@ -168,9 +166,8 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	{
 		airTime += Time::GetDelta() * 8.0f;
 
-		if (airTime >= 1.5f)
-			PlayAnimation("Falling", true);
-
+		/*if (airTime >= 1.5f)
+			PlayAnimation("Falling", true);*/
 
 		/*else
 			std::cout << "Startup" << std::endl;*/
@@ -190,7 +187,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	if (closestColliderToCam < currentCameraDistance)
 		currentCameraDistance = closestColliderToCam;
 
-	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
+	position = newPlayerPos;
 
 	Vector3 newCameraPos;
 
@@ -201,7 +198,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
 
 	float newY = CalcHeightForCamera(heightMap);
-	//std::cout << "HeightMapAtCam: " << CalcHeightForCamera(heightMap) << "			CamHeight: " << sceneCamera->GetPosition().y << "			";
+	
 	if (newY > newCameraPos.y)
 	{
 		//std::cout << "PROBLEMATIC\n";
@@ -219,10 +216,10 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	if (sinceLastShot > shootingAnimationLenght) {
 
 		bool hasMoved = (position == lastPosition) ? false : true;
-		if (!hasMoved)
-			PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
-		else if (hasMoved && !jumping)
-			PlayAnimation("Walk", true); // ADD WALKING ANIMATION
+		//if (!hasMoved)
+		//	PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
+		//else if (hasMoved && !jumping)
+		//	PlayAnimation("Walk", true); // ADD WALKING ANIMATION
 		//else if (jumping)
 			 // ADD IN AIR JUMP ANIMATION
 	}
@@ -236,7 +233,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		{
 			if (Event::LeftIsClicked() && numArrows > 0)
 			{
-				arrowHandler.AddArrow(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+				arrowHandler.AddArrow(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				SoundEffect::AddAudio(L"Audio/Fire.wav", 1);
 				SoundEffect::SetVolume(0.005, 1);
@@ -255,10 +252,12 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		sceneCamera->MoveTowards(newCameraPos);
 	}
 		
-	arrowHandler.Update(mRenderer, cRenderer);
+	arrowHandler.Update();
 
 	AnimatedModel::Update();
+
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
+
 	bounds->Update();
 	frustum->Update();
 }
@@ -268,8 +267,6 @@ void Player::TakeDamage()
 	if (stats.healthPoints - 1 == 0)
 	{
 		stats.healthPoints--;
-		std::cout << "GAME OVER" << std::endl;
-		UpdateHealthUI();
 		gameOver = true;
 		return; // Return here because hp will be -1. This leads to a hp image not being found which in turn leads to a crash during Draw().
 	}
@@ -277,8 +274,6 @@ void Player::TakeDamage()
 	SoundEffect::SetVolume(0.5, 2);
 	SoundEffect::StartAudio(2);
 	stats.healthPoints--;
-	
-	UpdateHealthUI();
 }
 
 void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders)
@@ -359,6 +354,9 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 
 		force.Normalize();
 
+		if (force.Dot({ 0, 1, 0 }) < 0)
+			force.y *= -1;
+
 		position += force * Time::GetDelta();
 
 		Transform::UpdateMatrix();
@@ -398,7 +396,6 @@ void Player::Save(const std::string file)
 	}
 
 	writer.close();
-	Print("SUCCEEDED SAVING PLAYER FILE");
 }
 
 void Player::Load(const std::string file)
@@ -423,18 +420,5 @@ void Player::Load(const std::string file)
 	reader >> stats.level;
 	stats.currentSpeed = stats.movementSpeed;
 
-	//INVENTORY
-	UINT numItems;
-	reader >> numItems;
-	for (UINT i = 0; i < numItems; ++i)
-	{
-		UINT resourceID, num;
-		reader >> resourceID;
-		reader >> num;
-
-		inventory.items[(RESOURCE)resourceID] = num;
-	}
-
 	reader.close();
-	Print("SUCCEDED LOADING PLAYER FILE");
 }

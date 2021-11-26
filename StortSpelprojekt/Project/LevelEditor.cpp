@@ -2,6 +2,7 @@
 #include "Event.h"
 #include "GameLoader.h"
 #include "FBXLoader.h"
+#include "Renderers.h"
 
 void LevelEditor::BindDrawables()
 {
@@ -12,8 +13,8 @@ void LevelEditor::BindDrawables()
 		{
 			scene.GetObjectNames().push_back(name);
 			model->SetID((UINT)scene.GetObjectNames().size());
-			modelRenderer.Bind(model);
-			idRenderer.Bind(model);
+			MR->Bind(model);
+			IDR->Bind(model);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 			component->AddName(name);
 			totalPolygonCount += model->mesh.vertexCount / 3.0f;
@@ -31,8 +32,8 @@ void LevelEditor::BindDrawables()
 			scene.GetDrawables()[name] = volume;
 			scene.GetObjectNames().push_back(name);
 			volume->SetID((UINT)scene.GetObjectNames().size());
-			volumeRenderer.Bind(volume);
-			idRenderer.Bind(volume);
+			VR->Bind(volume);
+			IDR->Bind(volume);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 			component->AddName(name);
 		}
@@ -49,16 +50,10 @@ void LevelEditor::BindDrawables()
 			scene.GetDrawables()[name] = volume;
 			scene.GetObjectNames().push_back(name);
 			volume->SetID((UINT)scene.GetObjectNames().size());
-			volumeRenderer.Bind(volume);
-			idRenderer.Bind(volume);
+			VR->Bind(volume);
+			IDR->Bind(volume);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 			component->AddName(name);
-		}
-
-		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
-		if (particleSystem)
-		{
-			//SAME BUT PS->
 		}
 	}
 }
@@ -78,8 +73,8 @@ void LevelEditor::Load(const std::string& file)
 	fileName = scene.AddModel(fileName, path.string());
 	auto model = scene.Get<Model>(fileName);
 	model->SetID((UINT)scene.GetObjectNames().size());
-	idRenderer.Bind(model);
-	modelRenderer.Bind(model);
+	IDR->Bind(model);
+	MR->Bind(model);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(fileName);
 	totalPolygonCount += model->mesh.vertexCount / 3.0f;
@@ -107,8 +102,8 @@ void LevelEditor::DuplicateObject()
 
 		scene.AddModel(modelName, model);
 		model->SetID((UINT)scene.GetObjectNames().size());
-		idRenderer.Bind(model);
-		modelRenderer.Bind(model);
+		IDR->Bind(model);
+		MR->Bind(model);
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->AddName(modelName);
 		totalPolygonCount += model->mesh.vertexCount / 3.0f;
@@ -138,8 +133,8 @@ void LevelEditor::DuplicateVolume()
 		volume->SetScale(box->GetScale());
 		scene.AddBoundingVolume(name, volume);
 		volume->SetID((UINT)scene.GetObjectNames().size());
-		volumeRenderer.Bind(volume);
-		idRenderer.Bind(volume);
+		VR->Bind(volume);
+		IDR->Bind(volume);
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->AddName(name);
 		selectedObject = name;
@@ -164,8 +159,8 @@ void LevelEditor::DuplicateVolume()
 		volume->SetScale(sphere->GetScale());
 		scene.AddBoundingVolume(name, volume);
 		volume->SetID((UINT)scene.GetObjectNames().size());
-		volumeRenderer.Bind(volume);
-		idRenderer.Bind(volume);
+		VR->Bind(volume);
+		IDR->Bind(volume);
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->AddName(name);
 		selectedObject = name;
@@ -201,8 +196,8 @@ void LevelEditor::CreateBoundingBox()
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(name);
 
-	volumeRenderer.Bind(box);
-	idRenderer.Bind(box);
+	VR->Bind(box);
+	IDR->Bind(box);
 
 	Print("BoundingBox Created!");
 }
@@ -234,8 +229,8 @@ void LevelEditor::CreateBoundingSphere()
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(name);
 
-	volumeRenderer.Bind(sphere);
-	idRenderer.Bind(sphere);
+	VR->Bind(sphere);
+	IDR->Bind(sphere);
 
 	Print("BoundingSphere Created!");
 }
@@ -387,7 +382,7 @@ void LevelEditor::Update()
 	
 		if (mousePos.x >= 0 && mousePos.y >= 0)
 		{
-			int id = idRenderer.GetObjectID((UINT)mousePos.x, (UINT)mousePos.y);
+			int id = IDR->GetObjectID((UINT)mousePos.x, (UINT)mousePos.y);
 
 			if (id > 0)
 			{
@@ -535,26 +530,27 @@ void LevelEditor::Update()
 	Event::ClearRawDelta();
 
 	if (viewportPanel.GetWidth() != 0)
-		idRenderer.UpdateViewport((UINT)viewportPanel.GetWidth(), (UINT)viewportPanel.GetHeight());
+		IDR->UpdateViewport((UINT)viewportPanel.GetWidth(), (UINT)viewportPanel.GetHeight());
 }
 
 void LevelEditor::Render()
 {
-	idRenderer.BeginFrame(dsv, viewport);
-	idRenderer.Render();
+	IDR->BeginFrame(dsv, viewport);
+	IDR->Render();
 
 	BeginViewportFrame();
 
 	if(renderTerrain)
-		terrainRenderer.Render(*terrain);
+		TR->Render(*terrain);
 
 	if(renderWater)
-		waterRenderer.Render(water);
+		WR->Render(water);
 
-	modelRenderer.Render();
-	
+	MR->Render();
+
 	if(renderVolumes)
-		volumeRenderer.Render();
+		VR->Render();
+
 
 	BeginFrame();
 
@@ -591,10 +587,14 @@ void LevelEditor::Render()
 }
 
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
-	:modelRenderer(FORWARD, false),
-	terrainRenderer(FORWARD),
-	water(5000)
+	:water(5000)
 {
+	RND.InitModelRenderer(false);
+	RND.InitIDRenderer();
+	RND.InitTerrainRenderer();
+	RND.InitWaterRenderer();
+	RND.InitVolumeRenderer();
+
 	//WINDOWS
 	{
 		AddWindow("TOOLS");
@@ -700,8 +700,9 @@ void LevelEditor::RemoveItem(std::string name)
 	if (model)
 	{
 		totalPolygonCount -= model->mesh.vertexCount / 3.0f;
-		modelRenderer.Unbind(model);
-		idRenderer.Unbind(model);
+		MR->Unbind(model);
+		IDR->Unbind(model);
+
 		scene.DeleteDrawable(name);
 		name = Resources::Inst().GetBufferNameFromID(model->mesh.bufferID);
 
@@ -744,8 +745,8 @@ void LevelEditor::RemoveItem(std::string name)
 		auto box = std::dynamic_pointer_cast<BoxVolume>(deleted);
 		if (box)
 		{
-			volumeRenderer.Unbind(box);
-			idRenderer.Unbind(box);
+			VR->Unbind(box);
+			IDR->Unbind(box);
 			scene.DeleteDrawable(name);
 			name = "BoxVolume";
 		}
@@ -753,8 +754,8 @@ void LevelEditor::RemoveItem(std::string name)
 		auto sphere = std::dynamic_pointer_cast<SphereVolume>(deleted);
 		if (sphere)
 		{
-			volumeRenderer.Unbind(sphere);
-			idRenderer.Unbind(sphere);
+			VR->Unbind(sphere);
+			IDR->Unbind(sphere);
 			scene.DeleteDrawable(name);
 			name = "SphereVolume";
 		}
@@ -798,8 +799,6 @@ void LevelEditor::RemoveItem(std::string name)
 			component->AddName(drawableName);
 		}
 	}
-
-
 }
 
 void LevelEditor::ClearToolUI()
@@ -856,6 +855,7 @@ void LevelEditor::FocusObject()
 
 LevelEditor::~LevelEditor()
 {
+	RND.ShutDown();
 	delete terrain;
 	Resources::Inst().Clear();
 }
