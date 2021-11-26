@@ -9,6 +9,7 @@
 #include "TerrainRenderer.h"
 #include "SkeletonRenderer.h"
 #include "WaterRenderer.h"
+#include "SkyBoxRenderer.h"
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
@@ -69,6 +70,7 @@ private:
     ColliderRenderer colliderRenderer;
     SkeletonRenderer skeletonRenderer;
     WaterRenderer waterRenderer;
+    SkyBoxRenderer skyBoxRenderer;
 
     SaveStation saveStations[2];
 

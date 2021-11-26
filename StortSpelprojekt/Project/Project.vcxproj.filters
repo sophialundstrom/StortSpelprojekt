@@ -202,6 +202,12 @@
     <Filter Include="ARCUS\Scene\Game\NPC\FSM">
       <UniqueIdentifier>{68b091f1-0a79-4bb7-aec4-3c4dca9294ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\SkyBoxRenderer">
+      <UniqueIdentifier>{b5c786b4-6db2-4da5-803e-83eb68b85d07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\SkyBoxRenderer\Shaders">
+      <UniqueIdentifier>{2019591e-f4cc-46a7-b6c4-7e1f01c03d03}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Terrain.cpp">
@@ -356,6 +362,9 @@
     </ClCompile>
     <ClCompile Include="ConcreteStates.cpp">
       <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBoxRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\SkyBoxRenderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -692,6 +701,9 @@
     <ClInclude Include="ConcreteStates.h">
       <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
     </ClInclude>
+    <ClInclude Include="SkyBoxRenderer.h">
+      <Filter>ARCUS\Graphics\Renderers\SkyBoxRenderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -795,6 +807,12 @@
     </FxCompile>
     <FxCompile Include="LoadingVS.hlsl">
       <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="skyBoxVertexShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\SkyBoxRenderer\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="skyBoxPixelShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\SkyBoxRenderer\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
