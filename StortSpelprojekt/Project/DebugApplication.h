@@ -5,11 +5,13 @@
 #include "States.h"
 #include "LoadingScreen.h"
 #include "MainMenu.h"
+#include "Renderers.h"
 
 class DebugApplication
 {
 private:
 	//SINGLETONS
+	std::unique_ptr<Renderers> renderers;
 	std::unique_ptr<Graphics> graphics;
 	std::unique_ptr<Resources> resources;
 	std::unique_ptr<ShaderData> shaderData;
@@ -95,7 +97,7 @@ public:
 		Window::ActivateCursor();
 		currentState = APPSTATE::MAIN_MENU;
 		currentGameState = new DebugMainMenu(clientWidth, clientHeight);
-
+		renderers = std::make_unique<Renderers>();
 	}
 
 	~DebugApplication()
