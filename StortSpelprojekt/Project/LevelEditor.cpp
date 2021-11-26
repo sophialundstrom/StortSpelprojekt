@@ -603,16 +603,19 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddTextComponent("SCENE POLYGON COUNT");
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
-		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
-		window.AddCheckBoxComponent("WIREFRAME", false);
 		window.AddButtonComponent("CREATE BBOX", 120, 30);
 		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
-		window.AddButtonComponent("RETURN TO MENU", 120, 30);
+		window.AddTextComponent("");
+		window.AddSliderIntComponent("TERRAIN SUBDIV", 0, 5);
+		window.AddCheckBoxComponent("WIREFRAME", false);
+		window.AddTextComponent("SHOW:");
 		window.AddCheckBoxComponent("TERRAIN", true);
 		window.AddCheckBoxComponent("WATER", true);
 		window.AddCheckBoxComponent("VOLUMES", true);
+		window.AddTextComponent("CULL:");
 		window.AddSliderIntComponent("RENDER DIVIDE", -2000, 2000, -2000, false);
 		window.AddCheckBoxComponent("FLIP DIVIDE", false);
+		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
 	{
@@ -900,11 +903,11 @@ APPSTATE LevelEditor::Run()
 		if (window.Changed("VOLUMES"))
 			ShowVolumes();
 
-		if (window.Changed("TERRAIN START SUBDIVISIONS"))
+		if (window.Changed("TERRAIN SUBDIV"))
 		{
 			if (terrain)
 				delete terrain;
-			terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
+			terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN SUBDIV"));
 		}
 
 		if (window.Changed("RENDER DIVIDE"))
