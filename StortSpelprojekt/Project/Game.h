@@ -124,8 +124,6 @@ private:
     std::vector<AudioSource>audioSources;
   
     bool mainMenu = false;
-    UINT slot = 0;
-    UINT lastMusicSlot;
 
     void RemoveItem(const std::string name);
     void AddItem(RESOURCE resource, Vector3 position);

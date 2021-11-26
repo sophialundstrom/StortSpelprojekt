@@ -117,7 +117,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		{
 			
 			Audio::StartEffect("Running.wav");
-			Audio::SetVolume("Running.wav", 4.f);
+			Audio::SetVolume("Running.wav", 1.f);
 			isSprinting = true;
 		}
 

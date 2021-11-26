@@ -7,27 +7,31 @@ class AudioSource
 private:
 	Vector3 position;
 	float reach;
-	int audioSlot;
+	std::string audioName;
 	bool active = false;
 public:
-	AudioSource(const Vector3& position, const float& reach, const int& audioSlot)
+	AudioSource(const Vector3& position, const float& reach, const std::string& audioName)
 	{
 		this->position = position;
 		this->reach = reach;
-		this->audioSlot = audioSlot;
+		this->audioName = audioName;
 	}
 
 	bool CheckActive(const Vector3& position)
 	{
+		//PrintNumber((position - this->position).Length(), "LEN: ");
 		if ((position - this->position).Length() <= reach && !active)
 		{
-			active = true;
 			PrintS("INSIDE");
+			Audio::StartEffect(this->audioName);
+			Audio::SetVolume(this->audioName, 1.f);
+			active = true;
 			return true;
 		}
 		else if ((position - this->position).Length() > reach && active)
 		{
 			PrintS("OUTSIDE");
+			Audio::StopEffect(this->audioName);
 			active = false;
 		}
 		
@@ -40,6 +44,6 @@ public:
 	const float& GetReach() { return this->reach; }
 	void SetReach(const float& reach) { this->reach = reach; }
 
-	const int& GetAudioSlot() { return this->audioSlot; }
-	void SetAudioSlot(const int& audioSlot) { this->audioSlot = audioSlot; }
+	const std::string& GetAudioSlot() { return this->audioName; }
+	void SetAudioSlot(const int& audioSlot) { this->audioName = audioSlot; }
 };

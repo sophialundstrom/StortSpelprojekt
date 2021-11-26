@@ -600,7 +600,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ocean->Bind(colliderRenderer);
 	biomes.emplace_back(ocean);
 
-	audioSources.emplace_back(AudioSource(Vector3(-15.8f, 23, -588.f), 10.f, 16));
+	audioSources.emplace_back(AudioSource(Vector3(38.f, 20.f, -574.f), 60.f, "Fireplace.wav"));
 
 	(void)Run();
 }
@@ -617,18 +617,15 @@ void Game::SetupAudio()
 {
 	Audio::Initialize(true, HardwareSupport::numThreads);
 
-	lastMusicSlot = 0;
 	Audio::StartMusic("Sonrie.wav");
+	Audio::SetVolume("Sonrie.wav", 0.3f);
 }
 
 void Game::HandleAudioSources()
 {
 	for (auto& audioSource : audioSources)
 	{
-		if (audioSource.CheckActive(player->GetPosition()))
-		{
-			//PrintS("AUDIO ON");
-		}
+		audioSource.CheckActive(player->GetPosition());
 	}
 }
 
@@ -756,7 +753,6 @@ void Game::HandleBiomes()
 			if (hit)
 			{
 				type = biome->type; // GETS BIOME TYPE
-				slot = biome->musicSlot;
 			}
 		}
 		
