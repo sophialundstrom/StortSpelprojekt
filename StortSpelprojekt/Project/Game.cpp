@@ -600,9 +600,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ocean->Bind(colliderRenderer);
 	biomes.emplace_back(ocean);
 
-	//audioSources.emplace_back(AudioSource(Vector3(-15.8f, 23, -588.f), 10.f, 16));
+	audioSources.emplace_back(AudioSource(Vector3(-15.8f, 23, -588.f), 10.f, 16));
 
-	
 	(void)Run();
 }
 
@@ -616,10 +615,7 @@ Game::~Game()
 
 void Game::SetupAudio()
 {
-	// NUMBER OF THREADS, ON THE CPU THAT IS USED, THAT CAN WORK IN PARALLELL
-	unsigned int nthreads = std::thread::hardware_concurrency();
-	PrintNumber(HardwareSupport::numThreads, "XXXXXXXX");
-	Audio::Initialize(true, nthreads);
+	Audio::Initialize(true, HardwareSupport::numThreads);
 
 	lastMusicSlot = 0;
 	Audio::StartMusic("Sonrie.wav");
@@ -825,17 +821,11 @@ void Game::CheckNearbyEnemies()
 	}
 	hostiles.resize(hostiles.size() - numDead);
 
-
-	// IF STARTING COMBAT IN ONE BIOME AND LEAVING THE BIOME WHILE STILL IN COMBATS AND THEN EXITS THE OLD BIOME WILL BE PLAYED BECAUSE THAT IS THE VALUE OF THE LASTBIOMESLOT-VARIABLE
-
 	if (!player->inCombat && numInCombat > 0) 
 	{
-		PrintS("ENTERED COMBAT");
+		PrintS("IN COMBAT");
 		player->inCombat = true;
 		short int rand = Random::Integer(0, 2);
-
-		//for (auto& slot : Audio::sMusic)
-		//	Audio::StopMusic(slot.first);
 
 		switch (rand)
 		{
@@ -856,58 +846,7 @@ void Game::CheckNearbyEnemies()
 	{
 		PrintS("OUT OF COMBAT"); 
 		player->inCombat = false;
-		//for (auto& slot : Audio::sMusic)
-		//	Audio::StopMusic(slot.first);
-
 		player->SwitchBiomeMusic();
-		//bool hit = false;
-		//BIOME type = BIOME::DEFAULT;
-		//for (auto& biome : biomes)
-		//{
-		//	for (auto& collider : biome->colliders)
-		//	{
-		//		hit = Collision::Contains(*collider, player->GetPosition());
-		//		if (hit)
-		//		{
-		//			type = biome->type;
-		//			slot = biome->musicSlot;
-		//		}
-		//	}
-
-		//}
-
-		//player->currentBiome = type;
-
-		//if (player->currentBiome != player->previousBiome)
-		//{
-		//	for (auto& slot : Audio::sMusic)
-		//		Audio::StopMusic(slot.first);
-
-		//	switch (player->currentBiome)
-		//	{
-		//	case BIOME::DESERT:
-		//		PrintS("DESERT");
-
-		//		Audio::StartMusic("SoundDesert.wav");
-		//		lastMusicSlot = 3; // SETS THE MUSIC SLOT FOR THE NEW MUSIC
-		//		break;
-		//	case BIOME::OCEAN:
-		//		PrintS("OCEAN");
-		//		/*for (auto& slot : Audio::musicSlots)
-		//			Audio::StopAudio(slot);*/
-		//		Audio::StartMusic("SoundOcean.wav");
-		//		lastMusicSlot = 14;
-		//		break;
-		//	case BIOME::DEFAULT:
-		//		PrintS("DEFAULT");
-		//		/*for (auto& slot : Audio::musicSlots)
-		//			Audio::StopAudio(slot);*/
-		//		Audio::StartMusic("Sonrie.wav");
-		//		lastMusicSlot = 0;
-		//		break;
-		//	}
-		//}
-		
 	}
 }
 

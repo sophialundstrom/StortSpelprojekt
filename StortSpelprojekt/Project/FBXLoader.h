@@ -4,6 +4,7 @@
 #include "ThreadPool.h"
 #include "Time.h"
 #include "LoadingScreen.h"
+#include "HardwareSupport.h"
 
 struct TempMeshData
 {
@@ -40,8 +41,6 @@ public:
 			std::atomic<int> fbxLeft;
 			fbxLeft = (int)numFBX;
 			
-			// NUMBER OF THREADS, ON THE CPU THAT IS USED, THAT CAN WORK IN PARALLELL
-
 			ThreadPool pool(HardwareSupport::numThreads);
 			
 			for (UINT i = 0; i < numFBX; ++i) {
