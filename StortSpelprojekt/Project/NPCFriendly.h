@@ -3,7 +3,9 @@
 #include "Model.h"
 #include "Building.h"
 #include "QuestLog.h"
+#include "Event.h"
 #include "QuestMarker.h"
+
 
 class FriendlyNPC : public NPC
 {
@@ -21,13 +23,19 @@ public:
 	bool Completed()										{ return completed; }
 
 	virtual void Update() override;
+
 private:
 	std::shared_ptr<QuestMarker> questMarker;
 	std::shared_ptr<Building> building;
 	int activeQuestID = -1;
 	bool interactable = false;
 	bool completed = false;
-
 	std::vector<UINT> questIDs;
 	void Walking();
+	float timeMeasurement = 0;
+	Timer timer;
+
+	Vector3 moveDirection;
+
+
 };

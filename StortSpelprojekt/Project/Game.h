@@ -127,7 +127,7 @@ private:
 
     void AddArrow(const std::string fileName);
 
-    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
+    void AddHostileNPC(const std::string& filename, Vector3 position);
     void AddLoot(LOOTTYPE type, const Vector3& position);
 
     void UpdateAndHandleLoot();
