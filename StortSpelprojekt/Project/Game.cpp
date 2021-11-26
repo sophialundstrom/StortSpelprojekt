@@ -909,47 +909,47 @@ void Game::CheckNearbyEnemies()
 }
 
 
-void Game::HoveringBackHowToPlay()
-{
-	canvases["HOW TO PLAY"]->GetImage("BackLeavesHowToPlay")->Show();
-}
-
-void Game::HoveringBackOptions()
-{
-	canvases["OPTIONS"]->GetImage("BackLeavesHowToPlay")->Show();
-}
-
-void Game::HoveringYes()
-{
-	canvases["QUIT"]->GetImage("YesLeaves")->Show();
-
-}
-
-void Game::HoveringNo()
-{
-	canvases["QUIT"]->GetImage("NoLeaves")->Show();
-
-}
-
-void Game::HoveringOptions()
-{
-	canvases["PAUSED"]->GetImage("OptionsLeaves")->Show();
-}
-
-void Game::HoveringResume()
-{
-	canvases["PAUSED"]->GetImage("ResumeLeaves")->Show();
-}
-
-void Game::HoveringHowToPlay()
-{
-	canvases["PAUSED"]->GetImage("HowToPlayLeaves")->Show();
-}
-
-void Game::HoveringMainMenu()
-{
-	canvases["PAUSED"]->GetImage("BackToMainMenuLeaves")->Show();
-}
+//void Game::HoveringBackHowToPlay()
+//{
+//	canvases["HOW TO PLAY"]->GetImage("BackLeavesHowToPlay")->Show();
+//}
+//
+//void Game::HoveringBackOptions()
+//{
+//	canvases["OPTIONS"]->GetImage("BackLeavesHowToPlay")->Show();
+//}
+//
+//void Game::HoveringYes()
+//{
+//	canvases["QUIT"]->GetImage("YesLeaves")->Show();
+//
+//}
+//
+//void Game::HoveringNo()
+//{
+//	canvases["QUIT"]->GetImage("NoLeaves")->Show();
+//
+//}
+//
+//void Game::HoveringOptions()
+//{
+//	canvases["PAUSED"]->GetImage("OptionsLeaves")->Show();
+//}
+//
+//void Game::HoveringResume()
+//{
+//	canvases["PAUSED"]->GetImage("ResumeLeaves")->Show();
+//}
+//
+//void Game::HoveringHowToPlay()
+//{
+//	canvases["PAUSED"]->GetImage("HowToPlayLeaves")->Show();
+//}
+//
+//void Game::HoveringMainMenu()
+//{
+//	canvases["PAUSED"]->GetImage("BackToMainMenuLeaves")->Show();
+//}
 
 void Game::UpdateQuadTree()
 {

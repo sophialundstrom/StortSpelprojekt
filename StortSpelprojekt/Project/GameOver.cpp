@@ -1,4 +1,5 @@
 #include "GameOver.h"
+#include "Renderer.h"
 
 void GameOver::Form()
 {
@@ -80,11 +81,13 @@ void GameOver::HoveringContinue()
 }
 
 GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
-	:modelRenderer(FORWARD, true),
-	particleRenderer(FORWARD),
-	terrainRenderer(FORWARD),
-	water(5000), terrain(2)
+	:water(5000), terrain(2)
 {
+	RND.InitModelRenderer();
+	RND.InitParticleRenderer();
+	RND.InitShadowRenderer();
+	//RND.InitTerrainRenderer();
+	//RND.InitWaterRenderer();
 	Audio::AddAudio(L"Audio/GameOver.wav", 0);
 	Audio::SetVolume(0.005, 0);
 	Audio::StartAudio(0);
@@ -172,26 +175,24 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 
 GameOver::~GameOver()
 {
-	
+	RND.ShutDown();
 }
 
 void GameOver::Render()
 {
-	shadowRenderer.Render();
+	SR->Render();
 
 	Graphics::Inst().BeginFrame();
 
 	ShaderData::Inst().BindFrameConstants();
 
-	particleRenderer.Render();
+	PR->Render();
 
-	modelRenderer.Render();
+	MR->Render();
 
-	//terrainRenderer.Render(terrain);
+	//TR->Render(terrain);
 
-	//waterRenderer.Render(water);
-
-	//skeletonRenderer.Render();
+	//WR->Render(water);
 
 	currentCanvas->Render();
 

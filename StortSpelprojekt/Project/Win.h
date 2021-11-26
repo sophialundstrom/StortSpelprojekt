@@ -1,31 +1,18 @@
 #pragma once
 #include "ApplicationState.h"
-#include "ParticleRenderer.h"
-#include "ShadowRenderer.h"
-#include "ModelRenderer.h"
 #include "Canvas.h"
 #include "FBXLoader.h"
 #include "GameLoader.h"
-#include "ParticleRenderer.h"
 #include "Building.h"
 #include "UI.h"
-#include "TerrainRenderer.h"
 #include "Terrain.h"
 #include "Water.h"
-#include "WaterRenderer.h"
-
 
 class Win : public ApplicationState
 {
 private:
 	std::shared_ptr<Canvas> currentCanvas;
 	std::map<std::string, std::shared_ptr<Canvas>> canvases;
-
-	ShadowRenderer shadowRenderer;
-	WaterRenderer waterRenderer;
-	TerrainRenderer terrainRenderer;
-	ParticleRenderer particleRenderer;
-	ModelRenderer modelRenderer;
 
 	Terrain terrain;
 	Water water;

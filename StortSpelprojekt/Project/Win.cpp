@@ -42,11 +42,13 @@ void Win::HoveringNo()
 }
 
 Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
-	:modelRenderer(FORWARD, true),
-	particleRenderer(FORWARD),
-	terrainRenderer(FORWARD),
-	water(5000), terrain(2)
+	:water(5000), terrain(2)
 {
+	RND.InitModelRenderer();
+	RND.InitParticleRenderer();
+	RND.InitShadowRenderer();
+	RND.InitTerrainRenderer();
+	RND.InitWaterRenderer();
 	Audio::AddAudio(L"Audio/Win.wav",0);
 	Audio::SetVolume(0.005,0);
 	Audio::StartAudio(0);
@@ -96,30 +98,31 @@ Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
 	//186 95 42 
 	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
 	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ 38.055f, 20.367f, -594.542f });
-	particleRenderer.Bind(menuFireSystem);
+	PR->Bind(menuFireSystem);
 
 	(void)Run();
 }
 
 Win::~Win()
 {
+	RND.ShutDown();
 }
 
 void Win::Render()
 {
-	shadowRenderer.Render();
+	SR->Render();
 
 	Graphics::Inst().BeginFrame();
 
 	ShaderData::Inst().BindFrameConstants();
 
-	modelRenderer.Render();
+	PR->Render();
 
-	terrainRenderer.Render(terrain);
-	
-	waterRenderer.Render(water);
+	MR->Render();
 
-	particleRenderer.Render();
+	TR->Render(terrain);
+
+	WR->Render(water);
 
 	currentCanvas->Render();
 
@@ -134,15 +137,15 @@ void Win::Initialize()
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
-	gameLoader.Load("GameOver", scene.GetDrawables());
+	gameLoader.Load("Default", scene.GetDrawables());
 
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
-			modelRenderer.Bind(model);
-			shadowRenderer.Bind(model);
+			MR->Bind(model);
+			SR->Bind(model);
 			continue;
 		}
 

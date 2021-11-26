@@ -44,7 +44,7 @@ public:
 		//SWAP TO MAINMENU TO NOT SKIP IT
 		Window::DeactivateCursor();
 
-		state = new MainMenu(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
+		state = new Game(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 	}
 
 	~Application()
