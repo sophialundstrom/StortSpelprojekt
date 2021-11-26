@@ -23,13 +23,13 @@ void Game::Update()
 
 	CheckSaveStationCollision();
 
+	HandleBiomes();
+
 	CheckNearbyEnemies();
 
 	CheckQuestInteraction();
 
 	UpdateAndHandleLoot();
-
-	HandleBiomes();
 
 	HandleAudioSources();
 
@@ -235,21 +235,6 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string fileName, Ve
 	return NPC;
 }
 
-void Game::AddArrow(const std::string fileName)
-{
-	auto arrow = std::make_shared<Arrow>();
-	arrows.emplace_back(arrow);
-	arrow->SetPosition(0, -100, 0);
-	arrow->SetScale(2);
-	//arrow->GetCollider()->SetParent(arrow);
-	//arrow->GetCollider()->SetScale(0.15f);
-	//arrow->GetCollider()->SetPosition(arrow->GetCollider()->GetPosition().x, arrow->GetCollider()->GetPosition().y, arrow->GetCollider()->GetPosition().z - 0.5f);
-	modelRenderer.Bind(arrow);
-	shadowRenderer.Bind(arrow);
-	//colliderRenderer.Bind(arrow->GetCollider());
-	arrow->Update();
-}
-
 void Game::UpdateAndHandleLoot()
 {
 	for (int i = 0; i < loot.size(); i++)
@@ -263,8 +248,7 @@ void Game::UpdateAndHandleLoot()
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 			
-			//Audio::StartAudio(11);
-			std::cout << "Loot destoyed\n";
+			Audio::StartEffect("PickupPop.wav");
 		}
 	}
 }
@@ -293,15 +277,14 @@ void Game::CheckNearbyCollision()
 				hostile->GetArrowHandler().CheckCollision(arrow, collider);
 			}
 		}
-
 		
 		for (auto& arrow : player->GetArrowHandler().arrows)
 		{
 			if (!arrow->canCollide)
 				continue;
-			if ((arrow->GetPosition() - collider->GetPosition()).Length() 
-				)
+			if ((arrow->GetPosition() - collider->GetPosition()).Length() > 50.f)
 				continue;
+
 			player->GetArrowHandler().CheckCollision(arrow, collider);
 		}
 
@@ -356,7 +339,6 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position)
 {
 	auto NPC = std::make_shared<HostileNPC>(filename, player, modelRenderer, colliderRenderer);
 	NPC->SetPosition(position);
-	//NPC->BindArrows(modelRenderer);
 
 	auto collider = NPC->GetCollider();
 	collider->SetParent(NPC);
@@ -367,7 +349,7 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position)
 	modelRenderer.Bind(NPC);
 	shadowRenderer.Bind(NPC);
 	const std::string name = filename + std::to_string(hostileID);
-	//scene.AddDrawable(name, NPC);
+
 	hostileID++;
 	hostiles.emplace_back(NPC);
 }
@@ -383,7 +365,6 @@ void Game::AddLoot(LOOTTYPE type, const Vector3& position)
 	scene.AddDrawable(name, LOOT);
 	loot.emplace_back(LOOT);
 	lootID++;
-	//colliderRenderer.Bind(LOOT->GetCollider());
 }
 
 void Game::CheckSaveStationCollision()
@@ -415,8 +396,7 @@ void Game::CheckItemCollision()
 
 			if (Event::KeyIsPressed('E'))
 			{
-				//Audio::StartAudio(10);
-				Print("PICKED UP ITEM");
+				Audio::StartEffect("Pickup.wav");
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item->GetName());
 				UpdateInventoryUI();
@@ -636,7 +616,6 @@ Game::~Game()
 void Game::SetupAudio()
 {
 	Audio::Initialize(true, 6);
-	//Audio::StartEngine();
 
 	lastMusicSlot = 0;
 	Audio::StartMusic("Sonrie.wav");
@@ -779,52 +758,13 @@ void Game::HandleBiomes()
 
 	player->currentBiome = type; // CURRENT BIOME SET
 
-		if (player->currentBiome != player->previousBiome) // IF NEW BIOME != LAST BIOME
-		{
-			if (!player->inCombat)
-			{
-				for (auto& slot : Audio::sMusic)
-					Audio::StopMusic(slot.first);
-
-				switch (player->currentBiome)
-				{
-				case BIOME::DESERT:
-					PrintS("DESERT");
-
-					Audio::StartMusic("SoundDesert.wav");
-					lastMusicSlot = 3; // SETS THE MUSIC SLOT FOR THE NEW MUSIC
-					break;
-				case BIOME::OCEAN:
-					PrintS("OCEAN");
-					/*for (auto& slot : Audio::musicSlots)
-						Audio::StopAudio(slot);*/
-					Audio::StartMusic("SoundOcean.wav");
-					lastMusicSlot = 14;
-					break;
-				case BIOME::DEFAULT:
-					PrintS("DEFAULT");
-					/*for (auto& slot : Audio::musicSlots)
-						Audio::StopAudio(slot);*/
-					Audio::StartMusic("Sonrie.wav");
-					lastMusicSlot = 0;
-					break;
-				}
-			}
-		}
-	
-	
-	/*switch (player->previousBiome)
+	if (player->currentBiome != player->previousBiome) // IF NEW BIOME != LAST BIOME
 	{
-	case BIOME::DESERT:
-		lastMusicSlot = 3;
-		break;
-	case BIOME::OCEAN:
-		lastMusicSlot = 14;
-		break;
-	case BIOME::DEFAULT:
-		lastMusicSlot = 0;
-		break;
-	}*/
+		if (!player->inCombat)
+		{
+			player->SwitchBiomeMusic();
+		}
+	}
 
 	player->previousBiome = player->currentBiome;
 }
@@ -884,8 +824,8 @@ void Game::CheckNearbyEnemies()
 		player->inCombat = true;
 		short int rand = Random::Integer(0, 2);
 
-		for (auto& slot : Audio::sMusic)
-			Audio::StopMusic(slot.first);
+		//for (auto& slot : Audio::sMusic)
+		//	Audio::StopMusic(slot.first);
 
 		switch (rand)
 		{
@@ -906,54 +846,57 @@ void Game::CheckNearbyEnemies()
 	{
 		PrintS("OUT OF COMBAT"); 
 		player->inCombat = false;
+		//for (auto& slot : Audio::sMusic)
+		//	Audio::StopMusic(slot.first);
 
-		bool hit = false;
-		BIOME type = BIOME::DEFAULT;
-		for (auto& biome : biomes)
-		{
-			for (auto& collider : biome->colliders)
-			{
-				hit = Collision::Contains(*collider, player->GetPosition());
-				if (hit)
-				{
-					type = biome->type;
-					slot = biome->musicSlot;
-				}
-			}
+		player->SwitchBiomeMusic();
+		//bool hit = false;
+		//BIOME type = BIOME::DEFAULT;
+		//for (auto& biome : biomes)
+		//{
+		//	for (auto& collider : biome->colliders)
+		//	{
+		//		hit = Collision::Contains(*collider, player->GetPosition());
+		//		if (hit)
+		//		{
+		//			type = biome->type;
+		//			slot = biome->musicSlot;
+		//		}
+		//	}
 
-		}
+		//}
 
-		player->currentBiome = type;
+		//player->currentBiome = type;
 
-		if (player->currentBiome != player->previousBiome)
-		{
-			for (auto& slot : Audio::sMusic)
-				Audio::StopMusic(slot.first);
+		//if (player->currentBiome != player->previousBiome)
+		//{
+		//	for (auto& slot : Audio::sMusic)
+		//		Audio::StopMusic(slot.first);
 
-			switch (player->currentBiome)
-			{
-			case BIOME::DESERT:
-				PrintS("DESERT");
+		//	switch (player->currentBiome)
+		//	{
+		//	case BIOME::DESERT:
+		//		PrintS("DESERT");
 
-				Audio::StartMusic("SoundDesert.wav");
-				lastMusicSlot = 3; // SETS THE MUSIC SLOT FOR THE NEW MUSIC
-				break;
-			case BIOME::OCEAN:
-				PrintS("OCEAN");
-				/*for (auto& slot : Audio::musicSlots)
-					Audio::StopAudio(slot);*/
-				Audio::StartMusic("SoundOcean.wav");
-				lastMusicSlot = 14;
-				break;
-			case BIOME::DEFAULT:
-				PrintS("DEFAULT");
-				/*for (auto& slot : Audio::musicSlots)
-					Audio::StopAudio(slot);*/
-				Audio::StartMusic("Sonrie.wav");
-				lastMusicSlot = 0;
-				break;
-			}
-		}
+		//		Audio::StartMusic("SoundDesert.wav");
+		//		lastMusicSlot = 3; // SETS THE MUSIC SLOT FOR THE NEW MUSIC
+		//		break;
+		//	case BIOME::OCEAN:
+		//		PrintS("OCEAN");
+		//		/*for (auto& slot : Audio::musicSlots)
+		//			Audio::StopAudio(slot);*/
+		//		Audio::StartMusic("SoundOcean.wav");
+		//		lastMusicSlot = 14;
+		//		break;
+		//	case BIOME::DEFAULT:
+		//		PrintS("DEFAULT");
+		//		/*for (auto& slot : Audio::musicSlots)
+		//			Audio::StopAudio(slot);*/
+		//		Audio::StartMusic("Sonrie.wav");
+		//		lastMusicSlot = 0;
+		//		break;
+		//	}
+		//}
 		
 	}
 }

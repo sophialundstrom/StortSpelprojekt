@@ -45,8 +45,11 @@ void Audio::SetVolume(const std::string& name, float volume)
 
 void Audio::StartMusic(const std::string& name)
 {
-
-	sMusic[name]->Stop(0);
+	for (auto& music : sMusic)
+	{
+		music.second->Stop(0);
+	}
+	
 	sMusic[name]->FlushSourceBuffers();
 	HRESULT hr;
 	if (FAILED(hr = sMusic[name]->SubmitSourceBuffer(&audioBuffers[name])))

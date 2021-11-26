@@ -23,8 +23,6 @@ HostileNPC::HostileNPC(const Model& model)
 
 void HostileNPC::Update()
 {
-    
-   
 }
 
 void HostileNPC::Update(const std::shared_ptr<Player> player)

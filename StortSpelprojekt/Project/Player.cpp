@@ -120,6 +120,7 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 			Audio::SetVolume("Running.wav", 4.f);
 			isSprinting = true;
 		}
+
 		stats.currentSpeed += 50.0f * Time::GetDelta();
 		if (stats.currentSpeed > stats.sprintSpeed)
 			stats.currentSpeed = stats.sprintSpeed;
@@ -299,6 +300,31 @@ void Player::TakeDamage()
 	stats.healthPoints--;
 	
 	UpdateHealthUI();
+}
+
+void Player::SwitchBiomeMusic()
+{
+	switch (this->currentBiome)
+	{
+	case BIOME::DESERT:
+		PrintS("DESERT");
+
+		Audio::StartMusic("SoundDesert.wav");
+		break;
+	case BIOME::MOUNTAIN:
+		PrintS("MOUNTAIN");
+
+		Audio::StartMusic("whenthedoommusickicksin.wav");
+		break;
+	case BIOME::OCEAN:
+		PrintS("OCEAN");
+		Audio::StartMusic("SoundOcean.wav");
+		break;
+	case BIOME::DEFAULT:
+		PrintS("DEFAULT");
+		Audio::StartMusic("Sonrie.wav");
+		break;
+	}
 }
 
 void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders)

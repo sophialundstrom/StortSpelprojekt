@@ -161,6 +161,7 @@ public:
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void TakeDamage();
 	bool inCombat = false;
+	void SwitchBiomeMusic();
 
 	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas/*, std::vector<std::shared_ptr<Arrow>> arrows*/, const UINT& maxArrows);
 

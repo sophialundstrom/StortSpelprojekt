@@ -32,11 +32,6 @@ void ArrowHandler::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
 
 bool ArrowHandler::CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<Collider> collider, bool isDynamic)
 {
-    /*for (auto& arrow : arrows)
-    {*/
-        //if (!arrow->canCollide)
-        //    continue;
-
         Collision::RayResults rayResult;
         Vector3 point;
 
@@ -56,9 +51,6 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<
 
         if (rayResult.didHit)
         {
-            //SoundEffect::AddAudio(L"Audio/arrowHit.wav", 2);
-            //SoundEffect::SetVolume(0.8, 2);
-            //SoundEffect::StartAudio(2);
             if (isDynamic)
             {
                 arrow->isDestroyed = true;

@@ -51,7 +51,6 @@ void Loot::Update()
 
 void Loot::Update(std::shared_ptr<Player> player)
 {
-	Update();
 	currentRotation += Time::GetDelta();
 	if (!isTaken)
 	{

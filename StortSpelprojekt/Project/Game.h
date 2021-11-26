@@ -132,8 +132,6 @@ private:
 
     std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string fileName, Vector3 position);
 
-    void AddArrow(const std::string fileName);
-
     void AddHostileNPC(const std::string& filename, Vector3 position);
     void AddLoot(LOOTTYPE type, const Vector3& position);
 
