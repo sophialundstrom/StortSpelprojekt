@@ -366,8 +366,8 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position)
 
 	modelRenderer.Bind(NPC);
 	shadowRenderer.Bind(NPC);
-	const std::string name = "hostileNPC" + std::to_string(hostileID);
-	scene.AddDrawable(name, NPC);
+	const std::string name = filename + std::to_string(hostileID);
+	//scene.AddDrawable(name, NPC);
 	hostileID++;
 	hostiles.emplace_back(NPC);
 }
@@ -837,7 +837,7 @@ void Game::CheckNearbyEnemies()
 	{
 		float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
 		
-		hostiles[i]->Update(modelRenderer, colliderRenderer, player);
+		hostiles[i]->Update(player);
 
 		hostiles[i]->CheckPlayerCollision(player);
 
@@ -846,7 +846,6 @@ void Game::CheckNearbyEnemies()
 			if (!arrow->canCollide)
 				continue;
 
-			//bool isDead = false;
 			bool hit = player->GetArrowHandler().CheckCollision(arrow, hostiles[i]->GetCollider(), true);
 
 			if (hit)
@@ -861,7 +860,6 @@ void Game::CheckNearbyEnemies()
 					colliderRenderer.Unbind(hostiles[i]->GetCollider());
 					modelRenderer.Unbind(hostiles[i]);
 					shadowRenderer.Unbind(hostiles[i]);
-					scene.DeleteDrawable(hostiles[i]->GetName());
 					hostiles[i] = hostiles[hostiles.size() - 1 - numDead];
 					numDead++;
 					distanceToHostile = 100000.f;

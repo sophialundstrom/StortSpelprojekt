@@ -23,7 +23,7 @@ public:
 	HostileNPC(const Model& model);
 
 	virtual void Update() override;
-	void Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player);
+	void Update(const std::shared_ptr<Player> player);
 	void CheckPlayerCollision(std::shared_ptr<Player> player);
 	ArrowHandler& GetArrowHandler() { return this->arrowHandler; }
 	std::shared_ptr<Player> GetPlayer() { return this->player; }

@@ -23,15 +23,16 @@ HostileNPC::HostileNPC(const Model& model)
 
 void HostileNPC::Update()
 {
+    
+   
+}
+
+void HostileNPC::Update(const std::shared_ptr<Player> player)
+{
     currentState->Update(*this);
     arrowHandler.Update(*mRend, *cRend);
 
     NPC::Update();
-   
-}
-
-void HostileNPC::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const std::shared_ptr<Player> player)
-{
 }
 
 void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
