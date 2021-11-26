@@ -370,9 +370,7 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		//camp->AddBarbarian("BarbarianBow", { 392, 182, -44 }, hostiles, player, CombatStyle::consistantDelay, false);
 		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, false);
-		//ADD MORE BARBARIANS AND CAMPS
 
 		camps[BarbarianCamp::Location::South] = camp;
 	}
@@ -400,7 +398,7 @@ void Game::AddBarbarianCamps()
 
 		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -126.0f }, hostiles, player, CombatStyle::consistantDelay);
 		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -136.0f }, hostiles, player, CombatStyle::consistantDelay);
-		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -146.0f }, hostiles, player, CombatStyle::consistantDelay);
+		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -116.0f }, hostiles, player, CombatStyle::consistantDelay);
 
 		camps[BarbarianCamp::Location::Village] = camp;
 	}
@@ -628,6 +626,7 @@ void Game::UpdateInventoryUI()
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:water(5000), terrain(2)
 {
+	//INIT WHICH RENDERERS WE WANT TO USE
 	RND.InitAnimatedModelRenderer();
 	RND.InitColliderRenderer();
 	RND.InitModelRenderer();
@@ -639,6 +638,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitWaterRenderer();
 	RND.InitInteractableRenderer();
 
+	//CREATE OR LOAD QUESTS
 	QuestLog::CreateQuests();
 	//QuestLog::Load("Default");
 
@@ -660,7 +660,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
 	player->SetPosition(-75, 20, -630);
-	//scene.AddModel("Player", player);
 	player->GetBounds()->SetParent(player);
 	CR->Bind(player->GetBounds());
 	SKR->Bind(player);
@@ -708,7 +707,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//AUDIO
 	Audio::AddAudio(L"Audio/Sonrie.wav", 0);
 	Audio::SetVolume(0.005, 0);
-	//Audio::SetVolume(0.1, 0);
 	Audio::StartAudio(0);
 	
 	(void)Run();
@@ -716,6 +714,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 Game::~Game()
 {
+	RND.ShutDown();
 	QuestLog::ShutDown();
 	delete quadTree;
 	scene.Clear();
@@ -915,7 +914,6 @@ void Game::UpdateQuadTree()
 			SMR->Bind(drawable);
 		}
 	}
-	//std::cout << "Meshes drawn " << drawablesToBeRendered.size() << std::endl;
 
 	orthographicCollider.Update(scene.GetDirectionalLight());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
@@ -929,8 +927,6 @@ void Game::UpdateQuadTree()
 		}
 	}
 	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
-	
-
 	
 	//DebugVariant
 	/*

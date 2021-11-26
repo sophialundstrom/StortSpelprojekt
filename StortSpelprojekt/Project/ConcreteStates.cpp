@@ -1,8 +1,6 @@
 #include "ConcreteStates.h"
 #include "NPCHostile.h"
 
-
-
 void ShootingState::SwapCombatStyle(CombatStyle newCombatStyle)
 {
     combatStyle = newCombatStyle;
@@ -106,11 +104,7 @@ void ShootingState::Update(HostileNPC& hostile)
             lastShot = Time::Get();
 
         }
-
     }
-
-
-    // hostile.Update();
 }
 
 void ShootingState::Exit(HostileNPC& hostile)
@@ -142,8 +136,6 @@ NPCState& MovingState::GetInstance()
     static MovingState singleton;
     return singleton;
 }
-
-
 
 void IdlingState::Enter(HostileNPC& hostile)
 {

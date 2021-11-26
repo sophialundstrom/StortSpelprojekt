@@ -13,7 +13,10 @@ void CollectObjective::Update(Inventory& inventory)
 
 std::string CollectObjective::Info()
 {
-    return "Collect " + std::to_string(numToCollect - numCollected) + " " + Item::Names[(UINT)itemType];
+    if (numToCollect == 1)
+        return "Collect A " + Item::Names[(UINT)itemType];
+
+    return "Collect " + std::to_string(numToCollect - numCollected) + " " + Item::Names[(UINT)itemType] + "s";
 }
 
 void CollectObjective::WriteToFile(File& file)

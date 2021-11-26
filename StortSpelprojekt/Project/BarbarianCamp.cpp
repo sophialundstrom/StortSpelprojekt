@@ -43,8 +43,10 @@ void BarbarianCamp::AddBarbarian(const std::string& file, const Vector3& positio
 {
     auto barbarian = std::make_shared<HostileNPC>(file, player, combatStyle);
     barbarian->SetPosition(position);
+
     barbarians.emplace_back(barbarian);
     hostiles.emplace_back(barbarian);
+
     MR->Bind(barbarian);
     SR->Bind(barbarian);
 

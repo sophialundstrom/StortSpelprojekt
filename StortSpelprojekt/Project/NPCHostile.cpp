@@ -14,12 +14,6 @@ HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, 
     arrowHandler.SetPullbackFactor(0.6f);
 }
 
-HostileNPC::HostileNPC(const Model& model)
-	:NPC(model)
-{
-
-}
-
 void HostileNPC::Update()
 {
     currentState->Update(*this);
@@ -52,10 +46,4 @@ void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
             player->TakeDamage();
         }
     }
-}
-
-void HostileNPC::WeaponSlash()
-{
-	// Highly prototype only
-	// need some kind of way to do a weapon slash in the future
 }
