@@ -707,14 +707,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	mountain->AddCollider(Vector3(312, 110, 790), 460);
 	mountain->AddCollider(Vector3(523, 110, 525), 460);
 	mountain->AddCollider(Vector3(708, 110, 456), 460);
-	mountain->Bind(colliderRenderer);
+	mountain->Bind();
 	biomes.emplace_back(mountain);
 
 	auto desert = std::make_shared<Biome>(3U, BIOME::DESERT);
 	desert->AddCollider(Vector3(-311, 31, 380), 433);
 	desert->AddCollider(Vector3(-39, 35, 258), 286);
 	desert->AddCollider(Vector3(-556, 31, 459), 397);
-	desert->Bind(colliderRenderer);
+	desert->Bind();
 	biomes.emplace_back(desert);
 
 	auto ocean = std::make_shared<Biome>(14U, BIOME::OCEAN);
@@ -722,7 +722,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	ocean->AddCollider(Vector3(-46, 18, -1114), 389);
 	ocean->AddCollider(Vector3(-264, 18, -852), 280);
 	ocean->AddCollider(Vector3(-507, 18, -754), 345);
-	ocean->Bind(colliderRenderer);
+	ocean->Bind();
 	biomes.emplace_back(ocean);
 
 	audioSources.emplace_back(AudioSource(Vector3(38.f, 20.f, -574.f), 60.f, "Fireplace.wav"));
@@ -819,11 +819,6 @@ APPSTATE Game::Run()
 			lastClick = Time::Get();
 		}
 
-	}
-
-	if (Event::KeyIsPressed('P'))
-	{
-		PrintVector3("PLAYER POSITION: ", player->GetPosition());
 	}
 
 	if (Event::KeyIsPressed('L'))

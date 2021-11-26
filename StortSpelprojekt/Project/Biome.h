@@ -1,6 +1,7 @@
 #pragma once
 #include "Collision.h"
 #include "BiomeEnum.h"
+#include "Renderers.h"
 
 struct Biome
 {
@@ -19,10 +20,10 @@ struct Biome
 		colliders.emplace_back(collider);
 	}
 
-	void Bind(ColliderRenderer& cRenderer)
+	void Bind()
 	{
 		for (auto& collider : colliders)
-			cRenderer.Bind(collider);
+			CR->Bind(collider);
 	}
 
 	std::vector<std::shared_ptr<BoundingSphere>> colliders;
