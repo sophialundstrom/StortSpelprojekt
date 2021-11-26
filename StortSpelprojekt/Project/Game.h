@@ -1,14 +1,5 @@
 #pragma once
 #include "ApplicationState.h"
-#include "AnimatedModelRenderer.h"
-#include "ModelRenderer.h"
-#include "ParticleRenderer.h"
-#include "ShadowRenderer.h"
-#include "DeferredRenderer.h"
-#include "ColliderRenderer.h"
-#include "TerrainRenderer.h"
-#include "SkeletonRenderer.h"
-#include "WaterRenderer.h"
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
@@ -23,6 +14,10 @@
 #include "NPCHostile.h"
 #include "Loot.h"
 #include "MainMenu.h"
+#include "Renderers.h"
+#include "DialogueOverlay.h"
+#include "InGameOverlay.h"
+#include "PauseOverlay.h"
 #include "QuadTree.h"
 #include "AudioSource.h"
 
@@ -57,24 +52,16 @@ private:
     //-----TEMP-----//
     Pathfinding pathing;
 
-    std::unique_ptr<QuestLog> questLog;
-
-    AnimatedModelRenderer animatedModelRenderer;
-    ParticleRenderer particleRenderer;
-    
-    ModelRenderer modelRenderer;
-    ModelRenderer staticMeshModelRender;
-    ShadowRenderer shadowRenderer;
-
-    TerrainRenderer terrainRenderer;
-    ColliderRenderer colliderRenderer;
-    SkeletonRenderer skeletonRenderer;
-    WaterRenderer waterRenderer;
-
     SaveStation saveStations[2];
 
     Terrain terrain;
     Water water;
+
+    Overlay* overlay;
+
+    InGameOverlay* ingameOverlay;
+    DialogueOverlay* dialogueOverlay;
+    PauseOverlay* pauseOverlay;
 
     std::shared_ptr<Canvas> currentCanvas;
     std::map<std::string, std::shared_ptr<Canvas>> canvases;
@@ -86,6 +73,10 @@ private:
     std::vector<std::shared_ptr<Item>> items;
 
     std::shared_ptr<Building> building;
+
+    std::map<BarbarianCamp::Location, BarbarianCamp*> camps;
+
+    std::vector<std::shared_ptr<Target>> targets;
 
     std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs;
     
@@ -104,7 +95,6 @@ private:
 
     // UI FUNC
     void Pause();
-    void Resume();
     void Options();
     void HowToPlay();
     void BacktoPause();
@@ -126,17 +116,24 @@ private:
     bool mainMenu = false;
 
     void RemoveItem(const std::string name);
-    void AddItem(RESOURCE resource, Vector3 position);
+    void AddItem(Item::Type type, Vector3 position);
 
-    std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string fileName, Vector3 position);
+    std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position);
 
     void AddHostileNPC(const std::string& filename, Vector3 position);
+    void AddFriendlyNPCs();
+    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
     void AddLoot(LOOTTYPE type, const Vector3& position);
+    void AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation);
+    void AddBarbarianCamps();
+
+    void SpawnInvasion();
 
     void UpdateAndHandleLoot();
     void CheckNearbyCollision();
     void CheckSaveStationCollision();
     void CheckItemCollision();
+    void CheckTargetCollision();
     void CheckQuestInteraction();
     void CheckNearbyEnemies();
     void HandleBiomes();
@@ -145,7 +142,6 @@ private:
     void SetupAudio();
     void UpdateQuadTree();
 
-    void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
     void UpdateInventoryUI();
 
     void Initialize();
