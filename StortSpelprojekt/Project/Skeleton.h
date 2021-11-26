@@ -13,6 +13,7 @@ struct Joint
 struct Skeleton
 {
 	ID3D11Buffer* jointBuffer = nullptr;
+
 	std::vector<Matrix> transforms;
 
 	const UINT stride = sizeof(Vector3);

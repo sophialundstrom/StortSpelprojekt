@@ -9,50 +9,6 @@
 #include "ArrowHandler.h"
 #include "AnimatedModel.h"
 
-#undef Ray
-
-//struct Inventory
-//{
-//	//std::unordered_map here?
-//	std::map<RESOURCE, UINT> items; //ID , NUM OF ITEM
-//	std::map<RESOURCE, std::string> names;
-//
-//	Inventory()
-//	{
-//		names[RESOURCE::WOOD] = "Wood";
-//		names[RESOURCE::STONE] = "Stone";
-//		names[RESOURCE::FOOD] = "Food";
-//		names[RESOURCE::NONE] = "NONE";
-//	}
-//
-//	void AddItem(enum RESOURCE ID)
-//	{
-//		items[ID]++;
-//	}
-//
-//	void RemoveItem(enum RESOURCE ID, UINT amount = 1)
-//	{
-//		if (items[ID] <= amount)
-//		{
-//			items[ID] = 0;
-//			return;
-//		}
-//
-//		items[ID] -= amount;
-//	}
-//
-//	UINT NumOf(enum RESOURCE ID)
-//
-//	{
-//		return items[ID];
-//	}
-//
-//	void GetResources(enum RESOURCE ID)
-//	{
-//		std::cout << names[ID] << " " << items[ID] << std::endl;
-//	}
-//};
-
 struct Stats
 {
 	UINT barbariansKilled = 0;
