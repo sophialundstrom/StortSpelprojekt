@@ -9,6 +9,7 @@
 #include "MainMenu.h"
 #include "GameOver.h"
 #include "Win.h"
+#include "HardwareSupport.h"
 
 class Application
 {

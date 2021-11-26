@@ -40,7 +40,9 @@ public:
 			std::atomic<int> fbxLeft;
 			fbxLeft = (int)numFBX;
 			
-			ThreadPool pool(10);
+			// NUMBER OF THREADS, ON THE CPU THAT IS USED, THAT CAN WORK IN PARALLELL
+
+			ThreadPool pool(HardwareSupport::numThreads);
 			
 			for (UINT i = 0; i < numFBX; ++i) {
 				pool.Enqueue([=, &tempMaterials, &tempMeshData, &fbxLeft] {

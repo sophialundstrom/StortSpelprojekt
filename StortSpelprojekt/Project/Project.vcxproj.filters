@@ -697,6 +697,9 @@
     <ClInclude Include="AudioSource.h">
       <Filter>ARCUS</Filter>
     </ClInclude>
+    <ClInclude Include="HardwareSupport.h">
+      <Filter>ARCUS\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">

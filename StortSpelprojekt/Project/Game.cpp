@@ -4,6 +4,7 @@
 #include "GameLoader.h"
 #include "DialogueOverlay.h"
 #include "Biome.h"
+#include "HardwareSupport.h"
 
 void Game::Update()
 {
@@ -615,7 +616,10 @@ Game::~Game()
 
 void Game::SetupAudio()
 {
-	Audio::Initialize(true, 6);
+	// NUMBER OF THREADS, ON THE CPU THAT IS USED, THAT CAN WORK IN PARALLELL
+	unsigned int nthreads = std::thread::hardware_concurrency();
+	PrintNumber(HardwareSupport::numThreads, "XXXXXXXX");
+	Audio::Initialize(true, nthreads);
 
 	lastMusicSlot = 0;
 	Audio::StartMusic("Sonrie.wav");
@@ -682,6 +686,12 @@ APPSTATE Game::Run()
 		if (Event::KeyIsPressed('K'))
 		{
 			PrintVector3(player->GetPosition());
+			lastClick = Time::Get();
+		}
+		if (Event::KeyIsPressed('H'))
+		{
+			unsigned int nthreads = std::thread::hardware_concurrency();
+			PrintNumber(nthreads);
 			lastClick = Time::Get();
 		}
 
