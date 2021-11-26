@@ -307,7 +307,6 @@ void Player::SwitchBiomeMusic()
 		break;
 	case BIOME::MOUNTAIN:
 		PrintS("MOUNTAIN");
-
 		Audio::StartMusic("whenthedoommusickicksin.wav");
 		break;
 	case BIOME::OCEAN:
@@ -316,7 +315,7 @@ void Player::SwitchBiomeMusic()
 		break;
 	case BIOME::DEFAULT:
 		PrintS("DEFAULT");
-		Audio::StartMusic("Sonrie.wav");
+		Audio::StartMusic("SoundForest.wav");
 		break;
 	}
 }

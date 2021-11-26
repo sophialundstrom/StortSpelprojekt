@@ -12,7 +12,7 @@ std::map<std::string, IXAudio2SourceVoice*> Audio::sMusic;
 std::map<std::string, IXAudio2SourceVoice*> Audio::sEffects;
 std::map<std::string, IXAudio2SourceVoice*> Audio::sVoices;
 std::map<std::string, XAUDIO2_BUFFER> Audio::audioBuffers;
-float Audio::volume = 0.5f;
+float Audio::volume = 0.1f;
 
 void Audio::StartEngine()
 {

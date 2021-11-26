@@ -4,8 +4,9 @@
 #include "Player.h"
 #include "Arrow.h"
 #include "Pathfinding.h"
+#include "AnimatedModel.h"
 
-class NPC : public Model
+class NPC : public AnimatedModel
 {
 protected:
 	int hp;
@@ -16,7 +17,7 @@ protected:
 	std::shared_ptr<BoundingBox> boundingBox;
 public:
 	NPC(const std::string& file);
-	NPC(const Model& model);
+	NPC(const AnimatedModel& model);
 
 	virtual void Update() override;
 	bool Collided(Player &player);

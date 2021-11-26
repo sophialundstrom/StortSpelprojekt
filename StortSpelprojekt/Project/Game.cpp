@@ -351,6 +351,7 @@ void Game::AddFriendlyNPCs()
 		friendlyNPCs.emplace_back(NPC);
 	}
 
+	
 	//NPC4
 }
 
@@ -400,9 +401,9 @@ void Game::AddBarbarianCamps()
 	{ // VILLAGE INVADERS
 		auto camp = new BarbarianCamp({ -11.5f, 18.0f, -126.0f }, BarbarianCamp::Location::Village, 40.0f, true);
 
-		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -126.0f }, hostiles, player, CombatStyle::consistantDelay);
-		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -136.0f }, hostiles, player, CombatStyle::consistantDelay);
-		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -116.0f }, hostiles, player, CombatStyle::consistantDelay);
+		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -126.0f }, hostiles, player, CombatStyle::consistantDelay);
+		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -136.0f }, hostiles, player, CombatStyle::consistantDelay);
+		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -116.0f }, hostiles, player, CombatStyle::consistantDelay);
 
 		camps[BarbarianCamp::Location::Village] = camp;
 	}
@@ -687,7 +688,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(Item::Type::Stick, { -85, 20, -608 });
 
 	//FRIENDLY NPCS
-	AddFriendlyNPCs();
+	//AddFriendlyNPCs();
 
 	//BARBARIAN CAMPS
 	AddBarbarianCamps();
@@ -744,8 +745,8 @@ void Game::SetupAudio()
 {
 	Audio::Initialize(true, HardwareSupport::numThreads);
 
-	Audio::StartMusic("Sonrie.wav");
-	Audio::SetVolume("Sonrie.wav", 0.3f);
+	Audio::StartMusic("SoundForest.wav");
+	Audio::SetVolume("SoundForest.wav", 0.3f);
 }
 
 void Game::HandleAudioSources()
@@ -809,7 +810,19 @@ APPSTATE Game::Run()
 		}
 		if (Event::KeyIsPressed('K'))
 		{
-			PrintVector3(player->GetPosition());
+			//PrintVector3(player->GetPosition());
+			{
+				auto NPC = AddFriendlyNPC("Steve", "BlackSmith", player->GetPosition());
+				NPC->SetScale(1.5);
+				NPC->AddQuest("FIRST QUEST FOR NPC3");
+				NPC->AddDialogue("FIRST QUEST FOR NPC3 >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
+				NPC->AddDialogue("FIRST QUEST FOR NPC3 >> INSERT DIALOGUE FOR GETTING HELP DURING QUEST");
+				NPC->AddDialogue("FIRST QUEST FOR NPC3 >> INSERT DIALOGUE FOR HANDING IN THE QUEST");
+
+				NPC->AddDialogue("INSERT DIALOGUE FOR WHEN NPC HAS NO QUESTS LEFT");
+				friendlyNPCs.emplace_back(NPC);
+
+			}
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('H'))

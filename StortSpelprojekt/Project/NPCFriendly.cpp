@@ -8,6 +8,7 @@ FriendlyNPC::FriendlyNPC(const std::string& name, const std::string& file)
 	SetName(name);
 	questMarker = std::make_shared<QuestMarker>();
 	boundingBox->SetScale(2, 4, 2);
+	PlayAnimation("WalkBlackSmith", true);
 }
 
 Quest* FriendlyNPC::AddQuest(const std::string& name)
