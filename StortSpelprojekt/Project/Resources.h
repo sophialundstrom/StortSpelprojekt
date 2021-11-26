@@ -82,7 +82,7 @@ public:
 	UINT GetMaterialIDFromName(const std::string& name)
 	{
 		for (auto& [ID, material] : materials)
-			if (material->name == name || material->name.find(name) != std::string::npos)
+			if (material->name == name ||  material->name.substr(0, material->name.find_first_of('_')) == name)
 				return ID;
 		return ID_INVALID;
 	}

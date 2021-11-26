@@ -19,6 +19,7 @@ AnimationStateMachine::AnimationStateMachine(Animator* animator, const aiScene* 
 
 void AnimationStateMachine::Update(Skeleton& skeleton, const aiScene* scene)
 {
+
 }
 
 void AnimationStateMachine::LoopAnimation(const std::string& name, const std::string& startBone)

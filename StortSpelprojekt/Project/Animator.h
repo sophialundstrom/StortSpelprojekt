@@ -84,6 +84,41 @@ public:
 			ReadNodeHeriarchy(node->mChildren[i], skeleton, globalTransform);
 	}
 
+	void ReadNodeHeriarchy(const aiNode* node, Skeleton& skeleton, const Matrix& parentTransform, std::vector<Matrix>& matrices)
+	{
+		const std::string nodeName(node->mName.C_Str());
+		Matrix globalTransform = parentTransform;
+
+		if (nodeName.find('_') == std::string::npos)
+		{
+			Matrix localMatrix;
+
+			currentAnimation->Update(nodeName, localMatrix);
+
+			if (localMatrix == Matrix::Identity)
+				localMatrix = AssimpToDX(node->mTransformation);
+
+			globalTransform = localMatrix * parentTransform;
+
+			const Matrix finalMatrix = (skeleton.FindJoint(nodeName).offsetMatrix * globalTransform).Transpose();
+
+			jointMatrices.emplace_back(finalMatrix);
+			skeleton.transforms.emplace_back(globalTransform);
+		}
+
+		for (UINT i = 0; i < node->mNumChildren; ++i)
+			ReadNodeHeriarchy(node->mChildren[i], skeleton, globalTransform);
+	}
+
+	void Update(Animation* animation, const aiScene* scene, Skeleton& skeleton, const std::string& startBone, std::vector<Matrix>& matrices)
+	{
+		const aiNode* root = scene->mRootNode->FindNode(skeleton.FindJoint(startBone).name.c_str());
+		if (!root)
+			return;
+
+		ReadNodeHeriarchy(root, skeleton, Matrix::Identity, matrices);
+	}
+
 	void Update(const aiScene* scene, Skeleton& skeleton)
 	{
 		if (!currentAnimation)

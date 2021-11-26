@@ -2,6 +2,7 @@
 #include "AssimpDirectXMathConverter.h"
 #include "Skeleton.h"
 #include "assimp\scene.h"
+#include "Time.h"
 #include <map>
 
 struct Channel
