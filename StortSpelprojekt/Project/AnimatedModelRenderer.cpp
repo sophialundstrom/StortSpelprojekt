@@ -2,8 +2,7 @@
 
 #include "AnimatedModel.h"
 
-AnimatedModelRenderer::AnimatedModelRenderer(RenderMethod method, bool isLit)
-	:isLit(isLit)
+AnimatedModelRenderer::AnimatedModelRenderer()
 {
 	//BUFFER
 	CreateBuffer(matricesBuf, sizeof(Matrices));
@@ -11,41 +10,12 @@ AnimatedModelRenderer::AnimatedModelRenderer(RenderMethod method, bool isLit)
 	//SHADERS
 	std::string byteCode;
 
-	if (isLit)
-	{
-		if (!LoadShader(vertexShader, vs_path, byteCode))
-			return;
+	if (!LoadShader(vertexShader, vs_path, byteCode))
+		return;
 
-		if (method == FORWARD)
-		{
-			if (!LoadShader(pixelShader, forward_ps_path))
-				return;
-		}
+	if (!LoadShader(pixelShader, forward_ps_path))
+		return;
 
-		else
-		{
-			if (!LoadShader(pixelShader, deferred_ps_path))
-				return;
-		}
-	}
-
-	else
-	{
-		if (!LoadShader(vertexShader, unlit_vs_path, byteCode))
-			return;
-
-		if (method == FORWARD)
-		{
-			if (!LoadShader(pixelShader, unlit_forward_ps_path))
-				return;
-		}
-
-		else
-		{
-			Print("UNLIT MODEL RENDERER ONLY AVALIABLE IN FORWARD");
-			return;
-		}
-	}
 	Print("SUCCEEDED LOADING SHADERS", "ANIMATED MODEL RENDERER");
 
 	//INPUT LAYOUT

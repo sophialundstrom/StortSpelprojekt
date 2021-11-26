@@ -20,15 +20,15 @@ public:
 
 	enum class TEXTFORMAT
 	{
-		DEFAULT_BACKGROUND,
 		DEFAULT,
-		TITLE_BACKGROUND,
 		TITLE_CENTERED,
-		TITLE__SMALL_BACKGROUND,
 		TITLE_SMALL,
-
+		DIALOGUE
 	};
 private:
+	static const std::wstring FONTFILE;
+	static const std::wstring FONTNAME;
+
 	//BRUSH COLORS
 	const Vector3 brushColors[5]
 	{
@@ -38,11 +38,12 @@ private:
 		{ 0, 0, 0 },
 		{ 43, 17, 1 }
 	};
+
 	//TEXT FORMATS
 	struct TextFormatDesc
 	{
 		TEXTFORMAT format = TEXTFORMAT::DEFAULT;
-		const WCHAR* fontName				= L"Lato";
+		const WCHAR* fontName				= FONTNAME.c_str();
 		IDWriteFontCollection* collection	= nullptr;
 		DWRITE_FONT_WEIGHT fontWeight		= DWRITE_FONT_WEIGHT_NORMAL;
 		DWRITE_FONT_STYLE fontStyle			= DWRITE_FONT_STYLE_NORMAL;
@@ -55,11 +56,8 @@ private:
 	const TextFormatDesc textFormatDescs[6] =
 	{
 		TextFormatDesc(),
-		{ TEXTFORMAT::DEFAULT_BACKGROUND, L"Lato", nullptr, DWRITE_FONT_WEIGHT_SEMI_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 15, DWRITE_TEXT_ALIGNMENT_LEADING},
-		{ TEXTFORMAT::TITLE_BACKGROUND, L"Lato", nullptr, DWRITE_FONT_WEIGHT_SEMI_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 30 , DWRITE_TEXT_ALIGNMENT_CENTER},
-		{ TEXTFORMAT::TITLE_CENTERED, L"Lato", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 30, DWRITE_TEXT_ALIGNMENT_CENTER },
-		{ TEXTFORMAT::TITLE__SMALL_BACKGROUND, L"Lato", nullptr, DWRITE_FONT_WEIGHT_SEMI_BOLD, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 20, DWRITE_TEXT_ALIGNMENT_LEADING},
-		{ TEXTFORMAT::TITLE_SMALL, L"Lato", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 20, DWRITE_TEXT_ALIGNMENT_LEADING },
+		{ TEXTFORMAT::TITLE_CENTERED, FONTNAME.c_str(), nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 30, DWRITE_TEXT_ALIGNMENT_CENTER },
+		{ TEXTFORMAT::TITLE_SMALL, FONTNAME.c_str(), nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 20, DWRITE_TEXT_ALIGNMENT_LEADING }
 	};
 	
 	IDWriteFontCollection* fontCollection = nullptr;
@@ -68,6 +66,9 @@ private:
 	IDWriteFactory* writeFactory = nullptr;
 	IWICImagingFactory* imageFactory = nullptr;
 	
+	IDWriteFontFace* fontFace = nullptr;
+	IDWriteFontFile* fontFile = nullptr;
+
 	std::map<TEXTFORMAT, IDWriteTextFormat*> textFormats;
 	std::map<COLOR, ID2D1SolidColorBrush*> brushes;
 public:
@@ -80,7 +81,12 @@ public:
 	ID2D1SolidColorBrush* GetBrush(COLOR color);
 	IDWriteTextFormat* GetTextFormat(TEXTFORMAT format);
 
+	ID2D1Factory* GetFactory()				{ return factory; }
+	IDWriteFontFace* GetFontFace()			{ return fontFace; }
 	IWICImagingFactory* GetImageFactory()	{ return imageFactory; }
 	IDWriteFactory* GetWriteFactory()		{ return writeFactory; }
 	ID2D1RenderTarget* GetRenderTarget()	{ return renderTarget; }
 };
+
+inline const std::wstring UI::FONTNAME = L"Palatino Linotype";
+inline const std::wstring UI::FONTFILE = L"pala.ttf";

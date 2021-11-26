@@ -2,7 +2,7 @@
 
 #include "Terrain.h"
 
-TerrainRenderer::TerrainRenderer(RenderMethod method, float tesselationAmount)
+TerrainRenderer::TerrainRenderer(float tesselationAmount)
 {
 	//BUFFER
 	CreateBuffer(matrixBuf, sizeof(Matrices));
@@ -15,45 +15,22 @@ TerrainRenderer::TerrainRenderer(RenderMethod method, float tesselationAmount)
 	if (!LoadShader(vertexShader, vs_path, byteCode))
 		return;
 
-	//EDITOR (MAX TESSELATION EVERYWHERE)
-	if (method == FORWARD)
-	{
-		//FIXED TESSELATION AMOUNT
-		CreateBuffer(tesselationBuf);
-		UpdateBuffer(tesselationBuf, tesselationAmount);
-		BindBuffer(tesselationBuf, Shader::HS);
+	CreateBuffer(tesselationBuf);
+	UpdateBuffer(tesselationBuf, tesselationAmount);
+	BindBuffer(tesselationBuf, Shader::HS);
 
-		if (!LoadShader(hullShader, hs_path))
-			return;
+	if (!LoadShader(hullShader, hs_path))
+		return;
 
-		if (!LoadShader(domainShader, ds_path))
-			return;
+	if (!LoadShader(domainShader, ds_path))
+		return;
 
-		if (!LoadShader(geometryShader, gs_path))
-			return;
+	if (!LoadShader(geometryShader, gs_path))
+		return;
 
-		if (!LoadShader(pixelShader, forward_ps_path))
-			return;
-	}
+	if (!LoadShader(pixelShader, forward_ps_path))
+		return;
 
-	//IN-GAME
-	else
-	{
-		CreateBuffer(tesselationBuf);
-		UpdateBuffer(tesselationBuf, tesselationAmount);
-
-		if (!LoadShader(hullShader, hs_path))
-			return;
-
-		if (!LoadShader(domainShader, ds_path))
-			return;
-
-		if (!LoadShader(geometryShader, gs_path))
-			return;
-
-		if (!LoadShader(pixelShader, deferred_ps_path))
-			return;
-	}
 	Print("SUCCEEDED LOADING SHADERS", "TERRAIN RENDERER");
 
 	//INPUT LAYOUT

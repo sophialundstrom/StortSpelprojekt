@@ -17,6 +17,7 @@ class ShaderData : public Singleton<ShaderData>
 	friend class VolumeRenderer;
 	friend class SkeletonRenderer;
 	friend class WaterRenderer;
+	friend class InteractableRenderer;
 private:
 	//CAMERA
 	Matrix cameraMatrix;
@@ -60,7 +61,7 @@ public:
 		CreateBuffer(lightDataBuf, sizeof(DirectionalLight::Data));
 		CreateBuffer(numPointLightsBuffer);
 		CreateStructuredBuffer(pointLightBuffer, pointLightSRV, sizeof(PointLight), sizeof(PointLight) * MAX_LIGHTS);
-		shadowMap = ShadowMap(4096, 10);
+		shadowMap = ShadowMap(10000, 10);
 
 		//SAMPLER
 		D3D11_SAMPLER_DESC samplerDesc = {};
