@@ -8,14 +8,12 @@ class SkyBoxRenderer : public Renderer
 {
 public:
 	SkyBoxRenderer();
-	void SetGameCamera(Camera* gameCamera) { this->gameCamera = gameCamera; }
 	virtual void Render() override;
 
 private:
 	const UINT stride = sizeof(Vector3);
 	const UINT offset = 0;
 
-	Camera* gameCamera;
 	ID3D11Resource** texture = nullptr;
 	ID3D11ShaderResourceView** textureView = nullptr;
 	//Vbuffer
@@ -24,11 +22,9 @@ private:
 	ID3D11Buffer* skyBoxIndices = nullptr;
 	//Cbuffer
 	ID3D11Buffer* matricesBuf = nullptr;
-	struct Matrices
-	{
-		Matrix world;
-		Matrix viewPerspective;
-	}matrices;
+
+	ID3D11DepthStencilState* skyboxDepthStencil = nullptr;
+
 
 #ifdef _DEBUG
 	const std::string vs_path = "../x64/Debug/skyBoxVertexShader.cso";

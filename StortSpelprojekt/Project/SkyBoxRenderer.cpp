@@ -8,7 +8,6 @@ SkyBoxRenderer::SkyBoxRenderer()
 	std::wstring cubemapPath = L"SkyBox.dds";
 	DirectX::CreateDDSTextureFromFile(&Graphics::Inst().GetDevice(), cubemapPath.c_str(), texture, textureView, 0, nullptr);
 
-
 	if (!LoadShader(skyBoxVertexShader, vs_path, byteCode))
 		return;
 	
@@ -16,13 +15,11 @@ SkyBoxRenderer::SkyBoxRenderer()
 		return;
 	Print("SUCCEEDED LOADING SHADERS", "SKYBOX RENDERER");
 
-
 	//BUFFERS
 	CreateIndexBuffer(skyBoxIndices, BoxVolumeData::INDICES, BoxVolumeData::reversedindices);
 	CreateVertexBuffer(skyboxMesh, stride, BoxVolumeData::VERTICES * stride, BoxVolumeData::vertices);
 
-	CreateBuffer(matricesBuf, sizeof(Matrices));
-
+	CreateBuffer(matricesBuf, sizeof(Matrix));
 
 	//INPUT LAYOUT
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
@@ -36,6 +33,14 @@ SkyBoxRenderer::SkyBoxRenderer()
 		Print("FAILED TO CREATE INPUT LAYOUT", "SKYBOX RENDERER");
 		return;
 	}
+
+	D3D11_DEPTH_STENCIL_DESC dsDesc = CD3D11_DEPTH_STENCIL_DESC{ CD3D11_DEFAULT{} };
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	Graphics::Inst().GetDevice().CreateDepthStencilState(&dsDesc, &skyboxDepthStencil);
+
+	Graphics::Inst();
+
 	Print("SUCCEEDED TO CREATE INPUT LAYOUT", "SKYBOX RENDERER");
 
 	Print("SUCCEEDED TO INITIALIZE SKYBOX RENDERER");
@@ -50,19 +55,20 @@ void SkyBoxRenderer::Render()
 	//TOPOLOGY
 	Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+	//SAVE SHADER DATA INSTANCE
+	auto& shaderData = ShaderData::Inst();
 
 	//BUFFER
-	matrices.viewPerspective = gameCamera->GetProjectionMatrix().Transpose();
-	UpdateBuffer(matricesBuf, matrices);
+	UpdateBuffer(matricesBuf, shaderData.projectionMatrix.Transpose());
 	BindBuffer(matricesBuf);
 
 	//SHADERS
 	BindShaders(skyBoxVertexShader, nullptr, nullptr, nullptr, skyBoxPixelShader);
 
-	//SAVE SHADER DATA INSTANCE
-	auto& shaderData = ShaderData::Inst();
-
+	Graphics::Inst().GetContext().OMSetDepthStencilState(skyboxDepthStencil, 1);
 	Graphics::Inst().GetContext().IASetIndexBuffer(skyBoxIndices, DXGI_FORMAT_R32_UINT, 0);
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &skyboxMesh, &stride, &offset);
 	Graphics::Inst().GetContext().DrawIndexed(BoxVolumeData::INDICES, 0, 0);
+
+	Graphics::Inst().GetContext().OMSetDepthStencilState(nullptr, 0);
 }
