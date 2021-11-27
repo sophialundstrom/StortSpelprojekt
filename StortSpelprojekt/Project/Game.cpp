@@ -45,13 +45,13 @@ void Game::Render()
 
 	ShaderData::Inst().BindFrameConstants();
 
-	//particleRenderer.Render();
+	particleRenderer.Render();
 
-	//modelRenderer.Render();
+	modelRenderer.Render();
 
-	//staticMeshModelRender.Render();
+	staticMeshModelRender.Render();
 
-	//animatedModelRenderer.Render();
+	animatedModelRenderer.Render();
 
 	//colliderRenderer.Render();
 

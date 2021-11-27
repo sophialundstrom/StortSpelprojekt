@@ -1,13 +1,26 @@
 #include "SkyBoxRenderer.h"
 #include "BoundingVolumes.h"
+#include "stb_image.h"
 
 SkyBoxRenderer::SkyBoxRenderer()
 {
 	std::string byteCode;
-
+	//DDSFileVariant
+	/*
 	std::wstring cubemapPath = L"SkyBox.dds";
 	DirectX::CreateDDSTextureFromFile(&Graphics::Inst().GetDevice(), cubemapPath.c_str(), texture, textureView, 0, nullptr);
+	*/
 
+
+
+
+
+
+
+
+
+
+	//Shaders
 	if (!LoadShader(skyBoxVertexShader, vs_path, byteCode))
 		return;
 	
@@ -34,6 +47,7 @@ SkyBoxRenderer::SkyBoxRenderer()
 		return;
 	}
 
+	//DepthStencilState
 	D3D11_DEPTH_STENCIL_DESC dsDesc = CD3D11_DEPTH_STENCIL_DESC{ CD3D11_DEFAULT{} };
 	dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
@@ -59,16 +73,27 @@ void SkyBoxRenderer::Render()
 	auto& shaderData = ShaderData::Inst();
 
 	//BUFFER
-	UpdateBuffer(matricesBuf, shaderData.projectionMatrix.Transpose());
+
+	//PorjectionMatrixClippar bort geometri wtf!?
+	UpdateBuffer(matricesBuf, shaderData.cameraMatrix);
 	BindBuffer(matricesBuf);
 
 	//SHADERS
 	BindShaders(skyBoxVertexShader, nullptr, nullptr, nullptr, skyBoxPixelShader);
 
 	Graphics::Inst().GetContext().OMSetDepthStencilState(skyboxDepthStencil, 1);
+	
 	Graphics::Inst().GetContext().IASetIndexBuffer(skyBoxIndices, DXGI_FORMAT_R32_UINT, 0);
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &skyboxMesh, &stride, &offset);
 	Graphics::Inst().GetContext().DrawIndexed(BoxVolumeData::INDICES, 0, 0);
-
+	
 	Graphics::Inst().GetContext().OMSetDepthStencilState(nullptr, 0);
+}
+
+void SkyBoxRenderer::CreateCubetexture()
+{
+	//http://www.hlsl.co.uk/blog/2014/11/19/creating-a-cubemap-in-dx11
+
+	
+
 }

@@ -45,18 +45,18 @@ inline const UINT BoxVolumeData::indices[BoxVolumeData::INDICES] =
 inline const UINT BoxVolumeData::reversedindices[BoxVolumeData::INDICES] =
 {
 
-	0, 5, 1,
-	0, 4, 5,
-	1, 6, 2,
-	1, 5, 6,
-	5, 7, 6,
-	5, 4, 7,
-	7, 2, 6,
-	7, 3, 2,
-	4, 3, 7,
-	4, 0, 3,
-	0, 1, 2,
-	0, 2, 3
+	3, 2, 0,
+	2, 1, 0,
+	3, 0, 4,
+	7, 3, 4,
+	2, 3, 7,
+	6, 2, 7,
+	7, 4, 5,
+	6, 7, 5,
+	6, 5, 1,
+	2, 6, 1,
+	5, 4, 0,
+	1, 5, 0
 
 };
 

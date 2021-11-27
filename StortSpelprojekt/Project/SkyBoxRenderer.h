@@ -11,11 +11,18 @@ public:
 	virtual void Render() override;
 
 private:
+	void CreateCubetexture();
 	const UINT stride = sizeof(Vector3);
 	const UINT offset = 0;
 
+
+	//DDSTexture codeVariant
+	/*
 	ID3D11Resource** texture = nullptr;
-	ID3D11ShaderResourceView** textureView = nullptr;
+	D3D11ShaderResourceView** textureView = nullptr;
+	*/
+
+
 	//Vbuffer
 	ID3D11Buffer* skyboxMesh = nullptr;
 	//Ibuffer
