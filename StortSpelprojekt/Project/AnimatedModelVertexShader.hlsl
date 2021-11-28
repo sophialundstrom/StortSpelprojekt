@@ -22,7 +22,6 @@ cbuffer MATRICES : register(b0)
     float4x4 viewPerspective;
     float4x4 lightViewPerspective;
 }
-
 StructuredBuffer<float4x4> boneMatrices : register(t0);
 
 VS_OUTPUT main(VS_INPUT input)

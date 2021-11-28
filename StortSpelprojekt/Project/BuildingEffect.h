@@ -1,12 +1,14 @@
 #pragma once
-#include "ParticleRenderer.h"
+#include "ParticleSystem.h"
+#include "Renderers.h"
 #include "Scene.h"
 
 class BuildingEffect
 {
-	friend class Building;
+private:
+	std::vector<std::shared_ptr<ParticleSystem>> particles;
 public:
-	BuildingEffect(Vector3 position)
+	BuildingEffect(Vector3 position, Scene& scene)
 	{
 		const Vector3 positions[] = 
 		{ 
@@ -141,9 +143,7 @@ public:
 			Vector3(position.x + 11, position.y, position.z - 12),
 			Vector3(position.x + 13, position.y + 4, position.z - 10),
 			Vector3(position.x + 11, position.y + 8, position.z - 12),
-			Vector3(position.x + 13, position.y + 12, position.z - 10),
-
-
+			Vector3(position.x + 13, position.y + 12, position.z - 10)
 		};
 
 		const std::string systemName = "testSmoke.ps";
@@ -152,46 +152,22 @@ public:
 			auto system = std::make_shared<ParticleSystem>(systemName);
 			system->SetPosition(positions[i]);
 			particles.emplace_back(system);
+			PR->Bind(system);
+			scene.AddDrawable("particleSystem_" + systemName + "_" + std::to_string(i), system);
 		}
 
-	}
-
-	void Unbind(Scene& scene, ParticleRenderer& renderer)
-	{
-		int index = 0;
-		for (auto& system : particles)
-		{
-			renderer.Unbind(system);
-			scene.DeleteDrawable("testSystem" + std::to_string(index));
-		}
-	}
-
-	void Bind(Scene& scene, ParticleRenderer& renderer)
-	{
-		int index = 0;
-		for (auto& system : particles)
-		{
-			renderer.Bind(system);
-			scene.AddDrawable("testSystem" + std::to_string(index), system);
-		}
+		Stop();
 	}
 
 	void Stop()
 	{
-		for (auto system : particles)
-		{
+		for (auto& system : particles)
 			system->StopSpawn();
-		}
 	}
 
 	void Start()
 	{
 		for (auto& system : particles)
-		{
 			system->StartSpawn();
-		}
 	}
-
-private:
-	std::vector<std::shared_ptr<ParticleSystem>> particles;
 };

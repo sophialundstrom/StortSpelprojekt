@@ -1,25 +1,67 @@
 #include "NPCFriendly.h"
 
-FriendlyNPC::FriendlyNPC(const std::string& file)
-	: NPC(file)
+#include "QuestLog.h"
+
+FriendlyNPC::FriendlyNPC(const std::string& name, const std::string& file)
+	:NPC(file), currentDialogueState(DialogueState::HANDOUT)
 {
+	SetName(name);
 	questMarker = std::make_shared<QuestMarker>();
 	boundingBox->SetScale(2, 4, 2);
 }
 
-FriendlyNPC::FriendlyNPC(const Model& model)
-	: NPC(model)
+Quest* FriendlyNPC::AddQuest(const std::string& name)
 {
+	auto quest = QuestLog::Get(name);
+	if (quest)
+	{
+		quest->SetQuestHolder(this->name);
+		quests.emplace_back(quest);
+		return quest;
+	}
+	
+	return nullptr;
+}
+
+void FriendlyNPC::AddDialogue(const std::string& string)
+{
+	dialogues.emplace_back(string);
+}
+
+bool FriendlyNPC::Interactable()
+{
+	if (completedAllQuests || dialogueOverride)
+		return true;
+
+	if (!currentQuest)
+		return false;
+
+	return currentQuest->Unlocked();
+}
+
+void FriendlyNPC::ActivateCurrentQuest()
+{
+	QuestLog::Activate(currentQuest);
+}
+
+const std::string FriendlyNPC::GetCurrentDialogue()
+{
+	if (!completedAllQuests)
+	{
+		auto ID = (3 * currentQuestID) + UINT(currentDialogueState);
+		return dialogues[ID];
+	}
+
+	else
+		return dialogues.back();
 }
 
 void FriendlyNPC::Update()
 {
 	NPC::Update();
 
-	activeQuestID = -1;
-	interactable = false;
-	Vector3 qmPosition = { 0, -1000, 0 };
-	///{
+	questMarker->Update();
+
 	static bool walking = false;
 	if (Event::KeyIsPressed('G'))
 		walking = true;
@@ -28,27 +70,65 @@ void FriendlyNPC::Update()
 	if(walking)
 		Walking();
 
-	//}
-	UINT completedQuests = 0;
-	for (auto& ID : questIDs)
+	if (dialogueOverride)
 	{
-		if (QuestLog::Inst().QuestIsActive(ID))
-		{
-			activeQuestID = ID;
-			interactable = true;
-			qmPosition = { 0, 10, 0 };
-			break;
-		}
-
-		if (QuestLog::Inst().QuestIsDone(ID))
-			completedQuests++;
+		questMarker->SetPosition(0, 9.0f, 0);
+		questMarker->SetAsObjective();
+		return;
 	}
 
-	if (completedQuests >= questIDs.size())
-		completed = true;
-	
-	questMarker->SetPosition(qmPosition);
-	questMarker->Update();
+	UINT completedQuests = 0;
+	if (currentQuest)
+	{
+		if (!currentQuest->Unlocked())
+		{
+			questMarker->SetPosition(0, -1000.0f, 0);
+			return;
+		}
+
+		questMarker->SetPosition(0, 9.0f, 0);
+
+		if (currentQuest->Unlocked() && currentQuest->IsActive() && !currentQuest->IsCompleted())
+		{
+			currentDialogueState = DialogueState::HELP;
+			questMarker->SetAsHelp();
+		}
+			
+		else if (currentQuest->IsCompleted())
+		{
+			currentDialogueState = DialogueState::HANDIN;
+			questMarker->SetAsDone();
+
+			if (finishedDialogue)
+			{
+				QuestLog::Complete(currentQuest);
+
+				currentQuestID++;
+				currentQuest = nullptr;
+
+				if (currentQuestID == quests.size())
+				{
+					completedAllQuests = true;
+					currentDialogueState = DialogueState::DONE;
+					questMarker->SetAsComplete();
+				}
+			}
+		}
+
+		else
+		{
+			questMarker->SetAsGive();
+			currentDialogueState = DialogueState::HANDOUT;
+		}
+	}
+
+	if (!currentQuest && !completedAllQuests)
+	{
+		currentQuest = quests[currentQuestID];
+		questMarker->SetAsGive();
+	}
+
+	finishedDialogue = false;
 }
 
 void FriendlyNPC::Walking()
@@ -87,5 +167,3 @@ void FriendlyNPC::Walking()
 	//	//path.clear();
 	//}
 }
-
-

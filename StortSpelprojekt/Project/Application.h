@@ -9,11 +9,13 @@
 #include "MainMenu.h"
 #include "GameOver.h"
 #include "Win.h"
+#include "HardwareSupport.h"
 
 class Application
 {
 private:
 	//SINGLETONS
+	std::unique_ptr<Renderers> renderers;
 	std::unique_ptr<Graphics> graphics;
 	std::unique_ptr<Resources> resources;
 	std::unique_ptr<ShaderData> shaderData;
@@ -26,18 +28,23 @@ public:
 	{
 		FileSystem::SetProjectDirectory();
 
-		WindowCreator(Window(),GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
+		WindowCreator(Window(), GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
 		
 		graphics = std::make_unique<Graphics>(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND(), false);
 
 		RunLoadingScreen();
 
 		shaderData = std::make_unique<ShaderData>();
+
+		renderers = std::make_unique<Renderers>();
+
 		resources = std::make_unique<Resources>();
+
 		ui = std::make_unique<UI>();
 
 		//SWAP TO MAINMENU TO NOT SKIP IT
 		Window::DeactivateCursor();
+
 		state = new MainMenu(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 	}
 
@@ -80,24 +87,28 @@ public:
 				break;
 
 			case APPSTATE::MAIN_MENU:
+				RND.ShutDown();
 				delete state;
 				RunLoadingScreen();
 				state = new MainMenu(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 				break;
 
 			case APPSTATE::WIN:
+				RND.ShutDown();
 				delete state;
 				RunLoadingScreen();
 				state = new Win(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 				break;
 
 			case APPSTATE::GAMEOVER:
+				RND.ShutDown();
 				delete state;
 				RunLoadingScreen();
 				state = new GameOver(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 				break;
 
 			case APPSTATE::GAME:
+				RND.ShutDown();
 				delete state;
 				RunLoadingScreen();
 				state = new Game(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());

@@ -4,6 +4,7 @@
 #include "ThreadPool.h"
 #include "Time.h"
 #include "LoadingScreen.h"
+#include "HardwareSupport.h"
 
 struct TempMeshData
 {
@@ -40,7 +41,7 @@ public:
 			std::atomic<int> fbxLeft;
 			fbxLeft = (int)numFBX;
 			
-			ThreadPool pool(10);
+			ThreadPool pool(HardwareSupport::numThreads);
 			
 			for (UINT i = 0; i < numFBX; ++i) {
 				pool.Enqueue([=, &tempMaterials, &tempMeshData, &fbxLeft] {
