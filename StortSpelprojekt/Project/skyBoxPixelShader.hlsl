@@ -3,5 +3,5 @@
 
 float4 main(float3 worldPos : Position) : SV_TARGET
 {
-    return float4(worldPos.x, worldPos.y, worldPos.z, 1.f);
+    return float4(1, -worldPos.y + 0.7, 0, 1.f);
 }
