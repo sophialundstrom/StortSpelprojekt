@@ -92,10 +92,11 @@ struct Animation
 
 		if (timeInTicks > duration)
 		{
-			timer = 0.0f;
 			if (!repeat)
 				active = false;
-			return;
+				
+			else
+				timer = 0.0f;
 		}
 
 		auto& map = channels[joint].positions;

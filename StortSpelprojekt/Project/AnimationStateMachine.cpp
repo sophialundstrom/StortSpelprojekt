@@ -36,11 +36,18 @@ void AnimationStateMachine::Update(Skeleton& skeleton, const aiScene* scene)
 
 	if (overrideAnimation->animation)
 	{
-		if (!overrideAnimation->animation->active)
+		if (overrideAnimation->transition < 1.0f)
+		{
+			overrideAnimation->transition += Time::GetDelta();
+			if (overrideAnimation->transition > 1.0f)
+				overrideAnimation->transition = 1.0f;
+		}
+
+		if (!overrideAnimation->animation->active && !overrideAnimation->hold)
 			overrideAnimation->animation = nullptr;
 
 		else
-			animator->Update(overrideAnimation->animation, scene, skeleton, overrideAnimation->startBone, 1.0f, matrices);
+			animator->Update(overrideAnimation->animation, scene, skeleton, overrideAnimation->startBone, overrideAnimation->transition, matrices);
 	}
 
 	for (auto& [joint, matrix] : matrices)
@@ -73,6 +80,11 @@ void AnimationStateMachine::PlayOverrideAnimation(const std::string& name, const
 	auto animation = animator->animations[name];
 	animation->active = true;
 	animation->timer = 0.0f;
+
+	if (overrideAnimation)
+		overrideAnimation->transition = 1.0f;
+	else
+		overrideAnimation->transition = 0.0f;
 
 	overrideAnimation->animation = animation;
 	overrideAnimation->startBone = startBone;
