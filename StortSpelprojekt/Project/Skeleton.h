@@ -65,6 +65,10 @@ struct Skeleton
 
 		transforms.emplace_back(worldMatrix);
 
+		Print("=================");
+		Print(node->mName.C_Str(), "NODE");
+		Print(node->mParent->mName.C_Str(), "PARENT");
+
 		for (UINT i = 0; i < node->mNumChildren; ++i)
 			SetBindPose(node->mChildren[i], worldMatrix);
 	}

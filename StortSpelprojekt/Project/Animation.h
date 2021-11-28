@@ -87,17 +87,12 @@ struct Animation
 		if (!active)
 			return;
 
-		float timeInTicks = timer/* / 100.0f*/ * ticksPerSecond * speedFactor; 
+		float timeInTicks = timer * ticksPerSecond * speedFactor; 
 		float frameTime = fmod(timeInTicks, duration);
-
-		/*Print(ticksPerSecond);
-		Print(duration);*/
-		//Print(Time::GetDelta());
 
 		if (timeInTicks > duration)
 		{
-			timer = 0;
-			//active = false;
+			timer = 0.0f;
 			if (!repeat)
 				active = false;
 			return;
@@ -110,9 +105,6 @@ struct Animation
 		auto lower = map.upper_bound(frameTime - 1);
 		auto higher = map.upper_bound(frameTime);
 
-		//Print(lower->first, "LOWER");
-		//Print(higher->first, "HIGHER");
-
 		float lowerTimestamp = lower->first;
 		float higherTimestamp = higher->first;
 		float weight = (frameTime - lowerTimestamp) / (higherTimestamp - lowerTimestamp);
@@ -120,9 +112,6 @@ struct Animation
 		Quaternion Q = Quaternion::Slerp(channels[joint].quaternions[lowerTimestamp], channels[joint].quaternions[higherTimestamp], weight);
 		Vector3 T = Vector3::Lerp(channels[joint].positions[lowerTimestamp], channels[joint].positions[higherTimestamp], weight);
 		Vector3 S = Vector3::Lerp(channels[joint].scalings[lowerTimestamp], channels[joint].scalings[higherTimestamp], weight);
-
-		//if (lower == map.end())
-		//	lower = map.begin();
 
 		const Matrix translation = Matrix::CreateTranslation(T);
 		const Matrix quaternion = Matrix::CreateFromQuaternion(Q);

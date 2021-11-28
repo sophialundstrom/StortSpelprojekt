@@ -3,9 +3,11 @@
 
 class Animator
 {
+	friend class AnimationStateMachine;
 private:
 	Animation* currentAnimation = nullptr;
 	std::map<std::string, Animation*> animations;
+
 	std::vector<Matrix> jointMatrices;
 
 	ID3D11Buffer* structuredBuffer = nullptr;
@@ -84,39 +86,42 @@ public:
 			ReadNodeHeriarchy(node->mChildren[i], skeleton, globalTransform);
 	}
 
-	void ReadNodeHeriarchy(const aiNode* node, Skeleton& skeleton, const Matrix& parentTransform, std::vector<Matrix>& matrices)
+	void ReadNodeHeriarchy(Animation* animation, const aiNode* node, Skeleton& skeleton, const Matrix& parentTransform, float weight, std::map<std::string, Matrix>& matrices)
 	{
 		const std::string nodeName(node->mName.C_Str());
+
 		Matrix globalTransform = parentTransform;
 
 		if (nodeName.find('_') == std::string::npos)
 		{
 			Matrix localMatrix;
 
-			currentAnimation->Update(nodeName, localMatrix);
+			animation->Update(nodeName, localMatrix);
 
 			if (localMatrix == Matrix::Identity)
 				localMatrix = AssimpToDX(node->mTransformation);
 
 			globalTransform = localMatrix * parentTransform;
 
-			const Matrix finalMatrix = (skeleton.FindJoint(nodeName).offsetMatrix * globalTransform).Transpose();
-
-			jointMatrices.emplace_back(finalMatrix);
-			skeleton.transforms.emplace_back(globalTransform);
+			if (weight != 1.0f)
+				matrices[nodeName] += globalTransform * weight;
+			else
+				matrices[nodeName] = globalTransform;
 		}
 
 		for (UINT i = 0; i < node->mNumChildren; ++i)
-			ReadNodeHeriarchy(node->mChildren[i], skeleton, globalTransform);
+			ReadNodeHeriarchy(animation, node->mChildren[i], skeleton, globalTransform, weight, matrices);
 	}
 
-	void Update(Animation* animation, const aiScene* scene, Skeleton& skeleton, const std::string& startBone, std::vector<Matrix>& matrices)
+	void Update(Animation* animation, const aiScene* scene, Skeleton& skeleton, const std::string& startBone, float weight, std::map<std::string, Matrix>& matrices)
 	{
 		const aiNode* root = scene->mRootNode->FindNode(skeleton.FindJoint(startBone).name.c_str());
 		if (!root)
 			return;
 
-		ReadNodeHeriarchy(root, skeleton, Matrix::Identity, matrices);
+		ReadNodeHeriarchy(animation, root, skeleton, Matrix::Identity, weight, matrices);
+
+		animation->timer += Time::GetDelta();
 	}
 
 	void Update(const aiScene* scene, Skeleton& skeleton)
@@ -139,8 +144,6 @@ public:
 			return;
 
 		Matrix matrix = Matrix::Identity;
-
-		currentAnimation->UpdateTime();
 
 		ReadNodeHeriarchy(root, skeleton, matrix);
 

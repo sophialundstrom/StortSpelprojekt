@@ -30,11 +30,8 @@ private:
 
 				if (tempScene->HasAnimations())
 				{
-					//std::cout << "NUM ANIM: " << tempScene->mNumAnimations << std::endl << "NAME: " << tempScene->mAnimations[0]->mName.C_Str() << std::endl;
-
 					animator->AddAnimation(tempScene->mAnimations[0]);
 				}
-
 			}
 		}
 	}

@@ -5,17 +5,23 @@
 class AnimationStateMachine
 {
 private:
+	const float transitionTime = 0.5f;
+
 	struct State
 	{
 		Animation* animation = nullptr;
 		std::string startBone = "root";
-		float progress = 0.0f;
-		bool loop = false;
-
-		float weight = 1.0f;
+		bool hold = false;
+		bool transitionIn = false;
+		bool transitionOut = false;
+		float transition = 0.0f;
 	};
 
 	std::map<std::string, State> activeAnimations;
+	State* latestAnimation;
+
+	State* overrideAnimation;
+
 	Animator* animator;
 
 	ID3D11Buffer* structuredBuffer = nullptr;
@@ -26,9 +32,8 @@ public:
 
 	void Update(Skeleton& skeleton, const aiScene* scene);
 
-	void LoopAnimation(const std::string& name, const std::string& startBone = "root");
-	void PlayAndHoldAnimation(const std::string& name, const std::string& startBone = "root");
-	void PlayUntilEnd(const std::string& name, const std::string& startBone = "root");
+	void PlayAnimation(const std::string& name);
+	void PlayOverrideAnimation(const std::string& name, const std::string& startBone, bool hold = true);
 	
 	void BindMatrices() { Graphics::Inst().GetContext().VSSetShaderResources(0, 1, &bufferSRV); }
 };
