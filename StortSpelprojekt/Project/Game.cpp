@@ -79,7 +79,7 @@ void Game::Render()
 
 	skyBoxRenderer.Render();
 	
-	currentCanvas->Render();
+	//currentCanvas->Render();
 	TR->Render(terrain);
 
 	WR->Render(water);
