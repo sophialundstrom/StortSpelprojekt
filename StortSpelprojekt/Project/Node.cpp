@@ -9,13 +9,9 @@ Node::~Node()
 	//delete parent;
 }
 
-Node::Node(bool walkable, Vector3 position, int gridX, int gridY)
+Node::Node(Vector3 position)
 {
-	this->walkable = walkable;
 	this->position = position;
-	this->BSphere.SetPosition(position);
-	this->gridX = gridX;
-	this->gridY = gridY;
 }
 
 Node::Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost)

@@ -13,7 +13,7 @@ class Grid : public Transform
 {
 private:
 
-
+	std::ifstream in;
 	int gridSizeX, gridSizeY;
 	Vector2 gridWorldSize; 
 
@@ -27,6 +27,7 @@ private:
 public:
 	Grid();
 	const static int gridWorldSizeInt = 128;
+	std::map<Node*, int> m;
 	Node* grid[gridWorldSizeInt]; // placeholder numbers
 	void CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 worldPosition, HeightMap* heightMap);
 	void SubCreateGrid(std::map<std::string, std::shared_ptr<Drawable>>& drawable, Vector3 worldPosition, int subDivision, HeightMap* heightMap);

@@ -61,6 +61,29 @@ std::string Scene::AddModel(const std::string& file, const std::string path)
 	return fileName;
 }
 
+std::string Scene::AddModel(std::string fileName, const std::string& file, const std::string path)
+{
+	UINT numInstances = 0;
+
+	for (auto& [name, drawable] : drawables)
+		if (name.find(file) != std::string::npos)
+			numInstances++;
+
+	if (numInstances > 0)
+	{
+		fileName = file + std::to_string(numInstances);
+		drawables[fileName] = std::make_shared<Model>(fileName, *std::dynamic_pointer_cast<Model>(drawables[file]));
+	}
+	else
+		drawables[fileName] = std::make_shared<Model>(file, fileName);
+
+	objectNames.push_back(fileName);
+
+	drawables[fileName]->SetName(fileName);
+
+	return fileName;
+}
+
 void Scene::AddModel(const std::string& name, std::shared_ptr<Drawable> drawable)
 {
 	drawables[name] = drawable;

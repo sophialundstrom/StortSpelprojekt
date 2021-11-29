@@ -58,6 +58,8 @@ private:
 	void AddNode();
 	void AddEdge();
 	void test();
+	std::ifstream in;
+	void LoadNodes();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

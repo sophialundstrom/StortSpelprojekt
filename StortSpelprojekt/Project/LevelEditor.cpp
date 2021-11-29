@@ -24,6 +24,42 @@ void LevelEditor::test()
 	OutputDebugStringA("done");
 }
 
+void LevelEditor::LoadNodes()
+{
+	auto filePath = FileSystem::ProjectDirectory::path;
+	in.open(filePath + "\\Test.txt");
+	std::string str;
+	std::string fill;
+	bool nodeYes = false;
+	while (std::getline(in, str))
+	{
+		if (str == "")
+		{
+			break;
+		}
+		for (size_t i = 0; i < str.size(); i++)
+		{
+			if (str.at(i) == '\t')
+			{
+				break;
+			}
+			fill += (str.at(i));
+		}
+		std::filesystem::path path = filePath + "\\Models";
+		std::string fileName = "Node1";
+
+		fileName = scene.AddModel(fill, fileName, path.string());
+		auto model = scene.Get<Model>(fileName);
+		model->SetID((UINT)scene.GetObjectNames().size());
+		IDR->Bind(model);
+		MR->Bind(model);
+		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+		component->AddName(fileName);
+		totalPolygonCount += model->mesh.vertexCount / 3.0f;
+		fill.clear();
+	}
+}
+
 void LevelEditor::BindDrawables()
 {
 	for (auto& [name, drawable] : scene.GetDrawables())
@@ -761,6 +797,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	wRatioY = (float)clientHeight / GetSystemMetrics(SM_CYSCREEN);
 
 	terrain = new Terrain(2);
+
+	LoadNodes();
 
 	(void*)Run();
 }

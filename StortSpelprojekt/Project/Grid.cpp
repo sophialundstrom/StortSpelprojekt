@@ -11,57 +11,30 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 	position = worldPosition;
 	int nrUnwalkable = 0;
 	Timer timer;
-	Vector3 worldBottomLeft = position - (Vector3::Right * gridWorldSize.x / 2) - (Vector3::Forward * gridWorldSize.y / 2);
-	timer.Start();
-	for (int x = 0; x < gridSizeX; x++)
+	auto filePath = FileSystem::ProjectDirectory::path;
+	in.open(filePath + "\\SaveData\\Test.txt");
+	std::string str;
+	if (in.is_open())
 	{
-		for (int y = 0; y < gridSizeY; y++)
+		while (std::getline(in, str))
 		{
-			Vector3 worldPoint = worldBottomLeft + Vector3::Right * (x * nodeDiameter + nodeRadius) + Vector3::Forward * (y * nodeDiameter + nodeRadius);
 
-			worldPoint.y = heightMap->data.at(Vector2((int)worldPoint.x, (int)worldPoint.z));
-			grid[x][y].position = worldPoint;
-			grid[x][y].BSphere.SetPosition(grid[x][y].position);
-			grid[x][y].BSphere.GetBounds().Center = DirectX::XMFLOAT3(grid[x][y].position);
-			grid[x][y].gridX = x;
-			grid[x][y].gridY = y;
 
-			for (auto& collider : colliders)
-			{
-				if (Vector3::Distance(worldPoint, collider->GetPosition()) < 64.0f)
-				{
-					//0.75
-					auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
-					if (box)
-					{
-						if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), box->GetBounds()))
-						{
-							grid[x][y].walkable = false;
-							nrUnwalkable++;
-						}
 
-						continue;
-					}
-					//0.350245
-					auto sphere = std::dynamic_pointer_cast<BoundingSphere>(collider);
-					if (sphere)
-					{
-						if (Collision::Intersection(grid[x][y].BSphere.GetBounds(), sphere->GetBounds()))
-						{
-							grid[x][y].walkable = false;
-							nrUnwalkable++;
-						}
 
-						continue;
-					}
-				}
-			}
+
+			Node* node = new Node();
 		}
 	}
+
+
+
+
+
+
 	float time = timer.DeltaTime();
 	std::fstream fs;
-	auto filePath = FileSystem::ProjectDirectory::path;
-	fs.open(filePath + "\\Measurements.txt");
+	fs.open(filePath + "\\SaveData\\Measurements.txt");
 	fs.seekg(0, std::ios::end);
 	fs.write(std::string(std::to_string(time)).c_str(), sizeof(std::string(std::to_string(time)).c_str()));
 	fs.write(std::string("\n").c_str(), sizeof(std::string("\n").c_str()));

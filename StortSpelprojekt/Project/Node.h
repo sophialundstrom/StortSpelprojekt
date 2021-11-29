@@ -21,7 +21,7 @@ public:
 
 	Node();
 	virtual ~Node();
-	Node(bool walkable, Vector3 position, int gridX, int gridY);
+	Node(Vector3 position);
 	Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost);
 	Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost, Node* parent);
 
