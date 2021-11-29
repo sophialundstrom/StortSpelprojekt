@@ -32,6 +32,11 @@ public:
 	static void Initialize(bool mtLoading = true, const int& numThreads = 6);
 	static void StopEngine();
 
+	static void SetMasterVolume(float volume);
+	static void SetMusicVolume(float volume);
+	static void SetSoundEffectsVolume(float volume);
+	static void SetVoiceVolume(float volume);
+
 	// STARTING AND STOPPING
 	static void StartMusic(const std::string& name);
 	static void StartEffect(const std::string& name);

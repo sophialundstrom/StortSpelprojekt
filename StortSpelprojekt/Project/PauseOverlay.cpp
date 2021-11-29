@@ -95,6 +95,15 @@ PauseOverlay::PauseOverlay()
 	}
 	canvases["HTP"] = htpCanvas;
 
+	auto optionsCanvas = new Canvas();
+	{
+		optionsCanvas->AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 8.0f }, "OptionsTitle", "OptionsSmall.png", 1.f, 1.0f);
+
+
+
+	}
+	canvases["OPTIONS"] = optionsCanvas;
+
 	auto pauseTitleCanvas = new Canvas();
 	{
 		pauseTitleCanvas->AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 8.0f }, "PauseTitle", "PAUSED.png", 0.8f, 1.0f);
