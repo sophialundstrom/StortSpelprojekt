@@ -1,6 +1,17 @@
 Texture2D displacementTexture : register(t0);
 SamplerState wrapSampler : register(s0);
 
+float3 Wave(float2 direction, float amplitude, float multiplier, float4 position, float time, float speed)
+{
+    float PI = 3.14159265359f;
+    float k = (2 * PI) / multiplier;
+    float phaseSpeed = speed;
+    float2 d = normalize(direction);
+    float f = k * (dot(direction, position.xz) - phaseSpeed * time);
+
+    return float3(d.x * (amplitude * cos(f)), amplitude * sin(f), d.y * (amplitude * cos(f)));
+}
+
 struct DS_INPUT
 {
     float4 position : SV_POSITION;
@@ -53,23 +64,13 @@ DS_OUTPUT main(
     output.texCoords = patch[0].texCoords * domain.x + patch[1].texCoords * domain.y + patch[2].texCoords * domain.z;
     output.tangent = patch[0].tangent * domain.x + patch[1].tangent * domain.y + patch[2].tangent * domain.z;
     output.normal = patch[0].normal * domain.x + patch[1].normal * domain.y + patch[2].normal * domain.z;
-    
-    const int amplitude = 2.0f;
-    const float multiplier = 100.0f;
-    const float PI = 3.14159265359f;
-    float k = (2 * PI) / multiplier;
-    float phaseSpeed = sqrt(9.8f / k);
-    float2 direction = normalize(float2(-1, -1));
-    float f = k * (dot(direction, output.position.xz) - phaseSpeed * time);
 
-    output.position.x += direction.x * (amplitude * cos(f));
-    output.position.y = amplitude * sin(f);
-    output.position.z += direction.y * (amplitude * cos(f));
+    output.position.xyz += Wave(float2(1, 1), 2.0f, 0.5f, output.position, time, 0.25f);
+    //output.position.xyz += Wave(float2(1, -1), 1.0f, 0.1f, output.position, time, 0.25f);
 
     //RECALCULATE NORMAL, TANGENT AND BINORMAL
-    //output.tangent = float3(1 - direction.x * direction.x * (amplitude * sin(f)), direction.x * (amplitude * cos(f)), -direction.x * direction.y * (amplitude * sin(f)));
-    //output.biNormal = float3(-direction.x * direction.y * (amplitude * sin(f)), direction.y * (amplitude * cos(f)), 1 - direction.y * direction.y * (amplitude * sin(f)));
-    //output.normal = normalize(float3(cross(output.biNormal, output.tangent)));
+    //output.tangent = normalize(float3(1, k * amplitude * cos(f), 0));
+    //output.normal = float3(-output.tangent.y, output.tangent.x, 0);
 
     output.worldPosition = output.position.xyz;
 
