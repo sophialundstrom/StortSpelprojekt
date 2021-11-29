@@ -46,6 +46,12 @@
       <FullPath>C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\IDVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\InteractablePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\InteractableVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\LoadingPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
@@ -68,6 +74,12 @@
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\SkeletonVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\skyBoxPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\skyBoxVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\johan\OneDrive - BTH Student\StortSpelprojekt\StortSpelprojekt\x64\Release\TerrainDomainShader.cso</FullPath>
