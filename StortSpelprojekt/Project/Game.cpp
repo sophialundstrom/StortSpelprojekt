@@ -647,7 +647,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitWaterRenderer();
 	RND.InitInteractableRenderer();
 	RND.InitSkyBoxRenderer();
-	
+
 
 	//CREATE OR LOAD QUESTS
 	QuestLog::CreateQuests();
@@ -657,7 +657,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	Initialize();
 
 	SetupAudio();
-	
+
 	//SET SCENE CAMERA + DIRECTIONAL LIGHT
 
 	//OVERLAYS
@@ -682,15 +682,34 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
-	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -107.5f, 20.0f, -608.5f }, scene);
-	building->SetRotation(0, -DirectX::XM_PI, 0);
-	building->SetScale(5.85);
+	std::string meshNamesFarm[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
+	std::string materialNamesFarm[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
+	buildings[0] = std::make_shared<Building>(meshNamesFarm, materialNamesFarm, "FarmHouse", Vector3{ -107.5f, 20.0f, -608.5f }, scene);
+	buildings[0]->SetRotation(0, -DirectX::XM_PI, 0);
+	buildings[0]->SetScale(5.85);
 
-	scene.AddModel("Building", building);
-	MR->Bind(building);
-	SR->Bind(building);
+	std::string meshNamesTent[] = { "ArcherTent1", "ArcherTent2", "ArcherTent3" };
+	std::string materialNamesTent[] = { "ArcherTentTexture", "ArcherTentTexture", "ArcherTentTexture" };
+	buildings[1] = std::make_shared<Building>(meshNamesTent, materialNamesTent, "ArcherTent", Vector3{ 128.86f, 18.12f, -643.05f }, scene);
+	buildings[1]->SetRotation(0, -DirectX::XM_PI, 0);
+	buildings[1]->SetScale(1.566);
+
+	std::string meshNamesBS[] = { "BSLevel1", "BSLevel2", "BSLevel3" };
+	std::string materialNamesBS[] = { "albedoBlacksmith", "albedoBlacksmith", "albedoBlacksmith" };
+	buildings[2] = std::make_shared<Building>(meshNamesBS, materialNamesBS, "Blacksmith", Vector3{ 5.4f, 17.86f, -701.5f }, scene);
+	buildings[2]->SetRotation(0, DirectX::XM_PIDIV4, 0);
+	buildings[2]->SetScale(1.776);
+
+	scene.AddDrawable("FarmHouse", buildings[0]);
+	scene.AddDrawable("ArcherTent", buildings[1]);
+	scene.AddDrawable("Blacksmith", buildings[2]);
+
+	for (int i = 0; i < 3; i++)
+	{
+		MR->Bind(buildings[i]);
+		SR->Bind(buildings[i]);
+	}
+
 
 	//ITEMS
 	AddItem(Item::Type::Stick, { -134, 22, -594 });

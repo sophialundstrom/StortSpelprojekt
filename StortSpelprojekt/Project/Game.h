@@ -74,7 +74,7 @@ private:
 
     std::vector<std::shared_ptr<Item>> items;
 
-    std::shared_ptr<Building> building;
+    std::shared_ptr<Building> buildings[3];
 
     std::map<BarbarianCamp::Location, BarbarianCamp*> camps;
 
