@@ -61,7 +61,7 @@ void SkyBoxRenderer::BuildCubeMap()
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
-	hr = Graphics::Inst().GetDevice().CreateShaderResourceView(pTexture, &srvDesc, pTextureView);
+	hr = Graphics::Inst().GetDevice().CreateShaderResourceView(pTexture, &srvDesc, &pTextureView);
 
 	if (FAILED(hr))
 		std::cout << "FAILED TO CREATE SRV\n";
@@ -135,9 +135,9 @@ void SkyBoxRenderer::Render()
 
 	Graphics::Inst().GetContext().OMSetDepthStencilState(skyboxDepthStencil, 1);
 	
-	//Graphics::Inst().GetContext().PSSetShaderResources(0, 1, pTextureView);
-
-	Graphics::Inst().GetContext().IASetIndexBuffer(skyBoxIndices, DXGI_FORMAT_R32_UINT, 0);
+	Graphics::Inst().GetContext().PSSetShaderResources(0, 1, &pTextureView);
+	
+	Graphics::Inst().GetContext().IASetIndexBuffer(skyBoxIndices, DXGI_FORMAT_R32_UINT, 0u);
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &skyboxMesh, &stride, &offset);
 	Graphics::Inst().GetContext().DrawIndexed(BoxVolumeData::INDICES, 0, 0);
 	

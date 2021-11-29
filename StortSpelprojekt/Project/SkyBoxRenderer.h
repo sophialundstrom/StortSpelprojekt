@@ -17,7 +17,7 @@ public:
 
 	//D3D11Resources
 	ID3D11Texture2D* pTexture;
-	ID3D11ShaderResourceView** pTextureView;
+	ID3D11ShaderResourceView* pTextureView;
 
 	//Vbuffer
 	ID3D11Buffer* skyboxMesh = nullptr;
