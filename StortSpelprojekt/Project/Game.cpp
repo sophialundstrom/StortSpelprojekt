@@ -43,7 +43,7 @@ void Game::Update()
 	ingameOverlay->UpdateHealth(player->Stats().healthPoints);
 	ingameOverlay->UpdateInventory(player->Inventory());
 	ingameOverlay->UpdateQuests(QuestLog::GetActiveQuests());
-	UpdateQuadTree(); //Something in here makes the game run twice as fast
+	UpdateQuadTree();
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
@@ -75,6 +75,8 @@ void Game::Render()
 	TR->Render(terrain);
 
 	WR->Render(water);
+
+	SBR->Render();
 
 	overlay->Render();
 
@@ -644,6 +646,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitTerrainRenderer();
 	RND.InitWaterRenderer();
 	RND.InitInteractableRenderer();
+	RND.InitSkyBoxRenderer();
+	
 
 	//CREATE OR LOAD QUESTS
 	QuestLog::CreateQuests();
@@ -1031,8 +1035,10 @@ void Game::UpdateQuadTree()
 	SMR->Clear();
 	SR->ClearStatic();
 
+
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+	std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{
@@ -1054,7 +1060,7 @@ void Game::UpdateQuadTree()
 			SR->BindStatic(drawable);
 		}
 	}
-	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
+	std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
 	
 	//DebugVariant
 	/*
