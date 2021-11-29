@@ -76,6 +76,12 @@
       <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\SkeletonVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\skyBoxPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\skyBoxVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\TerrainDomainShader.cso</FullPath>
     </ContentFile>
     <ContentFile>

@@ -43,7 +43,7 @@ void Game::Update()
 	ingameOverlay->UpdateHealth(player->Stats().healthPoints);
 	ingameOverlay->UpdateInventory(player->Inventory());
 	ingameOverlay->UpdateQuests(QuestLog::GetActiveQuests());
-	UpdateQuadTree(); //Something in here makes the game run twice as fast
+	UpdateQuadTree();
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
@@ -76,6 +76,8 @@ void Game::Render()
 
 	WR->Render(water);
 
+	SBR->Render();
+
 	overlay->Render();
 
 	Graphics::Inst().EndFrame();
@@ -107,6 +109,11 @@ void Game::BacktoPause()
 void Game::MainMenu()
 {
 	mainMenu = true;
+}
+
+void Game::QuitCanvas()
+{
+	currentCanvas = canvases["QUIT"];
 }
 
 void Game::Initialize()
@@ -624,6 +631,11 @@ void Game::UpdateInventoryUI()
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:water(5000), terrain(2)
 {
+
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.05f, 100.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
+	scene.AddPointLight({ 38.055f, 22.367f, -594.542f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
+
 	//INIT WHICH RENDERERS WE WANT TO USE
 	RND.InitAnimatedModelRenderer();
 	RND.InitColliderRenderer();
@@ -635,6 +647,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitTerrainRenderer();
 	RND.InitWaterRenderer();
 	RND.InitInteractableRenderer();
+	RND.InitSkyBoxRenderer();
+	
 
 	//CREATE OR LOAD QUESTS
 	QuestLog::CreateQuests();
@@ -642,11 +656,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//LOAD SCENE
 	Initialize();
+
 	SetupAudio();
 	
 	//SET SCENE CAMERA + DIRECTIONAL LIGHT
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
 
 	//OVERLAYS
 	ingameOverlay = new InGameOverlay();
@@ -737,7 +750,9 @@ Game::~Game()
 	QuestLog::ShutDown();
 	delete quadTree;
 	scene.Clear();
+
 	Audio::StopEngine();
+
 	Resources::Inst().Clear();
 }
 
@@ -767,19 +782,30 @@ APPSTATE Game::Run()
 	case OVERLAYSTATE::MAIN_MENU:
 		return APPSTATE::MAIN_MENU;
 
+
 	case OVERLAYSTATE::PAUSE:
 	{
-		state = GameState::PAUSED;
-		overlay = pauseOverlay;
-		overlay->ShowCursor();
+		if (Time::Get() - lastStateChange > 0.25f)
+		{
+			state = GameState::PAUSED;
+			overlay = pauseOverlay;
+			overlay->ShowCursor();
+			lastStateChange = Time::Get();
+		}
+	
 		break;
 	}
 
 	case OVERLAYSTATE::RETURN:
 	{
-		state = GameState::ACTIVE;
-		overlay = ingameOverlay;
-		overlay->HideCursor();
+		if (Time::Get() - lastStateChange > 0.25f)
+		{
+			state = GameState::ACTIVE;
+			overlay = ingameOverlay;
+			overlay->HideCursor();
+			lastStateChange = Time::Get();
+		}
+	
 		break;
 	}
 	}
@@ -983,14 +1009,59 @@ void Game::CheckNearbyEnemies()
 	}
 }
 
+
+//void Game::HoveringBackHowToPlay()
+//{
+//	canvases["HOW TO PLAY"]->GetImage("BackLeavesHowToPlay")->Show();
+//}
+//
+//void Game::HoveringBackOptions()
+//{
+//	canvases["OPTIONS"]->GetImage("BackLeavesHowToPlay")->Show();
+//}
+//
+//void Game::HoveringYes()
+//{
+//	canvases["QUIT"]->GetImage("YesLeaves")->Show();
+//
+//}
+//
+//void Game::HoveringNo()
+//{
+//	canvases["QUIT"]->GetImage("NoLeaves")->Show();
+//
+//}
+//
+//void Game::HoveringOptions()
+//{
+//	canvases["PAUSED"]->GetImage("OptionsLeaves")->Show();
+//}
+//
+//void Game::HoveringResume()
+//{
+//	canvases["PAUSED"]->GetImage("ResumeLeaves")->Show();
+//}
+//
+//void Game::HoveringHowToPlay()
+//{
+//	canvases["PAUSED"]->GetImage("HowToPlayLeaves")->Show();
+//}
+//
+//void Game::HoveringMainMenu()
+//{
+//	canvases["PAUSED"]->GetImage("BackToMainMenuLeaves")->Show();
+//}
+
 void Game::UpdateQuadTree()
 {
 	drawablesToBeRendered.clear();
 	SMR->Clear();
 	SR->ClearStatic();
 
+
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+	std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{
@@ -1012,7 +1083,7 @@ void Game::UpdateQuadTree()
 			SR->BindStatic(drawable);
 		}
 	}
-	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
+	std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
 	
 	//DebugVariant
 	/*
@@ -1089,6 +1160,5 @@ void Game::UpdateQuadTree()
 
 	}
 	*/
-
 
 }
