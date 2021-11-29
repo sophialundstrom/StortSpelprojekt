@@ -37,7 +37,8 @@ void Game::Update()
 	ingameOverlay->UpdateHealth(player->Stats().healthPoints);
 	ingameOverlay->UpdateInventory(player->Inventory());
 	ingameOverlay->UpdateQuests(QuestLog::GetActiveQuests());
-	UpdateQuadTree(); //Something in here makes the game run twice as fast
+
+	UpdateQuadTree();
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
@@ -62,7 +63,7 @@ void Game::Render()
 	
 	SMR->Render();
 
-	//CR->Render();
+	CR->Render();
 
 	IR->Render();
 
@@ -172,37 +173,85 @@ void Game::Initialize()
 		scene.DeleteDrawable(collider->GetName());
 }
 
-void Game::RemoveItem(const std::string name)
+void Game::RemoveItem(std::shared_ptr<Item> removedItem)
 {
 	for (UINT i = 0; i < items.size(); ++i)
 	{
-		if (items[i]->GetName() == name)
+		auto& item = items[i];
+
+		if (item == removedItem)
 		{
-			auto item = scene.Get<Item>(name);
+			IR->Unbind(item);
 			MR->Unbind(item);
 			SR->Unbind(item);
 			CR->Unbind(item->GetCollider());
+
 			auto it = items.begin() + i;
 			items.erase(it);
-			scene.DeleteDrawable(name);
+
 			return;
 		}
 	}
 }
 
-void Game::AddItem(Item::Type type, Vector3 position)
+void Game::AddItem(Item::Type type, Vector3 position, const Vector3& rotation)
 {
 	const std::string name = "Item";
 
 	auto item = std::make_shared<Item>(type, name);
 	item->SetPosition(position);
+	item->SetRotation(rotation);
 	auto collider = item->GetCollider();
+	collider->SetParent(item);
 
-	scene.AddDrawable(name, item);
 	items.emplace_back(item);
+
 	MR->Bind(item);
 	SR->Bind(item);
 	CR->Bind(item->GetCollider());
+}
+
+void Game::GenerateRandomItems(const Vector3& center, UINT amount, float radius)
+{
+	for (UINT i = 0; i < amount; ++i)
+	{
+		auto r = radius * sqrt(Random::Real(0.0f, 1.0f));
+		auto theta = Random::Real(0.0f, 1.0f) * 2.0f * PI;
+
+		auto x = center.x + r * cos(theta);
+		auto z = center.z + r * sin(theta);
+
+		auto y = terrain.SampleAverage(x, z);
+
+		auto itemType = (Item::Type)Random::Integer(0, 2);
+
+		Vector3 rotation = { 0.0f, 0.0f, 0.0f };
+
+		switch (itemType)
+		{
+			case Item::Type::Stick:
+			{
+				auto x = Random::Real(-PI_DIV4, PI_DIV4);
+				auto y = Random::Real(0, 2.0f * PI);
+				auto z = Random::Real(-PI_DIV4, PI_DIV4);
+				rotation = { x, y, z };
+				
+				break;
+			}
+
+			case Item::Type::Stone: case Item::Type::Food:
+			{
+				auto x = Random::Real(0, 2.0f * PI);
+				auto y = Random::Real(0, 2.0f * PI);
+				auto z = Random::Real(0, 2.0f * PI);
+				rotation = { x, y, z };
+
+				break;
+			}
+		}
+
+		AddItem(itemType, { x, y, z }, rotation);
+	}
 }
 
 std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position)
@@ -244,7 +293,6 @@ void Game::UpdateAndHandleLoot()
 			SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
 			SoundEffect::SetVolume(0.1, 2);
 			SoundEffect::StartAudio(2);
-			//std::cout << "Loot destoyed\n";
 		}
 	}
 }
@@ -583,9 +631,16 @@ void Game::CheckItemCollision()
 				SoundEffect::SetVolume(0.005, 2);
 				SoundEffect::StartAudio(2);
 
-				player->Inventory().AddItem(item->GetType());
-				RemoveItem(item->GetName());
-				UpdateInventoryUI();
+				if (item->GetType() == Item::Type::Food)
+					player->AddHealthPoint();
+
+				else
+				{
+					player->Inventory().AddItem(item->GetType());
+					UpdateInventoryUI();
+				}
+
+				RemoveItem(item);
 
 				return;
 			}
@@ -695,6 +750,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddItem(Item::Type::Stick, { -116, 30, -609 });
 	AddItem(Item::Type::Stick, { -91, 30, -593 });
 	AddItem(Item::Type::Stick, { -85, 30, -608 });
+
+	//RANDOM ITEMS
+	GenerateRandomItems({ 38.0f, 20.3f, -574.5f }, 15, 70);
 
 	//FRIENDLY NPCS
 	AddFriendlyNPCs();
@@ -934,6 +992,7 @@ void Game::UpdateQuadTree()
 			SR->BindStatic(drawable);
 		}
 	}
+
 	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
 	
 	//DebugVariant

@@ -19,7 +19,7 @@ public:
 	Type GetType()									{ return type; }
 };
 
-inline const std::string Item::Names[] = { "Stick", "Stone", "Food", "Hammer", "Axe" };
+inline const std::string Item::Names[] = { "Stick", "Tomato", "Food", "Hammer", "Axe" };
 
 //class Item :public Model
 //{

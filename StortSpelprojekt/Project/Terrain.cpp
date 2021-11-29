@@ -59,6 +59,24 @@ Terrain::~Terrain()
 	delete plane;
 }
 
+float Terrain::SampleAverage(float x, float z)
+{
+	const int lowX = (int)std::floor(x);
+	const int highX = (int)std::ceil(x);
+	const float Xdecimal = x - lowX;
+
+	const int lowZ = (int)std::floor(z);
+	const int highZ = (int)std::ceil(z);
+	const float Zdecimal = z - lowZ;
+
+	const float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+	const float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+	const float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+	const float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+
+	return H1 + H2 + H3 + H4;
+}
+
 void Terrain::Draw() const
 {
 	blendMap->Bind(0);
