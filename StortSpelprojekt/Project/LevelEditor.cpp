@@ -645,13 +645,13 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("X", -700, 700, 0, false);
 		window.AddSliderFloatComponent("Y", -50, 200, 0, false);
 		window.AddSliderFloatComponent("Z", -700, 700, 0, false);
+		window.AddCheckBoxComponent("Snap to Terrain", false);
 
 		window.AddTextComponent("Scale");
 		window.AddSliderFloatComponent("X-axis", -1, 50, 0, false);
 		window.AddSliderFloatComponent("Y-axis", -1, 50, 0, false);
 		window.AddSliderFloatComponent("Z-axis", -1, 50, 0, false);
 		window.AddCheckBoxComponent("Uniform scaling", false);
-		window.AddCheckBoxComponent("Snap to Terrain", false);
 		window.AddButtonComponent("Delete", 120, 30);
 		window.AddButtonComponent("Duplicate", 120, 30);
 	}
