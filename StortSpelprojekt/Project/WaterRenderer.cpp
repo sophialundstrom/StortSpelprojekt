@@ -1,5 +1,4 @@
 #include "WaterRenderer.h"
-
 #include "Water.h"
 
 WaterRenderer::WaterRenderer(float tesselationAmount)
@@ -8,6 +7,8 @@ WaterRenderer::WaterRenderer(float tesselationAmount)
 	CreateBuffer(matrixBuf, sizeof(Matrix));
 	CreateBuffer(lightBuf, sizeof(Matrix));
 	CreateBuffer(timeBuf);
+	CreateBuffer(translationBuf, sizeof(textureTranslation));
+	CreateBuffer(thetaBuf, sizeof(theta));
 
 	//SHADERS
 	std::string byteCode;
@@ -35,7 +36,9 @@ WaterRenderer::WaterRenderer(float tesselationAmount)
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
 	{
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TEXTURECOORDS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+		{"TEXTURECOORDS", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TANGENT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
 	HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
@@ -52,6 +55,8 @@ WaterRenderer::WaterRenderer(float tesselationAmount)
 
 WaterRenderer::~WaterRenderer()
 {
+	thetaBuf->Release();
+	translationBuf->Release();
 	tesselationBuf->Release();
 	matrixBuf->Release();
 	timeBuf->Release();
@@ -87,6 +92,20 @@ void WaterRenderer::Render()
 	UpdateBuffer(timeBuf, Time::Get());
 	BindBuffer(timeBuf, Shader::DS, 1);
 
+
+	UpdateBuffer(translationBuf, translationOffset);
+	BindBuffer(translationBuf, Shader::PS, 10);	
+	translationOffset.offset += 0.0005f;
+	if (translationOffset.offset >= 1)
+	{
+		translationOffset.offset = 0;
+	}
+
+	UpdateBuffer(thetaBuf, thetaOffset);
+	BindBuffer(thetaBuf, Shader::DS, 2);	
+	thetaOffset.offset += 0.01f;
+
+
 	//DRAW
 	for (auto& drawable : drawables)
 	{
@@ -120,6 +139,18 @@ void WaterRenderer::Render(const Water& water)
 
 	UpdateBuffer(timeBuf, Time::Get());
 	BindBuffer(timeBuf, Shader::DS, 1);
+
+	UpdateBuffer(translationBuf, translationOffset);
+	BindBuffer(translationBuf, Shader::PS, 10);
+	translationOffset.offset += 0.0005f * Time::GetDelta();
+	if (translationOffset.offset >= 1)
+	{
+		translationOffset.offset = 0;
+	}
+
+	UpdateBuffer(thetaBuf, thetaOffset);
+	BindBuffer(thetaBuf, Shader::DS, 2);
+	thetaOffset.offset += 0.01f;
 
 	//DRAW
 	water.Draw();
