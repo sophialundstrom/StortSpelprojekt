@@ -11,12 +11,12 @@ void SkyBoxRenderer::BuildCubeMap()
 	image = new unsigned char*[6];
 
 	std::string textures[] = { 
-		{skyboxTexturePath + "back.png"},
+		{skyboxTexturePath + "right.png"},
+		{skyboxTexturePath + "left.png"},
+		{skyboxTexturePath + "up.png"},
 		{skyboxTexturePath + "down.png"},
 		{skyboxTexturePath + "front.png"},
-		{skyboxTexturePath + "left.png"},
-		{skyboxTexturePath + "right.png"},
-		{skyboxTexturePath + "up.png"},
+		{skyboxTexturePath + "back.png"},
 	};
 
 	for (int i = 0; i < 6; i++)
