@@ -11,9 +11,6 @@ void hovering2()
 
 GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 {
-	Audio::AddAudio(L"Audio/GameOver.wav", 0);
-	Audio::SetVolume(0.005, 0);
-	Audio::StartAudio(0);
 
 	currentCanvas = new Canvas();
 	//FORM

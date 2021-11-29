@@ -1,15 +1,5 @@
 #pragma once
 #include "ApplicationState.h"
-#include "AnimatedModelRenderer.h"
-#include "ModelRenderer.h"
-#include "ParticleRenderer.h"
-#include "ShadowRenderer.h"
-#include "DeferredRenderer.h"
-#include "ColliderRenderer.h"
-#include "TerrainRenderer.h"
-#include "SkeletonRenderer.h"
-#include "WaterRenderer.h"
-#include "SkyBoxRenderer.h"
 #include "Building.h"
 #include "Item.h"
 #include "QuestLog.h"
@@ -24,7 +14,12 @@
 #include "NPCHostile.h"
 #include "Loot.h"
 #include "MainMenu.h"
+#include "Renderers.h"
+#include "DialogueOverlay.h"
+#include "InGameOverlay.h"
+#include "PauseOverlay.h"
 #include "QuadTree.h"
+#include "AudioSource.h"
 
 enum class GameState { ACTIVE, PAUSED, DIALOGUE };
 
@@ -57,25 +52,16 @@ private:
     //-----TEMP-----//
     Pathfinding pathing;
 
-    std::unique_ptr<QuestLog> questLog;
-
-    AnimatedModelRenderer animatedModelRenderer;
-    ParticleRenderer particleRenderer;
-    
-    ModelRenderer modelRenderer;
-    ModelRenderer staticMeshModelRender;
-    ShadowRenderer shadowRenderer;
-
-    TerrainRenderer terrainRenderer;
-    ColliderRenderer colliderRenderer;
-    SkeletonRenderer skeletonRenderer;
-    WaterRenderer waterRenderer;
-    SkyBoxRenderer skyBoxRenderer;
-
     SaveStation saveStations[2];
 
     Terrain terrain;
     Water water;
+
+    Overlay* overlay;
+
+    InGameOverlay* ingameOverlay;
+    DialogueOverlay* dialogueOverlay;
+    PauseOverlay* pauseOverlay;
 
     std::shared_ptr<Canvas> currentCanvas;
     std::map<std::string, std::shared_ptr<Canvas>> canvases;
@@ -88,6 +74,10 @@ private:
 
     std::shared_ptr<Building> building;
 
+    std::map<BarbarianCamp::Location, BarbarianCamp*> camps;
+
+    std::vector<std::shared_ptr<Target>> targets;
+
     std::vector<std::shared_ptr<FriendlyNPC>> friendlyNPCs;
     
     std::vector<std::shared_ptr<Collider>> colliders;
@@ -98,50 +88,48 @@ private:
     std::vector<std::shared_ptr<Loot>> loot;
     UINT lootID = 0;
 
+    std::vector<std::shared_ptr<Biome>> biomes;
+
     void Update();
     void Render();
 
     // UI FUNC
     void Pause();
-    void Resume();
     void Options();
     void HowToPlay();
     void BacktoPause();
     void MainMenu();
 
-    // LEAVES
-    void HoveringResume();
-    void HoveringOptions();
-    void HoveringHowToPlay();
-    void HoveringQuit();
-    void HoveringBackHowToPlay();
-    void HoveringBackQuit();
-    void HoveringBackOptions();
-    void HoveringYes();
-    void HoveringNo();
-
+    std::vector<AudioSource>audioSources;
   
     bool mainMenu = false;
 
     void RemoveItem(const std::string name);
-    void AddItem(RESOURCE resource, Vector3 position);
+    void AddItem(Item::Type type, Vector3 position);
 
-    std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string fileName, Vector3 position);
+    std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position);
 
-    void AddArrow(const std::string fileName);
-
-    void AddHostileNPC(const std::string& filename, Vector3 position);
+    void AddFriendlyNPCs();
+    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
     void AddLoot(LOOTTYPE type, const Vector3& position);
+    void AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation);
+    void AddBarbarianCamps();
+
+    void SpawnInvasion();
 
     void UpdateAndHandleLoot();
     void CheckNearbyCollision();
     void CheckSaveStationCollision();
     void CheckItemCollision();
+    void CheckTargetCollision();
     void CheckQuestInteraction();
     void CheckNearbyEnemies();
+    void HandleBiomes();
+    void HandleAudioSources();
+
+    void SetupAudio();
     void UpdateQuadTree();
 
-    void UnbindBuildingEffect(std::unique_ptr<BuildingEffect> effect);
     void UpdateInventoryUI();
 
     void Initialize();

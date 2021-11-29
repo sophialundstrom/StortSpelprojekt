@@ -1,8 +1,6 @@
 #include "ConcreteStates.h"
 #include "NPCHostile.h"
 
-
-
 void ShootingState::SwapCombatStyle(CombatStyle newCombatStyle)
 {
     combatStyle = newCombatStyle;
@@ -92,25 +90,21 @@ void ShootingState::Update(HostileNPC& hostile)
 
         if (Time::Get() - lastShot > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
         {
-            hostile.GetArrowHandler().AddArrow(*hostile.GetMRenderer(), *hostile.GetCRenderer(), aimDir, hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            hostile.GetArrowHandler().AddArrow(aimDir, hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             lastShot = Time::Get();
         }
         else if (Time::Get() - lastShot > 3 && combatStyle == CombatStyle::wideArrow)
         {
             float arrowWidth = PI / 32.f;
-            hostile.GetArrowHandler().AddArrow(*hostile.GetMRenderer(), *hostile.GetCRenderer(), aimDir, hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-            hostile.GetArrowHandler().AddArrow(*hostile.GetMRenderer(), *hostile.GetCRenderer(), DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
-            hostile.GetArrowHandler().AddArrow(*hostile.GetMRenderer(), *hostile.GetCRenderer(), DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
+            hostile.GetArrowHandler().AddArrow(aimDir, hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            hostile.GetArrowHandler().AddArrow(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
+            hostile.GetArrowHandler().AddArrow(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
 
             DirectX::XMMatrixRotationX(-arrowWidth);
             lastShot = Time::Get();
 
         }
-
     }
-
-
-    // hostile.Update();
 }
 
 void ShootingState::Exit(HostileNPC& hostile)
@@ -142,8 +136,6 @@ NPCState& MovingState::GetInstance()
     static MovingState singleton;
     return singleton;
 }
-
-
 
 void IdlingState::Enter(HostileNPC& hostile)
 {

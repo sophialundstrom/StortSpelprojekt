@@ -40,7 +40,7 @@ void SoundEffect::Initialize()
 		std::cout << "COULD NOT CREATE MASTERING VOICE" << std::endl;
 }
 
-void SoundEffect::AddAudio(std::wstring fileName, int slot)
+void SoundEffect::AddAudio(std::wstring fileName, int slot, bool repeat)
 {
 	LPCWSTR strFileName = fileName.c_str();
 	Initialize();
@@ -71,7 +71,10 @@ void SoundEffect::AddAudio(std::wstring fileName, int slot)
 	audioBuffer.AudioBytes = audioChunkSize;
 	audioBuffer.pAudioData = dataBuffer;
 	audioBuffer.Flags = XAUDIO2_END_OF_STREAM;
-	audioBuffer.LoopCount = 0;
+	if (repeat)
+		audioBuffer.LoopCount = XAUDIO2_MAX_LOOP_COUNT;
+	else
+		audioBuffer.LoopCount = 0;
 
 	HRESULT hr;
 	if (FAILED(hr = SoundEffectEngine->CreateSourceVoice(&pSourceVoice[slot], (WAVEFORMATEX*)&wfx, 0, XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL, NULL)))
@@ -82,4 +85,13 @@ void SoundEffect::AddAudio(std::wstring fileName, int slot)
 		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
 
 	pSourceVoice[slot]->SetVolume(volume);
+}
+
+void SoundEffect::StopAudio(int slot)
+{
+	if (pSourceVoice[slot] == nullptr)
+		return;
+	HRESULT hr;
+	if (FAILED(hr = pSourceVoice[slot]->Stop(0)))
+		std::cout << "COULD NOT START AUDIO" << std::endl;
 }
