@@ -148,7 +148,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	// HOW TO PLAY CANVAS
 	auto howToPlayCanvas = new Canvas();
 	{
-		howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Controls", "Controls.png", 2.0f, 1.0f);
+		howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f }, "Controls", "ControlsBig.png", 1.0f, 1.0f);
 
 		// BACK
 		howToPlayCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f + 450 }, "BackControls", "Back.png", 1.0f, 1.0f);

@@ -8,9 +8,7 @@ class Canvas
 protected:
 	bool showCursor = true;
 
-	Image* hoveredCursor;
 	Image* regularCursor;
-	Image* currentCursor;
 
 	std::map<std::string, Button*> buttons;
 	std::map<std::string, Image*> images;

@@ -8,6 +8,8 @@ void PauseOverlay::HideLeaves()
 	GetImage("MainMenuLeaves")->Hide();
 	GetImage("OptionsLeaves")->Hide();
 	GetImage("HowToPlayLeaves")->Hide();
+	canvases["QUITCHOICE"]->GetImage("YesLeaves")->Hide();
+	canvases["QUITCHOICE"]->GetImage("NoLeaves")->Hide();
 }
 
 PauseOverlay::PauseOverlay()
@@ -61,15 +63,35 @@ PauseOverlay::PauseOverlay()
 		AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "OptionsButton", image->GetWidth(), image->GetHeight(), UI::COLOR::DARK_YELLOW, toOptionsChoiceFunc, hoveringFunc);
 	}
 
+	auto quitCanvas = new Canvas();
+	{
+		auto hoveringYesFunc = [this]() { canvases["QUITCHOICE"]->GetImage("YesLeaves")->Show(); };
+		auto hoveringNoFunc = [this]() { canvases["QUITCHOICE"]->GetImage("NoLeaves")->Show(); };
+		auto quitFunc = [this]() { returnState = OVERLAYSTATE::MAIN_MENU; };
+		auto noFunc = [this]() { internalState = INTERNALSTATE::MAIN; };
+
+		quitCanvas->AddImage({ Window::ClientWidth() / 2.0f,  Window::ClientHeight() / 2.0f - 200.0f }, "AreYouSure", "AreYouSure.png", 1.2f, 1.0f, true, true);
+		quitCanvas->AddImage({ Window::ClientWidth() / 2.0f,  Window::ClientHeight() / 8.0f }, "MMTitle", "MainMenuTitle.png", 1.f, 1.0f);
+		quitCanvas->AddImage({ Window::ClientWidth() / 2.0f,  Window::ClientHeight() / 2.0f }, "Yes", "Yes.png", 1.0f, 1.0f, true, true);
+		quitCanvas->AddImage({ Window::ClientWidth() / 2.0f,  Window::ClientHeight() / 2.0f }, "YesLeaves", "YesLeaves.png", 1.0f, 1.0f, true, true);
+		quitCanvas->AddImage({ Window::ClientWidth() / 2.0f,  Window::ClientHeight() / 2.0f + 100.0f }, "No", "No.png", 1.0f, 1.0f, true, true);
+		quitCanvas->AddImage({ Window::ClientWidth() / 2.0f,  Window::ClientHeight() / 2.0f + 100.0f }, "NoLeaves", "NoLeaves.png", 1.0f, 1.0f, true, true);
+
+		auto yes = quitCanvas->GetImage("Yes");
+		auto no = quitCanvas->GetImage("No");
+		quitCanvas->AddButton({ yes->GetLeftSidePosition().x + yes->GetWidth() / 2, yes->GetLeftSidePosition().y + yes->GetHeight() / 2 }, "YesButton", yes->GetWidth(), yes->GetHeight(), UI::COLOR::DARK_YELLOW, quitFunc, hoveringYesFunc);
+		quitCanvas->AddButton({ no->GetLeftSidePosition().x + no->GetWidth() / 2, no->GetLeftSidePosition().y + no->GetHeight() / 2 }, "NoButton", no->GetWidth(), no->GetHeight(), UI::COLOR::DARK_YELLOW, noFunc, hoveringNoFunc);
+	}
+	canvases["QUITCHOICE"] = quitCanvas;
+
 	auto htpCanvas = new Canvas();
 	{
+		// HTP CANVAS
 		float xPos = Window::ClientWidth() / 2.0f + 250.f;
 		float yPos = Window::ClientHeight() / 2.0f + 100.0f;
 
 		htpCanvas->AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 8.0f }, "HTPTitle", "HowToPlaySmall.png", 1.f, 1.0f);
 		htpCanvas->AddImage({ std::roundf(xPos), std::roundf(yPos) }, "Controls", "ControlsBig.png", 1.f, 1.0f);
-		
-
 	}
 	canvases["HTP"] = htpCanvas;
 
@@ -102,11 +124,11 @@ void PauseOverlay::Render()
 		currentCanvas->DrawImages();
 		currentCanvas->DrawTexts();
 	}
-	
+
 	HideLeaves();
 
 	if (showCursor)
-		currentCursor->Draw();
+		regularCursor->Draw();
 
 	UI::Inst().EndFrame();
 }
@@ -114,9 +136,7 @@ void PauseOverlay::Render()
 OVERLAYSTATE PauseOverlay::Update()
 {
 	returnState = OVERLAYSTATE::NO_CHANGE;
-
-	Canvas::Update();
-
+	
 	if (Event::KeyIsPressed(VK_ESCAPE))
 	{
 		returnState = OVERLAYSTATE::RETURN;
@@ -133,7 +153,16 @@ OVERLAYSTATE PauseOverlay::Update()
 		currentCanvas = canvases["PAUSETITLE"];
 	}
 
+	if (internalState == INTERNALSTATE::QUIT_CHOICE)
+	{
+		currentCanvas = canvases["QUITCHOICE"];
+		
+		GetImage("MainMenuLeaves")->Show();
+	}
 
+
+	Canvas::Update();
+	currentCanvas->Update();
 
 	return returnState;
 }
