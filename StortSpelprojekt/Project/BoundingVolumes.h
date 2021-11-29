@@ -9,6 +9,7 @@ struct BoxVolumeData
 	static const UINT VERTICES = 8;
 
 	static const UINT indices[BoxVolumeData::INDICES];
+	static const UINT reversedindices[BoxVolumeData::INDICES];
 
 	static const Vector3 vertices[BoxVolumeData::VERTICES];
 };
@@ -23,6 +24,7 @@ inline const Vector3 BoxVolumeData::vertices[BoxVolumeData::VERTICES] =
 	{-1.0 , 1.0, 1.0},
 	{1.0 , 1.0, 1.0},
 };
+
 
 inline const UINT BoxVolumeData::indices[BoxVolumeData::INDICES] =
 {
@@ -39,6 +41,26 @@ inline const UINT BoxVolumeData::indices[BoxVolumeData::INDICES] =
 	0, 4, 5,
 	0, 5, 1
 };
+
+inline const UINT BoxVolumeData::reversedindices[BoxVolumeData::INDICES] =
+{
+
+	3, 2, 0,
+	2, 1, 0,
+	3, 0, 4,
+	7, 3, 4,
+	2, 3, 7,
+	6, 2, 7,
+	7, 4, 5,
+	6, 7, 5,
+	6, 5, 1,
+	2, 6, 1,
+	5, 4, 0,
+	1, 5, 0
+
+};
+
+
 
 struct SphereVolumeData
 {

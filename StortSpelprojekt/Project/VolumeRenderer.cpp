@@ -21,7 +21,6 @@ VolumeRenderer::VolumeRenderer()
 	if (!LoadShader(vertexShader, vs_path, byteCode))
 		return;
 
-
 	if (!LoadShader(pixelShader, forward_ps_path))
 		return;
 
