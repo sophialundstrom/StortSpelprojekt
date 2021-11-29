@@ -16,6 +16,10 @@ HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, 
 
 void HostileNPC::Update()
 {
+}
+
+void HostileNPC::Update(const std::shared_ptr<Player> player)
+{
     currentState->Update(*this);
     arrowHandler.Update();
 
@@ -39,6 +43,9 @@ void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
     for (auto& arrow : arrowHandler.arrows)
     {
         if (!arrow->canCollide)
+            continue;
+
+        if ((arrow->GetPosition() - player->GetPosition()).Length() > 10.f)
             continue;
 
         if (arrowHandler.CheckCollision(arrow, player->GetBounds(), true))

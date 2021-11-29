@@ -81,10 +81,12 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitShadowRenderer();
 
 	Initialize();
-	
-	Audio::AddAudio(L"Audio/Menu.wav", 0);
-	Audio::SetVolume(0.005, 0);
-	Audio::StartAudio(0);
+	//Audio::Initialize();
+	//Audio::StartEngine();
+	//
+	//Audio::AddAudio(L"Audio/Menu.wav", 0, AUDIOTYPE::MUSIC, true);
+	//Audio::SetVolume(0.005, 0);
+	//Audio::StartAudio(0);
 
 	auto menuCanvas = new Canvas();
 	float xPos = 75;
@@ -186,10 +188,15 @@ MainMenu::~MainMenu()
 {
 	for (auto& [name, canvas] : canvases)
 		delete canvas;
+
+	Audio::StopEngine();
 }
 
 void MainMenu::Initialize()
 {
+	Audio::Initialize();
+	Audio::StartMusic("Menu.wav");
+
 	//LOAD SCENE
 	FBXLoader levelLoader("Models");
 

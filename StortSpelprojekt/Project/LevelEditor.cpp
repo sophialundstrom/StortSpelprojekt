@@ -17,7 +17,7 @@ void LevelEditor::BindDrawables()
 			IDR->Bind(model);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 			component->AddName(name);
-			totalVertexCount += model->mesh.vertexCount;
+			totalPolygonCount += model->mesh.vertexCount / 3.0f;
 		}
 
 		auto box = std::dynamic_pointer_cast<BoundingBox>(drawable);
@@ -77,7 +77,7 @@ void LevelEditor::Load(const std::string& file)
 	MR->Bind(model);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(fileName);
-	totalVertexCount += model->mesh.vertexCount;
+	totalPolygonCount += model->mesh.vertexCount / 3.0f;
 }
 
 void LevelEditor::DuplicateObject()
@@ -106,7 +106,7 @@ void LevelEditor::DuplicateObject()
 		MR->Bind(model);
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->AddName(modelName);
-		totalVertexCount += model->mesh.vertexCount;
+		totalPolygonCount += model->mesh.vertexCount / 3.0f;
 		selectedObject = modelName;
 	}
 }
@@ -235,6 +235,145 @@ void LevelEditor::CreateBoundingSphere()
 	Print("BoundingSphere Created!");
 }
 
+void LevelEditor::ShowWater()
+{
+	bool changed = false;
+	if (renderWater)
+	{
+		renderWater = false;
+		changed = true;
+	}
+	if (!renderWater && !changed)
+	{
+		renderWater = true;
+	}
+}
+
+void LevelEditor::DivideRendering()
+{
+	int divX = windows["TOOLS"].GetValue<SliderIntComponent>("RENDER DIVIDE");
+	auto& drawables = scene.GetDrawables();
+	for (auto& [drawableName, drawable] : drawables)
+	{
+		if (!divideFlipped)
+		{
+			if (drawable->GetPosition().x < divX)
+			{
+				auto model = std::dynamic_pointer_cast<Model>(drawable);
+				if (model)
+				{
+					MR->Unbind(drawable);
+					IDR->Unbind(drawable);
+				}
+				else
+				{
+					VR->Unbind(drawable);
+					IDR->Unbind(drawable);
+				}
+			}
+			else
+			{
+				auto model = std::dynamic_pointer_cast<Model>(drawable);
+				if (model)
+				{
+					if (!MR->IsBound(drawable))
+					{
+						MR->Bind(drawable);
+						IDR->Bind(drawable);
+					}
+				}
+				else
+				{
+					if (!VR->IsBound(drawable))
+					{
+						VR->Bind(drawable);
+						IDR->Bind(drawable);
+					}
+				}
+			}
+		}
+		else
+		{
+			if (drawable->GetPosition().x > divX)
+			{
+				auto model = std::dynamic_pointer_cast<Model>(drawable);
+				if (model)
+				{
+					MR->Unbind(drawable);
+					IDR->Unbind(drawable);
+				}
+				else
+				{
+					VR->Unbind(drawable);
+					IDR->Unbind(drawable);
+				}
+			}
+			else
+			{
+				auto model = std::dynamic_pointer_cast<Model>(drawable);
+				if (model)
+				{
+					if (!MR->IsBound(drawable))
+					{
+						MR->Bind(drawable);
+						IDR->Bind(drawable);
+					}
+				}
+				else
+				{
+					if (!VR->IsBound(drawable))
+					{
+						VR->Bind(drawable);
+						IDR->Bind(drawable);
+					}
+				}
+			}
+		}
+	}
+}
+
+void LevelEditor::FlipRenderingDivider()
+{
+	bool changed = false;
+	if (divideFlipped)
+	{
+		divideFlipped = false;
+		changed = true;
+	}
+	if (!divideFlipped && !changed)
+	{
+		divideFlipped = true;
+	}
+}
+
+void LevelEditor::ShowVolumes()
+{
+	bool changed = false;
+	if (renderVolumes)
+	{
+		renderVolumes = false;
+		changed = true;
+	}
+	if (!renderVolumes && !changed)
+	{
+		renderVolumes = true;
+	}
+}
+
+void LevelEditor::ShowTerrain()
+{
+	bool changed = false;
+	if (renderTerrain)
+	{
+		renderTerrain = false;
+		changed = true;
+	}
+	if (!renderTerrain && !changed)
+	{
+		renderTerrain = true;
+	}
+}
+
 void LevelEditor::Update()
 {
 	if (Event::LeftIsClicked() && !ImGuizmo::IsOver() && viewportPanel.Hovered())
@@ -313,7 +452,7 @@ void LevelEditor::Update()
 	}
 
 	if (Event::KeyIsPressed(VK_SHIFT))
-		scene.GetCamera()->SetSpeedMultiplier(4);
+		scene.GetCamera()->SetSpeedMultiplier(8);
 	else
 		scene.GetCamera()->SetSpeedMultiplier(1);
 
@@ -401,13 +540,17 @@ void LevelEditor::Render()
 
 	BeginViewportFrame();
 
-	TR->Render(*terrain);
+	if(renderTerrain)
+		TR->Render(*terrain);
 
-	WR->Render(water);
+	if(renderWater)
+		WR->Render(water);
 
 	MR->Render();
-	
-	VR->Render();
+
+	if(renderVolumes)
+		VR->Render();
+
 
 	BeginFrame();
 
@@ -458,13 +601,21 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];
 		window.AddTextComponent("FPS");
-		window.AddTextComponent("SCENE VERTEX COUNT");
+		window.AddTextComponent("SCENE POLYGON COUNT");
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
-		window.AddSliderIntComponent("TERRAIN START SUBDIVISIONS", 0, 5);
-		window.AddCheckBoxComponent("WIREFRAME", false);
 		window.AddButtonComponent("CREATE BBOX", 120, 30);
 		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
+		window.AddTextComponent("");
+		window.AddSliderIntComponent("TERRAIN SUBDIV", 0, 5);
+		window.AddCheckBoxComponent("WIREFRAME", false);
+		window.AddTextComponent("SHOW:");
+		window.AddCheckBoxComponent("TERRAIN", true);
+		window.AddCheckBoxComponent("WATER", true);
+		window.AddCheckBoxComponent("VOLUMES", true);
+		window.AddTextComponent("CULL:");
+		window.AddSliderIntComponent("RENDER DIVIDE", -2000, 2000, -2000, false);
+		window.AddCheckBoxComponent("FLIP DIVIDE", false);
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
@@ -472,7 +623,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		AddWindow("GAME OBJECT");
 		auto& window = windows["GAME OBJECT"];
 		window.AddTextComponent("ObjectName");
-		window.AddTextComponent("VertexCount");
+		window.AddTextComponent("PolygonCount");
 		window.AddTextComponent("Position");
 		window.AddSliderFloatComponent("X", -700, 700, 0, false);
 		window.AddSliderFloatComponent("Y", -50, 200, 0, false);
@@ -492,6 +643,19 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		auto& window = windows["SCENE COMPONENTS"];
 		window.AddListBoxComponent("NameList", false);
 	}
+
+	{
+		AddWindow("HELP");
+		auto& window = windows["HELP"];
+		window.AddTextComponent("Movement", false);
+		window.SetValue<TextComponent, std::string>("Movement", "- Use WASD to move around.\n- Use SPACEBAR to go up.\n- Use Z to go down.\n- Use SHIFT to move faster.\n- Look around by holding RMB.\n- Select items by pressing LMB.\nSelected items show up in the Game Object window.\nYou can also select items by clicking on them in the Scene Component list.\n\n");
+		window.AddTextComponent("Shortcuts", false);
+		window.SetValue<TextComponent, std::string>("Shortcuts", "Selecting an item brings up the gizmo.\n- Keyboard key 1: MoveTool\n- Keyboard key 2: RotateTool\n- Keyboard key 3: ScaleTool\n\nPressing F on your keyboard focuses on the selected item.\n\nYou can also modify items by using the sliders in the Game Object window.\nBy holding CTRL and pressing LMB on a slider, you can type in an exact value.\n\n");
+		window.AddTextComponent("Tools", false);
+		window.SetValue<TextComponent, std::string>("Tools","Using the 'Delete' button will remove the selected item.\nThis can also be achieved by pressing 'Del' on your keyboard.\nWhen items are removed, the Scene Component list will update and sort itself.\n\nThe 'Duplicate' button creates a copy of the selected item.\nThe copy will automatically be selected.\nThis can also be achieved by pressing CTRL + D on your keyboard.\n\nWhen an item is selected, use 'CreateBBox' or 'CreateBSphere' to create an appropriate bounding-volume for the item.\nThe volume can be moved, scaled and rotated.\nThe volume is Not connected to any item, but an item must be selected to create a new volume.\nLike items, bounding-volumes can be duplicated.\n\n");
+		window.AddTextComponent("Scene", false);
+		window.SetValue<TextComponent, std::string>("Scene", "For now the editor only has one scene-file. This scene-file is the one that the game loads.\nTo Save changes to the file, press 'Save World'.\nUse the 'Load FBX' button to import new items.");
+	}	
 
 	//LOAD SCENE
 	FBXLoader levelLoader("Models");
@@ -536,9 +700,10 @@ void LevelEditor::RemoveItem(std::string name)
 	auto model = std::dynamic_pointer_cast<Model>(deleted);
 	if (model)
 	{
-		totalVertexCount -= model->mesh.vertexCount;
+		totalPolygonCount -= model->mesh.vertexCount / 3.0f;
 		MR->Unbind(model);
 		IDR->Unbind(model);
+
 		scene.DeleteDrawable(name);
 		name = Resources::Inst().GetBufferNameFromID(model->mesh.bufferID);
 
@@ -642,14 +807,10 @@ void LevelEditor::ClearToolUI()
 	auto& window = windows["GAME OBJECT"];
 
 	window.SetValue<TextComponent, std::string>("ObjectName", "");
-	window.SetValue<TextComponent, std::string>("VertexCount", "");
+	window.SetValue<TextComponent, std::string>("PolygonCount", "");
 	window.SetValue<SliderFloatComponent, float>("X", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Y", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Z", 0.0f);
-
-	//window.SetValue<SliderFloatComponent, float>("Around X", 0.0f);
-	//window.SetValue<SliderFloatComponent, float>("Around Y", 0.0f);
-	//window.SetValue<SliderFloatComponent, float>("Around Z", 0.0f);
 
 	window.SetValue<SliderFloatComponent, float>("X-axis", 0.0f);
 	window.SetValue<SliderFloatComponent, float>("Y-axis", 0.0f);
@@ -667,16 +828,12 @@ void LevelEditor::UpdateToolUI(std::string name)
 	auto modelmodel = std::dynamic_pointer_cast<Model>(model);
 	if (modelmodel)
 	{
-		window.SetValue<TextComponent, std::string>("VertexCount", "VertexCount: " + std::to_string(modelmodel->mesh.vertexCount));
+		window.SetValue<TextComponent, std::string>("PolygonCount", "PolygonCount: " + std::to_string(int(modelmodel->mesh.vertexCount / 3.0f)));
 	}
 
 	window.SetValue<SliderFloatComponent, float>("X", model->GetPosition().x);
 	window.SetValue<SliderFloatComponent, float>("Y", model->GetPosition().y);
 	window.SetValue<SliderFloatComponent, float>("Z", model->GetPosition().z);
-
-	//window.SetValue<SliderFloatComponent, float>("Around X", model->GetRotation().x * 180 / PI);
-	//window.SetValue<SliderFloatComponent, float>("Around Y", model->GetRotation().y * 180 / PI);
-	//window.SetValue<SliderFloatComponent, float>("Around Z", model->GetRotation().z * 180 / PI);
 
 	window.SetValue<SliderFloatComponent, float>("X-axis", model->GetScale().x);
 	window.SetValue<SliderFloatComponent, float>("Y-axis", model->GetScale().y);
@@ -721,10 +878,10 @@ APPSTATE LevelEditor::Run()
 			frames = 0;
 			time = 0.0f;
 		}
-		if (totalVertexCount > totalVertexCountLastFrame || totalVertexCount < totalVertexCountLastFrame)
+		if (totalPolygonCount > totalPolygonsLastFrame || totalPolygonCount < totalPolygonsLastFrame)
 		{
-			window.SetValue<TextComponent, std::string>("SCENE VERTEX COUNT", "SCENE VERTEX COUNT: " + std::to_string(totalVertexCount));
-			totalVertexCountLastFrame = totalVertexCount;
+			window.SetValue<TextComponent, std::string>("SCENE POLYGON COUNT", "SCENE POLYGON COUNT: " + std::to_string(totalPolygonCount));
+			totalPolygonsLastFrame = totalPolygonCount;
 		}
 		if (window.GetValue<ButtonComponent>("LOAD FBX"))
 			Load(FileSystem::LoadFile("Models"));
@@ -738,12 +895,28 @@ APPSTATE LevelEditor::Run()
 		if (window.Changed("WIREFRAME"))
 			Graphics::Inst().ToggleWireframe();
 
-		if (window.Changed("TERRAIN START SUBDIVISIONS"))
+		if (window.Changed("TERRAIN"))
+			ShowTerrain();
+
+		if (window.Changed("WATER"))
+			ShowWater();
+
+		if (window.Changed("VOLUMES"))
+			ShowVolumes();
+
+		if (window.Changed("TERRAIN SUBDIV"))
 		{
 			if (terrain)
 				delete terrain;
-			terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN START SUBDIVISIONS"));
+			terrain = new Terrain(window.GetValue<SliderIntComponent>("TERRAIN SUBDIV"));
 		}
+
+		if (window.Changed("RENDER DIVIDE"))
+			DivideRendering();
+
+		if (window.Changed("FLIP DIVIDE"))
+			FlipRenderingDivider();
+			DivideRendering();
 
 		if (window.GetValue<ButtonComponent>("SAVE WORLD"))
 		{

@@ -4,54 +4,12 @@
 #include "Model.h"
 #include "Event.h"
 #include "Terrain.h"
-#include "Inventory.h"
+#include "Item.h"
 #include "Canvas.h"
 #include "ArrowHandler.h"
 #include "AnimatedModel.h"
-
-#undef Ray
-
-//struct Inventory
-//{
-//	//std::unordered_map here?
-//	std::map<RESOURCE, UINT> items; //ID , NUM OF ITEM
-//	std::map<RESOURCE, std::string> names;
-//
-//	Inventory()
-//	{
-//		names[RESOURCE::WOOD] = "Wood";
-//		names[RESOURCE::STONE] = "Stone";
-//		names[RESOURCE::FOOD] = "Food";
-//		names[RESOURCE::NONE] = "NONE";
-//	}
-//
-//	void AddItem(enum RESOURCE ID)
-//	{
-//		items[ID]++;
-//	}
-//
-//	void RemoveItem(enum RESOURCE ID, UINT amount = 1)
-//	{
-//		if (items[ID] <= amount)
-//		{
-//			items[ID] = 0;
-//			return;
-//		}
-//
-//		items[ID] -= amount;
-//	}
-//
-//	UINT NumOf(enum RESOURCE ID)
-//
-//	{
-//		return items[ID];
-//	}
-//
-//	void GetResources(enum RESOURCE ID)
-//	{
-//		std::cout << names[ID] << " " << items[ID] << std::endl;
-//	}
-//};
+#include "Biome.h"
+#include "Inventory.h"
 
 struct Stats
 {
@@ -76,8 +34,11 @@ class Player : public AnimatedModel
 private:
 	Stats stats;
 
-	Camera* sceneCamera;
 
+
+	std::shared_ptr<Canvas> ingameCanvas;
+
+	//std::vector<std::shared_ptr<Arrow>>arrows;
 	ArrowHandler arrowHandler;
 
 	bool hasCollided;
@@ -99,7 +60,7 @@ private:
 	bool jumping = false;
 	bool maxJumpHeight = false;
 	bool pressed = false;
-	bool sprint = false;
+	bool isSprinting = false;
 
 	float airTime = 0;
 	float jumpHeight = 5.0f;
@@ -129,12 +90,35 @@ private:
 	float currentLerp = 0.f;
 	float duration = 1.f;
 	bool inAir = false;
+	bool isAiming = false;
+
+
+	void UpdateHealthUI()
+	{
+		auto image = ingameCanvas->GetImage("hp");
+		if (image->FileName() == "HP" + std::to_string(stats.healthPoints) + ".png")
+			return;
+
+		auto position = image->GetPosition();
+		ingameCanvas->RemoveImage("hp");
+		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
+	}
+
 public:
+	Camera* sceneCamera;
+	BIOME currentBiome;
+	BIOME previousBiome;
+	bool test = false;
+	bool biomeChanged = false;
+
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
 	void Update(HeightMap* heightMap);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void TakeDamage();
+	bool inCombat = false;
+	void SwitchBiomeMusic();
+
 	Player(const std::string file, Camera* camera, const UINT& maxArrows);
 
 public:
@@ -150,7 +134,6 @@ public:
 	}
 
 	bool GetGameOver() { return this->gameOver; }
-
 	std::shared_ptr<BoundingBox> GetBounds() { return bounds; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 
@@ -161,7 +144,7 @@ public:
 
 	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void ResetToLastPosition() { position = lastPosition; }
-	void AddHealthPoint() { stats.IncreaseHealthPoints(); }
+	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
 	void SetClosestColliderToCam(float range)
 	{
 		closestColliderToCam = range;

@@ -21,6 +21,11 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	PlayAnimation("Run", true);
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
+
+	currentBiome = BIOME::DEFAULT;
+	previousBiome = currentBiome;
+
+
 }
 
 void Player::CalcHeight(HeightMap* heightMap)
@@ -105,6 +110,15 @@ void Player::Update(HeightMap* heightMap)
 	//SPRINTING
 	if (Event::KeyIsPressed(VK_SHIFT))
 	{
+		// IF PLAYER SPRINTS AND JUMPS THE SOUND WILL STOP UNTIL SHIFT IS PRESSED AGAIN...
+		if (!isSprinting)
+		{
+			
+			Audio::StartEffect("Running.wav");
+			Audio::SetVolume("Running.wav", 1.f);
+			isSprinting = true;
+		}
+
 		stats.currentSpeed += 50.0f * Time::GetDelta();
 		if (stats.currentSpeed > stats.sprintSpeed)
 			stats.currentSpeed = stats.sprintSpeed;
@@ -113,9 +127,10 @@ void Player::Update(HeightMap* heightMap)
 		if (currentCameraDistance > maxCameraDistance)
 			currentCameraDistance = maxCameraDistance;
 	}
-
 	else
 	{
+		isSprinting = false;
+		Audio::StopEffect("Running.wav");
 		stats.currentSpeed -= 12.0f * Time::GetDelta();
 		if (stats.currentSpeed < stats.movementSpeed)
 			stats.currentSpeed = stats.movementSpeed;
@@ -154,9 +169,7 @@ void Player::Update(HeightMap* heightMap)
 		if (Event::KeyIsPressed(VK_SPACE))
 		{
 			jumping = true;
-			SoundEffect::AddAudio(L"Audio/Jump.wav", 2);
-			SoundEffect::SetVolume(0.005, 2);
-			SoundEffect::StartAudio(2);
+			Audio::StartEffect("Jump.wav");
 			preJumpGroundLevel = currentGroundLevel; 
 			//PlayAnimation("Jump", false, 0.5f);
 		}
@@ -226,6 +239,12 @@ void Player::Update(HeightMap* heightMap)
 
 	if(Event::RightIsClicked())
 	{
+		if (!isAiming)
+		{
+			Audio::StartEffect("Bow.wav");
+			isAiming = true;
+		}
+
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
 		sceneCamera->SetPosition(newCameraPos);
@@ -235,9 +254,7 @@ void Player::Update(HeightMap* heightMap)
 			{
 				arrowHandler.AddArrow(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
-				SoundEffect::AddAudio(L"Audio/Fire.wav", 1);
-				SoundEffect::SetVolume(0.005, 1);
-				SoundEffect::StartAudio(1);
+				Audio::StartEffect("Fire.wav");
 				int currentIndex = 0;
 				numArrows--;
 				sinceLastShot = 0.f;
@@ -245,9 +262,11 @@ void Player::Update(HeightMap* heightMap)
 			}
 		}
 	}
-
 	else
 	{
+		Audio::StopEffect("Bow.wav");
+		isAiming = false;
+		
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 		sceneCamera->MoveTowards(newCameraPos);
 	}
@@ -264,16 +283,42 @@ void Player::Update(HeightMap* heightMap)
 
 void Player::TakeDamage()
 {
-	if (stats.healthPoints - 1 == 0)
+	if (stats.healthPoints - 1 == 0 /*|| stats.healthPoints < 0*/)
 	{
 		stats.healthPoints--;
 		gameOver = true;
 		return; // Return here because hp will be -1. This leads to a hp image not being found which in turn leads to a crash during Draw().
 	}
-	SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
-	SoundEffect::SetVolume(0.5, 2);
-	SoundEffect::StartAudio(2);
+
+	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
+	//SoundEffect::SetVolume(0.5, 2);
+	//SoundEffect::StartAudio(2);
 	stats.healthPoints--;
+}
+
+void Player::SwitchBiomeMusic()
+{
+	switch (this->currentBiome)
+	{
+	case BIOME::DESERT:
+		PrintS("DESERT");
+
+		Audio::StartMusic("SoundDesert.wav");
+		break;
+	case BIOME::MOUNTAIN:
+		PrintS("MOUNTAIN");
+
+		Audio::StartMusic("whenthedoommusickicksin.wav");
+		break;
+	case BIOME::OCEAN:
+		PrintS("OCEAN");
+		Audio::StartMusic("SoundOcean.wav");
+		break;
+	case BIOME::DEFAULT:
+		PrintS("DEFAULT");
+		Audio::StartMusic("Sonrie.wav");
+		break;
+	}
 }
 
 void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders)
