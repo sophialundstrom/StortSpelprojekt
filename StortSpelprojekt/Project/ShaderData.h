@@ -17,10 +17,13 @@ class ShaderData : public Singleton<ShaderData>
 	friend class VolumeRenderer;
 	friend class SkeletonRenderer;
 	friend class WaterRenderer;
+	friend class SkyBoxRenderer;
 	friend class InteractableRenderer;
 private:
 	//CAMERA
 	Matrix cameraMatrix;
+	Matrix viewMatrix;
+	Matrix projectionMatrix;
 	Vector3 cameraPosition;
 	ID3D11Buffer* cameraPositionBuf;
 
@@ -108,6 +111,9 @@ public:
 	{
 		//CAMERA
 		cameraMatrix = camera.GetMatrix();
+		viewMatrix = camera.GetViewMatrix();
+		projectionMatrix = camera.GetProjectionMatrix();
+
 		cameraPosition = camera.GetPosition();
 
 		matrices.viewPerspective = cameraMatrix;

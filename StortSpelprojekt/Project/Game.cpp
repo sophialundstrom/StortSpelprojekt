@@ -76,6 +76,8 @@ void Game::Render()
 
 	WR->Render(water);
 
+	SBR->Render();
+
 	overlay->Render();
 
 	Graphics::Inst().EndFrame();
@@ -634,6 +636,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitTerrainRenderer();
 	RND.InitWaterRenderer();
 	RND.InitInteractableRenderer();
+	RND.InitSkyBoxRenderer();
+	
 
 	//CREATE OR LOAD QUESTS
 	QuestLog::CreateQuests();
