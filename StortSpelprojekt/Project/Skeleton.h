@@ -23,6 +23,17 @@ struct Skeleton
 	int tempIndex = 0;
 	UINT vertexCount = 0;
 
+	int GetJointID(const std::string& name)
+	{
+		int counter = 0;
+		for (auto& joint : joints)
+		{
+			if (joint.name == name)
+				return counter;
+			counter++;
+		}
+	}
+
 	const Joint& FindJoint(const std::string& name) const
 	{
 		for (auto& joint : joints)
@@ -61,14 +72,19 @@ struct Skeleton
 
 	void SetBindPose(const aiNode* node, const Matrix& parentMatrix)
 	{
-		Matrix worldMatrix = AssimpToDX(node->mTransformation) * parentMatrix;
+		bool extraNode = false;
+		if (std::string(node->mName.C_Str()).find('_') != std::string::npos)
+			extraNode = true;
 
-		transforms.emplace_back(worldMatrix);
+		Matrix worldMatrix = parentMatrix; 
+		
+		if (!extraNode)
+		{
+			worldMatrix = AssimpToDX(node->mTransformation) * parentMatrix;
 
-		Print("=================");
-		Print(node->mName.C_Str(), "NODE");
-		Print(node->mParent->mName.C_Str(), "PARENT");
-
+			transforms.emplace_back(worldMatrix);
+		}
+		
 		for (UINT i = 0; i < node->mNumChildren; ++i)
 			SetBindPose(node->mChildren[i], worldMatrix);
 	}

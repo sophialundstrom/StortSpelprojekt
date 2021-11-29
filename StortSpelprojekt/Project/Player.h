@@ -86,6 +86,10 @@ private:
 	float currentLerp = 0.f;
 	float duration = 1.f;
 	bool inAir = false;
+
+	//ANIMATION HANDLING
+	bool isAiming = false;
+
 public:
 	UINT maxArrows = 10;
 	UINT numArrows = 5;

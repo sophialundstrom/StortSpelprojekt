@@ -1,13 +1,12 @@
 #pragma once
 #include "Animator.h"
 #include "DirectXHelp.h"
+#include <deque>
 
 class AnimationStateMachine
 {
 private:
-	const float transitionTime = 0.5f;
-
-	struct State
+	struct Clip
 	{
 		Animation* animation = nullptr;
 		std::string startBone = "root";
@@ -17,16 +16,17 @@ private:
 		float transition = 0.0f;
 	};
 
-	std::map<std::string, State> activeAnimations;
-	State* latestAnimation;
-
-	State* overrideAnimation;
+	std::deque<Clip> queuedAnimations;
+	Clip overrideAnimation;
 
 	Animator* animator;
 
 	ID3D11Buffer* structuredBuffer = nullptr;
 	ID3D11ShaderResourceView* bufferSRV = nullptr;
 	std::vector<Matrix> finalTransforms;
+
+	void CalculateOverrideAnimation(const aiScene* scene, Skeleton& skeleton, std::map<UINT, Matrix>& matrices);
+	void CalculateCoreAnimation(const aiScene* scene, Skeleton& skeleton, std::map<UINT, Matrix>& matrices);
 public:
 	AnimationStateMachine(Animator* animator, const aiScene* scene, Skeleton& skeleton);
 

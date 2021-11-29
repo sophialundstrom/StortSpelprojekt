@@ -119,8 +119,10 @@ void InteractableRenderer::Render()
 
 		auto item = std::dynamic_pointer_cast<Item>(drawable);
 		if (item)
+		{
 			UpdateBuffer(colorBuf, BLUE);
-		
+		}
+			
 		auto target = std::dynamic_pointer_cast<Target>(drawable);
 		if (target)
 		{

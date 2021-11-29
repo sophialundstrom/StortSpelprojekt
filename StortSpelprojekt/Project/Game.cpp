@@ -566,9 +566,13 @@ void Game::CheckItemCollision()
 {
 	for (auto& item : items)
 	{
+		if (IR->IsBound(item))
+			IR->Unbind(item);
+
 		if (Collision::Intersection(*item->GetCollider(), *player->GetFrustum()))
 		{
 			ingameOverlay->ShowInteract();
+			IR->Bind(item);
 
 			if (Event::KeyIsPressed('E'))
 			{
@@ -660,8 +664,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
 	player->SetPosition(-75, 20, -630);
-	player->GetBounds()->SetParent(player);
-	CR->Bind(player->GetBounds());
+	auto collider = player->GetBounds();
+	collider->SetParent(player);
+	CR->Bind(collider);
 	SKR->Bind(player);
 	AMR->Bind(player);
 

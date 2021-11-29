@@ -79,25 +79,29 @@ struct Animation
 
 	void UpdateTime()
 	{
-		timer += Time::GetDelta();
-	}
+		if (active)
+			timer += Time::GetDelta();
 
-	void Update(const std::string& joint, Matrix& localMatrix)
-	{
-		if (!active)
-			return;
-
-		float timeInTicks = timer * ticksPerSecond * speedFactor; 
+		float timeInTicks = timer * ticksPerSecond * speedFactor;
 		float frameTime = fmod(timeInTicks, duration);
 
 		if (timeInTicks > duration)
 		{
 			if (!repeat)
+			{
 				active = false;
+				timer = (duration / (ticksPerSecond * speedFactor)) - 0.000001f;
+			}
 				
 			else
 				timer = 0.0f;
 		}
+	}
+
+	void Update(const std::string& joint, Matrix& localMatrix)
+	{
+		float timeInTicks = timer * ticksPerSecond * speedFactor; 
+		float frameTime = fmod(timeInTicks, duration);
 
 		auto& map = channels[joint].positions;
 		if (map.empty())

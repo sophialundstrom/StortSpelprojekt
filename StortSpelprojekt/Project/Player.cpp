@@ -18,7 +18,7 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 
 	Load(file);
 
-	PlayAnimation("Run", true);
+	PlayAnimation("Idle");
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 }
@@ -74,7 +74,6 @@ float Get2DAngle(Vector2 a, Vector2 b)
 
 void Player::Update(HeightMap* heightMap)
 {
-	//std::cout << position.x << "		" << position.y << "		" << position.z << std::endl;
 	lastPosition = position;
 
 	CalcHeight(heightMap);
@@ -224,17 +223,21 @@ void Player::Update(HeightMap* heightMap)
 			 // ADD IN AIR JUMP ANIMATION
 	}
 
-	if(Event::RightIsClicked())
+	if (Event::RightIsClicked())
 	{
-		newCameraPos = position + camSocketUpdate;
+		if (!isAiming)
+			isAiming = true;
+
+		//newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
 		sceneCamera->SetPosition(newCameraPos);
-		if (Time::Get() - lastClick > 0.2f)
+		PlayOverrideAnimation("Aim", "Spine2", true);
+
+		if (Time::Get() - lastClick > 0.75f)
 		{
 			if (Event::LeftIsClicked() && numArrows > 0)
 			{
 				arrowHandler.AddArrow(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
 				SoundEffect::AddAudio(L"Audio/Fire.wav", 1);
 				SoundEffect::SetVolume(0.005, 1);
 				SoundEffect::StartAudio(1);
@@ -242,17 +245,29 @@ void Player::Update(HeightMap* heightMap)
 				numArrows--;
 				sinceLastShot = 0.f;
 				lastClick = Time::Get();
+				PlayOverrideAnimation("HalfAim", "Spine2", true);
 			}
 		}
 	}
 
 	else
 	{
+		if (isAiming)
+		{
+			isAiming = false;
+			PlayOverrideAnimation("Stop", "Spine2", false);
+		}
+
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 		sceneCamera->MoveTowards(newCameraPos);
 	}
 		
 	arrowHandler.Update();
+
+	if (moveDirection.Length() == 0)
+		PlayAnimation("Idle");
+	else
+		PlayAnimation("Run");
 
 	AnimatedModel::Update();
 
