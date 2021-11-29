@@ -4,6 +4,26 @@
 #include "FBXLoader.h"
 #include "Renderers.h"
 
+void LevelEditor::AddNode()
+{
+	out << "node1\t0.2\t0.4\t0.8\n\n";
+}
+
+void LevelEditor::AddEdge()
+{
+	out << "node1\tnode2";
+}
+
+void LevelEditor::test()
+{
+	auto filePath = FileSystem::ProjectDirectory::path;
+	out.open(filePath + "\\Test.txt");
+	AddNode();
+	AddEdge();
+	out.close();
+	OutputDebugStringA("done");
+}
+
 void LevelEditor::BindDrawables()
 {
 	for (auto& [name, drawable] : scene.GetDrawables())
@@ -387,14 +407,22 @@ void LevelEditor::Update()
 			if (id > 0)
 			{
 				std::string name = scene.GetObjectNames()[id - 1];
+				//test();
 				if (name != "")
+				{
+					if(name != selectedObject)
+						lastSelectedObject = selectedObject;
+
 					UpdateToolUI(name);
+				}
 			}
 
 			if (id == 0)
 				ClearToolUI();
 		}
 	}
+
+
 
 	if (Event::KeyIsPressed('C'))
 		ClearToolUI();
@@ -448,7 +476,41 @@ void LevelEditor::Update()
 			else
 				DuplicateVolume();
 			lastClick = Time::Get();
+
 		}
+
+
+		if (Event::KeyIsPressed('N'))
+		{
+			auto selected = scene.Get<Drawable>(selectedObject);
+			std::string str = selectedObject + "\t" + std::to_string(selected->GetPosition().x) + "\t" + std::to_string(selected->GetPosition().y) + "\t" + std::to_string(selected->GetPosition().z) + "\n";
+			this->n.append(str);
+			lastClick = Time::Get();
+
+		}
+
+		if (Event::KeyIsPressed('E'))
+		{
+			std::string str = selectedObject + "\t" + lastSelectedObject + "\n";
+			this->e.append(str);
+			lastClick = Time::Get();
+
+		}
+
+		if (Event::KeyIsPressed('I'))
+		{
+			auto filePath = FileSystem::ProjectDirectory::path;
+			out.open(filePath + "\\Test.txt");
+			out << n;
+			out << "\n";
+			if (!e.empty())
+				out << e;
+			out.close();
+			OutputDebugStringA("done");
+			lastClick = Time::Get();
+
+		}
+
 	}
 
 	if (Event::KeyIsPressed(VK_SHIFT))
@@ -864,6 +926,8 @@ APPSTATE LevelEditor::Run()
 {
 	Update();
 	Render();
+
+
 
 	{
 		auto& window = windows["TOOLS"];

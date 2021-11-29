@@ -49,6 +49,15 @@ private:
 	void FlipRenderingDivider();
 	void ShowVolumes();
 	void ShowTerrain();
+
+private:
+	std::ofstream out;
+	std::string n;
+	std::string e;
+	std::string lastSelectedObject;
+	void AddNode();
+	void AddEdge();
+	void test();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 
