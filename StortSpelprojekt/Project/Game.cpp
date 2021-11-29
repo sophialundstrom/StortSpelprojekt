@@ -68,7 +68,7 @@ void Game::Render()
 	
 	SMR->Render();
 
-	CR->Render();
+	//CR->Render();
 
 	IR->Render();
 
@@ -640,7 +640,7 @@ void Game::CheckItemCollision()
 			{
 				Audio::StartEffect("Pickup.wav");
 				player->Inventory().AddItem(item->GetType());
-				RemoveItem(item->GetName());
+				RemoveItem(item);
 				UpdateInventoryUI();
 
 				return;

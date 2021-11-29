@@ -134,7 +134,7 @@ public:
 
 	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void ResetToLastPosition() { position = lastPosition; }
-	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
+	void AddHealthPoint() { stats.IncreaseHealthPoints(); }
 	void SetClosestColliderToCam(float range)
 	{
 		closestColliderToCam = range;
