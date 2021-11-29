@@ -53,7 +53,8 @@ cbuffer NUM_POINTLIGHTS : register(b3)
 {
 	uint numPointlights;
 }
-    StructuredBuffer<POINT_LIGHT> lights : register(t9);
+
+StructuredBuffer<POINT_LIGHT> lights : register(t9);
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
