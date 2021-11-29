@@ -195,6 +195,7 @@ void Game::AddItem(Item::Type type, Vector3 position)
 	const std::string name = "Item";
 
 	auto item = std::make_shared<Item>(type, name);
+	item->SetPosition(position);
 	auto collider = item->GetCollider();
 
 	scene.AddDrawable(name, item);
@@ -566,6 +567,8 @@ void Game::CheckItemCollision()
 {
 	for (auto& item : items)
 	{
+		item->Update();
+
 		if (IR->IsBound(item))
 			IR->Unbind(item);
 
@@ -687,11 +690,11 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	SR->Bind(building);
 
 	//ITEMS
-	AddItem(Item::Type::Stick, { -134, 22, -594 });
-	AddItem(Item::Type::Stick, { -113, 22, -582 });
-	AddItem(Item::Type::Stick, { -116, 20, -609 });
-	AddItem(Item::Type::Stick, { -91, 20, -593 });
-	AddItem(Item::Type::Stick, { -85, 20, -608 });
+	AddItem(Item::Type::Stick, { -134, 32, -594 });
+	AddItem(Item::Type::Stick, { -113, 32, -582 });
+	AddItem(Item::Type::Stick, { -116, 30, -609 });
+	AddItem(Item::Type::Stick, { -91, 30, -593 });
+	AddItem(Item::Type::Stick, { -85, 30, -608 });
 
 	//FRIENDLY NPCS
 	AddFriendlyNPCs();

@@ -80,6 +80,12 @@ AnimationStateMachine::AnimationStateMachine(Animator* animator, const aiScene* 
 	UpdateBuffer(structuredBuffer, finalTransforms.data(), (UINT)finalTransforms.size() * sizeof(Matrix));
 }
 
+AnimationStateMachine::~AnimationStateMachine()
+{
+	structuredBuffer->Release();
+	bufferSRV->Release();
+}
+
 void AnimationStateMachine::Update(Skeleton& skeleton, const aiScene* scene)
 {
 	if (queuedAnimations.empty())

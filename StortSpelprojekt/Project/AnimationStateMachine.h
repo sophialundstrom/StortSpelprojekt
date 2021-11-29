@@ -29,6 +29,7 @@ private:
 	void CalculateCoreAnimation(const aiScene* scene, Skeleton& skeleton, std::map<UINT, Matrix>& matrices);
 public:
 	AnimationStateMachine(Animator* animator, const aiScene* scene, Skeleton& skeleton);
+	~AnimationStateMachine();
 
 	void Update(Skeleton& skeleton, const aiScene* scene);
 
