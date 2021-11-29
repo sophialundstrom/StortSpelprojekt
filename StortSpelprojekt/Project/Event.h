@@ -1,5 +1,7 @@
 #pragma once
 #include <bitset>
+#include <map>
+#include "Time.h"
 
 struct RawDelta
 {
@@ -26,6 +28,8 @@ private:
 	//KEYBOARD
 	static constexpr unsigned int keys = 256;
 	static std::bitset<keys> keystates;
+
+	static std::map<unsigned int, float> lastKeyPressed;
 
 	static bool scrolledUp;
 	static bool scrolledDown;
@@ -58,8 +62,10 @@ public:
 
 	//KEYBOARD
 	static bool KeyIsPressed(unsigned char keycode) { return keystates[keycode]; }
-	static void OnKeyPressed(unsigned char keycode) { keystates.set(keycode, true); }
+	static void OnKeyPressed(unsigned char keycode) { lastKeyPressed[keycode] = Time::Get(); keystates.set(keycode, true); }
 	static void OnKeyReleased(unsigned char keycode) { keystates.set(keycode, false); }
+
+	static bool LastKeyPress(unsigned char keycode) { return lastKeyPressed[keycode]; }
 
 	//STATE
 	static bool MovementEnabled() { return movement; }
@@ -74,3 +80,4 @@ inline bool Event::leftIsPressed;
 inline bool Event::rightIsPressed;
 inline std::bitset<Event::keys> Event::keystates;
 inline bool Event::movement;
+inline std::map<unsigned int, float> Event::lastKeyPressed;

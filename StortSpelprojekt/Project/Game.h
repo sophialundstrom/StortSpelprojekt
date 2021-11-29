@@ -49,6 +49,8 @@ private:
     //bool paused = false;
     const std::string file = "Default"; //"Test"
 
+    float lastStateChange = 0.0f;
+
     //-----TEMP-----//
     Pathfinding pathing;
 
@@ -99,6 +101,7 @@ private:
     void HowToPlay();
     void BacktoPause();
     void MainMenu();
+    void QuitCanvas();
 
     std::vector<AudioSource>audioSources;
   

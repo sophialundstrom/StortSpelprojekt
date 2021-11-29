@@ -111,6 +111,11 @@ void Game::MainMenu()
 	mainMenu = true;
 }
 
+void Game::QuitCanvas()
+{
+	currentCanvas = canvases["QUIT"];
+}
+
 void Game::Initialize()
 {
 	QuadTreeBounds qtBounds(-1000.f, -1000.f, 2000.f, 2000.f);
@@ -625,6 +630,11 @@ void Game::UpdateInventoryUI()
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:water(5000), terrain(2)
 {
+
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.05f, 100.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
+	scene.AddPointLight({ 38.055f, 22.367f, -594.542f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
+
 	//INIT WHICH RENDERERS WE WANT TO USE
 	RND.InitAnimatedModelRenderer();
 	RND.InitColliderRenderer();
@@ -645,11 +655,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//LOAD SCENE
 	Initialize();
+
 	SetupAudio();
 	
 	//SET SCENE CAMERA + DIRECTIONAL LIGHT
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
 
 	//OVERLAYS
 	ingameOverlay = new InGameOverlay();
@@ -740,7 +749,9 @@ Game::~Game()
 	QuestLog::ShutDown();
 	delete quadTree;
 	scene.Clear();
+
 	Audio::StopEngine();
+
 	Resources::Inst().Clear();
 }
 
@@ -770,19 +781,30 @@ APPSTATE Game::Run()
 	case OVERLAYSTATE::MAIN_MENU:
 		return APPSTATE::MAIN_MENU;
 
+
 	case OVERLAYSTATE::PAUSE:
 	{
-		state = GameState::PAUSED;
-		overlay = pauseOverlay;
-		overlay->ShowCursor();
+		if (Time::Get() - lastStateChange > 0.25f)
+		{
+			state = GameState::PAUSED;
+			overlay = pauseOverlay;
+			overlay->ShowCursor();
+			lastStateChange = Time::Get();
+		}
+	
 		break;
 	}
 
 	case OVERLAYSTATE::RETURN:
 	{
-		state = GameState::ACTIVE;
-		overlay = ingameOverlay;
-		overlay->HideCursor();
+		if (Time::Get() - lastStateChange > 0.25f)
+		{
+			state = GameState::ACTIVE;
+			overlay = ingameOverlay;
+			overlay->HideCursor();
+			lastStateChange = Time::Get();
+		}
+	
 		break;
 	}
 	}
@@ -974,6 +996,49 @@ void Game::CheckNearbyEnemies()
 	}
 }
 
+
+//void Game::HoveringBackHowToPlay()
+//{
+//	canvases["HOW TO PLAY"]->GetImage("BackLeavesHowToPlay")->Show();
+//}
+//
+//void Game::HoveringBackOptions()
+//{
+//	canvases["OPTIONS"]->GetImage("BackLeavesHowToPlay")->Show();
+//}
+//
+//void Game::HoveringYes()
+//{
+//	canvases["QUIT"]->GetImage("YesLeaves")->Show();
+//
+//}
+//
+//void Game::HoveringNo()
+//{
+//	canvases["QUIT"]->GetImage("NoLeaves")->Show();
+//
+//}
+//
+//void Game::HoveringOptions()
+//{
+//	canvases["PAUSED"]->GetImage("OptionsLeaves")->Show();
+//}
+//
+//void Game::HoveringResume()
+//{
+//	canvases["PAUSED"]->GetImage("ResumeLeaves")->Show();
+//}
+//
+//void Game::HoveringHowToPlay()
+//{
+//	canvases["PAUSED"]->GetImage("HowToPlayLeaves")->Show();
+//}
+//
+//void Game::HoveringMainMenu()
+//{
+//	canvases["PAUSED"]->GetImage("BackToMainMenuLeaves")->Show();
+//}
+
 void Game::UpdateQuadTree()
 {
 	drawablesToBeRendered.clear();
@@ -1082,6 +1147,5 @@ void Game::UpdateQuadTree()
 
 	}
 	*/
-
 
 }
