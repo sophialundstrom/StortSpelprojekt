@@ -202,6 +202,7 @@
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="PauseOverlay.cpp" />
+    <ClCompile Include="PlaneWithNormals.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="QuestLog.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="Overlay.h" />
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="PauseOverlay.h" />
+    <ClInclude Include="PlaneWithNormals.h" />
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
