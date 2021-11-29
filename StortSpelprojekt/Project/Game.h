@@ -129,6 +129,7 @@ private:
     void CheckNearbyEnemies();
     void HandleBiomes();
     void HandleAudioSources();
+    void HandleHouseUpgrades();
 
     void SetupAudio();
     void UpdateQuadTree();
