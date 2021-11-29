@@ -10,6 +10,8 @@ private:
 	//IT CAN HAVE A BASE THAT ALWAYS RENDERS 
 	//AND THEN CANVASES WITHIN THAT WE CAN SWAP BETWEEN
 
+	float lastInput;
+
 	Canvas* currentCanvas = nullptr;
 	std::map<std::string, Canvas*> canvases;
 

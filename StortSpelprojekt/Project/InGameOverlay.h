@@ -22,6 +22,8 @@ public:
 	InGameOverlay();
 	~InGameOverlay();
 
+	float lastInput;
+
 	void UpdateQuests(const std::vector<Quest*>& quests);
 	void UpdateInventory(Inventory& inventory);
 	void UpdateArrowCounter(UINT amount);

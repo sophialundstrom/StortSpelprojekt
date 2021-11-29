@@ -20,7 +20,7 @@ void Win::Form()
 {
 	ShellExecute(0, 0, L"https://docs.google.com/forms/d/1wSGU7CwBNTTCu50nsunQX2Q9DC06SEi5SAqbgJstgb0/viewform?edit_requested=true", 0, 0, SW_SHOW);
 }
-	currentCanvas = new Canvas();
+
 
 void Win::HoveringForm()
 {
@@ -51,9 +51,6 @@ Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitShadowRenderer();
 	RND.InitTerrainRenderer();
 	RND.InitWaterRenderer();
-	Audio::AddAudio(L"Audio/Win.wav",0);
-	Audio::SetVolume(0.005,0);
-	Audio::StartAudio(0);
 	
 	Initialize();
 	float xPos = 75;

@@ -1,5 +1,6 @@
 #include "GameOver.h"
 #include "Renderer.h"
+#include "Audio.h"
 
 void GameOver::Form()
 {
@@ -88,11 +89,11 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitShadowRenderer();
 	//RND.InitTerrainRenderer();
 	//RND.InitWaterRenderer();
-	Audio::AddAudio(L"Audio/GameOver.wav", 0);
-	Audio::SetVolume(0.005, 0);
-	Audio::StartAudio(0);
-
+	
 	Initialize();
+
+	Audio::StartMusic("Sonrie.wav");
+
 	float xPos = 75;
 	auto gameOverCanvas = std::make_shared<Canvas>();
 	gameOverCanvas->AddImage({ clientWidth / 2.0f, 150.0f }, "Form", "Form.png", 1.f, true, true);
