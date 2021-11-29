@@ -49,6 +49,8 @@ private:
     //bool paused = false;
     const std::string file = "Default"; //"Test"
 
+    float lastStateChange = 0.0f;
+
     //-----TEMP-----//
     Pathfinding pathing;
 

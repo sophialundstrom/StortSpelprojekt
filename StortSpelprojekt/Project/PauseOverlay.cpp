@@ -117,10 +117,9 @@ OVERLAYSTATE PauseOverlay::Update()
 
 	Canvas::Update();
 
-	if (Event::KeyIsPressed(VK_ESCAPE) && Time::Get() - Event::LastKeyPress(VK_ESCAPE) > 2.f)
+	if (Event::KeyIsPressed(VK_ESCAPE))
 	{
 		returnState = OVERLAYSTATE::RETURN;
-		lastInput = Time::Get();
 	}
 
 	if (internalState == INTERNALSTATE::HOW_TO_PLAY)

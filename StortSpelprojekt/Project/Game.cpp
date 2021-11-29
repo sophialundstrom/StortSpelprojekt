@@ -784,17 +784,27 @@ APPSTATE Game::Run()
 
 	case OVERLAYSTATE::PAUSE:
 	{
-		state = GameState::PAUSED;
-		overlay = pauseOverlay;
-		overlay->ShowCursor();
+		if (Time::Get() - lastStateChange > 0.25f)
+		{
+			state = GameState::PAUSED;
+			overlay = pauseOverlay;
+			overlay->ShowCursor();
+			lastStateChange = Time::Get();
+		}
+	
 		break;
 	}
 
 	case OVERLAYSTATE::RETURN:
 	{
-		state = GameState::ACTIVE;
-		overlay = ingameOverlay;
-		overlay->HideCursor();
+		if (Time::Get() - lastStateChange > 0.25f)
+		{
+			state = GameState::ACTIVE;
+			overlay = ingameOverlay;
+			overlay->HideCursor();
+			lastStateChange = Time::Get();
+		}
+	
 		break;
 	}
 	}
