@@ -7,15 +7,13 @@
 class SkyBoxRenderer : public Renderer
 {
 private:
-	void CreateCubetexture();
 	const UINT stride = sizeof(Vector3);
 	const UINT offset = 0;
-
+	void BuildCubeMap();
 
 public:
 	SkyBoxRenderer();
 	virtual void Render() override;
-
 
 
 	//DDSTexture codeVariant

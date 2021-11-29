@@ -2,6 +2,11 @@
 #include "BoundingVolumes.h"
 #include "stb_image.h"
 
+void SkyBoxRenderer::BuildCubeMap()
+{
+
+}
+
 SkyBoxRenderer::SkyBoxRenderer()
 {
 	std::string byteCode;
@@ -10,15 +15,6 @@ SkyBoxRenderer::SkyBoxRenderer()
 	std::wstring cubemapPath = L"SkyBox.dds";
 	DirectX::CreateDDSTextureFromFile(&Graphics::Inst().GetDevice(), cubemapPath.c_str(), texture, textureView, 0, nullptr);
 	*/
-
-
-
-
-
-
-
-
-
 
 	//Shaders
 	if (!LoadShader(skyBoxVertexShader, vs_path, byteCode))
@@ -90,10 +86,3 @@ void SkyBoxRenderer::Render()
 	Graphics::Inst().GetContext().OMSetDepthStencilState(nullptr, 0);
 }
 
-void SkyBoxRenderer::CreateCubetexture()
-{
-	//http://www.hlsl.co.uk/blog/2014/11/19/creating-a-cubemap-in-dx11
-
-	
-
-}
