@@ -118,7 +118,16 @@
       <FullPath>D:\BTH\Kurser\StoraSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterDomainShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>D:\BTH\Kurser\StoraSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterGeometryShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\BTH\Kurser\StoraSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterHullShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>D:\BTH\Kurser\StoraSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\BTH\Kurser\StoraSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterVertexShader.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
