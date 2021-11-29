@@ -691,13 +691,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	std::string meshNamesTent[] = { "ArcherTent1", "ArcherTent2", "ArcherTent3" };
 	std::string materialNamesTent[] = { "ArcherTentTexture", "ArcherTentTexture", "ArcherTentTexture" };
 	buildings[1] = std::make_shared<Building>(meshNamesTent, materialNamesTent, "ArcherTent", Vector3{ 128.86f, 18.12f, -643.05f }, scene);
-	buildings[1]->SetRotation(0, -DirectX::XM_PI, 0);
+	buildings[1]->SetRotation(0, -DirectX::XM_PIDIV4, 0);
 	buildings[1]->SetScale(1.566);
 
 	std::string meshNamesBS[] = { "BSLevel1", "BSLevel2", "BSLevel3" };
 	std::string materialNamesBS[] = { "albedoBlacksmith", "albedoBlacksmith", "albedoBlacksmith" };
-	buildings[2] = std::make_shared<Building>(meshNamesBS, materialNamesBS, "Blacksmith", Vector3{ 5.4f, 17.86f, -701.5f }, scene);
-	buildings[2]->SetRotation(0, DirectX::XM_PIDIV4, 0);
+	buildings[2] = std::make_shared<Building>(meshNamesBS, materialNamesBS, "Blacksmith", Vector3{ -5.4f, 17.86f, -701.5f }, scene);
+	buildings[2]->SetRotation(0, 0, 0);
 	buildings[2]->SetScale(1.776);
 
 	scene.AddDrawable("FarmHouse", buildings[0]);
