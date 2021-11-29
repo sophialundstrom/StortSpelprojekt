@@ -1,5 +1,6 @@
 #include "ArrowHandler.h"
 #include "Renderers.h"
+#include "Random.h"
 
 void ArrowHandler::AddArrow(const Vector3& direction, const Vector3& startPos, const Vector3& rotation)
 {
@@ -28,7 +29,7 @@ void ArrowHandler::Update()
     }
 }
 
-bool ArrowHandler::CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<Collider> collider, bool isDynamic)
+bool ArrowHandler::CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<Collider> collider, const Vector3& playerPosition, bool isDynamic)
 {
         Collision::RayResults rayResult;
         Vector3 point;
@@ -61,6 +62,15 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<
                 arrow->SetPosition(arrow->GetPosition() + pullBackVector);
                 arrow->isStuck = true;
                 arrow->canCollide = false;
+            }
+
+            if ((playerPosition - arrow->GetPosition()).Length() < 15.f)
+            {
+                int rand = Random::Integer(0, 1);
+                if (rand == 0)
+                    Audio::StartEffect("ArrowHit.wav");
+                else
+                    Audio::StartEffect("ArrowHitWall.wav");
             }
         }
         

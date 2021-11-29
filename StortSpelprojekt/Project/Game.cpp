@@ -374,7 +374,7 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, false);
+		//camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero, false);
 
 		camps[BarbarianCamp::Location::South] = camp;
 	}
@@ -400,9 +400,9 @@ void Game::AddBarbarianCamps()
 	{ // VILLAGE INVADERS
 		auto camp = new BarbarianCamp({ -11.5f, 18.0f, -126.0f }, BarbarianCamp::Location::Village, 40.0f, true);
 
-		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -126.0f }, hostiles, player, CombatStyle::consistantDelay);
-		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -136.0f }, hostiles, player, CombatStyle::consistantDelay);
-		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -116.0f }, hostiles, player, CombatStyle::consistantDelay);
+		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -126.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
+		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -136.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
+		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -116.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
 
 		camps[BarbarianCamp::Location::Village] = camp;
 	}
@@ -424,7 +424,7 @@ void Game::CheckTargetCollision()
 			if (target->GotHit())
 				continue;
 
-			bool hit = handler.CheckCollision(arrow, target->GetCollider());
+			bool hit = handler.CheckCollision(arrow, target->GetCollider(), player->GetPosition());
 
 			if (hit)
 			{
@@ -457,7 +457,7 @@ void Game::CheckNearbyCollision()
 				if ((arrow->GetPosition() - collider->GetPosition()).Length() > 50.f)
 					continue;
 
-				hostile->GetArrowHandler().CheckCollision(arrow, collider);
+				hostile->GetArrowHandler().CheckCollision(arrow, collider, player->GetPosition());
 			}
 		}
 		
@@ -468,7 +468,7 @@ void Game::CheckNearbyCollision()
 			if ((arrow->GetPosition() - collider->GetPosition()).Length() > 50.f)
 				continue;
 
-			player->GetArrowHandler().CheckCollision(arrow, collider);
+			player->GetArrowHandler().CheckCollision(arrow, collider, player->GetPosition());
 		}
 
 		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
@@ -518,9 +518,9 @@ void Game::CheckNearbyCollision()
 	player->HandleCollidedObjects(collidedColliders);
 }
 
-void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
+void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle, const Vector3& targetPosition)
 {
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle);
+	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, targetPosition);
 	NPC->SetPosition(position);
 
 	auto collider = NPC->GetCollider();
@@ -742,7 +742,7 @@ Game::~Game()
 
 void Game::SetupAudio()
 {
-	Audio::Initialize(true, HardwareSupport::numThreads);
+	Audio::Initialize();
 
 	Audio::StartMusic("Sonrie.wav");
 	Audio::SetVolume("Sonrie.wav", 0.3f);
@@ -794,7 +794,7 @@ APPSTATE Game::Run()
 	{
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::Burst);
+			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::Burst, Vector3(70, 25, -590));
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('1'))
@@ -814,8 +814,7 @@ APPSTATE Game::Run()
 		}
 		if (Event::KeyIsPressed('H'))
 		{
-			unsigned int nthreads = std::thread::hardware_concurrency();
-			PrintNumber(nthreads);
+			PrintVector3(player->GetPosition());
 			lastClick = Time::Get();
 		}
 
@@ -902,7 +901,7 @@ void Game::CheckNearbyEnemies()
 	{
 		float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
 		
-		hostiles[i]->Update(player);
+		hostiles[i]->Update(player, terrain.GetHeightMap());
 
 		hostiles[i]->CheckPlayerCollision(player);
 
@@ -911,13 +910,15 @@ void Game::CheckNearbyEnemies()
 			if (!arrow->canCollide)
 				continue;
 
-			bool hit = player->GetArrowHandler().CheckCollision(arrow, hostiles[i]->GetCollider(), true);
+			bool hit = player->GetArrowHandler().CheckCollision(arrow, hostiles[i]->GetCollider(), player->GetPosition(), true);
 
 			if (hit)
 			{
 				hostiles[i]->TakeDamage();
+				Audio::StartEffect("BarbHit1.wav");
 				if (hostiles[i]->IsDead())
 				{
+					Audio::StartEffect("BarbDead.wav");
 					hostiles[i]->TakeDamage();
 					player->Stats().barbariansKilled++;
 					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));
@@ -933,7 +934,7 @@ void Game::CheckNearbyEnemies()
 			}
 
 		}
-		if (distanceToHostile < 70.f) // Should be compared to if the hostile "sees" the player instead of a hardcoded value.
+		if (distanceToHostile < hostiles[i]->viewDistance) // Should be compared to if the hostile "sees" the player instead of a hardcoded value.
 		{
 			numInCombat++;
 
@@ -943,7 +944,6 @@ void Game::CheckNearbyEnemies()
 
 	if (!player->inCombat && numInCombat > 0) 
 	{
-		PrintS("IN COMBAT");
 		player->inCombat = true;
 		short int rand = Random::Integer(0, 2);
 
@@ -963,8 +963,7 @@ void Game::CheckNearbyEnemies()
 		}
 	}
 	else if (player->inCombat && numInCombat == 0)
-	{
-		PrintS("OUT OF COMBAT"); 
+	{ 
 		player->inCombat = false;
 		player->SwitchBiomeMusic();
 	}

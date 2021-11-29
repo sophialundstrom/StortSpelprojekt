@@ -19,7 +19,7 @@ public:
 	BarbarianCamp() = default;
 	BarbarianCamp(const Vector3& position, Location location, float radius, bool active = true);
 
-	void AddBarbarian(const std::string& file, const Vector3& position, std::vector<std::shared_ptr<HostileNPC>>& hostiles, std::shared_ptr<Player> player, CombatStyle combatStyle, bool dynamic = true);
+	void AddBarbarian(const std::string& file, const Vector3& position, std::vector<std::shared_ptr<HostileNPC>>& hostiles, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, bool dynamic = true);
 
 	Location GetLocation();
 	UINT NumDead();

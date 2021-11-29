@@ -1,6 +1,9 @@
 #include "Terrain.h"
 #include "DirectXHelp.h"
 #include "stb_image.h"
+#include "ThreadPool.h"
+#include "HardwareSupport.h"
+//static std::mutex terrainLock;
 
 HeightMap::HeightMap(const std::string& texture)
 {
@@ -17,6 +20,37 @@ HeightMap::HeightMap(const std::string& texture)
 	}
 
 	UINT k = 0;
+
+	//ThreadPool tp(HardwareSupport::numThreads);
+	//std::atomic<int> numChunks = 4;
+
+	//for (int i = 0; i < numChunks.load(); i++)
+	//{
+	//	tp.Enqueue([=, &numChunks]
+	//		{
+	//			for (int w = i * 500; w < width; w++)
+	//			{
+	//				for (int j = 0; j < height; ++j)
+	//				{
+	//					unsigned char* pixelOffset = image + (w + width * j) * channels;
+
+	//					int value = pixelOffset[0];
+	//					float finalValue = (float)value * 2.0f - 100.0f;
+
+	//					terrainLock.lock();
+	//					data.emplace(Vector2((float)w - (width / 2) + 1, (float)j - (height / 2) + 1), finalValue);
+	//					terrainLock.unlock();
+	//				}
+	//			}
+	//			numChunks.fetch_sub(1);
+	//			terrainLock.lock();
+	//			PrintNumber(numChunks.load());
+	//			terrainLock.unlock();
+	//		});
+	//}
+
+	//while (numChunks.load() != 0);
+
 	for (int i = 0; i < width; ++i)
 	{
 		for (int j = 0; j < height; ++j)

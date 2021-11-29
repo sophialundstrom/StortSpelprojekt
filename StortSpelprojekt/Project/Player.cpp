@@ -301,21 +301,17 @@ void Player::SwitchBiomeMusic()
 	switch (this->currentBiome)
 	{
 	case BIOME::DESERT:
-		PrintS("DESERT");
 
 		Audio::StartMusic("SoundDesert.wav");
 		break;
 	case BIOME::MOUNTAIN:
-		PrintS("MOUNTAIN");
 
-		Audio::StartMusic("whenthedoommusickicksin.wav");
+		Audio::StartMusic("EpicHeart.wav");
 		break;
 	case BIOME::OCEAN:
-		PrintS("OCEAN");
-		Audio::StartMusic("SoundOcean.wav");
+		Audio::StartMusic("SandyBeach.wav");
 		break;
 	case BIOME::DEFAULT:
-		PrintS("DEFAULT");
 		Audio::StartMusic("Sonrie.wav");
 		break;
 	}

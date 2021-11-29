@@ -29,7 +29,7 @@ public:
 	static std::map<std::string, IXAudio2SourceVoice*> sVoices;
 
 	// SETUP AND DELETION
-	static void Initialize(bool mtLoading = true, const int& numThreads = 6);
+	static void Initialize(bool mtLoading = true);
 	static void StopEngine();
 
 	// STARTING AND STOPPING
@@ -41,6 +41,7 @@ public:
 	static void StopVoice(const std::string& name);
 
 	// SETTINGS
+	static void SetMasterVolume(float volume);
 	static void SetVolume(const std::string& name, float volume);
 	static float GetVolume() { return volume; }
 };

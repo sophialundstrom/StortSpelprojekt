@@ -9,19 +9,19 @@ class NPCState;
 class HostileNPC : public NPC
 {
 private:
-	NPCState* currentState;
-	float speed = 9.0f;
+	
 	std::vector<Vector3> path;
 	Pathfinding* pathing;
 	std::shared_ptr<Player> player;
 	ArrowHandler arrowHandler;
+	void CalcHeight(HeightMap* heightMap);
 public:
-	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle);
+	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition);
 ;
 	virtual void Update() override;
-	void Update(const std::shared_ptr<Player> player);
+	void Update(const std::shared_ptr<Player> player, HeightMap* heightMap);
 
-	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
+	ArrowHandler& GetArrowHandler() { return this->arrowHandler; }
 
 	void Reset();
 	void SetSpawnPosition(const Vector3& position);
@@ -33,5 +33,12 @@ public:
 	void SetPathVar(Pathfinding* path)				{ this->pathing = path; }
 	void SetPlayerPtr(std::shared_ptr<Player> p)	{ this->player = p; }
 	void SetState(NPCState &newState)				{ currentState = &newState; }
+
+	Vector3 targetPosition;
+	float speed = 9.0f;
+	float heightMapGroundLevel = 0.f;
+	NPCState* currentState;
+	float viewDistance;
+	float distanceToPlayer;
                                                                                                                                                                                                                                                              
 };
