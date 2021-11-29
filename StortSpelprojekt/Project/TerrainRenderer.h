@@ -13,6 +13,7 @@ private:
 	//BUFFERS
 	ID3D11Buffer* matrixBuf = nullptr;
 	ID3D11Buffer* lightBuf = nullptr;
+	ID3D11Buffer* timeBuf = nullptr;
 
 	ID3D11Buffer* tesselationBuf = nullptr;
 
