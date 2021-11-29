@@ -589,6 +589,7 @@ void LevelEditor::Render()
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	:water(5000)
 {
+
 	RND.InitModelRenderer(false);
 	RND.InitIDRenderer();
 	RND.InitTerrainRenderer();
@@ -663,7 +664,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	//GAME
 	//gameLoader.Load("Default", scene.GetDrawables());
 	//MAIN MENU
-	gameLoader.Load("Default", scene.GetDrawables());
+	gameLoader.Load("MainMenu", scene.GetDrawables());
 	BindDrawables();
 
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 1.0f, 25.0f, {0, 90, 0});
@@ -920,7 +921,7 @@ APPSTATE LevelEditor::Run()
 		if (window.GetValue<ButtonComponent>("SAVE WORLD"))
 		{
 			GameLoader loader;
-			loader.Save("Default", scene.GetDrawables());
+			loader.Save("MainMenu", scene.GetDrawables());
 		}
 
 		if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
