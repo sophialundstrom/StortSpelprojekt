@@ -54,15 +54,12 @@ cbuffer NUM_POINTLIGHTS : register(b3)
 	uint numPointlights;
 }
 
-
 StructuredBuffer<POINT_LIGHT> lights : register(t9);
-
-
 
 float4 main(PS_INPUT input) : SV_TARGET
 {
    	const float shadow = ShadowCalculation(input.lightClipPosition);
-	const float4 globalAmbient = 0.09f;
+	const float4 globalAmbient = 0.0f;
 
 	const float4 T = diffuseTexture.Sample(wrapSampler, input.texCoords);
     
@@ -72,8 +69,8 @@ float4 main(PS_INPUT input) : SV_TARGET
 	for (uint i = 0; i < numPointlights; ++i)
 	{
 		const POINT_LIGHT pointLight = lights[i];
-		LightResult result = PointLightCalculation(input.worldPosition, input.normal, diffuse, specular, pointLight.color, pointLight.position, pointLight.range, pointLight.attenuation, cameraPosition);
-		pResult.diffuse += result.diffuse;
+        LightResult result = PointLightCalculation(input.worldPosition, input.normal, diffuse, specular, pointLight.color, pointLight.intensity, pointLight.position, pointLight.range, pointLight.attenuation, cameraPosition);
+        pResult.diffuse += result.diffuse;
 		pResult.color *= result.color;
 		pResult.specular += result.specular;
         
@@ -84,7 +81,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     pResult.specular = saturate(pResult.specular);
     
     const float4 finalLighting = LightCalculation(input.worldPosition, input.normal, diffuse, specular, ambient, directionalLight, cameraPosition) * shadow +
-                                (pResult.diffuse * 5+ pResult.specular * pResult.color) + globalAmbient + ambient;
+                                (pResult.diffuse * 5 + pResult.specular) + globalAmbient + ambient;
     
     //FOG
 	float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
@@ -94,8 +91,8 @@ float4 main(PS_INPUT input) : SV_TARGET
 	float fogFactor = saturate((fogDistance - fogStart) / fogRange);
 
     //RESULT
-	const float4 finalColor = lerp((T * (saturate(finalLighting))), fogColor, fogFactor);
+    const float4 finalColor = lerp((T * float4(pResult.color) * (saturate(finalLighting))), fogColor, fogFactor);
 
-
+    //return pResult.diffuse;
     return finalColor;
 }

@@ -24,6 +24,8 @@
     <FxCompile Include="ShadowVertexShader.hlsl" />
     <FxCompile Include="SkeletonPixelShader.hlsl" />
     <FxCompile Include="SkeletonVertexShader.hlsl" />
+    <FxCompile Include="skyBoxPixelShader.hlsl" />
+    <FxCompile Include="skyBoxVertexShader.hlsl" />
     <FxCompile Include="TerrainDomainShader.hlsl" />
     <FxCompile Include="TerrainGeometryShader.hlsl" />
     <FxCompile Include="TerrainHullShader.hlsl" />
@@ -37,6 +39,9 @@
     <FxCompile Include="VolumeVertexShader.hlsl" />
     <FxCompile Include="WaterDomainShader.hlsl" />
     <FxCompile Include="WaterPixelShader.hlsl" />
+    <FxCompile Include="WaterGeometryShader.hlsl" />
+    <FxCompile Include="WaterHullShader.hlsl" />
+    <FxCompile Include="WaterVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedModelRenderer.cpp" />
@@ -92,6 +97,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SkeletonRenderer.cpp" />
+    <ClCompile Include="SkyBoxRenderer.cpp" />
     <ClCompile Include="SoundEffect.cpp" />
     <ClCompile Include="TalkObjective.cpp" />
     <ClCompile Include="Target.cpp" />
@@ -105,7 +111,7 @@
     <ClCompile Include="WaterRenderer.cpp" />
     <ClCompile Include="Win.cpp" />
     <ClCompile Include="Window.cpp" />
-    <ClCompile Include="AnimationStateMachine.cpp" />
+    <ClCompile Include="PlaneWithNormals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -202,6 +208,7 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonRenderer.h" />
+    <ClInclude Include="SkyBoxRenderer.h" />
     <ClInclude Include="SoundEffect.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="States.h" />
@@ -229,7 +236,7 @@
     <ClInclude Include="WaterRenderer.h" />
     <ClInclude Include="Win.h" />
     <ClInclude Include="Window.h" />
-    <ClInclude Include="AnimationStateMachine.h" />
+    <ClInclude Include="PlaneWithNormals.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LightCalculations.hlsli" />

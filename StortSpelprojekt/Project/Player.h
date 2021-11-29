@@ -4,10 +4,12 @@
 #include "Model.h"
 #include "Event.h"
 #include "Terrain.h"
-#include "Inventory.h"
+#include "Item.h"
 #include "Canvas.h"
 #include "ArrowHandler.h"
 #include "AnimatedModel.h"
+#include "Biome.h"
+#include "Inventory.h"
 
 struct Stats
 {
@@ -32,8 +34,11 @@ class Player : public AnimatedModel
 private:
 	Stats stats;
 
-	Camera* sceneCamera;
 
+
+	std::shared_ptr<Canvas> ingameCanvas;
+
+	//std::vector<std::shared_ptr<Arrow>>arrows;
 	ArrowHandler arrowHandler;
 
 	bool hasCollided;
@@ -45,10 +50,9 @@ private:
 	float currentGroundLevel = 0.0f;
 	float heightMapGroundLevel = 0.0f;
 
-	const float mouseDefaultSensitivity = 3.f;
-	const float mouseAimSensitivity = 2.f;
+	const float mouseDefaultSensitivity = 10.f;
+	const float mouseAimSensitivity = 4.f;
 	float mouseCurrentSensitivity = mouseDefaultSensitivity;
-	float mouseSensitivity = 5.f;
 
 	float gravity = 9.82f;
 	float timePassed = 0;
@@ -56,7 +60,7 @@ private:
 	bool jumping = false;
 	bool maxJumpHeight = false;
 	bool pressed = false;
-	bool sprint = false;
+	bool isSprinting = false;
 
 	float airTime = 0;
 	float jumpHeight = 5.0f;
@@ -91,11 +95,20 @@ private:
 	bool isAiming = false;
 
 public:
+	Camera* sceneCamera;
+	BIOME currentBiome;
+	BIOME previousBiome;
+	bool test = false;
+	bool biomeChanged = false;
+
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
 	void Update(HeightMap* heightMap);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void TakeDamage();
+	bool inCombat = false;
+	void SwitchBiomeMusic();
+
 	Player(const std::string file, Camera* camera, const UINT& maxArrows);
 
 public:
@@ -111,7 +124,6 @@ public:
 	}
 
 	bool GetGameOver() { return this->gameOver; }
-
 	std::shared_ptr<BoundingBox> GetBounds() { return bounds; }
 	std::shared_ptr<FrustumCollider> GetFrustum() { return frustum; }
 
@@ -122,7 +134,7 @@ public:
 
 	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void ResetToLastPosition() { position = lastPosition; }
-	void AddHealthPoint() { stats.IncreaseHealthPoints(); }
+	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
 	void SetClosestColliderToCam(float range)
 	{
 		closestColliderToCam = range;

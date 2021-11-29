@@ -48,9 +48,10 @@ struct POINT_LIGHT
     float3 position;
     float range;
     float3 attenuation;
+    float intensity;
 };
 
-LightResult PointLightCalculation(float4 P, float3 N, float4 D, float4 S, float4 lightColor, float3 lightPosition, float lightRange, float3 lightAttenuation, float3 cameraPosition)
+LightResult PointLightCalculation(float4 P, float3 N, float4 D, float4 S, float4 lightColor, float lightIntensity, float3 lightPosition, float lightRange, float3 lightAttenuation, float3 cameraPosition)
 {
     LightResult result = { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 1, 1, 1, 1 } };
     float4 V = { 1, 1, 1, 1 };
@@ -62,8 +63,8 @@ LightResult PointLightCalculation(float4 P, float3 N, float4 D, float4 S, float4
     if (dist > lightRange)
         return result;
 
-	float attenuation = 1.0f / (lightAttenuation[0] + dist * lightAttenuation[1] + dist * dist * lightAttenuation[2]);
-
+    float attenuation = 1.0f / (lightAttenuation[0] + (lightAttenuation[1] * dist) + (dist * dist * lightAttenuation[2]));
+        
     float diffuse = dot(N, L);
 
     if (diffuse < 0.0f) // IF BACKFACED
@@ -73,6 +74,8 @@ LightResult PointLightCalculation(float4 P, float3 N, float4 D, float4 S, float4
         result.diffuse += saturate(diffuse) * D * attenuation;
     else
         result.diffuse += saturate(diffuse) * V * attenuation;
+    
+    result.diffuse *= lightIntensity;
 
     float3 R = normalize(reflect(-L, N));
     float3 E = normalize(cameraPosition - P.xyz);
@@ -84,6 +87,8 @@ LightResult PointLightCalculation(float4 P, float3 N, float4 D, float4 S, float4
         result.specular += specular * V * attenuation;
 
     result.color *= lightColor;
+    
+    //result.diffuse = float4(attenuation, attenuation, attenuation, 1.0f);
     
     return result;
 }
