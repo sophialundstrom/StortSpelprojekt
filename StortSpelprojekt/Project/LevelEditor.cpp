@@ -530,6 +530,24 @@ void LevelEditor::Update()
 		float newYScale = window.GetValue<SliderFloatComponent>("Y-axis");
 		float newZScale = window.GetValue<SliderFloatComponent>("Z-axis");
 
+		if (window.GetValue<CheckBoxComponent>("Snap to Terrain"))
+		{
+			const int lowX = (int)std::floor(newXPos);
+			const int highX = (int)std::ceil(newXPos);
+			const float Xdecimal = newXPos - lowX;
+
+			const int lowZ = (int)std::floor(newZPos);
+			const int highZ = (int)std::ceil(newZPos);
+			const float Zdecimal = newZPos - lowZ;
+
+			const float H1 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+			const float H2 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+			const float H3 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+			const float H4 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+
+			newYPos = H1 + H2 + H3 + H4;
+		}
+
 		auto model = scene.Get<Drawable>(selectedObject);
 		model->SetPosition(newXPos, newYPos, newZPos);
 
@@ -695,6 +713,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("Y-axis", -1, 50, 0, false);
 		window.AddSliderFloatComponent("Z-axis", -1, 50, 0, false);
 		window.AddCheckBoxComponent("Uniform scaling", false);
+		window.AddCheckBoxComponent("Snap to Terrain", false);
 		window.AddButtonComponent("Delete", 120, 30);
 		window.AddButtonComponent("Duplicate", 120, 30);
 	}
@@ -771,7 +790,10 @@ void LevelEditor::RemoveItem(std::string name)
 		auto& drawables = scene.GetDrawables();
 		for (auto& [drawableName, drawable] : drawables)
 		{
-			if (drawableName.find(name) != std::string::npos)
+			auto object = std::dynamic_pointer_cast<Model>(drawable);
+			if(!object)
+				continue;
+			if (name == Resources::Inst().GetBufferNameFromID(object->mesh.bufferID))
 				sameNameArray.emplace_back(drawable);
 		}
 
