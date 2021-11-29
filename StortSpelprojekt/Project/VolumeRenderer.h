@@ -38,6 +38,7 @@ private:
 
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
+
 public:
 	VolumeRenderer();
 	~VolumeRenderer();

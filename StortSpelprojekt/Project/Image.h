@@ -16,8 +16,8 @@ public:
 	Image() = default;
 	Image(const std::string& filename, D2D_VECTOR_2F position, float scale = 1.0f, float opacity = 1.0f, bool visible = true, bool centered = true);
 	~Image();
-	float GetWidth() { return width; }
-	float GetHeight() { return height; }
+	UINT GetWidth() { return sourceWidth; }
+	UINT GetHeight() { return sourceHeight; }
 	void Draw();
 	std::string FileName() { return filename; }
 };

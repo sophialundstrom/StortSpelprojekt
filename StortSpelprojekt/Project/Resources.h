@@ -11,13 +11,6 @@ typedef enum { ID_INVALID = 9999 } ID_FLAG;
 class Resources : public Singleton<Resources>
 {
 private:
-	struct MinMaxBounds
-	{
-		Vector3 maxBounds;
-		Vector3 minBounds;
-	};
-	std::vector<MinMaxBounds> minMaxBounds;
-
 	const UINT animatedStride = sizeof(AnimatedVertex);
 	const UINT stride = sizeof(Vertex);
 	const UINT offset = 0;
@@ -57,20 +50,11 @@ public:
 	void AddMaterial(Material* material) { materials.emplace(NumMaterials(), material); }
 
 	//ADD NEW VERTEX BUFFER
-	void AddVertexBuffer(const std::string& name, ID3D11Buffer* buffer, UINT vertexCount, Vector3 maxBounds, Vector3 minBounds)
+	void AddVertexBuffer(const std::string& name, ID3D11Buffer* buffer, UINT vertexCount) 
 	{ 
 		vertexBuffers.emplace(NumBuffers(), buffer); 
 		bufferNames.emplace_back(name); 
-		vertexCounts.emplace_back(vertexCount);
-		minMaxBounds.emplace_back(MinMaxBounds{ maxBounds, minBounds });
-	}
-
-	Vector3* GetMinMaxBoundsFromID(UINT ID)
-	{
-		if (vertexBuffers.find(ID) != vertexBuffers.end())
-			return (Vector3*)&minMaxBounds[ID];
-
-		return nullptr;
+		vertexCounts.emplace_back(vertexCount); 
 	}
 
 	UINT GetVertexCountFromID(UINT ID) 
@@ -82,7 +66,7 @@ public:
 	UINT GetMaterialIDFromName(const std::string& name)
 	{
 		for (auto& [ID, material] : materials)
-			if (material->name == name || material->name.substr(0, material->name.find_first_of('_')) == name)
+			if (material->name == name || material->name.find(name) != std::string::npos)
 				return ID;
 		return ID_INVALID;
 	}
@@ -118,8 +102,6 @@ public:
 	void BindMaterial(UINT materialID, bool useMaterial)
 	{
 		std::shared_ptr<Material> material = materials[materialID];
-		if (!material)
-			return;
 
 		if (currentMaterial != material)
 		{
@@ -137,9 +119,6 @@ public:
 	//BIND VERTEX BUFFER AND DRAW
 	void Draw(UINT vertexCount, UINT bufferID)
 	{
-		if (bufferID > 999999999)
-			return;
-
 		ID3D11Buffer* vertexBuffer = std::next(vertexBuffers.begin(), bufferID)->second;
 
 		if (currentVertexBuffer != vertexBuffer)

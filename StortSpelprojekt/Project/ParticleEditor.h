@@ -1,7 +1,9 @@
 #pragma once
+#include "ParticleRenderer.h"
 #include "Editor.h"
 #include "FileSystem.h"
 #include "ApplicationState.h"
+#include "ColliderRenderer.h"
 
 class ParticleEditor : public Editor, public ApplicationState
 {
@@ -10,7 +12,9 @@ private:
 	std::string loadedParticleSystem = "default.ps";
 	std::shared_ptr<ParticleSystem> particleSystem;
 
+	ColliderRenderer colliderRenderer;
 	std::shared_ptr<BoundingSphere>source;
+	ParticleRenderer renderer;
 
 	// Inherited via Editor
 	virtual void Save(const std::string& file) override;
@@ -19,7 +23,6 @@ private:
 	virtual void Render() override;
 public:
 	ParticleEditor(UINT clientWidth, UINT clientHeight);
-	~ParticleEditor();
 
 	// Inherited via GameState
 	APPSTATE Run();

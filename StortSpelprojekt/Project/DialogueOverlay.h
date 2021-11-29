@@ -1,14 +1,9 @@
 #pragma once
-#include "Overlay.h"
-#include "NPCFriendly.h"
-#include "TalkObjective.h"
+#include "Canvas.h"
 
-class DialogueOverlay : public Overlay
+class DialogueOverlay : public Canvas
 {
 private:
-	std::shared_ptr<FriendlyNPC> NPC;
-	Objective* objective;
-
 	Text* dialogueName;
 	Text* dialogueText;
 
@@ -19,19 +14,17 @@ private:
 	float timeSinceChar = 0.0f;
 	UINT numCharacters = 0;
 
-	float lastInteraction = 0.0f;
-
 	float delay = 0.0f;
 	const float doneDelay = 2.0f;
-	bool done = true;
+	bool done = false;
 public:
 	DialogueOverlay();
 	~DialogueOverlay();
 
-	bool HasRecentDialogue() { return (Time::Get() - lastInteraction < 1.0f); }
-	void Set(std::shared_ptr<FriendlyNPC> NPC, TalkObjective* objective = nullptr);
+	void Update();
+	void Render();
 
-	// Inherited via Overlay
-	virtual void Render() override;
-	virtual OVERLAYSTATE Update() override;
+	bool IsDone()	{ return done; }
+
+	void Set(const std::string& NPCName, const std::string& text);
 };

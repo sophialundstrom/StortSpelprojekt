@@ -1,169 +1,48 @@
 #include "NPCFriendly.h"
 
-#include "QuestLog.h"
-
-FriendlyNPC::FriendlyNPC(const std::string& name, const std::string& file)
-	:NPC(file), currentDialogueState(DialogueState::HANDOUT)
+FriendlyNPC::FriendlyNPC(const std::string& file)
+	: NPC(file)
 {
-	SetName(name);
 	questMarker = std::make_shared<QuestMarker>();
 	boundingBox->SetScale(2, 4, 2);
 }
 
-Quest* FriendlyNPC::AddQuest(const std::string& name)
+FriendlyNPC::FriendlyNPC(const Model& model)
+	: NPC(model)
 {
-	auto quest = QuestLog::Get(name);
-	if (quest)
-	{
-		quest->SetQuestHolder(this->name);
-		quests.emplace_back(quest);
-		return quest;
-	}
-	
-	return nullptr;
-}
-
-void FriendlyNPC::AddDialogue(const std::string& string)
-{
-	dialogues.emplace_back(string);
-}
-
-bool FriendlyNPC::Interactable()
-{
-	if (completedAllQuests || dialogueOverride)
-		return true;
-
-	if (!currentQuest)
-		return false;
-
-	return currentQuest->Unlocked();
-}
-
-void FriendlyNPC::ActivateCurrentQuest()
-{
-	QuestLog::Activate(currentQuest);
-}
-
-const std::string FriendlyNPC::GetCurrentDialogue()
-{
-	if (!completedAllQuests)
-	{
-		auto ID = (3 * currentQuestID) + UINT(currentDialogueState);
-		return dialogues[ID];
-	}
-
-	else
-		return dialogues.back();
 }
 
 void FriendlyNPC::Update()
 {
 	NPC::Update();
 
-	questMarker->Update();
-
-	static bool walking = false;
-	if (Event::KeyIsPressed('G'))
-		walking = true;
-	else if (Event::KeyIsPressed('H'))
-		walking = false;
-	if(walking)
-		Walking();
-
-	if (dialogueOverride)
-	{
-		questMarker->SetPosition(0, 9.0f, 0);
-		questMarker->SetAsObjective();
-		return;
-	}
+	activeQuestID = -1;
+	interactable = false;
+	Vector3 qmPosition = { 0, -1000, 0 };
 
 	UINT completedQuests = 0;
-	if (currentQuest)
+	for (auto& ID : questIDs)
 	{
-		if (!currentQuest->Unlocked())
+		if (QuestLog::Inst().QuestIsActive(ID))
 		{
-			questMarker->SetPosition(0, -1000.0f, 0);
-			return;
+			activeQuestID = ID;
+			interactable = true;
+			qmPosition = { 0, 10, 0 };
+			break;
 		}
 
-		questMarker->SetPosition(0, 9.0f, 0);
-
-		if (currentQuest->Unlocked() && currentQuest->IsActive() && !currentQuest->IsCompleted())
-		{
-			currentDialogueState = DialogueState::HELP;
-			questMarker->SetAsHelp();
-		}
-			
-		else if (currentQuest->IsCompleted())
-		{
-			currentDialogueState = DialogueState::HANDIN;
-			questMarker->SetAsDone();
-
-			if (finishedDialogue)
-			{
-				QuestLog::Complete(currentQuest);
-
-				currentQuestID++;
-				currentQuest = nullptr;
-
-				if (currentQuestID == quests.size())
-				{
-					completedAllQuests = true;
-					currentDialogueState = DialogueState::DONE;
-					questMarker->SetAsComplete();
-				}
-			}
-		}
-
-		else
-		{
-			questMarker->SetAsGive();
-			currentDialogueState = DialogueState::HANDOUT;
-		}
+		if (QuestLog::Inst().QuestIsDone(ID))
+			completedQuests++;
 	}
 
-	if (!currentQuest && !completedAllQuests)
-	{
-		currentQuest = quests[currentQuestID];
-		questMarker->SetAsGive();
-	}
-
-	finishedDialogue = false;
+	if (completedQuests >= questIDs.size())
+		completed = true;
+	
+	questMarker->SetPosition(qmPosition);
+	questMarker->Update();
 }
 
 void FriendlyNPC::Walking()
 {
 	//TODO: Implement walking behaviour
-	//static int pathIndex = 0;
-	//if (Vector3::Distance(position, player->GetPosition()) > 4.0f)
-	//{
-	//	if (pathIndex < pathing->GetGrid()->GetPath().size())
-	//	{
-	//		moveDirection = pathing->GetGrid()->GetPath()[pathIndex] - position;
-	//		moveDirection.Normalize();
-
-	//		position += (moveDirection * speed * Time::GetDelta());
-
-	//		if (Vector3::Distance(pathing->GetGrid()->GetPath()[pathIndex], position) < 0.2f)
-	//		{
-	//			pathIndex++;
-
-	//		}
-	//	}
-	//	else
-	//	{
-	//		pathIndex = 0;
-	//		if (Vector3::Distance(pathing->GetGrid()->GetPosition(), position) > 8.0f)
-	//		{
-	//			//pathing->CreateGrid(Vector3((int)position.x, (int)position.y, (int)position.z));
-	//		}
-	//		pathing->FindPath(position, player->GetPosition());
-	//		return;
-	//	}
-	//}
-	//else // delete path because we want to stop before collision 
-	//{
-	//	pathing->GetGrid()->GetPathRef().clear();
-	//	//path.clear();
-	//}
 }

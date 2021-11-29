@@ -14,8 +14,8 @@ class ThreadPool {
 public:
 
 	using Task = std::function<void()>;
-	ThreadPool() = default;
-	ThreadPool(UINT numThreads)
+
+	explicit ThreadPool(UINT numThreads)
 	{
 		Start(numThreads);
 	}
@@ -101,7 +101,6 @@ private:
 		{
 			thread.join();
 		}
-		std::cout << "THREADPOOL DESTROYED" << std::endl;
 	}
 
 };

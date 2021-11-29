@@ -188,18 +188,6 @@ void ParticleSystem::Update()
 	for (auto& particle : particles)
 	{
 		index++;
-		//if (type == EmitterType::CONE)
-		//{
-		//	if (particle.lifeTime > particlesLifetime * 0.5f)
-		//	{
-		//		float yDir = particle.direction.y;
-		//		particle.direction *= sin(particle.lifeTime);
-		//		particle.direction.y = yDir;
-		//		//particle.direction += Vector3(0.0f, 1.0f, 0.0f);
-		//		particle.direction.Normalize();
-		//	}
-		//}
-		
 		particle.position += particle.direction * Time::GetDelta() * particle.velocity;
 		particle.lifeTime += Time::GetDelta();
 

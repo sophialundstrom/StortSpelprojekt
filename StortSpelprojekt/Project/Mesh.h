@@ -11,15 +11,12 @@ struct Mesh
 	UINT bufferID = -1;
 	UINT materialID = -1;
 	UINT vertexCount = -1;
-	
 
 	Mesh() = default;
 	Mesh(aiMesh* mesh)
 	{
 		auto& resources = Resources::Inst();
 		std::vector<Vertex> vertices(mesh->mNumVertices);
-
-		
 
 		for (UINT i = 0; i < mesh->mNumVertices; ++i)
 		{
@@ -44,6 +41,6 @@ struct Mesh
 		ID3D11Buffer* buffer;
 		CreateVertexBuffer(buffer, sizeof(Vertex), sizeof(Vertex) * vertexCount, vertices.data());
 
-		Resources::Inst().AddVertexBuffer(mesh->mName.C_Str(), buffer, vertexCount, Vector3(0, 0, 0), Vector3(0, 0, 0));
+		Resources::Inst().AddVertexBuffer(mesh->mName.C_Str(), buffer, vertexCount);
 	}
 };

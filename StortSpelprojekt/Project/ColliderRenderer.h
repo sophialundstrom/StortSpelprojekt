@@ -38,7 +38,7 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	ColliderRenderer();
+	ColliderRenderer(RenderMethod method);
 	~ColliderRenderer();
 
 	virtual void Render() override;

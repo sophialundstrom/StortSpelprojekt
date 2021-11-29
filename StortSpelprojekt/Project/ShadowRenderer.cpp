@@ -43,7 +43,7 @@ ShadowRenderer::~ShadowRenderer()
 
 void ShadowRenderer::Render()
 {
-	if (drawables.empty() && staticDrawables.empty())
+	if (drawables.empty())
 		return;
 
 	//SET SHADOW MAP AS RENDER TARGET
@@ -71,21 +71,4 @@ void ShadowRenderer::Render()
 
 		model->Draw(false);
 	}
-
-	for (auto& drawable : staticDrawables)
-	{
-		auto model = std::dynamic_pointer_cast<Model>(drawable);
-		if (!model)
-			continue;
-
-		//Matrices
-		UpdateBuffer(matrixBuf, ShaderData::Inst().lightMatrix * model->GetMatrix());
-		BindBuffer(matrixBuf);
-
-		//SHADER
-		BindShaders(vertexShader);
-
-		model->Draw(false);
-	}
-
 }

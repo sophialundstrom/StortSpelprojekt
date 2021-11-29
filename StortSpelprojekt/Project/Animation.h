@@ -34,7 +34,6 @@ struct Animation
 			aiNodeAnim* aiChannel = animation->mChannels[i];
 
 			std::string jointName = aiChannel->mNodeName.C_Str();
-			Print(jointName);
 			jointName = jointName.substr(0, jointName.find_first_of('_'));
 
 			for (UINT j = 0; j < aiChannel->mNumPositionKeys; ++j)
@@ -76,17 +75,13 @@ struct Animation
 		}
 	}
 
-	void UpdateTime()
-	{
-		timer += Time::GetDelta();
-	}
-
 	void Update(const std::string& joint, Matrix& localMatrix)
 	{
 		if (!active)
 			return;
 
-		float timeInTicks = timer/* / 100.0f*/ * ticksPerSecond * speedFactor; 
+		timer += Time::GetDelta();
+		float timeInTicks = timer / 100.0f * ticksPerSecond * speedFactor;
 		float frameTime = fmod(timeInTicks, duration);
 
 		/*Print(ticksPerSecond);
@@ -108,9 +103,6 @@ struct Animation
 
 		auto lower = map.upper_bound(frameTime - 1);
 		auto higher = map.upper_bound(frameTime);
-
-		//Print(lower->first, "LOWER");
-		//Print(higher->first, "HIGHER");
 
 		float lowerTimestamp = lower->first;
 		float higherTimestamp = higher->first;

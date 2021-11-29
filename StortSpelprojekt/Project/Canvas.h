@@ -19,7 +19,7 @@ public:
 	Canvas();
 	~Canvas();
 
-	void Update();
+	virtual void Update();
 
 	void DrawImages();
 	void DrawTexts();

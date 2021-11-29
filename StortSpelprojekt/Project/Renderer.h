@@ -11,7 +11,6 @@ class Renderer
 {
 protected:
 	std::vector<std::shared_ptr<Drawable>> drawables;
-	std::vector<std::shared_ptr<Drawable>> staticDrawables;
 public:
 	virtual ~Renderer() = default;
 
@@ -27,17 +26,6 @@ public:
 			drawables.push_back(drawable); 
 	}
 
-	void BindStatic(std::shared_ptr<Drawable> drawable)
-	{
-		bool found = false;
-		for (auto& d : staticDrawables)
-			if (d == drawable)
-				found = true;
-
-		if (!found)
-			staticDrawables.push_back(drawable);
-	}
-
 	void Unbind(std::shared_ptr<Drawable> drawable)
 	{
 		for (UINT i = 0; i < drawables.size(); ++i)
@@ -49,27 +37,7 @@ public:
 			}
 	}
 
-	bool IsBound(std::shared_ptr<Drawable> drawable)
-	{
-		for (UINT i = 0; i < drawables.size(); ++i)
-			if (drawables[i] == drawable)
-				return true;
-		return false;
-	}
-
-	void UnbindStatic(std::shared_ptr<Drawable> drawable)
-	{
-		for (UINT i = 0; i < staticDrawables.size(); ++i)
-			if (staticDrawables[i] == drawable)
-			{
-				auto it = staticDrawables.begin() + i;
-				staticDrawables.erase(it);
-				return;
-			}
-	}
-
 	void Clear() { drawables.clear(); }
-	void ClearStatic() { staticDrawables.clear(); }
 	virtual void Render() = 0;
 	virtual void OnResize(float width, float height) {}
 };	

@@ -99,7 +99,7 @@ public:
 			mesh.bufferID = ID;
 	}
 
-	void PlayAnimation(const std::string& animation, bool onRepeat, float speedFactor = 1.f)
+	void PlayAnimation(const std::string& animation, const bool& onRepeat, const float& speedFactor = 1.f)
 	{
 		animator->PlayAnimation(animation, onRepeat, speedFactor);
 	}

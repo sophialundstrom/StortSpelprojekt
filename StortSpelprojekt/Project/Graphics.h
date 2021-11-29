@@ -21,13 +21,11 @@ private:
 	IDXGISurface* UISurface;
 
 	ID3D11BlendState* blendState = nullptr;
-	ID3D11BlendState* blendStateATC = nullptr; // Alpha to Coverage blend-state
-
 
 	ID3D11RasterizerState* wireframeState;
 	
+
 	HRESULT CreateBlendState();
-	HRESULT CreateBlendStateATC(); // Create Alpha to Coverage Blend-State
 	HRESULT CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed);
 	HRESULT CreateRenderTarget();
 	HRESULT CreateDepthStencil(UINT clientWidth, UINT clientHeight);
@@ -43,8 +41,6 @@ public:
 
 	void EnableAlpha() { Graphics::Inst().GetContext().OMSetBlendState(blendState, nullptr, 0Xffffffff); }
 	void DisableAlpha() { Graphics::Inst().GetContext().OMSetBlendState(nullptr, nullptr, 0Xffffffff); }
-	// Alpha to Coverage Blend States
-	void EnableATCAlpha() { Graphics::Inst().GetContext().OMSetBlendState(blendStateATC, nullptr, 0Xffffffff); }
 
 	void ActivateWireframe() { context->RSSetState(wireframeState); }
 	void DeactivateWireframe() { context->RSSetState(nullptr); }

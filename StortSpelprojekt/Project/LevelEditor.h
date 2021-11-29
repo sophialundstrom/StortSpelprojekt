@@ -1,8 +1,11 @@
 #pragma once
 #include "Editor.h"
 #include "Scene.h"
+#include "ModelRenderer.h"
+#include "TerrainRenderer.h"
 #include "ApplicationState.h"
-#include "ImGui.h"
+#include "IDRenderer.h"
+#include "VolumeRenderer.h"
 #include "WaterRenderer.h"
 
 class LevelEditor : public Editor, public ApplicationState
@@ -10,8 +13,8 @@ class LevelEditor : public Editor, public ApplicationState
 private:
 	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
 
-	int totalPolygonsLastFrame;
-	int totalPolygonCount;
+	int totalVertexCountLastFrame;
+	int totalVertexCount;
 	std::string selectedObject;
 	HWND appWindow;
 	float wRatioX;
@@ -22,10 +25,13 @@ private:
 	std::map<std::string, std::shared_ptr<BoundingSphere>> pickBoxes;
 	Terrain* terrain;
 	Water water;
-	bool renderWater = true;
-	bool divideFlipped = false;
-	bool renderVolumes = true;
-	bool renderTerrain = true;
+
+	//ADD RENDERERS
+	TerrainRenderer terrainRenderer;
+	ModelRenderer modelRenderer;
+	IDRenderer idRenderer;
+	VolumeRenderer volumeRenderer;
+	WaterRenderer waterRenderer;
 
 	UINT wWidth, wHeight;
 
@@ -44,11 +50,6 @@ private:
 	void FocusObject();
 	void DuplicateObject();
 	void DuplicateVolume();
-	void ShowWater();
-	void DivideRendering();
-	void FlipRenderingDivider();
-	void ShowVolumes();
-	void ShowTerrain();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

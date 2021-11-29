@@ -38,13 +38,6 @@ Graphics::Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed
 	}
 	Print("SUCCEEDED TO CREATE BLEND STATE", "GRAPHICS");
 
-	if FAILED(CreateBlendStateATC())
-	{
-		Print("FAILED TO CREATE ATC BLEND STATE", "GRAPHICS");
-		return;
-	}
-	Print("SUCCEEDED TO CREATE ATC BLEND STATE", "GRAPHICS");
-
 
 	CreateViewport(clientWidth, clientHeight);
 
@@ -68,23 +61,6 @@ HRESULT Graphics::CreateBlendState()
 {
 	//BLEND STATE
 	D3D11_BLEND_DESC blendDesc = {};
-	blendDesc.AlphaToCoverageEnable = false;
-	blendDesc.RenderTarget[0].BlendEnable = true;
-	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
-	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].RenderTargetWriteMask = 0X0f;
-	HRESULT hr = Graphics::Inst().GetDevice().CreateBlendState(&blendDesc, &blendState);
-	return hr;
-}
-
-HRESULT Graphics::CreateBlendStateATC()
-{
-	//BLEND STATE
-	D3D11_BLEND_DESC blendDesc = {};
 	blendDesc.AlphaToCoverageEnable = true;
 	blendDesc.RenderTarget[0].BlendEnable = true;
 	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
@@ -94,7 +70,7 @@ HRESULT Graphics::CreateBlendStateATC()
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = 0X0f;
-	HRESULT hr = Graphics::Inst().GetDevice().CreateBlendState(&blendDesc, &blendStateATC);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateBlendState(&blendDesc, &blendState);
 	return hr;
 }
 

@@ -1,6 +1,5 @@
 #include "ParticleEditor.h"
 #include <fstream>
-#include "Renderers.h"
 
 void ParticleEditor::Save(const std::string& file)
 {
@@ -40,9 +39,9 @@ void ParticleEditor::Load(const std::string& file)
 	if (file == "" || std::filesystem::path(file).extension() != ".ps")
 		return;
 
-	PR->Clear();
+	renderer.Clear();
 	particleSystem = std::make_shared<ParticleSystem>(file, true);
-	PR->Bind(particleSystem);
+	renderer.Bind(particleSystem);
 
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
 
@@ -99,9 +98,8 @@ void ParticleEditor::Render()
 {
 	BeginViewportFrame();
 
-	CR->Render();
-
-	PR->Render();
+	colliderRenderer.Render();
+	renderer.Render();
 
 	BeginFrame();
 
@@ -112,15 +110,13 @@ void ParticleEditor::Render()
 }
 
 ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
+	:renderer(FORWARD), colliderRenderer(FORWARD)
 {
-	RND.InitColliderRenderer();
-	RND.InitParticleRenderer();
-
 	camera = new Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0, 0, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
 
 	source = std::make_shared<BoundingSphere>();
 	source->SetScale(0.5f);
-	CR->Bind(source);
+	colliderRenderer.Bind(source);
 
 	AddWindow("PARTICLE SYSTEM EDITOR");
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
@@ -184,11 +180,6 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 
 	Load("default.ps");
 	(void)Run();
-}
-
-ParticleEditor::~ParticleEditor()
-{
-	RND.ShutDown();
 }
 
 APPSTATE ParticleEditor::Run()

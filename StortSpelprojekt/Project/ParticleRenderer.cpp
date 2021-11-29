@@ -2,7 +2,7 @@
 
 #include "ParticleSystem.h"
 
-ParticleRenderer::ParticleRenderer()
+ParticleRenderer::ParticleRenderer(RenderMethod method)
 {
 	//BUFFERS
 	CreateBuffer(extentsBuf);
@@ -17,9 +17,17 @@ ParticleRenderer::ParticleRenderer()
 	if (!LoadShader(geometryShader, gs_path))
 		return;
 
-	if (!LoadShader(pixelShader, forward_ps_path))
-		return;
+	if (method == FORWARD)
+	{
+		if (!LoadShader(pixelShader, forward_ps_path))
+			return;
+	}
 
+	else
+	{
+		if (!LoadShader(pixelShader, deferred_ps_path))
+			return;
+	}
 	Print("SUCCEEDED LOADING SHADERS", "PARTICLE RENDERER");
 
 	//INPUT LAYOUT
@@ -66,7 +74,7 @@ void ParticleRenderer::Render()
 	Graphics::Inst().GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	//BLEND
-	Graphics::Inst().EnableATCAlpha();
+	Graphics::Inst().EnableAlpha();
 
 	//SHADERS
 	BindShaders(vertexShader, nullptr, nullptr, geometryShader, pixelShader);

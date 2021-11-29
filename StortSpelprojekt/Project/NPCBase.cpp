@@ -6,7 +6,7 @@ NPC::NPC(const std::string& file)
 {
 	// call bind here cause i think it binds the bounding volume to a useful place
 	boundingBox = std::make_shared<BoundingBox>();
-	hp = maxHP = 3;
+	hp = 3;
 }
 
 NPC::NPC(const Model& model)

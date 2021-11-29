@@ -23,22 +23,15 @@ private:
 	ID2D1SolidColorBrush* brush = nullptr;
 	ID2D1SolidColorBrush* backgroundBrush = nullptr;
 	IDWriteTextFormat* format = nullptr;
-	
-	ID2D1PathGeometry* geometry = nullptr;
-	ID2D1GeometrySink* outline = nullptr;
+	IDWriteTextFormat* backgroundFormat = nullptr;
 
 	std::wstring string;
 	void SetWidth();
-
-	FLOAT ConvertPointSizeToDIP(FLOAT points);
-	void CalculateOutline();
 public:
 	Text() = default;
-	~Text();
 	Text(std::wstring string, D2D_VECTOR_2F position, UI::TEXTFORMAT format, ID2D1SolidColorBrush* brush, bool visible = true);
 	Text(std::wstring string, D2D_VECTOR_2F position, UI::TEXTFORMAT format, ID2D1SolidColorBrush* brush, FLOAT width, FLOAT height, bool visible = true);
 	void SetString(const std::string newString, bool bound = false);
 	std::string GetString() { return to_str(string); }
-	FLOAT GetExactWidth();
 	void Draw(bool allCharacters = true, UINT numCharacters = 0);
 };

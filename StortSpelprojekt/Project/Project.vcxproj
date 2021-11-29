@@ -161,17 +161,13 @@
     <ClCompile Include="ArrowHandler.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioChunks.cpp" />
-    <ClCompile Include="BarbarianCamp.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
-    <ClCompile Include="CollectObjective.cpp" />
     <ClCompile Include="ColliderRenderer.cpp" />
-    <ClCompile Include="ConcreteStates.cpp" />
     <ClCompile Include="DialogueOverlay.cpp" />
     <ClCompile Include="DockSpacePanel.cpp" />
     <ClCompile Include="DynamicPlane.cpp" />
-    <ClCompile Include="FightObjective.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="GameOver.cpp" />
@@ -181,13 +177,8 @@
     <ClCompile Include="IDRenderer.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImGui\include\ImGui\ImGuizmo.cpp" />
-    <ClCompile Include="InGameOverlay.cpp" />
-    <ClCompile Include="InteractableRenderer.cpp" />
-    <ClCompile Include="Inventory.cpp" />
-    <ClCompile Include="Item.cpp" />
     <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
-    <ClCompile Include="LocationObjective.cpp" />
     <ClCompile Include="Loot.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -196,24 +187,16 @@
     <ClCompile Include="NPCBase.cpp" />
     <ClCompile Include="NPCFriendly.cpp" />
     <ClCompile Include="NPCHostile.cpp" />
-    <ClCompile Include="Objective.cpp" />
     <ClCompile Include="ParticleEditor.cpp" />
     <ClCompile Include="ParticleRenderer.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
-    <ClCompile Include="PauseOverlay.cpp" />
+    <ClCompile Include="PlaneWithNormals.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Quest.cpp" />
-    <ClCompile Include="QuestLog.cpp" />
-    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SkeletonRenderer.cpp" />
-    <ClCompile Include="SkyBoxRenderer.cpp" />
     <ClCompile Include="SoundEffect.cpp" />
-    <ClCompile Include="TalkObjective.cpp" />
-    <ClCompile Include="Target.cpp" />
-    <ClCompile Include="TargetObjective.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="TerrainRenderer.cpp" />
     <ClCompile Include="Text.cpp" />
@@ -230,20 +213,16 @@
     <ClInclude Include="ArrowHandler.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioChunks.h" />
-    <ClInclude Include="BarbarianCamp.h" />
     <ClInclude Include="BoundingVolumes.h" />
     <ClInclude Include="BuildingEffect.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Canvas.h" />
-    <ClInclude Include="CollectObjective.h" />
     <ClInclude Include="CollectQuest.h" />
-    <ClInclude Include="ConcreteStates.h" />
     <ClInclude Include="DialogueOverlay.h" />
     <ClInclude Include="DockSpacePanel.h" />
     <ClInclude Include="DynamicPlane.h" />
     <ClInclude Include="FBXLoader.h" />
-    <ClInclude Include="FightObjective.h" />
-    <ClInclude Include="File.h" />
+    <ClInclude Include="FightQuest.h" />
     <ClInclude Include="GameLoader.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="Grid.h" />
@@ -251,20 +230,15 @@
     <ClInclude Include="IDRenderer.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImGui\include\ImGui\ImGuizmo.h" />
-    <ClInclude Include="InGameOverlay.h" />
-    <ClInclude Include="InteractableRenderer.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="LoadingScreen.h" />
-    <ClInclude Include="LocationObjective.h" />
     <ClInclude Include="Loot.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Node.h" />
+    <ClInclude Include="NormalMap.h" />
     <ClInclude Include="NPCFriendly.h" />
-    <ClInclude Include="Objective.h" />
-    <ClInclude Include="Overlay.h" />
     <ClInclude Include="Pathfinding.h" />
-    <ClInclude Include="PauseOverlay.h" />
-    <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="PlaneWithNormals.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
     <ClInclude Include="AnimatedModel.h" />
@@ -310,7 +284,6 @@
     <ClInclude Include="Random.h" />
     <ClInclude Include="PRay.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="Renderers.h" />
     <ClInclude Include="SaveStation.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderData.h" />
@@ -319,18 +292,14 @@
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonRenderer.h" />
-    <ClInclude Include="SkyBoxRenderer.h" />
     <ClInclude Include="SoundEffect.h" />
-    <ClInclude Include="State.h" />
     <ClInclude Include="States.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="stb_image_write.h" />
-    <ClInclude Include="TalkObjective.h" />
-    <ClInclude Include="Target.h" />
-    <ClInclude Include="TargetObjective.h" />
+    <ClInclude Include="TalkQuest.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="TerrainRenderer.h" />
     <ClInclude Include="Text.h" />
@@ -479,18 +448,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="InteractablePixelShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="InteractableVertexShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-    </FxCompile>
     <FxCompile Include="LoadingPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -570,18 +527,6 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="skyBoxPixelShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="skyBoxVertexShader.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="TerrainDomainShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Domain</ShaderType>
@@ -703,6 +648,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Domain</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="WaterGeometryShader.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+    </FxCompile>
+    <FxCompile Include="WaterHullShader.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Hull</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Hull</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="WaterPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -712,6 +669,14 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="WaterVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

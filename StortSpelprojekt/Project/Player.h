@@ -8,8 +8,50 @@
 #include "Canvas.h"
 #include "ArrowHandler.h"
 #include "AnimatedModel.h"
-#include "Biome.h"
-#include "Inventory.h"
+
+#undef Ray
+
+struct Inventory
+{
+	//std::unordered_map here?
+	std::map<RESOURCE, UINT> items; //ID , NUM OF ITEM
+	std::map<RESOURCE, std::string> names;
+
+	Inventory()
+	{
+		names[RESOURCE::WOOD] = "Wood";
+		names[RESOURCE::STONE] = "Stone";
+		names[RESOURCE::FOOD] = "Food";
+		names[RESOURCE::NONE] = "NONE";
+	}
+
+	void AddItem(enum RESOURCE ID)
+	{
+		items[ID]++;
+	}
+
+	void RemoveItem(enum RESOURCE ID, UINT amount = 1)
+	{
+		if (items[ID] <= amount)
+		{
+			items[ID] = 0;
+			return;
+		}
+
+		items[ID] -= amount;
+	}
+
+	UINT NumOf(enum RESOURCE ID)
+
+	{
+		return items[ID];
+	}
+
+	void GetResources(enum RESOURCE ID)
+	{
+		std::cout << names[ID] << " " << items[ID] << std::endl;
+	}
+};
 
 struct Stats
 {
@@ -34,7 +76,7 @@ class Player : public AnimatedModel
 private:
 	Stats stats;
 
-
+	Camera* sceneCamera;
 
 	std::shared_ptr<Canvas> ingameCanvas;
 
@@ -50,9 +92,10 @@ private:
 	float currentGroundLevel = 0.0f;
 	float heightMapGroundLevel = 0.0f;
 
-	const float mouseDefaultSensitivity = 10.f;
-	const float mouseAimSensitivity = 4.f;
+	const float mouseDefaultSensitivity = 3.f;
+	const float mouseAimSensitivity = 2.f;
 	float mouseCurrentSensitivity = mouseDefaultSensitivity;
+	float mouseSensitivity = 5.f;
 
 	float gravity = 9.82f;
 	float timePassed = 0;
@@ -60,7 +103,7 @@ private:
 	bool jumping = false;
 	bool maxJumpHeight = false;
 	bool pressed = false;
-	bool isSprinting = false;
+	bool sprint = false;
 
 	float airTime = 0;
 	float jumpHeight = 5.0f;
@@ -90,8 +133,6 @@ private:
 	float currentLerp = 0.f;
 	float duration = 1.f;
 	bool inAir = false;
-	bool isAiming = false;
-
 
 	void UpdateHealthUI()
 	{
@@ -105,21 +146,13 @@ private:
 	}
 
 public:
-	Camera* sceneCamera;
-	BIOME currentBiome;
-	BIOME previousBiome;
-	bool test = false;
-	bool biomeChanged = false;
-
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
-	void Update(HeightMap* heightMap);
+	void Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void TakeDamage();
-	bool inCombat = false;
-	void SwitchBiomeMusic();
 
-	Player(const std::string file, Camera* camera, const UINT& maxArrows);
+	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas/*, std::vector<std::shared_ptr<Arrow>> arrows*/, const UINT& maxArrows);
 
 public:
 	// TEMP STATS PRINT

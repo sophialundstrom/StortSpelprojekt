@@ -1,27 +1,29 @@
 #include "ArrowHandler.h"
-#include "Renderers.h"
 
-void ArrowHandler::AddArrow(const Vector3& direction, const Vector3& startPos, const Vector3& rotation)
+void ArrowHandler::AddArrow(ModelRenderer& mRenderer, ColliderRenderer& cRenderer, const Vector3& direction, const Vector3& startPos, const Vector3& rotation)
 {
     std::shared_ptr<Arrow> arrow = std::make_shared<Arrow>();
     arrow->SetRotation({ rotation.x, rotation.y + PI, rotation.z });
     arrow->direction = direction;
     arrow->SetPosition(startPos);
-    CR->Bind(arrow->rayCollider);
-    MR->Bind(arrow);
+    cRenderer.Bind(arrow->rayCollider);
+    mRenderer.Bind(arrow);
     arrows.emplace_back(arrow);
 }
 
-void ArrowHandler::Update()
+void ArrowHandler::Update(ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
 {
     for (int i = 0; i < arrows.size(); i++)
     {
         arrows[i]->Update();
+        if (!arrows[i]->canCollide)
+            PrintS("CANT COLLIDE!");
 
         if (arrows[i]->isDestroyed)
         {
-            CR->Unbind(arrows[i]->rayCollider);
-            MR->Unbind(arrows[i]);
+            cRenderer.Unbind(arrows[i]->rayCollider);
+            mRenderer.Unbind(arrows[i]);
+            //arrows.erase(arrows.begin() + i);
             arrows[i] = std::move(arrows[arrows.size() - 1]);
             arrows.resize(arrows.size() - 1);
         }
@@ -30,6 +32,11 @@ void ArrowHandler::Update()
 
 bool ArrowHandler::CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<Collider> collider, bool isDynamic)
 {
+    /*for (auto& arrow : arrows)
+    {*/
+        //if (!arrow->canCollide)
+        //    continue;
+
         Collision::RayResults rayResult;
         Vector3 point;
 
@@ -49,6 +56,9 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<
 
         if (rayResult.didHit)
         {
+            //SoundEffect::AddAudio(L"Audio/arrowHit.wav", 2);
+            //SoundEffect::SetVolume(0.8, 2);
+            //SoundEffect::StartAudio(2);
             if (isDynamic)
             {
                 arrow->isDestroyed = true;
@@ -71,11 +81,11 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<
     return false;
 }
 
-void ArrowHandler::ClearArrows()
+void ArrowHandler::ClearArrows(ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
 {
     for (auto& arrow : arrows)
     {
-        MR->Unbind(arrow);
-        CR->Unbind(arrow->rayCollider);
+        mRenderer.Unbind(arrow);
+        cRenderer.Unbind(arrow->rayCollider);
     }
 }

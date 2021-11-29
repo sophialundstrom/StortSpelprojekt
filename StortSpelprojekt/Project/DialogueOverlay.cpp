@@ -7,12 +7,12 @@
 DialogueOverlay::DialogueOverlay()
 {
 	auto center = D2D_VECTOR_2F{ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f };
-	AddImage({ center.x, Window::ClientHeight() - 200.0f }, "Background", "DialogueBackground.png");
+	AddImage({ center.x, Window::ClientHeight() - 149.0f }, "Background", "DialogueBackground.png");
 
 	auto color = UI::Inst().GetBrush(UI::COLOR::YELLOW);
 
-	dialogueName = new Text(L"TEMP NAME", { center.x - 450, Window::ClientHeight() - 310.0f }, UI::TEXTFORMAT::TITLE_SMALL, color, 900, 30);
-	dialogueText = new Text(L"TEMP TEXT", { center.x - 450, Window::ClientHeight() - 290.0f}, UI::TEXTFORMAT::TITLE_SMALL, color, 900, 250);
+	dialogueName = new Text(L"TEMP NAME", { center.x - 366, Window::ClientHeight() - 230.0f }, UI::TEXTFORMAT::TITLE_SMALL, color, 652, 30);
+	dialogueText = new Text(L"TEMP TEXT", { center.x - 366, Window::ClientHeight() - 200.0f}, UI::TEXTFORMAT::DEFAULT, color, 652, 200);
 }
 
 DialogueOverlay::~DialogueOverlay()
@@ -21,13 +21,8 @@ DialogueOverlay::~DialogueOverlay()
 	delete dialogueText;
 }
 
-OVERLAYSTATE DialogueOverlay::Update()
+void DialogueOverlay::Update()
 {
-	returnState = OVERLAYSTATE::NO_CHANGE;
-
-	if (!NPC)
-		return OVERLAYSTATE::RETURN;
-
 	if (Event::KeyIsPressed('E'))
 		speed = holdSpeed;
 	else
@@ -46,31 +41,8 @@ OVERLAYSTATE DialogueOverlay::Update()
 		delay += Time::GetDelta();
 
 		if (delay > doneDelay && Event::KeyIsPressed('E'))
-		{
-			lastInteraction = Time::Get();
-
-			if (objective)
-			{
-				NPC->RemoveDialogueOverride();
-				objective->Complete();
-				objective = nullptr;
-			}
-
-			else
-			{
-				NPC->SetCompletedConversation();
-
-				if (NPC->HasQuestsLeft())
-					NPC->ActivateCurrentQuest();
-			}
-
-			NPC = nullptr;
 			done = true;
-			returnState = OVERLAYSTATE::RETURN;
-		}
 	}
-
-	return returnState;
 }
 
 void DialogueOverlay::Render()
@@ -85,20 +57,11 @@ void DialogueOverlay::Render()
 	UI::Inst().EndFrame();
 }
 
-void DialogueOverlay::Set(std::shared_ptr<FriendlyNPC> NPC, TalkObjective* objective)
+void DialogueOverlay::Set(const std::string& NPCName, const std::string& text)
 {
 	delay = 0;
 	numCharacters = 0;
 	done = false;
-	this->NPC = NPC;
-	dialogueName->SetString(NPC->GetName(), true);
-
-	if (objective && !objective->IsCompleted())
-	{
-		this->objective = objective;
-		dialogueText->SetString(objective->GetString(), true);
-	}
-	
-	else
-		dialogueText->SetString(NPC->GetCurrentDialogue(), true);
+	dialogueName->SetString(NPCName, true);
+	dialogueText->SetString(text, true);
 }

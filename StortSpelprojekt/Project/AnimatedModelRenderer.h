@@ -39,7 +39,7 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	AnimatedModelRenderer();
+	AnimatedModelRenderer(RenderMethod method, bool isLit);
 	~AnimatedModelRenderer();
 	virtual void Render() override;
 };

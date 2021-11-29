@@ -28,7 +28,6 @@ void GameLoader::Load(const std::string& filename, std::map<std::string, std::sh
 			{
 				auto model = ReadModel();
 				drawables.emplace(model->name, model);
-			
 				break;
 			}
 			
@@ -65,6 +64,7 @@ void GameLoader::Load(const std::string& filename, std::map<std::string, std::sh
 		}
 	}
 
+	std::cout << "Closing reader\n";
 	reader.close();
 }
 
@@ -149,6 +149,8 @@ void GameLoader::Save(const std::string& filename, const std::map<std::string, s
 
 		Print(message);
 	}
+
+	std::cout << "\n\n\n-- SAVE DONE --\n\n\n";
 
 	writer.close();
 }

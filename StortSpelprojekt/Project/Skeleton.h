@@ -2,7 +2,7 @@
 #include "Math.h"
 #include <vector>
 
-#define MAX_JOINTS 30
+#define MAX_JOINTS 20
 
 struct Joint
 {
@@ -18,7 +18,7 @@ struct Skeleton
 	const UINT stride = sizeof(Vector3);
 	const UINT offset = 0;
 	std::vector<Joint> joints;
-	int tempIndex = 0;
+	int tempIndex = -1;
 	UINT vertexCount = 0;
 
 	const Joint& FindJoint(const std::string& name) const
@@ -32,27 +32,20 @@ struct Skeleton
 
 	void SetVertex(const aiNode* node, std::vector<Vector3>& vertices)
 	{
-		bool extraNode = false;
-		if (std::string(node->mName.C_Str()).find('_') != std::string::npos)
-			extraNode = true;
+		tempIndex++;
 
 		Vector3 position;
-		if (!extraNode)
-		{
-			position = Vector3::Transform(position, transforms[tempIndex]);
-			tempIndex++;
+		position = Vector3::Transform(position, transforms[tempIndex]);
 
-			if (node->mName.C_Str() != joints[0].name)
-				vertices.emplace_back(position);
+		if (node->mName.C_Str() != joints[0].name)
+			vertices.emplace_back(position);
 
-			if (node->mNumChildren == 0)
-				return;
-		}
+		if (node->mNumChildren == 0)
+			return;
 
 		for (UINT i = 0; i < node->mNumChildren; ++i)
 		{
-			if (!extraNode)
-				vertices.emplace_back(position);
+			vertices.emplace_back(position);
 			SetVertex(node->mChildren[i], vertices);
 		}
 	}
@@ -78,7 +71,7 @@ struct Skeleton
 
 		vertexCount = (UINT)vertices.size();
 
-		tempIndex = 0;
+		tempIndex = -1;
 	}
 
 	void BindBuffer()

@@ -59,7 +59,6 @@ UI::UI()
 
 		brushes[(COLOR)i] = brush;
 	}
-	Print("SUCCEEDED CREATING BRUSHES", "UI");
 
 	//TEXT FORMATS
 	for (auto& desc : textFormatDescs)
@@ -76,7 +75,6 @@ UI::UI()
 		format->SetTextAlignment(desc.alignment);
 		textFormats[desc.format] = format;
 	}
-	Print("SUCCEEDED CREATING TEXT FORMATS", "UI");
 
 	//IMAGE FACTORY
 	hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_IWICImagingFactory, (LPVOID*)&imageFactory);
@@ -86,25 +84,7 @@ UI::UI()
 		return;
 	}
 
-	//OUTLINE TESTING
-	hr = writeFactory->CreateFontFileReference((L"C://Windows//Fonts//" + FONTFILE).c_str(), NULL, &fontFile);
-	if FAILED(hr)
-	{
-		Print("FAILED TO CREATE FONT FILE REFERENCE", "UI");
-		return;
-	}
-	Print("SUCCEDED TO CREATE FONT FILE REFERENCE", "UI");
-
-	hr = writeFactory->CreateFontFace(DWRITE_FONT_FACE_TYPE_TRUETYPE, 1, &fontFile, 0, DWRITE_FONT_SIMULATIONS_NONE, &fontFace);
-	if FAILED(hr)
-	{
-		Print("FAILED TO CREATE FONT FACE", "UI");
-		return;
-	}
-	Print("SUCCEDED TO CREATE FONT FILE REFERENCE", "UI");
-
 	Print("SUCCEEDED TO INITIALIZE UI");
-	Print("=======================================");
 }
 
 UI::~UI()

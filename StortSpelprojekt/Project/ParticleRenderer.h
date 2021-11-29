@@ -29,7 +29,7 @@ class ParticleRenderer : public Renderer
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	ParticleRenderer();
+	ParticleRenderer(RenderMethod method);
 	~ParticleRenderer();
 
 	virtual void Render() override;
