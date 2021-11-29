@@ -15,13 +15,9 @@ public:
 	SkyBoxRenderer();
 	virtual void Render() override;
 
-
-	//DDSTexture codeVariant
-	/*
-	ID3D11Resource** texture = nullptr;
-	D3D11ShaderResourceView** textureView = nullptr;
-	*/
-
+	//D3D11Resources
+	ID3D11Texture2D* pTexture;
+	ID3D11ShaderResourceView** pTextureView;
 
 	//Vbuffer
 	ID3D11Buffer* skyboxMesh = nullptr;
@@ -40,6 +36,8 @@ public:
 	const std::string vs_path = "../x64/Release/skyBoxVertexShader.cso";
 	const std::string ps_path = "../x64/Debug/skyBoxPixelShader.cso";
 #endif
+	const std::string skyboxTexturePath = "Skybox/png/";
+
 	//Shaders
 	ID3D11VertexShader* skyBoxVertexShader = nullptr;
 	ID3D11PixelShader* skyBoxPixelShader = nullptr;

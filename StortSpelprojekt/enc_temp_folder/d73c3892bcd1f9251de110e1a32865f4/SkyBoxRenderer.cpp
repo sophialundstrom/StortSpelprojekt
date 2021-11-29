@@ -142,5 +142,6 @@ void SkyBoxRenderer::Render()
 	Graphics::Inst().GetContext().DrawIndexed(BoxVolumeData::INDICES, 0, 0);
 	
 	Graphics::Inst().GetContext().OMSetDepthStencilState(nullptr, 0);
+	Graphics::Inst().GetContext().PSSetShaderResources(0, 6, nullptr);
 }
 
