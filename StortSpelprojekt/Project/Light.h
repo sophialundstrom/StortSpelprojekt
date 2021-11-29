@@ -1,7 +1,7 @@
 #pragma once
 #include "Drawable.h"
 #include "Time.h"
-
+#include "Random.h"
 #define MAX_LIGHTS 10
 
 class DirectionalLight
@@ -37,7 +37,8 @@ public:
 
 	void SetTargetPosition(const Vector3& position)
 	{
-		this->viewMatrix = Matrix::CreateLookAt(position + -data.direction * range, position, { 0.0f, 1.0f, 0.0f });
+		this->position = position + -data.direction * range;
+		this->viewMatrix = Matrix::CreateLookAt(this->position, position, { 0.0f, 1.0f, 0.0f });
 		this->matrix = (viewMatrix * ortoMatrix).Transpose();
 	}
 
@@ -67,9 +68,8 @@ public:
 
 		this->matrix = (viewMatrix * ortoMatrix).Transpose();
 	}
-
+	float GetRange() { return this->range; }
 	Vector3 GetRepresentativePosition() const { return this->position; }
-
 	Matrix GetMatrix() const { return this->matrix; }
 };
 
@@ -87,10 +87,44 @@ struct PointLight
 		Vector3 position;
 		float range;
 		Vector3 attenuation;
+		float intensity;
 	} data;
 
-	PointLight(float range = 10.0f, Vector3 attenuation = { 1.0f, 1.0f, 1.0f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f }, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 rotation = { 0.0f, 0.0f, 0.0f }, Vector3 scale = { 0.0f, 0.0f, 0.0f })
-		{ data = { color, position, range, attenuation }; }
+	PointLight(float range = 10.0f, Vector3 attenuation = { 1.0f, 1.0f, 1.0f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f }, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 rotation = { 0.0f, 0.0f, 0.0f }, Vector3 scale = { 0.0f, 0.0f, 0.0f }, float intensity = 0.75)
+		{ 
+			data = { color, position, range, attenuation, intensity }; 
+		}
+
+	void Update()
+	{
+		const float maxIntensity = 2.0f;
+		const float minIntensity = 1.5f;
+		const float maxChange = 0.05f;
+
+		float randomizedIntensity = Random::Real(minIntensity, maxIntensity);
+
+		if (randomizedIntensity > data.intensity)
+		{
+			if (randomizedIntensity - data.intensity > maxChange)
+			{
+				data.intensity += maxChange;
+			}
+			else 
+			{
+				data.intensity = randomizedIntensity;
+			}
+		}
+		else
+		{
+			if (data.intensity - randomizedIntensity > maxChange)
+			{
+				data.intensity -= maxChange;
+			}
+			else
+				data.intensity = randomizedIntensity;
+		}
+	}
+
 };
 
 struct SpotLight : public Light

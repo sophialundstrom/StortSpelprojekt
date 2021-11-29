@@ -59,13 +59,24 @@ public:
 
 	void MoveTowards(Vector3 position)
 	{
-		const Vector3 direction = position - this->position;
+		Vector3 direction = position - this->position;
+		direction.Normalize();
 		const Vector3 distance = moveSpeed * direction * Time::GetDelta();
+		//float multiplier = -pow((distance.Length() - 1.6667f) * 0.6f, 2.0f) + 1;
+		//
+		//Print(distance.Length(), "Distance");
+		//Print(multiplier, "Multiplier");
 		if ((this->position - position).Length() < distance.Length())
 			this->position = position;
 		else
 			this->position += moveSpeed * direction *  Time::GetDelta();
+			//this->position = Vector3::Lerp(position, this->position, multiplier);
 	}
+
+	float GetNearZ() {return nearZ;}
+	float GetFarZ() { return farZ; }
+	float GetJaw() { return yaw; }
+	float GetPitch() { return pitch; }
 
 	void SetPosition(Vector3 newPosition) { position = newPosition; };
 	Vector3 GetDirection() const { return this->direction; }

@@ -16,9 +16,6 @@
     <Filter Include="ARCUS\ApplicationStates\GameStates\Game">
       <UniqueIdentifier>{bab0ce45-9b21-4e42-9fa5-8916fb95ec63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ARCUS\ApplicationStates\GameStates\Game\Canvases">
-      <UniqueIdentifier>{a9aa3fa1-a6b5-4dba-8f5e-1d16a8b714bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ARCUS\ApplicationStates\GameStates\Win">
       <UniqueIdentifier>{94ce8bdd-3901-400f-bf63-51d8874dc0ac}</UniqueIdentifier>
     </Filter>
@@ -199,6 +196,17 @@
     <Filter Include="ARCUS\Scene\Game\Loot">
       <UniqueIdentifier>{026b4804-3197-4874-97ad-f47e47e174e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ARCUS\ApplicationStates\GameStates\Game\Overlays">
+      <UniqueIdentifier>{a9aa3fa1-a6b5-4dba-8f5e-1d16a8b714bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\InteractableRenderer">
+      <UniqueIdentifier>{35391c32-dc46-4158-95cf-57336463276e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ARCUS\Graphics\Renderers\InteractableRenderer\Shaders">
+      <UniqueIdentifier>{6d5e65d4-bd34-44f4-adaf-e4a1a5821ead}</UniqueIdentifier>
+    <Filter Include="ARCUS\Scene\Game\NPC\FSM">
+      <UniqueIdentifier>{68b091f1-0a79-4bb7-aec4-3c4dca9294ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Terrain.cpp">
@@ -334,7 +342,7 @@
       <Filter>ARCUS\ApplicationStates\GameStates\MainMenu</Filter>
     </ClCompile>
     <ClCompile Include="DialogueOverlay.cpp">
-      <Filter>ARCUS\ApplicationStates\GameStates\Game\Canvases</Filter>
+      <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>ARCUS</Filter>
@@ -346,7 +354,35 @@
       <Filter>ARCUS\Audio</Filter>
     </ClCompile>
     <ClCompile Include="ArrowHandler.cpp" />
-    <ClCompile Include="PlaneWithNormals.cpp" />
+    <ClCompile Include="BarbarianCamp.cpp" />
+    <ClCompile Include="CollectObjective.cpp" />
+    <ClCompile Include="FightObjective.cpp" />
+    <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="LocationObjective.cpp" />
+    <ClCompile Include="Objective.cpp" />
+    <ClCompile Include="Quest.cpp" />
+    <ClCompile Include="QuestLog.cpp" />
+    <ClCompile Include="TalkObjective.cpp" />
+    <ClCompile Include="Target.cpp" />
+    <ClCompile Include="TargetObjective.cpp" />
+    <ClCompile Include="InGameOverlay.cpp">
+      <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="InteractableRenderer.cpp">
+      <Filter>ARCUS\Graphics\Renderers\InteractableRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="PauseOverlay.cpp">
+      <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
+    <ClCompile Include="ArrowHandler.cpp">
+      <Filter>ARCUS</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>ARCUS</Filter>
+    </ClCompile>
+    <ClCompile Include="ConcreteStates.cpp">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graphics.h">
@@ -481,16 +517,7 @@
     <ClInclude Include="ColliderRenderer.h">
       <Filter>ARCUS\Graphics\Renderers\ColliderRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="CollectQuest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="FightQuest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
     <ClInclude Include="Quest.h">
-      <Filter>ARCUS\Scene\Game\Quests</Filter>
-    </ClInclude>
-    <ClInclude Include="TalkQuest.h">
       <Filter>ARCUS\Scene\Game\Quests</Filter>
     </ClInclude>
     <ClInclude Include="QuestLog.h">
@@ -644,7 +671,7 @@
       <Filter>ARCUS\ApplicationStates\GameStates\MainMenu</Filter>
     </ClInclude>
     <ClInclude Include="DialogueOverlay.h">
-      <Filter>ARCUS\ApplicationStates\GameStates\Game\Canvases</Filter>
+      <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
     </ClInclude>
     <ClInclude Include="Building.h">
       <Filter>ARCUS\Scene\Game\Building</Filter>
@@ -668,8 +695,52 @@
       <Filter>ARCUS\Audio</Filter>
     </ClInclude>
     <ClInclude Include="ArrowHandler.h" />
-    <ClInclude Include="NormalMap.h" />
-    <ClInclude Include="PlaneWithNormals.h" />
+    <ClInclude Include="BarbarianCamp.h" />
+    <ClInclude Include="CollectObjective.h" />
+    <ClInclude Include="FightObjective.h" />
+    <ClInclude Include="File.h" />
+    <ClInclude Include="LocationObjective.h" />
+    <ClInclude Include="Objective.h" />
+    <ClInclude Include="TalkObjective.h" />
+    <ClInclude Include="Target.h" />
+    <ClInclude Include="TargetObjective.h" />
+    <ClInclude Include="Renderers.h">
+      <Filter>ARCUS\Graphics\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameOverlay.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="Overlay.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="InteractableRenderer.h">
+      <Filter>ARCUS\Graphics\Renderers\InteractableRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="PauseOverlay.h">
+      <Filter>ARCUS\ApplicationStates\GameStates\Game\Overlays</Filter>
+    <ClInclude Include="ArrowHandler.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="ConcreteStates.h">
+      <Filter>ARCUS\Scene\Game\NPC\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="Biome.h" />
+    <ClInclude Include="BiomeEnum.h" />
+    <ClInclude Include="AudioSource.h">
+      <Filter>ARCUS</Filter>
+    </ClInclude>
+    <ClInclude Include="HardwareSupport.h">
+      <Filter>ARCUS\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ParticleGeometryShader.hlsl">
@@ -774,14 +845,11 @@
     <FxCompile Include="LoadingVS.hlsl">
       <Filter>ARCUS\ApplicationStates\GameStates\LoadingScreen\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="WaterGeometryShader.hlsl">
-      <Filter>ARCUS\Graphics\Renderers\WaterRenderer\Shaders</Filter>
+    <FxCompile Include="InteractableVertexShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\InteractableRenderer\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="WaterHullShader.hlsl">
-      <Filter>ARCUS\Graphics\Renderers\WaterRenderer\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="WaterVertexShader.hlsl">
-      <Filter>ARCUS\Graphics\Renderers\WaterRenderer\Shaders</Filter>
+    <FxCompile Include="InteractablePixelShader.hlsl">
+      <Filter>ARCUS\Graphics\Renderers\InteractableRenderer\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

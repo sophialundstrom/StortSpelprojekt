@@ -17,9 +17,13 @@ class ShaderData : public Singleton<ShaderData>
 	friend class VolumeRenderer;
 	friend class SkeletonRenderer;
 	friend class WaterRenderer;
+	friend class SkyBoxRenderer;
+	friend class InteractableRenderer;
 private:
 	//CAMERA
 	Matrix cameraMatrix;
+	Matrix viewMatrix;
+	Matrix projectionMatrix;
 	Vector3 cameraPosition;
 	ID3D11Buffer* cameraPositionBuf;
 
@@ -60,7 +64,7 @@ public:
 		CreateBuffer(lightDataBuf, sizeof(DirectionalLight::Data));
 		CreateBuffer(numPointLightsBuffer);
 		CreateStructuredBuffer(pointLightBuffer, pointLightSRV, sizeof(PointLight), sizeof(PointLight) * MAX_LIGHTS);
-		shadowMap = ShadowMap(4096, 10);
+		shadowMap = ShadowMap(10000, 10);
 
 		//SAMPLER
 		D3D11_SAMPLER_DESC samplerDesc = {};
@@ -107,6 +111,9 @@ public:
 	{
 		//CAMERA
 		cameraMatrix = camera.GetMatrix();
+		viewMatrix = camera.GetViewMatrix();
+		projectionMatrix = camera.GetProjectionMatrix();
+
 		cameraPosition = camera.GetPosition();
 
 		matrices.viewPerspective = cameraMatrix;
