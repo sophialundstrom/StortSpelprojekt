@@ -1,15 +1,16 @@
 Texture2D displacementTexture : register(t0);
 SamplerState wrapSampler : register(s0);
 
-float3 Wave(float2 direction, float amplitude, float multiplier, float4 position, float time, float speed)
+float3 Wave(float2 direction, float amplitude, float waveLength, float4 position, float time)
 {
     float PI = 3.14159265359f;
-    float k = (2 * PI) / multiplier;
-    float phaseSpeed = speed;
+    float k = (2 * PI) / waveLength;
+    float phaseSpeed = sqrt(9.8f / k);
+    float a = amplitude / k;
     float2 d = normalize(direction);
     float f = k * (dot(direction, position.xz) - phaseSpeed * time);
 
-    return float3(d.x * (amplitude * cos(f)), amplitude * sin(f), d.y * (amplitude * cos(f)));
+    return float3(d.x * (a * cos(f)), a * sin(f), d.y * (a * cos(f)));
 }
 
 struct DS_INPUT
@@ -45,11 +46,6 @@ cbuffer TIME : register(b1)
     float time;
 }
 
-cbuffer thetaOffset : register(b2)
-{
-    float theta;
-}
-
 #define NUM_CONTROL_POINTS 3
 [domain("tri")]
 DS_OUTPUT main(
@@ -65,8 +61,19 @@ DS_OUTPUT main(
     output.tangent = patch[0].tangent * domain.x + patch[1].tangent * domain.y + patch[2].tangent * domain.z;
     output.normal = patch[0].normal * domain.x + patch[1].normal * domain.y + patch[2].normal * domain.z;
 
-    output.position.xyz += Wave(float2(1, 1), 2.0f, 0.5f, output.position, time, 0.25f);
-    //output.position.xyz += Wave(float2(1, -1), 1.0f, 0.1f, output.position, time, 0.25f);
+    float amplitude = 4.0f;
+    float multiplier = 3.0f;
+    float PI = 3.14159265359f;
+    //float2 direction = float2(0, 1);
+
+    if (round(output.position.x) % 2 == 0 && round(output.position.z) % 3 == 0)
+        output.position.y += sin(time * multiplier) * amplitude;
+
+    else if (round(output.position.x) % 3 == 0 && round(output.position.z) % 2 == 0)
+        output.position.y += sin(time * multiplier + PI) * amplitude;
+
+    else
+        output.position.y += sin(time * multiplier + PI / 2.0f) * amplitude / 2.0f;
 
     //RECALCULATE NORMAL, TANGENT AND BINORMAL
     //output.tangent = normalize(float3(1, k * amplitude * cos(f), 0));
