@@ -74,24 +74,19 @@ void MainMenu::HoveringNewGame()
 	canvases["MAIN MENU"]->GetImage("NewGameLeaves")->Show();
 }
 
-
-
-void Hovering()
-{
-	
-	//Print("HOVERING");
-}
-
 MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
-	:modelRenderer(FORWARD, true),
-	particleRenderer(FORWARD),
-	terrainRenderer(FORWARD, 40)
 {
+	RND.InitModelRenderer();
+	RND.InitParticleRenderer();
+	RND.InitShadowRenderer();
+
 	Initialize();
-	
-	Audio::AddAudio(L"Audio/Menu.wav", 0);
-	Audio::SetVolume(0.005, 0);
-	Audio::StartAudio(0);
+	//Audio::Initialize();
+	//Audio::StartEngine();
+	//
+	//Audio::AddAudio(L"Audio/Menu.wav", 0, AUDIOTYPE::MUSIC, true);
+	//Audio::SetVolume(0.005, 0);
+	//Audio::StartAudio(0);
 
 	auto menuCanvas = new Canvas();
 	float xPos = 75;
@@ -137,12 +132,12 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 		menuCanvas->AddImage({ xPos, clientHeight / 2.0f + 225 }, "QuitLeaves", "QuitLeaves.png", 1.f, 1.0f, true, false);
 		auto image = menuCanvas->GetImage("Quit");
 		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "QuitButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Quit(); }, [this] { HoveringQuit(); });
-		}
+	}
 
 	{
 		// FORM
-		menuCanvas->AddImage({ clientWidth - (float)250, clientHeight / 2.0f + 450 }, "Form", "Form.png", 1.0f, 1.0f, true, false);
-		menuCanvas->AddImage({ clientWidth - (float)250, clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.0f, 1.0f, true, false);
+		menuCanvas->AddImage({ clientWidth - 250.f, clientHeight / 2.0f + 450 }, "Form", "Form.png", 1.0f, 1.0f, true, false);
+		menuCanvas->AddImage({ clientWidth - 250.f, clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.0f, 1.0f, true, false);
 		auto image = menuCanvas->GetImage("Form");
 		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "FormButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Form(); }, [this] {HoveringForm(); });
 	}
@@ -162,8 +157,6 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 		howToPlayCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "BackButtonControls", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { BacktoMenu(); }, [this] { HoveringBackControls(); });
 	}
 
-	
-
 	canvases["HOW TO PLAY"] = howToPlayCanvas;
 
 	// OPTIONS
@@ -181,12 +174,12 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { -41.0f, 37.0f, -687.0f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(200, { 0.03f, 0.03f, 0.03f ,1 }, 1);
-	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
+	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 200, { 1.0f, 0.0f, 0.05f }, { 190.0f / 255.0f, 83.0f / 255.0f, 21.0f / 255.0f, 1.0f });
 
-	//186 95 42 
+
 	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
 	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 35, -687 });
-	particleRenderer.Bind(menuFireSystem);
+	PR->Bind(menuFireSystem);
 		
 	(void)Run();
 }
@@ -195,10 +188,15 @@ MainMenu::~MainMenu()
 {
 	for (auto& [name, canvas] : canvases)
 		delete canvas;
+
+	Audio::StopEngine();
 }
 
 void MainMenu::Initialize()
 {
+	Audio::Initialize();
+	Audio::StartMusic("Menu.wav");
+
 	//LOAD SCENE
 	FBXLoader levelLoader("Models");
 
@@ -210,8 +208,8 @@ void MainMenu::Initialize()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
-			modelRenderer.Bind(model);
-			shadowRenderer.Bind(model);
+			MR->Bind(model);
+			SR->Bind(model);
 			continue;
 		}
 
@@ -222,20 +220,19 @@ void MainMenu::Initialize()
 			continue;
 		}
 	}
-
 }
 
 void MainMenu::Render()
 {
-	shadowRenderer.Render();
+	SR->Render();
 
 	Graphics::Inst().BeginFrame();
 
 	ShaderData::Inst().BindFrameConstants();
 
-	modelRenderer.Render();
+	MR->Render();
 
-	particleRenderer.Render();
+	PR->Render();
 
 	currentCanvas->Render();
 
@@ -258,6 +255,7 @@ APPSTATE MainMenu::Run()
 
 	currentCanvas->Update();
 	scene.GetCamera()->RotateAroundPoint({ -41.0f, 37.0f, -687.0f }, 40, (Vector3{ 0, -0.6f, -1 } / Vector3(0, -0.6f, -1).Length()));
+	scene.UpdatePointLights();
 	scene.UpdateDirectionalLight(scene.GetCamera()->GetPosition());
 	scene.Update();
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), scene.GetNumberOfPointlights(), scene.GetPointLights());

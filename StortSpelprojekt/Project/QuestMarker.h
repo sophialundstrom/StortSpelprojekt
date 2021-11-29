@@ -3,12 +3,18 @@
 
 class QuestMarker : public Model
 {
-private:
-
 public:
 	QuestMarker()
-		:Model("QuestMarkerStart", "QM")
-	{}
+		:Model("ExclamationMark", "QM")
+	{
+		position = { 0, -1000, 0 };
+	}
+
+	void SetAsGive()	 { ApplyMesh("ExclamationMark"); }
+	void SetAsHelp()	 { ApplyMesh("QuestionMarkGray"); }
+	void SetAsDone()	 { ApplyMesh("QuestionMarkYellow"); }
+	void SetAsComplete() { ApplyMesh("ChatBubble"); }
+	void SetAsObjective(){ ApplyMesh("ChatBubbleYellow"); }
 
 	void Update()
 	{

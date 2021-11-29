@@ -51,7 +51,6 @@ void Loot::Update()
 
 void Loot::Update(std::shared_ptr<Player> player)
 {
-	Update();
 	currentRotation += Time::GetDelta();
 	if (!isTaken)
 	{
@@ -86,11 +85,11 @@ void Loot::Update(std::shared_ptr<Player> player)
 				if (type == LOOTTYPE::MIXED)
 				{
 				for (int wood = 0; wood < numWood; wood++)
-					player->Inventory().AddItem(RESOURCE::WOOD);
+					player->Inventory().AddItem(Item::Type::Stick);
 				for (int stone = 0; stone < numStones; stone++)
-					player->Inventory().AddItem(RESOURCE::STONE);
+					player->Inventory().AddItem(Item::Type::Stone);
 				for (int food = 0; food < numFood; food++)
-					player->Inventory().AddItem(RESOURCE::FOOD);
+					player->Inventory().AddItem(Item::Type::Food);
 				}
 				// GIVE ARROWS HERE....
 
@@ -104,10 +103,10 @@ void Loot::Update(std::shared_ptr<Player> player)
 					player->numArrows += numArrows;
 				
 
+
+
 				std::cout << "Destroyed by collision\n";
-				SoundEffect::AddAudio(L"Audio/PickupPop.wav", 2);
-				SoundEffect::SetVolume(0.8, 2);
-				SoundEffect::StartAudio(2);
+				
 				destroy = true;
 			}
 		}

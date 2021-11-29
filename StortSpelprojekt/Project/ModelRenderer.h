@@ -36,10 +36,12 @@ private:
 	ID3D11VertexShader* vertexShader = nullptr;
 	ID3D11PixelShader* pixelShader = nullptr;
 
+	ID3D11Buffer* timeBuf = nullptr;
+
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	ModelRenderer(RenderMethod method, bool isLit);
+	ModelRenderer(bool isLit = true);
 	~ModelRenderer();
 
 	virtual void Render() override;
