@@ -13,15 +13,6 @@ VSOut main(float3 pos : Position)
 {
     VSOut vso;
 
-//  float4x4 identity =
-//  {
-//       1, 0, 0, 0,
-//       0, 1, 0, 0,
-//       0, 0, 1, 0,
-//       0, 0, 0, 1
-//  };
-    
-
 	vso.worldPos = pos;
 	vso.pos = mul(float4(pos, 0.0f), viewProj);
 
