@@ -33,6 +33,8 @@ private:
 	EmitterType type;
 
 	float size;
+	float width;
+	float depth;
 	Vector3 position;
 
 	Vector2 particleExtents;
@@ -91,6 +93,10 @@ public:
 	void ChangeSecondTexture(std::string path, std::string fileName);
 	void ChangeOpacityTexture(std::string path, std::string fileName);
 
+	void SetCubeWidth(float width) { this->width = width; }
+	void SetCubeDepth(float depth) { this->depth = depth; }
+
+
 	ID3D11ShaderResourceView* GetFirstTexture() { return firstTexture->Get(); }
 	std::string GetFirstTexturePath() { return firstTexture->GetPath(); }
 	std::string GetFirstTextureFile() { return firstTexture->GetFile(); }
@@ -107,6 +113,8 @@ public:
 	Vector2 GetParticleExtents() const { return this->particleExtents; }
 	EmitterType GetType() const { return this->type; }
 	float GetSize() const { return this->size; }
+	float GetWidth() const { return this->width; }
+	float GetDepth() const { return this->depth; }
 	float GetParticleWidth() const { return this->particleExtents.x; }
 	float GetParticleHeight() const { return this->particleExtents.y; }
 	float GetMinVelocity() const { return this->minVelocity; }

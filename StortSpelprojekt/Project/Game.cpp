@@ -62,8 +62,6 @@ void Game::Render()
 
 	ShaderData::Inst().BindFrameConstants();
 
-	PR->Render();
-
 	MR->Render();
 
 	AMR->Render();
@@ -81,6 +79,8 @@ void Game::Render()
 	WR->Render(water);
 
 	SBR->Render();
+
+	PR->Render();
 
 	overlay->Render();
 
@@ -811,7 +811,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNamesFarm[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNamesFarm[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	buildings[0] = std::make_shared<Building>(meshNamesFarm, materialNamesFarm, "FarmHouse", Vector3{ -107.5f, 20.0f, -608.5f }, scene);
+	buildings[0] = std::make_shared<Building>(meshNamesFarm, materialNamesFarm, "FarmHouse", Vector3{ -107.5f, 18.0f, -608.5f }, scene);
 	buildings[0]->SetRotation(0, -DirectX::XM_PI, 0);
 	buildings[0]->SetScale(5.85);
 	buildings[0]->MoveCollider({ 10, 0, 2 });
@@ -869,7 +869,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddTarget("TargetDummy", { -190, 23, -600 }, { 0,0,0 });
 
 	//PARTICLE SYSTEM
-	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
+	auto campFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	PR->Bind(campFireSystem);
 	
