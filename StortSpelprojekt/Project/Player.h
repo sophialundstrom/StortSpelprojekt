@@ -14,7 +14,7 @@
 struct Stats
 {
 	UINT barbariansKilled = 0;
-	float movementSpeed = 20.0f;
+	float movementSpeed = 10.0f;
 	float sprintSpeed = 70.0f;
 	UINT maxHealthPoints = 1;
 	UINT healthPoints = 1;
@@ -34,7 +34,7 @@ class Player : public AnimatedModel
 private:
 	Stats stats;
 
-
+	std::shared_ptr<AnimatedModel> bow;
 
 	std::shared_ptr<Canvas> ingameCanvas;
 

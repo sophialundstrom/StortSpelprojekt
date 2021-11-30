@@ -10,7 +10,7 @@
 
 class AnimatedModel : public Drawable
 {
-private:
+protected:
 	Assimp::Importer importer;
 	const aiScene* scene;
 

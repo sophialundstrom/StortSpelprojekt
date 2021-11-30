@@ -25,7 +25,9 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	currentBiome = BIOME::DEFAULT;
 	previousBiome = currentBiome;
 
-
+	//BOW
+	bow = std::make_shared<AnimatedModel>("AnimatedBow", "Bow");
+	AMR->Bind(bow);
 }
 
 void Player::CalcHeight(HeightMap* heightMap)
@@ -236,11 +238,15 @@ void Player::Update(HeightMap* heightMap)
 			 // ADD IN AIR JUMP ANIMATION
 	}
 
+	if (Event::KeyIsPressed('Y'))
+		bow->PlayOverrideAnimation("Draw", "root", true);
+
 	if (Event::RightIsClicked())
 	{
 		if (!isAiming)
 		{
 			Audio::StartEffect("Bow.wav");
+			bow->PlayOverrideAnimation("Draw", "root", true);
 			isAiming = true;
 		}
 
@@ -285,7 +291,7 @@ void Player::Update(HeightMap* heightMap)
 	if (moveDirection.Length() == 0)
 		PlayAnimation("Idle");
 	else
-		PlayAnimation("Run");
+		PlayAnimation("Walk");
 
 	AnimatedModel::Update();
 
@@ -293,6 +299,25 @@ void Player::Update(HeightMap* heightMap)
 
 	bounds->Update();
 	frustum->Update();
+
+	//BOW UPDATE
+	auto& socket = skeleton.transforms[skeleton.GetJointID("RWrist")];
+
+	auto bowT = Matrix::CreateScale(1.5f) * Matrix::CreateFromYawPitchRoll(PI_DIV2, 0, 0) * Matrix::CreateTranslation(-0.5f, -0.2f, 0.0f);
+
+	Matrix bowTransform = bowT * socket * matrix;
+
+	Vector3 position, scale;
+	Quaternion rotation;
+	bowTransform.Decompose(scale, rotation, position);
+
+	rotation.Normalize();
+
+	bow->SetPosition(position);
+	bow->SetRotation(rotation);
+	bow->SetScale(scale);
+
+	bow->Update();
 }
 
 void Player::TakeDamage()

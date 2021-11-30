@@ -702,7 +702,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitWaterRenderer();
 	RND.InitInteractableRenderer();
 	RND.InitSkyBoxRenderer();
-	
 
 	//CREATE OR LOAD QUESTS
 	QuestLog::CreateQuests();
