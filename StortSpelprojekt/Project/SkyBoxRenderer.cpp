@@ -2,7 +2,7 @@
 #include "BoundingVolumes.h"
 #include "stb_image.h"
 
-void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D* texture, ID3D11ShaderResourceView* textureView)
+void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D*& texture, ID3D11ShaderResourceView*& textureView)
 {
 	HRESULT hr;
 
@@ -51,7 +51,7 @@ void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D*
 
 
 	//Create texture resource
-	hr = Graphics::Inst().GetDevice().CreateTexture2D(&textureDesc, data, &dayTexture);
+	hr = Graphics::Inst().GetDevice().CreateTexture2D(&textureDesc, data, &texture);
 	if (FAILED(hr))
 		std::cout << "FAILED TO CREATE TEXTURE2D\n";
 
@@ -61,7 +61,7 @@ void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D*
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
-	hr = Graphics::Inst().GetDevice().CreateShaderResourceView(dayTexture, &srvDesc, &dayTextureView);
+	hr = Graphics::Inst().GetDevice().CreateShaderResourceView(texture, &srvDesc, &textureView);
 
 	if (FAILED(hr))
 		std::cout << "FAILED TO CREATE SRV\n";
@@ -70,7 +70,7 @@ void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D*
 SkyBoxRenderer::SkyBoxRenderer()
 {
 	BuildCubeMap("DayTime", dayTexture, dayTextureView);
-	//BuildCubeMap("NightTIme");
+	BuildCubeMap("NightTIme", nightTexture, nightTextureView);
 
 	std::string byteCode;
 	//Shaders
@@ -135,13 +135,11 @@ void SkyBoxRenderer::Render()
 	BindShaders(skyBoxVertexShader, nullptr, nullptr, nullptr, skyBoxPixelShader);
 
 	Graphics::Inst().GetContext().OMSetDepthStencilState(skyboxDepthStencil, 1);
-	
 	Graphics::Inst().GetContext().PSSetShaderResources(0, 1, &dayTextureView);
-	
+	Graphics::Inst().GetContext().PSSetShaderResources(1, 1, &nightTextureView);
 	Graphics::Inst().GetContext().IASetIndexBuffer(skyBoxIndices, DXGI_FORMAT_R32_UINT, 0u);
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &skyboxMesh, &stride, &offset);
 	Graphics::Inst().GetContext().DrawIndexed(BoxVolumeData::INDICES, 0, 0);
-	
 	Graphics::Inst().GetContext().OMSetDepthStencilState(nullptr, 0);
 }
 
