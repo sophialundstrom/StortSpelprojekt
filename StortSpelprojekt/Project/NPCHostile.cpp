@@ -109,7 +109,7 @@ void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
 
         if (arrowHandler.CheckCollision(arrow, player->GetBounds(), player->GetPosition(), true))
         {
-            player->TakeDamage();
+            player->TakeDamage(damage);
         }
     }
 }

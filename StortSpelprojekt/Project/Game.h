@@ -74,7 +74,7 @@ private:
 
     std::vector<std::shared_ptr<Item>> items;
 
-    std::shared_ptr<Building> building;
+    std::shared_ptr<Building> buildings[3];
 
     std::map<BarbarianCamp::Location, BarbarianCamp*> camps;
 
@@ -130,11 +130,13 @@ private:
     void CheckNearbyEnemies();
     void HandleBiomes();
     void HandleAudioSources();
+    void HandleHouseUpgrades();
+    bool CheckBuildRequirements(std::shared_ptr<Building> building);
     void HandleCamps();
+
 
     void SetupAudio();
     void UpdateQuadTree();
-
     void UpdateInventoryUI();
 
     void Initialize();

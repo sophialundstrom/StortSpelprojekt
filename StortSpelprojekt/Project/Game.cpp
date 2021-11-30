@@ -37,6 +37,8 @@ void Game::Update()
 
 	HandleAudioSources();
 
+	HandleHouseUpgrades();
+
 	scene.UpdateDirectionalLight(player->GetPosition());
 
 	QuestLog::Update(player, camps, targets);
@@ -433,8 +435,7 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		//camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero, false);
-
+		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero, false, 1);
 		camps[BarbarianCamp::Location::South] = camp;
 	}
 
@@ -636,6 +637,60 @@ void Game::CheckSaveStationCollision()
 	}
 }
 
+void Game::HandleHouseUpgrades()
+{
+	for (auto& building : buildings)
+	{
+		if (Collision::Intersection(*building->GetCollider(), *player->GetFrustum()))
+		{
+			ingameOverlay->ShowInteract();
+
+			if (Event::KeyIsPressed('E') && CheckBuildRequirements(building))
+			{
+				player->HandleUpgrades(building);
+				building->Upgrade();
+			}
+			else if (Event::KeyIsPressed('E') && !CheckBuildRequirements(building))
+			{
+				if (building->GetBuildingName() == "ArcherTent")
+				{
+					if (building->GetCurrentState() == 1)
+						player->numArrows = 10;
+					if (building->GetCurrentState() == 2)
+						player->numArrows = 20;
+					if (building->GetCurrentState() == 3)
+						player->numArrows = 30;
+				}
+			}
+		}
+	}
+}
+
+bool Game::CheckBuildRequirements(std::shared_ptr<Building> building)
+{
+	bool canBuild = false;
+	if (building->GetCurrentState() == 1)
+	{
+		if (player->Inventory().NumOf(Item::Type::Stick) >= building->reqStick1 && player->Inventory().NumOf(Item::Type::Stone) >= building->reqStone1)
+		{
+			player->Inventory().RemoveItem(Item::Type::Stick, building->reqStick1);
+			player->Inventory().RemoveItem(Item::Type::Stone, building->reqStone1);
+			canBuild = true;
+		}
+	}
+	if (building->GetCurrentState() == 2)
+	{
+		if (player->Inventory().NumOf(Item::Type::Stick) >= building->reqStick2 && player->Inventory().NumOf(Item::Type::Stone) >= building->reqStone2)
+		{
+			player->Inventory().RemoveItem(Item::Type::Stick, building->reqStick2);
+			player->Inventory().RemoveItem(Item::Type::Stone, building->reqStone2);
+			canBuild = true;
+		}
+	}
+
+	return canBuild;
+}
+
 void Game::CheckItemCollision()
 {
 	for (auto& item : items)
@@ -716,7 +771,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitWaterRenderer();
 	RND.InitInteractableRenderer();
 	RND.InitSkyBoxRenderer();
-	
+
 
 	//CREATE OR LOAD QUESTS
 	QuestLog::CreateQuests();
@@ -726,7 +781,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	Initialize();
 
 	SetupAudio();
-	
+
 	//SET SCENE CAMERA + DIRECTIONAL LIGHT
 
 	//OVERLAYS
@@ -752,15 +807,43 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
-	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -107.5f, 20.0f, -608.5f }, scene);
-	building->SetRotation(0, -DirectX::XM_PI, 0);
-	building->SetScale(5.85);
+	std::string meshNamesFarm[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
+	std::string materialNamesFarm[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
+	buildings[0] = std::make_shared<Building>(meshNamesFarm, materialNamesFarm, "FarmHouse", Vector3{ -107.5f, 20.0f, -608.5f }, scene);
+	buildings[0]->SetRotation(0, -DirectX::XM_PI, 0);
+	buildings[0]->SetScale(5.85);
+	buildings[0]->MoveCollider({ 10, 0, 2 });
+	buildings[0]->SetColliderRadius(20.0f);
+	buildings[0]->SetRequirements(20,20,40,40);
 
-	scene.AddModel("Building", building);
-	MR->Bind(building);
-	SR->Bind(building);
+	std::string meshNamesTent[] = { "ArcherTent1", "ArcherTent2", "ArcherTent3" };
+	std::string materialNamesTent[] = { "ArcherTentTexture", "ArcherTentTexture", "ArcherTentTexture" };
+	buildings[1] = std::make_shared<Building>(meshNamesTent, materialNamesTent, "ArcherTent", Vector3{ 128.86f, 18.12f, -643.05f }, scene);
+	buildings[1]->SetRotation(0, -DirectX::XM_PIDIV4, 0);
+	buildings[1]->SetScale(1.566);
+	buildings[1]->SetColliderRadius(17.0f);
+	buildings[1]->SetRequirements(20, 20, 40, 40);
+
+	std::string meshNamesBS[] = { "BSLevel1", "BSLevel2", "BSLevel3" };
+	std::string materialNamesBS[] = { "albedoBlacksmith", "albedoBlacksmith", "albedoBlacksmith" };
+	buildings[2] = std::make_shared<Building>(meshNamesBS, materialNamesBS, "Blacksmith", Vector3{ -5.4f, 17.86f, -701.5f }, scene);
+	buildings[2]->SetRotation(0, 0, 0);
+	buildings[2]->SetScale(1.776);
+	buildings[2]->MoveCollider({ 13, 0, 0 });
+	buildings[2]->SetColliderRadius(20.0f);
+	buildings[2]->SetRequirements(20, 20, 40, 40);
+
+	scene.AddDrawable("FarmHouse", buildings[0]);
+	scene.AddDrawable("ArcherTent", buildings[1]);
+	scene.AddDrawable("Blacksmith", buildings[2]);
+
+	for (int i = 0; i < 3; i++)
+	{
+		MR->Bind(buildings[i]);
+		SR->Bind(buildings[i]);
+		CR->Bind(buildings[i]->GetCollider());
+	}
+
 
 	//ITEMS
 	AddItem(Item::Type::Stick, { -134, 32, -594 });
@@ -871,12 +954,12 @@ void Game::HandleCamps()
 
 				if (hit)
 				{
-					camp->barbarians[i]->TakeDamage();
+					camp->barbarians[i]->TakeDamage(player->Stats().damage);
 					Audio::StartEffect("BarbHit1.wav");
 					if (camp->barbarians[i]->IsDead())
 					{
 						Audio::StartEffect("BarbDead.wav");
-						camp->barbarians[i]->TakeDamage();
+						camp->barbarians[i]->TakeDamage(player->Stats().damage);
 						player->Stats().barbariansKilled++;
 						AddLoot(LOOTTYPE::ARROWS, camp->barbarians[i]->GetPosition() + Vector3(0, -3, 0));
 						camp->barbarians[i]->GetArrowHandler().ClearArrows();
@@ -1088,7 +1171,7 @@ void Game::CheckNearbyEnemies()
 	for (int i = 0; i < hostiles.size(); i++)
 	{
 		float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
-		
+
 		hostiles[i]->Update(player, terrain.GetHeightMap());
 
 		hostiles[i]->CheckPlayerCollision(player);
@@ -1102,12 +1185,14 @@ void Game::CheckNearbyEnemies()
 
 			if (hit)
 			{
-				hostiles[i]->TakeDamage();
+
+				hostiles[i]->TakeDamage(player->Stats().damage);
 				Audio::StartEffect("BarbHit1.wav");
 				if (hostiles[i]->IsDead())
 				{
 					Audio::StartEffect("BarbDead.wav");
-					hostiles[i]->TakeDamage();
+					hostiles[i]->TakeDamage(player->Stats().damage);
+
 					player->Stats().barbariansKilled++;
 					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));
 					hostiles[i]->GetArrowHandler().ClearArrows();
@@ -1130,8 +1215,10 @@ void Game::CheckNearbyEnemies()
 	}
 	hostiles.resize(hostiles.size() - numDead);
 
-	if (!player->inCombat && numInCombat > 0) 
+	if (!player->inCombat && numInCombat > 0)
 	{
+		//PrintS("IN COMBAT");
+
 		player->inCombat = true;
 		short int rand = Random::Integer(0, 2);
 
@@ -1151,12 +1238,16 @@ void Game::CheckNearbyEnemies()
 		}
 	}
 	else if (player->inCombat && numInCombat == 0)
-	{ 
-		player->inCombat = false;
-		player->SwitchBiomeMusic();
+	{
+		//PrintS("OUT OF COMBAT"); 
+
+		{
+
+			player->inCombat = false;
+			player->SwitchBiomeMusic();
+		}
 	}
 }
-
 
 //void Game::HoveringBackHowToPlay()
 //{
@@ -1209,7 +1300,7 @@ void Game::UpdateQuadTree()
 
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
-	std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
+	//std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{
