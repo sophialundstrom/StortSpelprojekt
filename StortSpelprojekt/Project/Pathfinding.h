@@ -21,4 +21,5 @@ public:
 	void SetDrawables(std::map<std::string, std::shared_ptr<Drawable>> d) { drawables = d; }
 	void SetColliders(std::vector<std::shared_ptr<Collider>> c) { colliders = c; }
 	void SetHeightMap(HeightMap* heightMap) { this->heightMap = heightMap; }
+	Pathfinding& GetInstance();
 };

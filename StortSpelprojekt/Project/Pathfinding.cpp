@@ -79,3 +79,9 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 		}
 	}
 }
+
+Pathfinding& Pathfinding::GetInstance()
+{
+	static Pathfinding singleton;
+	return singleton;
+}
