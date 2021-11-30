@@ -45,7 +45,7 @@ void Game::Update()
 	ingameOverlay->UpdateHealth(player->Stats().healthPoints);
 	ingameOverlay->UpdateInventory(player->Inventory());
 	ingameOverlay->UpdateQuests(QuestLog::GetActiveQuests());
-	UpdateQuadTree(); //Something in here makes the game run twice as fast
+	UpdateQuadTree();
 
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
 
@@ -78,6 +78,8 @@ void Game::Render()
 
 	WR->Render(water);
 
+	SBR->Render();
+
 	overlay->Render();
 
 	Graphics::Inst().EndFrame();
@@ -109,6 +111,11 @@ void Game::BacktoPause()
 void Game::MainMenu()
 {
 	mainMenu = true;
+}
+
+void Game::QuitCanvas()
+{
+	currentCanvas = canvases["QUIT"];
 }
 
 void Game::Initialize()
@@ -180,36 +187,85 @@ void Game::Initialize()
 		scene.DeleteDrawable(collider->GetName());
 }
 
-void Game::RemoveItem(const std::string name)
+void Game::RemoveItem(std::shared_ptr<Item> removedItem)
 {
 	for (UINT i = 0; i < items.size(); ++i)
 	{
-		if (items[i]->GetName() == name)
+		auto& item = items[i];
+
+		if (item == removedItem)
 		{
-			auto item = scene.Get<Item>(name);
+			IR->Unbind(item);
 			MR->Unbind(item);
 			SR->Unbind(item);
 			CR->Unbind(item->GetCollider());
+
 			auto it = items.begin() + i;
 			items.erase(it);
-			scene.DeleteDrawable(name);
+
 			return;
 		}
 	}
 }
 
-void Game::AddItem(Item::Type type, Vector3 position)
+void Game::AddItem(Item::Type type, Vector3 position, const Vector3& rotation)
 {
 	const std::string name = "Item";
 
 	auto item = std::make_shared<Item>(type, name);
+	item->SetPosition(position);
+	item->SetRotation(rotation);
 	auto collider = item->GetCollider();
+	collider->SetParent(item);
 
-	scene.AddDrawable(name, item);
 	items.emplace_back(item);
+
 	MR->Bind(item);
 	SR->Bind(item);
 	CR->Bind(item->GetCollider());
+}
+
+void Game::GenerateRandomItems(const Vector3& center, UINT amount, float radius)
+{
+	for (UINT i = 0; i < amount; ++i)
+	{
+		auto r = radius * sqrt(Random::Real(0.0f, 1.0f));
+		auto theta = Random::Real(0.0f, 1.0f) * 2.0f * PI;
+
+		auto x = center.x + r * cos(theta);
+		auto z = center.z + r * sin(theta);
+
+		auto y = terrain.SampleAverage(x, z);
+
+		auto itemType = (Item::Type)Random::Integer(0, 2);
+
+		Vector3 rotation = { 0.0f, 0.0f, 0.0f };
+
+		switch (itemType)
+		{
+			case Item::Type::Stick:
+			{
+				auto x = Random::Real(-PI_DIV4, PI_DIV4);
+				auto y = Random::Real(0, 2.0f * PI);
+				auto z = Random::Real(-PI_DIV4, PI_DIV4);
+				rotation = { x, y, z };
+				
+				break;
+			}
+
+			case Item::Type::Stone: case Item::Type::Food:
+			{
+				auto x = Random::Real(0, 2.0f * PI);
+				auto y = Random::Real(0, 2.0f * PI);
+				auto z = Random::Real(0, 2.0f * PI);
+				rotation = { x, y, z };
+
+				break;
+			}
+		}
+
+		AddItem(itemType, { x, y, z }, rotation);
+	}
 }
 
 std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position)
@@ -583,15 +639,21 @@ void Game::CheckItemCollision()
 {
 	for (auto& item : items)
 	{
+		item->Update();
+
+		if (IR->IsBound(item))
+			IR->Unbind(item);
+
 		if (Collision::Intersection(*item->GetCollider(), *player->GetFrustum()))
 		{
 			ingameOverlay->ShowInteract();
+			IR->Bind(item);
 
 			if (Event::KeyIsPressed('E'))
 			{
 				Audio::StartEffect("Pickup.wav");
 				player->Inventory().AddItem(item->GetType());
-				RemoveItem(item->GetName());
+				RemoveItem(item);
 				UpdateInventoryUI();
 
 				return;
@@ -636,6 +698,11 @@ void Game::UpdateInventoryUI()
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:water(5000), terrain(2)
 {
+
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.05f, 100.0f, { 0.0f, 200.0f, -100.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
+	scene.AddPointLight({ 38.055f, 22.367f, -594.542f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
+
 	//INIT WHICH RENDERERS WE WANT TO USE
 	RND.InitAnimatedModelRenderer();
 	RND.InitColliderRenderer();
@@ -647,6 +714,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitTerrainRenderer();
 	RND.InitWaterRenderer();
 	RND.InitInteractableRenderer();
+	RND.InitSkyBoxRenderer();
+	
 
 	//CREATE OR LOAD QUESTS
 	QuestLog::CreateQuests();
@@ -654,11 +723,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//LOAD SCENE
 	Initialize();
+
 	SetupAudio();
 	
 	//SET SCENE CAMERA + DIRECTIONAL LIGHT
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
 
 	//OVERLAYS
 	ingameOverlay = new InGameOverlay();
@@ -671,8 +739,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
 	player->SetPosition(-75, 20, -630);
-	player->GetBounds()->SetParent(player);
-	CR->Bind(player->GetBounds());
+	auto collider = player->GetBounds();
+	collider->SetParent(player);
+	CR->Bind(collider);
 	SKR->Bind(player);
 	AMR->Bind(player);
 
@@ -693,11 +762,14 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	SR->Bind(building);
 
 	//ITEMS
-	AddItem(Item::Type::Stick, { -134, 22, -594 });
-	AddItem(Item::Type::Stick, { -113, 22, -582 });
-	AddItem(Item::Type::Stick, { -116, 20, -609 });
-	AddItem(Item::Type::Stick, { -91, 20, -593 });
-	AddItem(Item::Type::Stick, { -85, 20, -608 });
+	AddItem(Item::Type::Stick, { -134, 32, -594 });
+	AddItem(Item::Type::Stick, { -113, 32, -582 });
+	AddItem(Item::Type::Stick, { -116, 30, -609 });
+	AddItem(Item::Type::Stick, { -91, 30, -593 });
+	AddItem(Item::Type::Stick, { -85, 30, -608 });
+
+	//RANDOM ITEMS
+	GenerateRandomItems({ 38.0f, 20.3f, -574.5f }, 15, 70);
 
 	//FRIENDLY NPCS
 	AddFriendlyNPCs();
@@ -749,7 +821,9 @@ Game::~Game()
 	QuestLog::ShutDown();
 	delete quadTree;
 	scene.Clear();
+
 	Audio::StopEngine();
+
 	Resources::Inst().Clear();
 }
 
@@ -864,19 +938,30 @@ APPSTATE Game::Run()
 	case OVERLAYSTATE::MAIN_MENU:
 		return APPSTATE::MAIN_MENU;
 
+
 	case OVERLAYSTATE::PAUSE:
 	{
-		state = GameState::PAUSED;
-		overlay = pauseOverlay;
-		overlay->ShowCursor();
+		if (Time::Get() - lastStateChange > 0.25f)
+		{
+			state = GameState::PAUSED;
+			overlay = pauseOverlay;
+			overlay->ShowCursor();
+			lastStateChange = Time::Get();
+		}
+	
 		break;
 	}
 
 	case OVERLAYSTATE::RETURN:
 	{
-		state = GameState::ACTIVE;
-		overlay = ingameOverlay;
-		overlay->HideCursor();
+		if (Time::Get() - lastStateChange > 0.25f)
+		{
+			state = GameState::ACTIVE;
+			overlay = ingameOverlay;
+			overlay->HideCursor();
+			lastStateChange = Time::Get();
+		}
+	
 		break;
 	}
 	}
@@ -1071,14 +1156,59 @@ void Game::CheckNearbyEnemies()
 	}
 }
 
+
+//void Game::HoveringBackHowToPlay()
+//{
+//	canvases["HOW TO PLAY"]->GetImage("BackLeavesHowToPlay")->Show();
+//}
+//
+//void Game::HoveringBackOptions()
+//{
+//	canvases["OPTIONS"]->GetImage("BackLeavesHowToPlay")->Show();
+//}
+//
+//void Game::HoveringYes()
+//{
+//	canvases["QUIT"]->GetImage("YesLeaves")->Show();
+//
+//}
+//
+//void Game::HoveringNo()
+//{
+//	canvases["QUIT"]->GetImage("NoLeaves")->Show();
+//
+//}
+//
+//void Game::HoveringOptions()
+//{
+//	canvases["PAUSED"]->GetImage("OptionsLeaves")->Show();
+//}
+//
+//void Game::HoveringResume()
+//{
+//	canvases["PAUSED"]->GetImage("ResumeLeaves")->Show();
+//}
+//
+//void Game::HoveringHowToPlay()
+//{
+//	canvases["PAUSED"]->GetImage("HowToPlayLeaves")->Show();
+//}
+//
+//void Game::HoveringMainMenu()
+//{
+//	canvases["PAUSED"]->GetImage("BackToMainMenuLeaves")->Show();
+//}
+
 void Game::UpdateQuadTree()
 {
 	drawablesToBeRendered.clear();
 	SMR->Clear();
 	SR->ClearStatic();
 
+
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+	std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{
@@ -1100,6 +1230,7 @@ void Game::UpdateQuadTree()
 			SR->BindStatic(drawable);
 		}
 	}
+
 	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
 	
 	//DebugVariant
@@ -1177,6 +1308,5 @@ void Game::UpdateQuadTree()
 
 	}
 	*/
-
 
 }
