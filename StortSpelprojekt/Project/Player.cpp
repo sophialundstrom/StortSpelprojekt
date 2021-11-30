@@ -31,20 +31,82 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 
 void Player::CalcHeight(HeightMap* heightMap)
 {
-	const int lowX = (int)std::floor(position.x);
-	const int highX = (int)std::ceil(position.x);
-	const float Xdecimal = position.x - lowX;
+	int lowX = (int)std::floor(position.x);
+	int highX = (int)std::ceil(position.x);
+	float Xdecimal = position.x - lowX;
 
-	const int lowZ = (int)std::floor(position.z);
-	const int highZ = (int)std::ceil(position.z);
-	const float Zdecimal = position.z - lowZ;
+	int lowZ = (int)std::floor(position.z);
+	int highZ = (int)std::ceil(position.z);
+	float Zdecimal = position.z - lowZ;
 
-	const float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
-	const float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
-	const float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
-	const float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+	float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+	float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+	float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+	float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
 
-	heightMapGroundLevel = position.y = H1 + H2 + H3 + H4;
+
+	int add = 2;
+	float posX = position.x + add;
+	float posZ = position.z + add;
+	lowX = (int)std::floor(posX);
+	highX = (int)std::ceil(posX);
+	Xdecimal = posX - lowX;
+
+	lowZ = (int)std::floor(posZ);
+	highZ = (int)std::ceil(posZ);
+	Zdecimal = posZ - lowZ;
+
+	const float H5 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+	const float H6 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+	const float H7 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+	const float H8 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+
+	posX = position.x - add;
+	posZ = position.z - add;
+	lowX = (int)std::floor(posX);
+	highX = (int)std::ceil(posX);
+	Xdecimal = posX - lowX;
+
+	lowZ = (int)std::floor(posZ);
+	highZ = (int)std::ceil(posZ);
+	Zdecimal = posZ - lowZ;
+
+	const float H9 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+	const float H10 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+	const float H11 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+	const float H12 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+
+	posX = position.x;
+	posZ = position.z + add;
+	lowX = (int)std::floor(posX);
+	highX = (int)std::ceil(posX);
+	Xdecimal = posX - lowX;
+
+	lowZ = (int)std::floor(posZ);
+	highZ = (int)std::ceil(posZ);
+	Zdecimal = posZ - lowZ;
+
+	const float H13 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+	const float H14 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+	const float H15 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+	const float H16 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+
+	posX = position.x + add;
+	posZ = position.z;
+	lowX = (int)std::floor(posX);
+	highX = (int)std::ceil(posX);
+	Xdecimal = posX - lowX;
+
+	lowZ = (int)std::floor(posZ);
+	highZ = (int)std::ceil(posZ);
+	Zdecimal = posZ - lowZ;
+
+	const float H17 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+	const float H18 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+	const float H19 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+	const float H20 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+
+	heightMapGroundLevel = position.y = (H1 + H2 + H3 + H4 + H5 + H6 + H7 + H8 + H9 + H10 + H11 + H12 + H13 + H14 + H15 + H16 + H17 + H18 + H19 + H20) / 20;
 }
 
 float Player::CalcHeightForCamera(HeightMap* heightMap)

@@ -112,6 +112,7 @@
     <ClCompile Include="Win.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="PlaneWithNormals.cpp" />
+    <ClCompile Include="AnimationStateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -237,6 +238,7 @@
     <ClInclude Include="Win.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="PlaneWithNormals.h" />
+    <ClInclude Include="AnimationStateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LightCalculations.hlsli" />
