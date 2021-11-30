@@ -2,7 +2,7 @@
 #include "BoundingVolumes.h"
 #include "stb_image.h"
 
-void SkyBoxRenderer::BuildCubeMap()
+void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName)
 {
 	HRESULT hr;
 
@@ -11,12 +11,12 @@ void SkyBoxRenderer::BuildCubeMap()
 	image = new unsigned char*[6];
 
 	std::string textures[] = { 
-		{skyboxTexturePath + "right.png"},
-		{skyboxTexturePath + "left.png"},
-		{skyboxTexturePath + "up.png"},
-		{skyboxTexturePath + "down.png"},
-		{skyboxTexturePath + "front.png"},
-		{skyboxTexturePath + "back.png"},
+		{skyboxTexturePath + skyboxFolderName + "/right.png"},
+		{skyboxTexturePath + skyboxFolderName + "/left.png"},
+		{skyboxTexturePath + skyboxFolderName + "/up.png"},
+		{skyboxTexturePath + skyboxFolderName + "/down.png"},
+		{skyboxTexturePath + skyboxFolderName + "/front.png"},
+		{skyboxTexturePath + skyboxFolderName + "/back.png"},
 	};
 
 	for (int i = 0; i < 6; i++)
@@ -69,7 +69,7 @@ void SkyBoxRenderer::BuildCubeMap()
 
 SkyBoxRenderer::SkyBoxRenderer()
 {
-	BuildCubeMap();
+	BuildCubeMap("DayTime");
 
 	std::string byteCode;
 	//Shaders

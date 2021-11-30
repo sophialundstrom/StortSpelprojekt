@@ -9,7 +9,7 @@ class SkyBoxRenderer : public Renderer
 private:
 	const UINT stride = sizeof(Vector3);
 	const UINT offset = 0;
-	void BuildCubeMap();
+	void BuildCubeMap(std::string skyboxFolderName);
 
 public:
 	SkyBoxRenderer();
@@ -36,7 +36,7 @@ public:
 	const std::string vs_path = "../x64/Release/skyBoxVertexShader.cso";
 	const std::string ps_path = "../x64/Debug/skyBoxPixelShader.cso";
 #endif
-	const std::string skyboxTexturePath = "Skybox/png/";
+	const std::string skyboxTexturePath = "Skybox/";
 
 	//Shaders
 	ID3D11VertexShader* skyBoxVertexShader = nullptr;
