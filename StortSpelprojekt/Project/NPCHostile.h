@@ -11,12 +11,12 @@ class HostileNPC : public NPC
 private:
 	
 	std::vector<Vector3> path;
-	Pathfinding* pathing;
+	std::shared_ptr<Pathfinding> pathing;
 	std::shared_ptr<Player> player;
 	ArrowHandler arrowHandler;
 	void CalcHeight(HeightMap* heightMap);
 public:
-	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition);
+	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, std::shared_ptr<Pathfinding> pathing);
 ;
 	virtual void Update() override;
 	void Update(const std::shared_ptr<Player> player, HeightMap* heightMap);
@@ -30,7 +30,7 @@ public:
 
 	std::shared_ptr<Player> GetPlayer() { return this->player; }
 
-	void SetPathVar(Pathfinding* path)				{ this->pathing = path; }
+	std::shared_ptr<Pathfinding> GetPath()			{ return this->pathing; }
 	void SetPlayerPtr(std::shared_ptr<Player> p)	{ this->player = p; }
 	void SetState(NPCState &newState)				{ currentState = &newState; }
 

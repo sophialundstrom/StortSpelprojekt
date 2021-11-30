@@ -85,3 +85,9 @@ Pathfinding& Pathfinding::GetInstance()
 	static Pathfinding singleton;
 	return singleton;
 }
+
+Pathfinding* Pathfinding::PGetInstance()
+{
+	static Pathfinding* singleton;
+	return singleton;
+}

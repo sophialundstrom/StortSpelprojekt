@@ -52,7 +52,7 @@ private:
     float lastStateChange = 0.0f;
 
     //-----TEMP-----//
-    Pathfinding pathing;
+    std::shared_ptr<Pathfinding> pathing;
 
     SaveStation saveStations[2];
 

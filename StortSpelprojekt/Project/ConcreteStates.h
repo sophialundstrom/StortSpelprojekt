@@ -1,6 +1,6 @@
 #pragma once
 #include "State.h"
-
+#include "Pathfinding.h"
 
 class MovingState : public NPCState
 {
@@ -14,6 +14,8 @@ private:
 	MovingState() {}
 	MovingState(const MovingState& other);
 	MovingState& operator=(const MovingState& other);
+
+	Pathfinding* path;
 };
 
 class ShootingState : public NPCState

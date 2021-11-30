@@ -144,6 +144,7 @@ void MovingState::Enter(HostileNPC& hostile)
 void MovingState::Update(HostileNPC& hostile)
 {
     
+    path = path->PGetInstance();
     Vector3 aimDir = hostile.GetPlayer()->GetPosition() + Vector3(0.f, 4.5f, 0.f) - hostile.GetPosition();
 
         aimDir.Normalize();

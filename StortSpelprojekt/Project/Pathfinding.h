@@ -22,4 +22,6 @@ public:
 	void SetColliders(std::vector<std::shared_ptr<Collider>> c) { colliders = c; }
 	void SetHeightMap(HeightMap* heightMap) { this->heightMap = heightMap; }
 	Pathfinding& GetInstance();
+	Pathfinding* PGetInstance();
+
 };

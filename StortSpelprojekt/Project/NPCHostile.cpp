@@ -1,7 +1,7 @@
 #include "NPCHostile.h"
 #include "ConcreteStates.h"
 
-HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition)
+HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, std::shared_ptr<Pathfinding> pathing)
 	:NPC(file)
 {
     this->player = player;
@@ -9,6 +9,7 @@ HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, 
     //SwapCombatStyle(combatStyle);
  
     currentState = &MovingState::GetInstance();
+    this->pathing = pathing;
     this->targetPosition = targetPosition;
     this->viewDistance = 100.f;
     //SetState(IdlingState::)

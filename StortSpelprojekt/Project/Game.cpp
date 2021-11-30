@@ -185,6 +185,10 @@ void Game::Initialize()
 
 	for (auto& collider : colliders)
 		scene.DeleteDrawable(collider->GetName());
+
+	//pathing = std::make_shared<Pathfinding>();
+	pathing->CreateGrid(Vector3::Zero);
+	
 }
 
 void Game::RemoveItem(std::shared_ptr<Item> removedItem)
@@ -470,14 +474,14 @@ void Game::AddBarbarianCamps()
 void Game::SpawnInvasion()
 {
 	camps[BarbarianCamp::Location::Village]->Reset();
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -14, 48, 439 }, hostiles, player, CombatStyle::consistantDelay, { -16.5, 20, -567 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 7, 56, -398 }, hostiles, player, CombatStyle::consistantDelay, { 2, 20, -579 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 73, 50, -422 }, hostiles, player, CombatStyle::consistantDelay, { 57, 21, -574 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 293, 22, -628 }, hostiles, player, CombatStyle::consistantDelay, { 122, 20, -624 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 243, 24, -576 }, hostiles, player, CombatStyle::consistantDelay, { 71, 20, -626 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 207, 18, -736 }, hostiles, player, CombatStyle::consistantDelay, { 97, 18, -681 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 200, 10, -791 }, hostiles, player, CombatStyle::consistantDelay, { 47, 18, -675 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -314, 7, -644 }, hostiles, player, CombatStyle::consistantDelay, { -88, 18, -652 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -14, 48, 439 }, hostiles, player, CombatStyle::consistantDelay, { -16.5, 20, -567 }, pathing);
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 7, 56, -398 }, hostiles, player, CombatStyle::consistantDelay, { 2, 20, -579 }, pathing);
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 73, 50, -422 }, hostiles, player, CombatStyle::consistantDelay, { 57, 21, -574 }, pathing);
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 293, 22, -628 }, hostiles, player, CombatStyle::consistantDelay, { 122, 20, -624 }, pathing);
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 243, 24, -576 }, hostiles, player, CombatStyle::consistantDelay, { 71, 20, -626 }, pathing);
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 207, 18, -736 }, hostiles, player, CombatStyle::consistantDelay, { 97, 18, -681 }, pathing);
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 200, 10, -791 }, hostiles, player, CombatStyle::consistantDelay, { 47, 18, -675 }, pathing);
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -314, 7, -644 }, hostiles, player, CombatStyle::consistantDelay, { -88, 18, -652 }, pathing);
 	
 
 }
@@ -590,7 +594,7 @@ void Game::CheckNearbyCollision()
 
 void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle, const Vector3& targetPosition)
 {
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, targetPosition);
+	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, targetPosition, pathing);
 	NPC->SetPosition(position);
 
 	auto collider = NPC->GetCollider();

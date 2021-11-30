@@ -61,7 +61,7 @@ private:
 	void test();
 	std::ifstream in;
 	void LoadNodes();
-	Pathfinding path;
+	Pathfinding* path;
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 
