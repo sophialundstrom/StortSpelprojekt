@@ -55,6 +55,10 @@ void Canvas::Update()
 			break;
 		}
 	}
+
+	for (auto& [name, slider] : sliders)
+		slider->Update();
+
 }
 
 void Canvas::DrawImages()
@@ -69,6 +73,13 @@ void Canvas::DrawTexts()
 	for (auto& [name, text] : texts)
 		if (text->IsVisible())
 			text->Draw();
+}
+
+void Canvas::DrawSliders()
+{
+	for (auto& [name, slider] : sliders)
+		if (slider->IsVisible())
+			slider->Draw();
 }
 
 void Canvas::DrawButtons()
@@ -87,6 +98,8 @@ void Canvas::Render()
 	DrawButtons();
 
 	DrawTexts();
+
+	DrawSliders();
 
 	if (showCursor)
 		regularCursor->Draw();

@@ -161,15 +161,24 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	// OPTIONS
 	auto optionsCanvas = new Canvas();
+	{
+		// OPTIONS TITLE
+		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 350 }, "OptionsInOptions", "Options.png", 1.5f, 1.0f);
+		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 350 }, "OptionsLeavesInOptions", "OptionsLeaves.png", 1.5f, 1.0f);
+		// BACK
+		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackLeavesOptions", "BackLeaves.png", 1.0f, 1.0f);
+		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackControls", "Back.png", 1.0f, 1.0f);
+		auto image = optionsCanvas->GetImage("BackControls");
+		optionsCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "BackButtonOptions", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { BacktoMenu(); }, [this] { HoveringBackOptions(); });
+		//Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrush * brush, std::function<void()> onClickFunction, std::function<void()> onHoverFunction, bool visible)
 
-	// OPTIONS TITLE
-	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 350 }, "OptionsInOptions", "Options.png", 1.5f, 1.0f);
-	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 350 }, "OptionsLeavesInOptions", "OptionsLeaves.png", 1.5f, 1.0f);
-	// BACK
-	optionsCanvas->AddButton({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackButtonOptions", 180, 50, UI::COLOR::GRAY, [this] { BacktoMenu(); }, [this] { HoveringBackOptions(); });
-	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackLeavesOptions", "BackLeaves.png", 1.0f, 1.0f);
-	optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackControls", "Back.png", 1.0f, 1.0f);
+		auto sliderButton = new Button({ 0,0 }, 50, 50, UI::Inst().GetBrush(UI::COLOR::GRAY));
+		auto sliderImage = new Image("HP0.png", { 0,0 }, 1.0f, 1.0f, true, true);
+		auto sliderButtonImage = new Image("Cursor.png", { 0,0 });
+		optionsCanvas->AddSlider({ clientWidth / 2.0f, clientHeight / 2.f }, "MasterVolumeSlider", sliderButton, sliderImage, sliderButtonImage, 0.0f, 1.0f, 0.5f, [this](float value) { Audio::SetMasterVolume(value); });
 
+	}
+	
 	canvases["OPTIONS"] = optionsCanvas;
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { -41.0f, 37.0f, -687.0f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });

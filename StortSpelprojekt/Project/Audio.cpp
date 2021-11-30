@@ -14,6 +14,41 @@ std::map<std::string, IXAudio2SourceVoice*> Audio::sVoices;
 std::map<std::string, XAUDIO2_BUFFER> Audio::audioBuffers;
 float Audio::volume = 0.5f;
 
+bool Audio::MuteAllVolume()
+{
+	return false;
+}
+
+void Audio::SetMasterVolume(float volume)
+{
+	pMasterVoice->SetVolume(volume);
+	Print(volume);
+}
+
+void Audio::SetMusicVolume(float volume)
+{
+	for (auto& [key, source] : sMusic)
+	{
+		source->SetVolume(volume);
+	}
+}
+
+void Audio::SetSoundEffectsVolume(float volume)
+{
+	for (auto& [key, source] : sEffects)
+	{
+		source->SetVolume(volume);
+	}
+}
+
+void Audio::SetVoiceVolume(float volume)
+{
+	for (auto& [key, source] : sVoices)
+	{
+		source->SetVolume(volume);
+	}
+}
+
 void Audio::StartEngine()
 {
 	MusicEngine->StartEngine();
@@ -26,8 +61,10 @@ void Audio::StopEngine()
 
 void Audio::SetVolume(const std::string& name, float volume)
 {
+
 	if (sMusic.count(name) == 1)
 	{
+
 		sMusic[name]->SetVolume(volume);
 		return;
 	}

@@ -16,6 +16,8 @@ private:
 	static WAVEFORMATEXTENSIBLE wfx;
 	static float volume;
 
+	bool mute = false;
+
 	static void StartEngine();
 	static void AddAudio(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat = false);
 	static void AddAudioNoneMT(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat = false);
@@ -36,6 +38,7 @@ public:
 	static void SetMusicVolume(float volume);
 	static void SetSoundEffectsVolume(float volume);
 	static void SetVoiceVolume(float volume);
+	bool MuteAllVolume();
 
 	// STARTING AND STOPPING
 	static void StartMusic(const std::string& name);

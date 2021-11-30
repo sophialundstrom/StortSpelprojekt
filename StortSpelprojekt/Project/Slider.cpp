@@ -2,27 +2,34 @@
 #include "Event.h"
 #include "Window.h"
 
-Slider::Slider(D2D_VECTOR_2F position, Button * button, Image* sliderImage, Image* buttonImage, float minValue, float maxValue, float currentValue, std::function<void(const std::string&, float)> func = NULL)
-	:button(button), sliderImage(sliderImage), buttonImage(buttonImage), minValue(minValue), maxValue(maxValue), currentValue(currentValue)
+Slider::Slider(D2D_VECTOR_2F position, Button * button, Image* sliderImage, Image* buttonImage, float minValue, float maxValue, float currentValue, std::function<void(float)> func, bool visible)
+	:position(position), button(button), sliderImage(sliderImage), buttonImage(buttonImage), minValue(minValue), maxValue(maxValue), currentValue(currentValue), func(func), UIComponent(0,0,visible)
 {
-	sliderImage->SetPosition(position.x, position.y);
+
+	sliderImage->SetPosition((int)position.x, (int)position.y);
 
 	minX = position.x - sliderImage->GetWidth() / 2;
 	maxX = position.x + sliderImage->GetWidth() / 2;
 
 	float startX =  minX + sliderImage->GetWidth() * ((currentValue - minValue) / (maxValue - minValue));
 
-	buttonImage->SetPosition(startX, position.y);
+	buttonImage->SetPosition((int)startX, (int)position.y);
 
-	button->SetPosition(startX, position.y);
+	button->SetPosition((int)startX, (int)position.y);
 	
-	
-
-
+	func(currentValue);
 }
 
 Slider::~Slider()
 {
+}
+
+void Slider::Draw()
+{
+	sliderImage->Draw();
+	buttonImage->Draw();
+
+	button->Draw();
 }
 
 void Slider::Update()
@@ -33,23 +40,23 @@ void Slider::Update()
 
 		if (button->isClicked(mp.x, mp.y))
 		{
-			//auto lastPosition = button->GetPosition();
+
 			if (mp.x > maxX)
 			{
-				mp.x = maxX;
+				mp.x = (long)maxX;
 			}
+
 			else if (mp.x < minX)
 			{
-				mp.x = minX;
+				mp.x = (long)minX;
 			}
-			button->SetPosition(mp.x, sliderImage->GetPosition().y);
-			buttonImage->SetPosition(mp.x, sliderImage->GetPosition().y);
+			button->SetPosition((int)mp.x, (int)sliderImage->GetPosition().y);
+			buttonImage->SetPosition((int)mp.x, (int)sliderImage->GetPosition().y);
 
-			
+			float normalizedValue = ((mp.x - minX) / (maxX - minX));
+			func(normalizedValue);
 
 		}
 	}
 		
-
-
 }
