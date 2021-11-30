@@ -18,7 +18,7 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 
 	Load(file);
 
-	PlayAnimation("Idle", true);
+	PlayAnimation("Running", true);
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 
