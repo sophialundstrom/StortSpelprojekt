@@ -744,8 +744,8 @@ void Game::SetupAudio()
 {
 	Audio::Initialize();
 
-	Audio::StartMusic("Sonrie.wav");
-	Audio::SetVolume("Sonrie.wav", 0.3f);
+	Audio::StartMusic("SoundForest.wav");
+	Audio::SetVolume("SoundForest.wav", 0.3f);
 }
 
 void Game::HandleAudioSources()
