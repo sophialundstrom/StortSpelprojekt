@@ -305,6 +305,7 @@ void Game::UpdateAndHandleLoot()
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 			
+			Audio::SetVolume("PickupPop.wav", 3.f);
 			Audio::StartEffect("PickupPop.wav");
 		}
 	}
