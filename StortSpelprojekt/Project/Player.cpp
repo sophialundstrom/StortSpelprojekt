@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Building.h"
 
 Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera)
@@ -218,11 +219,32 @@ void Player::Update(HeightMap* heightMap)
 	}
 	
 	static float lastClick = 0;
+	static float lastEat = 0;
 
-	if (Event::KeyIsPressed('R') && numArrows < maxArrows)
+	if (Event::KeyIsPressed('R') && Time::Get() - lastEat > 1.0f)
 	{
-		numArrows++;
+		//if (stats.healthPoints < 10 && inventory.NumOf(Item::Type::Food) > 0)
+		//{
+			stats.IncreaseHealthPoints();
+		//	inventory.RemoveItem(Item::Type::Food, 1);
+		//}
+		lastEat = Time::Get();
 	}
+
+	if (Event::KeyIsPressed('K'))
+	{
+		inventory.AddItem(Item::Type::Stick, 10);
+		Print("Sticks: ");
+		Print(inventory.NumOf(Item::Type::Stick));
+	}
+
+	if (Event::KeyIsPressed('L'))
+	{
+		inventory.AddItem(Item::Type::Stone, 10);
+		Print("Stones: ");
+		Print(inventory.NumOf(Item::Type::Stone));
+	}
+
 
 	sinceLastShot += Time::GetDelta();
 	if (sinceLastShot > shootingAnimationLenght) {
@@ -295,7 +317,7 @@ void Player::Update(HeightMap* heightMap)
 	frustum->Update();
 }
 
-void Player::TakeDamage()
+void Player::TakeDamage(int x)
 {
 	if (stats.healthPoints - 1 == 0 /*|| stats.healthPoints < 0*/)
 	{
@@ -307,7 +329,13 @@ void Player::TakeDamage()
 	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
 	//SoundEffect::SetVolume(0.5, 2);
 	//SoundEffect::StartAudio(2);
-	stats.healthPoints--;
+
+	int totalDamage = x - stats.resist;
+	if (totalDamage <= 1)
+		stats.healthPoints--;
+	else
+		stats.healthPoints -= totalDamage;
+	
 }
 
 void Player::SwitchBiomeMusic()
@@ -315,22 +343,18 @@ void Player::SwitchBiomeMusic()
 	switch (this->currentBiome)
 	{
 	case BIOME::DESERT:
-		PrintS("DESERT");
 
 		Audio::StartMusic("SoundDesert.wav");
 		break;
 	case BIOME::MOUNTAIN:
-		PrintS("MOUNTAIN");
 
-		Audio::StartMusic("whenthedoommusickicksin.wav");
+		Audio::StartMusic("SoundMountain.wav");
 		break;
 	case BIOME::OCEAN:
-		PrintS("OCEAN");
 		Audio::StartMusic("SoundOcean.wav");
 		break;
 	case BIOME::DEFAULT:
-		PrintS("DEFAULT");
-		Audio::StartMusic("Sonrie.wav");
+		Audio::StartMusic("SoundForest.wav");
 		break;
 	}
 }
@@ -420,6 +444,51 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 
 		Transform::UpdateMatrix();
 		bounds->Update();
+	}
+}
+
+void Player::HandleUpgrades(std::shared_ptr<Building> building)
+{
+	std::string buildingName = building->GetBuildingName();
+	int state = building->GetCurrentState();
+	if (buildingName == "FarmHouse")
+	{
+		if (state == 1)
+		{
+			stats.resist = 1;
+			stats.HPGain = 2;
+		}
+		if (state == 2)
+		{
+			stats.resist = 2;
+			stats.HPGain = 3;
+		}
+	}
+	if (buildingName == "ArcherTent")
+	{
+		if (state == 1)
+		{
+			maxArrows = 20;
+			numArrows = 20;
+		}
+		if (state == 2)
+		{
+			maxArrows = 30;
+			numArrows = 30;
+		}
+		if (state == 3)
+			numArrows = 30;
+	}
+	if (buildingName == "Blacksmith")
+	{
+		if (state == 1)
+		{
+			stats.damage = 2;
+		}
+		if (state == 2)
+		{
+			stats.damage = 3;
+		}
 	}
 }
 
