@@ -69,7 +69,8 @@ void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName)
 
 SkyBoxRenderer::SkyBoxRenderer()
 {
-	BuildCubeMap("DayTime");
+	//BuildCubeMap("DayTime");
+	BuildCubeMap("NightTIme");
 
 	std::string byteCode;
 	//Shaders
