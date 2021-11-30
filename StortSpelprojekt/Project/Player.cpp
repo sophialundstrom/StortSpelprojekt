@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
-	:AnimatedModel("BarbarianAnim", "Player"), sceneCamera(camera)
+	:AnimatedModel("Farmer", "Player"), sceneCamera(camera)
 {
 	isRightPressed = false;
 	isLeftPressed = false;
@@ -18,7 +18,7 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 
 	Load(file);
 
-	PlayAnimation("Running", true);
+	PlayAnimation("Idle", true);
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 
