@@ -114,7 +114,7 @@ private:
     std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position);
 
     void AddFriendlyNPCs();
-    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
+    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle, const Vector3& targetPosition);
     void AddLoot(LOOTTYPE type, const Vector3& position);
     void AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation);
     void AddBarbarianCamps();
@@ -132,6 +132,7 @@ private:
     void HandleAudioSources();
     void HandleHouseUpgrades();
     bool CheckBuildRequirements(std::shared_ptr<Building> building);
+
 
     void SetupAudio();
     void UpdateQuadTree();

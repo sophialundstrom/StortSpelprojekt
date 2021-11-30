@@ -329,6 +329,7 @@ void Player::TakeDamage(int x)
 	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
 	//SoundEffect::SetVolume(0.5, 2);
 	//SoundEffect::StartAudio(2);
+
 	int totalDamage = x - stats.resist;
 	if (totalDamage <= 1)
 		stats.healthPoints--;
@@ -342,22 +343,18 @@ void Player::SwitchBiomeMusic()
 	switch (this->currentBiome)
 	{
 	case BIOME::DESERT:
-		PrintS("DESERT");
 
 		Audio::StartMusic("SoundDesert.wav");
 		break;
 	case BIOME::MOUNTAIN:
-		PrintS("MOUNTAIN");
 
-		Audio::StartMusic("whenthedoommusickicksin.wav");
+		Audio::StartMusic("SoundMountain.wav");
 		break;
 	case BIOME::OCEAN:
-		PrintS("OCEAN");
 		Audio::StartMusic("SoundOcean.wav");
 		break;
 	case BIOME::DEFAULT:
-		PrintS("DEFAULT");
-		Audio::StartMusic("Sonrie.wav");
+		Audio::StartMusic("SoundForest.wav");
 		break;
 	}
 }

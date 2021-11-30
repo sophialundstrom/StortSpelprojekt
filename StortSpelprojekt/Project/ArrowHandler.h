@@ -21,7 +21,7 @@ public:
 
 	// Call this function when checking collision between arrows and a collider. The bool determines if the arrow should treat the colliding object as a static (immobile) or dynamic (moving) object.
 	// Checks collision with the input collider and each arrow in the vector.
-	bool CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<Collider> collider, bool isDynamic = false);
+	bool CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<Collider> collider, const Vector3& playerPosition, bool isDynamic = false);
 
 	// This function removes all arrows from the input renderers.
 	void ClearArrows();
