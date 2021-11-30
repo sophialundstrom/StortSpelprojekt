@@ -11,6 +11,8 @@
 #include "Biome.h"
 #include "Inventory.h"
 
+class Building;
+
 struct Stats
 {
 	UINT barbariansKilled = 0;
@@ -20,6 +22,7 @@ struct Stats
 	UINT healthPoints = 1;
 	UINT level = 1;
 	float currentSpeed = movementSpeed;
+	int resist = 0;
 
 	void SetMaxHealthPoints(UINT newMaxHealthPoints) { this->maxHealthPoints = newMaxHealthPoints; }
 	void SetHealthPoints(UINT newHealthPoints) { this->healthPoints = newHealthPoints; }
@@ -115,7 +118,7 @@ public:
 	UINT numArrows = 5;
 	void Update(HeightMap* heightMap);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
-	void TakeDamage();
+	void TakeDamage(int x);
 	bool inCombat = false;
 	void SwitchBiomeMusic();
 
@@ -149,4 +152,5 @@ public:
 	{
 		closestColliderToCam = range;
 	}
+	void HandleUpgrades(std::shared_ptr<Building> building);
 };

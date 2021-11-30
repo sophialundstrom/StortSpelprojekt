@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Building.h"
 
 Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera)
@@ -281,7 +282,7 @@ void Player::Update(HeightMap* heightMap)
 	frustum->Update();
 }
 
-void Player::TakeDamage()
+void Player::TakeDamage(int x)
 {
 	if (stats.healthPoints - 1 == 0 /*|| stats.healthPoints < 0*/)
 	{
@@ -293,7 +294,12 @@ void Player::TakeDamage()
 	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
 	//SoundEffect::SetVolume(0.5, 2);
 	//SoundEffect::StartAudio(2);
-	stats.healthPoints--;
+	int totalDamage = x - stats.resist;
+	if (totalDamage <= 1)
+		stats.healthPoints--;
+	else
+		stats.healthPoints -= totalDamage;
+	
 }
 
 void Player::SwitchBiomeMusic()
@@ -406,6 +412,24 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 
 		Transform::UpdateMatrix();
 		bounds->Update();
+	}
+}
+
+void Player::HandleUpgrades(std::shared_ptr<Building> building)
+{
+	std::string buildingName = building->GetBuildingName();
+	int state = building->GetCurrentState();
+	if (buildingName == "FarmHouse")
+	{
+		stats.resist = state;
+	}
+	if (buildingName == "ArcherTent")
+	{
+
+	}
+	if (buildingName == "BlackSmith")
+	{
+
 	}
 }
 

@@ -585,7 +585,7 @@ void Game::HandleHouseUpgrades()
 
 			if (Event::KeyIsPressed('E'))
 			{
-
+				building->Upgrade();
 			}
 		}
 	}

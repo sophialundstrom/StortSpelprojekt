@@ -15,13 +15,14 @@ private:
 	Pathfinding* pathing;
 	std::shared_ptr<Player> player;
 	ArrowHandler arrowHandler;
+	int damage;
 public:
 	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle);
 ;
 	virtual void Update() override;
 	void Update(const std::shared_ptr<Player> player);
 
-	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
+	ArrowHandler& GetArrowHandler() { return this->arrowHandler; }
 
 	void Reset();
 	void SetSpawnPosition(const Vector3& position);
@@ -33,5 +34,6 @@ public:
 	void SetPathVar(Pathfinding* path)				{ this->pathing = path; }
 	void SetPlayerPtr(std::shared_ptr<Player> p)	{ this->player = p; }
 	void SetState(NPCState &newState)				{ currentState = &newState; }
+	void SetDamage(int x)							{ damage = x; }
                                                                                                                                                                                                                                                              
 };

@@ -15,6 +15,7 @@ private:
 	UINT currState = 0;
 	float lastUpdate = 0;
 	std::shared_ptr<BoundingSphere> collider;
+	std::string buildingName = "";
 public:
 	std::unique_ptr<BuildingEffect> effect;
 	Building() = default;
@@ -22,6 +23,7 @@ public:
 	Building(std::string meshNames[], std::string materialNames[], const std::string &name, Vector3 position, Scene& scene)
 		:Model(meshNames[0], name)
 	{
+		buildingName = name;
 		collider = std::make_shared<BoundingSphere>();
 		this->position = position;
 		collider->SetPosition(position);
@@ -43,6 +45,8 @@ public:
 	}
 
 	void MoveCollider(Vector3 pos) { collider->SetPosition(position + pos); }
+	int GetCurrentState() { return currState; }
+	std::string GetBuildingName() { return buildingName; }
 
 	void Upgrade()
 	{
