@@ -10,10 +10,46 @@ HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, 
  
     currentState = &MovingState::GetInstance();
     this->targetPosition = targetPosition;
-    this->viewDistance = 80.f;
+    this->viewDistance = 100.f;
     //SetState(IdlingState::)
 
     arrowHandler.SetPullbackFactor(0.6f);
+
+
+    Vector3 aimDir = player->GetPosition() + Vector3(0.f, 4.5f, 0.f) - position;
+    aimDir.Normalize();
+    float additionalRadians = 0;
+    float aimDirXIgnoranceLevel = 0.2f;
+    Vector3 yRadiantVecReference;
+
+    if (aimDir.x > -aimDirXIgnoranceLevel && aimDir.x < aimDirXIgnoranceLevel)
+    {
+        if (aimDir.z < 0)
+        {
+            yRadiantVecReference = { 1, 0, 0 };
+            additionalRadians = PI_DIV2;
+        }
+        else if (aimDir.z > 0)
+        {
+            yRadiantVecReference = { -1, 0, 0 };
+            additionalRadians = -PI_DIV2;
+        }
+    }
+    else if (aimDir.x > 0)
+    {
+        yRadiantVecReference = { 0, 0, 1 };
+        additionalRadians = 0;
+    }
+    else
+    {
+        yRadiantVecReference = { 0, 0, -1 };
+        additionalRadians = PI;
+    }
+
+    float movementYRadiant = additionalRadians + acos(aimDir.Dot(yRadiantVecReference) / aimDir.Length());
+
+    SetRotation({ 0, movementYRadiant, 0 });
+    originalRotation = rotation;
 }
 
 void HostileNPC::CalcHeight(HeightMap* heightMap)

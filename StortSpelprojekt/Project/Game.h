@@ -126,6 +126,7 @@ private:
     void CheckNearbyEnemies();
     void HandleBiomes();
     void HandleAudioSources();
+    void HandleCamps();
 
     void SetupAudio();
     void UpdateQuadTree();

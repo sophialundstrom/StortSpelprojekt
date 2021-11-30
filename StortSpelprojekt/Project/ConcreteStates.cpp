@@ -52,6 +52,7 @@ void ShootingState::Update(HostileNPC& hostile)
     {
         PrintS("CHANGED FROM SHOOT -> MOVING");
         hostile.currentState = &MovingState::GetInstance();
+        hostile.SetRotation(hostile.originalRotation);
         return;
     }
     if ((hostile.GetPosition() - hostile.targetPosition).Length() < 3.f && hostile.distanceToPlayer > hostile.viewDistance)
@@ -59,10 +60,10 @@ void ShootingState::Update(HostileNPC& hostile)
         PrintS("CHANGED FROM SHOOT -> MOVING");
         hostile.currentState = &IdlingState::GetInstance();
         return;
-    }
+    } 
 
     SwapCombatStyle(CombatStyle::consistantDelay);
-    Vector3 aimDir = hostile.GetPlayer()->GetPosition() + Vector3(0.f, 3.5f, 0.f) - hostile.GetPosition();
+    Vector3 aimDir = hostile.GetPlayer()->GetPosition() + Vector3(0.f, 4.5f, 0.f) - hostile.GetPosition();
 
     if (aimDir.Length() <= enemyShootDetectionRadius)
     {
@@ -102,13 +103,14 @@ void ShootingState::Update(HostileNPC& hostile)
 
         hostile.SetRotation({ 0, movementYRadiant, 0 });
 
-        if (Time::Get() - lastShot > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
+        if (Time::Get() - hostile.lastShot > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
         {
             hostile.GetArrowHandler().AddArrow(aimDir, hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             Audio::StartEffect("Fire.wav");
-            lastShot = Time::Get();
+            PrintS("SHOT");
+            hostile.lastShot = Time::Get();
         }
-        else if (Time::Get() - lastShot > 3 && combatStyle == CombatStyle::wideArrow)
+        else if (Time::Get() - hostile.lastShot > 3 && combatStyle == CombatStyle::wideArrow)
         {
             float arrowWidth = PI / 32.f;
             Audio::StartEffect("Fire.wav");
@@ -117,7 +119,7 @@ void ShootingState::Update(HostileNPC& hostile)
             hostile.GetArrowHandler().AddArrow(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
 
             DirectX::XMMatrixRotationX(-arrowWidth);
-            lastShot = Time::Get();
+            hostile.lastShot = Time::Get();
 
         }
     }
@@ -141,6 +143,46 @@ void MovingState::Enter(HostileNPC& hostile)
 
 void MovingState::Update(HostileNPC& hostile)
 {
+    
+    Vector3 aimDir = hostile.GetPlayer()->GetPosition() + Vector3(0.f, 4.5f, 0.f) - hostile.GetPosition();
+
+        aimDir.Normalize();
+
+        float additionalRadians = 0;
+
+        Vector3 yRadiantVecReference;
+        float aimDirXIgnoranceLevel = 0.2f;
+
+        if (aimDir.x > -aimDirXIgnoranceLevel && aimDir.x < aimDirXIgnoranceLevel)
+        {
+            if (aimDir.z < 0)
+            {
+                yRadiantVecReference = { 1, 0, 0 };
+                additionalRadians = PI_DIV2;
+            }
+            else if (aimDir.z > 0)
+            {
+                yRadiantVecReference = { -1, 0, 0 };
+                additionalRadians = -PI_DIV2;
+            }
+        }
+        else if (aimDir.x > 0)
+        {
+            yRadiantVecReference = { 0, 0, 1 };
+            additionalRadians = 0;
+        }
+        else
+        {
+            yRadiantVecReference = { 0, 0, -1 };
+            additionalRadians = PI;
+        }
+        float movementYRadiant = additionalRadians + acos(aimDir.Dot(yRadiantVecReference) / aimDir.Length());
+        //movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
+
+        hostile.SetRotation({ 0, movementYRadiant, 0 });
+
+    
+
     Vector3 direction = hostile.targetPosition - hostile.GetPosition();
     direction.Normalize();
 
@@ -194,6 +236,7 @@ void IdlingState::Update(HostileNPC& hostile)
     {
         PrintS("CHANGED FROM IDLE -> MOVING");
         hostile.currentState = &MovingState::GetInstance();
+        hostile.SetRotation(hostile.originalRotation);
         return;
     }
 }

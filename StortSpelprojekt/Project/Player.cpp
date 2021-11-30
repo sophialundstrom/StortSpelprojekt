@@ -293,7 +293,7 @@ void Player::TakeDamage()
 	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
 	//SoundEffect::SetVolume(0.5, 2);
 	//SoundEffect::StartAudio(2);
-	stats.healthPoints--;
+	 stats.healthPoints--;
 }
 
 void Player::SwitchBiomeMusic()
@@ -309,7 +309,7 @@ void Player::SwitchBiomeMusic()
 		Audio::StartMusic("EpicHeart.wav");
 		break;
 	case BIOME::OCEAN:
-		Audio::StartMusic("SandyBeach.wav");
+		Audio::StartMusic("SoundOcean.wav");
 		break;
 	case BIOME::DEFAULT:
 		Audio::StartMusic("Sonrie.wav");

@@ -64,7 +64,7 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<
                 arrow->canCollide = false;
             }
 
-            if ((playerPosition - arrow->GetPosition()).Length() < 15.f)
+            if ((playerPosition - arrow->GetPosition()).Length() < 50.f)
             {
                 int rand = Random::Integer(0, 1);
                 if (rand == 0)

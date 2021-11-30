@@ -28,13 +28,13 @@ public:
 private:
 	CombatStyle combatStyle;
 	float shootDeelay = 0.2f;
-	float lastShot = 0.f;
+//	float lastShot = 0.f;
 
 
 	float shootDeelayPattern[3];
 	int shootPatternIndex = 0;
 
-	int enemyShootDetectionRadius = 80;
+	int enemyShootDetectionRadius = 100;
 	float movementXRadiant;
 	float movementYRadiant;
 };

@@ -9,25 +9,24 @@ void BarbarianCamp::SetTarget(const Vector3& target)
     this->target = target;
 }
 
-void BarbarianCamp::Update(std::shared_ptr<Player> player)
+void BarbarianCamp::Update(std::shared_ptr<Player> player, HeightMap* heightMap)
 {
     //NOT CORRECT BUT WORKS FOR NOW
     for (auto& barbarian : barbarians)
     {
         if (location == Location::Village)
         {
-           /* if ((player->GetPosition() - barbarian->GetPosition()).Length() < barbarian->DetectionRadius())
-                target = player->GetPosition();*/
+            barbarian->Update(player, heightMap);
         }
 
        // barbarian->Update(player);
     }
 
-    if (location != Location::Village)
+    /*if (location != Location::Village)
     {
         if ((player->GetPosition() - position).Length() < radius)
             target = player->GetPosition();
-    }
+    }*/
 }
 
 void BarbarianCamp::Reset()

@@ -34,6 +34,8 @@ public:
 	void SetPlayerPtr(std::shared_ptr<Player> p)	{ this->player = p; }
 	void SetState(NPCState &newState)				{ currentState = &newState; }
 
+	float lastShot = 0.f;
+	Quaternion originalRotation;
 	Vector3 targetPosition;
 	float speed = 9.0f;
 	float heightMapGroundLevel = 0.f;

@@ -27,6 +27,8 @@ void Game::Update()
 
 	CheckNearbyEnemies();
 
+	//HandleCamps();
+
 	CheckTargetCollision();
 
 	CheckQuestInteraction();
@@ -411,6 +413,16 @@ void Game::AddBarbarianCamps()
 void Game::SpawnInvasion()
 {
 	camps[BarbarianCamp::Location::Village]->Reset();
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -14, 48, 439 }, hostiles, player, CombatStyle::consistantDelay, { -16.5, 20, -567 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 7, 56, -398 }, hostiles, player, CombatStyle::consistantDelay, { 2, 20, -579 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 73, 50, -422 }, hostiles, player, CombatStyle::consistantDelay, { 57, 21, -574 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 293, 22, -628 }, hostiles, player, CombatStyle::consistantDelay, { 122, 20, -624 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 243, 24, -576 }, hostiles, player, CombatStyle::consistantDelay, { 71, 20, -626 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 207, 18, -736 }, hostiles, player, CombatStyle::consistantDelay, { 97, 18, -681 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 200, 10, -791 }, hostiles, player, CombatStyle::consistantDelay, { 47, 18, -675 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -314, 7, -644 }, hostiles, player, CombatStyle::consistantDelay, { -88, 18, -652 });
+	
+
 }
 
 void Game::CheckTargetCollision()
@@ -428,6 +440,7 @@ void Game::CheckTargetCollision()
 
 			if (hit)
 			{
+				Audio::StartEffect("ArrowHitDummy.wav");
 				target->Hit();
 				Print("TARGET " + std::to_string(target->GetID()) + " GOT HIT");
 				return;
@@ -756,6 +769,91 @@ void Game::HandleAudioSources()
 	}
 }
 
+void Game::HandleCamps()
+{
+
+	short int numInCombat = 0;
+	int numDead = 0;
+
+	// for each camp
+	for (auto& [key, camp] : camps)
+	{
+
+		for (int i = 0; i < camp->barbarians.size(); i++)
+		{
+			float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
+
+			camp->barbarians[i]->Update(player, terrain.GetHeightMap());
+
+			camp->barbarians[i]->CheckPlayerCollision(player);
+
+			for (auto& arrow : player->GetArrowHandler().arrows)
+			{
+				if (!arrow->canCollide)
+					continue;
+
+				bool hit = player->GetArrowHandler().CheckCollision(arrow, camp->barbarians[i]->GetCollider(), player->GetPosition(), true);
+
+				if (hit)
+				{
+					camp->barbarians[i]->TakeDamage();
+					Audio::StartEffect("BarbHit1.wav");
+					if (camp->barbarians[i]->IsDead())
+					{
+						Audio::StartEffect("BarbDead.wav");
+						camp->barbarians[i]->TakeDamage();
+						player->Stats().barbariansKilled++;
+						AddLoot(LOOTTYPE::ARROWS, camp->barbarians[i]->GetPosition() + Vector3(0, -3, 0));
+						camp->barbarians[i]->GetArrowHandler().ClearArrows();
+						CR->Unbind(camp->barbarians[i]->GetCollider());
+						MR->Unbind(camp->barbarians[i]);
+						SR->Unbind(camp->barbarians[i]);
+						camp->barbarians[i] = camp->barbarians[camp->barbarians.size() - 1 - numDead];
+						numDead++;
+						distanceToHostile = 100000.f;
+						break;
+					}
+				}
+
+			}
+			if (distanceToHostile < camp->barbarians[i]->viewDistance) // Should be compared to if the hostile "sees" the player instead of a hardcoded value.
+			{
+				numInCombat++;
+
+			}
+		}
+		camp->barbarians.resize(camp->barbarians.size() - numDead);
+	}
+	// end of loop
+
+	if (!player->inCombat && numInCombat > 0)
+	{
+		player->inCombat = true;
+		short int rand = Random::Integer(0, 2);
+
+		switch (rand)
+		{
+		case 0:
+			Audio::StartMusic("Camelot.wav");
+			break;
+
+		case 1:
+			Audio::StartMusic("combat1.wav");
+			break;
+
+		case 2:
+			Audio::StartMusic("combat2.wav");
+			break;
+		}
+	}
+	else if (player->inCombat && numInCombat == 0)
+	{
+		player->inCombat = false;
+		player->SwitchBiomeMusic();
+	}
+
+}
+
 APPSTATE Game::Run()
 {
 	switch (overlay->Update())
@@ -814,7 +912,7 @@ APPSTATE Game::Run()
 		}
 		if (Event::KeyIsPressed('H'))
 		{
-			PrintVector3(player->GetPosition());
+			SpawnInvasion();
 			lastClick = Time::Get();
 		}
 
@@ -897,6 +995,10 @@ void Game::CheckNearbyEnemies()
 {
 	short int numInCombat = 0;
 	int numDead = 0;
+	if (Event::KeyIsPressed('9'))
+	{
+		PrintS("");
+	}
 	for (int i = 0; i < hostiles.size(); i++)
 	{
 		float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
@@ -950,7 +1052,7 @@ void Game::CheckNearbyEnemies()
 		switch (rand)
 		{
 		case 0:
-			Audio::StartMusic("Camelot.wav");
+			Audio::StartMusic("combat1.wav");
 			break;
 
 		case 1:
