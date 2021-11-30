@@ -243,12 +243,11 @@ void Player::Update(HeightMap* heightMap)
 			Audio::StartEffect("Bow.wav");
 			isAiming = true;
 		}
-			
-		//newCameraPos = position + camSocketUpdate;
 
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
-		sceneCamera->SetPosition(newCameraPos);
+		sceneCamera->SetSpeedMultiplier(5.0f);
+		sceneCamera->MoveTowards(newCameraPos);
 		PlayOverrideAnimation("Aim", "Spine2", true);
 
 		if (Time::Get() - lastClick > 0.75f)
@@ -276,6 +275,7 @@ void Player::Update(HeightMap* heightMap)
 			PlayOverrideAnimation("Stop", "Spine2", false);
 		}
 
+		sceneCamera->SetSpeedMultiplier(1.0f);
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 		sceneCamera->MoveTowards(newCameraPos);
 	}
