@@ -39,10 +39,11 @@ void BarbarianCamp::Reset()
 BarbarianCamp::BarbarianCamp(const Vector3& position, Location location,  float radius, bool active)
     :location(location), radius(radius), active(active), numBarbarians(0) {}
 
-void BarbarianCamp::AddBarbarian(const std::string& file, const Vector3& position, std::vector<std::shared_ptr<HostileNPC>>& hostiles, std::shared_ptr<Player> player, CombatStyle combatStyle, bool dynamic)
+void BarbarianCamp::AddBarbarian(const std::string& file, const Vector3& position, std::vector<std::shared_ptr<HostileNPC>>& hostiles, std::shared_ptr<Player> player, CombatStyle combatStyle, bool dynamic, int damage)
 {
     auto barbarian = std::make_shared<HostileNPC>(file, player, combatStyle);
     barbarian->SetPosition(position);
+    barbarian->SetDamage(damage);
 
     barbarians.emplace_back(barbarian);
     hostiles.emplace_back(barbarian);

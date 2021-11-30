@@ -432,7 +432,7 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, false);
+		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, false, 2);
 
 		camps[BarbarianCamp::Location::South] = camp;
 	}
@@ -634,6 +634,7 @@ void Game::HandleHouseUpgrades()
 
 			if (Event::KeyIsPressed('E'))
 			{
+				player->HandleUpgrades(building);
 				building->Upgrade();
 			}
 		}

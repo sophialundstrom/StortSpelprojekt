@@ -12,7 +12,7 @@ private:
 	static const UINT stages = 3;
 	std::string meshNames[stages];
 	std::string materialNames[stages];
-	UINT currState = 0;
+	UINT currState = 1;
 	float lastUpdate = 0;
 	std::shared_ptr<BoundingSphere> collider;
 	std::string buildingName = "";
@@ -56,7 +56,6 @@ public:
 		upgrading = true;
 		std::thread worker([=] {
 
-			currState++;
 			if (currState >= stages)
 				return;
 
@@ -64,6 +63,7 @@ public:
 			Sleep(5000);
 			ApplyMesh(meshNames[currState]);
 			ApplyMaterial(materialNames[currState]);
+			currState++;
 			effect->Stop();
 			upgrading = false;
 		});

@@ -439,7 +439,18 @@ void Player::HandleUpgrades(std::shared_ptr<Building> building)
 	}
 	if (buildingName == "ArcherTent")
 	{
-
+		if (state == 1)
+		{
+			maxArrows = 20;
+			numArrows = 20;
+		}
+		if (state == 2)
+		{
+			maxArrows = 30;
+			numArrows = 30;
+		}
+		if (state == 3)
+			numArrows = 30;
 	}
 	if (buildingName == "BlackSmith")
 	{
