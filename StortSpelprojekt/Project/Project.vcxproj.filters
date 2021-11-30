@@ -39,6 +39,9 @@
     <FxCompile Include="VolumeVertexShader.hlsl" />
     <FxCompile Include="WaterDomainShader.hlsl" />
     <FxCompile Include="WaterPixelShader.hlsl" />
+    <FxCompile Include="WaterGeometryShader.hlsl" />
+    <FxCompile Include="WaterHullShader.hlsl" />
+    <FxCompile Include="WaterVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedModelRenderer.cpp" />
