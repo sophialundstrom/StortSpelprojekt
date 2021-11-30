@@ -432,7 +432,7 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, false, 2);
+		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, false, 1);
 
 		camps[BarbarianCamp::Location::South] = camp;
 	}
@@ -632,13 +632,38 @@ void Game::HandleHouseUpgrades()
 		{
 			ingameOverlay->ShowInteract();
 
-			if (Event::KeyIsPressed('E'))
+			if (Event::KeyIsPressed('E') && CheckBuildRequirements(building))
 			{
 				player->HandleUpgrades(building);
 				building->Upgrade();
 			}
 		}
 	}
+}
+
+bool Game::CheckBuildRequirements(std::shared_ptr<Building> building)
+{
+	bool canBuild = false;
+	if (building->GetCurrentState() == 1)
+	{
+		if (player->Inventory().NumOf(Item::Type::Stick) >= building->reqStick1 && player->Inventory().NumOf(Item::Type::Stone) >= building->reqStone1)
+		{
+			player->Inventory().RemoveItem(Item::Type::Stick, building->reqStick1);
+			player->Inventory().RemoveItem(Item::Type::Stone, building->reqStone1);
+			canBuild = true;
+		}
+	}
+	if (building->GetCurrentState() == 2)
+	{
+		if (player->Inventory().NumOf(Item::Type::Stick) >= building->reqStick2 && player->Inventory().NumOf(Item::Type::Stone) >= building->reqStone2)
+		{
+			player->Inventory().RemoveItem(Item::Type::Stick, building->reqStick2);
+			player->Inventory().RemoveItem(Item::Type::Stone, building->reqStone2);
+			canBuild = true;
+		}
+	}
+
+	return canBuild;
 }
 
 void Game::CheckItemCollision()
@@ -764,6 +789,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[0]->SetScale(5.85);
 	buildings[0]->MoveCollider({ 10, 0, 2 });
 	buildings[0]->SetColliderRadius(20.0f);
+	buildings[0]->SetRequirements(20,20,40,40);
 
 	std::string meshNamesTent[] = { "ArcherTent1", "ArcherTent2", "ArcherTent3" };
 	std::string materialNamesTent[] = { "ArcherTentTexture", "ArcherTentTexture", "ArcherTentTexture" };
@@ -771,6 +797,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[1]->SetRotation(0, -DirectX::XM_PIDIV4, 0);
 	buildings[1]->SetScale(1.566);
 	buildings[1]->SetColliderRadius(17.0f);
+	buildings[1]->SetRequirements(20, 20, 40, 40);
 
 	std::string meshNamesBS[] = { "BSLevel1", "BSLevel2", "BSLevel3" };
 	std::string materialNamesBS[] = { "albedoBlacksmith", "albedoBlacksmith", "albedoBlacksmith" };
@@ -779,6 +806,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[2]->SetScale(1.776);
 	buildings[2]->MoveCollider({ 13, 0, 0 });
 	buildings[2]->SetColliderRadius(20.0f);
+	buildings[2]->SetRequirements(20, 20, 40, 40);
 
 	scene.AddDrawable("FarmHouse", buildings[0]);
 	scene.AddDrawable("ArcherTent", buildings[1]);
@@ -1044,10 +1072,10 @@ void Game::CheckNearbyEnemies()
 
 			if (hit)
 			{
-				hostiles[i]->TakeDamage();
+				hostiles[i]->TakeDamage(player->Stats().damage);
 				if (hostiles[i]->IsDead())
 				{
-					hostiles[i]->TakeDamage();
+					hostiles[i]->TakeDamage(player->Stats().damage);
 					player->Stats().barbariansKilled++;
 					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));
 					hostiles[i]->GetArrowHandler().ClearArrows();
@@ -1072,7 +1100,7 @@ void Game::CheckNearbyEnemies()
 
 	if (!player->inCombat && numInCombat > 0) 
 	{
-		PrintS("IN COMBAT");
+		//PrintS("IN COMBAT");
 		player->inCombat = true;
 		short int rand = Random::Integer(0, 2);
 
@@ -1093,7 +1121,7 @@ void Game::CheckNearbyEnemies()
 	}
 	else if (player->inCombat && numInCombat == 0)
 	{
-		PrintS("OUT OF COMBAT"); 
+		//PrintS("OUT OF COMBAT"); 
 		player->inCombat = false;
 		player->SwitchBiomeMusic();
 	}
@@ -1151,7 +1179,7 @@ void Game::UpdateQuadTree()
 
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
-	std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
+	//std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{

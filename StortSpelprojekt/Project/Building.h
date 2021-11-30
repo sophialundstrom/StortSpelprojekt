@@ -17,6 +17,10 @@ private:
 	std::shared_ptr<BoundingSphere> collider;
 	std::string buildingName = "";
 public:
+	int reqStick1 = 0;
+	int reqStone1 = 0;
+	int reqStick2 = 0;
+	int reqStone2 = 0;
 	std::unique_ptr<BuildingEffect> effect;
 	Building() = default;
 
@@ -43,6 +47,8 @@ public:
 		collider->SetScale(radius); 
 		collider->Update(); 
 	}
+	void SetRequirements(int stick1, int stone1, int stick2, int stone2) { reqStick1 = stick1; reqStick2 = stick2; reqStone1 = stone1; reqStone2 = stone2; }
+
 
 	void MoveCollider(Vector3 pos) { collider->SetPosition(position + pos); }
 	int GetCurrentState() { return currState; }

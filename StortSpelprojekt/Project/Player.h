@@ -23,12 +23,23 @@ struct Stats
 	UINT level = 1;
 	float currentSpeed = movementSpeed;
 	int resist = 0;
+	int damage = 1;
+	int HPGain = 1;
 
 	void SetMaxHealthPoints(UINT newMaxHealthPoints) { this->maxHealthPoints = newMaxHealthPoints; }
 	void SetHealthPoints(UINT newHealthPoints) { this->healthPoints = newHealthPoints; }
 	void SetMovementSpeed(float newMovementSpeed) { this->movementSpeed = newMovementSpeed; }
 	void SetSprintSpeed(float newSprintSpeed) { this->sprintSpeed = newSprintSpeed; }
-	void IncreaseHealthPoints() { if (healthPoints < maxHealthPoints) this->healthPoints++; };
+	void IncreaseHealthPoints()
+	{ 
+		if (healthPoints < maxHealthPoints)
+		{
+			this->healthPoints += HPGain; 
+			if (this->healthPoints > 10)
+				this->healthPoints = 10;
+		}
+	}
+
 	void DecreaseHealthPoint() { if (healthPoints != 0) this->healthPoints--; };
 };
 
@@ -111,6 +122,7 @@ public:
 	void TakeDamage(int x);
 	bool inCombat = false;
 	void SwitchBiomeMusic();
+	void SetDamage(int x) { stats.damage = x; }
 
 	Player(const std::string file, Camera* camera, const UINT& maxArrows);
 

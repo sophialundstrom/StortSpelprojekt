@@ -131,6 +131,7 @@ private:
     void HandleBiomes();
     void HandleAudioSources();
     void HandleHouseUpgrades();
+    bool CheckBuildRequirements(std::shared_ptr<Building> building);
 
     void SetupAudio();
     void UpdateQuadTree();
