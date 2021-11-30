@@ -4,6 +4,7 @@
 #include "ThreadPool.h"
 #include "Time.h"
 #include "Print.h"
+#include "HardwareSupport.h"
 
 Microsoft::WRL::ComPtr<IXAudio2> Audio::MusicEngine;
 IXAudio2MasteringVoice* Audio::pMasterVoice = nullptr;
@@ -22,6 +23,14 @@ void Audio::StartEngine()
 void Audio::StopEngine()
 {
 	MusicEngine->StopEngine();
+	sMusic.clear();
+	sEffects.clear();
+	sVoices.clear();
+}
+
+void Audio::SetMasterVolume(float volume)
+{
+	pMasterVoice->SetVolume(volume);
 }
 
 void Audio::SetVolume(const std::string& name, float volume)
@@ -80,7 +89,7 @@ void Audio::StartVoice(const std::string& name)
 		std::cout << "COULD NOT START AUDIO" << std::endl;
 }
 
-void Audio::Initialize(bool mtLoading, const int& numThreads)
+void Audio::Initialize(bool mtLoading)
 {	
 
 	HRESULT hr;
@@ -100,13 +109,12 @@ void Audio::Initialize(bool mtLoading, const int& numThreads)
 		Timer timer;
 		timer.Start();
 
-		ThreadPool tp(numThreads);
+		ThreadPool tp(HardwareSupport::numThreads);
 
 		for (const auto& dirEntry : directory_iterator("Audio/Music/"))
 		{
 			if (dirEntry.path().extension() == ".wav")
 			{
-				PrintS(dirEntry.path().string());
 				std::string fileName = dirEntry.path().filename().string();
 				std::wstring path = to_wstr("Audio/Music/" + fileName);
 				tp.Enqueue([=] {
@@ -149,7 +157,6 @@ void Audio::Initialize(bool mtLoading, const int& numThreads)
 		{
 			if (dirEntry.path().extension() == ".wav")
 			{
-				PrintS(dirEntry.path().string());
 				std::string fileName = dirEntry.path().filename().string();
 				std::wstring path = to_wstr("Audio/Music/" + fileName);
 				AddAudioNoneMT(path, fileName, 0, AUDIOTYPE::MUSIC, true);
