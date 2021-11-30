@@ -2,7 +2,7 @@
 #include "BoundingVolumes.h"
 #include "stb_image.h"
 
-void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName)
+void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D* texture, ID3D11ShaderResourceView* textureView)
 {
 	HRESULT hr;
 
@@ -51,7 +51,7 @@ void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName)
 
 
 	//Create texture resource
-	hr = Graphics::Inst().GetDevice().CreateTexture2D(&textureDesc, data, &pTexture);
+	hr = Graphics::Inst().GetDevice().CreateTexture2D(&textureDesc, data, &dayTexture);
 	if (FAILED(hr))
 		std::cout << "FAILED TO CREATE TEXTURE2D\n";
 
@@ -61,7 +61,7 @@ void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName)
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
-	hr = Graphics::Inst().GetDevice().CreateShaderResourceView(pTexture, &srvDesc, &pTextureView);
+	hr = Graphics::Inst().GetDevice().CreateShaderResourceView(dayTexture, &srvDesc, &dayTextureView);
 
 	if (FAILED(hr))
 		std::cout << "FAILED TO CREATE SRV\n";
@@ -69,8 +69,8 @@ void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName)
 
 SkyBoxRenderer::SkyBoxRenderer()
 {
-	//BuildCubeMap("DayTime");
-	BuildCubeMap("NightTIme");
+	BuildCubeMap("DayTime", dayTexture, dayTextureView);
+	//BuildCubeMap("NightTIme");
 
 	std::string byteCode;
 	//Shaders
@@ -136,7 +136,7 @@ void SkyBoxRenderer::Render()
 
 	Graphics::Inst().GetContext().OMSetDepthStencilState(skyboxDepthStencil, 1);
 	
-	Graphics::Inst().GetContext().PSSetShaderResources(0, 1, &pTextureView);
+	Graphics::Inst().GetContext().PSSetShaderResources(0, 1, &dayTextureView);
 	
 	Graphics::Inst().GetContext().IASetIndexBuffer(skyBoxIndices, DXGI_FORMAT_R32_UINT, 0u);
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &skyboxMesh, &stride, &offset);

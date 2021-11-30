@@ -4,20 +4,28 @@
 #include <string>
 #include "Camera.h"
 
+enum
+{
+	dayTime,
+	nightTime
+};
+
 class SkyBoxRenderer : public Renderer
 {
 private:
 	const UINT stride = sizeof(Vector3);
 	const UINT offset = 0;
-	void BuildCubeMap(std::string skyboxFolderName);
+	void BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D* texture, ID3D11ShaderResourceView* textureView);
 
 public:
 	SkyBoxRenderer();
 	virtual void Render() override;
 
 	//D3D11Resources
-	ID3D11Texture2D* pTexture;
-	ID3D11ShaderResourceView* pTextureView;
+	ID3D11Texture2D* dayTexture = nullptr;
+	ID3D11Texture2D* nightTexture = nullptr;
+	ID3D11ShaderResourceView* dayTextureView = nullptr;
+	ID3D11ShaderResourceView* nightTextureView = nullptr;
 
 	//Vbuffer
 	ID3D11Buffer* skyboxMesh = nullptr;
