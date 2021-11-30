@@ -4,15 +4,9 @@
 #include <string>
 #include "Camera.h"
 
-enum TimePeriod
+struct TransitionProperties
 {
-	DayTime,
-	NightTime
-};
-
-struct transitionProperties
-{
-	float transitionSlider = 0;
+	float fadeSlider = 0;
 	float pad1;
 	float pad2;
 	float pad3;
@@ -23,8 +17,8 @@ class SkyBoxRenderer : public Renderer
 private:
 	const UINT stride = sizeof(Vector3);
 	const UINT offset = 0;
+	float playTime;
 	void BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D*& texture, ID3D11ShaderResourceView*& textureView);
-	float transition;
 public:
 	SkyBoxRenderer();
 	virtual void Render() override;
@@ -41,6 +35,8 @@ public:
 	ID3D11Buffer* skyBoxIndices = nullptr;
 	//Cbuffer
 	ID3D11Buffer* matricesBuf = nullptr;
+	ID3D11Buffer* fadeBuffer = nullptr;
+
 
 	ID3D11DepthStencilState* skyboxDepthStencil = nullptr;
 

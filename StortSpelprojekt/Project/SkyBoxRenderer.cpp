@@ -86,6 +86,7 @@ SkyBoxRenderer::SkyBoxRenderer()
 	CreateVertexBuffer(skyboxMesh, stride, BoxVolumeData::VERTICES * stride, BoxVolumeData::vertices);
 
 	CreateBuffer(matricesBuf, sizeof(Matrix));
+	CreateBuffer(fadeBuffer, sizeof(TransitionProperties));
 
 	//INPUT LAYOUT
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
@@ -125,11 +126,16 @@ void SkyBoxRenderer::Render()
 	//SAVE SHADER DATA INSTANCE
 	auto& shaderData = ShaderData::Inst();
 
-	//BUFFER
+	playTime += Time::GetDelta();
 
-	//PorjectionMatrixClippar bort geometri wtf!?
+
+	//BUFFER
 	UpdateBuffer(matricesBuf, shaderData.cameraMatrix);
 	BindBuffer(matricesBuf);
+	TransitionProperties tp;
+	tp.fadeSlider = (0.5f * sin(playTime) + 0.5f);
+	UpdateBuffer(fadeBuffer, tp);
+	BindBuffer(fadeBuffer, Shader::PS, 0U);
 
 	//SHADERS
 	BindShaders(skyBoxVertexShader, nullptr, nullptr, nullptr, skyBoxPixelShader);
