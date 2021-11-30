@@ -41,7 +41,7 @@ void AnimationStateMachine::CalculateCoreAnimation(const aiScene* scene, Skeleto
 	auto& firstClip = queuedAnimations.front();
 	auto& secondClip = queuedAnimations[1];
 
-	firstClip.transition -= Time::GetDelta() * 2.0f;
+	firstClip.transition -= Time::GetDelta() * 3.0f;
 
 	if (firstClip.transition < 0.0f)
 		firstClip.transition = 0.0f;

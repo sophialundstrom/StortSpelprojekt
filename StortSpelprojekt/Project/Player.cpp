@@ -120,7 +120,7 @@ void Player::Update(HeightMap* heightMap)
 			isSprinting = true;
 		}
 
-		stats.currentSpeed += 50.0f * Time::GetDelta();
+		stats.currentSpeed += 70.0f * Time::GetDelta();
 		if (stats.currentSpeed > stats.sprintSpeed)
 			stats.currentSpeed = stats.sprintSpeed;
 
@@ -254,7 +254,7 @@ void Player::Update(HeightMap* heightMap)
 		mouseCurrentSensitivity = mouseAimSensitivity;
 		sceneCamera->SetSpeedMultiplier(5.0f);
 		sceneCamera->MoveTowards(newCameraPos);
-		PlayOverrideAnimation("Aim", "Spine2", true);
+		PlayOverrideAnimation("Aim", "Spine1", true);
 
 		if (Time::Get() - lastClick > 0.75f)
 		{
@@ -267,7 +267,7 @@ void Player::Update(HeightMap* heightMap)
 				numArrows--;
 				sinceLastShot = 0.f;
 				lastClick = Time::Get();
-				PlayOverrideAnimation("HalfAim", "Spine2", true);
+				PlayOverrideAnimation("Aim", "Spine1", true);
 			}
 		}
 	}
@@ -278,7 +278,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			isAiming = false;
 			Audio::StopEffect("Bow.wav");
-			PlayOverrideAnimation("Stop", "Spine2", false);
+			PlayOverrideAnimation("Stop", "Spine1", false);
 		}
 
 		sceneCamera->SetSpeedMultiplier(1.0f);
@@ -290,6 +290,8 @@ void Player::Update(HeightMap* heightMap)
 
 	if (moveDirection.Length() == 0)
 		PlayAnimation("Idle");
+	else if (isSprinting)
+		PlayAnimation("Run");
 	else
 		PlayAnimation("Walk");
 
@@ -301,9 +303,9 @@ void Player::Update(HeightMap* heightMap)
 	frustum->Update();
 
 	//BOW UPDATE
-	auto& socket = skeleton.transforms[skeleton.GetJointID("RWrist")];
+	auto& socket = skeleton.transforms[skeleton.GetJointID("LWrist")];
 
-	auto bowT = Matrix::CreateScale(1.5f) * Matrix::CreateFromYawPitchRoll(PI_DIV2, 0, 0) * Matrix::CreateTranslation(-0.5f, -0.2f, 0.0f);
+	auto bowT = Matrix::CreateScale(1.5f) * Matrix::CreateFromYawPitchRoll(PI_DIV2, PI, 0) * Matrix::CreateTranslation(0.5f, -0.05f, 0.0f);
 
 	Matrix bowTransform = bowT * socket * matrix;
 

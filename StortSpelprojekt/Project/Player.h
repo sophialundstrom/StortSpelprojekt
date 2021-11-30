@@ -69,7 +69,7 @@ private:
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
 	float closestColliderToCam = 9999;
-	Vector3 cameraLocationSocket = { 1.3f, 8.0, -2.f };
+	Vector3 cameraLocationSocket = { -1.3f, 8.0, -3.f };
 
 	void CalcHeight(HeightMap* heightMap);
 	float CalcHeightForCamera(HeightMap* heightMap);
