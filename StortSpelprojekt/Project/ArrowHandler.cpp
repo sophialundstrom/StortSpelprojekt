@@ -68,7 +68,7 @@ bool ArrowHandler::CheckCollision(std::shared_ptr<Arrow> arrow, std::shared_ptr<
             {
                 int rand = Random::Integer(0, 1);
                 if (rand == 0)
-                    Audio::StartEffect("ArrowHit.wav");
+                    Audio::StartEffect("arrowHit.wav");
                 else
                     Audio::StartEffect("ArrowHitWall.wav");
             }
