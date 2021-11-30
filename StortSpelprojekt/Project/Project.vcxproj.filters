@@ -39,6 +39,9 @@
     <FxCompile Include="VolumeVertexShader.hlsl" />
     <FxCompile Include="WaterDomainShader.hlsl" />
     <FxCompile Include="WaterPixelShader.hlsl" />
+    <FxCompile Include="WaterGeometryShader.hlsl" />
+    <FxCompile Include="WaterHullShader.hlsl" />
+    <FxCompile Include="WaterVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedModelRenderer.cpp" />
@@ -108,7 +111,7 @@
     <ClCompile Include="WaterRenderer.cpp" />
     <ClCompile Include="Win.cpp" />
     <ClCompile Include="Window.cpp" />
-    <ClCompile Include="Slider.cpp" />
+    <ClCompile Include="PlaneWithNormals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -233,7 +236,7 @@
     <ClInclude Include="WaterRenderer.h" />
     <ClInclude Include="Win.h" />
     <ClInclude Include="Window.h" />
-    <ClInclude Include="Slider.h" />
+    <ClInclude Include="PlaneWithNormals.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LightCalculations.hlsli" />

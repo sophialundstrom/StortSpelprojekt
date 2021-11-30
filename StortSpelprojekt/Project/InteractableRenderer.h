@@ -19,7 +19,7 @@ private:
 
 	//COLORS
 	const Vector3 RED = { 1.0f, 0.0f, 0.0f };
-	const Vector3 BLUE = { 0.0f, 0.0f, 1.0f };
+	const Vector3 YELLOW = { 211.0f / 255.0f, 184.0f / 255.0f, 96.0f / 255.0f };
 
 	//BUFFERS
 	ID3D11Buffer* colorBuf = nullptr;
