@@ -154,7 +154,7 @@ void PauseOverlay::Render()
 {
 	UI::Inst().BeginFrame();
 
-	DrawButtons();
+	//DrawButtons();
 	DrawImages();
 	DrawTexts();
 	DrawSliders();

@@ -82,12 +82,6 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	Initialize();
 	Audio::StartEngine();
-	//Audio::Initialize();
-	//Audio::StartEngine();
-	//
-	//Audio::AddAudio(L"Audio/Menu.wav", 0, AUDIOTYPE::MUSIC, true);
-	//Audio::SetVolume(0.005, 0);
-	//Audio::StartAudio(0);
 
 	auto menuCanvas = new Canvas();
 	float xPos = 75;
@@ -200,7 +194,6 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 		optionsCanvas->AddSlider({ clientWidth / 2.0f, clientHeight / 2.f + 300.0f }, "VoiceSlider", voiceSliderButton, voiceSliderImage, voiceSliderButtonImage, 0.0f, 1.0f, Audio::voiceVolume, [this](float value) { Audio::SetVoiceVolume(value); });
 
 	}
-	
 	canvases["OPTIONS"] = optionsCanvas;
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { -41.0f, 37.0f, -687.0f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });

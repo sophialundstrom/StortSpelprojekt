@@ -14,7 +14,7 @@ std::map<std::string, IXAudio2SourceVoice*> Audio::sEffects;
 std::map<std::string, IXAudio2SourceVoice*> Audio::sVoices;
 std::map<std::string, XAUDIO2_BUFFER> Audio::audioBuffers;
 float Audio::volume = 0.5f;
-float Audio::masterVolume = 0.5f;
+float Audio::masterVolume = 0.25f;
 float Audio::musicVolume = 0.5f;
 float Audio::effectsVolume = 0.5f;
 float Audio::voiceVolume = 0.5f;
@@ -78,11 +78,6 @@ void Audio::StopEngine()
 	sMusic.clear();
 	sEffects.clear();
 	sVoices.clear();
-}
-
-void Audio::SetMasterVolume(float volume)
-{
-	pMasterVoice->SetVolume(volume);
 }
 
 void Audio::SetVolume(const std::string& name, float volume)

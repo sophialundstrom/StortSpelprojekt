@@ -307,8 +307,8 @@ void Game::UpdateAndHandleLoot()
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 			
-			Audio::SetVolume("PickupPop.wav", 3.f);
-			Audio::StartEffect("PickupPop.wav");
+			Audio::SetVolume("Pickup.wav", Audio::effectsVolume);
+			Audio::StartEffect("Pickup.wav");
 		}
 	}
 }
@@ -708,6 +708,7 @@ void Game::CheckItemCollision()
 			if (Event::KeyIsPressed('E'))
 			{
 				Audio::StartEffect("Pickup.wav");
+				Audio::SetVolume("Pickup.wav", Audio::effectsVolume * 2);
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item);
 				UpdateInventoryUI();
@@ -914,11 +915,12 @@ Game::~Game()
 
 void Game::SetupAudio()
 {
-
+	
+	Audio::Initialize();
 	Audio::SetMusicVolume(Audio::musicVolume);
 
 	Audio::StartMusic("SoundForest.wav");
-	Audio::SetVolume("SoundForest.wav", 0.3f);
+	Audio::SetVolume("SoundForest.wav", Audio::musicVolume);
 
 }
 

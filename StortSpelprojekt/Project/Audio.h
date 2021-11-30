@@ -56,7 +56,6 @@ public:
 	static float voiceVolume;
 
 	// SETTINGS
-	static void SetMasterVolume(float volume);
 	static void SetVolume(const std::string& name, float volume);
 	static float GetVolume() { return volume; }
 };
