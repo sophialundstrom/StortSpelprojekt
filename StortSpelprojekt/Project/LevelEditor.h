@@ -4,6 +4,7 @@
 #include "ApplicationState.h"
 #include "ImGui.h"
 #include "WaterRenderer.h"
+#include "Pathfinding.h"
 
 class LevelEditor : public Editor, public ApplicationState
 {
@@ -60,6 +61,7 @@ private:
 	void test();
 	std::ifstream in;
 	void LoadNodes();
+	Pathfinding path;
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

@@ -5,36 +5,16 @@ Node::Node()
 }
 
 Node::~Node()
-{
-	//delete parent;
+{	
+	for (int i = 0; i < neighbours.size(); i++)
+	{
+		delete neighbours[i];
+	}
 }
 
 Node::Node(Vector3 position)
 {
 	this->position = position;
-}
-
-Node::Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost)
-{
-	this->walkable = walkable;
-	this->position = position;
-	this->BSphere.SetPosition(position);
-	this->gridX = gridX;
-	this->gridY = gridY;
-	this->hCost = hCost;
-	this->gCost = gCost;
-}
-
-Node::Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost, Node* parent)
-{
-	this->walkable = walkable;
-	this->position = position;
-	this->BSphere.SetPosition(position);
-	this->gridX = gridX;
-	this->gridY = gridY;
-	this->hCost = hCost;
-	this->gCost = gCost;
-	this->parent = parent;
 }
 
 int Node::Compare(const Node* n)

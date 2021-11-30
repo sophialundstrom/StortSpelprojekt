@@ -432,6 +432,8 @@ void LevelEditor::ShowTerrain()
 
 void LevelEditor::Update()
 {
+	path.CreateGrid({ 0,0,0 });
+	path.FindPath(Vector3(-16, 22, -565), Vector3(86, 60, -233));
 	if (Event::LeftIsClicked() && !ImGuizmo::IsOver() && viewportPanel.Hovered())
 	{
 		auto mousePos = viewportPanel.GetMousePosition();
