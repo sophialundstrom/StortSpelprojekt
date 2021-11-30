@@ -650,6 +650,18 @@ void Game::HandleHouseUpgrades()
 				player->HandleUpgrades(building);
 				building->Upgrade();
 			}
+			else if (Event::KeyIsPressed('E') && !CheckBuildRequirements(building))
+			{
+				if (building->GetBuildingName() == "ArcherTent")
+				{
+					if (building->GetCurrentState() == 1)
+						player->numArrows = 10;
+					if (building->GetCurrentState() == 2)
+						player->numArrows = 20;
+					if (building->GetCurrentState() == 3)
+						player->numArrows = 30;
+				}
+			}
 		}
 	}
 }
@@ -942,12 +954,12 @@ void Game::HandleCamps()
 
 				if (hit)
 				{
-					camp->barbarians[i]->TakeDamage();
+					camp->barbarians[i]->TakeDamage(player->Stats().damage);
 					Audio::StartEffect("BarbHit1.wav");
 					if (camp->barbarians[i]->IsDead())
 					{
 						Audio::StartEffect("BarbDead.wav");
-						camp->barbarians[i]->TakeDamage();
+						camp->barbarians[i]->TakeDamage(player->Stats().damage);
 						player->Stats().barbariansKilled++;
 						AddLoot(LOOTTYPE::ARROWS, camp->barbarians[i]->GetPosition() + Vector3(0, -3, 0));
 						camp->barbarians[i]->GetArrowHandler().ClearArrows();
@@ -1159,7 +1171,7 @@ void Game::CheckNearbyEnemies()
 	for (int i = 0; i < hostiles.size(); i++)
 	{
 		float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
-		
+
 		hostiles[i]->Update(player, terrain.GetHeightMap());
 
 		hostiles[i]->CheckPlayerCollision(player);
@@ -1203,7 +1215,7 @@ void Game::CheckNearbyEnemies()
 	}
 	hostiles.resize(hostiles.size() - numDead);
 
-	if (!player->inCombat && numInCombat > 0) 
+	if (!player->inCombat && numInCombat > 0)
 	{
 		//PrintS("IN COMBAT");
 
@@ -1229,13 +1241,13 @@ void Game::CheckNearbyEnemies()
 	{
 		//PrintS("OUT OF COMBAT"); 
 
-	{ 
+		{
 
-		player->inCombat = false;
-		player->SwitchBiomeMusic();
+			player->inCombat = false;
+			player->SwitchBiomeMusic();
+		}
 	}
 }
-
 
 //void Game::HoveringBackHowToPlay()
 //{

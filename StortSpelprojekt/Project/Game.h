@@ -132,11 +132,11 @@ private:
     void HandleAudioSources();
     void HandleHouseUpgrades();
     bool CheckBuildRequirements(std::shared_ptr<Building> building);
+    void HandleCamps();
 
 
     void SetupAudio();
     void UpdateQuadTree();
-
     void UpdateInventoryUI();
 
     void Initialize();
