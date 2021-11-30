@@ -306,13 +306,13 @@ void Player::SwitchBiomeMusic()
 		break;
 	case BIOME::MOUNTAIN:
 
-		Audio::StartMusic("EpicHeart.wav");
+		Audio::StartMusic("SoundMountain.wav");
 		break;
 	case BIOME::OCEAN:
 		Audio::StartMusic("SoundOcean.wav");
 		break;
 	case BIOME::DEFAULT:
-		Audio::StartMusic("Sonrie.wav");
+		Audio::StartMusic("SoundForest.wav");
 		break;
 	}
 }

@@ -28,7 +28,7 @@ public:
 	{
 		FileSystem::SetProjectDirectory();
 
-		WindowCreator(Window(), /*GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)*/800, 600, L"ARCUS", instance);
+		WindowCreator(Window(), GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN), L"ARCUS", instance);
 		
 		graphics = std::make_unique<Graphics>(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND(), false);
 
