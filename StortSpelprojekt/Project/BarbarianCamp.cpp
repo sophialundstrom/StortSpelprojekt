@@ -9,25 +9,24 @@ void BarbarianCamp::SetTarget(const Vector3& target)
     this->target = target;
 }
 
-void BarbarianCamp::Update(std::shared_ptr<Player> player)
+void BarbarianCamp::Update(std::shared_ptr<Player> player, HeightMap* heightMap)
 {
     //NOT CORRECT BUT WORKS FOR NOW
     for (auto& barbarian : barbarians)
     {
         if (location == Location::Village)
         {
-           /* if ((player->GetPosition() - barbarian->GetPosition()).Length() < barbarian->DetectionRadius())
-                target = player->GetPosition();*/
+            barbarian->Update(player, heightMap);
         }
 
        // barbarian->Update(player);
     }
 
-    if (location != Location::Village)
+    /*if (location != Location::Village)
     {
         if ((player->GetPosition() - position).Length() < radius)
             target = player->GetPosition();
-    }
+    }*/
 }
 
 void BarbarianCamp::Reset()
@@ -39,10 +38,11 @@ void BarbarianCamp::Reset()
 BarbarianCamp::BarbarianCamp(const Vector3& position, Location location,  float radius, bool active)
     :location(location), radius(radius), active(active), numBarbarians(0) {}
 
-void BarbarianCamp::AddBarbarian(const std::string& file, const Vector3& position, std::vector<std::shared_ptr<HostileNPC>>& hostiles, std::shared_ptr<Player> player, CombatStyle combatStyle, bool dynamic)
+void BarbarianCamp::AddBarbarian(const std::string& file, const Vector3& position, std::vector<std::shared_ptr<HostileNPC>>& hostiles, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, bool dynamic, int damage)
 {
-    auto barbarian = std::make_shared<HostileNPC>(file, player, combatStyle);
+    auto barbarian = std::make_shared<HostileNPC>(file, player, combatStyle, targetPosition);
     barbarian->SetPosition(position);
+    barbarian->SetDamage(damage);
 
     barbarians.emplace_back(barbarian);
     hostiles.emplace_back(barbarian);

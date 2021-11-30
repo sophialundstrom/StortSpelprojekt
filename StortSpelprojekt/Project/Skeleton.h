@@ -1,4 +1,5 @@
 #pragma once
+#include "DirectXHelp.h"
 #include "Math.h"
 #include <vector>
 
@@ -13,6 +14,7 @@ struct Joint
 struct Skeleton
 {
 	ID3D11Buffer* jointBuffer = nullptr;
+
 	std::vector<Matrix> transforms;
 
 	const UINT stride = sizeof(Vector3);
@@ -20,6 +22,17 @@ struct Skeleton
 	std::vector<Joint> joints;
 	int tempIndex = 0;
 	UINT vertexCount = 0;
+
+	int GetJointID(const std::string& name)
+	{
+		int counter = 0;
+		for (auto& joint : joints)
+		{
+			if (joint.name == name)
+				return counter;
+			counter++;
+		}
+	}
 
 	const Joint& FindJoint(const std::string& name) const
 	{
@@ -59,10 +72,19 @@ struct Skeleton
 
 	void SetBindPose(const aiNode* node, const Matrix& parentMatrix)
 	{
-		Matrix worldMatrix = AssimpToDX(node->mTransformation) * parentMatrix;
+		bool extraNode = false;
+		if (std::string(node->mName.C_Str()).find('_') != std::string::npos)
+			extraNode = true;
 
-		transforms.emplace_back(worldMatrix);
+		Matrix worldMatrix = parentMatrix; 
+		
+		if (!extraNode)
+		{
+			worldMatrix = AssimpToDX(node->mTransformation) * parentMatrix;
 
+			transforms.emplace_back(worldMatrix);
+		}
+		
 		for (UINT i = 0; i < node->mNumChildren; ++i)
 			SetBindPose(node->mChildren[i], worldMatrix);
 	}

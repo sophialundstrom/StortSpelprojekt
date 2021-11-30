@@ -27,6 +27,8 @@ void Game::Update()
 
 	CheckNearbyEnemies();
 
+	//HandleCamps();
+
 	CheckTargetCollision();
 
 	CheckQuestInteraction();
@@ -34,6 +36,8 @@ void Game::Update()
 	UpdateAndHandleLoot();
 
 	HandleAudioSources();
+
+	HandleHouseUpgrades();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
 
@@ -111,6 +115,11 @@ void Game::MainMenu()
 	mainMenu = true;
 }
 
+void Game::QuitCanvas()
+{
+	currentCanvas = canvases["QUIT"];
+}
+
 void Game::Initialize()
 {
 	QuadTreeBounds qtBounds(-1000.f, -1000.f, 2000.f, 2000.f);
@@ -180,36 +189,85 @@ void Game::Initialize()
 		scene.DeleteDrawable(collider->GetName());
 }
 
-void Game::RemoveItem(const std::string name)
+void Game::RemoveItem(std::shared_ptr<Item> removedItem)
 {
 	for (UINT i = 0; i < items.size(); ++i)
 	{
-		if (items[i]->GetName() == name)
+		auto& item = items[i];
+
+		if (item == removedItem)
 		{
-			auto item = scene.Get<Item>(name);
+			IR->Unbind(item);
 			MR->Unbind(item);
 			SR->Unbind(item);
 			CR->Unbind(item->GetCollider());
+
 			auto it = items.begin() + i;
 			items.erase(it);
-			scene.DeleteDrawable(name);
+
 			return;
 		}
 	}
 }
 
-void Game::AddItem(Item::Type type, Vector3 position)
+void Game::AddItem(Item::Type type, Vector3 position, const Vector3& rotation)
 {
 	const std::string name = "Item";
 
 	auto item = std::make_shared<Item>(type, name);
+	item->SetPosition(position);
+	item->SetRotation(rotation);
 	auto collider = item->GetCollider();
+	collider->SetParent(item);
 
-	scene.AddDrawable(name, item);
 	items.emplace_back(item);
+
 	MR->Bind(item);
 	SR->Bind(item);
 	CR->Bind(item->GetCollider());
+}
+
+void Game::GenerateRandomItems(const Vector3& center, UINT amount, float radius)
+{
+	for (UINT i = 0; i < amount; ++i)
+	{
+		auto r = radius * sqrt(Random::Real(0.0f, 1.0f));
+		auto theta = Random::Real(0.0f, 1.0f) * 2.0f * PI;
+
+		auto x = center.x + r * cos(theta);
+		auto z = center.z + r * sin(theta);
+
+		auto y = terrain.SampleAverage(x, z);
+
+		auto itemType = (Item::Type)Random::Integer(0, 2);
+
+		Vector3 rotation = { 0.0f, 0.0f, 0.0f };
+
+		switch (itemType)
+		{
+			case Item::Type::Stick:
+			{
+				auto x = Random::Real(-PI_DIV4, PI_DIV4);
+				auto y = Random::Real(0, 2.0f * PI);
+				auto z = Random::Real(-PI_DIV4, PI_DIV4);
+				rotation = { x, y, z };
+				
+				break;
+			}
+
+			case Item::Type::Stone: case Item::Type::Food:
+			{
+				auto x = Random::Real(0, 2.0f * PI);
+				auto y = Random::Real(0, 2.0f * PI);
+				auto z = Random::Real(0, 2.0f * PI);
+				rotation = { x, y, z };
+
+				break;
+			}
+		}
+
+		AddItem(itemType, { x, y, z }, rotation);
+	}
 }
 
 std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position)
@@ -249,7 +307,8 @@ void Game::UpdateAndHandleLoot()
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 			
-			Audio::StartEffect("PickupPop.wav");
+			Audio::SetVolume("Pickup.wav", Audio::effectsVolume);
+			Audio::StartEffect("Pickup.wav");
 		}
 	}
 }
@@ -376,8 +435,7 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, false);
-
+		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero, false, 1);
 		camps[BarbarianCamp::Location::South] = camp;
 	}
 
@@ -402,9 +460,9 @@ void Game::AddBarbarianCamps()
 	{ // VILLAGE INVADERS
 		auto camp = new BarbarianCamp({ -11.5f, 18.0f, -126.0f }, BarbarianCamp::Location::Village, 40.0f, true);
 
-		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -126.0f }, hostiles, player, CombatStyle::consistantDelay);
-		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -136.0f }, hostiles, player, CombatStyle::consistantDelay);
-		camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -116.0f }, hostiles, player, CombatStyle::consistantDelay);
+		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -126.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
+		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -136.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
+		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -116.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
 
 		camps[BarbarianCamp::Location::Village] = camp;
 	}
@@ -413,6 +471,16 @@ void Game::AddBarbarianCamps()
 void Game::SpawnInvasion()
 {
 	camps[BarbarianCamp::Location::Village]->Reset();
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -14, 48, 439 }, hostiles, player, CombatStyle::consistantDelay, { -16.5, 20, -567 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 7, 56, -398 }, hostiles, player, CombatStyle::consistantDelay, { 2, 20, -579 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 73, 50, -422 }, hostiles, player, CombatStyle::consistantDelay, { 57, 21, -574 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 293, 22, -628 }, hostiles, player, CombatStyle::consistantDelay, { 122, 20, -624 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 243, 24, -576 }, hostiles, player, CombatStyle::consistantDelay, { 71, 20, -626 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 207, 18, -736 }, hostiles, player, CombatStyle::consistantDelay, { 97, 18, -681 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 200, 10, -791 }, hostiles, player, CombatStyle::consistantDelay, { 47, 18, -675 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -314, 7, -644 }, hostiles, player, CombatStyle::consistantDelay, { -88, 18, -652 });
+	
+
 }
 
 void Game::CheckTargetCollision()
@@ -426,10 +494,11 @@ void Game::CheckTargetCollision()
 			if (target->GotHit())
 				continue;
 
-			bool hit = handler.CheckCollision(arrow, target->GetCollider());
+			bool hit = handler.CheckCollision(arrow, target->GetCollider(), player->GetPosition());
 
 			if (hit)
 			{
+				Audio::StartEffect("ArrowHitDummy.wav");
 				target->Hit();
 				Print("TARGET " + std::to_string(target->GetID()) + " GOT HIT");
 				return;
@@ -459,7 +528,7 @@ void Game::CheckNearbyCollision()
 				if ((arrow->GetPosition() - collider->GetPosition()).Length() > 50.f)
 					continue;
 
-				hostile->GetArrowHandler().CheckCollision(arrow, collider);
+				hostile->GetArrowHandler().CheckCollision(arrow, collider, player->GetPosition());
 			}
 		}
 		
@@ -470,7 +539,7 @@ void Game::CheckNearbyCollision()
 			if ((arrow->GetPosition() - collider->GetPosition()).Length() > 50.f)
 				continue;
 
-			player->GetArrowHandler().CheckCollision(arrow, collider);
+			player->GetArrowHandler().CheckCollision(arrow, collider, player->GetPosition());
 		}
 
 		auto box = std::dynamic_pointer_cast<BoundingBox>(collider);
@@ -520,9 +589,9 @@ void Game::CheckNearbyCollision()
 	player->HandleCollidedObjects(collidedColliders);
 }
 
-void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle)
+void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle, const Vector3& targetPosition)
 {
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle);
+	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, targetPosition);
 	NPC->SetPosition(position);
 
 	auto collider = NPC->GetCollider();
@@ -568,19 +637,80 @@ void Game::CheckSaveStationCollision()
 	}
 }
 
+void Game::HandleHouseUpgrades()
+{
+	for (auto& building : buildings)
+	{
+		if (Collision::Intersection(*building->GetCollider(), *player->GetFrustum()))
+		{
+			ingameOverlay->ShowInteract();
+
+			if (Event::KeyIsPressed('E') && CheckBuildRequirements(building))
+			{
+				player->HandleUpgrades(building);
+				building->Upgrade();
+			}
+			else if (Event::KeyIsPressed('E') && !CheckBuildRequirements(building))
+			{
+				if (building->GetBuildingName() == "ArcherTent")
+				{
+					if (building->GetCurrentState() == 1)
+						player->numArrows = 10;
+					if (building->GetCurrentState() == 2)
+						player->numArrows = 20;
+					if (building->GetCurrentState() == 3)
+						player->numArrows = 30;
+				}
+			}
+		}
+	}
+}
+
+bool Game::CheckBuildRequirements(std::shared_ptr<Building> building)
+{
+	bool canBuild = false;
+	if (building->GetCurrentState() == 1)
+	{
+		if (player->Inventory().NumOf(Item::Type::Stick) >= building->reqStick1 && player->Inventory().NumOf(Item::Type::Stone) >= building->reqStone1)
+		{
+			player->Inventory().RemoveItem(Item::Type::Stick, building->reqStick1);
+			player->Inventory().RemoveItem(Item::Type::Stone, building->reqStone1);
+			canBuild = true;
+		}
+	}
+	if (building->GetCurrentState() == 2)
+	{
+		if (player->Inventory().NumOf(Item::Type::Stick) >= building->reqStick2 && player->Inventory().NumOf(Item::Type::Stone) >= building->reqStone2)
+		{
+			player->Inventory().RemoveItem(Item::Type::Stick, building->reqStick2);
+			player->Inventory().RemoveItem(Item::Type::Stone, building->reqStone2);
+			canBuild = true;
+		}
+	}
+
+	return canBuild;
+}
+
 void Game::CheckItemCollision()
 {
 	for (auto& item : items)
 	{
+		item->Update();
+
+		if (IR->IsBound(item))
+			IR->Unbind(item);
+
 		if (Collision::Intersection(*item->GetCollider(), *player->GetFrustum()))
 		{
 			ingameOverlay->ShowInteract();
+			IR->Bind(item);
 
 			if (Event::KeyIsPressed('E'))
 			{
 				Audio::StartEffect("Pickup.wav");
+				Audio::SetVolume("Pickup.wav", Audio::effectsVolume * 2);
 				player->Inventory().AddItem(item->GetType());
-				RemoveItem(item->GetName());
+				RemoveItem(item);
 				UpdateInventoryUI();
 
 				return;
@@ -625,6 +755,12 @@ void Game::UpdateInventoryUI()
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:water(5000), terrain(2)
 {
+	Audio::StartEngine();
+
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.05f, 100.0f, { 0.0f, 200.0f, -100.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
+	scene.AddPointLight({ 38.055f, 22.367f, -594.542f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
+
 	//INIT WHICH RENDERERS WE WANT TO USE
 	RND.InitAnimatedModelRenderer();
 	RND.InitColliderRenderer();
@@ -637,7 +773,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitWaterRenderer();
 	RND.InitInteractableRenderer();
 	RND.InitSkyBoxRenderer();
-	
+
 
 	//CREATE OR LOAD QUESTS
 	QuestLog::CreateQuests();
@@ -645,11 +781,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//LOAD SCENE
 	Initialize();
+
 	SetupAudio();
-	
+
 	//SET SCENE CAMERA + DIRECTIONAL LIGHT
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 0.0f, 2.0f, -10.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
-	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
 
 	//OVERLAYS
 	ingameOverlay = new InGameOverlay();
@@ -662,8 +797,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
 	player->SetPosition(-75, 20, -630);
-	player->GetBounds()->SetParent(player);
-	CR->Bind(player->GetBounds());
+	auto collider = player->GetBounds();
+	collider->SetParent(player);
+	CR->Bind(collider);
 	SKR->Bind(player);
 	AMR->Bind(player);
 
@@ -673,22 +809,53 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//BUILDING
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
-	std::string meshNames[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
-	std::string materialNames[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	building = std::make_shared<Building>(meshNames, materialNames, "Building", Vector3{ -107.5f, 20.0f, -608.5f }, scene);
-	building->SetRotation(0, -DirectX::XM_PI, 0);
-	building->SetScale(5.85);
+	std::string meshNamesFarm[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
+	std::string materialNamesFarm[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
+	buildings[0] = std::make_shared<Building>(meshNamesFarm, materialNamesFarm, "FarmHouse", Vector3{ -107.5f, 20.0f, -608.5f }, scene);
+	buildings[0]->SetRotation(0, -DirectX::XM_PI, 0);
+	buildings[0]->SetScale(5.85);
+	buildings[0]->MoveCollider({ 10, 0, 2 });
+	buildings[0]->SetColliderRadius(20.0f);
+	buildings[0]->SetRequirements(20,20,40,40);
 
-	scene.AddModel("Building", building);
-	MR->Bind(building);
-	SR->Bind(building);
+	std::string meshNamesTent[] = { "ArcherTent1", "ArcherTent2", "ArcherTent3" };
+	std::string materialNamesTent[] = { "ArcherTentTexture", "ArcherTentTexture", "ArcherTentTexture" };
+	buildings[1] = std::make_shared<Building>(meshNamesTent, materialNamesTent, "ArcherTent", Vector3{ 128.86f, 18.12f, -643.05f }, scene);
+	buildings[1]->SetRotation(0, -DirectX::XM_PIDIV4, 0);
+	buildings[1]->SetScale(1.566);
+	buildings[1]->SetColliderRadius(17.0f);
+	buildings[1]->SetRequirements(20, 20, 40, 40);
+
+	std::string meshNamesBS[] = { "BSLevel1", "BSLevel2", "BSLevel3" };
+	std::string materialNamesBS[] = { "albedoBlacksmith", "albedoBlacksmith", "albedoBlacksmith" };
+	buildings[2] = std::make_shared<Building>(meshNamesBS, materialNamesBS, "Blacksmith", Vector3{ -5.4f, 17.86f, -701.5f }, scene);
+	buildings[2]->SetRotation(0, 0, 0);
+	buildings[2]->SetScale(1.776);
+	buildings[2]->MoveCollider({ 13, 0, 0 });
+	buildings[2]->SetColliderRadius(20.0f);
+	buildings[2]->SetRequirements(20, 20, 40, 40);
+
+	scene.AddDrawable("FarmHouse", buildings[0]);
+	scene.AddDrawable("ArcherTent", buildings[1]);
+	scene.AddDrawable("Blacksmith", buildings[2]);
+
+	for (int i = 0; i < 3; i++)
+	{
+		MR->Bind(buildings[i]);
+		SR->Bind(buildings[i]);
+		CR->Bind(buildings[i]->GetCollider());
+	}
+
 
 	//ITEMS
-	AddItem(Item::Type::Stick, { -134, 22, -594 });
-	AddItem(Item::Type::Stick, { -113, 22, -582 });
-	AddItem(Item::Type::Stick, { -116, 20, -609 });
-	AddItem(Item::Type::Stick, { -91, 20, -593 });
-	AddItem(Item::Type::Stick, { -85, 20, -608 });
+	AddItem(Item::Type::Stick, { -134, 32, -594 });
+	AddItem(Item::Type::Stick, { -113, 32, -582 });
+	AddItem(Item::Type::Stick, { -116, 30, -609 });
+	AddItem(Item::Type::Stick, { -91, 30, -593 });
+	AddItem(Item::Type::Stick, { -85, 30, -608 });
+
+	//RANDOM ITEMS
+	GenerateRandomItems({ 38.0f, 20.3f, -574.5f }, 15, 70);
 
 	//FRIENDLY NPCS
 	AddFriendlyNPCs();
@@ -740,16 +907,21 @@ Game::~Game()
 	QuestLog::ShutDown();
 	delete quadTree;
 	scene.Clear();
+
 	Audio::StopEngine();
+
 	Resources::Inst().Clear();
 }
 
 void Game::SetupAudio()
 {
-	Audio::Initialize(true, HardwareSupport::numThreads);
+	
+	Audio::Initialize();
+	Audio::SetMusicVolume(Audio::musicVolume);
 
-	Audio::StartMusic("Sonrie.wav");
-	Audio::SetVolume("Sonrie.wav", 0.3f);
+	Audio::StartMusic("SoundForest.wav");
+	Audio::SetVolume("SoundForest.wav", Audio::musicVolume);
+
 }
 
 void Game::HandleAudioSources()
@@ -758,6 +930,91 @@ void Game::HandleAudioSources()
 	{
 		audioSource.CheckActive(player->GetPosition());
 	}
+}
+
+void Game::HandleCamps()
+{
+
+	short int numInCombat = 0;
+	int numDead = 0;
+
+	// for each camp
+	for (auto& [key, camp] : camps)
+	{
+
+		for (int i = 0; i < camp->barbarians.size(); i++)
+		{
+			float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
+
+			camp->barbarians[i]->Update(player, terrain.GetHeightMap());
+
+			camp->barbarians[i]->CheckPlayerCollision(player);
+
+			for (auto& arrow : player->GetArrowHandler().arrows)
+			{
+				if (!arrow->canCollide)
+					continue;
+
+				bool hit = player->GetArrowHandler().CheckCollision(arrow, camp->barbarians[i]->GetCollider(), player->GetPosition(), true);
+
+				if (hit)
+				{
+					camp->barbarians[i]->TakeDamage(player->Stats().damage);
+					Audio::StartEffect("BarbHit1.wav");
+					if (camp->barbarians[i]->IsDead())
+					{
+						Audio::StartEffect("BarbDead.wav");
+						camp->barbarians[i]->TakeDamage(player->Stats().damage);
+						player->Stats().barbariansKilled++;
+						AddLoot(LOOTTYPE::ARROWS, camp->barbarians[i]->GetPosition() + Vector3(0, -3, 0));
+						camp->barbarians[i]->GetArrowHandler().ClearArrows();
+						CR->Unbind(camp->barbarians[i]->GetCollider());
+						MR->Unbind(camp->barbarians[i]);
+						SR->Unbind(camp->barbarians[i]);
+						camp->barbarians[i] = camp->barbarians[camp->barbarians.size() - 1 - numDead];
+						numDead++;
+						distanceToHostile = 100000.f;
+						break;
+					}
+				}
+
+			}
+			if (distanceToHostile < camp->barbarians[i]->viewDistance) // Should be compared to if the hostile "sees" the player instead of a hardcoded value.
+			{
+				numInCombat++;
+
+			}
+		}
+		camp->barbarians.resize(camp->barbarians.size() - numDead);
+	}
+	// end of loop
+
+	if (!player->inCombat && numInCombat > 0)
+	{
+		player->inCombat = true;
+		short int rand = Random::Integer(0, 2);
+
+		switch (rand)
+		{
+		case 0:
+			Audio::StartMusic("Camelot.wav");
+			break;
+
+		case 1:
+			Audio::StartMusic("combat1.wav");
+			break;
+
+		case 2:
+			Audio::StartMusic("combat2.wav");
+			break;
+		}
+	}
+	else if (player->inCombat && numInCombat == 0)
+	{
+		player->inCombat = false;
+		player->SwitchBiomeMusic();
+	}
+
 }
 
 APPSTATE Game::Run()
@@ -770,19 +1027,30 @@ APPSTATE Game::Run()
 	case OVERLAYSTATE::MAIN_MENU:
 		return APPSTATE::MAIN_MENU;
 
+
 	case OVERLAYSTATE::PAUSE:
 	{
-		state = GameState::PAUSED;
-		overlay = pauseOverlay;
-		overlay->ShowCursor();
+		if (Time::Get() - lastStateChange > 0.25f)
+		{
+			state = GameState::PAUSED;
+			overlay = pauseOverlay;
+			overlay->ShowCursor();
+			lastStateChange = Time::Get();
+		}
+	
 		break;
 	}
 
 	case OVERLAYSTATE::RETURN:
 	{
-		state = GameState::ACTIVE;
-		overlay = ingameOverlay;
-		overlay->HideCursor();
+		if (Time::Get() - lastStateChange > 0.25f)
+		{
+			state = GameState::ACTIVE;
+			overlay = ingameOverlay;
+			overlay->HideCursor();
+			lastStateChange = Time::Get();
+		}
+	
 		break;
 	}
 	}
@@ -798,7 +1066,7 @@ APPSTATE Game::Run()
 	{
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::Burst);
+			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::Burst, Vector3(70, 25, -590));
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('1'))
@@ -818,8 +1086,7 @@ APPSTATE Game::Run()
 		}
 		if (Event::KeyIsPressed('H'))
 		{
-			unsigned int nthreads = std::thread::hardware_concurrency();
-			PrintNumber(nthreads);
+			SpawnInvasion();
 			lastClick = Time::Get();
 		}
 
@@ -902,11 +1169,15 @@ void Game::CheckNearbyEnemies()
 {
 	short int numInCombat = 0;
 	int numDead = 0;
+	if (Event::KeyIsPressed('9'))
+	{
+		PrintS("");
+	}
 	for (int i = 0; i < hostiles.size(); i++)
 	{
 		float distanceToHostile = (player->GetPosition() - hostiles[i]->GetPosition()).Length();
-		
-		hostiles[i]->Update(player);
+
+		hostiles[i]->Update(player, terrain.GetHeightMap());
 
 		hostiles[i]->CheckPlayerCollision(player);
 
@@ -915,14 +1186,18 @@ void Game::CheckNearbyEnemies()
 			if (!arrow->canCollide)
 				continue;
 
-			bool hit = player->GetArrowHandler().CheckCollision(arrow, hostiles[i]->GetCollider(), true);
+			bool hit = player->GetArrowHandler().CheckCollision(arrow, hostiles[i]->GetCollider(), player->GetPosition(), true);
 
 			if (hit)
 			{
-				hostiles[i]->TakeDamage();
+
+				hostiles[i]->TakeDamage(player->Stats().damage);
+				Audio::StartEffect("BarbHit1.wav");
 				if (hostiles[i]->IsDead())
 				{
-					hostiles[i]->TakeDamage();
+					Audio::StartEffect("BarbDead.wav");
+					hostiles[i]->TakeDamage(player->Stats().damage);
+
 					player->Stats().barbariansKilled++;
 					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));
 					hostiles[i]->GetArrowHandler().ClearArrows();
@@ -937,7 +1212,7 @@ void Game::CheckNearbyEnemies()
 			}
 
 		}
-		if (distanceToHostile < 70.f) // Should be compared to if the hostile "sees" the player instead of a hardcoded value.
+		if (distanceToHostile < hostiles[i]->viewDistance) // Should be compared to if the hostile "sees" the player instead of a hardcoded value.
 		{
 			numInCombat++;
 
@@ -945,16 +1220,17 @@ void Game::CheckNearbyEnemies()
 	}
 	hostiles.resize(hostiles.size() - numDead);
 
-	if (!player->inCombat && numInCombat > 0) 
+	if (!player->inCombat && numInCombat > 0)
 	{
-		PrintS("IN COMBAT");
+		//PrintS("IN COMBAT");
+
 		player->inCombat = true;
 		short int rand = Random::Integer(0, 2);
 
 		switch (rand)
 		{
 		case 0:
-			Audio::StartMusic("Camelot.wav");
+			Audio::StartMusic("combat1.wav");
 			break;
 
 		case 1:
@@ -968,11 +1244,57 @@ void Game::CheckNearbyEnemies()
 	}
 	else if (player->inCombat && numInCombat == 0)
 	{
-		PrintS("OUT OF COMBAT"); 
-		player->inCombat = false;
-		player->SwitchBiomeMusic();
+		//PrintS("OUT OF COMBAT"); 
+
+		{
+
+			player->inCombat = false;
+			player->SwitchBiomeMusic();
+		}
 	}
 }
+
+//void Game::HoveringBackHowToPlay()
+//{
+//	canvases["HOW TO PLAY"]->GetImage("BackLeavesHowToPlay")->Show();
+//}
+//
+//void Game::HoveringBackOptions()
+//{
+//	canvases["OPTIONS"]->GetImage("BackLeavesHowToPlay")->Show();
+//}
+//
+//void Game::HoveringYes()
+//{
+//	canvases["QUIT"]->GetImage("YesLeaves")->Show();
+//
+//}
+//
+//void Game::HoveringNo()
+//{
+//	canvases["QUIT"]->GetImage("NoLeaves")->Show();
+//
+//}
+//
+//void Game::HoveringOptions()
+//{
+//	canvases["PAUSED"]->GetImage("OptionsLeaves")->Show();
+//}
+//
+//void Game::HoveringResume()
+//{
+//	canvases["PAUSED"]->GetImage("ResumeLeaves")->Show();
+//}
+//
+//void Game::HoveringHowToPlay()
+//{
+//	canvases["PAUSED"]->GetImage("HowToPlayLeaves")->Show();
+//}
+//
+//void Game::HoveringMainMenu()
+//{
+//	canvases["PAUSED"]->GetImage("BackToMainMenuLeaves")->Show();
+//}
 
 void Game::UpdateQuadTree()
 {
@@ -983,7 +1305,7 @@ void Game::UpdateQuadTree()
 
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
-	std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
+	//std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{
@@ -1005,7 +1327,8 @@ void Game::UpdateQuadTree()
 			SR->BindStatic(drawable);
 		}
 	}
-	std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
+
+	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
 	
 	//DebugVariant
 	/*
@@ -1082,6 +1405,5 @@ void Game::UpdateQuadTree()
 
 	}
 	*/
-
 
 }

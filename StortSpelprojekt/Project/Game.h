@@ -49,6 +49,8 @@ private:
     //bool paused = false;
     const std::string file = "Default"; //"Test"
 
+    float lastStateChange = 0.0f;
+
     //-----TEMP-----//
     Pathfinding pathing;
 
@@ -72,7 +74,7 @@ private:
 
     std::vector<std::shared_ptr<Item>> items;
 
-    std::shared_ptr<Building> building;
+    std::shared_ptr<Building> buildings[3];
 
     std::map<BarbarianCamp::Location, BarbarianCamp*> camps;
 
@@ -99,18 +101,20 @@ private:
     void HowToPlay();
     void BacktoPause();
     void MainMenu();
+    void QuitCanvas();
 
     std::vector<AudioSource>audioSources;
   
     bool mainMenu = false;
 
-    void RemoveItem(const std::string name);
-    void AddItem(Item::Type type, Vector3 position);
+    void RemoveItem(std::shared_ptr<Item> removedItem);
+    void AddItem(Item::Type type, Vector3 position, const Vector3& rotation = { 0.0f, 0.0f, 0.0f });
+    void GenerateRandomItems(const Vector3& center, UINT amount, float radius);
 
     std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position);
 
     void AddFriendlyNPCs();
-    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
+    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle, const Vector3& targetPosition);
     void AddLoot(LOOTTYPE type, const Vector3& position);
     void AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation);
     void AddBarbarianCamps();
@@ -126,10 +130,13 @@ private:
     void CheckNearbyEnemies();
     void HandleBiomes();
     void HandleAudioSources();
+    void HandleHouseUpgrades();
+    bool CheckBuildRequirements(std::shared_ptr<Building> building);
+    void HandleCamps();
+
 
     void SetupAudio();
     void UpdateQuadTree();
-
     void UpdateInventoryUI();
 
     void Initialize();
