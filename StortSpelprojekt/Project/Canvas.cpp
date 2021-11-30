@@ -90,7 +90,7 @@ void Canvas::Render()
 
 	DrawImages();
 
-	//DrawButtons();
+	DrawButtons();
 
 	DrawTexts();
 

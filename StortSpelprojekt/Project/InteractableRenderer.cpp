@@ -89,7 +89,7 @@ void InteractableRenderer::Render()
 	Graphics::Inst().GetContext().IASetInputLayout(inputLayout);
 
 	//BLEND STATE
-	Graphics::Inst().EnableAlpha();
+	Graphics::Inst().EnableATCAlpha();
 
 	//RASTERIZER STATE
 	Graphics::Inst().GetContext().RSSetState(noCullState);
@@ -119,8 +119,11 @@ void InteractableRenderer::Render()
 
 		auto item = std::dynamic_pointer_cast<Item>(drawable);
 		if (item)
-			UpdateBuffer(colorBuf, BLUE);
-		
+		{
+			matrices.world = (Matrix::CreateScale(2.0f) * Matrix::CreateTranslation(drawable->GetPosition().x, drawable->GetPosition().y + 1.0f, drawable->GetPosition().z)).Transpose();
+			UpdateBuffer(colorBuf, YELLOW);
+		}
+			
 		auto target = std::dynamic_pointer_cast<Target>(drawable);
 		if (target)
 		{

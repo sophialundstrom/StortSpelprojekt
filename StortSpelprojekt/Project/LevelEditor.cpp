@@ -707,6 +707,7 @@ void LevelEditor::Render()
 LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	:water(5000)
 {
+
 	RND.InitModelRenderer(false);
 	RND.InitIDRenderer();
 	RND.InitTerrainRenderer();

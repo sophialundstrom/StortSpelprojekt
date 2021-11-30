@@ -150,6 +150,14 @@ void Scene::AddPointLight(Vector3 position, float range, Vector3 attenuation, Ve
 		pointLights.push_back(PointLight(range, attenuation, color, position));
 }
 
+void Scene::UpdatePointLights()
+{
+	for (auto& pointlight : pointLights)
+	{
+		pointlight.Update();
+	}
+}
+
 
 void Scene::SetDirectionalLight(float range, Vector4 color, float startAngle, int startDir)
 {

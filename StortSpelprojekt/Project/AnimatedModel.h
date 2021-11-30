@@ -2,7 +2,7 @@
 #include "MaterialLoader.h"
 #include "Drawable.h"
 #include "AnimatedMesh.h"
-#include "Animator.h"
+#include "AnimationStateMachine.h"
 
 #include "assimp\Importer.hpp"
 #include "assimp\postprocess.h"
@@ -13,6 +13,8 @@ class AnimatedModel : public Drawable
 private:
 	Assimp::Importer importer;
 	const aiScene* scene;
+
+	AnimationStateMachine* animationController;
 
 	AnimatedMesh mesh;
 	Skeleton skeleton;
@@ -30,11 +32,8 @@ private:
 
 				if (tempScene->HasAnimations())
 				{
-					//std::cout << "NUM ANIM: " << tempScene->mNumAnimations << std::endl << "NAME: " << tempScene->mAnimations[0]->mName.C_Str() << std::endl;
-
 					animator->AddAnimation(tempScene->mAnimations[0]);
 				}
-
 			}
 		}
 	}
@@ -67,13 +66,15 @@ public:
 		animator = new Animator(scene, skeleton);
 
 		ProcessAnimations(fileName);
+
+		animationController = new AnimationStateMachine(animator, scene, skeleton);
 	}
 	
-	~AnimatedModel() { delete animator; }
+	~AnimatedModel() { delete animator; if (animationController) delete animationController; }
 
 	void Draw(bool useTextures = true, bool useMaterial = true) 
 	{ 
-		animator->BindMatricesBuffer();
+		animationController->BindMatrices();
 
 		if (useTextures) 
 			Resources::Inst().BindMaterial(mesh.materialID, useMaterial); 
@@ -104,10 +105,22 @@ public:
 		animator->PlayAnimation(animation, onRepeat, speedFactor);
 	}
 
+	void PlayAnimation(const std::string& name)
+	{
+		animationController->PlayAnimation(name);
+	}
+
+	void PlayOverrideAnimation(const std::string& name, const std::string& startBone, bool hold)
+	{
+		animationController->PlayOverrideAnimation(name, startBone, hold);
+	}
+
 	// Inherited via Drawable
 	virtual void Update() override
 	{
 		UpdateMatrix();
-		animator->Update(scene, skeleton);
+
+		animationController->Update(skeleton, scene);
+		//animator->Update(scene, skeleton);
 	}
 };

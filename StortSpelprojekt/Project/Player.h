@@ -50,10 +50,9 @@ private:
 	float currentGroundLevel = 0.0f;
 	float heightMapGroundLevel = 0.0f;
 
-	const float mouseDefaultSensitivity = 3.f;
-	const float mouseAimSensitivity = 2.f;
+	const float mouseDefaultSensitivity = 10.f;
+	const float mouseAimSensitivity = 4.f;
 	float mouseCurrentSensitivity = mouseDefaultSensitivity;
-	float mouseSensitivity = 5.f;
 
 	float gravity = 9.82f;
 	float timePassed = 0;
@@ -70,7 +69,7 @@ private:
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
 	float closestColliderToCam = 9999;
-	Vector3 cameraLocationSocket = { 1.3f, 5.0, -2.f };
+	Vector3 cameraLocationSocket = { 1.3f, 8.0, -2.f };
 
 	void CalcHeight(HeightMap* heightMap);
 	float CalcHeightForCamera(HeightMap* heightMap);
@@ -91,19 +90,9 @@ private:
 	float currentLerp = 0.f;
 	float duration = 1.f;
 	bool inAir = false;
+
+	//ANIMATION HANDLING
 	bool isAiming = false;
-
-
-	void UpdateHealthUI()
-	{
-		auto image = ingameCanvas->GetImage("hp");
-		if (image->FileName() == "HP" + std::to_string(stats.healthPoints) + ".png")
-			return;
-
-		auto position = image->GetPosition();
-		ingameCanvas->RemoveImage("hp");
-		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
-	}
 
 public:
 	Camera* sceneCamera;
@@ -145,7 +134,7 @@ public:
 
 	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void ResetToLastPosition() { position = lastPosition; }
-	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
+	void AddHealthPoint() { stats.IncreaseHealthPoints(); }
 	void SetClosestColliderToCam(float range)
 	{
 		closestColliderToCam = range;
