@@ -54,10 +54,12 @@ void NPC::Die()
 	//position = { 0,-100,0 };
 }
 
-void NPC::TakeDamage()
+void NPC::TakeDamage(int x)
 {
 	//std::cout << "DamageTaken\n";
-	hp--;
+	hp -= x;
+	Print("Damage ");
+	Print(x);
 	if (hp <= 0)
 		Die();
 }

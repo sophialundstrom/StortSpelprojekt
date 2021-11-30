@@ -59,7 +59,7 @@ StructuredBuffer<POINT_LIGHT> lights : register(t9);
 float4 main(PS_INPUT input) : SV_TARGET
 {
    	const float shadow = ShadowCalculation(input.lightClipPosition);
-	const float4 globalAmbient = 0.0f;
+	const float4 globalAmbient = 0.15f;
 
 	const float4 T = diffuseTexture.Sample(wrapSampler, input.texCoords);
     

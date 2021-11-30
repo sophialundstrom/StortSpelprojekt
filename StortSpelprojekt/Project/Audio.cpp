@@ -4,6 +4,7 @@
 #include "ThreadPool.h"
 #include "Time.h"
 #include "Print.h"
+#include "HardwareSupport.h"
 
 Microsoft::WRL::ComPtr<IXAudio2> Audio::MusicEngine;
 IXAudio2MasteringVoice* Audio::pMasterVoice = nullptr;
@@ -13,6 +14,58 @@ std::map<std::string, IXAudio2SourceVoice*> Audio::sEffects;
 std::map<std::string, IXAudio2SourceVoice*> Audio::sVoices;
 std::map<std::string, XAUDIO2_BUFFER> Audio::audioBuffers;
 float Audio::volume = 0.5f;
+float Audio::masterVolume = 0.25f;
+float Audio::musicVolume = 0.5f;
+float Audio::effectsVolume = 0.5f;
+float Audio::voiceVolume = 0.5f;
+
+void Audio::StopAudio()
+{
+	/*for (auto& [key, audio] : sMusic)
+	{
+		audio
+	}*/
+}
+
+bool Audio::MuteAllVolume()
+{
+	return false;
+}
+
+void Audio::SetMasterVolume(float volume)
+{
+	pMasterVoice->SetVolume(volume);
+	masterVolume = volume;
+	Print(masterVolume);
+}
+
+void Audio::SetMusicVolume(float volume)
+{
+	for (auto& [key, source] : sMusic)
+	{
+		source->SetVolume(volume);
+		musicVolume = volume;
+	}
+	Print(volume);
+}
+
+void Audio::SetSoundEffectsVolume(float volume)
+{
+	for (auto& [key, source] : sEffects)
+	{
+		source->SetVolume(volume);
+		effectsVolume = volume;
+	}
+}
+
+void Audio::SetVoiceVolume(float volume)
+{
+	for (auto& [key, source] : sVoices)
+	{
+		source->SetVolume(volume);
+		voiceVolume = volume;
+	}
+}
 
 void Audio::StartEngine()
 {
@@ -22,12 +75,17 @@ void Audio::StartEngine()
 void Audio::StopEngine()
 {
 	MusicEngine->StopEngine();
+	sMusic.clear();
+	sEffects.clear();
+	sVoices.clear();
 }
 
 void Audio::SetVolume(const std::string& name, float volume)
 {
+
 	if (sMusic.count(name) == 1)
 	{
+
 		sMusic[name]->SetVolume(volume);
 		return;
 	}
@@ -80,7 +138,7 @@ void Audio::StartVoice(const std::string& name)
 		std::cout << "COULD NOT START AUDIO" << std::endl;
 }
 
-void Audio::Initialize(bool mtLoading, const int& numThreads)
+void Audio::Initialize(bool mtLoading)
 {	
 
 	HRESULT hr;
@@ -100,13 +158,12 @@ void Audio::Initialize(bool mtLoading, const int& numThreads)
 		Timer timer;
 		timer.Start();
 
-		ThreadPool tp(numThreads);
+		ThreadPool tp(HardwareSupport::numThreads);
 
 		for (const auto& dirEntry : directory_iterator("Audio/Music/"))
 		{
 			if (dirEntry.path().extension() == ".wav")
 			{
-				PrintS(dirEntry.path().string());
 				std::string fileName = dirEntry.path().filename().string();
 				std::wstring path = to_wstr("Audio/Music/" + fileName);
 				tp.Enqueue([=] {
@@ -149,7 +206,6 @@ void Audio::Initialize(bool mtLoading, const int& numThreads)
 		{
 			if (dirEntry.path().extension() == ".wav")
 			{
-				PrintS(dirEntry.path().string());
 				std::string fileName = dirEntry.path().filename().string();
 				std::wstring path = to_wstr("Audio/Music/" + fileName);
 				AddAudioNoneMT(path, fileName, 0, AUDIOTYPE::MUSIC, true);

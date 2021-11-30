@@ -31,9 +31,9 @@ void AnimationStateMachine::CalculateCoreAnimation(const aiScene* scene, Skeleto
 
 	if (queuedAnimations.size() == 1)
 	{
-		Print("================SINGLE ANIMATION=================");
-		Print("PLAYING ANIMATION: " + queuedAnimations.front().animation->name);
-		Print(1.0f, "WEIGHT");
+		//Print("================SINGLE ANIMATION=================");
+		//Print("PLAYING ANIMATION: " + queuedAnimations.front().animation->name);
+		//Print(1.0f, "WEIGHT");
 		animator->Update(queuedAnimations.front().animation, scene, skeleton, queuedAnimations.front().startBone, 1.0f, matrices);
 		return;
 	}
@@ -48,13 +48,13 @@ void AnimationStateMachine::CalculateCoreAnimation(const aiScene* scene, Skeleto
 
 	secondClip.transition = 1.0f - firstClip.transition;
 	
-	Print("================MULTIPLE ANIMATIONS=================");
+	//Print("================MULTIPLE ANIMATIONS=================");
 
-	Print("PLAYING ANIMATION: " + firstClip.animation->name);
-	Print(firstClip.transition, "WEIGHT");
+	//Print("PLAYING ANIMATION: " + firstClip.animation->name);
+	//Print(firstClip.transition, "WEIGHT");
 
-	Print("PLAYING ANIMATION: " + secondClip.animation->name);
-	Print(secondClip.transition, "WEIGHT");
+	//Print("PLAYING ANIMATION: " + secondClip.animation->name);
+	//Print(secondClip.transition, "WEIGHT");
 
 	animator->Update(firstClip.animation, scene, skeleton, firstClip.startBone, firstClip.transition, matrices);
 	animator->Update(secondClip.animation, scene, skeleton, secondClip.startBone, secondClip.transition, matrices);
@@ -144,7 +144,7 @@ void AnimationStateMachine::PlayAnimation(const std::string& name)
 		animation->active = true;
 		animation->repeat = true;
 
-		Print("PUSHED ANIMATION " + name);
+		//Print("PUSHED ANIMATION " + name);
 
 		queuedAnimations.push_back(clip);
 	}

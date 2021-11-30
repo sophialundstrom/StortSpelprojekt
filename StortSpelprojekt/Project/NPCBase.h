@@ -23,7 +23,7 @@ public:
 	
 	void Die();
 	bool IsDead() { return dead; }
-	void TakeDamage();
+	void TakeDamage(int x);
 	std::shared_ptr<BoundingBox> GetCollider() { return boundingBox; }
 	void debugPrint();
 };
