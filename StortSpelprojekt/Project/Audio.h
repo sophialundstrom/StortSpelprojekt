@@ -16,7 +16,8 @@ private:
 	static WAVEFORMATEXTENSIBLE wfx;
 	static float volume;
 
-	static void StartEngine();
+	bool mute = false;
+
 	static void AddAudio(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat = false);
 	static void AddAudioNoneMT(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat = false);
 
@@ -31,6 +32,13 @@ public:
 	// SETUP AND DELETION
 	static void Initialize(bool mtLoading = true);
 	static void StopEngine();
+	static void StartEngine();
+
+	static void SetMasterVolume(float volume);
+	static void SetMusicVolume(float volume);
+	static void SetSoundEffectsVolume(float volume);
+	static void SetVoiceVolume(float volume);
+	bool MuteAllVolume();
 
 	// STARTING AND STOPPING
 	static void StartMusic(const std::string& name);
@@ -40,8 +48,14 @@ public:
 	static void StopEffect(const std::string& name);
 	static void StopVoice(const std::string& name);
 
+	static void StopAudio();
+
+	static float masterVolume;
+	static float musicVolume;
+	static float effectsVolume;
+	static float voiceVolume;
+
 	// SETTINGS
-	static void SetMasterVolume(float volume);
 	static void SetVolume(const std::string& name, float volume);
 	static float GetVolume() { return volume; }
 };

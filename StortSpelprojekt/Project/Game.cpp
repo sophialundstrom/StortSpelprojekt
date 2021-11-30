@@ -307,8 +307,8 @@ void Game::UpdateAndHandleLoot()
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 			
-			Audio::SetVolume("PickupPop.wav", 3.f);
-			Audio::StartEffect("PickupPop.wav");
+			Audio::SetVolume("Pickup.wav", Audio::effectsVolume);
+			Audio::StartEffect("Pickup.wav");
 		}
 	}
 }
@@ -708,6 +708,7 @@ void Game::CheckItemCollision()
 			if (Event::KeyIsPressed('E'))
 			{
 				Audio::StartEffect("Pickup.wav");
+				Audio::SetVolume("Pickup.wav", Audio::effectsVolume * 2);
 				player->Inventory().AddItem(item->GetType());
 				RemoveItem(item);
 				UpdateInventoryUI();
@@ -754,6 +755,7 @@ void Game::UpdateInventoryUI()
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:water(5000), terrain(2)
 {
+	Audio::StartEngine();
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.05f, 100.0f, { 0.0f, 200.0f, -100.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
@@ -913,10 +915,13 @@ Game::~Game()
 
 void Game::SetupAudio()
 {
+	
 	Audio::Initialize();
+	Audio::SetMusicVolume(Audio::musicVolume);
 
 	Audio::StartMusic("SoundForest.wav");
-	Audio::SetVolume("SoundForest.wav", 0.3f);
+	Audio::SetVolume("SoundForest.wav", Audio::musicVolume);
+
 }
 
 void Game::HandleAudioSources()

@@ -212,6 +212,7 @@
     <ClCompile Include="ShadowRenderer.cpp" />
     <ClCompile Include="SkeletonRenderer.cpp" />
     <ClCompile Include="SkyBoxRenderer.cpp" />
+    <ClCompile Include="Slider.cpp" />
     <ClCompile Include="SoundEffect.cpp" />
     <ClCompile Include="TalkObjective.cpp" />
     <ClCompile Include="Target.cpp" />
@@ -324,6 +325,7 @@
     <ClInclude Include="Skeleton.h" />
     <ClInclude Include="SkeletonRenderer.h" />
     <ClInclude Include="SkyBoxRenderer.h" />
+    <ClInclude Include="Slider.h" />
     <ClInclude Include="SoundEffect.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="States.h" />
