@@ -81,6 +81,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitShadowRenderer();
 
 	Initialize();
+	Audio::StartEngine();
 	//Audio::Initialize();
 	//Audio::StartEngine();
 	//
@@ -163,19 +164,40 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	auto optionsCanvas = new Canvas();
 	{
 		// OPTIONS TITLE
-		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 350 }, "OptionsInOptions", "Options.png", 1.5f, 1.0f);
-		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 350 }, "OptionsLeavesInOptions", "OptionsLeaves.png", 1.5f, 1.0f);
+		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 8.0f }, "Options", "OptionsSmall.png", 1.f, 1.0f, true, true);
 		// BACK
 		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackLeavesOptions", "BackLeaves.png", 1.0f, 1.0f);
 		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 1.1f }, "BackControls", "Back.png", 1.0f, 1.0f);
 		auto image = optionsCanvas->GetImage("BackControls");
 		optionsCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "BackButtonOptions", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { BacktoMenu(); }, [this] { HoveringBackOptions(); });
-		//Button::Button(D2D_VECTOR_2F pos, float width, float height, ID2D1SolidColorBrush * brush, std::function<void()> onClickFunction, std::function<void()> onHoverFunction, bool visible)
 
-		auto sliderButton = new Button({ 0,0 }, 50, 50, UI::Inst().GetBrush(UI::COLOR::GRAY));
-		auto sliderImage = new Image("HP0.png", { 0,0 }, 1.0f, 1.0f, true, true);
-		auto sliderButtonImage = new Image("Cursor.png", { 0,0 });
-		optionsCanvas->AddSlider({ clientWidth / 2.0f, clientHeight / 2.f }, "MasterVolumeSlider", sliderButton, sliderImage, sliderButtonImage, 0.0f, 1.0f, 0.5f, [this](float value) { Audio::SetMasterVolume(value); });
+		// MASTER
+		optionsCanvas->AddImage({ clientWidth / 2.0f, clientHeight / 2.0f - 225.0f }, "Master", "Master.png", 1.f, 1.0f, true, true);
+		auto masterSliderButton = new Button({ 0,0 }, 50, 50, UI::Inst().GetBrush(UI::COLOR::GRAY));
+		auto masterSliderImage = new Image("Slider.png", { 0,0 }, 1.0f, 1.0f, true, true);
+		auto masterSliderButtonImage = new Image("SliderButton.png", { 0,0 });
+		optionsCanvas->AddSlider({ clientWidth / 2.0f, clientHeight / 2.f - 150.f }, "MasterVolumeSlider", masterSliderButton, masterSliderImage, masterSliderButtonImage, 0.0f, 1.0f, Audio::masterVolume, [this](float value) { Audio::SetMasterVolume(value); });
+		
+		// SOUND EFFECTS
+		optionsCanvas->AddImage({ clientWidth / 2.0f - 420.0f, clientHeight / 2.0f - 50 }, "SFX", "SoundEffects.png", 1.f, 1.0f, true, false);
+		auto effectsSliderButton = new Button({ 0,0 }, 50, 50, UI::Inst().GetBrush(UI::COLOR::GRAY));
+		auto effectsSliderImage = new Image("SliderSmall.png", { 0,0 }, 1.0f, 1.0f, true, true);
+		auto effectsSliderButtonImage = new Image("SliderButton.png", { 0,0 });
+		optionsCanvas->AddSlider({ clientWidth / 2.0f, clientHeight / 2.f }, "SoundEffectsSlider", effectsSliderButton, effectsSliderImage, effectsSliderButtonImage, 0.0f, 1.0f, Audio::effectsVolume, [this](float value) { Audio::SetSoundEffectsVolume(value); });
+
+		// MUSIC
+		optionsCanvas->AddImage({ clientWidth / 2.0f - 420.0f, clientHeight / 2.0f + 100.0f }, "Music", "Music.png", 1.f, 1.0f, true, false);
+		auto musicSliderButton = new Button({ 0,0 }, 50, 50, UI::Inst().GetBrush(UI::COLOR::GRAY));
+		auto musicSliderImage = new Image("SliderSmall.png", { 0,0 }, 1.0f, 1.0f, true, true);
+		auto musicSliderButtonImage = new Image("SliderButton.png", { 0,0 });
+		optionsCanvas->AddSlider({ clientWidth / 2.0f, clientHeight / 2.f + 150.0f }, "MusicSlider", musicSliderButton, musicSliderImage, musicSliderButtonImage, 0.0f, 1.0f, Audio::musicVolume, [this](float value) { Audio::SetMusicVolume(value); });
+
+		// DIALOGUE
+		optionsCanvas->AddImage({ clientWidth / 2.0f - 420.0f, clientHeight / 2.0f + 250.0f }, "Dialogue", "Dialogue.png", 1.f, 1.0f, true, false);
+		auto voiceSliderButton = new Button({ 0,0 }, 50, 50, UI::Inst().GetBrush(UI::COLOR::GRAY));
+		auto voiceSliderImage = new Image("SliderSmall.png", { 0,0 }, 1.0f, 1.0f, true, true);
+		auto voiceSliderButtonImage = new Image("SliderButton.png", { 0,0 });
+		optionsCanvas->AddSlider({ clientWidth / 2.0f, clientHeight / 2.f + 300.0f }, "VoiceSlider", voiceSliderButton, voiceSliderImage, voiceSliderButtonImage, 0.0f, 1.0f, Audio::voiceVolume, [this](float value) { Audio::SetVoiceVolume(value); });
 
 	}
 	
@@ -203,7 +225,7 @@ MainMenu::~MainMenu()
 
 void MainMenu::Initialize()
 {
-	Audio::Initialize();
+	//Audio::Initialize();
 	Audio::StartMusic("Menu.wav");
 
 	//LOAD SCENE

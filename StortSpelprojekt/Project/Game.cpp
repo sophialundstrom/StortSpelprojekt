@@ -685,6 +685,7 @@ void Game::UpdateInventoryUI()
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	:water(5000), terrain(2)
 {
+	Audio::StartEngine();
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.05f, 100.0f, { 0.0f, 200.0f, -100.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
@@ -816,10 +817,12 @@ Game::~Game()
 
 void Game::SetupAudio()
 {
-	Audio::Initialize(true, HardwareSupport::numThreads);
+	//Audio::Initialize(true, HardwareSupport::numThreads);
 
 	Audio::StartMusic("Sonrie.wav");
 	Audio::SetVolume("Sonrie.wav", 0.3f);
+	
+	Audio::SetMusicVolume(Audio::musicVolume);
 }
 
 void Game::HandleAudioSources()

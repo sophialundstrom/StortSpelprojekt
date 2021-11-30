@@ -1,6 +1,9 @@
 #include "PauseOverlay.h"
 #include "Time.h"
 #include "Event.h"
+#include "Audio.h"
+#include "Slider.h"
+
 
 void PauseOverlay::HideLeaves()
 {
@@ -97,9 +100,37 @@ PauseOverlay::PauseOverlay()
 
 	auto optionsCanvas = new Canvas();
 	{
+		auto resumeFunc = [this]() { returnState = OVERLAYSTATE::RETURN; };
+
 		optionsCanvas->AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 8.0f }, "OptionsTitle", "OptionsSmall.png", 1.f, 1.0f);
 
+		// MASTER
+		optionsCanvas->AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f - 225.0f }, "Master", "Master.png", 1.f, 1.0f, true, true);
+		auto masterSliderButton = new Button({ 0,0 }, 50, 50, UI::Inst().GetBrush(UI::COLOR::GRAY));
+		auto masterSliderImage = new Image("Slider.png", { 0,0 }, 1.0f, 1.0f, true, true);
+		auto masterSliderButtonImage = new Image("SliderButton.png", { 0,0 });
+		optionsCanvas->AddSlider({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.f - 150.f }, "MasterVolumeSlider", masterSliderButton, masterSliderImage, masterSliderButtonImage, 0.0f, 1.0f, Audio::masterVolume, [this](float value) { Audio::SetMasterVolume(value); });
 
+		// SOUND EFFECTS
+		optionsCanvas->AddImage({ Window::ClientWidth() / 2.0f - 420.0f, Window::ClientHeight() / 2.0f - 50 }, "SFX", "SoundEffects.png", 1.f, 1.0f, true, false);
+		auto effectsSliderButton = new Button({ 0,0 }, 50, 50, UI::Inst().GetBrush(UI::COLOR::GRAY));
+		auto effectsSliderImage = new Image("SliderSmall.png", { 0,0 }, 1.0f, 1.0f, true, true);
+		auto effectsSliderButtonImage = new Image("SliderButton.png", { 0,0 });
+		optionsCanvas->AddSlider({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.f }, "SoundEffectsSlider", effectsSliderButton, effectsSliderImage, effectsSliderButtonImage, 0.0f, 1.0f, Audio::effectsVolume, [this](float value) { Audio::SetSoundEffectsVolume(value); });
+
+		// MUSIC
+		optionsCanvas->AddImage({ Window::ClientWidth() / 2.0f - 420.0f, Window::ClientHeight() / 2.0f + 100.0f }, "Music", "Music.png", 1.f, 1.0f, true, false);
+		auto musicSliderButton = new Button({ 0,0 }, 50, 50, UI::Inst().GetBrush(UI::COLOR::GRAY));
+		auto musicSliderImage = new Image("SliderSmall.png", { 0,0 }, 1.0f, 1.0f, true, true);
+		auto musicSliderButtonImage = new Image("SliderButton.png", { 0,0 });
+		optionsCanvas->AddSlider({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.f + 150.0f }, "MusicSlider", musicSliderButton, musicSliderImage, musicSliderButtonImage, 0.0f, 1.0f, Audio::musicVolume, [this](float value) { Audio::SetMusicVolume(value); });
+
+		// DIALOGUE
+		optionsCanvas->AddImage({ Window::ClientWidth() / 2.0f - 420.0f, Window::ClientHeight() / 2.0f + 250.0f }, "Dialogue", "Dialogue.png", 1.f, 1.0f, true, false);
+		auto voiceSliderButton = new Button({ 0,0 }, 50, 50, UI::Inst().GetBrush(UI::COLOR::GRAY));
+		auto voiceSliderImage = new Image("SliderSmall.png", { 0,0 }, 1.0f, 1.0f, true, true);
+		auto voiceSliderButtonImage = new Image("SliderButton.png", { 0,0 });
+		optionsCanvas->AddSlider({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.f + 300.0f }, "VoiceSlider", voiceSliderButton, voiceSliderImage, voiceSliderButtonImage, 0.0f, 1.0f, Audio::voiceVolume, [this](float value) { Audio::SetVoiceVolume(value); });
 
 	}
 	canvases["OPTIONS"] = optionsCanvas;
@@ -126,12 +157,14 @@ void PauseOverlay::Render()
 	DrawButtons();
 	DrawImages();
 	DrawTexts();
+	DrawSliders();
 
 	if (currentCanvas)
 	{
 		currentCanvas->DrawButtons();
 		currentCanvas->DrawImages();
 		currentCanvas->DrawTexts();
+		currentCanvas->DrawSliders();
 	}
 
 	HideLeaves();
@@ -160,6 +193,12 @@ OVERLAYSTATE PauseOverlay::Update()
 	if (internalState == INTERNALSTATE::MAIN)
 	{
 		currentCanvas = canvases["PAUSETITLE"];
+	}
+
+	if (internalState == INTERNALSTATE::OPTIONS)
+	{
+		currentCanvas = canvases["OPTIONS"];
+		GetImage("OptionsLeaves")->Show();
 	}
 
 	if (internalState == INTERNALSTATE::QUIT_CHOICE)

@@ -13,9 +13,9 @@ Slider::Slider(D2D_VECTOR_2F position, Button * button, Image* sliderImage, Imag
 
 	float startX =  minX + sliderImage->GetWidth() * ((currentValue - minValue) / (maxValue - minValue));
 
-	buttonImage->SetPosition((int)startX, (int)position.y);
+	buttonImage->SetPosition((int)startX, (int)position.y + 4.0f);
 
-	button->SetPosition((int)startX, (int)position.y);
+	button->SetPosition((int)startX, (int)position.y + 4.0f);
 	
 	func(currentValue);
 }
@@ -50,8 +50,8 @@ void Slider::Update()
 			{
 				mp.x = (long)minX;
 			}
-			button->SetPosition((int)mp.x, (int)sliderImage->GetPosition().y);
-			buttonImage->SetPosition((int)mp.x, (int)sliderImage->GetPosition().y);
+			button->SetPosition((int)mp.x, (int)sliderImage->GetPosition().y + 4.0f);
+			buttonImage->SetPosition((int)mp.x, (int)sliderImage->GetPosition().y + 4.0f);
 
 			float normalizedValue = ((mp.x - minX) / (maxX - minX));
 			func(normalizedValue);

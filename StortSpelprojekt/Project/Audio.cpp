@@ -13,6 +13,18 @@ std::map<std::string, IXAudio2SourceVoice*> Audio::sEffects;
 std::map<std::string, IXAudio2SourceVoice*> Audio::sVoices;
 std::map<std::string, XAUDIO2_BUFFER> Audio::audioBuffers;
 float Audio::volume = 0.5f;
+float Audio::masterVolume = 0.5f;
+float Audio::musicVolume = 0.5f;
+float Audio::effectsVolume = 0.5f;
+float Audio::voiceVolume = 0.5f;
+
+void Audio::StopAudio()
+{
+	/*for (auto& [key, audio] : sMusic)
+	{
+		audio
+	}*/
+}
 
 bool Audio::MuteAllVolume()
 {
@@ -22,7 +34,8 @@ bool Audio::MuteAllVolume()
 void Audio::SetMasterVolume(float volume)
 {
 	pMasterVoice->SetVolume(volume);
-	Print(volume);
+	masterVolume = volume;
+	Print(masterVolume);
 }
 
 void Audio::SetMusicVolume(float volume)
@@ -30,7 +43,9 @@ void Audio::SetMusicVolume(float volume)
 	for (auto& [key, source] : sMusic)
 	{
 		source->SetVolume(volume);
+		musicVolume = volume;
 	}
+	Print(volume);
 }
 
 void Audio::SetSoundEffectsVolume(float volume)
@@ -38,6 +53,7 @@ void Audio::SetSoundEffectsVolume(float volume)
 	for (auto& [key, source] : sEffects)
 	{
 		source->SetVolume(volume);
+		effectsVolume = volume;
 	}
 }
 
@@ -46,6 +62,7 @@ void Audio::SetVoiceVolume(float volume)
 	for (auto& [key, source] : sVoices)
 	{
 		source->SetVolume(volume);
+		voiceVolume = volume;
 	}
 }
 

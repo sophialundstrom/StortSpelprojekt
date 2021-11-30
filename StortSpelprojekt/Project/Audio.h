@@ -18,7 +18,6 @@ private:
 
 	bool mute = false;
 
-	static void StartEngine();
 	static void AddAudio(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat = false);
 	static void AddAudioNoneMT(const std::wstring& path, const std::string& name, short int slot, AUDIOTYPE type, bool repeat = false);
 
@@ -33,6 +32,7 @@ public:
 	// SETUP AND DELETION
 	static void Initialize(bool mtLoading = true, const int& numThreads = 6);
 	static void StopEngine();
+	static void StartEngine();
 
 	static void SetMasterVolume(float volume);
 	static void SetMusicVolume(float volume);
@@ -47,6 +47,13 @@ public:
 	static void StopMusic(const std::string& name);
 	static void StopEffect(const std::string& name);
 	static void StopVoice(const std::string& name);
+
+	static void StopAudio();
+
+	static float masterVolume;
+	static float musicVolume;
+	static float effectsVolume;
+	static float voiceVolume;
 
 	// SETTINGS
 	static void SetVolume(const std::string& name, float volume);
