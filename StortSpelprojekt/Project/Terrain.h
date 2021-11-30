@@ -34,6 +34,8 @@ public:
 	Terrain(UINT subdivisions = 0);
 	~Terrain();
 
+	float SampleAverage(float x, float z);
+
 	HeightMap* GetHeightMap() { return heightMap; }
 	void Draw() const;
 };

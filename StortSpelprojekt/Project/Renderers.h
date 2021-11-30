@@ -10,6 +10,7 @@
 #include "VolumeRenderer.h"				//VR
 #include "WaterRenderer.h"				//WR
 #include "InteractableRenderer.h"		//IR
+#include "SkyBoxRenderer.h"				//SBR
 
 class Renderers : public Singleton<Renderers>
 {
@@ -26,6 +27,7 @@ private:
 	static VolumeRenderer* vr;
 	static WaterRenderer* wr;
 	static InteractableRenderer* ir;
+	static SkyBoxRenderer* sbr;
 public:
 	Renderers() :Singleton(this) {}
 	~Renderers() { ShutDown(); }
@@ -42,6 +44,7 @@ public:
 	static void InitVolumeRenderer()								{ vr = new VolumeRenderer(); }
 	static void InitWaterRenderer(float tesselationAmount = 63.0f)	{ wr = new WaterRenderer(tesselationAmount); }
 	static void InitInteractableRenderer()							{ ir = new InteractableRenderer(); }
+	static void InitSkyBoxRenderer()								{ sbr = new SkyBoxRenderer(); }
 
 	static AnimatedModelRenderer* AMR() { return amr; }
 	static ColliderRenderer* CR()		{ return cr; }
@@ -55,6 +58,7 @@ public:
 	static VolumeRenderer* VR()			{ return vr; }
 	static WaterRenderer* WR()			{ return wr; }
 	static InteractableRenderer* IR()	{ return ir; }
+	static SkyBoxRenderer* SBR()		{ return sbr; }
 
 	static void Clear()
 	{
@@ -78,6 +82,8 @@ public:
 			vr->Clear();
 		if (wr)
 			wr->Clear();
+		if (sbr)
+			sbr->Clear();
 	}
 	static void ShutDown()
 	{
@@ -146,6 +152,12 @@ public:
 			delete wr;
 			wr = nullptr;
 		}
+
+		if (sbr)
+		{
+			delete sbr;
+			sbr = nullptr;
+		}
 	}
 };
 inline AnimatedModelRenderer*	Renderers::amr	= nullptr;
@@ -160,6 +172,7 @@ inline TerrainRenderer*			Renderers::tr	= nullptr;
 inline VolumeRenderer*			Renderers::vr	= nullptr;
 inline WaterRenderer*			Renderers::wr	= nullptr;
 inline InteractableRenderer*	Renderers::ir   = nullptr;
+inline SkyBoxRenderer*			Renderers::sbr	= nullptr;
 
 inline Renderers& GetRenderersInstance() { return Renderers::Inst(); }
 #define RND GetRenderersInstance()
@@ -211,3 +224,7 @@ inline WaterRenderer* RendererWR() { return RND.WR(); }
 inline InteractableRenderer* RendererIR() { return RND.IR(); }
 //INTERACTABLE RENDERER
 #define IR RendererIR()
+
+inline SkyBoxRenderer* RendererSBR() { return RND.SBR(); }
+//SKYBOX RENDERER
+#define SBR RendererSBR()
