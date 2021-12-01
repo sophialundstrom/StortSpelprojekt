@@ -52,7 +52,7 @@ private:
     float fadeTimeMultiplier = 0.25;
     Vector4 lightColor;
     Vector4 DayLightColor = { 1, 1, 1, 1 };
-    Vector4 NightLightColor = { 0, 0, 0.15, 1 };
+    Vector4 NightLightColor = { 0.5, 0.5, 1, 1 };
 
     bool hovering = false;
     bool done = false;
