@@ -2,132 +2,132 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\Project.exe</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\Project.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\AnimatedModelVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\AnimatedModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredColliderPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredColliderPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredTerrainPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredTerrainPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\ColliderPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ColliderPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\ColliderVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ColliderVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\ForwardModelPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ForwardModelPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\ForwardParticlePixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ForwardParticlePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredModelPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredModelPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\ForwardTerrainPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ForwardTerrainPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\IDPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\IDPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\IDVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\IDVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\InteractablePixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\InteractablePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\InteractableVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\InteractableVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\LoadingPS.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\LoadingPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\ModelVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleGeometryShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleGeometryShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredParticlePixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\DeferredParticlePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\SkeletonPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\SkeletonPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\SkeletonVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\SkeletonVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\skyBoxPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\skyBoxPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\skyBoxVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\skyBoxVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\TerrainDomainShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\TerrainDomainShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\TerrainGeometryShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\TerrainGeometryShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\TerrainHullShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\TerrainHullShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\TerrainVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\TerrainVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitAnimatedModelVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitAnimatedModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitForwardModelPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitForwardModelPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitModelVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\UnlitModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\LoadingVS.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\LoadingVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumeIDVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumeIDVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumePixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumeVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\VolumeVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterDomainShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterDomainShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterGeometryShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterGeometryShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterHullShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterHullShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterPixelShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>X:\Skola\3\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterVertexShader.cso</FullPath>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\WaterVertexShader.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
