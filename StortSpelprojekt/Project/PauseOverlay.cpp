@@ -23,7 +23,7 @@ PauseOverlay::PauseOverlay()
 
 	//LEFT BORDER WOOD
 	AddImage({ 25, Window::ClientHeight() / 2.0f }, "MenuStick", "MenuStick.png", 0.8f, 1.0f, true, true);
-	AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f }, "ABPauseBackground", "PauseBackground.png", 1.0f, 1.0f);
+	AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f }, "ABPauseBackground", "PauseBackground.png", 2.0f, 1.0f);
 
 
 	{
@@ -161,7 +161,7 @@ void PauseOverlay::Render()
 
 	if (currentCanvas)
 	{
-		currentCanvas->DrawButtons();
+		//currentCanvas->DrawButtons();
 		currentCanvas->DrawImages();
 		currentCanvas->DrawTexts();
 		currentCanvas->DrawSliders();
