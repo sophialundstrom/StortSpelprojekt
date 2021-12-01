@@ -95,7 +95,7 @@ Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
 
 	//186 95 42 
-	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
+	auto menuFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
 	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ 38.055f, 20.367f, -594.542f });
 	PR->Bind(menuFireSystem);
 
