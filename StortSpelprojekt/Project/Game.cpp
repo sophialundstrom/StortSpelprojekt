@@ -310,7 +310,7 @@ void Game::UpdateAndHandleLoot()
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 			
-			Audio::SetVolume("Pickup.wav", Audio::effectsVolume);
+			Audio::SetVolume("PickupPop.wav", 1.f);
 			Audio::StartEffect("Pickup.wav");
 		}
 	}
@@ -496,7 +496,9 @@ void Game::CheckTargetCollision()
 		{
 			if (target->GotHit())
 				continue;
-
+			if ((arrow->GetPosition() - target->GetPosition()).Length() > 70.f)
+				continue;
+				
 			bool hit = handler.CheckCollision(arrow, target->GetCollider(), player->GetPosition());
 
 			if (hit)
@@ -625,18 +627,19 @@ void Game::CheckSaveStationCollision()
 {
 	for (auto& saveStation : saveStations)
 	{
-		saveStation.Update();
+			saveStation.Update();
 
-		if (Collision::Intersection(*saveStation.Collider(), *player->GetFrustum()))
-		{
-			if (Time::Get() - saveStation.LastSave() > 5 && Event::KeyIsPressed('E'))
+			if (Collision::Intersection(*saveStation.Collider(), *player->GetFrustum()))
 			{
-				Print("SAVED");
-				player->Save("Test");
-				//QuestLog::Inst().Save("Test");
-				saveStation.LastSave(Time::Get());
+				if (Time::Get() - saveStation.LastSave() > 5 && Event::KeyIsPressed('E'))
+				{
+					Print("SAVED");
+					player->Save("Test");
+					//QuestLog::Inst().Save("Test");
+					saveStation.LastSave(Time::Get());
+				}
 			}
-		}
+		
 	}
 }
 
@@ -644,25 +647,28 @@ void Game::HandleHouseUpgrades()
 {
 	for (auto& building : buildings)
 	{
-		if (Collision::Intersection(*building->GetCollider(), *player->GetFrustum()))
+		if ((player->GetPosition() - building->GetPosition()).Length() < 170.f)
 		{
-			ingameOverlay->ShowInteract();
+			if (Collision::Intersection(*building->GetCollider(), *player->GetFrustum()))
+			{
+				ingameOverlay->ShowInteract();
 
-			if (Event::KeyIsPressed('E') && CheckBuildRequirements(building))
-			{
-				player->HandleUpgrades(building);
-				building->Upgrade();
-			}
-			else if (Event::KeyIsPressed('E') && !CheckBuildRequirements(building))
-			{
-				if (building->GetBuildingName() == "ArcherTent")
+				if (Event::KeyIsPressed('E') && CheckBuildRequirements(building))
 				{
-					if (building->GetCurrentState() == 1)
-						player->numArrows = 10;
-					if (building->GetCurrentState() == 2)
-						player->numArrows = 20;
-					if (building->GetCurrentState() == 3)
-						player->numArrows = 30;
+					player->HandleUpgrades(building);
+					building->Upgrade();
+				}
+				else if (Event::KeyIsPressed('E') && !CheckBuildRequirements(building))
+				{
+					if (building->GetBuildingName() == "ArcherTent")
+					{
+						if (building->GetCurrentState() == 1)
+							player->numArrows = 10;
+						if (building->GetCurrentState() == 2)
+							player->numArrows = 20;
+						if (building->GetCurrentState() == 3)
+							player->numArrows = 30;
+					}
 				}
 			}
 		}
@@ -698,25 +704,28 @@ void Game::CheckItemCollision()
 {
 	for (auto& item : items)
 	{
-		item->Update();
-
-		if (IR->IsBound(item))
-			IR->Unbind(item);
-
-		if (Collision::Intersection(*item->GetCollider(), *player->GetFrustum()))
+		if ((player->GetPosition() - item->GetPosition()).Length() < 70.f)
 		{
-			ingameOverlay->ShowInteract();
-			IR->Bind(item);
+			item->Update();
 
-			if (Event::KeyIsPressed('E'))
+			if (IR->IsBound(item))
+				IR->Unbind(item);
+
+			if (Collision::Intersection(*item->GetCollider(), *player->GetFrustum()))
 			{
-				Audio::StartEffect("Pickup.wav");
-				Audio::SetVolume("Pickup.wav", Audio::effectsVolume * 2);
-				player->Inventory().AddItem(item->GetType());
-				RemoveItem(item);
-				UpdateInventoryUI();
+				ingameOverlay->ShowInteract();
+				IR->Bind(item);
 
-				return;
+				if (Event::KeyIsPressed('E'))
+				{
+					Audio::StartEffect("Pickup.wav");
+					Audio::SetVolume("Pickup.wav", Audio::effectsVolume * 2);
+					player->Inventory().AddItem(item->GetType());
+					RemoveItem(item);
+					UpdateInventoryUI();
+
+					return;
+				}
 			}
 		}
 	}
@@ -728,20 +737,23 @@ void Game::CheckQuestInteraction()
 	{
 		if (NPC->Interactable())
 		{
-			if (Collision::Intersection(*NPC->GetCollider(), *player->GetFrustum()))
+			if ((player->GetPosition() - NPC->GetPosition()).Length() < 70.f)
 			{
-				ingameOverlay->ShowInteract();
-
-				if (Event::KeyIsPressed('E'))
+				if (Collision::Intersection(*NPC->GetCollider(), *player->GetFrustum()))
 				{
-					if (overlay == dialogueOverlay || dialogueOverlay->HasRecentDialogue())
+					ingameOverlay->ShowInteract();
+
+					if (Event::KeyIsPressed('E'))
+					{
+						if (overlay == dialogueOverlay || dialogueOverlay->HasRecentDialogue())
+							return;
+
+						overlay = dialogueOverlay;
+
+						auto objective = QuestLog::GetTalkObjective(NPC->GetName());
+						dialogueOverlay->Set(NPC, (TalkObjective*)objective);
 						return;
-
-					overlay = dialogueOverlay;
-
-					auto objective = QuestLog::GetTalkObjective(NPC->GetName());
-					dialogueOverlay->Set(NPC, (TalkObjective*)objective);
-					return;
+					}
 				}
 			}
 		}
