@@ -283,7 +283,7 @@ void Player::Update(HeightMap* heightMap)
 	{
 		if (!isAiming)
 		{
-			Audio::StartEffect("Bow.wav");
+			//Audio::StartEffect("Bow.wav");
 			bow->PlayOverrideAnimation("Draw", "root", true);
 			PlayOverrideAnimation("Aim", "Spine1", true);
 			isAiming = true;

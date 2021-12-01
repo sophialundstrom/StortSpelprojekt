@@ -64,7 +64,7 @@ public:
 	void TriggerOnCompleteFunction() { if (onCompleteFunction != NULL) onCompleteFunction(); }
 
 	void ResetObjectiveResources(std::shared_ptr<Player>, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets);
-	void Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets);
+	void Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets, std::vector<std::shared_ptr<FriendlyNPC>> frendlyNPCs);
 
 	void SaveToFile(File& file);
 	void LoadFromFile(File& file);
