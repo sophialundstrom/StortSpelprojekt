@@ -101,7 +101,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     
     const float4 finalColor = lerp((color * finalLighting.diffuse * finalLighting.color), fogColor, fogFactor) * shadow;
     
-    return globalAmbient * finalColor ;
+    return finalColor ;
    // return directionalLight.lightColor;
 	//return lerp(color, fogColor, fogFactor) * shadow;
 
