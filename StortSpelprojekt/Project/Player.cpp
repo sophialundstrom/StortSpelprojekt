@@ -26,6 +26,10 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 
 	currentBiome = BIOME::DEFAULT;
 	previousBiome = currentBiome;
+
+	//BOW
+	bow = std::make_shared<AnimatedModel>("AnimatedBow", "Bow");
+	AMR->Bind(bow);
 	minCameraDistance = 0.5f;
 
 }
@@ -122,7 +126,7 @@ void Player::Update(HeightMap* heightMap)
 			isSprinting = true;
 		}
 
-		stats.currentSpeed += 50.0f * Time::GetDelta();
+		stats.currentSpeed += 70.0f * Time::GetDelta();
 		if (stats.currentSpeed > stats.sprintSpeed)
 			stats.currentSpeed = stats.sprintSpeed;
 
@@ -232,7 +236,6 @@ void Player::Update(HeightMap* heightMap)
 	
 	if (newY > newCameraPos.y)
 	{
-		//std::cout << "PROBLEMATIC\n";
 		newCameraPos.y = newY;
 	}
 	
@@ -243,12 +246,6 @@ void Player::Update(HeightMap* heightMap)
 	if (sinceLastShot > shootingAnimationLenght) {
 
 		bool hasMoved = (position == lastPosition) ? false : true;
-		//if (!hasMoved)
-		//	PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
-		//else if (hasMoved && !jumping)
-		//	PlayAnimation("Walk", true); // ADD WALKING ANIMATION
-		//else if (jumping)
-			 // ADD IN AIR JUMP ANIMATION
 	}
 
 	if (Event::RightIsClicked())
@@ -256,6 +253,8 @@ void Player::Update(HeightMap* heightMap)
 		if (!isAiming)
 		{
 			Audio::StartEffect("Bow.wav");
+			bow->PlayOverrideAnimation("Draw", "root", true);
+			PlayOverrideAnimation("Aim", "Spine1", true);
 			isAiming = true;
 		}
 
@@ -263,20 +262,23 @@ void Player::Update(HeightMap* heightMap)
 		mouseCurrentSensitivity = mouseAimSensitivity;
 		sceneCamera->SetSpeedMultiplier(5.0f);
 		sceneCamera->MoveTowards(newCameraPos);
-		PlayOverrideAnimation("Aim", "Spine2", true);
 
-		if (Time::Get() - lastClick > 0.75f)
+		if (Time::Get() - lastClick > 1.0f)
 		{
 			if (Event::LeftIsClicked() && numArrows > 0)
 			{
-				arrowHandler.AddArrow(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
+				lookDirection = lookDirection.Transform(lookDirection, Matrix::CreateFromYawPitchRoll(-0.02f, 0.02f, 0.0f));
+
+				arrowHandler.AddArrow(lookDirection, bow->GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+
 				Audio::StartEffect("Fire.wav");
+
 				int currentIndex = 0;
 				numArrows--;
 				sinceLastShot = 0.f;
 				lastClick = Time::Get();
-				PlayOverrideAnimation("HalfAim", "Spine2", true);
+
+				PlayOverrideAnimation("Reload", "Spine1", true, true);
 			}
 		}
 	}
@@ -287,7 +289,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			isAiming = false;
 			Audio::StopEffect("Bow.wav");
-			PlayOverrideAnimation("Stop", "Spine2", false);
+			PlayOverrideAnimation("Stop", "Spine1", false);
 		}
 
 		sceneCamera->SetSpeedMultiplier(1.0f);
@@ -299,15 +301,39 @@ void Player::Update(HeightMap* heightMap)
 
 	if (moveDirection.Length() == 0)
 		PlayAnimation("Idle");
-	else
+	else if (isSprinting)
 		PlayAnimation("Run");
+	else
+		PlayAnimation("Walk");
 
-	AnimatedModel::Update();
+	if (isAiming)
+		AnimatedModel::Update(sceneCamera, "Spine3");
+	else
+		AnimatedModel::Update();
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 
 	bounds->Update();
 	frustum->Update();
+
+	//BOW UPDATE
+	auto& socket = skeleton.transforms[skeleton.GetJointID("LWrist")];
+
+	auto bowT = Matrix::CreateScale(1.5f) * Matrix::CreateFromYawPitchRoll(PI_DIV2, PI, 0) * Matrix::CreateTranslation(0.5f, -0.05f, 0.0f);
+
+	Matrix bowTransform = bowT * socket * matrix;
+
+	Vector3 position, scale;
+	Quaternion rotation;
+	bowTransform.Decompose(scale, rotation, position);
+
+	rotation.Normalize();
+
+	bow->SetPosition(position);
+	bow->SetRotation(rotation);
+	bow->SetScale(scale);
+
+	bow->Update();
 }
 
 void Player::TakeDamage(int x)

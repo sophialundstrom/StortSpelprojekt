@@ -16,7 +16,7 @@ class Building;
 struct Stats
 {
 	UINT barbariansKilled = 0;
-	float movementSpeed = 20.0f;
+	float movementSpeed = 10.0f;
 	float sprintSpeed = 70.0f;
 	UINT maxHealthPoints = 1;
 	UINT healthPoints = 1;
@@ -48,11 +48,10 @@ class Player : public AnimatedModel
 private:
 	Stats stats;
 
-
+	std::shared_ptr<AnimatedModel> bow;
 
 	std::shared_ptr<Canvas> ingameCanvas;
 
-	//std::vector<std::shared_ptr<Arrow>>arrows;
 	ArrowHandler arrowHandler;
 
 	bool hasCollided;
@@ -84,7 +83,7 @@ private:
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
 	float minCameraDistance = 0.5f;
 	float closestColliderToCam = 9999;
-	Vector3 cameraLocationSocket = { 1.3f, 8.0, -2.f };
+	Vector3 cameraLocationSocket = { -1.3f, 8.0, -4.f };
 
 	void CalcHeight(HeightMap* heightMap);
 	float CalcHeightForCamera(HeightMap* heightMap);
