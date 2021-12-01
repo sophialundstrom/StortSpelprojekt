@@ -438,7 +438,7 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, { 120, 24, -700 }, false, 1);
+		camp->AddBarbarian("BarbarianBow", { -582.0f, 93.0f, -273.5f }, hostiles, player, CombatStyle::consistantDelay, { -582.0f, 93.0f, -273.5f }, false, 1,3, false);
 		camps[BarbarianCamp::Location::South] = camp;
 	}
 
@@ -780,7 +780,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//PLAYER
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
-	player->SetPosition(-75, 20, -630);
+	/*player->SetPosition(-75, 20, -630);*/
+	player->SetPosition(-580, 72, -260);
 	auto collider = player->GetBounds();
 	collider->SetParent(player);
 	CR->Bind(collider);
