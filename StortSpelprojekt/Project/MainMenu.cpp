@@ -213,12 +213,10 @@ MainMenu::~MainMenu()
 	for (auto& [name, canvas] : canvases)
 		delete canvas;
 
-	Audio::StopEngine();
 }
 
 void MainMenu::Initialize()
 {
-	//Audio::Initialize();
 	Audio::StartMusic("Menu.wav");
 
 	//LOAD SCENE

@@ -132,7 +132,6 @@ void Player::Update(HeightMap* heightMap)
 
 		if (currentCameraDistance < minCameraDistance)
 		{
-			PrintS("LESS");
 			currentCameraDistance = minCameraDistance;
 		}
 	}
@@ -150,7 +149,6 @@ void Player::Update(HeightMap* heightMap)
 
 		if (currentCameraDistance < minCameraDistance)
 		{
-			PrintS("LESS");
 			currentCameraDistance = minCameraDistance;
 		}
 	}
@@ -225,16 +223,12 @@ void Player::Update(HeightMap* heightMap)
 
 	bool approvedCam = false;
 
-	CalcHeightForCamera(heightMap);
-
 	newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
 
-	if (Event::KeyIsPressed('8'))
-	{
-		PrintNumber(-currentCameraDistance, "CURR CAM DIST: ");
-	}
-
 	float newY = CalcHeightForCamera(heightMap);
+	if (newY < 1.f)
+		newY += 1.f;
+
 	
 	if (newY > newCameraPos.y)
 	{
@@ -244,31 +238,6 @@ void Player::Update(HeightMap* heightMap)
 	
 	static float lastClick = 0;
 	static float lastEat = 0;
-
-	if (Event::KeyIsPressed('R') && Time::Get() - lastEat > 1.0f)
-	{
-		//if (stats.healthPoints < 10 && inventory.NumOf(Item::Type::Food) > 0)
-		//{
-			stats.IncreaseHealthPoints();
-		//	inventory.RemoveItem(Item::Type::Food, 1);
-		//}
-		lastEat = Time::Get();
-	}
-
-	if (Event::KeyIsPressed('K'))
-	{
-		inventory.AddItem(Item::Type::Stick, 10);
-		Print("Sticks: ");
-		Print(inventory.NumOf(Item::Type::Stick));
-	}
-
-	if (Event::KeyIsPressed('L'))
-	{
-		inventory.AddItem(Item::Type::Stone, 10);
-		Print("Stones: ");
-		Print(inventory.NumOf(Item::Type::Stone));
-	}
-
 
 	sinceLastShot += Time::GetDelta();
 	if (sinceLastShot > shootingAnimationLenght) {
