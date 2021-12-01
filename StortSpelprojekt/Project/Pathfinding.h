@@ -10,6 +10,7 @@ private:
 	Grid grid;
 	std::map<std::string, std::shared_ptr<Drawable>> drawables;
 	std::vector<std::shared_ptr<Collider>> colliders;
+
 	HeightMap* heightMap;
 public:
 	Pathfinding();
@@ -23,5 +24,7 @@ public:
 	void SetHeightMap(HeightMap* heightMap) { this->heightMap = heightMap; }
 	Pathfinding& GetInstance();
 	Pathfinding* PGetInstance();
+	// gets the closest node in the radius of cutoff
+	Node* GetClosestNode(Vector3 worldPoint, int cutoff = 32);
 
 };

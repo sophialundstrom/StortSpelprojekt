@@ -15,7 +15,8 @@ private:
 	MovingState(const MovingState& other);
 	MovingState& operator=(const MovingState& other);
 
-	Pathfinding* path;
+
+	float speed = 16.0f;
 };
 
 class ShootingState : public NPCState

@@ -139,73 +139,104 @@ NPCState& ShootingState::GetInstance()
 
 void MovingState::Enter(HostileNPC& hostile)
 {
+    Node* node = hostile.GetPath()->GetClosestNode(hostile.GetPosition(), 1000);
+    if (hostile.GetPath()->GetClosestNode(hostile.GetPosition(), 1000) != nullptr)
+    {
+        hostile.GetPath()->FindPath(hostile.GetPath()->GetClosestNode(hostile.GetPosition(), 1000)->position, hostile.GetPlayer()->GetPosition());
+    }
+    else
+    {
+        hostile.SetState(IdlingState::GetInstance());
+        //delete node;
+        return;
+    }
+
+    hostile.path = hostile.GetPath()->GetGrid()->GetPathRef();
+    for (int i = 0; i < hostile.GetPath()->GetGrid()->GetIDs().size(); i++)
+    {
+        if (node->id == hostile.GetPath()->GetGrid()->GetIDs()[i])
+            hostile.pathIndex = i;
+    }
+    //hostile.pathIndex = node->id;
 }
 
 void MovingState::Update(HostileNPC& hostile)
 {
-    
-    path = path->PGetInstance();
-    Vector3 aimDir = hostile.GetPlayer()->GetPosition() + Vector3(0.f, 4.5f, 0.f) - hostile.GetPosition();
+    //TODO: Implement walking behaviour
+    Vector3 moveDirection;
+    Vector3 aimDir;// = hostile.GetPlayer()->GetPosition() + Vector3(0.f, 4.5f, 0.f) - hostile.GetPosition();
 
-        aimDir.Normalize();
+    if (Vector3::Distance(hostile.GetPosition(), hostile.GetPlayer()->GetPosition()) > 40.0f)
+    {
 
-        float additionalRadians = 0;
+	    if (hostile.pathIndex < hostile.path.size())
+	    {
+		    moveDirection = hostile.path[hostile.pathIndex] - hostile.GetPosition();
+		    moveDirection.Normalize();
+            aimDir = moveDirection;
 
-        Vector3 yRadiantVecReference;
-        float aimDirXIgnoranceLevel = 0.2f;
+            hostile.GetPositionRef() += (moveDirection * speed * Time::GetDelta());
 
-        if (aimDir.x > -aimDirXIgnoranceLevel && aimDir.x < aimDirXIgnoranceLevel)
+		    if (Vector3::Distance(hostile.path[hostile.pathIndex], hostile.GetPosition()) < 5.2f)
+                hostile.pathIndex++;
+	    }
+	    else
+	    {
+            // find a new path here
+            hostile.pathIndex = 0;
+		    //pathing->FindPath(position, player->GetPosition());
+		    return;
+	    }
+    }
+    else // delete path because we want to stop before collision 
+    {
+	    hostile.path.clear();
+        hostile.SetState(ShootingState::GetInstance());
+        return;
+    }
+    float additionalRadians = 0;
+
+    Vector3 yRadiantVecReference;
+    float aimDirXIgnoranceLevel = 0.2f;
+
+    if (aimDir.x > -aimDirXIgnoranceLevel && aimDir.x < aimDirXIgnoranceLevel)
+    {
+        if (aimDir.z < 0)
         {
-            if (aimDir.z < 0)
-            {
-                yRadiantVecReference = { 1, 0, 0 };
-                additionalRadians = PI_DIV2;
-            }
-            else if (aimDir.z > 0)
-            {
-                yRadiantVecReference = { -1, 0, 0 };
-                additionalRadians = -PI_DIV2;
-            }
+            yRadiantVecReference = { 1, 0, 0 };
+            additionalRadians = PI_DIV2;
         }
-        else if (aimDir.x > 0)
+        else if (aimDir.z > 0)
         {
-            yRadiantVecReference = { 0, 0, 1 };
-            additionalRadians = 0;
+            yRadiantVecReference = { -1, 0, 0 };
+            additionalRadians = -PI_DIV2;
         }
-        else
-        {
-            yRadiantVecReference = { 0, 0, -1 };
-            additionalRadians = PI;
-        }
-        float movementYRadiant = additionalRadians + acos(aimDir.Dot(yRadiantVecReference) / aimDir.Length());
-        //movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
+    }
+    else if (aimDir.x > 0)
+    {
+        yRadiantVecReference = { 0, 0, 1 };
+        additionalRadians = 0;
+    }
+    else
+    {
+        yRadiantVecReference = { 0, 0, -1 };
+        additionalRadians = PI;
+    }
+    float movementYRadiant = additionalRadians + acos(aimDir.Dot(yRadiantVecReference) / aimDir.Length());
+    //movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
 
-        hostile.SetRotation({ 0, movementYRadiant, 0 });
-
-    
-
-    Vector3 direction = hostile.targetPosition - hostile.GetPosition();
-    direction.Normalize();
-
-    Vector3 newPosition = hostile.GetPosition() + direction * (hostile.speed * Time::GetDelta());
-    newPosition.y = hostile.heightMapGroundLevel;
+    hostile.SetRotation({ 0, movementYRadiant, 0 });
 
     if (Event::KeyIsPressed('7'))
     {
         PrintNumber(hostile.viewDistance, "VIEW DIST: ");
         PrintNumber(hostile.distanceToPlayer, "DIST TO PLAYER: ");
     }
-    hostile.SetPosition(newPosition);
     if (hostile.distanceToPlayer < hostile.viewDistance)
     {
         PrintS("CHANGED FROM MOVING -> SHOOT");
         Audio::StartEffect("BarbNoticed.wav");
         hostile.currentState = &ShootingState::GetInstance();
-    }
-    if ((newPosition - hostile.targetPosition).Length() < 3.f && hostile.distanceToPlayer > hostile.viewDistance)
-    {
-        PrintS("CHANGED FROM MOVING -> IDLE");
-        hostile.currentState = &IdlingState::GetInstance();
     }
 }
 

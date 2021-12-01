@@ -163,7 +163,15 @@ void LevelEditor::DuplicateObject()
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->AddName(modelName);
 		totalPolygonCount += model->mesh.vertexCount / 3.0f;
+
+		auto selected = scene.Get<Drawable>(modelName);
+		std::string Nstr = selectedObject + "\t" + std::to_string(selected->GetPosition().x) + "\t" + std::to_string(selected->GetPosition().y) + "\t" + std::to_string(selected->GetPosition().z) + "\n";
+		this->n.append(Nstr);
+
+		std::string tmpStr = selectedObject;
 		selectedObject = modelName;
+		std::string Estr = std::string("E") + "\t" + selectedObject + "\t" + tmpStr + "\n";
+		this->e.append(Estr);
 	}
 }
 
@@ -528,7 +536,7 @@ void LevelEditor::Update()
 
 		if (Event::KeyIsPressed('E'))
 		{
-			std::string str = selectedObject + "\t" + lastSelectedObject + "\n";
+			std::string str = 'E' + "\t" + selectedObject + "\t" + lastSelectedObject + "\n";
 			this->e.append(str);
 			lastClick = Time::Get();
 
@@ -537,7 +545,7 @@ void LevelEditor::Update()
 		if (Event::KeyIsPressed('I'))
 		{
 			auto filePath = FileSystem::ProjectDirectory::path;
-			out.open(filePath + "\\Test.txt");
+			out.open(filePath + "\\Nodes.txt");
 			out << n;
 			out << "\n";
 			if (!e.empty())
@@ -800,11 +808,11 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 
 	terrain = new Terrain(2);
 
-	LoadNodes();
-	path = new Pathfinding;
-	path = path->PGetInstance();
-	path->CreateGrid({ 0,0,0 });
-	path->FindPath(Vector3(-16, 22, -565), Vector3(86, 60, -233));
+	//LoadNodes();
+	//path = new Pathfinding;
+	//path = path->PGetInstance();
+	//path->CreateGrid({ 0,0,0 });
+	//path->FindPath(Vector3(-16, 22, -565), Vector3(86, 60, -233));
 
 	(void*)Run();
 }

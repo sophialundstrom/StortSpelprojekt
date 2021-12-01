@@ -18,7 +18,7 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 	Timer timer;
 	timer.Start();
 	auto filePath = FileSystem::ProjectDirectory::path;
-	in.open(filePath + "\\SaveData\\Test.txt");
+	in.open(filePath + "\\SaveData\\Nodes.txt");
 	std::string str;
 	std::string fill;
 	std::string id;
@@ -32,7 +32,8 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 				std::stringstream ss(str);
 
 				std::string id, Sx, Sy, Sz;
-				float fid, fx, fy, fz;
+				int iid;
+				float fx, fy, fz;
 				std::getline(ss, id, '1');
 				std::getline(ss, id, '\t');
 
@@ -40,13 +41,13 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 				std::getline(ss, Sy, '\t');
 				std::getline(ss, Sz); 
 				if (id.empty())
-					fid = 0;
+					iid = 0;
 				else
-					fid = std::stoi(id);
+					iid = std::stoi(id);
 				fx = std::stof(Sx);
 				fy = std::stof(Sy) + 1.0f;
 				fz = std::stof(Sz);
-				m.emplace(fid, new Node(Vector3(fx, fy, fz)));
+				m.emplace(iid, new Node(Vector3(fx, fy, fz), iid));
 			}
 			else if (str[0] == 'E')
 			{
@@ -90,27 +91,6 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 	//exit(0);
 }
 
-Node* Grid::NodeFromWorldPoint(Vector3 worldPoint)
-{
-	int closest = 32;
-	int savedId = -1;
-	for (auto [id, n] : m)
-	{
-		float distance = Vector3::Distance(n->position, worldPoint);
-		if (distance < 32)
-		{
-			if (distance <= closest)
-			{
-				closest = distance;
-				savedId = id;
-			}
-		}
-	}
-	if (savedId != -1)
-		return m.find(savedId)->second;
-	else
-		return nullptr;
-}
 
 std::map<int, Node*> Grid::GetNeighbours(Node* node)
 {
@@ -127,13 +107,17 @@ void Grid::RetracePath(Node* startNode, Node* endNode)
 		path.push_back(currentNode);
 		currentNode = currentNode->parent;
 	}
+	if (currentNode == startNode)
+		path.push_back(currentNode);
 	std::vector<Vector3> waypoints;
 	//if (!path.size() < 3)
 	//	path.push_back(path[path.size() - 2]->position);
 	std::reverse(path.begin(), path.end());
+	ids.clear();
 	for (int i = 0; i < path.size(); i++)
 	{
 		waypoints.push_back(path[i]->position);
+		ids.push_back(path[i]->id);
 	}
 	this->waypointPath = waypoints;
 }
@@ -146,6 +130,28 @@ std::vector<Vector3> Grid::GetPath()
 std::vector<Vector3>& Grid::GetPathRef()
 {
 	return waypointPath;
+}
+
+Node* Grid::NodeFromWorldPoint(Vector3 worldPoint, int cutoff)
+{
+	int closest = cutoff;
+	int savedId = -1;
+	for (auto [id, n] : m)
+	{
+		float distance = Vector3::Distance(n->position, worldPoint);
+		if (distance < cutoff)
+		{
+			if (distance <= closest)
+			{
+				closest = distance;
+				savedId = id;
+			}
+		}
+	}
+	if (savedId != -1)
+		return m.find(savedId)->second;
+	else
+		return nullptr;
 }
 
 //std::vector<Vector3> Grid::optimizePath(std::vector<Node*> path)

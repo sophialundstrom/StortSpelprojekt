@@ -49,14 +49,10 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 		{
 			//retrace path. fills up a path vector in Grid
 			grid.RetracePath(startNode, targetNode);
-			//for (int x = 0; x < grid.gridWorldSizeInt; x++)
-			//{
-			//	for (int y = 0; y < grid.gridWorldSizeInt; y++)
-			//	{
-			//		grid.grid[x][y].gCost = BIG_INT;
-			//		grid.grid[x][y].hCost = 0;
-			//	}
-			//}
+			for (auto [i,n] : grid.GetNodes())
+			{
+				n->gCost = BIG_INT;
+			}
 			return;
 		}
 
@@ -66,14 +62,14 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 			//	continue;
 
 			int newCostToNeighbour = node->gCost + GetDistance(node, neighbour);
-			if (newCostToNeighbour < neighbour->gCost /*|| !(std::find(openSet.begin(), openSet.end(), neighbour) != openSet.end())*/)
+			if (newCostToNeighbour < neighbour->gCost)
 			{
 				neighbour->gCost = newCostToNeighbour;
 				neighbour->hCost = GetDistance(neighbour, targetNode);
 				neighbour->parent = node;
 
 				//if openset does not contains "neighbour" node
-				if ((std::find(openSet.begin(), openSet.end(), neighbour) == openSet.end()))//	!std::any_of(openSet.begin(), openSet.end(), (Node)*neighbour))
+				if ((std::find(openSet.begin(), openSet.end(), neighbour) == openSet.end()))
 					openSet.push_back(neighbour);
 			}
 		}
@@ -90,4 +86,11 @@ Pathfinding* Pathfinding::PGetInstance()
 {
 	static Pathfinding* singleton;
 	return singleton;
+}
+
+
+
+Node* Pathfinding::GetClosestNode(Vector3 worldPoint, int cutoff)
+{
+	return grid.NodeFromWorldPoint(worldPoint, cutoff);
 }

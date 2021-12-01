@@ -12,9 +12,10 @@ Node::~Node()
 	}
 }
 
-Node::Node(Vector3 position)
+Node::Node(Vector3 position, int id)
 {
 	this->position = position;
+	this->id = id;
 }
 
 int Node::Compare(const Node* n)

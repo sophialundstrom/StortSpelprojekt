@@ -12,6 +12,7 @@ class Node
 private:
 
 public:
+	int id  = -1;
 	Vector3 position;
 	int gCost = BIG_INT;
 	int hCost = 0;
@@ -20,7 +21,7 @@ public:
 
 	Node();
 	virtual ~Node();
-	Node(Vector3 position);
+	Node(Vector3 position, int id);
 	Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost);
 	Node(bool walkable, Vector3 position, int gridX, int gridY, int hCost, int gCost, Node* parent);
 
