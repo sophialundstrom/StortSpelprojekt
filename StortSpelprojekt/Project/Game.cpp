@@ -412,7 +412,6 @@ void Game::AddFriendlyNPCs()
 		friendlyNPCs.emplace_back(NPC);
 	}
 
-	//NPC4
 }
 
 void Game::AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation)
@@ -641,25 +640,28 @@ void Game::HandleHouseUpgrades()
 {
 	for (auto& building : buildings)
 	{
-		if (Collision::Intersection(*building->GetCollider(), *player->GetFrustum()))
+		if(player->Inventory().NumOf(Item::Type::Hammer) > 0)
 		{
-			ingameOverlay->ShowInteract();
+			if (Collision::Intersection(*building->GetCollider(), *player->GetFrustum()))
+			{
+				ingameOverlay->ShowInteract();
 
-			if (Event::KeyIsPressed('E') && CheckBuildRequirements(building))
-			{
-				player->HandleUpgrades(building);
-				building->Upgrade();
-			}
-			else if (Event::KeyIsPressed('E') && !CheckBuildRequirements(building))
-			{
-				if (building->GetBuildingName() == "ArcherTent")
+				if (Event::KeyIsPressed('E') && CheckBuildRequirements(building))
 				{
-					if (building->GetCurrentState() == 1)
-						player->numArrows = 10;
-					if (building->GetCurrentState() == 2)
-						player->numArrows = 20;
-					if (building->GetCurrentState() == 3)
-						player->numArrows = 30;
+					player->HandleUpgrades(building);
+					building->Upgrade();
+				}
+				else if (Event::KeyIsPressed('E') && !CheckBuildRequirements(building))
+				{
+					if (building->GetBuildingName() == "ArcherTent")
+					{
+						if (building->GetCurrentState() == 1)
+							player->numArrows = 10;
+						if (building->GetCurrentState() == 2)
+							player->numArrows = 20;
+						if (building->GetCurrentState() == 3)
+							player->numArrows = 30;
+					}
 				}
 			}
 		}
