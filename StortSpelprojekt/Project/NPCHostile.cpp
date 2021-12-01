@@ -1,12 +1,13 @@
 #include "NPCHostile.h"
 #include "ConcreteStates.h"
 
-HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition)
-	:NPC(file)
+HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, int health, bool moving)
+	:NPC(file, health)
 {
     this->player = player;
     //this->combatStyle = combatStyle;
     //SwapCombatStyle(combatStyle);
+    isMoving = moving;
  
     currentState = &MovingState::GetInstance();
     this->targetPosition = targetPosition;
@@ -76,8 +77,8 @@ void HostileNPC::Update()
 
 void HostileNPC::Update(const std::shared_ptr<Player> player, HeightMap* heightMap)
 {
-
-    CalcHeight(heightMap);
+    if(isMoving)
+        CalcHeight(heightMap);
     distanceToPlayer = (player->GetPosition() - position).Length();
     currentState->Update(*this);
     arrowHandler.Update();

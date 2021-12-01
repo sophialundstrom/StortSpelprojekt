@@ -438,24 +438,33 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero, false, 1);
+		camp->AddBarbarian("BarbarianBow", { -582.0f, 92.0f, -273.5f }, hostiles, player, CombatStyle::consistantDelay, { -582.0f, 92.0f, -273.5f }, false, 1,3, false);
+		camp->AddBarbarian("BarbarianBow", { -572.0f, 93.0f, -213.0f }, hostiles, player, CombatStyle::consistantDelay, { -572.0f, 93.0f, -213.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { -670.0f, 87.0f, -208.0f }, hostiles, player, CombatStyle::consistantDelay, { -670.0f, 87.0f, -208.0f }, false, 1, 3, false);
 		camps[BarbarianCamp::Location::South] = camp;
 	}
 
 	{ // EASTERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::East, 40.0f);
+		camp->AddBarbarian("BarbarianBow", { 597.0f, 83.0f, -461.0f }, hostiles, player, CombatStyle::consistantDelay, { 597.0f, 83.0f, -461.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 650.0f, 86.0f, -516.5f }, hostiles, player, CombatStyle::consistantDelay, { 650.0f, 86.0f, -516.5f }, false, 1, 3, false);
 
 		camps[BarbarianCamp::Location::East] = camp;
 	}
 
 	{ // NORTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::North, 40.0f);
-
+		camp->AddBarbarian("BarbarianBow", { 588.3f, 422.0f, 371.0f }, hostiles, player, CombatStyle::consistantDelay, { 588.3f, 422.0f, 371.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 654.0f, 422.0f, 472.0f }, hostiles, player, CombatStyle::consistantDelay, { 654.0f, 422.0f, 472.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 556.5f, 427.0f, 517.0f }, hostiles, player, CombatStyle::consistantDelay, { 556.5f, 427.0f, 517.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 480.5f, 427.0f, 476.5f }, hostiles, player, CombatStyle::consistantDelay, { 480.5f, 427.0f, 476.5f }, false, 1, 3, false);
 		camps[BarbarianCamp::Location::North] = camp;
 	}
 
 	{ // WESTERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::West, 40.0f);
+		camp->AddBarbarian("BarbarianBow", { -533.5f, 205.0f, 628.0f }, hostiles, player, CombatStyle::consistantDelay, { -533.5f, 205.0f, 628.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { -643.0f, 204.0f, 637.0f }, hostiles, player, CombatStyle::consistantDelay, { -643.0f, 204.0f, 637.0f }, false, 1, 3, false);
 
 		camps[BarbarianCamp::Location::West] = camp;
 	}
@@ -592,23 +601,6 @@ void Game::CheckNearbyCollision()
 	player->SetClosestColliderToCam(closestCamCollision);
 
 	player->HandleCollidedObjects(collidedColliders);
-}
-
-void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle, const Vector3& targetPosition)
-{
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, targetPosition);
-	NPC->SetPosition(position);
-
-	auto collider = NPC->GetCollider();
-	collider->SetParent(NPC);
-	collider->Update();
-	collider->SetScale(2, 7, 2);
-	CR->Bind(collider);
-
-	MR->Bind(NPC);
-	SR->Bind(NPC);
-	hostileID++;
-	hostiles.emplace_back(NPC);
 }
 
 void Game::AddLoot(LOOTTYPE type, const Vector3& position)
@@ -809,7 +801,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//PLAYER
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
-	player->SetPosition(-75, 20, -630);
+	/*player->SetPosition(-75, 20, -630);*/
+	player->SetPosition(567.0f, 402.0f, 434.0f);
 	auto collider = player->GetBounds();
 	collider->SetParent(player);
 	CR->Bind(collider);
@@ -886,8 +879,18 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	PR->Bind(campFireSystem);
 	//scene.AddPointLight({ 0.0f, 30.7f, -554.542f }, 40, { 0.5f, 0.0f, 0.05f }, { 190.0f / 255.0f, 83.0f / 255.0f, 21.0f / 255.0f, 1.0f });
-
-
+	auto bigCampFireSystem = std::make_shared<ParticleSystem>("largeFire.ps");
+	scene.AddParticleSystem("BigCampFireSystem", bigCampFireSystem, Vector3{ 573.2f, 401.5f, 449.0f });
+	PR->Bind(bigCampFireSystem);
+	auto southFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
+	scene.AddParticleSystem("SouthCampfireSystem", southFireSystem, Vector3{ -672.0f, 69.5f, -248.0f });
+	PR->Bind(southFireSystem);
+	auto westFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
+	scene.AddParticleSystem("WestCampfireSystem", westFireSystem, Vector3{ -574.0f, 192.5f, 675.5f });
+	PR->Bind(westFireSystem);
+	auto eastFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
+	scene.AddParticleSystem("EastCampfireSystem", eastFireSystem, Vector3{ 635.0f, 67.0f, -488.0f });
+	PR->Bind(eastFireSystem);
 
 	auto mountain = std::make_shared<Biome>(13U, BIOME::MOUNTAIN);
 	mountain->AddCollider(Vector3(-294, 108, 978), 534);
@@ -1110,11 +1113,6 @@ APPSTATE Game::Run()
 
 	if (Time::Get() - lastClick > 0.5f)
 	{
-		if (Event::KeyIsPressed(VK_RETURN))
-		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::Burst, Vector3(70, 25, -590));
-			lastClick = Time::Get();
-		}
 		if (Event::KeyIsPressed('1'))
 		{
 			Graphics::Inst().ActivateWireframe();

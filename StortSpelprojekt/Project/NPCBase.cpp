@@ -1,18 +1,19 @@
 #include "NPCBase.h"
 
 
-NPC::NPC(const std::string& file)
+NPC::NPC(const std::string& file, int health)
 	:Model(file, file)
 {
 	// call bind here cause i think it binds the bounding volume to a useful place
 	boundingBox = std::make_shared<BoundingBox>();
-	hp = maxHP = 3;
+	hp = maxHP = health;
 }
 
-NPC::NPC(const Model& model)
+NPC::NPC(const Model& model, int health)
 	: Model(model)
 {
 	boundingBox = std::make_shared<BoundingBox>();
+	hp = maxHP = health;
 }
 
 void NPC::Update()
