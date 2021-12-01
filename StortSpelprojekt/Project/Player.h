@@ -82,6 +82,7 @@ private:
 	float defaultCameraDistance = 17.0f;
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
+	float minCameraDistance = 0.5f;
 	float closestColliderToCam = 9999;
 	Vector3 cameraLocationSocket = { 1.3f, 8.0, -2.f };
 
