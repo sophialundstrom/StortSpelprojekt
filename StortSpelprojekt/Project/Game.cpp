@@ -867,8 +867,18 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	PR->Bind(campFireSystem);
 	//scene.AddPointLight({ 0.0f, 30.7f, -554.542f }, 40, { 0.5f, 0.0f, 0.05f }, { 190.0f / 255.0f, 83.0f / 255.0f, 21.0f / 255.0f, 1.0f });
-
-
+	auto bigCampFireSystem = std::make_shared<ParticleSystem>("largeFire.ps");
+	scene.AddParticleSystem("BigCampFireSystem", bigCampFireSystem, Vector3{ 573.2f, 401.5f, 449.0f });
+	PR->Bind(bigCampFireSystem);
+	auto southFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
+	scene.AddParticleSystem("SouthCampfireSystem", southFireSystem, Vector3{ -672.0f, 69.5f, -248.0f });
+	PR->Bind(southFireSystem);
+	auto westFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
+	scene.AddParticleSystem("WestCampfireSystem", westFireSystem, Vector3{ -574.0f, 192.5f, 675.5f });
+	PR->Bind(westFireSystem);
+	auto eastFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
+	scene.AddParticleSystem("EastCampfireSystem", eastFireSystem, Vector3{ 635.0f, 67.0f, -488.0f });
+	PR->Bind(eastFireSystem);
 
 	auto mountain = std::make_shared<Biome>(13U, BIOME::MOUNTAIN);
 	mountain->AddCollider(Vector3(-294, 108, 978), 534);
