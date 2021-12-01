@@ -99,7 +99,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     
     float4 color = lerp(t, path, pathTexture.Sample(wrapSampler, input.texCoords).x);
     
-    const float4 finalColor = lerp((color * float4(finalLighting.color) * saturate(finalLighting.color))), fogColor, fogFactor);
+    const float4 finalColor = lerp((color * finalLighting.color * saturate(finalLighting.color)), fogColor, fogFactor);
     
     return finalColor * shadow + globalAmbient;
    // return directionalLight.lightColor;
