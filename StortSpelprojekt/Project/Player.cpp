@@ -3,7 +3,7 @@
 
 
 Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
-	:AnimatedModel("BarbarianAnim", "Player"), sceneCamera(camera)
+	:AnimatedModel("VillageArcherNPC", "Player"), sceneCamera(camera)
 {
 	isRightPressed = false;
 	isLeftPressed = false;
@@ -20,7 +20,7 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 
 	Load(file);
 
-	//PlayAnimation("Talking");
+	PlayAnimation("Idle");
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 
@@ -306,7 +306,7 @@ void Player::Update(HeightMap* heightMap)
 	arrowHandler.Update();
 
 	if (moveDirection.Length() == 0)
-		PlayAnimation("Shoot");
+		PlayAnimation("Idle");
 	else
 		PlayAnimation("Run");
 
