@@ -54,6 +54,7 @@ public:
 	{
 		ui.reset();
 		Window::ShutDown();
+		Audio::StopEngine();
 	}
 
 	int Run()
