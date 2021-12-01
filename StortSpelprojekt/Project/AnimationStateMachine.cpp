@@ -188,7 +188,7 @@ void AnimationStateMachine::PlayAnimation(const std::string& name)
 		animation->active = true;
 		animation->repeat = true;
 
-		Print("PUSHED ANIMATION " + name);
+		//Print("PUSHED ANIMATION " + name);
 
 		queuedAnimations.push_back(clip);
 	}

@@ -11,6 +11,8 @@
 #include "Biome.h"
 #include "Inventory.h"
 
+class Building;
+
 struct Stats
 {
 	UINT barbariansKilled = 0;
@@ -20,12 +22,24 @@ struct Stats
 	UINT healthPoints = 1;
 	UINT level = 1;
 	float currentSpeed = movementSpeed;
+	int resist = 0;
+	int damage = 1;
+	int HPGain = 1;
 
 	void SetMaxHealthPoints(UINT newMaxHealthPoints) { this->maxHealthPoints = newMaxHealthPoints; }
 	void SetHealthPoints(UINT newHealthPoints) { this->healthPoints = newHealthPoints; }
 	void SetMovementSpeed(float newMovementSpeed) { this->movementSpeed = newMovementSpeed; }
 	void SetSprintSpeed(float newSprintSpeed) { this->sprintSpeed = newSprintSpeed; }
-	void IncreaseHealthPoints() { if (healthPoints < maxHealthPoints) this->healthPoints++; };
+	void IncreaseHealthPoints()
+	{ 
+		if (healthPoints < maxHealthPoints)
+		{
+			this->healthPoints += HPGain; 
+			if (this->healthPoints > 10)
+				this->healthPoints = 10;
+		}
+	}
+
 	void DecreaseHealthPoint() { if (healthPoints != 0) this->healthPoints--; };
 };
 
@@ -67,6 +81,7 @@ private:
 	float defaultCameraDistance = 17.0f;
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
+	float minCameraDistance = 0.5f;
 	float closestColliderToCam = 9999;
 	Vector3 cameraLocationSocket = { -1.3f, 8.0, -4.f };
 
@@ -104,9 +119,10 @@ public:
 	UINT numArrows = 5;
 	void Update(HeightMap* heightMap);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
-	void TakeDamage();
+	void TakeDamage(int x);
 	bool inCombat = false;
 	void SwitchBiomeMusic();
+	void SetDamage(int x) { stats.damage = x; }
 
 	Player(const std::string file, Camera* camera, const UINT& maxArrows);
 
@@ -138,4 +154,5 @@ public:
 	{
 		closestColliderToCam = range;
 	}
+	void HandleUpgrades(std::shared_ptr<Building> building);
 };

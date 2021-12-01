@@ -1,4 +1,6 @@
 #include "Player.h"
+#include "Building.h"
+
 
 Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera)
@@ -28,24 +30,26 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	//BOW
 	bow = std::make_shared<AnimatedModel>("AnimatedBow", "Bow");
 	AMR->Bind(bow);
+	minCameraDistance = 0.5f;
+
 }
 
 void Player::CalcHeight(HeightMap* heightMap)
 {
-	const int lowX = (int)std::floor(position.x);
-	const int highX = (int)std::ceil(position.x);
-	const float Xdecimal = position.x - lowX;
+	int lowX = (int)std::floor(position.x);
+	int highX = (int)std::ceil(position.x);
+	float Xdecimal = position.x - lowX;
 
-	const int lowZ = (int)std::floor(position.z);
-	const int highZ = (int)std::ceil(position.z);
-	const float Zdecimal = position.z - lowZ;
+	int lowZ = (int)std::floor(position.z);
+	int highZ = (int)std::ceil(position.z);
+	float Zdecimal = position.z - lowZ;
 
-	const float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
-	const float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
-	const float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
-	const float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+	float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+	float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+	float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+	float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
 
-	heightMapGroundLevel = position.y = H1 + H2 + H3 + H4;
+	heightMapGroundLevel = position.y = (H1 + H2 + H3 + H4);
 }
 
 float Player::CalcHeightForCamera(HeightMap* heightMap)
@@ -83,6 +87,8 @@ void Player::Update(HeightMap* heightMap)
 {
 	lastPosition = position;
 
+	std::cout << "Player X: " << position.x << "        " << "Player Y: " << position.y << "        "  << "Player Z: " << position.z << "\n";
+
 	CalcHeight(heightMap);
 
 	if (!hasCollided)
@@ -116,7 +122,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			
 			Audio::StartEffect("Running.wav");
-			Audio::SetVolume("Running.wav", 1.f);
+			Audio::SetVolume("Running.wav", Audio::effectsVolume * 0.25f);
 			isSprinting = true;
 		}
 
@@ -127,6 +133,12 @@ void Player::Update(HeightMap* heightMap)
 		currentCameraDistance += Time::GetDelta() * 20.0f;
 		if (currentCameraDistance > maxCameraDistance)
 			currentCameraDistance = maxCameraDistance;
+
+		if (currentCameraDistance < minCameraDistance)
+		{
+			PrintS("LESS");
+			currentCameraDistance = minCameraDistance;
+		}
 	}
 	else
 	{
@@ -139,6 +151,12 @@ void Player::Update(HeightMap* heightMap)
 		currentCameraDistance -= Time::GetDelta() * 10.0f;
 		if (currentCameraDistance < defaultCameraDistance)
 			currentCameraDistance = defaultCameraDistance;
+
+		if (currentCameraDistance < minCameraDistance)
+		{
+			PrintS("LESS");
+			currentCameraDistance = minCameraDistance;
+		}
 	}
 
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
@@ -198,8 +216,12 @@ void Player::Update(HeightMap* heightMap)
 		newPlayerPos = Vector3(newPlayerPos.x, currentGroundLevel, newPlayerPos.z);
 	}
 
-	if (closestColliderToCam < currentCameraDistance)
+	if (closestColliderToCam < currentCameraDistance && closestColliderToCam > minCameraDistance)
+
+	{
 		currentCameraDistance = closestColliderToCam;
+		PrintS("FORCE");
+	}
 
 	position = newPlayerPos;
 
@@ -211,6 +233,11 @@ void Player::Update(HeightMap* heightMap)
 
 	newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
 
+	if (Event::KeyIsPressed('8'))
+	{
+		PrintNumber(-currentCameraDistance, "CURR CAM DIST: ");
+	}
+
 	float newY = CalcHeightForCamera(heightMap);
 	
 	if (newY > newCameraPos.y)
@@ -219,11 +246,32 @@ void Player::Update(HeightMap* heightMap)
 	}
 	
 	static float lastClick = 0;
+	static float lastEat = 0;
 
-	if (Event::KeyIsPressed('R') && numArrows < maxArrows)
+	if (Event::KeyIsPressed('R') && Time::Get() - lastEat > 1.0f)
 	{
-		numArrows++;
+		//if (stats.healthPoints < 10 && inventory.NumOf(Item::Type::Food) > 0)
+		//{
+			stats.IncreaseHealthPoints();
+		//	inventory.RemoveItem(Item::Type::Food, 1);
+		//}
+		lastEat = Time::Get();
 	}
+
+	if (Event::KeyIsPressed('K'))
+	{
+		inventory.AddItem(Item::Type::Stick, 10);
+		Print("Sticks: ");
+		Print(inventory.NumOf(Item::Type::Stick));
+	}
+
+	if (Event::KeyIsPressed('L'))
+	{
+		inventory.AddItem(Item::Type::Stone, 10);
+		Print("Stones: ");
+		Print(inventory.NumOf(Item::Type::Stone));
+	}
+
 
 	sinceLastShot += Time::GetDelta();
 	if (sinceLastShot > shootingAnimationLenght) {
@@ -319,7 +367,7 @@ void Player::Update(HeightMap* heightMap)
 	bow->Update();
 }
 
-void Player::TakeDamage()
+void Player::TakeDamage(int x)
 {
 	if (stats.healthPoints - 1 == 0 /*|| stats.healthPoints < 0*/)
 	{
@@ -331,7 +379,13 @@ void Player::TakeDamage()
 	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
 	//SoundEffect::SetVolume(0.5, 2);
 	//SoundEffect::StartAudio(2);
-	stats.healthPoints--;
+
+	int totalDamage = x - stats.resist;
+	if (totalDamage <= 1)
+		stats.healthPoints--;
+	else
+		stats.healthPoints -= totalDamage;
+	
 }
 
 void Player::SwitchBiomeMusic()
@@ -339,22 +393,18 @@ void Player::SwitchBiomeMusic()
 	switch (this->currentBiome)
 	{
 	case BIOME::DESERT:
-		PrintS("DESERT");
 
 		Audio::StartMusic("SoundDesert.wav");
 		break;
 	case BIOME::MOUNTAIN:
-		PrintS("MOUNTAIN");
 
-		Audio::StartMusic("whenthedoommusickicksin.wav");
+		Audio::StartMusic("SoundMountain.wav");
 		break;
 	case BIOME::OCEAN:
-		PrintS("OCEAN");
 		Audio::StartMusic("SoundOcean.wav");
 		break;
 	case BIOME::DEFAULT:
-		PrintS("DEFAULT");
-		Audio::StartMusic("Sonrie.wav");
+		Audio::StartMusic("SoundForest.wav");
 		break;
 	}
 }
@@ -444,6 +494,51 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 
 		Transform::UpdateMatrix();
 		bounds->Update();
+	}
+}
+
+void Player::HandleUpgrades(std::shared_ptr<Building> building)
+{
+	std::string buildingName = building->GetBuildingName();
+	int state = building->GetCurrentState();
+	if (buildingName == "FarmHouse")
+	{
+		if (state == 1)
+		{
+			stats.resist = 1;
+			stats.HPGain = 2;
+		}
+		if (state == 2)
+		{
+			stats.resist = 2;
+			stats.HPGain = 3;
+		}
+	}
+	if (buildingName == "ArcherTent")
+	{
+		if (state == 1)
+		{
+			maxArrows = 20;
+			numArrows = 20;
+		}
+		if (state == 2)
+		{
+			maxArrows = 30;
+			numArrows = 30;
+		}
+		if (state == 3)
+			numArrows = 30;
+	}
+	if (buildingName == "Blacksmith")
+	{
+		if (state == 1)
+		{
+			stats.damage = 2;
+		}
+		if (state == 2)
+		{
+			stats.damage = 3;
+		}
 	}
 }
 

@@ -15,6 +15,9 @@ void ParticleEditor::Save(const std::string& file)
 	writer << particleSystem->GetTimeBetweenParticles() << space;
 	writer << particleSystem->GetParticlesLifetime() << space;
 	writer << particleSystem->GetSize() << space;
+	writer << particleSystem->GetWidth() << space;
+	writer << particleSystem->GetDepth() << space;
+
 
 	writer << particleSystem->GetMinVelocity() << space;
 	writer << particleSystem->GetMaxVelocity() << space;
@@ -51,6 +54,10 @@ void ParticleEditor::Load(const std::string& file)
 	window.SetValue<SliderFloatComponent, float>("LIFETIME", particleSystem->GetParticlesLifetime());
 	window.SetValue<SliderFloatComponent, float>("DELTA SPAWN", particleSystem->GetTimeBetweenParticles());
 	window.SetValue<SliderFloatComponent, float>("SYSTEM SIZE", particleSystem->GetSize());
+
+	window.SetValue<SliderFloatComponent, float>("CUBE WIDTH", particleSystem->GetWidth());
+	window.SetValue<SliderFloatComponent, float>("CUBE DEPTH", particleSystem->GetDepth());
+
 	window.SetValue<SliderFloatComponent, float>("MIN VELOCITY", particleSystem->GetMinVelocity());
 	window.SetValue<SliderFloatComponent, float>("MAX VELOCITY", particleSystem->GetMaxVelocity());
 
@@ -133,6 +140,8 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	window.AddSliderFloatComponent("DELTA SPAWN");
 	window.AddSliderFloatComponent("LIFETIME", 0.0f, 10.0f);
 	window.AddSliderFloatComponent("SYSTEM SIZE", 0.0f, 50.0f);
+	window.AddSliderFloatComponent("CUBE WIDTH", 0.0f, 50.0f);
+	window.AddSliderFloatComponent("CUBE DEPTH", 0.0f, 50.0f);
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("VELOCITY");
@@ -323,6 +332,17 @@ APPSTATE ParticleEditor::Run()
 	else if (window.Changed("SYSTEM SIZE"))
 	{
 		particleSystem->SetSize(window.GetValue<SliderFloatComponent>("SYSTEM SIZE"));
+		particleSystem->Reset();
+	}
+
+	else if (window.Changed("CUBE WIDTH"))
+	{
+		particleSystem->SetCubeWidth(window.GetValue<SliderFloatComponent>("CUBE WIDTH"));
+		particleSystem->Reset();
+	}
+	else if (window.Changed("CUBE DEPTH"))
+	{
+		particleSystem->SetCubeDepth(window.GetValue<SliderFloatComponent>("CUBE DEPTH"));
 		particleSystem->Reset();
 	}
 

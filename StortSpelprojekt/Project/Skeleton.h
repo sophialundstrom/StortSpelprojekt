@@ -4,7 +4,7 @@
 #include <vector>
 #include <map>
 
-#define MAX_JOINTS 30
+#define MAX_JOINTS 35
 
 struct Joint
 {

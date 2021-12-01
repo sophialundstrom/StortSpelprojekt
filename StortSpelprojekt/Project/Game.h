@@ -44,6 +44,16 @@ private:
     bool updateFrustrum = true;
     int cullingProfile = 0;
 
+    //DayNightCycleConfig
+    float worldClockTime = 0;
+    float dayLength = 300;
+    float nightLength = 300;
+    float timeSliderVal = 0;
+    float fadeTimeMultiplier = 0.25;
+    Vector4 lightColor;
+    Vector4 DayLightColor = { 1, 1, 1, 1 };
+    Vector4 NightLightColor = { 0, 0, 0.15, 1 };
+
     bool hovering = false;
     bool done = false;
     //bool paused = false;
@@ -74,7 +84,7 @@ private:
 
     std::vector<std::shared_ptr<Item>> items;
 
-    std::shared_ptr<Building> building;
+    std::shared_ptr<Building> buildings[3];
 
     std::map<BarbarianCamp::Location, BarbarianCamp*> camps;
 
@@ -114,7 +124,7 @@ private:
     std::shared_ptr<FriendlyNPC> AddFriendlyNPC(const std::string& name, const std::string& fileName, Vector3 position);
 
     void AddFriendlyNPCs();
-    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle);
+    void AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle, const Vector3& targetPosition);
     void AddLoot(LOOTTYPE type, const Vector3& position);
     void AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation);
     void AddBarbarianCamps();
@@ -130,10 +140,13 @@ private:
     void CheckNearbyEnemies();
     void HandleBiomes();
     void HandleAudioSources();
+    void HandleHouseUpgrades();
+    bool CheckBuildRequirements(std::shared_ptr<Building> building);
+    void HandleCamps();
+    void HandleDayNightCycle();
 
     void SetupAudio();
     void UpdateQuadTree();
-
     void UpdateInventoryUI();
 
     void Initialize();
