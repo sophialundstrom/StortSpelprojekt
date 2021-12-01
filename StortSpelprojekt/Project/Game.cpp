@@ -42,6 +42,7 @@ void Game::Update()
 	HandleDayNightCycle();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
+	//scene.UpdatePointLights();
 
 	QuestLog::Update(player, camps, targets);
 
@@ -51,7 +52,7 @@ void Game::Update()
 	ingameOverlay->UpdateQuests(QuestLog::GetActiveQuests());
 	UpdateQuadTree();
 
-	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), scene.GetNumberOfPointlights(), scene.GetPointLights());
 
 	Event::ClearRawDelta();
 }
@@ -63,8 +64,6 @@ void Game::Render()
 	Graphics::Inst().BeginFrame();
 
 	ShaderData::Inst().BindFrameConstants();
-
-	PR->Render();
 
 	MR->Render();
 
@@ -83,6 +82,8 @@ void Game::Render()
 	WR->Render(water);
 
 	SBR->Render();
+
+	PR->Render();
 
 	overlay->Render();
 
@@ -755,13 +756,12 @@ void Game::UpdateInventoryUI()
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
-	:water(5000), terrain(2)
+	:water(5000), terrain(3)
 {
 	Audio::StartEngine();
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.05f, 100.0f, { 0.0f, 200.0f, -100.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
-	scene.AddPointLight({ 38.055f, 22.367f, -594.542f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
 
 	//INIT WHICH RENDERERS WE WANT TO USE
 	RND.InitAnimatedModelRenderer();
@@ -813,7 +813,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//MESH NAMES MUST BE SAME IN MAYA AND FBX FILE NAME, MATERIAL NAME MUST BE SAME AS IN MAYA
 	std::string meshNamesFarm[] = { "BuildingZero", "BuildingFirst", "BuildingSecond" };
 	std::string materialNamesFarm[] = { "FarmHouse", "FarmHouse", "FarmHouse" };
-	buildings[0] = std::make_shared<Building>(meshNamesFarm, materialNamesFarm, "FarmHouse", Vector3{ -107.5f, 20.0f, -608.5f }, scene);
+	buildings[0] = std::make_shared<Building>(meshNamesFarm, materialNamesFarm, "FarmHouse", Vector3{ -107.5f, 18.0f, -608.5f }, scene, "stableSmoke.ps");
 	buildings[0]->SetRotation(0, -DirectX::XM_PI, 0);
 	buildings[0]->SetScale(5.85);
 	buildings[0]->MoveCollider({ 10, 0, 2 });
@@ -822,7 +822,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	std::string meshNamesTent[] = { "ArcherTent1", "ArcherTent2", "ArcherTent3" };
 	std::string materialNamesTent[] = { "ArcherTentTexture", "ArcherTentTexture", "ArcherTentTexture" };
-	buildings[1] = std::make_shared<Building>(meshNamesTent, materialNamesTent, "ArcherTent", Vector3{ 128.86f, 18.12f, -643.05f }, scene);
+	buildings[1] = std::make_shared<Building>(meshNamesTent, materialNamesTent, "ArcherTent", Vector3{ 128.86f, 18.12f, -643.05f }, scene, "tentSmoke.ps");
 	buildings[1]->SetRotation(0, -DirectX::XM_PIDIV4, 0);
 	buildings[1]->SetScale(1.566);
 	buildings[1]->SetColliderRadius(17.0f);
@@ -830,7 +830,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	std::string meshNamesBS[] = { "BSLevel1", "BSLevel2", "BSLevel3" };
 	std::string materialNamesBS[] = { "albedoBlacksmith", "albedoBlacksmith", "albedoBlacksmith" };
-	buildings[2] = std::make_shared<Building>(meshNamesBS, materialNamesBS, "Blacksmith", Vector3{ -5.4f, 17.86f, -701.5f }, scene);
+	buildings[2] = std::make_shared<Building>(meshNamesBS, materialNamesBS, "Blacksmith", Vector3{ -5.4f, 17.86f, -701.5f }, scene, "smithSmoke.ps");
 	buildings[2]->SetRotation(0, 0, 0);
 	buildings[2]->SetScale(1.776);
 	buildings[2]->MoveCollider({ 13, 0, 0 });
@@ -871,10 +871,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddTarget("TargetDummy", { -190, 23, -600 }, { 0,0,0 });
 
 	//PARTICLE SYSTEM
-	auto campFireSystem = std::make_shared<ParticleSystem>("fire.ps");
+	auto campFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	PR->Bind(campFireSystem);
-	
+	//scene.AddPointLight({ 0.0f, 30.7f, -554.542f }, 40, { 0.5f, 0.0f, 0.05f }, { 190.0f / 255.0f, 83.0f / 255.0f, 21.0f / 255.0f, 1.0f });
+
+
+
 	auto mountain = std::make_shared<Biome>(13U, BIOME::MOUNTAIN);
 	mountain->AddCollider(Vector3(-294, 108, 978), 534);
 	mountain->AddCollider(Vector3(312, 110, 790), 460);

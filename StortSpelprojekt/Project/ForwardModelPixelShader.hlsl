@@ -73,7 +73,6 @@ float4 main(PS_INPUT input) : SV_TARGET
         pResult.diffuse += result.diffuse;
 		pResult.color *= result.color;
 		pResult.specular += result.specular;
-        
 	}
     
     pResult.diffuse = saturate(pResult.diffuse);
