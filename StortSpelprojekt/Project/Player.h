@@ -48,8 +48,6 @@ class Player : public AnimatedModel
 private:
 	Stats stats;
 
-
-
 	std::shared_ptr<Canvas> ingameCanvas;
 
 	//std::vector<std::shared_ptr<Arrow>>arrows;
