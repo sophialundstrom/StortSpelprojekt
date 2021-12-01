@@ -1050,7 +1050,7 @@ void Game::HandleDayNightCycle()
 	lightColor = DayLightColor* timeSliderVal;
 	lightColor += NightLightColor * (1 - timeSliderVal);
 
-	std::cout << worldClockTime << "			" << timeSliderVal << std::endl;
+	//std::cout << worldClockTime << "			" << timeSliderVal << std::endl;
 	SBR->PullDayNightSlider(timeSliderVal);
 	scene.SetDirectionalLight(500, lightColor, 4, 4);
 
