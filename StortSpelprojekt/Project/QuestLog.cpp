@@ -126,7 +126,7 @@ void QuestLog::CreateQuests()
 	//SAME STUFF HERE KINDA I THIK U GET IT, IF ANY QUEST DEPENDS ON ANOTHER (CANT BE TWO) YOU HAVE TO CREATE THE FIRST ONE FIRST, 
 	//AND ALL QUESTS THAT SHOULD BE "UNLOCKED" AFTER THE ATTACK SHOULD BE CHILD OF Q3
 
-	Save("Default");
+	//Save("Default");
 
 	//ShutDown();
 
@@ -138,6 +138,7 @@ void QuestLog::ShutDown()
 {
 	for (auto quest : quests)
 		delete quest;
+	quests.clear();
 }
 
 void QuestLog::Activate(Quest* quest)

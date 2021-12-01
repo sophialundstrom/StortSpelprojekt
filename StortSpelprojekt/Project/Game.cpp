@@ -674,14 +674,15 @@ void Game::HandleHouseUpgrades()
 		{
 			if (Collision::Intersection(*building->GetCollider(), *player->GetFrustum()))
 			{
-				ingameOverlay->ShowInteract();
+				auto requirements = CheckBuildRequirements(building);
 
-				if (Event::KeyIsPressed('E') && CheckBuildRequirements(building))
+				if (Event::KeyIsPressed('E') && requirements)
 				{
 					player->HandleUpgrades(building);
 					building->Upgrade();
 				}
-				else if (Event::KeyIsPressed('E') && !CheckBuildRequirements(building))
+
+				else if (Event::KeyIsPressed('E') && !requirements)
 				{
 					if (building->GetBuildingName() == "ArcherTent")
 					{
@@ -692,6 +693,24 @@ void Game::HandleHouseUpgrades()
 						if (building->GetCurrentState() == 3)
 							player->numArrows = 30;
 					}
+				}
+
+				switch (building->GetCurrentState())
+				{
+					case 1:
+						ingameOverlay->ShowUpgrade({ (float)building->reqStick1, (float)building->reqStone1 }, { (float)player->Inventory().NumOf(Item::Type::Stick), (float)player->Inventory().NumOf(Item::Type::Stone)});
+						break;
+
+					case 2:
+						ingameOverlay->ShowUpgrade({ (float)building->reqStick2, (float)building->reqStone2 }, { (float)player->Inventory().NumOf(Item::Type::Stick), (float)player->Inventory().NumOf(Item::Type::Stone)});
+						break;
+
+					case 3:
+					{
+						if (building->GetBuildingName() == "ArcherTent")
+							ingameOverlay->ShowUpgrade(Vector2(), Vector2(), "Refill Arrows [E]");
+						break;
+					}	
 				}
 			}
 		}
@@ -727,10 +746,10 @@ void Game::CheckItemCollision()
 {
 	for (auto& item : items)
 	{
+		item->Update();
+
 		if ((player->GetPosition() - item->GetPosition()).Length() < 70.f)
 		{
-			item->Update();
-
 			if (IR->IsBound(item))
 				IR->Unbind(item);
 
@@ -832,8 +851,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//PLAYER
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
-	/*player->SetPosition(-75, 20, -630);*/
-	player->SetPosition(567.0f, 402.0f, 434.0f);
+	player->SetPosition(-75, 20, -630);
+	//player->SetPosition(567.0f, 402.0f, 434.0f);
 	auto collider = player->GetBounds();
 	collider->SetParent(player);
 	CR->Bind(collider);
@@ -883,7 +902,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 		CR->Bind(buildings[i]->GetCollider());
 	}
 
-
 	//ITEMS
 	AddItem(Item::Type::Hammer, { -134, 32, -594 });
 	AddItem(Item::Type::Rope, { -113, 32, -582 });
@@ -899,9 +917,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddBarbarianCamps();
 
 	//TARGETS
-	AddTarget("TargetDummy", { -150, 23, -600 }, { 0,0,0 });
-	AddTarget("TargetDummy", { -170, 23, -600 }, { 0,0,0 });
-	AddTarget("TargetDummy", { -190, 23, -600 }, { 0,0,0 });
+	AddTarget("TargetDummy", { 175.0f, 18.0f, -691.5f }, { 0,-0.05f,0 });
+	AddTarget("TargetDummy", { 158.0f, 18.0f, -701.0f }, { 0,0.15f,0 });
+	AddTarget("TargetDummy", { 143.6f, 18.0f, -685.0f }, { 0, 0.1f ,0 });
 
 	//PARTICLE SYSTEM
 	auto campFireSystem = std::make_shared<ParticleSystem>("newFire.ps");

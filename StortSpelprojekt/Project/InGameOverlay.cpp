@@ -27,6 +27,7 @@ OVERLAYSTATE InGameOverlay::Update()
 	}
 
 	GetText("Interact")->Hide();
+	buildingRequirements.Hide();
 
 	returnState = OVERLAYSTATE::NO_CHANGE;
 
@@ -78,6 +79,16 @@ InGameOverlay::InGameOverlay()
 
 	//INTERACT
 	AddText({ (float)Window::ClientWidth() / 2.0f, (float)Window::ClientHeight() - 200.0f }, "Interact", "Interact [E]", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
+
+	//UPGRADE
+	AddText({ (float)Window::ClientWidth() / 2.0f, (float)Window::ClientHeight() - 400.0f }, "Requirements", "Requirements", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
+	AddText({ (float)Window::ClientWidth() / 2.0f, (float)Window::ClientHeight() - 300.0f }, "StickRequirements", "", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
+	AddText({ (float)Window::ClientWidth() / 2.0f, (float)Window::ClientHeight() - 200.0f }, "StoneRequirements", "", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
+	AddText({ (float)Window::ClientWidth() / 2.0f, (float)Window::ClientHeight() - 100.0f }, "Upgrade", "", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_CENTERED, false);
+	buildingRequirements.requirements = GetText("Requirements");
+	buildingRequirements.stickRequirement = GetText("StickRequirements");
+	buildingRequirements.stoneRequirement = GetText("StoneRequirements");
+	buildingRequirements.upgrade = GetText("Upgrade");
 
 	//LINE BRUSH
 	lineBrush = UI::Inst().GetBrush(UI::COLOR::BROWN);
@@ -204,5 +215,40 @@ void InGameOverlay::UpdateFPS(UINT FPS)
 
 void InGameOverlay::ShowInteract()
 {
+	if (buildingRequirements.requirements->IsVisible())
+		return;
 	GetText("Interact")->Show();
+}
+
+void InGameOverlay::ShowUpgrade(Vector2 requirements, Vector2 requirementsCompleted, const std::string& completedCustomString)
+{
+	if (GetText("Interact")->IsVisible())
+		return;
+
+	buildingRequirements.Show();
+
+	if (completedCustomString != "")
+	{
+		buildingRequirements.requirements->SetString(completedCustomString);
+		buildingRequirements.stickRequirement->SetString("");
+		buildingRequirements.stoneRequirement->SetString("");
+		buildingRequirements.upgrade->SetString("");
+		return;
+	}
+
+	buildingRequirements.requirements->SetString("Requirements");
+
+	if (requirements.x == requirementsCompleted.x && requirements.y == requirementsCompleted.y)
+	{
+		buildingRequirements.stickRequirement->SetString("Sticks: " + std::to_string((UINT)requirementsCompleted.x) + " of " + std::to_string((UINT)requirements.x));
+		buildingRequirements.stoneRequirement->SetString("Stone: " + std::to_string((UINT)requirementsCompleted.y) + " of " + std::to_string((UINT)requirements.y));
+		buildingRequirements.upgrade->SetString("Press [E] To Upgrade");
+	}
+
+	else
+	{
+		buildingRequirements.stickRequirement->SetString("Sticks: " + std::to_string((UINT)requirementsCompleted.x) + " of " + std::to_string((UINT)requirements.x));
+		buildingRequirements.stoneRequirement->SetString("Stone: " + std::to_string((UINT)requirementsCompleted.y) + " of " + std::to_string((UINT)requirements.y));
+		buildingRequirements.upgrade->SetString("");
+	}
 }
