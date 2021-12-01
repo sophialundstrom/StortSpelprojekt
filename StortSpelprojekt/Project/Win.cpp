@@ -18,7 +18,7 @@ void Win::HoveringMainMenu()
 
 void Win::Form()
 {
-	ShellExecute(0, 0, L"https://docs.google.com/forms/d/1wSGU7CwBNTTCu50nsunQX2Q9DC06SEi5SAqbgJstgb0/viewform?edit_requested=true", 0, 0, SW_SHOW);
+	ShellExecute(0, 0, L"https://forms.gle/Bf36fwdMFhnNfk6D8", 0, 0, SW_SHOW);
 }
 
 

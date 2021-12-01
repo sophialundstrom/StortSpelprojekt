@@ -400,10 +400,16 @@ void Game::AddFriendlyNPCs()
 			NPC->AddDialogue("Thank you! Now we can finally start rebuilding the tent.");
 		}
 		{
-			NPC->AddQuest("Sticks And Stones");
+			auto quest = NPC->AddQuest("Sticks And Stones");
 			NPC->AddDialogue("I will still need some resources for the structure. Please look around for some sticks and rocks that we can use.");
 			NPC->AddDialogue("I really need those sticks and rocks right now, it can't be that hard to find");
 			NPC->AddDialogue("Great work! Now that wont be enough to rebuild the structure but I will trade you some arrows for it, whenever you are in need of some more arrows, just come back here.");
+			
+			auto onCompleteFunc = [this, quest]() mutable
+			{
+				quest->ResetObjectiveResources(player, camps, targets);
+			};
+			quest->AddOnCompleteFunction(onCompleteFunc);
 		}
 		{
 			auto quest = NPC->AddQuest("Target Aquired");
@@ -860,8 +866,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//PLAYER
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
-	player->SetPosition(-75, 20, -630);
-	//player->SetPosition(567.0f, 402.0f, 434.0f);
+	//player->SetPosition(-75, 20, -630);
+	player->SetPosition(567.0f, 402.0f, 434.0f);
 	auto collider = player->GetBounds();
 	collider->SetParent(player);
 	CR->Bind(collider);
@@ -1196,6 +1202,9 @@ APPSTATE Game::Run()
 		player->Inventory().AddItem(Item::Type::Hammer);
 
 	UpdateInventoryUI();
+
+	if (camps[BarbarianCamp::Location::North]->NumDead() == camps[BarbarianCamp::Location::North]->NumBarbarians())
+		done = true;
 
 	static float counter = 0;
 	if (done)
