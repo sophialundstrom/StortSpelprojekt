@@ -438,24 +438,33 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		camp->AddBarbarian("BarbarianBow", { -582.0f, 93.0f, -273.5f }, hostiles, player, CombatStyle::consistantDelay, { -582.0f, 93.0f, -273.5f }, false, 1,3, false);
+		camp->AddBarbarian("BarbarianBow", { -582.0f, 92.0f, -273.5f }, hostiles, player, CombatStyle::consistantDelay, { -582.0f, 92.0f, -273.5f }, false, 1,3, false);
+		camp->AddBarbarian("BarbarianBow", { -572.0f, 93.0f, -213.0f }, hostiles, player, CombatStyle::consistantDelay, { -572.0f, 93.0f, -213.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { -670.0f, 87.0f, -208.0f }, hostiles, player, CombatStyle::consistantDelay, { -670.0f, 87.0f, -208.0f }, false, 1, 3, false);
 		camps[BarbarianCamp::Location::South] = camp;
 	}
 
 	{ // EASTERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::East, 40.0f);
+		camp->AddBarbarian("BarbarianBow", { 597.0f, 83.0f, -461.0f }, hostiles, player, CombatStyle::consistantDelay, { 597.0f, 83.0f, -461.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 650.0f, 86.0f, -516.5f }, hostiles, player, CombatStyle::consistantDelay, { 650.0f, 86.0f, -516.5f }, false, 1, 3, false);
 
 		camps[BarbarianCamp::Location::East] = camp;
 	}
 
 	{ // NORTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::North, 40.0f);
-
+		camp->AddBarbarian("BarbarianBow", { 588.3f, 422.0f, 371.0f }, hostiles, player, CombatStyle::consistantDelay, { 588.3f, 422.0f, 371.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 654.0f, 422.0f, 472.0f }, hostiles, player, CombatStyle::consistantDelay, { 654.0f, 422.0f, 472.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 556.5f, 427.0f, 517.0f }, hostiles, player, CombatStyle::consistantDelay, { 556.5f, 427.0f, 517.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 480.5f, 427.0f, 476.5f }, hostiles, player, CombatStyle::consistantDelay, { 480.5f, 427.0f, 476.5f }, false, 1, 3, false);
 		camps[BarbarianCamp::Location::North] = camp;
 	}
 
 	{ // WESTERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::West, 40.0f);
+		camp->AddBarbarian("BarbarianBow", { -533.5f, 205.0f, 628.0f }, hostiles, player, CombatStyle::consistantDelay, { -533.5f, 205.0f, 628.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { -643.0f, 204.0f, 637.0f }, hostiles, player, CombatStyle::consistantDelay, { -643.0f, 204.0f, 637.0f }, false, 1, 3, false);
 
 		camps[BarbarianCamp::Location::West] = camp;
 	}
@@ -781,7 +790,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
 	/*player->SetPosition(-75, 20, -630);*/
-	player->SetPosition(-580, 72, -260);
+	player->SetPosition(567.0f, 402.0f, 434.0f);
 	auto collider = player->GetBounds();
 	collider->SetParent(player);
 	CR->Bind(collider);
