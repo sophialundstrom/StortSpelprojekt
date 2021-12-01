@@ -145,7 +145,6 @@ private:
     void HandleCamps();
     void HandleDayNightCycle();
 
-
     void SetupAudio();
     void UpdateQuadTree();
     void UpdateInventoryUI();
