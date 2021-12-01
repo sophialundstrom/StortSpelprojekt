@@ -18,10 +18,30 @@ struct PS_INPUT
 	float4 lightClipPosition : LIGHTPOSITION;
 };
 
+cbuffer MATERIAL : register(b0)
+{
+    float4 diffuse;
+    float4 ambient;
+    float4 specular;
+    float specularPower;
+}
+
+cbuffer DIRECTIONALLIGHT : register(b1)
+{
+    DirectionalLight directionalLight;
+}
+
 cbuffer CAMERA : register(b2)
 {
     float3 cameraPosition;
 }
+
+cbuffer NUM_POINTLIGHTS : register(b3)
+{
+    uint numPointlights;
+}
+
+StructuredBuffer<POINT_LIGHT> lights : register(t9);
 
 float ShadowCalculation(float4 LCP)
 {
@@ -53,17 +73,40 @@ float4 main(PS_INPUT input) : SV_TARGET
     const float4 t = t1 + t2 + t3;
 
     const float4 path = textures[3].Sample(wrapSampler, newTex);
+    
+    float4 globalAmbient = (0.2f, 0.2f, 0.2f, 1);
+    
+    LightResult pResult = { { 0.0f, 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f } };
 
+    for (uint i = 0; i < numPointlights; ++i)
+    {
+        const POINT_LIGHT pointLight = lights[i];
+        LightResult result = PointLightCalculation(float4(input.worldPosition.x, input.worldPosition.y, input.worldPosition.z, 1.f), input.normal, 0.5f, 0.2f, pointLight.color, pointLight.intensity, pointLight.position, pointLight.range, pointLight.attenuation, cameraPosition);
+        pResult.diffuse += result.diffuse;
+        pResult.color *= result.color;
+        pResult.specular += result.specular; 
+    }
+    
+    pResult.diffuse = saturate(pResult.diffuse);
+    pResult.color = saturate(pResult.color);
+    pResult.specular = saturate(pResult.specular);
+    
+    const float4 finalLighting = LightCalculation(float4(input.worldPosition.x, input.worldPosition.y, input.worldPosition.z, 1.f), input.normal, 0.5f, 0.2f, 0.5f, directionalLight, cameraPosition) * shadow +
+                                (pResult.diffuse * 5 + pResult.specular) + globalAmbient + 0.01f;
+    
     //FOG
     float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
     float fogStart = 100.0f;
     float fogRange = 2000.0f;
     float fogDistance = distance(cameraPosition, input.worldPosition);
     float fogFactor = saturate((fogDistance - fogStart) / fogRange);
-	float4 globalAmbient = (0.2f, 0.2f, 0.2f, 1);
+
     
     float4 color = lerp(t, path, pathTexture.Sample(wrapSampler, input.texCoords).x);
     
-	return lerp(color, fogColor, fogFactor) * shadow;
+    const float4 finalColor = lerp((color * float4(pResult.color) * (saturate(finalLighting))), fogColor, fogFactor);
+    
+    return finalColor * shadow;
+	//return lerp(color, fogColor, fogFactor) * shadow;
 
 }

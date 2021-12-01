@@ -40,6 +40,7 @@ void Game::Update()
 	HandleHouseUpgrades();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
+	scene.UpdatePointLights();
 
 	QuestLog::Update(player, camps, targets);
 
@@ -49,7 +50,7 @@ void Game::Update()
 	ingameOverlay->UpdateQuests(QuestLog::GetActiveQuests());
 	UpdateQuadTree();
 
-	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), 0, nullptr);
+	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), scene.GetNumberOfPointlights(), scene.GetPointLights());
 
 	Event::ClearRawDelta();
 }
@@ -753,13 +754,12 @@ void Game::UpdateInventoryUI()
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
-	:water(5000), terrain(2)
+	:water(5000), terrain(4)
 {
 	Audio::StartEngine();
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.05f, 100.0f, { 0.0f, 200.0f, -100.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
-	scene.AddPointLight({ 38.055f, 22.367f, -594.542f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
 
 	//INIT WHICH RENDERERS WE WANT TO USE
 	RND.InitAnimatedModelRenderer();
@@ -872,7 +872,10 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	auto campFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	PR->Bind(campFireSystem);
-	
+	scene.AddPointLight({ 35.055f, 22.367f, -554.542f }, 200, { 1.0f, 0.0f, 0.05f }, { 190.0f / 255.0f, 83.0f / 255.0f, 21.0f / 255.0f, 1.0f });
+
+
+
 	auto mountain = std::make_shared<Biome>(13U, BIOME::MOUNTAIN);
 	mountain->AddCollider(Vector3(-294, 108, 978), 534);
 	mountain->AddCollider(Vector3(312, 110, 790), 460);

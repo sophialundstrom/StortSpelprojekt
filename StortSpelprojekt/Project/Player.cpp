@@ -3,7 +3,7 @@
 
 
 Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
-	:AnimatedModel("VillageArcherNPC", "Player"), sceneCamera(camera)
+	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera)
 {
 	isRightPressed = false;
 	isLeftPressed = false;
@@ -83,7 +83,7 @@ void Player::Update(HeightMap* heightMap)
 {
 	lastPosition = position;
 
-	std::cout << "Player X: " << position.x << "                    " << "Player Z: " << position.z << "\n";
+	std::cout << "Player X: " << position.x << "        " << "Player Y: " << position.y << "        "  << "Player Z: " << position.z << "\n";
 
 	CalcHeight(heightMap);
 
