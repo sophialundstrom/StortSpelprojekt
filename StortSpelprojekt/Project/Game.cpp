@@ -40,7 +40,7 @@ void Game::Update()
 	HandleHouseUpgrades();
 
 	scene.UpdateDirectionalLight(player->GetPosition());
-	scene.UpdatePointLights();
+	//scene.UpdatePointLights();
 
 	QuestLog::Update(player, camps, targets);
 
@@ -754,7 +754,7 @@ void Game::UpdateInventoryUI()
 }
 
 Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
-	:water(5000), terrain(4)
+	:water(5000), terrain(3)
 {
 	Audio::StartEngine();
 
@@ -872,7 +872,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	auto campFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	PR->Bind(campFireSystem);
-	scene.AddPointLight({ 35.055f, 22.367f, -554.542f }, 200, { 1.0f, 0.0f, 0.05f }, { 190.0f / 255.0f, 83.0f / 255.0f, 21.0f / 255.0f, 1.0f });
+	//scene.AddPointLight({ 0.0f, 30.7f, -554.542f }, 40, { 0.5f, 0.0f, 0.05f }, { 190.0f / 255.0f, 83.0f / 255.0f, 21.0f / 255.0f, 1.0f });
 
 
 
