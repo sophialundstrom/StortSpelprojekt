@@ -841,8 +841,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//PLAYER
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
-	/*player->SetPosition(-75, 20, -630);*/
-	player->SetPosition(-560.0f, 92.0f, -273.5f);
+	player->SetPosition(-75, 20, -630);
 	auto collider = player->GetBounds();
 	collider->SetParent(player);
 	CR->Bind(collider);

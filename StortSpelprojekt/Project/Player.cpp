@@ -112,6 +112,17 @@ void Player::Update(HeightMap* heightMap)
 	if (Event::KeyIsPressed('D'))
 		moveDirection += Vector3(1, 0, 0);
 
+	static float lastEat = 0;
+	if (Event::KeyIsPressed('R') && Time::Get() - lastEat > 1.0f)
+	{
+		if (stats.healthPoints < 10 && inventory.NumOf(Item::Type::Food) > 0)
+		{
+		stats.IncreaseHealthPoints();
+		    inventory.RemoveItem(Item::Type::Food, 1);
+		}
+		lastEat = Time::Get();
+	}
+
 	moveDirection.Normalize();
 
 	//SPRINTING
@@ -240,7 +251,7 @@ void Player::Update(HeightMap* heightMap)
 	}
 	
 	static float lastClick = 0;
-	static float lastEat = 0;
+
 
 	sinceLastShot += Time::GetDelta();
 	if (sinceLastShot > shootingAnimationLenght) {
