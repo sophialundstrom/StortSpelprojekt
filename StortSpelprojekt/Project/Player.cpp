@@ -32,6 +32,7 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	AMR->Bind(bow);
 	minCameraDistance = 0.5f;
 
+	numArrows = 0;
 }
 
 void Player::CalcHeight(HeightMap* heightMap)

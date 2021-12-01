@@ -919,7 +919,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//RANDOM ITEMS
 	GenerateRandomItems({ 58.0f, 20.3f, -574.5f }, 55, 100);
-	GenerateRandomItems({ 370, 75, -269 }, 100, 400);
+	GenerateRandomItems({ 370, 75, -269 }, 200, 400);
 
 	//FRIENDLY NPCS
 	AddFriendlyNPCs();
