@@ -110,17 +110,15 @@ public:
 		animationController->PlayAnimation(name);
 	}
 
-	void PlayOverrideAnimation(const std::string& name, const std::string& startBone, bool hold)
+	void PlayOverrideAnimation(const std::string& name, const std::string& startBone, bool hold, bool fullImpact = false)
 	{
-		animationController->PlayOverrideAnimation(name, startBone, hold);
+		animationController->PlayOverrideAnimation(name, startBone, hold, fullImpact);
 	}
 
-	// Inherited via Drawable
-	virtual void Update() override
+	void Update(Camera* camera = nullptr, const std::string& rotationJoint = "")
 	{
 		UpdateMatrix();
 
-		animationController->Update(skeleton, scene);
-		//animator->Update(scene, skeleton);
+		animationController->Update(skeleton, scene, camera, rotation, rotationJoint);
 	}
 };

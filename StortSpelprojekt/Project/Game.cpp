@@ -1106,7 +1106,6 @@ void Game::UpdateQuadTree()
 
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
-	std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{

@@ -215,7 +215,6 @@ void Player::Update(HeightMap* heightMap)
 	
 	if (newY > newCameraPos.y)
 	{
-		//std::cout << "PROBLEMATIC\n";
 		newCameraPos.y = newY;
 	}
 	
@@ -230,16 +229,7 @@ void Player::Update(HeightMap* heightMap)
 	if (sinceLastShot > shootingAnimationLenght) {
 
 		bool hasMoved = (position == lastPosition) ? false : true;
-		//if (!hasMoved)
-		//	PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
-		//else if (hasMoved && !jumping)
-		//	PlayAnimation("Walk", true); // ADD WALKING ANIMATION
-		//else if (jumping)
-			 // ADD IN AIR JUMP ANIMATION
 	}
-
-	if (Event::KeyIsPressed('Y'))
-		bow->PlayOverrideAnimation("Draw", "root", true);
 
 	if (Event::RightIsClicked())
 	{
@@ -247,6 +237,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			Audio::StartEffect("Bow.wav");
 			bow->PlayOverrideAnimation("Draw", "root", true);
+			PlayOverrideAnimation("Aim", "Spine1", true);
 			isAiming = true;
 		}
 
@@ -254,20 +245,23 @@ void Player::Update(HeightMap* heightMap)
 		mouseCurrentSensitivity = mouseAimSensitivity;
 		sceneCamera->SetSpeedMultiplier(5.0f);
 		sceneCamera->MoveTowards(newCameraPos);
-		PlayOverrideAnimation("Aim", "Spine1", true);
 
-		if (Time::Get() - lastClick > 0.75f)
+		if (Time::Get() - lastClick > 1.0f)
 		{
 			if (Event::LeftIsClicked() && numArrows > 0)
 			{
-				arrowHandler.AddArrow(lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
+				lookDirection = lookDirection.Transform(lookDirection, Matrix::CreateFromYawPitchRoll(-0.02f, 0.02f, 0.0f));
+
+				arrowHandler.AddArrow(lookDirection, bow->GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+
 				Audio::StartEffect("Fire.wav");
+
 				int currentIndex = 0;
 				numArrows--;
 				sinceLastShot = 0.f;
 				lastClick = Time::Get();
-				PlayOverrideAnimation("Aim", "Spine1", true);
+
+				PlayOverrideAnimation("Reload", "Spine1", true, true);
 			}
 		}
 	}
@@ -295,7 +289,10 @@ void Player::Update(HeightMap* heightMap)
 	else
 		PlayAnimation("Walk");
 
-	AnimatedModel::Update();
+	if (isAiming)
+		AnimatedModel::Update(sceneCamera, "Spine3");
+	else
+		AnimatedModel::Update();
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 

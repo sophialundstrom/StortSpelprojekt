@@ -2,6 +2,7 @@
 #include "DirectXHelp.h"
 #include "Math.h"
 #include <vector>
+#include <map>
 
 #define MAX_JOINTS 30
 
@@ -32,6 +33,15 @@ struct Skeleton
 				return counter;
 			counter++;
 		}
+	}
+
+	void PostTransformNodes(const aiNode* node, const Matrix& matrix, std::map<UINT, Matrix>& matrices)
+	{
+		if (std::string(node->mName.C_Str()).find('_') == std::string::npos)
+			matrices[GetJointID(node->mName.C_Str())] *= matrix;
+
+		for (UINT i = 0; i < node->mNumChildren; ++i)
+			PostTransformNodes(node->mChildren[i], matrix, matrices);
 	}
 
 	const Joint& FindJoint(const std::string& name) const
