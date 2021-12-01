@@ -2,8 +2,8 @@
 
 #include "QuestLog.h"
 
-FriendlyNPC::FriendlyNPC(const std::string& name, const std::string& file)
-	:NPC(file), currentDialogueState(DialogueState::HANDOUT)
+FriendlyNPC::FriendlyNPC(const std::string& name, const std::string& file, int health)
+	:NPC(file, health), currentDialogueState(DialogueState::HANDOUT)
 {
 	SetName(name);
 	questMarker = std::make_shared<QuestMarker>();

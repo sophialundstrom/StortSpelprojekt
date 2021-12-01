@@ -15,8 +15,8 @@ protected:
 protected:
 	std::shared_ptr<BoundingBox> boundingBox;
 public:
-	NPC(const std::string& file);
-	NPC(const Model& model);
+	NPC(const std::string& file, int health);
+	NPC(const Model& model, int health);
 
 	virtual void Update() override;
 	bool Collided(Player &player);

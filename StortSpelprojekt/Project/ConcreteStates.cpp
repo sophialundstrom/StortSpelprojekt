@@ -187,7 +187,8 @@ void MovingState::Update(HostileNPC& hostile)
     direction.Normalize();
 
     Vector3 newPosition = hostile.GetPosition() + direction * (hostile.speed * Time::GetDelta());
-    newPosition.y = hostile.heightMapGroundLevel;
+    if(hostile.isMoving)
+        newPosition.y = hostile.heightMapGroundLevel;
 
     if (Event::KeyIsPressed('7'))
     {
