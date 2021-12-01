@@ -94,7 +94,7 @@ PauseOverlay::PauseOverlay()
 		float yPos = Window::ClientHeight() / 2.0f + 100.0f;
 
 		htpCanvas->AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 8.0f }, "HTPTitle", "HowToPlaySmall.png", 1.f, 1.0f);
-		htpCanvas->AddImage({ std::roundf(xPos), std::roundf(yPos) }, "Controls", "ControlsBig.png", 1.f, 1.0f);
+		htpCanvas->AddImage({ std::roundf(xPos), std::roundf(yPos) }, "Controls", "ControlsSmall.png", 1.f, 1.0f);
 	}
 	canvases["HTP"] = htpCanvas;
 
