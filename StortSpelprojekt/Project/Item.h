@@ -5,7 +5,7 @@
 class Item : public Model
 {
 public:
-	enum class Type { Stick, Stone, Food, Hammer, Axe }; // FILL THIS WITH ALL ITEMS & IN NAMES ARRAY (BOTTOM OF FILE)
+	enum class Type { Stick, Stone, Food, Hammer, Axe, Rope }; // FILL THIS WITH ALL ITEMS & IN NAMES ARRAY (BOTTOM OF FILE)
 	static const std::string Names[];
 private:
 	std::shared_ptr<BoundingSphere> collider;
@@ -19,7 +19,7 @@ public:
 	Type GetType()									{ return type; }
 };
 
-inline const std::string Item::Names[] = { "Stick", "Tomato", "Food", "Hammer", "Axe" };
+inline const std::string Item::Names[] = { "Stick", "Stone", "Food", "Hammer", "Axe", "Rope"};
 
 //class Item :public Model
 //{

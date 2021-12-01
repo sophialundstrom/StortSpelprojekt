@@ -45,7 +45,7 @@ public:
 		//SWAP TO MAINMENU TO NOT SKIP IT
 		Window::DeactivateCursor();
 
-		Audio::Initialize();
+		Audio::Initialize(false);
 
 		state = new MainMenu(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 	}

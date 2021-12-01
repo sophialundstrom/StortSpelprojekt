@@ -91,9 +91,7 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 	//RND.InitWaterRenderer();
 	
 	Initialize();
-
 	Audio::Initialize();
-
 	Audio::StartMusic("GameOver.wav");
 
 	float xPos = 75;

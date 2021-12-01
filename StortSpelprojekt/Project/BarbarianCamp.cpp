@@ -47,7 +47,8 @@ void BarbarianCamp::AddBarbarian(const std::string& file, const Vector3& positio
     barbarians.emplace_back(barbarian);
     hostiles.emplace_back(barbarian);
 
-    MR->Bind(barbarian);
+    //MR->Bind(barbarian);
+    AMR->Bind(barbarian);
     SR->Bind(barbarian);
 
     auto collider = barbarian->GetCollider();
