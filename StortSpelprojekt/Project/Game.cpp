@@ -360,22 +360,22 @@ void Game::AddFriendlyNPCs()
 		NPC->SetScale(1.6);
 		NPC->SetRotation(0, PI_DIV4, 0);
 		{
-			NPC->AddQuest("Fetch Me� Hammer");
-			NPC->AddDialogue("I need your help retrieving a hammer tha� I need. The last time I had i� was when I was venturing into the desert with me old cart. Then the barbarians attacked so I �ad to leave it there. Please bring i� back so tha� we can start working on rebuildin� the forge.");
-			NPC->AddDialogue("Hi again, I thought you would have me� hammer by now� The cart was not tha� far from the trail leading up into the desert, so tha� should be a good place to start lookin�.");
-			NPC->AddDialogue("Thanks friend! Tha� hammer really means a lo�to me.");
+			NPC->AddQuest("Fetch Me' Hammer");
+			NPC->AddDialogue("I need your help retrieving a hammer tha' I need. The last time I had it was when I was venturing into the desert with me old cart. Then the barbarians attacked so I had to leave it there. Please bring it back so that we can start working on rebuilding' the forge.");
+			NPC->AddDialogue("Hi again, I thought you would have me hammer by now The cart was not tha' far from the trail leading up into the desert, so tha' should be a good place to start lookin.");
+			NPC->AddDialogue("Thanks friend! Tha' hammer really means a lo'to me.");
 		}
 		{
 			NPC->AddQuest("Spy In The Making");
-			NPC->AddDialogue("Did you see the camp in the desert? It is kinda suspicious. Would you be able to go an� have a look? Just spy on them to see what they�re u�to. But be careful, they are quite dangerous.");
-			NPC->AddDialogue(" I saw some bushes you should be able to hide in withou� bein� seen to the left o� the camp.");
-			NPC->AddDialogue("You�re back! How di�it go? I knew they were u�to somethin�!");
+			NPC->AddDialogue("Did you see the camp in the desert? It is kinda suspicious. Would you be able to go an have a look? Just spy on them to see what they're u'to. But be careful, they are quite dangerous.");
+			NPC->AddDialogue(" I saw some bushes you should be able to hide in withou' bein' seen to the left o' the camp.");
+			NPC->AddDialogue("You're back! How di'it go? I knew they were u'to somethin'!");
 		}
 		{
-			auto quest = NPC->AddQuest("Barbarians No Mo�");
-			NPC->AddDialogue("We needo do somethin� abou�it befo� they do somethin� awful.");
-			NPC->AddDialogue(" Down with the bastards! Remembe� to stock u� on arrows at Lydia�s.");
-			NPC->AddDialogue("Wha� a remarkable job! They won� bo�er us now.");
+			auto quest = NPC->AddQuest("Barbarians No Mo'");
+			NPC->AddDialogue("We needo do somethin' abou'it befo' they do somethin' awful.");
+			NPC->AddDialogue(" Down with the bastards! Remembe' to stock u' on arrows at Lydia's.");
+			NPC->AddDialogue("Wha' a remarkable job! They won' bo'er us now.");
 			auto onActiveFunc = [this, quest]() mutable
 			{
 				quest->ResetObjectiveResources(player, camps, targets);
@@ -383,7 +383,7 @@ void Game::AddFriendlyNPCs()
 			quest->AddOnActivateFunction(onActiveFunc);
 		}
 
-		NPC->AddDialogue("Make't sure ye ready fo the barbs. They have a big camp at the north");
+		NPC->AddDialogue("Make't sure ye ready fo the barbs. They have a big camp to the north");
 
 		friendlyNPCs.emplace_back(NPC);
 	}
@@ -396,7 +396,7 @@ void Game::AddFriendlyNPCs()
 		{
 			NPC->AddQuest("Getting Started");
 			NPC->AddDialogue("Thank the gods that you are alive! The barbarians almost got us all and they have destroyed the village. We're gonna need your help to rebuild it and destroy the barbarians. In case you don't remember me, I'm Lydia and I need you to get something for me. I used to have a archery tent right behind me, but it was destroyed during the raid. I need you to collect some rope so that we can start building a new tent. The last time I saw it, it was laying near the ocean, so if you just explore the beach I think you will find some.");
-			NPC->AddDialogue("Back again so soon� I think I remember that the rope was close to the dock.");
+			NPC->AddDialogue("Back again so soon? I think I remember that the rope was close to the dock.");
 			NPC->AddDialogue("Thank you! Now we can finally start rebuilding the tent.");
 		}
 		{
@@ -471,31 +471,33 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		camp->AddBarbarian("BarbarianAnim", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero, false, 1);
+		camp->AddBarbarian("BarbarianAnim", { -582.0f, 92.0f, -273.5f }, hostiles, player, CombatStyle::consistantDelay, { -582.0f, 92.0f, -273.5f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianAnim", { -572.0f, 93.0f, -213.0f }, hostiles, player, CombatStyle::consistantDelay, { -572.0f, 93.0f, -213.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianAnim", { -670.0f, 87.0f, -208.0f }, hostiles, player, CombatStyle::consistantDelay, { -670.0f, 87.0f, -208.0f }, false, 1, 3, false);		
 		camps[BarbarianCamp::Location::South] = camp;
 	}
 
 	{ // EASTERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::East, 40.0f);
-		camp->AddBarbarian("BarbarianBow", { 597.0f, 83.0f, -461.0f }, hostiles, player, CombatStyle::consistantDelay, { 597.0f, 83.0f, -461.0f }, false, 1, 3, false);
-		camp->AddBarbarian("BarbarianBow", { 650.0f, 86.0f, -516.5f }, hostiles, player, CombatStyle::consistantDelay, { 650.0f, 86.0f, -516.5f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianAnim", { 597.0f, 83.0f, -461.0f }, hostiles, player, CombatStyle::consistantDelay, { 597.0f, 83.0f, -461.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianAnim", { 650.0f, 86.0f, -516.5f }, hostiles, player, CombatStyle::consistantDelay, { 650.0f, 86.0f, -516.5f }, false, 1, 3, false);
 
 		camps[BarbarianCamp::Location::East] = camp;
 	}
 
 	{ // NORTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::North, 40.0f);
-		camp->AddBarbarian("BarbarianBow", { 588.3f, 422.0f, 371.0f }, hostiles, player, CombatStyle::consistantDelay, { 588.3f, 422.0f, 371.0f }, false, 1, 3, false);
-		camp->AddBarbarian("BarbarianBow", { 654.0f, 422.0f, 472.0f }, hostiles, player, CombatStyle::consistantDelay, { 654.0f, 422.0f, 472.0f }, false, 1, 3, false);
-		camp->AddBarbarian("BarbarianBow", { 556.5f, 427.0f, 517.0f }, hostiles, player, CombatStyle::consistantDelay, { 556.5f, 427.0f, 517.0f }, false, 1, 3, false);
-		camp->AddBarbarian("BarbarianBow", { 480.5f, 427.0f, 476.5f }, hostiles, player, CombatStyle::consistantDelay, { 480.5f, 427.0f, 476.5f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianAnim", { 588.3f, 422.0f, 371.0f }, hostiles, player, CombatStyle::consistantDelay, { 588.3f, 422.0f, 371.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianAnim", { 654.0f, 422.0f, 472.0f }, hostiles, player, CombatStyle::consistantDelay, { 654.0f, 422.0f, 472.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianAnim", { 556.5f, 427.0f, 517.0f }, hostiles, player, CombatStyle::consistantDelay, { 556.5f, 427.0f, 517.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianAnim", { 480.5f, 427.0f, 476.5f }, hostiles, player, CombatStyle::consistantDelay, { 480.5f, 427.0f, 476.5f }, false, 1, 3, false);
 		camps[BarbarianCamp::Location::North] = camp;
 	}
 
 	{ // WESTERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::West, 40.0f);
-		camp->AddBarbarian("BarbarianBow", { -533.5f, 205.0f, 628.0f }, hostiles, player, CombatStyle::consistantDelay, { -533.5f, 205.0f, 628.0f }, false, 1, 3, false);
-		camp->AddBarbarian("BarbarianBow", { -643.0f, 204.0f, 637.0f }, hostiles, player, CombatStyle::consistantDelay, { -643.0f, 204.0f, 637.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianAnim", { -533.5f, 205.0f, 628.0f }, hostiles, player, CombatStyle::consistantDelay, { -533.5f, 205.0f, 628.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianAnim", { -643.0f, 204.0f, 637.0f }, hostiles, player, CombatStyle::consistantDelay, { -643.0f, 204.0f, 637.0f }, false, 1, 3, false);
 
 		camps[BarbarianCamp::Location::West] = camp;
 	}
@@ -503,9 +505,9 @@ void Game::AddBarbarianCamps()
 	{ // VILLAGE INVADERS
 		auto camp = new BarbarianCamp({ -11.5f, 18.0f, -126.0f }, BarbarianCamp::Location::Village, 40.0f, true);
 
-		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -126.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
-		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -136.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
-		//camp->AddBarbarian("BarbarianBow", { -11.5f, 18.0f, -116.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
+		//camp->AddBarbarian("BarbarianAnim", { -11.5f, 18.0f, -126.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
+		//camp->AddBarbarian("BarbarianAnim", { -11.5f, 18.0f, -136.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
+		//camp->AddBarbarian("BarbarianAnim", { -11.5f, 18.0f, -116.0f }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero);
 
 		camps[BarbarianCamp::Location::Village] = camp;
 	}

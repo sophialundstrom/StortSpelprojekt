@@ -91,7 +91,7 @@ void QuestLog::CreateQuests()
 
 	//=====================================================
 	//NPC2
-	auto q7 = q5->AddChildQuest("Fetch Me’ Hammer");
+	auto q7 = q5->AddChildQuest("Fetch Me' Hammer");
 	q7->AddCollectObjective(Item::Type::Hammer, 1);
 	quests.emplace_back(q7);
 
@@ -99,7 +99,7 @@ void QuestLog::CreateQuests()
 	q8->AddLocationObjective({ -729.f, 147.f, 363.f }, 10.f );
 	quests.emplace_back(q8);
 
-	auto q9 = q8->AddChildQuest("Barbarians No Mo’");
+	auto q9 = q8->AddChildQuest("Barbarians No Mo'");
 	q9->AddFightObjective(BarbarianCamp::Location::West);
 	quests.emplace_back(q9);
 

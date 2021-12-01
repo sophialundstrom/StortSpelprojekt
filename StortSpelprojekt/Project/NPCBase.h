@@ -16,7 +16,7 @@ protected:
 protected:
 	std::shared_ptr<BoundingBox> boundingBox;
 public:
-	NPC(const std::string& file);
+	NPC(const std::string& file, int health = 3);
 	NPC(const AnimatedModel& model);
 
 	virtual void Update() override;
