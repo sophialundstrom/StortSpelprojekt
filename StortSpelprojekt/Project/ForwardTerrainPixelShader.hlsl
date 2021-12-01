@@ -18,14 +18,6 @@ struct PS_INPUT
 	float4 lightClipPosition : LIGHTPOSITION;
 };
 
-cbuffer MATERIAL : register(b0)
-{
-    float4 diffuse;
-    float4 ambient;
-    float4 specular;
-    float specularPower;
-}
-
 cbuffer DIRECTIONALLIGHT : register(b1)
 {
     DirectionalLight directionalLight;
