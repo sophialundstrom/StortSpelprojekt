@@ -47,7 +47,7 @@ public:
 
 		Audio::Initialize(false);
 
-		state = new Win(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
+		state = new MainMenu(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 	}
 
 	~Application()
