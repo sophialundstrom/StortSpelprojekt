@@ -46,8 +46,8 @@ private:
 
     //DayNightCycleConfig
     float worldClockTime = 0;
-    float dayLength = 300;
-    float nightLength = 300;
+    float dayLength = 20;
+    float nightLength = 20;
     float timeSliderVal = 0;
     float fadeTimeMultiplier = 0.25;
     Vector4 lightColor;
