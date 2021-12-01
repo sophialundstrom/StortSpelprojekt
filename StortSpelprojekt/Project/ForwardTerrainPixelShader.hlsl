@@ -73,7 +73,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     for (uint i = 0; i < numPointlights; ++i)
     {
         const POINT_LIGHT pointLight = lights[i];
-        LightResult result = PointLightCalculation(float4(input.worldPosition.x, input.worldPosition.y, input.worldPosition.z, 1.f), input.normal, 0.5f, 0.2f, pointLight.color, pointLight.intensity, pointLight.position, pointLight.range, pointLight.attenuation, cameraPosition);
+        LightResult result = PointLightCalculation(float4(input.worldPosition.x, input.worldPosition.y, input.worldPosition.z, 1.f), input.normal, 0.f, 0.2f, pointLight.color, pointLight.intensity, pointLight.position, pointLight.range, pointLight.attenuation, cameraPosition);
         pResult.diffuse += result.diffuse;
         pResult.color *= result.color;
         pResult.specular += result.specular; 
@@ -83,8 +83,11 @@ float4 main(PS_INPUT input) : SV_TARGET
     pResult.color = saturate(pResult.color);
     pResult.specular = saturate(pResult.specular);
     
-    const float4 finalLighting = LightCalculation(float4(input.worldPosition.x, input.worldPosition.y, input.worldPosition.z, 1.f), input.normal, 0.5f, 0.2f, 0.5f, directionalLight, cameraPosition) * shadow +
-                                (pResult.diffuse * 5 + pResult.specular) + globalAmbient + 0.01f;
+    LightResult finalLighting = DirectionalLightCalculation(float4(input.worldPosition, 1.f), input.normal, float4(0.0f, 0.0f, 0.0f, 0.0f), float4(0.0f, 0.0f, 0.0f, 0.0f), directionalLight.lightColor, directionalLight.lightDirection, cameraPosition);
+    
+    finalLighting.diffuse = saturate(finalLighting.diffuse);
+    finalLighting.color = saturate(finalLighting.color);
+    finalLighting.specular = saturate(finalLighting.specular);
     
     //FOG
     float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
@@ -96,9 +99,10 @@ float4 main(PS_INPUT input) : SV_TARGET
     
     float4 color = lerp(t, path, pathTexture.Sample(wrapSampler, input.texCoords).x);
     
-    const float4 finalColor = lerp((color * float4(pResult.color) * (saturate(finalLighting))), fogColor, fogFactor);
+    const float4 finalColor = lerp((color * float4(finalLighting.color) * saturate(finalLighting.color))), fogColor, fogFactor);
     
-    return finalColor * shadow;
+    return finalColor * shadow + globalAmbient;
+   // return directionalLight.lightColor;
 	//return lerp(color, fogColor, fogFactor) * shadow;
 
 }
