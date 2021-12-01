@@ -14,6 +14,7 @@ NPC::NPC(const AnimatedModel& model)
 	:AnimatedModel("","")
 {
 	boundingBox = std::make_shared<BoundingBox>();
+	hp = maxHP = health;
 }
 
 void NPC::Update()

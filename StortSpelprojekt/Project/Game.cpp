@@ -311,7 +311,7 @@ void Game::UpdateAndHandleLoot()
 			loot[i] = std::move(loot[loot.size() - 1]);
 			loot.resize(loot.size() - 1);
 			
-			Audio::SetVolume("Pickup.wav", Audio::effectsVolume);
+			Audio::SetVolume("PickupPop.wav", 1.f);
 			Audio::StartEffect("Pickup.wav");
 		}
 	}
@@ -360,22 +360,22 @@ void Game::AddFriendlyNPCs()
 		NPC->SetScale(1.6);
 		NPC->SetRotation(0, PI_DIV4, 0);
 		{
-			NPC->AddQuest("Fetch Me’ Hammer");
-			NPC->AddDialogue("I need your help retrieving a hammer tha’ I need. The last time I had i’ was when I was venturing into the desert with me old cart. Then the barbarians attacked so I ‘ad to leave it there. Please bring i’ back so tha’ we can start working on rebuildin’ the forge.");
-			NPC->AddDialogue("Hi again, I thought you would have me’ hammer by now… The cart was not tha’ far from the trail leading up into the desert, so tha’ should be a good place to start lookin’.");
-			NPC->AddDialogue("Thanks friend! Tha’ hammer really means a lo’to me.");
+			NPC->AddQuest("Fetch Meï¿½ Hammer");
+			NPC->AddDialogue("I need your help retrieving a hammer thaï¿½ I need. The last time I had iï¿½ was when I was venturing into the desert with me old cart. Then the barbarians attacked so I ï¿½ad to leave it there. Please bring iï¿½ back so thaï¿½ we can start working on rebuildinï¿½ the forge.");
+			NPC->AddDialogue("Hi again, I thought you would have meï¿½ hammer by nowï¿½ The cart was not thaï¿½ far from the trail leading up into the desert, so thaï¿½ should be a good place to start lookinï¿½.");
+			NPC->AddDialogue("Thanks friend! Thaï¿½ hammer really means a loï¿½to me.");
 		}
 		{
 			NPC->AddQuest("Spy In The Making");
-			NPC->AddDialogue("Did you see the camp in the desert? It is kinda suspicious. Would you be able to go an’ have a look? Just spy on them to see what they’re u’to. But be careful, they are quite dangerous.");
-			NPC->AddDialogue(" I saw some bushes you should be able to hide in withou’ bein’ seen to the left o’ the camp.");
-			NPC->AddDialogue("You’re back! How di’it go? I knew they were u’to somethin’!");
+			NPC->AddDialogue("Did you see the camp in the desert? It is kinda suspicious. Would you be able to go anï¿½ have a look? Just spy on them to see what theyï¿½re uï¿½to. But be careful, they are quite dangerous.");
+			NPC->AddDialogue(" I saw some bushes you should be able to hide in withouï¿½ beinï¿½ seen to the left oï¿½ the camp.");
+			NPC->AddDialogue("Youï¿½re back! How diï¿½it go? I knew they were uï¿½to somethinï¿½!");
 		}
 		{
-			auto quest = NPC->AddQuest("Barbarians No Mo’");
-			NPC->AddDialogue("We needo do somethin’ abou’it befo’ they do somethin’ awful.");
-			NPC->AddDialogue(" Down with the bastards! Remembe’ to stock u’ on arrows at Lydia’s.");
-			NPC->AddDialogue("Wha’ a remarkable job! They won’ bo’er us now.");
+			auto quest = NPC->AddQuest("Barbarians No Moï¿½");
+			NPC->AddDialogue("We needo do somethinï¿½ abouï¿½it befoï¿½ they do somethinï¿½ awful.");
+			NPC->AddDialogue(" Down with the bastards! Remembeï¿½ to stock uï¿½ on arrows at Lydiaï¿½s.");
+			NPC->AddDialogue("Whaï¿½ a remarkable job! They wonï¿½ boï¿½er us now.");
 			auto onActiveFunc = [this, quest]() mutable
 			{
 				quest->ResetObjectiveResources(player, camps, targets);
@@ -396,7 +396,7 @@ void Game::AddFriendlyNPCs()
 		{
 			NPC->AddQuest("Getting Started");
 			NPC->AddDialogue("Thank the gods that you are alive! The barbarians almost got us all and they have destroyed the village. We're gonna need your help to rebuild it and destroy the barbarians. In case you don't remember me, I'm Lydia and I need you to get something for me. I used to have a archery tent right behind me, but it was destroyed during the raid. I need you to collect some rope so that we can start building a new tent. The last time I saw it, it was laying near the ocean, so if you just explore the beach I think you will find some.");
-			NPC->AddDialogue("Back again so soon… I think I remember that the rope was close to the dock.");
+			NPC->AddDialogue("Back again so soonï¿½ I think I remember that the rope was close to the dock.");
 			NPC->AddDialogue("Thank you! Now we can finally start rebuilding the tent.");
 		}
 		{
@@ -435,9 +435,9 @@ void Game::AddFriendlyNPCs()
 		}
 		{
 			auto quest = NPC->AddQuest("Payback");
-			NPC->AddDialogue("Hi! I was out searching for raw materials in the woods to craft arrows with and encountered a couple of those damn barbarians. I managed to get a few of them but I can’t take them. Would you help me with the rest of them? I think they came from the eastern camp.");
+			NPC->AddDialogue("Hi! I was out searching for raw materials in the woods to craft arrows with and encountered a couple of those damn barbarians. I managed to get a few of them but I canï¿½t take them. Would you help me with the rest of them? I think they came from the eastern camp.");
 			NPC->AddDialogue("If the mountains are in due north... And the desert is are in the west... Then the east must be in...?");
-			NPC->AddDialogue("Did you get them all? Nice! Now I’ll be able to craft all the arrows in the world without interruption!");
+			NPC->AddDialogue("Did you get them all? Nice! Now Iï¿½ll be able to craft all the arrows in the world without interruption!");
 			auto onActiveFunc = [this, quest]() mutable
 			{
 				quest->ResetObjectiveResources(player, camps, targets);
@@ -477,18 +477,25 @@ void Game::AddBarbarianCamps()
 
 	{ // EASTERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::East, 40.0f);
+		camp->AddBarbarian("BarbarianBow", { 597.0f, 83.0f, -461.0f }, hostiles, player, CombatStyle::consistantDelay, { 597.0f, 83.0f, -461.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 650.0f, 86.0f, -516.5f }, hostiles, player, CombatStyle::consistantDelay, { 650.0f, 86.0f, -516.5f }, false, 1, 3, false);
 
 		camps[BarbarianCamp::Location::East] = camp;
 	}
 
 	{ // NORTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::North, 40.0f);
-
+		camp->AddBarbarian("BarbarianBow", { 588.3f, 422.0f, 371.0f }, hostiles, player, CombatStyle::consistantDelay, { 588.3f, 422.0f, 371.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 654.0f, 422.0f, 472.0f }, hostiles, player, CombatStyle::consistantDelay, { 654.0f, 422.0f, 472.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 556.5f, 427.0f, 517.0f }, hostiles, player, CombatStyle::consistantDelay, { 556.5f, 427.0f, 517.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { 480.5f, 427.0f, 476.5f }, hostiles, player, CombatStyle::consistantDelay, { 480.5f, 427.0f, 476.5f }, false, 1, 3, false);
 		camps[BarbarianCamp::Location::North] = camp;
 	}
 
 	{ // WESTERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::West, 40.0f);
+		camp->AddBarbarian("BarbarianBow", { -533.5f, 205.0f, 628.0f }, hostiles, player, CombatStyle::consistantDelay, { -533.5f, 205.0f, 628.0f }, false, 1, 3, false);
+		camp->AddBarbarian("BarbarianBow", { -643.0f, 204.0f, 637.0f }, hostiles, player, CombatStyle::consistantDelay, { -643.0f, 204.0f, 637.0f }, false, 1, 3, false);
 
 		camps[BarbarianCamp::Location::West] = camp;
 	}
@@ -527,7 +534,9 @@ void Game::CheckTargetCollision()
 		{
 			if (target->GotHit())
 				continue;
-
+			if ((arrow->GetPosition() - target->GetPosition()).Length() > 70.f)
+				continue;
+				
 			bool hit = handler.CheckCollision(arrow, target->GetCollider(), player->GetPosition());
 
 			if (hit)
@@ -623,24 +632,6 @@ void Game::CheckNearbyCollision()
 	player->HandleCollidedObjects(collidedColliders);
 }
 
-void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle, const Vector3& targetPosition)
-{
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, targetPosition);
-	NPC->SetPosition(position);
-
-	auto collider = NPC->GetCollider();
-	collider->SetParent(NPC);
-	collider->Update();
-	collider->SetScale(2, 7, 2);
-	CR->Bind(collider);
-
-	//MR->Bind(NPC);
-	AMR->Bind(NPC);
-	SR->Bind(NPC);
-	hostileID++;
-	hostiles.emplace_back(NPC);
-}
-
 void Game::AddLoot(LOOTTYPE type, const Vector3& position)
 {
 	auto LOOT = std::make_shared<Loot>(type, position);
@@ -657,18 +648,19 @@ void Game::CheckSaveStationCollision()
 {
 	for (auto& saveStation : saveStations)
 	{
-		saveStation.Update();
+			saveStation.Update();
 
-		if (Collision::Intersection(*saveStation.Collider(), *player->GetFrustum()))
-		{
-			if (Time::Get() - saveStation.LastSave() > 5 && Event::KeyIsPressed('E'))
+			if (Collision::Intersection(*saveStation.Collider(), *player->GetFrustum()))
 			{
-				Print("SAVED");
-				player->Save("Test");
-				//QuestLog::Inst().Save("Test");
-				saveStation.LastSave(Time::Get());
+				if (Time::Get() - saveStation.LastSave() > 5 && Event::KeyIsPressed('E'))
+				{
+					Print("SAVED");
+					player->Save("Test");
+					//QuestLog::Inst().Save("Test");
+					saveStation.LastSave(Time::Get());
+				}
 			}
-		}
+		
 	}
 }
 
@@ -676,7 +668,7 @@ void Game::HandleHouseUpgrades()
 {
 	for (auto& building : buildings)
 	{
-		if(true)
+		if ((player->GetPosition() - building->GetPosition()).Length() < 170.f)
 		{
 			if (Collision::Intersection(*building->GetCollider(), *player->GetFrustum()))
 			{
@@ -733,25 +725,28 @@ void Game::CheckItemCollision()
 {
 	for (auto& item : items)
 	{
-		item->Update();
-
-		if (IR->IsBound(item))
-			IR->Unbind(item);
-
-		if (Collision::Intersection(*item->GetCollider(), *player->GetFrustum()))
+		if ((player->GetPosition() - item->GetPosition()).Length() < 70.f)
 		{
-			ingameOverlay->ShowInteract();
-			IR->Bind(item);
+			item->Update();
 
-			if (Event::KeyIsPressed('E'))
+			if (IR->IsBound(item))
+				IR->Unbind(item);
+
+			if (Collision::Intersection(*item->GetCollider(), *player->GetFrustum()))
 			{
-				Audio::StartEffect("Pickup.wav");
-				Audio::SetVolume("Pickup.wav", Audio::effectsVolume * 2);
-				player->Inventory().AddItem(item->GetType());
-				RemoveItem(item);
-				UpdateInventoryUI();
+				ingameOverlay->ShowInteract();
+				IR->Bind(item);
 
-				return;
+				if (Event::KeyIsPressed('E'))
+				{
+					Audio::StartEffect("Pickup.wav");
+					Audio::SetVolume("Pickup.wav", Audio::effectsVolume * 2);
+					player->Inventory().AddItem(item->GetType());
+					RemoveItem(item);
+					UpdateInventoryUI();
+
+					return;
+				}
 			}
 		}
 	}
@@ -763,20 +758,23 @@ void Game::CheckQuestInteraction()
 	{
 		if (NPC->Interactable())
 		{
-			if (Collision::Intersection(*NPC->GetCollider(), *player->GetFrustum()))
+			if ((player->GetPosition() - NPC->GetPosition()).Length() < 70.f)
 			{
-				ingameOverlay->ShowInteract();
-
-				if (Event::KeyIsPressed('E'))
+				if (Collision::Intersection(*NPC->GetCollider(), *player->GetFrustum()))
 				{
-					if (overlay == dialogueOverlay || dialogueOverlay->HasRecentDialogue())
+					ingameOverlay->ShowInteract();
+
+					if (Event::KeyIsPressed('E'))
+					{
+						if (overlay == dialogueOverlay || dialogueOverlay->HasRecentDialogue())
+							return;
+
+						overlay = dialogueOverlay;
+
+						auto objective = QuestLog::GetTalkObjective(NPC->GetName());
+						dialogueOverlay->Set(NPC, (TalkObjective*)objective);
 						return;
-
-					overlay = dialogueOverlay;
-
-					auto objective = QuestLog::GetTalkObjective(NPC->GetName());
-					dialogueOverlay->Set(NPC, (TalkObjective*)objective);
-					return;
+					}
 				}
 			}
 		}
@@ -832,7 +830,8 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//PLAYER
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
-	player->SetPosition(-75, 20, -630);
+	/*player->SetPosition(-75, 20, -630);*/
+	player->SetPosition(567.0f, 402.0f, 434.0f);
 	auto collider = player->GetBounds();
 	collider->SetParent(player);
 	CR->Bind(collider);
@@ -907,8 +906,18 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
 	PR->Bind(campFireSystem);
 	//scene.AddPointLight({ 0.0f, 30.7f, -554.542f }, 40, { 0.5f, 0.0f, 0.05f }, { 190.0f / 255.0f, 83.0f / 255.0f, 21.0f / 255.0f, 1.0f });
-
-
+	auto bigCampFireSystem = std::make_shared<ParticleSystem>("largeFire.ps");
+	scene.AddParticleSystem("BigCampFireSystem", bigCampFireSystem, Vector3{ 573.2f, 401.5f, 449.0f });
+	PR->Bind(bigCampFireSystem);
+	auto southFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
+	scene.AddParticleSystem("SouthCampfireSystem", southFireSystem, Vector3{ -672.0f, 69.5f, -248.0f });
+	PR->Bind(southFireSystem);
+	auto westFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
+	scene.AddParticleSystem("WestCampfireSystem", westFireSystem, Vector3{ -574.0f, 192.5f, 675.5f });
+	PR->Bind(westFireSystem);
+	auto eastFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
+	scene.AddParticleSystem("EastCampfireSystem", eastFireSystem, Vector3{ 635.0f, 67.0f, -488.0f });
+	PR->Bind(eastFireSystem);
 
 	auto mountain = std::make_shared<Biome>(13U, BIOME::MOUNTAIN);
 	mountain->AddCollider(Vector3(-294, 108, 978), 534);
@@ -945,15 +954,12 @@ Game::~Game()
 	delete quadTree;
 	scene.Clear();
 
-	Audio::StopEngine();
-
 	Resources::Inst().Clear();
 }
 
 void Game::SetupAudio()
 {
 	
-	Audio::Initialize();
 	Audio::SetMusicVolume(Audio::musicVolume);
 
 	Audio::StartMusic("SoundForest.wav");
@@ -1064,8 +1070,6 @@ void Game::HandleDayNightCycle()
 	if (worldClockTime > dayLength && worldClockTime < (dayLength + nightLength))
 	{
 		//NIGHT
-		lightColor = { 0, 0, 0.15, 1 };
-
 		if (timeSliderVal > 0)
 			timeSliderVal -= (Time::GetDelta() * fadeTimeMultiplier);
 		if (timeSliderVal < 0)
@@ -1074,8 +1078,6 @@ void Game::HandleDayNightCycle()
 	else
 	{
 		//DAY
-		lightColor = { 1, 1, 1, 1 };
-
 		if (timeSliderVal < 1)
 			timeSliderVal += (Time::GetDelta() * fadeTimeMultiplier);
 		if (timeSliderVal > 1)
@@ -1138,11 +1140,6 @@ APPSTATE Game::Run()
 
 	if (Time::Get() - lastClick > 0.5f)
 	{
-		if (Event::KeyIsPressed(VK_RETURN))
-		{
-			AddHostileNPC("BarbarianAnim", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::Burst, Vector3(70, 25, -590));
-			lastClick = Time::Get();
-		}
 		if (Event::KeyIsPressed('1'))
 		{
 			Graphics::Inst().ActivateWireframe();

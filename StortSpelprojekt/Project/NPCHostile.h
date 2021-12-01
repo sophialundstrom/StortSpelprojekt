@@ -17,7 +17,8 @@ private:
 	int damage;
 	void CalcHeight(HeightMap* heightMap);
 public:
-	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition);
+	bool isMoving;
+	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, int health, bool moving);
 ;
 	virtual void Update() override;
 	void Update(const std::shared_ptr<Player> player, HeightMap* heightMap);
