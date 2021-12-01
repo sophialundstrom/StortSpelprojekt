@@ -912,15 +912,12 @@ Game::~Game()
 	delete quadTree;
 	scene.Clear();
 
-	Audio::StopEngine();
-
 	Resources::Inst().Clear();
 }
 
 void Game::SetupAudio()
 {
 	
-	Audio::Initialize();
 	Audio::SetMusicVolume(Audio::musicVolume);
 
 	Audio::StartMusic("SoundForest.wav");
