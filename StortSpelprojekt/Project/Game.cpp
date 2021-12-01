@@ -1011,8 +1011,6 @@ void Game::HandleDayNightCycle()
 	if (worldClockTime > dayLength && worldClockTime < (dayLength + nightLength))
 	{
 		//NIGHT
-		lightColor = { 0, 0, 0.15, 1 };
-
 		if (timeSliderVal > 0)
 			timeSliderVal -= (Time::GetDelta() * fadeTimeMultiplier);
 		if (timeSliderVal < 0)
@@ -1021,8 +1019,6 @@ void Game::HandleDayNightCycle()
 	else
 	{
 		//DAY
-		lightColor = { 1, 1, 1, 1 };
-
 		if (timeSliderVal < 1)
 			timeSliderVal += (Time::GetDelta() * fadeTimeMultiplier);
 		if (timeSliderVal > 1)
