@@ -4,7 +4,7 @@
 
 void GameOver::Form()
 {
-	ShellExecute(0, 0, L"https://docs.google.com/forms/d/1wSGU7CwBNTTCu50nsunQX2Q9DC06SEi5SAqbgJstgb0/viewform?edit_requested=true", 0, 0, SW_SHOW);
+	ShellExecute(0, 0, L"https://forms.gle/Bf36fwdMFhnNfk6D8", 0, 0, SW_SHOW);
 }
 
 void GameOver::HoveringForm()
@@ -168,7 +168,7 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 200, { 1.0f, 0.0f, 0.05f }, { 190.0f / 255.0f, 83.0f / 255.0f, 21.0f / 255.0f, 1.0f });
 
 
-	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
+	auto menuFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
 	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 35, -687 });
 	PR->Bind(menuFireSystem);
 
