@@ -35,9 +35,9 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 	};
 	drawableBounds.Center = boundTransform;
 	
-	drawableBounds.Extents.x = drawable->GetScale().x;
-	drawableBounds.Extents.y = drawable->GetScale().y;
-	drawableBounds.Extents.z = drawable->GetScale().z;
+	drawableBounds.Extents.x *= drawable->GetScale().x;
+	drawableBounds.Extents.y *= drawable->GetScale().y;
+	drawableBounds.Extents.z *= drawable->GetScale().z;
 
 	//IF Stuff is still broken try tweak with orientation but why risk it if stuff seems to be working?
 	drawableBounds.Orientation = drawable->GetRotation();
