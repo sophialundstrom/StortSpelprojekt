@@ -39,6 +39,8 @@ void Game::Update()
 
 	HandleHouseUpgrades();
 
+	HandleDayNightCycle();
+
 	scene.UpdateDirectionalLight(player->GetPosition());
 
 	QuestLog::Update(player, camps, targets);
@@ -1016,6 +1018,43 @@ void Game::HandleCamps()
 		player->inCombat = false;
 		player->SwitchBiomeMusic();
 	}
+
+}
+
+void Game::HandleDayNightCycle()
+{
+	worldClockTime += Time::GetDelta();
+
+	if (worldClockTime >= (dayLength + nightLength))
+		worldClockTime = (worldClockTime - (dayLength + nightLength));
+
+	if (worldClockTime > dayLength && worldClockTime < (dayLength + nightLength))
+	{
+		//NIGHT
+		lightColor = { 0, 0, 0.15, 1 };
+
+		if (timeSliderVal > 0)
+			timeSliderVal -= (Time::GetDelta() * fadeTimeMultiplier);
+		if (timeSliderVal < 0)
+			timeSliderVal = 0;
+	}
+	else
+	{
+		//DAY
+		lightColor = { 1, 1, 1, 1 };
+
+		if (timeSliderVal < 1)
+			timeSliderVal += (Time::GetDelta() * fadeTimeMultiplier);
+		if (timeSliderVal > 1)
+			timeSliderVal = 1;
+	}
+
+	lightColor = DayLightColor* timeSliderVal;
+	lightColor += NightLightColor * (1 - timeSliderVal);
+
+	std::cout << worldClockTime << "			" << timeSliderVal << std::endl;
+	SBR->PullDayNightSlider(timeSliderVal);
+	scene.SetDirectionalLight(500, lightColor, 4, 4);
 
 }
 
