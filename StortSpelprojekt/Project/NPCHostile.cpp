@@ -1,8 +1,8 @@
 #include "NPCHostile.h"
 #include "ConcreteStates.h"
 
-HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition)
-	:NPC(file)
+HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, int health)
+	:NPC(file, health)
 {
     this->player = player;
     //this->combatStyle = combatStyle;

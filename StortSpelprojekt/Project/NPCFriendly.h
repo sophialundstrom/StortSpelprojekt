@@ -30,7 +30,7 @@ private:
 	Timer timer;
 	Vector3 moveDirection;
 public:
-	FriendlyNPC(const std::string& name, const std::string& file);
+	FriendlyNPC(const std::string& name, const std::string& file, int health = 0);
 
 	Quest* AddQuest(const std::string& name);
 

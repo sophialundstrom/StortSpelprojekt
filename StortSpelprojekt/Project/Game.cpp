@@ -438,7 +438,7 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero, false, 1);
+		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, { 120, 24, -700 }, false, 1);
 		camps[BarbarianCamp::Location::South] = camp;
 	}
 
@@ -590,23 +590,6 @@ void Game::CheckNearbyCollision()
 	player->SetClosestColliderToCam(closestCamCollision);
 
 	player->HandleCollidedObjects(collidedColliders);
-}
-
-void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatStyle combatStyle, const Vector3& targetPosition)
-{
-	auto NPC = std::make_shared<HostileNPC>(filename, player, combatStyle, targetPosition);
-	NPC->SetPosition(position);
-
-	auto collider = NPC->GetCollider();
-	collider->SetParent(NPC);
-	collider->Update();
-	collider->SetScale(2, 7, 2);
-	CR->Bind(collider);
-
-	MR->Bind(NPC);
-	SR->Bind(NPC);
-	hostileID++;
-	hostiles.emplace_back(NPC);
 }
 
 void Game::AddLoot(LOOTTYPE type, const Vector3& position)
@@ -1102,11 +1085,6 @@ APPSTATE Game::Run()
 
 	if (Time::Get() - lastClick > 0.5f)
 	{
-		if (Event::KeyIsPressed(VK_RETURN))
-		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::Burst, Vector3(70, 25, -590));
-			lastClick = Time::Get();
-		}
 		if (Event::KeyIsPressed('1'))
 		{
 			Graphics::Inst().ActivateWireframe();
