@@ -776,7 +776,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitInteractableRenderer();
 	RND.InitSkyBoxRenderer();
 
-
 	//CREATE OR LOAD QUESTS
 	QuestLog::CreateQuests();
 	//QuestLog::Load("Default");
@@ -1347,7 +1346,6 @@ void Game::UpdateQuadTree()
 
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
-	//std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{
