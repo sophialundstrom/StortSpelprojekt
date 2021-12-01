@@ -55,11 +55,19 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 			}
 			else
 			{
-				if (highestY < (drawableBounds.Center.y + (drawableBounds.Extents.y * 0.5f)))
-					highestY = (drawableBounds.Center.y + (drawableBounds.Extents.y * 0.5f));
+				float sizes[] = {
+					drawableBounds.Extents.x,
+					drawableBounds.Extents.y,
+					drawableBounds.Extents.z
+				};
+				for (int i = 0; i < 3; i++)
+				{
+					if (lowestY > drawableBounds.Center.y - sizes[i])
+						lowestY = (drawableBounds.Center.y - sizes[i]);
 
-				if (lowestY > (drawableBounds.Center.y - (drawableBounds.Extents.y * 0.5f)))
-					highestY = (drawableBounds.Center.y - (drawableBounds.Extents.y * 0.5f));
+					if (highestY < drawableBounds.Center.y + sizes[i])
+						highestY = (drawableBounds.Center.y + sizes[i]);
+				}
 
 				collectedDrawables.emplace(drawable->GetName(), drawable);
 			}
@@ -171,19 +179,34 @@ void QuadTree::OptimizeBounds()
 {
 	if (divided)
 	{
-		TopL->PrintTree();
-		TopR->PrintTree();
-		BotL->PrintTree();
-		BotR->PrintTree();
+		TopL->OptimizeBounds();
+		TopR->OptimizeBounds();
+		BotL->OptimizeBounds();
+		BotR->OptimizeBounds();
 	}
 	else
 	{
-		float extentY = highestY - lowestY;
-		float centerY = lowestY + (extentY / 2.f);
-		Vector3 newBounds = { quadTreeBoundsCollider.Extents.x, extentY, quadTreeBoundsCollider.Extents.z };
-		Vector3 newCenterPos = { quadTreeBoundsCollider.Center.x, centerY, quadTreeBoundsCollider.Center.z };
-		quadTreeBoundsCollider.Extents = newBounds;
-		quadTreeBoundsCollider.Center = newCenterPos;
+		std::cout << "---\n";
+		std::cout << "lowestY: " << lowestY << std::endl;
+		std::cout << "HighestY: " << highestY << std::endl;
+
+		if (lowestY == D3D11_FLOAT32_MAX)
+			lowestY = -0.5f;
+
+		if (highestY == -D3D11_FLOAT32_MAX)
+			highestY = 0.5f;
+
+		if (lowestY > highestY)
+		{
+			float temp = highestY;
+			highestY = lowestY;
+			lowestY = temp;
+		}
+
+		float newExtent = (highestY - lowestY)/2.f;
+		float newYcenter = lowestY + newExtent;
+		quadTreeBoundsCollider.Center.y = newYcenter;
+		quadTreeBoundsCollider.Extents.y = newExtent;
 	}
 }
 

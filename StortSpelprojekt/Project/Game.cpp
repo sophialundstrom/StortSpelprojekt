@@ -141,9 +141,9 @@ void Game::Initialize()
 	}
 	
 	//For Future work do not remove atm:
-	/*quadTree->GetAllDrawables(noCullingDrawables);
-	//quadTree->OptimizeBounds();
-	quadTree->PrintTree();*/
+	//quadTree->GetAllDrawables(noCullingDrawables);
+	//quadTree->PrintTree();
+	quadTree->OptimizeBounds();
 
 	//SAVE STATIONS
 	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
@@ -1030,7 +1030,6 @@ void Game::HandleDayNightCycle()
 	{
 		//NIGHT
 		lightColor = { 0, 0, 0.15, 1 };
-
 		if (timeSliderVal > 0)
 			timeSliderVal -= (Time::GetDelta() * fadeTimeMultiplier);
 		if (timeSliderVal < 0)
@@ -1040,7 +1039,6 @@ void Game::HandleDayNightCycle()
 	{
 		//DAY
 		lightColor = { 1, 1, 1, 1 };
-
 		if (timeSliderVal < 1)
 			timeSliderVal += (Time::GetDelta() * fadeTimeMultiplier);
 		if (timeSliderVal > 1)
@@ -1050,7 +1048,6 @@ void Game::HandleDayNightCycle()
 	lightColor = DayLightColor* timeSliderVal;
 	lightColor += NightLightColor * (1 - timeSliderVal);
 
-	std::cout << worldClockTime << "			" << timeSliderVal << std::endl;
 	SBR->PullDayNightSlider(timeSliderVal);
 	scene.SetDirectionalLight(500, lightColor, 4, 4);
 
@@ -1344,7 +1341,7 @@ void Game::UpdateQuadTree()
 
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
-	//std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
+	std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{
@@ -1367,7 +1364,7 @@ void Game::UpdateQuadTree()
 		}
 	}
 
-	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
+	std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
 	
 	//DebugVariant
 	/*
