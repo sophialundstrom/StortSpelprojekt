@@ -282,7 +282,8 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const
 	collider->Update();
 	CR->Bind(collider);
 
-	MR->Bind(NPC);
+	//MR->Bind(NPC);
+	AMR->Bind(NPC);
 	SR->Bind(NPC);
 
 	scene.AddDrawable(name, NPC);
@@ -319,8 +320,9 @@ void Game::AddFriendlyNPCs()
 {
 	//NPC1
 	{
-		auto NPC = AddFriendlyNPC("Gilbert", "Priest", { -134, 25, -594 });
-
+		auto NPC = AddFriendlyNPC("Farmer", "Farmer", { -77.253, 20, -588 });
+		NPC->SetScale(1.6);
+		NPC->SetRotation(0, PI_DIV2, 0);
 		{
 			auto quest = NPC->AddQuest("A Helping Hand.");
 			NPC->AddDialogue("A Helping Hand. >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
@@ -372,7 +374,9 @@ void Game::AddFriendlyNPCs()
 
 	//NPC2
 	{
-		auto NPC = AddFriendlyNPC("Gilbert2", "Priest", { -144, 25, -594 });
+		auto NPC = AddFriendlyNPC("BlackSmith", "BlackSmith", { -18, 18, -677 });
+		NPC->SetScale(1.6);
+		NPC->SetRotation(0, PI_DIV4, 0);
 
 		{
 			Quest* quest = NPC->AddQuest("FIRST QUEST FOR NPC2");
@@ -402,7 +406,9 @@ void Game::AddFriendlyNPCs()
 
 	//NPC3
 	{
-		auto NPC = AddFriendlyNPC("Gilbert3", "Priest", { -154, 25, -594 });
+		auto NPC = AddFriendlyNPC("VillageArcherNPC", "VillageArcherNPC", { 117.5, 18, -655 });
+		NPC->SetScale(0.4);
+		NPC->SetRotation(0, -PI_DIV2, 0);
 
 		NPC->AddQuest("FIRST QUEST FOR NPC3");
 		NPC->AddDialogue("FIRST QUEST FOR NPC3 >> INSERT DIALOGUE FOR HANDING OUT THE QUEST");
@@ -436,7 +442,7 @@ void Game::AddBarbarianCamps()
 
 	{ // SOUTHERN CAMP
 		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::South, 30.0f);
-		camp->AddBarbarian("BarbarianBow", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero, false, 1);
+		camp->AddBarbarian("BarbarianAnim", { 120, 24, -700 }, hostiles, player, CombatStyle::consistantDelay, Vector3::Zero, false, 1);
 		camps[BarbarianCamp::Location::South] = camp;
 	}
 
@@ -472,14 +478,14 @@ void Game::AddBarbarianCamps()
 void Game::SpawnInvasion()
 {
 	camps[BarbarianCamp::Location::Village]->Reset();
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -14, 48, 439 }, hostiles, player, CombatStyle::consistantDelay, { -16.5, 20, -567 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 7, 56, -398 }, hostiles, player, CombatStyle::consistantDelay, { 2, 20, -579 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 73, 50, -422 }, hostiles, player, CombatStyle::consistantDelay, { 57, 21, -574 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 293, 22, -628 }, hostiles, player, CombatStyle::consistantDelay, { 122, 20, -624 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 243, 24, -576 }, hostiles, player, CombatStyle::consistantDelay, { 71, 20, -626 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 207, 18, -736 }, hostiles, player, CombatStyle::consistantDelay, { 97, 18, -681 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 200, 10, -791 }, hostiles, player, CombatStyle::consistantDelay, { 47, 18, -675 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -314, 7, -644 }, hostiles, player, CombatStyle::consistantDelay, { -88, 18, -652 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { -14, 48, 439 }, hostiles, player, CombatStyle::consistantDelay, { -16.5, 20, -567 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 7, 56, -398 }, hostiles, player, CombatStyle::consistantDelay, { 2, 20, -579 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 73, 50, -422 }, hostiles, player, CombatStyle::consistantDelay, { 57, 21, -574 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 293, 22, -628 }, hostiles, player, CombatStyle::consistantDelay, { 122, 20, -624 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 243, 24, -576 }, hostiles, player, CombatStyle::consistantDelay, { 71, 20, -626 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 207, 18, -736 }, hostiles, player, CombatStyle::consistantDelay, { 97, 18, -681 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 200, 10, -791 }, hostiles, player, CombatStyle::consistantDelay, { 47, 18, -675 });
+	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { -314, 7, -644 }, hostiles, player, CombatStyle::consistantDelay, { -88, 18, -652 });
 	
 
 }
@@ -601,7 +607,8 @@ void Game::AddHostileNPC(const std::string& filename, Vector3 position, CombatSt
 	collider->SetScale(2, 7, 2);
 	CR->Bind(collider);
 
-	MR->Bind(NPC);
+	//MR->Bind(NPC);
+	AMR->Bind(NPC);
 	SR->Bind(NPC);
 	hostileID++;
 	hostiles.emplace_back(NPC);
@@ -1052,7 +1059,7 @@ void Game::HandleDayNightCycle()
 	lightColor = DayLightColor* timeSliderVal;
 	lightColor += NightLightColor * (1 - timeSliderVal);
 
-	std::cout << worldClockTime << "			" << timeSliderVal << std::endl;
+	//std::cout << worldClockTime << "			" << timeSliderVal << std::endl;
 	SBR->PullDayNightSlider(timeSliderVal);
 	scene.SetDirectionalLight(500, lightColor, 4, 4);
 
@@ -1107,7 +1114,7 @@ APPSTATE Game::Run()
 	{
 		if (Event::KeyIsPressed(VK_RETURN))
 		{
-			AddHostileNPC("BarbarianBow", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::Burst, Vector3(70, 25, -590));
+			AddHostileNPC("BarbarianAnim", { player->GetPosition() + Vector3(0,6,0) }, CombatStyle::Burst, Vector3(70, 25, -590));
 			lastClick = Time::Get();
 		}
 		if (Event::KeyIsPressed('1'))
@@ -1243,7 +1250,8 @@ void Game::CheckNearbyEnemies()
 					AddLoot(LOOTTYPE::ARROWS, hostiles[i]->GetPosition() + Vector3(0, -3, 0));
 					hostiles[i]->GetArrowHandler().ClearArrows();
 					CR->Unbind(hostiles[i]->GetCollider());
-					MR->Unbind(hostiles[i]);
+					AMR->Unbind(hostiles[i]);
+					//MR->Unbind(hostiles[i]);
 					SR->Unbind(hostiles[i]);
 					hostiles[i] = hostiles[hostiles.size() - 1 - numDead];
 					numDead++;

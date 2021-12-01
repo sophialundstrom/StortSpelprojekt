@@ -10,6 +10,7 @@ class NPC : public AnimatedModel
 protected:
 	int hp;
 	int maxHP;
+	bool played = true;
 	bool dead = false;
 	Vector3 spawnPosition;
 protected:
