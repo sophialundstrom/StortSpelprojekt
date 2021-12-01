@@ -29,7 +29,7 @@ void Slider::Draw()
 	sliderImage->Draw();
 	buttonImage->Draw();
 
-	button->Draw();
+	//button->Draw();
 }
 
 void Slider::Update()
