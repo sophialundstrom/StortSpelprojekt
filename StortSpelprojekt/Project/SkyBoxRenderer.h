@@ -17,10 +17,11 @@ class SkyBoxRenderer : public Renderer
 private:
 	const UINT stride = sizeof(Vector3);
 	const UINT offset = 0;
-	float playTime;
+	float dayNightSlider = 0;
 	void BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D*& texture, ID3D11ShaderResourceView*& textureView);
 public:
 	SkyBoxRenderer();
+	void PullDayNightSlider(float newValue);
 	virtual void Render() override;
 
 	//D3D11Resources

@@ -115,6 +115,11 @@ SkyBoxRenderer::SkyBoxRenderer()
 	Print("=======================================");
 }
 
+void SkyBoxRenderer::PullDayNightSlider(float newValue)
+{
+	dayNightSlider = newValue;
+}
+
 void SkyBoxRenderer::Render()
 {
 	//INPUT LAYOUT
@@ -126,14 +131,19 @@ void SkyBoxRenderer::Render()
 	//SAVE SHADER DATA INSTANCE
 	auto& shaderData = ShaderData::Inst();
 
-	playTime += Time::GetDelta();
+	
 
 
 	//BUFFER
 	UpdateBuffer(matricesBuf, shaderData.cameraMatrix);
 	BindBuffer(matricesBuf);
 	TransitionProperties tp;
-	tp.fadeSlider = (0.5f * sin(playTime) + 0.5f);
+
+	//playTime += Time::GetDelta();
+	//tp.fadeSlider = (0.5f * sin(playTime) + 0.5f);
+
+	tp.fadeSlider = dayNightSlider;
+
 	UpdateBuffer(fadeBuffer, tp);
 	BindBuffer(fadeBuffer, Shader::PS, 0U);
 
