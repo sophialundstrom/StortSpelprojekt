@@ -186,10 +186,6 @@ void QuadTree::OptimizeBounds()
 	}
 	else
 	{
-		std::cout << "---\n";
-		std::cout << "lowestY: " << lowestY << std::endl;
-		std::cout << "HighestY: " << highestY << std::endl;
-
 		if (lowestY == D3D11_FLOAT32_MAX)
 			lowestY = -0.5f;
 
@@ -203,10 +199,21 @@ void QuadTree::OptimizeBounds()
 			lowestY = temp;
 		}
 
-		float newExtent = (highestY - lowestY)/2.f;
-		float newYcenter = lowestY + newExtent;
-		quadTreeBoundsCollider.Center.y = newYcenter;
-		quadTreeBoundsCollider.Extents.y = newExtent;
+		lowestY -= 100;
+		highestY += 100;
+
+		std::cout << "---\n";
+		std::cout << "lowestY: " << lowestY << std::endl;
+		std::cout << "HighestY: " << highestY << std::endl;
+
+		
+
+		
+
+		Vector3 newExtent = { quadTreeBoundsCollider.Extents.x, (highestY - lowestY) / 2.f, quadTreeBoundsCollider.Extents.z };
+		Vector3 newYcenter = { quadTreeBoundsCollider.Center.x, lowestY + newExtent.y, quadTreeBoundsCollider.Center.z };
+		quadTreeBoundsCollider.Center = newYcenter;
+		quadTreeBoundsCollider.Extents = newExtent;
 	}
 }
 
