@@ -429,6 +429,7 @@ void Game::AddFriendlyNPCs()
 			NPC->AddDialogue("Amazing! Thanks for saving us.");
 			auto onActiveFunc = [this, quest]() mutable
 			{
+				SpawnInvasion();
 				quest->ResetObjectiveResources(player, camps, targets);
 			};
 			quest->AddOnActivateFunction(onActiveFunc);
@@ -531,14 +532,9 @@ void Game::AddBarbarianCamps()
 void Game::SpawnInvasion()
 {
 	camps[BarbarianCamp::Location::Village]->Reset();
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { -14, 48, 439 }, hostiles, player, CombatStyle::consistantDelay, { -16.5, 20, -567 });
 	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 7, 56, -398 }, hostiles, player, CombatStyle::consistantDelay, { 2, 20, -579 });
 	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 73, 50, -422 }, hostiles, player, CombatStyle::consistantDelay, { 57, 21, -574 });
 	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 293, 22, -628 }, hostiles, player, CombatStyle::consistantDelay, { 122, 20, -624 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 243, 24, -576 }, hostiles, player, CombatStyle::consistantDelay, { 71, 20, -626 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 207, 18, -736 }, hostiles, player, CombatStyle::consistantDelay, { 97, 18, -681 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 200, 10, -791 }, hostiles, player, CombatStyle::consistantDelay, { 47, 18, -675 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { -314, 7, -644 }, hostiles, player, CombatStyle::consistantDelay, { -88, 18, -652 });
 }
 
 void Game::CheckTargetCollision()
@@ -702,11 +698,11 @@ void Game::HandleHouseUpgrades()
 					if (building->GetBuildingName() == "ArcherTent")
 					{
 						if (building->GetCurrentState() == 1)
-							player->numArrows = 10;
+							player->numArrows = 15;
 						if (building->GetCurrentState() == 2)
-							player->numArrows = 20;
-						if (building->GetCurrentState() == 3)
 							player->numArrows = 30;
+						if (building->GetCurrentState() == 3)
+							player->numArrows = 50;
 					}
 				}
 
@@ -864,7 +860,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	overlay = ingameOverlay;
 
 	//PLAYER
-	UINT maxArrows = 5;
+	UINT maxArrows = 0;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
 	player->SetPosition(-75.0f, 20.0f, -725.0f);
 	auto collider = player->GetBounds();
@@ -886,7 +882,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[0]->SetScale(5.85);
 	buildings[0]->MoveCollider({ 10, 0, 2 });
 	buildings[0]->SetColliderRadius(20.0f);
-	buildings[0]->SetRequirements(20,20,40,40);
+	buildings[0]->SetRequirements(10,10,20,20);
 
 	std::string meshNamesTent[] = { "ArcherTent1", "ArcherTent2", "ArcherTent3" };
 	std::string materialNamesTent[] = { "ArcherTentTexture", "ArcherTentTexture", "ArcherTentTexture" };
@@ -894,7 +890,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[1]->SetRotation(0, -DirectX::XM_PIDIV4, 0);
 	buildings[1]->SetScale(1.566);
 	buildings[1]->SetColliderRadius(17.0f);
-	buildings[1]->SetRequirements(20, 20, 40, 40);
+	buildings[1]->SetRequirements(5, 5, 15, 15);
 
 	std::string meshNamesBS[] = { "BSLevel1", "BSLevel2", "BSLevel3" };
 	std::string materialNamesBS[] = { "albedoBlacksmith", "albedoBlacksmith", "albedoBlacksmith" };
@@ -903,7 +899,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[2]->SetScale(1.776);
 	buildings[2]->MoveCollider({ 13, 0, 0 });
 	buildings[2]->SetColliderRadius(20.0f);
-	buildings[2]->SetRequirements(20, 20, 40, 40);
+	buildings[2]->SetRequirements(10, 10, 20, 20);
 
 	scene.AddDrawable("FarmHouse", buildings[0]);
 	scene.AddDrawable("ArcherTent", buildings[1]);
@@ -923,6 +919,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//RANDOM ITEMS
 	GenerateRandomItems({ 58.0f, 20.3f, -574.5f }, 55, 100);
+	GenerateRandomItems({ 370, 75, -269 }, 100, 400);
 
 	//FRIENDLY NPCS
 	AddFriendlyNPCs();

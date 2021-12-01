@@ -498,8 +498,8 @@ void Player::HandleUpgrades(std::shared_ptr<Building> building)
 	{
 		if (state == 1)
 		{
-			maxArrows = 20;
-			numArrows = 20;
+			maxArrows = 15;
+			numArrows = 15;
 		}
 		if (state == 2)
 		{
@@ -507,7 +507,11 @@ void Player::HandleUpgrades(std::shared_ptr<Building> building)
 			numArrows = 30;
 		}
 		if (state == 3)
-			numArrows = 30;
+		{
+			numArrows = 50;
+			maxArrows = 50;
+		}
+			
 	}
 	if (buildingName == "Blacksmith")
 	{
