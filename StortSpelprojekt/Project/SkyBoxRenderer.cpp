@@ -115,6 +115,21 @@ SkyBoxRenderer::SkyBoxRenderer()
 	Print("=======================================");
 }
 
+SkyBoxRenderer::~SkyBoxRenderer()
+{
+	dayTexture->Release();
+	nightTexture->Release();
+	dayTextureView->Release();
+	nightTextureView->Release();
+	skyboxMesh->Release();
+	skyBoxIndices->Release();
+	matricesBuf->Release();
+	fadeBuffer->Release();
+	skyboxDepthStencil->Release();
+	skyBoxVertexShader->Release();
+	skyBoxPixelShader->Release();
+}
+
 void SkyBoxRenderer::PullDayNightSlider(float newValue)
 {
 	dayNightSlider = newValue;
