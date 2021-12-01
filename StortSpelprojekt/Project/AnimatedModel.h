@@ -50,14 +50,10 @@ public:
 			return;
 		}
 
-		UINT foundID = Resources::Inst().GetBufferIDFromName(scene->mMeshes[0]->mName.C_Str());
-		if (foundID == ID_INVALID)
-			mesh = AnimatedMesh(scene->mMeshes[0], skeleton, scene);
-		else
-			ApplyMesh(scene->mMeshes[0]->mName.C_Str());
+		mesh = AnimatedMesh(scene->mMeshes[0], skeleton, scene);
 
 		const std::string materialName = std::string(scene->mMeshes[0]->mName.C_Str()) + "_" + std::string(scene->mMaterials[0]->GetName().C_Str());
-		foundID = Resources::Inst().GetMaterialIDFromName(materialName);
+		UINT foundID = Resources::Inst().GetMaterialIDFromName(materialName);
 		if (foundID == ID_INVALID)
 			MaterialLoader::Load(scene->mMeshes[0]->mName.C_Str(), scene->mMaterials[0]);
 
