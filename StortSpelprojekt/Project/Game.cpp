@@ -893,9 +893,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 
 	//ITEMS
-	AddItem(Item::Type::Hammer, { -134, 32, -594 });
-	AddItem(Item::Type::Rope, { -113, 32, -582 });
-	AddItem(Item::Type::Axe, { -116, 30, -609 });
+	AddItem(Item::Type::Hammer, { -175.0f, 148.0f, 336.0f });
+	AddItem(Item::Type::Rope, { -100.0f, 12.3f, -778.0f });
+	AddItem(Item::Type::Axe, { -15.0f, 66.0f, -340.0f });
 
 	//RANDOM ITEMS
 	GenerateRandomItems({ 58.0f, 20.3f, -574.5f }, 55, 100);
