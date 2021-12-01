@@ -26,26 +26,26 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 
 	currentBiome = BIOME::DEFAULT;
 	previousBiome = currentBiome;
-
+	minCameraDistance = 0.5f;
 
 }
 
 void Player::CalcHeight(HeightMap* heightMap)
 {
-	const int lowX = (int)std::floor(position.x);
-	const int highX = (int)std::ceil(position.x);
-	const float Xdecimal = position.x - lowX;
+	int lowX = (int)std::floor(position.x);
+	int highX = (int)std::ceil(position.x);
+	float Xdecimal = position.x - lowX;
 
-	const int lowZ = (int)std::floor(position.z);
-	const int highZ = (int)std::ceil(position.z);
-	const float Zdecimal = position.z - lowZ;
+	int lowZ = (int)std::floor(position.z);
+	int highZ = (int)std::ceil(position.z);
+	float Zdecimal = position.z - lowZ;
 
-	const float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
-	const float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
-	const float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
-	const float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+	float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+	float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+	float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+	float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
 
-	heightMapGroundLevel = position.y = H1 + H2 + H3 + H4;
+	heightMapGroundLevel = position.y = (H1 + H2 + H3 + H4);
 }
 
 float Player::CalcHeightForCamera(HeightMap* heightMap)
@@ -129,6 +129,12 @@ void Player::Update(HeightMap* heightMap)
 		currentCameraDistance += Time::GetDelta() * 20.0f;
 		if (currentCameraDistance > maxCameraDistance)
 			currentCameraDistance = maxCameraDistance;
+
+		if (currentCameraDistance < minCameraDistance)
+		{
+			PrintS("LESS");
+			currentCameraDistance = minCameraDistance;
+		}
 	}
 	else
 	{
@@ -141,6 +147,12 @@ void Player::Update(HeightMap* heightMap)
 		currentCameraDistance -= Time::GetDelta() * 10.0f;
 		if (currentCameraDistance < defaultCameraDistance)
 			currentCameraDistance = defaultCameraDistance;
+
+		if (currentCameraDistance < minCameraDistance)
+		{
+			PrintS("LESS");
+			currentCameraDistance = minCameraDistance;
+		}
 	}
 
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
@@ -200,8 +212,12 @@ void Player::Update(HeightMap* heightMap)
 		newPlayerPos = Vector3(newPlayerPos.x, currentGroundLevel, newPlayerPos.z);
 	}
 
-	if (closestColliderToCam < currentCameraDistance)
+	if (closestColliderToCam < currentCameraDistance && closestColliderToCam > minCameraDistance)
+
+	{
 		currentCameraDistance = closestColliderToCam;
+		PrintS("FORCE");
+	}
 
 	position = newPlayerPos;
 
@@ -212,6 +228,11 @@ void Player::Update(HeightMap* heightMap)
 	CalcHeightForCamera(heightMap);
 
 	newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
+
+	if (Event::KeyIsPressed('8'))
+	{
+		PrintNumber(-currentCameraDistance, "CURR CAM DIST: ");
+	}
 
 	float newY = CalcHeightForCamera(heightMap);
 	
