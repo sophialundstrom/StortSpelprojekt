@@ -17,7 +17,7 @@ struct Stats
 {
 	UINT barbariansKilled = 0;
 	float movementSpeed = 10.0f;
-	float sprintSpeed = 90.0f;
+	float sprintSpeed = 110.0f;
 	UINT maxHealthPoints = 1;
 	UINT healthPoints = 1;
 	UINT level = 1;

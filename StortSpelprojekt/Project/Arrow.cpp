@@ -1,9 +1,10 @@
 #include "Arrow.h"
 
 Arrow::Arrow()
-	:Model("ArrowPivotFront", "ArrowPivotFront"), speed(150.f), lifeTime(10.f)
+	:Model("ArrowPivotFront", "ArrowPivotFront"), speed(170.f), lifeTime(10.f)
 {
 	rayCollider = std::make_shared<RayCollider>();
+	SetScale(1.5f);
 }
 
 void Arrow::Update()

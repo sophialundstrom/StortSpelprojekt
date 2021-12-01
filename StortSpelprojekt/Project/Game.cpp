@@ -69,7 +69,7 @@ void Game::Render()
 
 	AMR->Render();
 
-	SKR->Render();
+	//SKR->Render();
 	
 	SMR->Render();
 
@@ -829,7 +829,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 {
 	Audio::StartEngine();
 
-	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.05f, 100.0f, { 0.0f, 200.0f, -100.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
+	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.05f, 100.0f, { -75.0f, 40.0f, -999.0f }, { 0.f, 0.f, 1.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(500, { 1, 1, 1, 1 }, 4, 4);
 
 	//INIT WHICH RENDERERS WE WANT TO USE
@@ -866,8 +866,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//PLAYER
 	UINT maxArrows = 5;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
-	//player->SetPosition(-75, 20, -630);
-	player->SetPosition(567.0f, 402.0f, 434.0f);
+	player->SetPosition(-75.0f, 20.0f, -725.0f);
 	auto collider = player->GetBounds();
 	collider->SetParent(player);
 	CR->Bind(collider);
