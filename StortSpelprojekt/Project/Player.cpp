@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Building.h"
 
+
 Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera)
 {
@@ -82,6 +83,8 @@ void Player::Update(HeightMap* heightMap)
 {
 	lastPosition = position;
 
+	std::cout << "Player X: " << position.x << "        " << "Player Y: " << position.y << "        "  << "Player Z: " << position.z << "\n";
+
 	CalcHeight(heightMap);
 
 	if (!hasCollided)
@@ -115,7 +118,7 @@ void Player::Update(HeightMap* heightMap)
 		{
 			
 			Audio::StartEffect("Running.wav");
-			Audio::SetVolume("Running.wav", 1.f);
+			Audio::SetVolume("Running.wav", Audio::effectsVolume * 0.25f);
 			isSprinting = true;
 		}
 

@@ -5,14 +5,11 @@
 
 Canvas::Canvas()
 {
-	regularCursor = new Image("RegularCursor.png", { 0,0 });
-	hoveredCursor = new Image("HoveredCursor.png", { 0,0 });
-	currentCursor = regularCursor;
+	regularCursor = new Image("Cursor.png", { 0,0 });
 }
 
 Canvas::~Canvas()
 {
-	delete hoveredCursor;
 	delete regularCursor;
 
 	for (auto& [name, button] : buttons)
@@ -43,16 +40,13 @@ void Canvas::Update()
 
 	if (showCursor)
 	{
-		currentCursor = regularCursor;
-		hoveredCursor->SetPosition(mp.x, mp.y);
-		regularCursor->SetPosition(mp.x, mp.y);
+		regularCursor->SetPosition(mp.x + (regularCursor->GetWidth() /2), mp.y + (regularCursor->GetHeight()) /2);
 	}
 	
 	for (auto& [name, button] : buttons)
 	{
-		if (button->IsHovered(mp.x, mp.y))
+		if (button->IsHovered(mp.x , mp.y))
 		{
-			currentCursor = hoveredCursor;
 			button->OnHoverFunction();
 
 			if (Event::LeftIsClicked())
@@ -61,6 +55,10 @@ void Canvas::Update()
 			break;
 		}
 	}
+
+	for (auto& [name, slider] : sliders)
+		slider->Update();
+
 }
 
 void Canvas::DrawImages()
@@ -77,6 +75,13 @@ void Canvas::DrawTexts()
 			text->Draw();
 }
 
+void Canvas::DrawSliders()
+{
+	for (auto& [name, slider] : sliders)
+		if (slider->IsVisible())
+			slider->Draw();
+}
+
 void Canvas::DrawButtons()
 {
 	for (auto& [name, button] : buttons)
@@ -90,12 +95,14 @@ void Canvas::Render()
 
 	DrawImages();
 
-	DrawButtons();
+	//DrawButtons();
 
 	DrawTexts();
 
+	DrawSliders();
+
 	if (showCursor)
-		currentCursor->Draw();
+		regularCursor->Draw();
 
 	UI::Inst().EndFrame();
 }

@@ -44,6 +44,16 @@ private:
     bool updateFrustrum = true;
     int cullingProfile = 0;
 
+    //DayNightCycleConfig
+    float worldClockTime = 0;
+    float dayLength = 300;
+    float nightLength = 300;
+    float timeSliderVal = 0;
+    float fadeTimeMultiplier = 0.25;
+    Vector4 lightColor;
+    Vector4 DayLightColor = { 1, 1, 1, 1 };
+    Vector4 NightLightColor = { 0, 0, 0.15, 1 };
+
     bool hovering = false;
     bool done = false;
     //bool paused = false;
@@ -133,7 +143,7 @@ private:
     void HandleHouseUpgrades();
     bool CheckBuildRequirements(std::shared_ptr<Building> building);
     void HandleCamps();
-
+    void HandleDayNightCycle();
 
     void SetupAudio();
     void UpdateQuadTree();

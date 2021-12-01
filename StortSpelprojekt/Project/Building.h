@@ -24,14 +24,14 @@ public:
 	std::unique_ptr<BuildingEffect> effect;
 	Building() = default;
 
-	Building(std::string meshNames[], std::string materialNames[], const std::string &name, Vector3 position, Scene& scene)
+	Building(std::string meshNames[], std::string materialNames[], const std::string &name, Vector3 position, Scene& scene, const std::string &systemName)
 		:Model(meshNames[0], name)
 	{
 		buildingName = name;
 		collider = std::make_shared<BoundingSphere>();
 		this->position = position;
 		collider->SetPosition(position);
-		effect = std::make_unique<BuildingEffect>(Vector3{position.x, position.y + 5, position.z}, scene);
+		effect = std::make_unique<BuildingEffect>(Vector3{position.x, position.y + 5, position.z}, scene, systemName);
 
 		for (UINT i = 0; i < stages; ++i)
 		{
