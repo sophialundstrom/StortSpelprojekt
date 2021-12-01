@@ -3,7 +3,7 @@
 
 
 Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
-	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera)
+	:AnimatedModel("VillageArcherNPC", "Player"), sceneCamera(camera)
 {
 	isRightPressed = false;
 	isLeftPressed = false;
