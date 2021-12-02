@@ -18,7 +18,7 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
 	frustum->SetPosition(0, 3, 0);
 
-	Load(file);
+	//Load(file);
 
 	PlayAnimation("Idle");
 

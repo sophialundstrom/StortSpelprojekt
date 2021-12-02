@@ -48,7 +48,7 @@ public:
 	const std::string ps_path = "../x64/Debug/skyBoxPixelShader.cso";
 #else
 	const std::string vs_path = "../x64/Release/skyBoxVertexShader.cso";
-	const std::string ps_path = "../x64/Debug/skyBoxPixelShader.cso";
+	const std::string ps_path = "../x64/Release/skyBoxPixelShader.cso";
 #endif
 	const std::string skyboxTexturePath = "Skybox/";
 

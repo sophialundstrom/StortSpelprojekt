@@ -139,6 +139,7 @@ void QuestLog::ShutDown()
 	for (auto quest : quests)
 		delete quest;
 	quests.clear();
+	activeQuests.clear();
 }
 
 void QuestLog::Activate(Quest* quest)

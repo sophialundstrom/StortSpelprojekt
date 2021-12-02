@@ -212,7 +212,7 @@ MainMenu::~MainMenu()
 {
 	for (auto& [name, canvas] : canvases)
 		delete canvas;
-
+	Resources::Inst().Clear();
 }
 
 void MainMenu::Initialize()

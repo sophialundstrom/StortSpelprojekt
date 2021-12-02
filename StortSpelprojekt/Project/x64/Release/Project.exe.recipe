@@ -2,132 +2,132 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\Project.exe</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\Project.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\AnimatedModelVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\AnimatedModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\DeferredColliderPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredColliderPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\DeferredTerrainPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredTerrainPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\ColliderPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ColliderPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\ColliderVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ColliderVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\DeferredPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\DeferredVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\ForwardModelPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardModelPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\ForwardParticlePixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardParticlePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\DeferredModelPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredModelPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\ForwardTerrainPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ForwardTerrainPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\IDPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\IDPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\IDVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\IDVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\InteractablePixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\InteractablePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\InteractableVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\InteractableVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\LoadingPS.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\LoadingPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\ModelVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\ParticleGeometryShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ParticleGeometryShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\DeferredParticlePixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\DeferredParticlePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\ParticleVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ParticleVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\ShadowVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\ShadowVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\SkeletonPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\SkeletonPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\SkeletonVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\SkeletonVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\skyBoxPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\skyBoxPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\skyBoxVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\skyBoxVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\TerrainDomainShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\TerrainDomainShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\TerrainGeometryShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\TerrainGeometryShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\TerrainHullShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\TerrainHullShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\TerrainVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\TerrainVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\UnlitAnimatedModelVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitAnimatedModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\UnlitForwardModelPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitForwardModelPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\UnlitModelVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\UnlitModelVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\LoadingVS.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\LoadingVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\VolumeIDVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\VolumeIDVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\VolumePixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\VolumePixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\VolumeVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\VolumeVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\WaterDomainShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\WaterDomainShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\WaterGeometryShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\WaterGeometryShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\WaterHullShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\WaterHullShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\WaterPixelShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\WaterPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>D:\Repository\StortSpelprojekt\x64\Release\WaterVertexShader.cso</FullPath>
+      <FullPath>C:\Users\sophi\Desktop\Git\StortSpelprojekt\StortSpelprojekt\x64\Release\WaterVertexShader.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
