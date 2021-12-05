@@ -18,7 +18,7 @@ void Win::HoveringMainMenu()
 
 void Win::Form()
 {
-	ShellExecute(0, 0, L"https://docs.google.com/forms/d/1wSGU7CwBNTTCu50nsunQX2Q9DC06SEi5SAqbgJstgb0/viewform?edit_requested=true", 0, 0, SW_SHOW);
+	ShellExecute(0, 0, L"https://forms.gle/Bf36fwdMFhnNfk6D8", 0, 0, SW_SHOW);
 }
 
 
@@ -92,12 +92,11 @@ Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
 
 	scene.SetCamera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 10000.0f, 0.25f, 15.0f, { 38.055f, 20.367f, -594.542f }, { 0.f, 1.f, 0.f }, { 0, 1, 0 });
 	scene.SetDirectionalLight(500, { 1.0f, 1.0f, 1.0f, 1 }, 4, 4);
-	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 60, { 0.2f, 0.2f, 0.2f }, { 255.0f / 255.0f, 55.0f / 255.0f, 42.0f / 255.0f, 1.0f });
 
 	//186 95 42 
-	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
-	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ 38.055f, 20.367f, -594.542f });
-	PR->Bind(menuFireSystem);
+	auto campFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
+	scene.AddParticleSystem("CampfireSystem", campFireSystem, Vector3{ 38.0f, 20.3f, -574.5f });
+	PR->Bind(campFireSystem);
 
 	(void)Run();
 }
@@ -136,7 +135,7 @@ void Win::Initialize()
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
-	gameLoader.Load("Default", scene.GetDrawables());
+	gameLoader.Load("Win", scene.GetDrawables());
 
 	for (auto& [name, drawable] : scene.GetDrawables())
 	{

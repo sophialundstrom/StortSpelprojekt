@@ -39,14 +39,19 @@ BarbarianCamp::BarbarianCamp(const Vector3& position, Location location,  float 
     :location(location), radius(radius), active(active), numBarbarians(0) {}
 
 void BarbarianCamp::AddBarbarian(const std::string& file, const Vector3& position, std::vector<std::shared_ptr<HostileNPC>>& hostiles, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, std::shared_ptr<Pathfinding> pathing, bool dynamic)
+void BarbarianCamp::AddBarbarian(const std::string& file, const Vector3& position, std::vector<std::shared_ptr<HostileNPC>>& hostiles, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, bool dynamic, int damage, int health, bool moving)
 {
+    auto barbarian = std::make_shared<HostileNPC>(file, player, combatStyle, targetPosition, health, moving);
+    barbarian->SetPosition(position);
+    barbarian->SetDamage(damage);
     auto barbarian = std::make_shared<HostileNPC>(file, position, player, combatStyle, targetPosition, pathing);
    // barbarian->SetPosition(position);
 
     barbarians.emplace_back(barbarian);
     hostiles.emplace_back(barbarian);
 
-    MR->Bind(barbarian);
+    //MR->Bind(barbarian);
+    AMR->Bind(barbarian);
     SR->Bind(barbarian);
 
     auto collider = barbarian->GetCollider();

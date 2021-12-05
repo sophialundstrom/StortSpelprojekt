@@ -14,7 +14,7 @@ public:
 
 	std::string GetNPCName() { return NPC; }
 	std::string GetString()	 { return string; }
-
+	void Update(std::shared_ptr<FriendlyNPC> NPC);
 	// Inherited via Objective
 	virtual std::string Info() override;
 	virtual void WriteToFile(File& file) override;

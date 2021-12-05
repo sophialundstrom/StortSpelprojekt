@@ -45,13 +45,16 @@ public:
 		//SWAP TO MAINMENU TO NOT SKIP IT
 		Window::DeactivateCursor();
 
-		state = new Game(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
+		Audio::Initialize(false);
+
+		state = new MainMenu(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 	}
 
 	~Application()
 	{
 		ui.reset();
 		Window::ShutDown();
+		Audio::StopEngine();
 	}
 
 	int Run()

@@ -3,6 +3,11 @@
 TalkObjective::TalkObjective(const std::string& NPC, const std::string& string)
 	:Objective(Type::TALK, false), NPC(NPC), string(string) {}
 
+void TalkObjective::Update(std::shared_ptr<FriendlyNPC> NPC)
+{
+	NPC->ApplyDialogueOverride();
+}
+
 std::string TalkObjective::Info()
 {
 	return "Talk To " + NPC + ".";

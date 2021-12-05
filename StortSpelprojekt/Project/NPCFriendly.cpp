@@ -2,8 +2,8 @@
 
 #include "QuestLog.h"
 
-FriendlyNPC::FriendlyNPC(const std::string& name, const std::string& file)
-	:NPC(file), currentDialogueState(DialogueState::HANDOUT)
+FriendlyNPC::FriendlyNPC(const std::string& name, const std::string& file, int health)
+	:NPC(file, health), currentDialogueState(DialogueState::HANDOUT)
 {
 	SetName(name);
 	questMarker = std::make_shared<QuestMarker>();
@@ -72,7 +72,7 @@ void FriendlyNPC::Update()
 
 	if (dialogueOverride)
 	{
-		questMarker->SetPosition(0, 9.0f, 0);
+		questMarker->SetPosition(position.x, position.y + 12.0f, position.z);
 		questMarker->SetAsObjective();
 		return;
 	}
@@ -86,7 +86,7 @@ void FriendlyNPC::Update()
 			return;
 		}
 
-		questMarker->SetPosition(0, 9.0f, 0);
+		questMarker->SetPosition(position.x, position.y + 12.0f,position.z);
 
 		if (currentQuest->Unlocked() && currentQuest->IsActive() && !currentQuest->IsCompleted())
 		{

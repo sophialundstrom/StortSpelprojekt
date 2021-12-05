@@ -1,6 +1,8 @@
 #include "NPCHostile.h"
 #include "ConcreteStates.h"
 
+HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, int health, bool moving)
+	:NPC(file, health)
 HostileNPC::HostileNPC(const std::string& file, Vector3 startPos, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, std::shared_ptr<Pathfinding> pathing)
 	:NPC(file)
 {
@@ -11,6 +13,11 @@ HostileNPC::HostileNPC(const std::string& file, Vector3 startPos, std::shared_pt
     position = startPos;
     //this->combatStyle = combatStyle;
     //SwapCombatStyle(combatStyle);
+    isMoving = moving;
+ 
+    currentState = &MovingState::GetInstance();
+    this->targetPosition = targetPosition;
+    this->viewDistance = 100.f;
     currentState = &IdlingState::GetInstance();
     SetState(MovingState::GetInstance());
     //SetState(IdlingState::)
@@ -78,8 +85,8 @@ void HostileNPC::Update()
 
 void HostileNPC::Update(const std::shared_ptr<Player> player, HeightMap* heightMap)
 {
-
-    CalcHeight(heightMap);
+    if(isMoving)
+        CalcHeight(heightMap);
     distanceToPlayer = (player->GetPosition() - position).Length();
     currentState->Update(*this);
     arrowHandler.Update();
@@ -111,7 +118,7 @@ void HostileNPC::CheckPlayerCollision(std::shared_ptr<Player> player)
 
         if (arrowHandler.CheckCollision(arrow, player->GetBounds(), player->GetPosition(), true))
         {
-            player->TakeDamage();
+            player->TakeDamage(damage);
         }
     }
 }

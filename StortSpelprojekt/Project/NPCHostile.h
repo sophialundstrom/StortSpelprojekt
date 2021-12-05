@@ -14,8 +14,11 @@ private:
 	std::shared_ptr<Pathfinding> pathing;
 	std::shared_ptr<Player> player;
 	ArrowHandler arrowHandler;
+	int damage;
 	void CalcHeight(HeightMap* heightMap);
 public:
+	bool isMoving;
+	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, int health, bool moving);
 	HostileNPC(const std::string& file, Vector3 startPos, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, std::shared_ptr<Pathfinding> pathing);
 ;
 	virtual void Update() override;
@@ -35,6 +38,8 @@ public:
 	void SetPlayerPtr(std::shared_ptr<Player> p)	{ this->player = p; }
 	void SetState(NPCState& newState);// { currentState = &newState; }
 
+	void SetDamage(int x)							{ damage = x; }
+
 	float lastShot = 0.f;
 	int pathIndex = -1;
 	Quaternion originalRotation;
@@ -45,5 +50,6 @@ public:
 	NPCState* currentState;
 	float viewDistance;
 	float distanceToPlayer;
+
                                                                                                                                                                                                                                                              
 };

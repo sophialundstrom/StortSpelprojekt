@@ -1,23 +1,24 @@
 #include "NPCBase.h"
 
 
-NPC::NPC(const std::string& file)
-	:Model(file, file)
+NPC::NPC(const std::string& file, int health)
+	:AnimatedModel(file, "")
 {
 	// call bind here cause i think it binds the bounding volume to a useful place
 	boundingBox = std::make_shared<BoundingBox>();
-	hp = maxHP = 3;
+	hp = maxHP = health;
+	PlayAnimation("Idle");
 }
 
-NPC::NPC(const Model& model)
-	: Model(model)
+NPC::NPC(const AnimatedModel& model)
+	:AnimatedModel("","")
 {
 	boundingBox = std::make_shared<BoundingBox>();
 }
 
 void NPC::Update()
 {
-	Model::Update();
+	AnimatedModel::Update();
 	boundingBox->Update();
 }
 
@@ -54,10 +55,12 @@ void NPC::Die()
 	//position = { 0,-100,0 };
 }
 
-void NPC::TakeDamage()
+void NPC::TakeDamage(int x)
 {
 	//std::cout << "DamageTaken\n";
-	hp--;
+	hp -= x;
+	Print("Damage ");
+	Print(x);
 	if (hp <= 0)
 		Die();
 }

@@ -123,6 +123,9 @@
     <ClCompile Include="Game.cpp">
       <Filter>UsefulShit</Filter>
     </ClCompile>
+    <ClCompile Include="PlaneWithNormals.cpp" />
+    <ClCompile Include="AnimationStateMachine.cpp" />
+    <ClCompile Include="Slider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationStateMachine.h" />
@@ -259,6 +262,9 @@
     <ClInclude Include="Game.h">
       <Filter>UsefulShit</Filter>
     </ClInclude>
+    <ClInclude Include="PlaneWithNormals.h" />
+    <ClInclude Include="AnimationStateMachine.h" />
+    <ClInclude Include="Slider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LightCalculations.hlsli" />

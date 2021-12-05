@@ -63,7 +63,7 @@ void ShootingState::Update(HostileNPC& hostile)
     } 
 
     SwapCombatStyle(CombatStyle::consistantDelay);
-    Vector3 aimDir = hostile.GetPlayer()->GetPosition() + Vector3(0.f, 4.5f, 0.f) - hostile.GetPosition();
+    Vector3 aimDir = hostile.GetPlayer()->GetPosition() - hostile.GetPosition();
 
     if (aimDir.Length() <= enemyShootDetectionRadius)
     {
@@ -105,7 +105,7 @@ void ShootingState::Update(HostileNPC& hostile)
 
         if (Time::Get() - hostile.lastShot > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
         {
-            hostile.GetArrowHandler().AddArrow(aimDir, hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            hostile.GetArrowHandler().AddArrow(aimDir, hostile.GetPosition() + Vector3(0,6,0), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
             Audio::StartEffect("Fire.wav");
             PrintS("SHOT");
             hostile.lastShot = Time::Get();
@@ -226,6 +226,15 @@ void MovingState::Update(HostileNPC& hostile)
     //movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
 
     hostile.SetRotation({ 0, movementYRadiant, 0 });
+
+    
+
+    Vector3 direction = hostile.targetPosition - hostile.GetPosition();
+    direction.Normalize();
+
+    Vector3 newPosition = hostile.GetPosition() + direction * (hostile.speed * Time::GetDelta());
+    if(hostile.isMoving)
+        newPosition.y = hostile.heightMapGroundLevel;
 
     if (Event::KeyIsPressed('7'))
     {

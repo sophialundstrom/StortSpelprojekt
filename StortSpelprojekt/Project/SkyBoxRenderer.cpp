@@ -2,7 +2,7 @@
 #include "BoundingVolumes.h"
 #include "stb_image.h"
 
-void SkyBoxRenderer::BuildCubeMap()
+void SkyBoxRenderer::BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D*& texture, ID3D11ShaderResourceView*& textureView)
 {
 	HRESULT hr;
 
@@ -11,12 +11,12 @@ void SkyBoxRenderer::BuildCubeMap()
 	image = new unsigned char*[6];
 
 	std::string textures[] = { 
-		{skyboxTexturePath + "right.png"},
-		{skyboxTexturePath + "left.png"},
-		{skyboxTexturePath + "up.png"},
-		{skyboxTexturePath + "down.png"},
-		{skyboxTexturePath + "front.png"},
-		{skyboxTexturePath + "back.png"},
+		{skyboxTexturePath + skyboxFolderName + "/right.png"},
+		{skyboxTexturePath + skyboxFolderName + "/left.png"},
+		{skyboxTexturePath + skyboxFolderName + "/up.png"},
+		{skyboxTexturePath + skyboxFolderName + "/down.png"},
+		{skyboxTexturePath + skyboxFolderName + "/front.png"},
+		{skyboxTexturePath + skyboxFolderName + "/back.png"},
 	};
 
 	for (int i = 0; i < 6; i++)
@@ -51,7 +51,7 @@ void SkyBoxRenderer::BuildCubeMap()
 
 
 	//Create texture resource
-	hr = Graphics::Inst().GetDevice().CreateTexture2D(&textureDesc, data, &pTexture);
+	hr = Graphics::Inst().GetDevice().CreateTexture2D(&textureDesc, data, &texture);
 	if (FAILED(hr))
 		std::cout << "FAILED TO CREATE TEXTURE2D\n";
 
@@ -61,7 +61,7 @@ void SkyBoxRenderer::BuildCubeMap()
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	srvDesc.Texture2D.MipLevels = 1;
-	hr = Graphics::Inst().GetDevice().CreateShaderResourceView(pTexture, &srvDesc, &pTextureView);
+	hr = Graphics::Inst().GetDevice().CreateShaderResourceView(texture, &srvDesc, &textureView);
 
 	if (FAILED(hr))
 		std::cout << "FAILED TO CREATE SRV\n";
@@ -69,7 +69,8 @@ void SkyBoxRenderer::BuildCubeMap()
 
 SkyBoxRenderer::SkyBoxRenderer()
 {
-	BuildCubeMap();
+	BuildCubeMap("DayTime", dayTexture, dayTextureView);
+	BuildCubeMap("NightTIme", nightTexture, nightTextureView);
 
 	std::string byteCode;
 	//Shaders
@@ -85,6 +86,7 @@ SkyBoxRenderer::SkyBoxRenderer()
 	CreateVertexBuffer(skyboxMesh, stride, BoxVolumeData::VERTICES * stride, BoxVolumeData::vertices);
 
 	CreateBuffer(matricesBuf, sizeof(Matrix));
+	CreateBuffer(fadeBuffer, sizeof(TransitionProperties));
 
 	//INPUT LAYOUT
 	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
@@ -113,6 +115,26 @@ SkyBoxRenderer::SkyBoxRenderer()
 	Print("=======================================");
 }
 
+SkyBoxRenderer::~SkyBoxRenderer()
+{
+	dayTexture->Release();
+	nightTexture->Release();
+	dayTextureView->Release();
+	nightTextureView->Release();
+	skyboxMesh->Release();
+	skyBoxIndices->Release();
+	matricesBuf->Release();
+	fadeBuffer->Release();
+	skyboxDepthStencil->Release();
+	skyBoxVertexShader->Release();
+	skyBoxPixelShader->Release();
+}
+
+void SkyBoxRenderer::PullDayNightSlider(float newValue)
+{
+	dayNightSlider = newValue;
+}
+
 void SkyBoxRenderer::Render()
 {
 	//INPUT LAYOUT
@@ -124,23 +146,31 @@ void SkyBoxRenderer::Render()
 	//SAVE SHADER DATA INSTANCE
 	auto& shaderData = ShaderData::Inst();
 
-	//BUFFER
+	
 
-	//PorjectionMatrixClippar bort geometri wtf!?
+
+	//BUFFER
 	UpdateBuffer(matricesBuf, shaderData.cameraMatrix);
 	BindBuffer(matricesBuf);
+	TransitionProperties tp;
+
+	//playTime += Time::GetDelta();
+	//tp.fadeSlider = (0.5f * sin(playTime) + 0.5f);
+
+	tp.fadeSlider = dayNightSlider;
+
+	UpdateBuffer(fadeBuffer, tp);
+	BindBuffer(fadeBuffer, Shader::PS, 0U);
 
 	//SHADERS
 	BindShaders(skyBoxVertexShader, nullptr, nullptr, nullptr, skyBoxPixelShader);
 
 	Graphics::Inst().GetContext().OMSetDepthStencilState(skyboxDepthStencil, 1);
-	
-	Graphics::Inst().GetContext().PSSetShaderResources(0, 1, &pTextureView);
-	
+	Graphics::Inst().GetContext().PSSetShaderResources(0, 1, &dayTextureView);
+	Graphics::Inst().GetContext().PSSetShaderResources(1, 1, &nightTextureView);
 	Graphics::Inst().GetContext().IASetIndexBuffer(skyBoxIndices, DXGI_FORMAT_R32_UINT, 0u);
 	Graphics::Inst().GetContext().IASetVertexBuffers(0, 1, &skyboxMesh, &stride, &offset);
 	Graphics::Inst().GetContext().DrawIndexed(BoxVolumeData::INDICES, 0, 0);
-	
 	Graphics::Inst().GetContext().OMSetDepthStencilState(nullptr, 0);
 }
 

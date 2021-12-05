@@ -7,14 +7,14 @@ void AnimationStateMachine::CalculateOverrideAnimation(const aiScene* scene, Ske
 
 	if (overrideAnimation.transition < 1.0f && overrideAnimation.transitionIn)
 	{
-		overrideAnimation.transition += Time::GetDelta() * 0.5f;
+		overrideAnimation.transition += Time::GetDelta() * 3.0f;
 		if (overrideAnimation.transition > 1.0f)
 			overrideAnimation.transition = 1.0f;
 	}
 
 	else if (overrideAnimation.transition > 0.0f && overrideAnimation.transitionOut)
 	{
-		overrideAnimation.transition -= Time::GetDelta() * 0.5f;
+		overrideAnimation.transition -= Time::GetDelta() * 3.0f;
 		if (overrideAnimation.transition < 0.0f)
 			overrideAnimation.transition = 0.0f;
 	}
@@ -28,12 +28,8 @@ void AnimationStateMachine::CalculateOverrideAnimation(const aiScene* scene, Ske
 
 void AnimationStateMachine::CalculateCoreAnimation(const aiScene* scene, Skeleton& skeleton, std::map<UINT, Matrix>& matrices)
 {
-
 	if (queuedAnimations.size() == 1)
 	{
-		Print("================SINGLE ANIMATION=================");
-		Print("PLAYING ANIMATION: " + queuedAnimations.front().animation->name);
-		Print(1.0f, "WEIGHT");
 		animator->Update(queuedAnimations.front().animation, scene, skeleton, queuedAnimations.front().startBone, 1.0f, matrices);
 		return;
 	}
@@ -41,20 +37,12 @@ void AnimationStateMachine::CalculateCoreAnimation(const aiScene* scene, Skeleto
 	auto& firstClip = queuedAnimations.front();
 	auto& secondClip = queuedAnimations[1];
 
-	firstClip.transition -= Time::GetDelta() * 2.0f;
+	firstClip.transition -= Time::GetDelta() * 3.0f;
 
 	if (firstClip.transition < 0.0f)
 		firstClip.transition = 0.0f;
 
 	secondClip.transition = 1.0f - firstClip.transition;
-	
-	Print("================MULTIPLE ANIMATIONS=================");
-
-	Print("PLAYING ANIMATION: " + firstClip.animation->name);
-	Print(firstClip.transition, "WEIGHT");
-
-	Print("PLAYING ANIMATION: " + secondClip.animation->name);
-	Print(secondClip.transition, "WEIGHT");
 
 	animator->Update(firstClip.animation, scene, skeleton, firstClip.startBone, firstClip.transition, matrices);
 	animator->Update(secondClip.animation, scene, skeleton, secondClip.startBone, secondClip.transition, matrices);
@@ -86,7 +74,7 @@ AnimationStateMachine::~AnimationStateMachine()
 	bufferSRV->Release();
 }
 
-void AnimationStateMachine::Update(Skeleton& skeleton, const aiScene* scene)
+void AnimationStateMachine::Update(Skeleton& skeleton, const aiScene* scene, Camera* camera, const Quaternion& modelRotation, const std::string& rotationJoint)
 {
 	if (queuedAnimations.empty())
 		return;
@@ -104,6 +92,62 @@ void AnimationStateMachine::Update(Skeleton& skeleton, const aiScene* scene)
 	
 	for (auto& [joint, matrix] : matrices)
 	{
+		if (joint == skeleton.GetJointID(rotationJoint) && camera)
+		{
+			auto pitch = camera->GetPitch();
+
+			auto maxMin = 10.0f * PI / 180.0f;
+
+			if (cos(pitch) < 1.0f / sqrt(2.0f))
+				pitch = acos(1.0f / sqrt(2.0f));
+
+			if (pitch > maxMin)
+				pitch = maxMin;
+
+			Quaternion q = modelRotation;
+
+			auto rotYaw = atan2(2 * q.y * q.w - 2 * q.x * q.z, 1 - 2 * q.y * q.y - 2 * q.z * q.z);
+			rotYaw = (rotYaw < 0) ? (rotYaw + PI * 2) : rotYaw;
+
+			auto yaw = 0.0f;// camera->GetJaw();
+
+			//if (rotYaw > yaw)
+			//{
+			//	Print("PLAYER > CAMERA");
+			//	if (rotYaw - yaw > PI_DIV4)
+			//	{
+			//		Print("SET YAW TO +");
+			//		yaw = PI_DIV4;
+			//	}
+			//		
+			//}
+
+			//else
+			//{
+			//	Print("PLAYER < CAMERA");
+
+			//	if (yaw -  rotYaw > PI_DIV4)
+			//	{
+			//		Print("SET YAW TO -");
+			//		yaw = PI_DIV4;
+			//	}
+			//}
+
+			////if (abs(rotYaw - yaw) > PI_DIV4)
+			////{
+			////	Print("TOO FAR");
+
+			////	if (yaw > rotYaw)
+			////		yaw = -PI_DIV4;
+			////	else
+			////		yaw = PI_DIV4;
+			////}
+
+			//yaw *= 0.5f;
+
+			skeleton.PostTransformNodes(scene->mRootNode->FindNode(rotationJoint.c_str()), Matrix::CreateFromYawPitchRoll(yaw, pitch, 0.0f), matrices);
+		}
+		
 		skeleton.transforms.emplace_back(matrix);
 		finalTransforms.emplace_back((skeleton.joints[joint].offsetMatrix * matrix).Transpose());
 	}
@@ -144,7 +188,7 @@ void AnimationStateMachine::PlayAnimation(const std::string& name)
 		animation->active = true;
 		animation->repeat = true;
 
-		Print("PUSHED ANIMATION " + name);
+		//Print("PUSHED ANIMATION " + name);
 
 		queuedAnimations.push_back(clip);
 	}
@@ -156,11 +200,11 @@ void AnimationStateMachine::PlayAnimation(const std::string& name)
 	}
 }
 
-void AnimationStateMachine::PlayOverrideAnimation(const std::string& name, const std::string& startBone, bool hold)
+void AnimationStateMachine::PlayOverrideAnimation(const std::string& name, const std::string& startBone, bool hold, bool fullImpact)
 {
 	auto animation = animator->animations[name];
 
-	if (!animation || animation == overrideAnimation.animation)
+	if ((!animation || animation == overrideAnimation.animation) && !fullImpact)
 		return;
 
 	animation->active = true;
@@ -184,4 +228,7 @@ void AnimationStateMachine::PlayOverrideAnimation(const std::string& name, const
 		overrideAnimation.transition = 0.0f;
 		overrideAnimation.transitionIn = true;
 	}
+	
+	if (fullImpact)
+		overrideAnimation.transition = 1.0f;
 }
