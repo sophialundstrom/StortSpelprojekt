@@ -38,5 +38,5 @@ public:
 	std::vector<Vector3>& GetPathRef();
 
 	// fetches node within (default 32 units) of given position, otherwise return nullptr
-	Node* NodeFromWorldPoint(Vector3 worldPoint, int cutoff = 32);
+	Node* NodeFromWorldPoint(Vector3 worldPoint, int cutoff = 1000);
 };

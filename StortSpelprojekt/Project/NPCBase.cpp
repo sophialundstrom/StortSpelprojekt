@@ -7,7 +7,7 @@ NPC::NPC(const std::string& file, int health)
 	// call bind here cause i think it binds the bounding volume to a useful place
 	boundingBox = std::make_shared<BoundingBox>();
 	hp = maxHP = health;
-	PlayAnimation("Idle");
+	//PlayAnimation("Idle");
 }
 
 NPC::NPC(const AnimatedModel& model)

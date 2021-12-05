@@ -229,12 +229,12 @@ void MovingState::Update(HostileNPC& hostile)
 
     
 
-    Vector3 direction = hostile.targetPosition - hostile.GetPosition();
-    direction.Normalize();
+    //Vector3 direction = hostile.targetPosition - hostile.GetPosition();
+    //direction.Normalize();
 
-    Vector3 newPosition = hostile.GetPosition() + direction * (hostile.speed * Time::GetDelta());
-    if(hostile.isMoving)
-        newPosition.y = hostile.heightMapGroundLevel;
+    //Vector3 newPosition = hostile.GetPosition() + direction * (hostile.speed * Time::GetDelta());
+    //if(hostile.isMoving)
+    //    newPosition.y = hostile.heightMapGroundLevel;
 
     if (Event::KeyIsPressed('7'))
     {
