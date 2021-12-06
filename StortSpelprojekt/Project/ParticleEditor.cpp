@@ -1,6 +1,7 @@
 #include "ParticleEditor.h"
 #include <fstream>
 #include "Renderers.h"
+#include "FBXLoader.h"
 
 void ParticleEditor::Save(const std::string& file)
 {
@@ -86,6 +87,28 @@ void ParticleEditor::Load(const std::string& file)
 
 }
 
+void ParticleEditor::LoadModel(const std::string& file)
+{
+	
+	std::filesystem::path path = std::filesystem::path(file);
+	if (file == "" || path.extension() != ".fbx")
+		return;
+
+	if (model)
+	{
+		MR->Unbind(model);
+		scene.DeleteDrawable(model->GetName());
+		model.reset();
+	}
+
+	std::string fileName = path.stem().string();
+	fileName = scene.AddModel(fileName, path.string());
+	model = scene.Get<Model>(fileName);
+	model->SetPosition({ 0.0f, -1.5f, 0.0f });
+	model->Update();
+	MR->Bind(model);
+}
+
 void ParticleEditor::Update()
 {
 	if (GetAsyncKeyState('W'))
@@ -147,10 +170,13 @@ void ParticleEditor::Render()
 {
 	BeginViewportFrame();
 
-	CR->Render();
-	SBR->Render();
-	
+	ShaderData::Inst().BindFrameConstants();
+
 	MR->Render();
+
+	CR->Render();
+
+	SBR->Render();
 
 	PR->Render();
 
@@ -160,6 +186,7 @@ void ParticleEditor::Render()
 	ImGui::PopStyleVar();
 
 	EndFrame();
+	Resources::Inst().Reset();
 }
 
 ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
@@ -167,84 +194,100 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	RND.InitColliderRenderer();
 	RND.InitParticleRenderer();
 	RND.InitSkyBoxRenderer("ParticleEditor", "ParticleEditor");
-	RND.InitModelRenderer();
+	RND.InitModelRenderer(false);
 
 	camera = new Camera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 0.75f, 2.0f, { 0.0f, 2.0f, -2.5f });
 	//camera = new Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0.25f, 2.0f, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
-	
-	auto terrain = std::shared_ptr<Model>("MainMenuTerrain", "");
+
+	FBXLoader meshLoader("Models");
+	auto terrain = std::make_shared<Model>("MainMenuTerrain", "");
+	terrain->SetPosition({ 0.0f,-2.0f,0.0f });
+	terrain->Update();
+	MR->Bind(terrain);
 
 	source = std::make_shared<BoundingSphere>();
 	source->SetScale(0.5f);
 	CR->Bind(source);
 
-	AddWindow("PARTICLE SYSTEM EDITOR");
-	auto& window = windows["PARTICLE SYSTEM EDITOR"];
+	
+	{
+		AddWindow("MODEL");
+		auto& window = windows["MODEL"];
+		window.AddTextComponent("MODEL");
+		window.AddTextComponent("FPS");
+		window.AddTextComponent("SCENE POLYGON COUNT");
+		window.AddButtonComponent("LOAD FBX", 120, 30);
+		window.AddCheckBoxComponent("RENDER MODEL", true);
+		window.AddSeperatorComponent();
+	}
 
-	window.AddTextComponent(loadedParticleSystem);
-	window.AddSeperatorComponent();
+	{
+		AddWindow("PARTICLE SYSTEM EDITOR");
+		auto& window = windows["PARTICLE SYSTEM EDITOR"];
 
-	window.AddTextComponent("SYSTEM");
-	window.AddSliderIntComponent("MAX PARTICLES", 1, 1500 /*ParticleSystem::ABSOLUTE_MAX_PARTICLES*/);
-	window.AddSliderFloatComponent("DELTA SPAWN");
-	window.AddSliderFloatComponent("LIFETIME", 0.0f, 10.0f);
-	window.AddSliderFloatComponent("X-POS", -50.0f, 50.0f, 0.0f);
-	window.AddSliderFloatComponent("Y-POS", -50.0f, 50.0f, 0.0f);
-	window.AddSliderFloatComponent("Z-POS", -50.0f, 50.0f, 0.0f);
-	window.AddSeperatorComponent();
-	window.AddTextComponent("CONE AND SPHERE");
-	window.AddSliderFloatComponent("SYSTEM SIZE", 0.0f, 50.0f);
-	window.AddSeperatorComponent();
-	window.AddTextComponent("CUBE EMITTER");
-	window.AddSliderFloatComponent("WIDTH", 0.0f, 50.0f);
-	window.AddSliderFloatComponent("DEPTH", 0.0f, 50.0f);
-	window.AddSeperatorComponent();
+		window.AddTextComponent(loadedParticleSystem);
+		window.AddSeperatorComponent();
+		window.AddTextComponent("SYSTEM");
+		window.AddSliderIntComponent("MAX PARTICLES", 1, 1500 /*ParticleSystem::ABSOLUTE_MAX_PARTICLES*/);
+		window.AddSliderFloatComponent("DELTA SPAWN");
+		window.AddSliderFloatComponent("LIFETIME", 0.0f, 10.0f);
+		window.AddSliderFloatComponent("X-POS", -50.0f, 50.0f, 0.0f);
+		window.AddSliderFloatComponent("Y-POS", -50.0f, 50.0f, 0.0f);
+		window.AddSliderFloatComponent("Z-POS", -50.0f, 50.0f, 0.0f);
+		window.AddSeperatorComponent();
+		window.AddTextComponent("CONE AND SPHERE");
+		window.AddSliderFloatComponent("SYSTEM SIZE", 0.0f, 50.0f);
+		window.AddSeperatorComponent();
+		window.AddTextComponent("CUBE EMITTER");
+		window.AddSliderFloatComponent("WIDTH", 0.0f, 50.0f);
+		window.AddSliderFloatComponent("DEPTH", 0.0f, 50.0f);
+		window.AddSeperatorComponent();
 
-	window.AddTextComponent("VELOCITY");
-	window.AddSliderFloatComponent("MIN VELOCITY", 0.0f, 50.0f);
-	window.AddSliderFloatComponent("MAX VELOCITY", 0.0f, 50.0f);
-	window.AddSeperatorComponent();
+		window.AddTextComponent("VELOCITY");
+		window.AddSliderFloatComponent("MIN VELOCITY", 0.0f, 50.0f);
+		window.AddSliderFloatComponent("MAX VELOCITY", 0.0f, 50.0f);
+		window.AddSeperatorComponent();
 
-	window.AddTextComponent("DIMENSIONS");
-	window.AddCheckBoxComponent("KEEP SQUARE", true);
-	window.AddSliderFloatComponent("PARTICLE WIDTH", 0.0f, 0.5f);
-	window.AddSliderFloatComponent("PARTICLE HEIGHT", 0.0f, 0.5f);
-	window.AddSeperatorComponent();
+		window.AddTextComponent("DIMENSIONS");
+		window.AddCheckBoxComponent("KEEP SQUARE", true);
+		window.AddSliderFloatComponent("PARTICLE WIDTH", 0.0f, 0.5f);
+		window.AddSliderFloatComponent("PARTICLE HEIGHT", 0.0f, 0.5f);
+		window.AddSeperatorComponent();
 
-	window.AddTextComponent("EMITTER");
-	const std::string names[] = { "SPHERE", "CUBE", "CONE" };
-	window.AddRadioButtonComponent("EMITTER TYPES", 0, 3, names);
-	window.AddSeperatorComponent();
+		window.AddTextComponent("EMITTER");
+		const std::string names[] = { "SPHERE", "CUBE", "CONE" };
+		window.AddRadioButtonComponent("EMITTER TYPES", 0, 3, names);
+		window.AddSeperatorComponent();
 
-	window.AddTextComponent("IN CASE OF DELTA TIME BUG");
-	window.AddButtonComponent("RESET", 50, 20);
-	window.AddSeperatorComponent();
+		window.AddTextComponent("IN CASE OF DELTA TIME BUG");
+		window.AddButtonComponent("RESET", 50, 20);
+		window.AddSeperatorComponent();
 
-	// CHANGE TEXTURE BUTTON
-	window.AddButtonComponent("CHANGE FIRST IMAGE", 100, 50);
-	window.AddTextComponent("\t\t\t\t\t", true);
-	window.AddImageComponent("First Image", true, nullptr, 75, 75);
-	window.AddSeperatorComponent();
+		// CHANGE TEXTURE BUTTON
+		window.AddButtonComponent("CHANGE FIRST IMAGE", 100, 50);
+		window.AddTextComponent("\t\t\t\t\t", true);
+		window.AddImageComponent("First Image", true, nullptr, 75, 75);
+		window.AddSeperatorComponent();
 
-	// CHANGE TEXTURE BUTTON
-	window.AddButtonComponent("CHANGE SECOND IMAGE", 100, 50);
-	window.AddTextComponent("\t\t\t\t\t", true);
-	window.AddImageComponent("Second Image", true, nullptr, 75, 75);
-	window.AddSeperatorComponent();
+		// CHANGE TEXTURE BUTTON
+		window.AddButtonComponent("CHANGE SECOND IMAGE", 100, 50);
+		window.AddTextComponent("\t\t\t\t\t", true);
+		window.AddImageComponent("Second Image", true, nullptr, 75, 75);
+		window.AddSeperatorComponent();
 
-	// CHANGE OPACITY BUTTON
-	window.AddButtonComponent("CHANGE OPACITY IMAGE", 100, 50);
-	window.AddTextComponent("\t\t\t\t\t", true);
-	window.AddImageComponent("Opacity Image", true, nullptr, 75, 75);
-	window.AddSeperatorComponent();
+		// CHANGE OPACITY BUTTON
+		window.AddButtonComponent("CHANGE OPACITY IMAGE", 100, 50);
+		window.AddTextComponent("\t\t\t\t\t", true);
+		window.AddImageComponent("Opacity Image", true, nullptr, 75, 75);
+		window.AddSeperatorComponent();
 
-	window.AddButtonComponent("LOAD", 100, 50);
-	window.AddTextComponent("\t\t\t\t\t", true);
-	window.AddButtonComponent("SAVE AS", 100, 50, true);
-	window.AddSeperatorComponent();
+		window.AddButtonComponent("LOAD", 100, 50);
+		window.AddTextComponent("\t\t\t\t\t", true);
+		window.AddButtonComponent("SAVE AS", 100, 50, true);
+		window.AddSeperatorComponent();
 
-	window.AddButtonComponent("RETURN TO MENU", 120, 30);
-
+		window.AddButtonComponent("RETURN TO MENU", 120, 30);
+	}
 	InitCamera(camera);
 
 	Load("default.ps");
@@ -258,10 +301,34 @@ ParticleEditor::~ParticleEditor()
 
 APPSTATE ParticleEditor::Run()
 {
+
+	timer.Start();
+
 	Update();
 	Render();
 
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
+
+	{
+		auto& window = windows["MODEL"];
+		static int frames = 0;
+		static float time = 0.0f;
+		time += Time::GetDelta();
+		frames++;
+		if (time >= 1)
+		{
+			window.SetValue<TextComponent, std::string>("FPS", std::to_string(frames));
+			frames = 0;
+			time = 0.0f;
+		}
+
+		if (window.GetValue<ButtonComponent>("LOAD FBX"))
+			LoadModel(FileSystem::LoadFile("Models"));
+
+		if (window.Changed("RENDER MODEL"))
+			RenderModel();
+	}
+	
 
 	if (window.GetValue<ButtonComponent>("LOAD"))
 	{
@@ -428,6 +495,15 @@ APPSTATE ParticleEditor::Run()
 
 	if (window.GetValue<ButtonComponent>("RESET"))
 		particleSystem->Reset();
+
+	float dt = timer.DeltaTime();
+
+	if (dt < tickInterval)
+	{
+		float timeToSleep = tickInterval - dt;
+		Print(timeToSleep);
+		Sleep(timeToSleep * 500.0f);
+	}
 
 	return APPSTATE::NO_CHANGE;
 }
