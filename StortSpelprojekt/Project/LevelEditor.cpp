@@ -387,12 +387,7 @@ void LevelEditor::ShowShadows()
 	bool changed = false;
 	if (renderShadows)
 	{
-		for (auto& [drawableName, drawable] : drawables)
-		{
-			auto model = std::dynamic_pointer_cast<Model>(drawable);
-			if (model)
-				SR->Unbind(model);
-		}
+		SR->Clear();
 		renderShadows = false;
 		changed = true;
 	}
