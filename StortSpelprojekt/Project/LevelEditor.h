@@ -23,9 +23,10 @@ private:
 	Terrain* terrain;
 	Water water;
 	bool renderWater = true;
-	bool divideFlipped = false;
 	bool renderVolumes = true;
 	bool renderTerrain = true;
+	bool renderShadows = true;
+	bool divideFlipped = false;
 
 	UINT wWidth, wHeight;
 
@@ -49,6 +50,7 @@ private:
 	void FlipRenderingDivider();
 	void ShowVolumes();
 	void ShowTerrain();
+	void ShowShadows();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

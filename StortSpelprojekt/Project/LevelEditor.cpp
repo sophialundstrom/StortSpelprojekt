@@ -14,6 +14,7 @@ void LevelEditor::BindDrawables()
 			scene.GetObjectNames().push_back(name);
 			model->SetID((UINT)scene.GetObjectNames().size());
 			MR->Bind(model);
+			SR->Bind(model);
 			IDR->Bind(model);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 			component->AddName(name);
@@ -75,6 +76,7 @@ void LevelEditor::Load(const std::string& file)
 	model->SetID((UINT)scene.GetObjectNames().size());
 	IDR->Bind(model);
 	MR->Bind(model);
+	SR->Bind(model);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(fileName);
 	totalPolygonCount += model->mesh.vertexCount / 3.0f;
@@ -104,6 +106,7 @@ void LevelEditor::DuplicateObject()
 		model->SetID((UINT)scene.GetObjectNames().size());
 		IDR->Bind(model);
 		MR->Bind(model);
+		SR->Bind(model);
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->AddName(modelName);
 		totalPolygonCount += model->mesh.vertexCount / 3.0f;
@@ -264,6 +267,7 @@ void LevelEditor::DivideRendering()
 				{
 					MR->Unbind(drawable);
 					IDR->Unbind(drawable);
+					SR->Unbind(drawable);
 				}
 				else
 				{
@@ -280,6 +284,7 @@ void LevelEditor::DivideRendering()
 					{
 						MR->Bind(drawable);
 						IDR->Bind(drawable);
+						SR->Bind(drawable);
 					}
 				}
 				else
@@ -301,6 +306,7 @@ void LevelEditor::DivideRendering()
 				{
 					MR->Unbind(drawable);
 					IDR->Unbind(drawable);
+					SR->Unbind(drawable);
 				}
 				else
 				{
@@ -317,6 +323,7 @@ void LevelEditor::DivideRendering()
 					{
 						MR->Bind(drawable);
 						IDR->Bind(drawable);
+						SR->Bind(drawable);
 					}
 				}
 				else
@@ -371,6 +378,33 @@ void LevelEditor::ShowTerrain()
 	if (!renderTerrain && !changed)
 	{
 		renderTerrain = true;
+	}
+}
+
+void LevelEditor::ShowShadows()
+{
+	auto& drawables = scene.GetDrawables();
+	bool changed = false;
+	if (renderShadows)
+	{
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+				SR->Unbind(model);
+		}
+		renderShadows = false;
+		changed = true;
+	}
+	if (!renderShadows && !changed)
+	{
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+				SR->Bind(model);
+		}
+		renderShadows = true;
 	}
 }
 
@@ -553,8 +587,11 @@ void LevelEditor::Update()
 
 void LevelEditor::Render()
 {
+
 	IDR->BeginFrame(dsv, viewport);
 	IDR->Render();
+
+	SR->Render();
 
 	BeginViewportFrame();
 
@@ -614,6 +651,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitModelRenderer(false);
 	RND.InitIDRenderer();
 	RND.InitTerrainRenderer();
+	RND.InitShadowRenderer();
 	RND.InitWaterRenderer();
 	RND.InitVolumeRenderer();
 
@@ -634,6 +672,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddCheckBoxComponent("TERRAIN", true);
 		window.AddCheckBoxComponent("WATER", true);
 		window.AddCheckBoxComponent("VOLUMES", true);
+		window.AddCheckBoxComponent("SHADOWS", true);
 		window.AddTextComponent("CULL:");
 		window.AddSliderIntComponent("RENDER DIVIDE", -2000, 2000, -2000, false);
 		window.AddCheckBoxComponent("FLIP DIVIDE", false);
@@ -690,7 +729,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	BindDrawables();
 
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 1.0f, 25.0f, {0, 90, 0});
-	scene.SetDirectionalLight(40);
+	scene.SetDirectionalLight(1000, { 1, 1, 1, 1 }, 4, 4);
 
 	InitCamera(scene.GetCamera());
 
@@ -928,6 +967,9 @@ APPSTATE LevelEditor::Run()
 
 		if (window.Changed("VOLUMES"))
 			ShowVolumes();
+
+		if (window.Changed("SHADOWS"))
+			ShowShadows();
 
 		if (window.Changed("TERRAIN SUBDIV"))
 		{
