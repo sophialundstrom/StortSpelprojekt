@@ -92,6 +92,7 @@ ParticleSystem::~ParticleSystem()
 	vertexBuffer->Release();
 	delete firstTexture;
 	delete secondTexture;
+	delete opacityTexture;
 }
 
 void ParticleSystem::Draw() const
@@ -222,8 +223,10 @@ void ParticleSystem::Update()
 			particle.lifeTime = 0.0f;
 		}
 	}
+
 	if (particles.empty())
 		done = true;
+
 	//LASTLY UPDATE BUFFER
 	UpdateBuffer(vertexBuffer, particles.data(), sizeof(Particle) * particleCount);
 }

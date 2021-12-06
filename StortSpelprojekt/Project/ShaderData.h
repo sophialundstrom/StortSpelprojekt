@@ -105,6 +105,7 @@ public:
 		lightDataBuf->Release();
 		wrapSampler->Release();
 		shadowMap.ShutDown();
+		Print("SHUTDOWN", "SHADERDATA");
 	}
 
 	void Update(const Camera& camera, const DirectionalLight& directionalLight, const UINT& numPointLights, PointLight* pointLightsData)

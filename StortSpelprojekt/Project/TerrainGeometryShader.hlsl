@@ -24,7 +24,8 @@ void main(triangle GSInput input[3] : SV_POSITION, inout TriangleStream<GSOutput
         vertex.position = input[i].position;
         vertex.texCoords = input[i].texCoords;
         vertex.worldPosition = input[i].worldPosition;
-        vertex.normal = normalize(cross(input[1].worldPosition - input[0].worldPosition, input[2].worldPosition - input[0].worldPosition).xyz);
+        vertex.normal = float3(0, 1, 0);
+        //vertex.normal = normalize(cross(input[1].worldPosition - input[0].worldPosition, input[2].worldPosition - input[0].worldPosition).xyz);
 		vertex.lightClipPosition = input[i].lightClipPosition;
 		output.Append(vertex);
 	}

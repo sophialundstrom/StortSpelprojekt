@@ -32,19 +32,19 @@ public:
 	Renderers() :Singleton(this) {}
 	~Renderers() { ShutDown(); }
 
-	static void InitAnimatedModelRenderer()							{ amr = new AnimatedModelRenderer(); }
-	static void InitColliderRenderer()								{ cr = new ColliderRenderer(); }
-	static void InitIDRenderer()									{ idr = new IDRenderer(); }
-	static void InitModelRenderer(bool isLit = true)				{ mr = new ModelRenderer(isLit); }
-	static void InitStaticModelRenderer(bool isLit = true)			{ smr = new ModelRenderer(isLit); }
-	static void InitParticleRenderer()								{ pr = new ParticleRenderer(); }
-	static void InitShadowRenderer()								{ sr = new ShadowRenderer(); }
-	static void InitSkeletonRenderer()								{ skr = new SkeletonRenderer(); }
-	static void InitTerrainRenderer(float tesselationAmount = 63.0f){ tr = new TerrainRenderer(tesselationAmount); }
-	static void InitVolumeRenderer()								{ vr = new VolumeRenderer(); }
-	static void InitWaterRenderer(float tesselationAmount = 63.0f)	{ wr = new WaterRenderer(tesselationAmount); }
-	static void InitInteractableRenderer()							{ ir = new InteractableRenderer(); }
-	static void InitSkyBoxRenderer()								{ sbr = new SkyBoxRenderer(); }
+	static void InitAnimatedModelRenderer()								{ amr = new AnimatedModelRenderer(); }
+	static void InitColliderRenderer()									{ cr = new ColliderRenderer(); }
+	static void InitIDRenderer()										{ idr = new IDRenderer(); }
+	static void InitModelRenderer(bool isLit = true)					{ mr = new ModelRenderer(isLit); }
+	static void InitStaticModelRenderer(bool isLit = true)				{ smr = new ModelRenderer(isLit); }
+	static void InitParticleRenderer()									{ pr = new ParticleRenderer(); }
+	static void InitShadowRenderer()									{ sr = new ShadowRenderer(); }
+	static void InitSkeletonRenderer()									{ skr = new SkeletonRenderer(); }
+	static void InitTerrainRenderer(float tesselationAmount = 63.0f)	{ tr = new TerrainRenderer(tesselationAmount); }
+	static void InitVolumeRenderer()									{ vr = new VolumeRenderer(); }
+	static void InitWaterRenderer(float tesselationAmount = 63.0f)		{ wr = new WaterRenderer(tesselationAmount); }
+	static void InitInteractableRenderer()								{ ir = new InteractableRenderer(); }
+	static void InitSkyBoxRenderer()									{ sbr = new SkyBoxRenderer(); }
 
 	static AnimatedModelRenderer* AMR() { return amr; }
 	static ColliderRenderer* CR()		{ return cr; }
@@ -85,6 +85,7 @@ public:
 		if (sbr)
 			sbr->Clear();
 	}
+
 	static void ShutDown()
 	{
 		if (amr)
@@ -194,7 +195,7 @@ inline ModelRenderer* RendererMR() { return RND.MR(); }
 #define MR RendererMR()
 
 inline ModelRenderer* RendererSMR() { return RND.SMR(); }
-//MODEL RENDERER
+//STATIC MODEL RENDERER
 #define SMR RendererSMR()
 
 inline ParticleRenderer* RendererPR() { return RND.PR(); }

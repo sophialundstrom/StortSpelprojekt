@@ -210,8 +210,12 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 MainMenu::~MainMenu()
 {
+	RND.ShutDown();
+
 	for (auto& [name, canvas] : canvases)
 		delete canvas;
+	canvases.clear();
+
 	Resources::Inst().Clear();
 }
 
@@ -219,7 +223,6 @@ void MainMenu::Initialize()
 {
 	Audio::StartMusic("Menu.wav");
 
-	//LOAD SCENE
 	FBXLoader levelLoader("Models");
 
 	GameLoader gameLoader;
@@ -232,13 +235,6 @@ void MainMenu::Initialize()
 		{
 			MR->Bind(model);
 			SR->Bind(model);
-			continue;
-		}
-
-		auto particleSystem = std::dynamic_pointer_cast<ParticleSystem>(drawable);
-		if (particleSystem)
-		{
-			//SAME BUT PS->
 			continue;
 		}
 	}
@@ -267,7 +263,6 @@ APPSTATE MainMenu::Run()
 {
 	// LEAVES
 	canvases["MAIN MENU"]->GetImage("NewGameLeaves")->Hide();
-	//canvases["MAIN MENU"]->GetImage("ContinueLeaves")->Hide();
 	canvases["MAIN MENU"]->GetImage("QuitLeaves")->Hide();
 	canvases["MAIN MENU"]->GetImage("HowToPlayLeaves")->Hide();
 	canvases["MAIN MENU"]->GetImage("FormLeaves")->Hide();
@@ -277,9 +272,11 @@ APPSTATE MainMenu::Run()
 
 	currentCanvas->Update();
 	scene.GetCamera()->RotateAroundPoint({ -41.0f, 37.0f, -687.0f }, 40, (Vector3{ 0, -0.6f, -1 } / Vector3(0, -0.6f, -1).Length()));
+
 	scene.UpdatePointLights();
 	scene.UpdateDirectionalLight(scene.GetCamera()->GetPosition());
 	scene.Update();
+
 	ShaderData::Inst().Update(*scene.GetCamera(), scene.GetDirectionalLight(), scene.GetNumberOfPointlights(), scene.GetPointLights());
 
 	Render();

@@ -58,7 +58,4 @@ public:
 
 	//Input layout
 	ID3D11InputLayout* inputLayout = nullptr;
-
-	
-
 };

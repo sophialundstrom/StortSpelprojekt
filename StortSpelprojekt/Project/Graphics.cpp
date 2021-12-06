@@ -45,7 +45,6 @@ Graphics::Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed
 	}
 	Print("SUCCEEDED TO CREATE ATC BLEND STATE", "GRAPHICS");
 
-
 	CreateViewport(clientWidth, clientHeight);
 
 	Print("SUCCEEDED TO INITIALIZE GRAPHICS");
@@ -54,14 +53,24 @@ Graphics::Graphics(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed
 
 Graphics::~Graphics()
 {
+	blendState->Release();
+	blendStateATC->Release();
 	dsView->Release();
 	dsTexture->Release();
 	backBuffer->Release();
 	swapChain->Release();
 	context->Release();
-	device->Release();
 	UISurface->Release();
 	wireframeState->Release();
+
+	ID3D11Debug* debugger = nullptr;
+	device->QueryInterface(__uuidof(ID3D11Debug), (void**)&debugger);
+	debugger->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+	debugger->Release();
+
+	device->Release();
+
+	Print("SHUTDOWN", "GRAPHICS");
 }
 
 HRESULT Graphics::CreateBlendState()
@@ -115,7 +124,7 @@ HRESULT Graphics::CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWN
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.BufferCount = 1;
 	swapChainDesc.OutputWindow = hWnd;
-	swapChainDesc.Windowed = windowed;
+	swapChainDesc.Windowed = true;
 
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;

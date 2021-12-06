@@ -18,6 +18,9 @@ public:
 	void Bind(const std::map<std::string, std::shared_ptr<Drawable>>& drawables) { for (auto& [name, drawable] : drawables) this->drawables.emplace_back(drawable); }
 	void Bind(std::shared_ptr<Drawable> drawable) 
 	{ 
+		if (!this)
+			return;
+
 		bool found = false;
 		for (auto& d : drawables)
 			if (d == drawable)
@@ -29,6 +32,9 @@ public:
 
 	void BindStatic(std::shared_ptr<Drawable> drawable)
 	{
+		if (!this)
+			return;
+
 		bool found = false;
 		for (auto& d : staticDrawables)
 			if (d == drawable)
@@ -40,6 +46,9 @@ public:
 
 	void Unbind(std::shared_ptr<Drawable> drawable)
 	{
+		if (!this)
+			return;
+
 		for (UINT i = 0; i < drawables.size(); ++i)
 			if (drawables[i] == drawable)
 			{
@@ -51,6 +60,9 @@ public:
 
 	bool IsBound(std::shared_ptr<Drawable> drawable)
 	{
+		if (!this)
+			return false;
+
 		for (UINT i = 0; i < drawables.size(); ++i)
 			if (drawables[i] == drawable)
 				return true;
@@ -59,6 +71,9 @@ public:
 
 	void UnbindStatic(std::shared_ptr<Drawable> drawable)
 	{
+		if (!this)
+			return;
+
 		for (UINT i = 0; i < staticDrawables.size(); ++i)
 			if (staticDrawables[i] == drawable)
 			{

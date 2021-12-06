@@ -45,6 +45,7 @@ public:
 
 		for (auto& [ID, buffer] : vertexBuffers)
 			buffer->Release();
+		Print("SHUTDOWN", "RESOURCES");
 	}
 
 	//NUM MATERIALS
@@ -176,5 +177,7 @@ public:
 			buffer->Release();
 
 		vertexBuffers.clear();
+		bufferNames.clear();
+		vertexCounts.clear();
 	}
 };

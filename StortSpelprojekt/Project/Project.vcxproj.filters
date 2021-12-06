@@ -114,6 +114,7 @@
     <ClCompile Include="PlaneWithNormals.cpp" />
     <ClCompile Include="AnimationStateMachine.cpp" />
     <ClCompile Include="Slider.cpp" />
+    <ClCompile Include="Editor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />

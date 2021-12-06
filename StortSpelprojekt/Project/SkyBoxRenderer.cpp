@@ -107,8 +107,6 @@ SkyBoxRenderer::SkyBoxRenderer()
 	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 	Graphics::Inst().GetDevice().CreateDepthStencilState(&dsDesc, &skyboxDepthStencil);
 
-	Graphics::Inst();
-
 	Print("SUCCEEDED TO CREATE INPUT LAYOUT", "SKYBOX RENDERER");
 
 	Print("SUCCEEDED TO INITIALIZE SKYBOX RENDERER");
@@ -128,6 +126,7 @@ SkyBoxRenderer::~SkyBoxRenderer()
 	skyboxDepthStencil->Release();
 	skyBoxVertexShader->Release();
 	skyBoxPixelShader->Release();
+	inputLayout->Release();
 }
 
 void SkyBoxRenderer::PullDayNightSlider(float newValue)
@@ -145,10 +144,7 @@ void SkyBoxRenderer::Render()
 
 	//SAVE SHADER DATA INSTANCE
 	auto& shaderData = ShaderData::Inst();
-
 	
-
-
 	//BUFFER
 	UpdateBuffer(matricesBuf, shaderData.cameraMatrix);
 	BindBuffer(matricesBuf);
@@ -173,4 +169,3 @@ void SkyBoxRenderer::Render()
 	Graphics::Inst().GetContext().DrawIndexed(BoxVolumeData::INDICES, 0, 0);
 	Graphics::Inst().GetContext().OMSetDepthStencilState(nullptr, 0);
 }
-

@@ -143,7 +143,7 @@ public:
 				currentGameState->Delete();
 				Window::ActivateCursor();
 				InitWindowed();
-				return 1;
+				currentGameState = new DebugMainMenu(Window::ClientWidth(), Window::ClientHeight());
 				break;
 
 			case APPSTATE::GAME:

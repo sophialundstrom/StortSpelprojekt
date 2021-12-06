@@ -5,7 +5,6 @@
 Slider::Slider(D2D_VECTOR_2F position, Button * button, Image* sliderImage, Image* buttonImage, float minValue, float maxValue, float currentValue, std::function<void(float)> func, bool visible)
 	:position(position), button(button), sliderImage(sliderImage), buttonImage(buttonImage), minValue(minValue), maxValue(maxValue), currentValue(currentValue), func(func), UIComponent(0,0,visible)
 {
-
 	sliderImage->SetPosition((int)position.x, (int)position.y);
 
 	minX = position.x - sliderImage->GetWidth() / 2;
@@ -22,13 +21,29 @@ Slider::Slider(D2D_VECTOR_2F position, Button * button, Image* sliderImage, Imag
 
 Slider::~Slider()
 {
+	if (sliderImage)
+	{
+		delete sliderImage;
+		sliderImage = nullptr;
+	}
+
+	if (button)
+	{
+		delete button;
+		button = nullptr;
+	}
+
+	if (buttonImage)
+	{
+		delete buttonImage;
+		buttonImage = nullptr;
+	}
 }
 
 void Slider::Draw()
 {
 	sliderImage->Draw();
 	buttonImage->Draw();
-
 	//button->Draw();
 }
 
@@ -40,23 +55,17 @@ void Slider::Update()
 
 		if (button->isClicked(mp.x, mp.y))
 		{
-
 			if (mp.x > maxX)
-			{
 				mp.x = (long)maxX;
-			}
 
 			else if (mp.x < minX)
-			{
 				mp.x = (long)minX;
-			}
+			
 			button->SetPosition((int)mp.x, (int)sliderImage->GetPosition().y + 4.0f);
 			buttonImage->SetPosition((int)mp.x, (int)sliderImage->GetPosition().y + 4.0f);
 
 			float normalizedValue = ((mp.x - minX) / (maxX - minX));
 			func(normalizedValue);
-
 		}
 	}
-		
 }

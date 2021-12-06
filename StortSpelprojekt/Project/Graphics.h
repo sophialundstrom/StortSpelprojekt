@@ -8,7 +8,6 @@
 class Graphics : public Singleton<Graphics>
 {
 private:
-	//const float backgroundColor[4] = { 129.0f / 255, 212.0f / 255, 212.0f / 255, 1.0f };
 	const float backgroundColor[4] = { 0, 0, 0, 1.0f };
 
 	D3D11_VIEWPORT viewport;
@@ -21,13 +20,12 @@ private:
 	IDXGISurface* UISurface;
 
 	ID3D11BlendState* blendState = nullptr;
-	ID3D11BlendState* blendStateATC = nullptr; // Alpha to Coverage blend-state
-
+	ID3D11BlendState* blendStateATC = nullptr;
 
 	ID3D11RasterizerState* wireframeState;
-	
+
 	HRESULT CreateBlendState();
-	HRESULT CreateBlendStateATC(); // Create Alpha to Coverage Blend-State
+	HRESULT CreateBlendStateATC();
 	HRESULT CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWND hWnd, bool windowed);
 	HRESULT CreateRenderTarget();
 	HRESULT CreateDepthStencil(UINT clientWidth, UINT clientHeight);
@@ -43,17 +41,25 @@ public:
 
 	void EnableAlpha() { Graphics::Inst().GetContext().OMSetBlendState(blendState, nullptr, 0Xffffffff); }
 	void DisableAlpha() { Graphics::Inst().GetContext().OMSetBlendState(nullptr, nullptr, 0Xffffffff); }
-	// Alpha to Coverage Blend States
 	void EnableATCAlpha() { Graphics::Inst().GetContext().OMSetBlendState(blendStateATC, nullptr, 0Xffffffff); }
 
-	void ActivateWireframe() { context->RSSetState(wireframeState); }
-	void DeactivateWireframe() { context->RSSetState(nullptr); }
-	void ToggleWireframe() { ID3D11RasterizerState* currentState = nullptr; context->RSGetState(&currentState); if (!currentState) context->RSSetState(wireframeState); else context->RSSetState(nullptr); }
+	void ActivateWireframe()	{ context->RSSetState(wireframeState); }
+	void DeactivateWireframe()	{ context->RSSetState(nullptr); }
+	void ToggleWireframe() 
+	{ 
+		ID3D11RasterizerState* currentState = nullptr; 
+		context->RSGetState(&currentState); 
+		
+		if (!currentState) 
+			context->RSSetState(wireframeState); 
+		else 
+			context->RSSetState(nullptr); 
+	}
 
-	ID3D11Device& GetDevice() { return *device; };
-	ID3D11DeviceContext& GetContext() { return *context; };
-	ID3D11DepthStencilView& GetDSV() { return  *dsView; }
-	D3D11_VIEWPORT& GetViewport() { return  viewport; }
-	const float* GetBackgroundColor() { return backgroundColor; }
-	IDXGISurface* GetSurface() { return UISurface; }
+	ID3D11Device& GetDevice()			{ return *device; };
+	ID3D11DeviceContext& GetContext()	{ return *context; };
+	ID3D11DepthStencilView& GetDSV()	{ return  *dsView; }
+	D3D11_VIEWPORT& GetViewport()		{ return  viewport; }
+	const float* GetBackgroundColor()	{ return backgroundColor; }
+	IDXGISurface* GetSurface()			{ return UISurface; }
 };

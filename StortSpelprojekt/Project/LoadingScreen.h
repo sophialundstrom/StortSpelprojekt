@@ -41,6 +41,7 @@ public:
 		layout->Release();
 		delete texture;
 		sampler->Release();
+		vBuffer->Release();
 	};
 
 	void Draw();

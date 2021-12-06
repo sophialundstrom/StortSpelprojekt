@@ -66,11 +66,15 @@ struct AnimatedMesh
 
 		vertexCount = (UINT)vertices.size();
 
-		bufferID = (UINT)Resources::Inst().NumBuffers();
+		bufferID = resources.GetBufferIDFromName(mesh->mName.C_Str());
+		if (bufferID == ID_INVALID)
+		{
+			bufferID = (UINT)resources.NumBuffers();
 
-		ID3D11Buffer* buffer;
-		CreateVertexBuffer(buffer, sizeof(AnimatedVertex), sizeof(AnimatedVertex) * vertexCount, vertices.data());
+			ID3D11Buffer* buffer;
+			CreateVertexBuffer(buffer, sizeof(AnimatedVertex), sizeof(AnimatedVertex) * vertexCount, vertices.data());
 
-		resources.AddVertexBuffer(mesh->mName.C_Str(), buffer, vertexCount, Vector3(0, 0, 0), Vector3(0, 0, 0));
+			resources.AddVertexBuffer(mesh->mName.C_Str(), buffer, vertexCount, Vector3(0, 0, 0), Vector3(0, 0, 0));
+		}
 	}
 };

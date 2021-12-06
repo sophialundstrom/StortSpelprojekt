@@ -32,6 +32,13 @@ Canvas::~Canvas()
 			delete text;
 			text = nullptr;
 		}
+
+	for (auto& [name, slider] : sliders)
+		if (slider)
+		{
+			delete slider;
+			slider = nullptr;
+		}
 }
 
 void Canvas::Update()

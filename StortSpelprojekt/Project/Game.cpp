@@ -980,6 +980,7 @@ Game::~Game()
 	delete ingameOverlay;
 	delete pauseOverlay;
 	delete dialogueOverlay;
+
 	RND.ShutDown();
 	QuestLog::ShutDown();
 	delete quadTree;
@@ -1375,7 +1376,6 @@ void Game::UpdateQuadTree()
 	drawablesToBeRendered.clear();
 	SMR->Clear();
 	SR->ClearStatic();
-
 
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
