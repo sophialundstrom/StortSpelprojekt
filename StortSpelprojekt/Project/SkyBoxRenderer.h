@@ -21,6 +21,7 @@ private:
 	void BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D*& texture, ID3D11ShaderResourceView*& textureView);
 public:
 	SkyBoxRenderer();
+	SkyBoxRenderer(std::string skyBoxDayFolderName, std::string skyBoxNightFolderName);
 	~SkyBoxRenderer();
 	void PullDayNightSlider(float newValue);
 	virtual void Render() override;

@@ -170,7 +170,7 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 {
 	RND.InitColliderRenderer();
 	RND.InitParticleRenderer();
-	RND.InitSkyBoxRenderer();
+	RND.InitSkyBoxRenderer("ParticleEditor", "ParticleEditor");
 
 	camera = new Camera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 0.75f, 2.0f, { 0.0f, 0.0f, -2.5f });
 	//camera = new Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0.25f, 2.0f, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
