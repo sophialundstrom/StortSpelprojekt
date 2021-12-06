@@ -50,7 +50,6 @@
     <ClCompile Include="ArrowHandler.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioChunks.cpp" />
-    <ClCompile Include="BarbarianCamp.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
@@ -126,6 +125,9 @@
     <ClCompile Include="PlaneWithNormals.cpp" />
     <ClCompile Include="AnimationStateMachine.cpp" />
     <ClCompile Include="Slider.cpp" />
+    <ClCompile Include="BarbarianCamp.cpp">
+      <Filter>UsefulShit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimationStateMachine.h" />
@@ -134,7 +136,6 @@
     <ClInclude Include="ArrowHandler.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioChunks.h" />
-    <ClInclude Include="BarbarianCamp.h" />
     <ClInclude Include="BoundingVolumes.h" />
     <ClInclude Include="BuildingEffect.h" />
     <ClInclude Include="Button.h" />
@@ -265,6 +266,9 @@
     <ClInclude Include="PlaneWithNormals.h" />
     <ClInclude Include="AnimationStateMachine.h" />
     <ClInclude Include="Slider.h" />
+    <ClInclude Include="BarbarianCamp.h">
+      <Filter>UsefulShit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="LightCalculations.hlsli" />

@@ -512,16 +512,16 @@ void LevelEditor::Update()
 	if (Event::RightIsClicked())
 	{
 		if (Event::ReadRawDelta().y > 0)
-			scene.GetCamera()->Rotate(0, 3);
+			scene.GetCamera()->Rotate(0, 0.5f);
 
 		if (Event::ReadRawDelta().y < 0)
-			scene.GetCamera()->Rotate(0, -3);
+			scene.GetCamera()->Rotate(0, -0.5f);
 
 		if (Event::ReadRawDelta().x > 0)
-			scene.GetCamera()->Rotate(3, 0);
+			scene.GetCamera()->Rotate(0.5f, 0);
 
 		if (Event::ReadRawDelta().x < 0)
-			scene.GetCamera()->Rotate(-3, 0);
+			scene.GetCamera()->Rotate(-0.5f, 0);
 	}
 
 	if (Event::KeyIsPressed('W'))

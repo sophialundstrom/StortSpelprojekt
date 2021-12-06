@@ -19,6 +19,22 @@ private:
 	float speed = 16.0f;
 };
 
+class HuntingState : public NPCState
+{
+public:
+
+	void Enter(HostileNPC& hostile);
+	void Update(HostileNPC& hostile);
+	void Exit(HostileNPC& hostile);
+	static NPCState& GetInstance();
+private:
+	HuntingState() {}
+	HuntingState(const HuntingState& other);
+	HuntingState& operator=(const HuntingState& other);
+
+	float speed = 16.0f;
+};
+
 class ShootingState : public NPCState
 {
 public:

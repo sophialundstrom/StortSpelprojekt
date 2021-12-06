@@ -57,6 +57,7 @@ HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, 
 
     SetRotation({ 0, movementYRadiant, 0 });
     originalRotation = rotation;
+    this->startPos = position;
 }
 
 void HostileNPC::CalcHeight(HeightMap* heightMap)

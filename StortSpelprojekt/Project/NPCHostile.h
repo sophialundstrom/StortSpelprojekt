@@ -49,6 +49,7 @@ public:
 	NPCState* currentState;
 	float viewDistance;
 	float distanceToPlayer;
+	Vector3 startPos;
 
                                                                                                                                                                                                                                                              
 };
