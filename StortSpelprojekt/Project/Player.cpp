@@ -87,6 +87,11 @@ void Player::Update(HeightMap* heightMap)
 {
 	lastPosition = position;
 
+	if (stats.healthPoints < 10)
+	{
+		stats.healthPoints++;
+
+	}
 	/*std::cout << "Player X: " << position.x << "        " << "Player Y: " << position.y << "        "  << "Player Z: " << position.z << "\n";*/
 
 	CalcHeight(heightMap);

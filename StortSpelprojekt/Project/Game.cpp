@@ -528,8 +528,8 @@ void Game::AddBarbarianCamps()
 
 void Game::SpawnInvasion()
 {
-	camps[BarbarianCamp::Location::Village]->Reset();
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -500, 48, -500 }, hostiles, player, CombatStyle::consistantDelay, { -16.5, 20, -567 }, pathing, false, 3, 15, false);
+	//camps[BarbarianCamp::Location::Village]->Reset();
+	//camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { -500, 48, -500 }, hostiles, player, CombatStyle::consistantDelay, { -16.5, 20, -567 }, pathing, false, 3, 15, false);
 	//camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 7, 56, -398 }, hostiles, player, CombatStyle::consistantDelay, { 2, 20, -579 }, pathing);
 	//camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 73, 50, -422 }, hostiles, player, CombatStyle::consistantDelay, { 57, 21, -574 }, pathing);
 	//camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianBow", { 293, 22, -628 }, hostiles, player, CombatStyle::consistantDelay, { 122, 20, -624 }, pathing);
