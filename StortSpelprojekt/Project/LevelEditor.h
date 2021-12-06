@@ -24,9 +24,10 @@ private:
 	Terrain* terrain;
 	Water water;
 	bool renderWater = true;
-	bool divideFlipped = false;
 	bool renderVolumes = true;
 	bool renderTerrain = true;
+	bool renderShadows = true;
+	bool divideFlipped = false;
 
 	UINT wWidth, wHeight;
 
@@ -62,6 +63,7 @@ private:
 	std::ifstream in;
 	void LoadNodes();
 	Pathfinding* path;
+	void ShowShadows();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 
