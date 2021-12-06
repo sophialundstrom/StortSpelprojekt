@@ -183,15 +183,15 @@ void MovingState::Update(HostileNPC& hostile)
 	    else
 	    {
             // find a new path here
-            hostile.pathIndex = 0;
-		    //pathing->FindPath(position, player->GetPosition());
+            hostile.path.clear();
+            hostile.SetState(IdlingState::GetInstance());
 		    return;
 	    }
     }
     else // delete path because we want to stop before collision 
     {
 	    hostile.path.clear();
-        hostile.SetState(ShootingState::GetInstance());
+        hostile.SetState(IdlingState::GetInstance());
         return;
     }
     float additionalRadians = 0;
