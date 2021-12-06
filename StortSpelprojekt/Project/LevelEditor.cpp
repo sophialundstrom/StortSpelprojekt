@@ -582,29 +582,45 @@ void LevelEditor::Update()
 
 void LevelEditor::Render()
 {
-
+	Timer timer;
+	timer.Start();
 	IDR->BeginFrame(dsv, viewport);
 	IDR->Render();
+	IDTime = timer.DeltaTime();
+	timer.Start();
 
 	SR->Render();
+	shadowTime = timer.DeltaTime();
+	timer.Start();
 
 	BeginViewportFrame();
 
 	ShaderData::Inst().BindFrameConstants();
 
 	MR->Render();
+	modelTime = timer.DeltaTime();
+	timer.Start();
 
-	if(renderTerrain)
+	if (renderTerrain)
+	{
 		TR->Render(*terrain);
-
-	if(renderWater)
+		terrainTime = timer.DeltaTime();
+	}
+	timer.Start();
+	if (renderWater)
+	{
 		WR->Render(water);
+		waterTime = timer.DeltaTime();
+	}
+	timer.Start();
 
-
-	if(renderVolumes)
+	if (renderVolumes)
+	{
 		VR->Render();
+		volumeTime = timer.DeltaTime();
+	}
 
-
+	timer.Start();
 	BeginFrame();
 
 	if (!selectedObject.empty())
@@ -633,6 +649,7 @@ void LevelEditor::Render()
 
 	ImGui::End();
 	ImGui::PopStyleVar();
+	renderUITime = timer.DeltaTime();
 
 	EndFrame();
 
@@ -709,16 +726,34 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddButtonComponent("Snapshot", 120, 30);
 		window.AddTextComponent("SPACE2");
 		window.SetValue<TextComponent, std::string>("SPACE2", "");
+		window.AddTextComponent("FRAME TIME");
+		window.AddTextComponent("UI TIME");
 		window.AddTextComponent("LOGIC TIME");
 		window.AddTextComponent("GRAPHICS TIME");
-		window.AddTextComponent("UI TIME");
-		window.AddTextComponent("FRAME TIME");
+
 		window.SetValue<TextComponent, std::string>("Take performance snapshot", "Take performance snapshot");
 		window.SetValue<TextComponent, std::string>("LOGIC TIME", "Logic Time: No snapshot taken.");
 		window.SetValue<TextComponent, std::string>("GRAPHICS TIME", "Graphics Time: No snapshot taken.");
 		window.SetValue<TextComponent, std::string>("FRAME TIME", "Frame: No snapshot taken.");
 		window.SetValue<TextComponent, std::string>("UI TIME", "UI Time: No snapshot taken.");
 
+		window.AddTextComponent("SPACE3");
+		window.SetValue<TextComponent, std::string>("SPACE3", "");
+		window.AddTextComponent("Graphic time details:");
+		window.AddTextComponent("MODEL TIME");
+		window.AddTextComponent("SHADOW TIME");
+		window.AddTextComponent("TERRAIN TIME");
+		window.AddTextComponent("VOLUME TIME");
+		window.AddTextComponent("WATER TIME");
+		window.AddTextComponent("ID TIME");
+		window.AddTextComponent("UI RENDER TIME");
+		window.SetValue<TextComponent, std::string>("MODEL TIME", "Models: No snapshot taken.");
+		window.SetValue<TextComponent, std::string>("SHADOW TIME", "Shadows: No snapshot taken.");
+		window.SetValue<TextComponent, std::string>("TERRAIN TIME", "Terrain: No snapshot taken.");
+		window.SetValue<TextComponent, std::string>("VOLUME TIME", "Volumes: No snapshot taken.");
+		window.SetValue<TextComponent, std::string>("WATER TIME", "Water: No snapshot taken.");
+		window.SetValue<TextComponent, std::string>("ID TIME", "Model-ID's: No snapshot taken.");
+		window.SetValue<TextComponent, std::string>("UI RENDER TIME", "UI: No snapshot taken.");
 	}
 
 	{
@@ -1044,6 +1079,13 @@ APPSTATE LevelEditor::Run()
 			window.SetValue<TextComponent, std::string>("GRAPHICS TIME", "Graphics Time: " + std::to_string(renderTime * 1000) + " ms");
 			window.SetValue<TextComponent, std::string>("UI TIME", "UI Time: " + std::to_string(updateUITime * 1000) + " ms");
 			window.SetValue<TextComponent, std::string>("FRAME TIME", "Frame: " + std::to_string(frameTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("MODEL TIME", "Models: " + std::to_string(modelTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("SHADOW TIME", "Shadows: " + std::to_string(shadowTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("TERRAIN TIME", "Terrain: " + std::to_string(terrainTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("VOLUME TIME", "Volumes: " + std::to_string(volumeTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("WATER TIME", "Water: " + std::to_string(waterTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("ID TIME", "Model-ID's: " + std::to_string(IDTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("UI RENDER TIME", "UI: " + std::to_string(renderUITime * 1000) + " ms");
 		}
 	}
 
