@@ -654,8 +654,6 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	{
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];
-		window.AddTextComponent("FPS");
-		window.AddTextComponent("SCENE POLYGON COUNT");
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddButtonComponent("CREATE BBOX", 120, 30);
@@ -698,6 +696,13 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		AddWindow("SCENE COMPONENTS");
 		auto& window = windows["SCENE COMPONENTS"];
 		window.AddListBoxComponent("NameList", false);
+	}
+
+	{
+		AddWindow("PERFORMANCE VIEWER");
+		auto& window = windows["PERFORMANCE VIEWER"];
+		window.AddTextComponent("FPS");
+		window.AddTextComponent("SCENE POLYGON COUNT");
 	}
 
 	{
@@ -927,21 +932,7 @@ APPSTATE LevelEditor::Run()
 
 	{
 		auto& window = windows["TOOLS"];
-		static int frames = 0;
-		static float time = 0.0f;
-		time += Time::GetDelta();
-		frames++;
-		if (time >= 1)
-		{
-			window.SetValue<TextComponent, std::string>("FPS", std::to_string(frames));
-			frames = 0;
-			time = 0.0f;
-		}
-		if (totalPolygonCount > totalPolygonsLastFrame || totalPolygonCount < totalPolygonsLastFrame)
-		{
-			window.SetValue<TextComponent, std::string>("SCENE POLYGON COUNT", "SCENE POLYGON COUNT: " + std::to_string(totalPolygonCount));
-			totalPolygonsLastFrame = totalPolygonCount;
-		}
+
 		if (window.GetValue<ButtonComponent>("LOAD FBX"))
 			Load(FileSystem::LoadFile("Models"));
 
@@ -1003,6 +994,25 @@ APPSTATE LevelEditor::Run()
 				else
 					DuplicateVolume();
 			}
+		}
+	}
+
+	{
+		auto& window = windows["PERFORMANCE VIEWER"];
+		static int frames = 0;
+		static float time = 0.0f;
+		time += Time::GetDelta();
+		frames++;
+		if (time >= 1)
+		{
+			window.SetValue<TextComponent, std::string>("FPS", "FPS: " + std::to_string(frames));
+			frames = 0;
+			time = 0.0f;
+		}
+		if (totalPolygonCount > totalPolygonsLastFrame || totalPolygonCount < totalPolygonsLastFrame)
+		{
+			window.SetValue<TextComponent, std::string>("SCENE POLYGON COUNT", "SCENE POLYGON COUNT: " + std::to_string(totalPolygonCount));
+			totalPolygonsLastFrame = totalPolygonCount;
 		}
 	}
 
