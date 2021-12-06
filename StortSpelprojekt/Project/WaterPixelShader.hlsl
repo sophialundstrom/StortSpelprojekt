@@ -16,7 +16,6 @@ struct PS_INPUT
     float2 texCoords : TEXTURECOORDS;
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
-    float3 biNormal : BINORMAL;
     float3 worldPosition : WORLDPOSITION;
 };
 
@@ -68,7 +67,10 @@ float4 main(PS_INPUT input) : SV_TARGET
     normalMap2.y = (2.0f * normalMap2.y) - 1.0f;
     normalMap2.z = normalMap2.z;
 
-    float3x3 texSpace = float3x3(input.tangent, input.biNormal, input.normal);
+    float3 biTangent = cross(input.normal, input.tangent);
+    input.tangent = normalize(input.tangent - dot(input.tangent, input.normal) * input.normal);
+
+    float3x3 texSpace = float3x3(input.tangent, biTangent, input.normal);
     input.normal = normalize(mul(normalMap1 + normalMap2, texSpace));
 
     //FOG
