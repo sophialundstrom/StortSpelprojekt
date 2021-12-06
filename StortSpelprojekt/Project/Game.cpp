@@ -353,7 +353,6 @@ void Game::AddFriendlyNPCs()
 			
 		friendlyNPCs.emplace_back(NPC);
 	}
-
 	//Ulfric
 	{
 		auto NPC = AddFriendlyNPC("Ulfric", "BlackSmith", { -18, 18, -677 });
@@ -367,27 +366,21 @@ void Game::AddFriendlyNPCs()
 		}
 		{
 			NPC->AddQuest("Spy In The Making");
-			NPC->AddDialogue("Did you see the camp in the desert? It is kinda suspicious. Would you be able to go an have a look? Just spy on them to see what they're u'to. But be careful, they are quite dangerous.");
-			NPC->AddDialogue(" I saw some bushes you should be able to hide in withou' bein' seen to the left o' the camp.");
+			NPC->AddDialogue("Did you see the camp in the desert? It is kinda suspicious. Would you be able to go an have a look at the old temple? Just spy on them to see what they're doing. But be careful, they are quite dangerous.");
+			NPC->AddDialogue("Just go to tha' desert and there you will find a temple very close to the barbs camp.");
 			NPC->AddDialogue("You're back! How di'it go? I knew they were u'to somethin'!");
 		}
 		{
 			auto quest = NPC->AddQuest("Barbarians No Mo'");
-			NPC->AddDialogue("We needo do somethin' abou'it befo' they do somethin' awful.");
+			NPC->AddDialogue("We needo somethin' abou' their camp befo' they do somethin' awful. I think they be in west");
 			NPC->AddDialogue(" Down with the bastards! Remembe' to stock u' on arrows at Lydia's.");
 			NPC->AddDialogue("Wha' a remarkable job! They won' bo'er us now.");
-			//auto onActiveFunc = [this, quest]() mutable
-			//{
-			//	quest->ResetObjectiveResources(player, camps, targets);
-			//};
-			//quest->AddOnActivateFunction(onActiveFunc);
 		}
 
 		NPC->AddDialogue("Make't sure ye ready fo the barbs. They have a big camp to the north");
 
 		friendlyNPCs.emplace_back(NPC);
 	}
-
 	//Lydia
 	{
 		auto NPC = AddFriendlyNPC("Lydia", "VillageArcherNPC", { 117.5, 18, -655 });
@@ -435,7 +428,7 @@ void Game::AddFriendlyNPCs()
 		}
 		{
 			NPC->AddQuest("Getting Acquainted");
-			NPC->AddDialogue("I think it's time to introduce you to the rest. Go talk to Sven and Ulfric.");
+			NPC->AddDialogue("I think it's time for you to talk to Sven and Ulfric.");
 			NPC->AddDialogue("Are you serious? They are right there...");
 			NPC->AddDialogue("Thank you! But now it's time to help the others. I think they really need it.");
 		}
@@ -444,17 +437,11 @@ void Game::AddFriendlyNPCs()
 			NPC->AddDialogue("Hi! I was out searching for raw materials in the woods to craft arrows with and encountered a couple of those damn barbarians. I managed to get a few of them but I can't take them. Would you help me with the rest of them? I think they came from the eastern camp.");
 			NPC->AddDialogue("If the mountains are in due north... And the desert is are in the west... Then the east must be in...?");
 			NPC->AddDialogue("Did you get them all? Nice! Now I'll be able to craft all the arrows in the world without interruption!");
-			//auto onActiveFunc = [this, quest]() mutable
-			//{
-			//	quest->ResetObjectiveResources(player, camps, targets);
-			//};
-			//quest->AddOnActivateFunction(onActiveFunc);
 		}
 
 		NPC->AddDialogue("You have helped me so much, I can never repay you for what you have done for me. By the way, when you're ready you should try to clear out the northern camp!");
 		friendlyNPCs.emplace_back(NPC);
 	}
-
 }
 
 void Game::AddTarget(const std::string& file, const Vector3& position, const Vector3& rotation)
