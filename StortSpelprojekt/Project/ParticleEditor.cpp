@@ -55,8 +55,8 @@ void ParticleEditor::Load(const std::string& file)
 	window.SetValue<SliderFloatComponent, float>("DELTA SPAWN", particleSystem->GetTimeBetweenParticles());
 	window.SetValue<SliderFloatComponent, float>("SYSTEM SIZE", particleSystem->GetSize());
 
-	window.SetValue<SliderFloatComponent, float>("CUBE WIDTH", particleSystem->GetWidth());
-	window.SetValue<SliderFloatComponent, float>("CUBE DEPTH", particleSystem->GetDepth());
+	window.SetValue<SliderFloatComponent, float>("WIDTH", particleSystem->GetWidth());
+	window.SetValue<SliderFloatComponent, float>("DEPTH", particleSystem->GetDepth());
 
 	window.SetValue<SliderFloatComponent, float>("MIN VELOCITY", particleSystem->GetMinVelocity());
 	window.SetValue<SliderFloatComponent, float>("MAX VELOCITY", particleSystem->GetMaxVelocity());
@@ -83,22 +83,69 @@ void ParticleEditor::Load(const std::string& file)
 
 void ParticleEditor::Update()
 {
-	if (Event::ScrolledUp())
+	//if (Event::ScrolledUp())
+	//{
+	//	Vector3 newPos = { camera->GetPosition().x + 1, camera->GetPosition().y, camera->GetPosition().z };
+	//	camera->SetPosition(newPos);
+	//}
+
+	//else if (Event::ScrolledDown())
+	//{
+	//	Vector3 newPos = { camera->GetPosition().x - 1, camera->GetPosition().y, camera->GetPosition().z };
+
+	//	camera->SetPosition(newPos);
+	//}
+
+	if (GetAsyncKeyState('W'))
 	{
-		Vector3 newPos = { camera->GetPosition().x + 1, camera->GetPosition().y, camera->GetPosition().z };
-		camera->SetPosition(newPos);
+		camera->MoveForward();
 	}
 
-	else if (Event::ScrolledDown())
+	if (GetAsyncKeyState('S'))
 	{
-		Vector3 newPos = { camera->GetPosition().x - 1, camera->GetPosition().y, camera->GetPosition().z };
-
-		camera->SetPosition(newPos);
+		camera->MoveForward(-1);
 	}
+
+	if (GetAsyncKeyState('A'))
+	{
+		camera->MoveRight(-1);
+	}
+
+	if (GetAsyncKeyState('D'))
+	{
+		camera->MoveRight();
+	}
+
+	if (Event::RightIsClicked())
+	{
+		if (Event::ReadRawDelta().y > 0)
+			camera->Rotate(0, 3);
+
+		if (Event::ReadRawDelta().y < 0)
+			camera->Rotate(0, -3);
+
+		if (Event::ReadRawDelta().x > 0)
+			camera->Rotate(3, 0);
+
+		if (Event::ReadRawDelta().x < 0)
+			camera->Rotate(-3, 0);
+	}
+
+	if (Event::KeyIsPressed(VK_SPACE))
+		camera->MoveUp();
+
+	if (Event::KeyIsPressed('Z'))
+		camera->MoveUp(-1);
+
+	if (Event::KeyIsPressed(VK_SHIFT))
+		camera->SetSpeedMultiplier(3);
+	else
+		camera->SetSpeedMultiplier(1);
 
 
 	particleSystem->Update();
 	camera->Update();
+	Event::ClearRawDelta();
 	ShaderData::Inst().Update(*camera);
 }
 
@@ -107,6 +154,7 @@ void ParticleEditor::Render()
 	BeginViewportFrame();
 
 	CR->Render();
+	SBR->Render();
 
 	PR->Render();
 
@@ -122,9 +170,11 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 {
 	RND.InitColliderRenderer();
 	RND.InitParticleRenderer();
+	RND.InitSkyBoxRenderer();
 
-	camera = new Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0, 0, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
-
+	camera = new Camera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 0.75f, 2.0f, { 0.0f, 0.0f, -2.5f });
+	//camera = new Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0.25f, 2.0f, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
+	
 	source = std::make_shared<BoundingSphere>();
 	source->SetScale(0.5f);
 	CR->Bind(source);
@@ -139,9 +189,13 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	window.AddSliderIntComponent("MAX PARTICLES", 1, 1500 /*ParticleSystem::ABSOLUTE_MAX_PARTICLES*/);
 	window.AddSliderFloatComponent("DELTA SPAWN");
 	window.AddSliderFloatComponent("LIFETIME", 0.0f, 10.0f);
+	window.AddSeperatorComponent();
+	window.AddTextComponent("CONE AND SPHERE");
 	window.AddSliderFloatComponent("SYSTEM SIZE", 0.0f, 50.0f);
-	window.AddSliderFloatComponent("CUBE WIDTH", 0.0f, 50.0f);
-	window.AddSliderFloatComponent("CUBE DEPTH", 0.0f, 50.0f);
+	window.AddSeperatorComponent();
+	window.AddTextComponent("CUBE EMITTER");
+	window.AddSliderFloatComponent("WIDTH", 0.0f, 50.0f);
+	window.AddSliderFloatComponent("DEPTH", 0.0f, 50.0f);
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("VELOCITY");
@@ -335,14 +389,14 @@ APPSTATE ParticleEditor::Run()
 		particleSystem->Reset();
 	}
 
-	else if (window.Changed("CUBE WIDTH"))
+	else if (window.Changed("WIDTH"))
 	{
-		particleSystem->SetCubeWidth(window.GetValue<SliderFloatComponent>("CUBE WIDTH"));
+		particleSystem->SetCubeWidth(window.GetValue<SliderFloatComponent>("WIDTH"));
 		particleSystem->Reset();
 	}
-	else if (window.Changed("CUBE DEPTH"))
+	else if (window.Changed("DEPTH"))
 	{
-		particleSystem->SetCubeDepth(window.GetValue<SliderFloatComponent>("CUBE DEPTH"));
+		particleSystem->SetCubeDepth(window.GetValue<SliderFloatComponent>("DEPTH"));
 		particleSystem->Reset();
 	}
 

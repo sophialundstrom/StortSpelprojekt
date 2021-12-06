@@ -115,6 +115,10 @@ SkyBoxRenderer::SkyBoxRenderer()
 	Print("=======================================");
 }
 
+SkyBoxRenderer::SkyBoxRenderer(std::string skyBoxDayFolderName, std::string skyBoxNightFolderName)
+{
+}
+
 SkyBoxRenderer::~SkyBoxRenderer()
 {
 	dayTexture->Release();
