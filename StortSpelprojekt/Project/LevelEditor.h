@@ -22,11 +22,20 @@ private:
 	std::map<std::string, std::shared_ptr<BoundingSphere>> pickBoxes;
 	Terrain* terrain;
 	Water water;
+
+	//CheckBoxStuff
 	bool renderWater = true;
 	bool renderVolumes = true;
 	bool renderTerrain = true;
 	bool renderShadows = true;
 	bool divideFlipped = false;
+
+	//PerformanceStuff
+	float frameTime = 0.0f;
+	float renderTime = 0.0f;
+	float updateTime = 0.0f;
+	float updateUITime = 0.0f;
+
 
 	UINT wWidth, wHeight;
 

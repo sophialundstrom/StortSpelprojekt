@@ -703,6 +703,22 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		auto& window = windows["PERFORMANCE VIEWER"];
 		window.AddTextComponent("FPS");
 		window.AddTextComponent("SCENE POLYGON COUNT");
+		window.AddTextComponent("SPACE");
+		window.SetValue<TextComponent, std::string>("SPACE", "");
+		window.AddTextComponent("Take performance snapshot");
+		window.AddButtonComponent("Snapshot", 120, 30);
+		window.AddTextComponent("SPACE2");
+		window.SetValue<TextComponent, std::string>("SPACE2", "");
+		window.AddTextComponent("LOGIC TIME");
+		window.AddTextComponent("GRAPHICS TIME");
+		window.AddTextComponent("UI TIME");
+		window.AddTextComponent("FRAME TIME");
+		window.SetValue<TextComponent, std::string>("Take performance snapshot", "Take performance snapshot");
+		window.SetValue<TextComponent, std::string>("LOGIC TIME", "Logic Time: No snapshot taken.");
+		window.SetValue<TextComponent, std::string>("GRAPHICS TIME", "Graphics Time: No snapshot taken.");
+		window.SetValue<TextComponent, std::string>("FRAME TIME", "Frame: No snapshot taken.");
+		window.SetValue<TextComponent, std::string>("UI TIME", "UI Time: No snapshot taken.");
+
 	}
 
 	{
@@ -927,8 +943,14 @@ LevelEditor::~LevelEditor()
 
 APPSTATE LevelEditor::Run()
 {
+	Timer timer;
+	timer.Start();
 	Update();
+	updateTime = timer.DeltaTime();
+	timer.Start();
 	Render();
+	renderTime = timer.DeltaTime();
+	timer.Start();
 
 	{
 		auto& window = windows["TOOLS"];
@@ -1011,10 +1033,20 @@ APPSTATE LevelEditor::Run()
 		}
 		if (totalPolygonCount > totalPolygonsLastFrame || totalPolygonCount < totalPolygonsLastFrame)
 		{
-			window.SetValue<TextComponent, std::string>("SCENE POLYGON COUNT", "SCENE POLYGON COUNT: " + std::to_string(totalPolygonCount));
+			window.SetValue<TextComponent, std::string>("SCENE POLYGON COUNT", "TOTAL POLY-COUNT: " + std::to_string(totalPolygonCount));
 			totalPolygonsLastFrame = totalPolygonCount;
 		}
+		updateUITime = timer.DeltaTime();
+		frameTime = updateUITime + updateTime + renderTime;
+		if (window.GetValue<ButtonComponent>("Snapshot"))
+		{
+			window.SetValue<TextComponent, std::string>("LOGIC TIME", "Logic Time: " + std::to_string(updateTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("GRAPHICS TIME", "Graphics Time: " + std::to_string(renderTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("UI TIME", "UI Time: " + std::to_string(updateUITime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("FRAME TIME", "Frame: " + std::to_string(frameTime * 1000) + " ms");
+		}
 	}
+
 
 	return APPSTATE::NO_CHANGE;
 }
