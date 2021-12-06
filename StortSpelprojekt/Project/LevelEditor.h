@@ -38,7 +38,6 @@ private:
 	//Rendereres
 	float shadowTime = 0.0f;
 	float modelTime = 0.0f;
-	float IDTime = 0.0f;
 	float waterTime = 0.0f;
 	float terrainTime = 0.0f;
 	float volumeTime = 0.0f;

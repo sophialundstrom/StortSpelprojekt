@@ -3,6 +3,7 @@
 #include "GameLoader.h"
 #include "FBXLoader.h"
 #include "Renderers.h"
+#include <dxgi.h>
 
 void LevelEditor::BindDrawables()
 {
@@ -583,10 +584,11 @@ void LevelEditor::Update()
 void LevelEditor::Render()
 {
 	Timer timer;
-	timer.Start();
-	IDR->BeginFrame(dsv, viewport);
-	IDR->Render();
-	IDTime = timer.DeltaTime();
+	if (Event::LeftIsClicked())
+	{
+		IDR->BeginFrame(dsv, viewport);
+		IDR->Render();
+	}
 	timer.Start();
 
 	SR->Render();
@@ -732,28 +734,23 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddTextComponent("GRAPHICS TIME");
 
 		window.SetValue<TextComponent, std::string>("Take performance snapshot", "Take performance snapshot");
-		window.SetValue<TextComponent, std::string>("LOGIC TIME", "Logic Time: No snapshot taken.");
-		window.SetValue<TextComponent, std::string>("GRAPHICS TIME", "Graphics Time: No snapshot taken.");
 		window.SetValue<TextComponent, std::string>("FRAME TIME", "Frame: No snapshot taken.");
-		window.SetValue<TextComponent, std::string>("UI TIME", "UI Time: No snapshot taken.");
-
-		window.AddTextComponent("SPACE3");
-		window.SetValue<TextComponent, std::string>("SPACE3", "");
-		window.AddTextComponent("Graphic time details:");
+		window.SetValue<TextComponent, std::string>("UI TIME", "  UI Time:");
+		window.SetValue<TextComponent, std::string>("LOGIC TIME", "  Logic Time:");
+		window.SetValue<TextComponent, std::string>("GRAPHICS TIME", "  Graphics Time:");
+		window.AddTextComponent("    Details:");
 		window.AddTextComponent("MODEL TIME");
 		window.AddTextComponent("SHADOW TIME");
 		window.AddTextComponent("TERRAIN TIME");
 		window.AddTextComponent("VOLUME TIME");
 		window.AddTextComponent("WATER TIME");
-		window.AddTextComponent("ID TIME");
 		window.AddTextComponent("UI RENDER TIME");
-		window.SetValue<TextComponent, std::string>("MODEL TIME", "Models: No snapshot taken.");
-		window.SetValue<TextComponent, std::string>("SHADOW TIME", "Shadows: No snapshot taken.");
-		window.SetValue<TextComponent, std::string>("TERRAIN TIME", "Terrain: No snapshot taken.");
-		window.SetValue<TextComponent, std::string>("VOLUME TIME", "Volumes: No snapshot taken.");
-		window.SetValue<TextComponent, std::string>("WATER TIME", "Water: No snapshot taken.");
-		window.SetValue<TextComponent, std::string>("ID TIME", "Model-ID's: No snapshot taken.");
-		window.SetValue<TextComponent, std::string>("UI RENDER TIME", "UI: No snapshot taken.");
+		window.SetValue<TextComponent, std::string>("MODEL TIME", "    Models:");
+		window.SetValue<TextComponent, std::string>("SHADOW TIME", "    Shadows:");
+		window.SetValue<TextComponent, std::string>("TERRAIN TIME", "    Terrain:");
+		window.SetValue<TextComponent, std::string>("VOLUME TIME", "    Volumes:");
+		window.SetValue<TextComponent, std::string>("WATER TIME", "    Water:");
+		window.SetValue<TextComponent, std::string>("UI RENDER TIME", "    UI:");
 	}
 
 	{
@@ -1075,17 +1072,17 @@ APPSTATE LevelEditor::Run()
 		frameTime = updateUITime + updateTime + renderTime;
 		if (window.GetValue<ButtonComponent>("Snapshot"))
 		{
-			window.SetValue<TextComponent, std::string>("LOGIC TIME", "Logic Time: " + std::to_string(updateTime * 1000) + " ms");
-			window.SetValue<TextComponent, std::string>("GRAPHICS TIME", "Graphics Time: " + std::to_string(renderTime * 1000) + " ms");
-			window.SetValue<TextComponent, std::string>("UI TIME", "UI Time: " + std::to_string(updateUITime * 1000) + " ms");
 			window.SetValue<TextComponent, std::string>("FRAME TIME", "Frame: " + std::to_string(frameTime * 1000) + " ms");
-			window.SetValue<TextComponent, std::string>("MODEL TIME", "Models: " + std::to_string(modelTime * 1000) + " ms");
-			window.SetValue<TextComponent, std::string>("SHADOW TIME", "Shadows: " + std::to_string(shadowTime * 1000) + " ms");
-			window.SetValue<TextComponent, std::string>("TERRAIN TIME", "Terrain: " + std::to_string(terrainTime * 1000) + " ms");
-			window.SetValue<TextComponent, std::string>("VOLUME TIME", "Volumes: " + std::to_string(volumeTime * 1000) + " ms");
-			window.SetValue<TextComponent, std::string>("WATER TIME", "Water: " + std::to_string(waterTime * 1000) + " ms");
-			window.SetValue<TextComponent, std::string>("ID TIME", "Model-ID's: " + std::to_string(IDTime * 1000) + " ms");
-			window.SetValue<TextComponent, std::string>("UI RENDER TIME", "UI: " + std::to_string(renderUITime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("UI TIME", "  UI Time: " + std::to_string(updateUITime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("LOGIC TIME", "  Logic Time: " + std::to_string(updateTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("GRAPHICS TIME", "  Graphics Time: " + std::to_string(renderTime * 1000) + " ms");
+
+			window.SetValue<TextComponent, std::string>("MODEL TIME", "    Models: " + std::to_string(modelTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("SHADOW TIME", "    Shadows: " + std::to_string(shadowTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("TERRAIN TIME", "    Terrain: " + std::to_string(terrainTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("VOLUME TIME", "    Volumes: " + std::to_string(volumeTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("WATER TIME", "    Water: " + std::to_string(waterTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("UI RENDER TIME", "    UI: " + std::to_string(renderUITime * 1000) + " ms");
 		}
 	}
 
