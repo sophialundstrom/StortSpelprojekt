@@ -665,13 +665,16 @@ void LevelEditor::Render()
 
 	BeginViewportFrame();
 
+	ShaderData::Inst().BindFrameConstants();
+
+	MR->Render();
+
 	if(renderTerrain)
 		TR->Render(*terrain);
 
 	if(renderWater)
 		WR->Render(water);
 
-	MR->Render();
 
 	if(renderVolumes)
 		VR->Render();
