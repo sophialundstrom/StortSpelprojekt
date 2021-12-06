@@ -1379,18 +1379,19 @@ void Game::UpdateQuadTree()
 
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
-	std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
+	//std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
+			SR->BindStatic(drawable);
 			SMR->Bind(drawable);
 		}
 	}
 
-	orthographicCollider.Update(scene.GetDirectionalLight());
+	orthographicCollider.Update(scene.GetDirectionalLight(), player->GetPosition());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
@@ -1402,7 +1403,7 @@ void Game::UpdateQuadTree()
 		}
 	}
 
-	std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
+	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
 	
 	//DebugVariant
 	/*

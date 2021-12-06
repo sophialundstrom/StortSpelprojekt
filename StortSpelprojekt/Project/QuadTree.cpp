@@ -199,8 +199,11 @@ void QuadTree::OptimizeBounds()
 			lowestY = temp;
 		}
 
-		lowestY -= 100;
-		highestY += 100;
+		/*if (highestY < lowestY + 400)
+			highestY += 400;*/
+
+		/*lowestY -= 100;
+		highestY += 100;*/
 
 		std::cout << "---\n";
 		std::cout << "lowestY: " << lowestY << std::endl;
