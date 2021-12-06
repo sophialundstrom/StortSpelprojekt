@@ -1,7 +1,9 @@
 #include "Player.h"
+#include "Building.h"
 
-Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas, const UINT& maxArrows)
-	:AnimatedModel("multipleAnimationModel", "Player"), sceneCamera(camera), ingameCanvas(ingameCanvas)
+
+Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
+	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera)
 {
 	isRightPressed = false;
 	isLeftPressed = false;
@@ -16,30 +18,39 @@ Player::Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> i
 	frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
 	frustum->SetPosition(0, 3, 0);
 
-	Load(file);
-	UpdateHealthUI();
+	//Load(file);
 
-	PlayAnimation("Idle", true, 0.2f);
+	PlayAnimation("Idle");
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
+
+	currentBiome = BIOME::DEFAULT;
+	previousBiome = currentBiome;
+
+	//BOW
+	bow = std::make_shared<AnimatedModel>("AnimatedBow", "Bow");
+	AMR->Bind(bow);
+	minCameraDistance = 0.5f;
+
+	numArrows = 0;
 }
 
 void Player::CalcHeight(HeightMap* heightMap)
 {
-	const int lowX = (int)std::floor(position.x);
-	const int highX = (int)std::ceil(position.x);
-	const float Xdecimal = position.x - lowX;
+	int lowX = (int)std::floor(position.x);
+	int highX = (int)std::ceil(position.x);
+	float Xdecimal = position.x - lowX;
 
-	const int lowZ = (int)std::floor(position.z);
-	const int highZ = (int)std::ceil(position.z);
-	const float Zdecimal = position.z - lowZ;
+	int lowZ = (int)std::floor(position.z);
+	int highZ = (int)std::ceil(position.z);
+	float Zdecimal = position.z - lowZ;
 
-	const float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
-	const float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
-	const float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
-	const float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+	float H1 = heightMap->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+	float H2 = heightMap->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+	float H3 = heightMap->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+	float H4 = heightMap->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
 
-	heightMapGroundLevel = position.y = H1 + H2 + H3 + H4;
+	heightMapGroundLevel = position.y = (H1 + H2 + H3 + H4);
 }
 
 float Player::CalcHeightForCamera(HeightMap* heightMap)
@@ -73,9 +84,11 @@ float Get2DAngle(Vector2 a, Vector2 b)
 	return acos(a.x * b.x + a.y * b.y);
 };
 
-void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer)
+void Player::Update(HeightMap* heightMap)
 {
 	lastPosition = position;
+
+	/*std::cout << "Player X: " << position.x << "        " << "Player Y: " << position.y << "        "  << "Player Z: " << position.z << "\n";*/
 
 	CalcHeight(heightMap);
 
@@ -100,23 +113,48 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	if (Event::KeyIsPressed('D'))
 		moveDirection += Vector3(1, 0, 0);
 
-	moveDirection.Normalize();
+	static float lastEat = 0;
+	if (Event::KeyIsPressed('R') && Time::Get() - lastEat > 1.0f)
+	{
+		if (stats.healthPoints < 10 && inventory.NumOf(Item::Type::Food) > 0)
+		{
+		stats.IncreaseHealthPoints();
+		    inventory.RemoveItem(Item::Type::Food, 1);
+		}
+		lastEat = Time::Get();
+	}
 
+	moveDirection.Normalize();
 
 	//SPRINTING
 	if (Event::KeyIsPressed(VK_SHIFT))
 	{
-		stats.currentSpeed += 50.0f * Time::GetDelta();
+		// IF PLAYER SPRINTS AND JUMPS THE SOUND WILL STOP UNTIL SHIFT IS PRESSED AGAIN...
+		if (!isSprinting)
+		{
+			
+			Audio::StartEffect("Running.wav");
+			Audio::SetVolume("Running.wav", Audio::effectsVolume * 0.25f);
+			isSprinting = true;
+		}
+
+		stats.currentSpeed += 70.0f * Time::GetDelta();
 		if (stats.currentSpeed > stats.sprintSpeed)
 			stats.currentSpeed = stats.sprintSpeed;
 
 		currentCameraDistance += Time::GetDelta() * 20.0f;
 		if (currentCameraDistance > maxCameraDistance)
 			currentCameraDistance = maxCameraDistance;
-	}
 
+		if (currentCameraDistance < minCameraDistance)
+		{
+			currentCameraDistance = minCameraDistance;
+		}
+	}
 	else
 	{
+		isSprinting = false;
+		Audio::StopEffect("Running.wav");
 		stats.currentSpeed -= 12.0f * Time::GetDelta();
 		if (stats.currentSpeed < stats.movementSpeed)
 			stats.currentSpeed = stats.movementSpeed;
@@ -124,6 +162,11 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		currentCameraDistance -= Time::GetDelta() * 10.0f;
 		if (currentCameraDistance < defaultCameraDistance)
 			currentCameraDistance = defaultCameraDistance;
+
+		if (currentCameraDistance < minCameraDistance)
+		{
+			currentCameraDistance = minCameraDistance;
+		}
 	}
 
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
@@ -155,11 +198,9 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		if (Event::KeyIsPressed(VK_SPACE))
 		{
 			jumping = true;
-			SoundEffect::AddAudio(L"Audio/Jump.wav", 2);
-			SoundEffect::SetVolume(0.005, 2);
-			SoundEffect::StartAudio(2);
+			Audio::StartEffect("Jump.wav");
 			preJumpGroundLevel = currentGroundLevel; 
-			PlayAnimation("Jump", false, 0.5f);
+			//PlayAnimation("Jump", false, 0.5f);
 		}
 	}
 
@@ -167,11 +208,11 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 	{
 		airTime += Time::GetDelta() * 8.0f;
 
-		if (airTime >= 1.5f)
-			PlayAnimation("Falling", true);
+		/*if (airTime >= 1.5f)
+			PlayAnimation("Falling", true);*/
 
-		else
-			std::cout << "Startup" << std::endl;
+		/*else
+			std::cout << "Startup" << std::endl;*/
 
 		newPlayerPos.y = -powf(airTime, 2) + jumpHeight * airTime + preJumpGroundLevel;
 	}
@@ -185,98 +226,168 @@ void Player::Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRend
 		newPlayerPos = Vector3(newPlayerPos.x, currentGroundLevel, newPlayerPos.z);
 	}
 
-	if (closestColliderToCam < currentCameraDistance)
-		currentCameraDistance = closestColliderToCam;
+	if (closestColliderToCam < currentCameraDistance && closestColliderToCam > minCameraDistance)
 
-	position = newPlayerPos/* + Vector3(0, 3.5f, 0)*/;
+	{
+		currentCameraDistance = closestColliderToCam;
+		PrintS("FORCE");
+	}
+
+	position = newPlayerPos;
 
 	Vector3 newCameraPos;
 
 	bool approvedCam = false;
 
-	CalcHeightForCamera(heightMap);
-
 	newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
 
 	float newY = CalcHeightForCamera(heightMap);
-	//std::cout << "HeightMapAtCam: " << CalcHeightForCamera(heightMap) << "			CamHeight: " << sceneCamera->GetPosition().y << "			";
+	if (newY < 1.f)
+		newY += 1.f;
+
+	
 	if (newY > newCameraPos.y)
 	{
-		//std::cout << "PROBLEMATIC\n";
 		newCameraPos.y = newY;
 	}
 	
 	static float lastClick = 0;
 
-	if (Event::KeyIsPressed('R') && numArrows < maxArrows)
-	{
-		numArrows++;
-	}
 
 	sinceLastShot += Time::GetDelta();
 	if (sinceLastShot > shootingAnimationLenght) {
 
 		bool hasMoved = (position == lastPosition) ? false : true;
-		if (!hasMoved)
-			PlayAnimation("Idle", true, 0.2f); // ADD IDLE ANIMATION
-		else if (hasMoved && !jumping)
-			PlayAnimation("Walk", true); // ADD WALKING ANIMATION
-		//else if (jumping)
-			 // ADD IN AIR JUMP ANIMATION
 	}
-	//std::cout << "NUM ARROWS: " << numArrows << std::endl;
-	if(Event::RightIsClicked())
+
+	if (Event::RightIsClicked())
 	{
+		if (!isAiming)
+		{
+			//Audio::StartEffect("Bow.wav");
+			bow->PlayOverrideAnimation("Draw", "root", true);
+			PlayOverrideAnimation("Aim", "Spine1", true);
+			isAiming = true;
+		}
+
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
-		sceneCamera->SetPosition(newCameraPos);
-		if (Time::Get() - lastClick > 0.2f)
+		sceneCamera->SetSpeedMultiplier(5.0f);
+		sceneCamera->MoveTowards(newCameraPos);
+
+		if (Time::Get() - lastClick > 1.0f)
 		{
 			if (Event::LeftIsClicked() && numArrows > 0)
 			{
-				arrowHandler.AddArrow(mRenderer, cRenderer, lookDirection, newPlayerPos + camSocketUpdate, { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-				//PlayAnimation("Take003", false); // ADD SHOOTING ANIMATION
-				SoundEffect::AddAudio(L"Audio/Fire.wav", 1);
-				SoundEffect::SetVolume(0.005, 1);
-				SoundEffect::StartAudio(1);
+				lookDirection = lookDirection.Transform(lookDirection, Matrix::CreateFromYawPitchRoll(-0.02f, 0.02f, 0.0f));
+
+				arrowHandler.AddArrow(lookDirection, bow->GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+
+				Audio::StartEffect("Fire.wav");
+
 				int currentIndex = 0;
 				numArrows--;
 				sinceLastShot = 0.f;
 				lastClick = Time::Get();
+
+				PlayOverrideAnimation("Reload", "Spine1", true, true);
 			}
 		}
 	}
-
+	
 	else
 	{
+		if (isAiming)
+		{
+			isAiming = false;
+			Audio::StopEffect("Bow.wav");
+			PlayOverrideAnimation("Stop", "Spine1", false);
+		}
+
+		sceneCamera->SetSpeedMultiplier(1.0f);
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
 		sceneCamera->MoveTowards(newCameraPos);
 	}
 		
-	arrowHandler.Update(mRenderer, cRenderer);
+	arrowHandler.Update();
 
-	AnimatedModel::Update();
+	if (moveDirection.Length() == 0)
+		PlayAnimation("Idle");
+	else if (isSprinting)
+		PlayAnimation("Run");
+	else
+		PlayAnimation("Walk");
+
+	if (isAiming)
+		AnimatedModel::Update(sceneCamera, "Spine3");
+	else
+		AnimatedModel::Update();
+
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
+
 	bounds->Update();
 	frustum->Update();
+
+	//BOW UPDATE
+	auto& socket = skeleton.transforms[skeleton.GetJointID("LWrist")];
+
+	auto bowT = Matrix::CreateScale(1.5f) * Matrix::CreateFromYawPitchRoll(PI_DIV2, PI, 0) * Matrix::CreateTranslation(0.5f, -0.05f, 0.0f);
+
+	Matrix bowTransform = bowT * socket * matrix;
+
+	Vector3 position, scale;
+	Quaternion rotation;
+	bowTransform.Decompose(scale, rotation, position);
+
+	rotation.Normalize();
+
+	bow->SetPosition(position);
+	bow->SetRotation(rotation);
+	bow->SetScale(scale);
+
+	bow->Update();
 }
 
-void Player::TakeDamage()
+void Player::TakeDamage(int x)
 {
-	if (stats.healthPoints - 1 == 0)
+	if (stats.healthPoints - 1 == 0 /*|| stats.healthPoints < 0*/)
 	{
 		stats.healthPoints--;
-		std::cout << "GAME OVER" << std::endl;
-		UpdateHealthUI();
 		gameOver = true;
 		return; // Return here because hp will be -1. This leads to a hp image not being found which in turn leads to a crash during Draw().
 	}
-	SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
-	SoundEffect::SetVolume(0.5, 2);
-	SoundEffect::StartAudio(2);
-	stats.healthPoints--;
+
+	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
+	//SoundEffect::SetVolume(0.5, 2);
+	//SoundEffect::StartAudio(2);
+
+	int totalDamage = x - stats.resist;
+	if (totalDamage <= 1)
+		stats.healthPoints--;
+	else
+		stats.healthPoints -= totalDamage;
 	
-	UpdateHealthUI();
+}
+
+void Player::SwitchBiomeMusic()
+{
+	switch (this->currentBiome)
+	{
+	case BIOME::DESERT:
+
+		Audio::StartMusic("SoundDesert.wav");
+		break;
+	case BIOME::MOUNTAIN:
+
+		Audio::StartMusic("SoundMountain.wav");
+		break;
+	case BIOME::OCEAN:
+		Audio::StartMusic("SoundOcean.wav");
+		break;
+	case BIOME::DEFAULT:
+		Audio::StartMusic("SoundForest.wav");
+		break;
+	}
 }
 
 void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders)
@@ -357,10 +468,62 @@ void Player::HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> 
 
 		force.Normalize();
 
+		if (force.Dot({ 0, 1, 0 }) < 0)
+			force.y *= -1;
+
 		position += force * Time::GetDelta();
 
 		Transform::UpdateMatrix();
 		bounds->Update();
+	}
+}
+
+void Player::HandleUpgrades(std::shared_ptr<Building> building)
+{
+	std::string buildingName = building->GetBuildingName();
+	int state = building->GetCurrentState();
+	if (buildingName == "FarmHouse")
+	{
+		if (state == 1)
+		{
+			stats.resist = 1;
+			stats.HPGain = 2;
+		}
+		if (state == 2)
+		{
+			stats.resist = 2;
+			stats.HPGain = 3;
+		}
+	}
+	if (buildingName == "ArcherTent")
+	{
+		if (state == 1)
+		{
+			maxArrows = 15;
+			numArrows = 15;
+		}
+		if (state == 2)
+		{
+			maxArrows = 30;
+			numArrows = 30;
+		}
+		if (state == 3)
+		{
+			numArrows = 50;
+			maxArrows = 50;
+		}
+			
+	}
+	if (buildingName == "Blacksmith")
+	{
+		if (state == 1)
+		{
+			stats.damage = 2;
+		}
+		if (state == 2)
+		{
+			stats.damage = 3;
+		}
 	}
 }
 
@@ -396,7 +559,6 @@ void Player::Save(const std::string file)
 	}
 
 	writer.close();
-	Print("SUCCEEDED SAVING PLAYER FILE");
 }
 
 void Player::Load(const std::string file)
@@ -421,18 +583,5 @@ void Player::Load(const std::string file)
 	reader >> stats.level;
 	stats.currentSpeed = stats.movementSpeed;
 
-	//INVENTORY
-	UINT numItems;
-	reader >> numItems;
-	for (UINT i = 0; i < numItems; ++i)
-	{
-		UINT resourceID, num;
-		reader >> resourceID;
-		reader >> num;
-
-		inventory.items[(RESOURCE)resourceID] = num;
-	}
-
 	reader.close();
-	Print("SUCCEDED LOADING PLAYER FILE");
 }

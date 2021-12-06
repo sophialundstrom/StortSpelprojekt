@@ -209,6 +209,7 @@ public:
 	}
 
 	const DirectX::BoundingSphere& GetBounds() const { return bounds; }
+	DirectX::BoundingSphere& GetBounds() { return bounds; }
 
 	// Inherited via Collider
 	virtual void Update() override
@@ -233,6 +234,18 @@ public:
 
 namespace Collision
 {
+	//SPHERE/BOX INTERSECTION
+	inline bool Intersection(const DirectX::BoundingSphere& first, const DirectX::BoundingOrientedBox& second)
+	{
+		return first.Intersects(second);
+	}
+
+	//SPHERE/BOX INTERSECTION
+	inline bool Intersection(const DirectX::BoundingSphere& first, const DirectX::BoundingSphere& second)
+	{
+		return first.Intersects(second);
+	}
+
 	//SPHERE/SPHERE INTERSECTION
 	inline bool Intersection(const BoundingSphere& first, const BoundingSphere& second)
 	{

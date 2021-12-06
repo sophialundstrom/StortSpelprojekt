@@ -2,6 +2,7 @@
 #include "AssimpDirectXMathConverter.h"
 #include "Skeleton.h"
 #include "assimp\scene.h"
+#include "Time.h"
 #include <map>
 
 struct Channel
@@ -34,6 +35,7 @@ struct Animation
 			aiNodeAnim* aiChannel = animation->mChannels[i];
 
 			std::string jointName = aiChannel->mNodeName.C_Str();
+			Print(jointName);
 			jointName = jointName.substr(0, jointName.find_first_of('_'));
 
 			for (UINT j = 0; j < aiChannel->mNumPositionKeys; ++j)
@@ -75,27 +77,31 @@ struct Animation
 		}
 	}
 
-	void Update(const std::string& joint, Matrix& localMatrix)
+	void UpdateTime()
 	{
-		if (!active)
-			return;
+		if (active)
+			timer += Time::GetDelta();
 
-		timer += Time::GetDelta();
-		float timeInTicks = timer / 100.0f * ticksPerSecond * speedFactor;
+		float timeInTicks = timer * ticksPerSecond * speedFactor;
 		float frameTime = fmod(timeInTicks, duration);
-
-		/*Print(ticksPerSecond);
-		Print(duration);*/
-		//Print(Time::GetDelta());
 
 		if (timeInTicks > duration)
 		{
-			timer = 0;
-			//active = false;
 			if (!repeat)
+			{
 				active = false;
-			return;
+				timer = (duration / (ticksPerSecond * speedFactor)) - 0.000001f;
+			}
+				
+			else
+				timer = 0.0f;
 		}
+	}
+
+	void Update(const std::string& joint, Matrix& localMatrix)
+	{
+		float timeInTicks = timer * ticksPerSecond * speedFactor; 
+		float frameTime = fmod(timeInTicks, duration);
 
 		auto& map = channels[joint].positions;
 		if (map.empty())
@@ -111,9 +117,6 @@ struct Animation
 		Quaternion Q = Quaternion::Slerp(channels[joint].quaternions[lowerTimestamp], channels[joint].quaternions[higherTimestamp], weight);
 		Vector3 T = Vector3::Lerp(channels[joint].positions[lowerTimestamp], channels[joint].positions[higherTimestamp], weight);
 		Vector3 S = Vector3::Lerp(channels[joint].scalings[lowerTimestamp], channels[joint].scalings[higherTimestamp], weight);
-
-		//if (lower == map.end())
-		//	lower = map.begin();
 
 		const Matrix translation = Matrix::CreateTranslation(T);
 		const Matrix quaternion = Matrix::CreateFromQuaternion(Q);

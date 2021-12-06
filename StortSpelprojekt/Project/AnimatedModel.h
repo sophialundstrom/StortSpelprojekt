@@ -2,7 +2,7 @@
 #include "MaterialLoader.h"
 #include "Drawable.h"
 #include "AnimatedMesh.h"
-#include "Animator.h"
+#include "AnimationStateMachine.h"
 
 #include "assimp\Importer.hpp"
 #include "assimp\postprocess.h"
@@ -10,9 +10,11 @@
 
 class AnimatedModel : public Drawable
 {
-private:
+protected:
 	Assimp::Importer importer;
 	const aiScene* scene;
+
+	AnimationStateMachine* animationController;
 
 	AnimatedMesh mesh;
 	Skeleton skeleton;
@@ -30,11 +32,8 @@ private:
 
 				if (tempScene->HasAnimations())
 				{
-					//std::cout << "NUM ANIM: " << tempScene->mNumAnimations << std::endl << "NAME: " << tempScene->mAnimations[0]->mName.C_Str() << std::endl;
-
 					animator->AddAnimation(tempScene->mAnimations[0]);
 				}
-
 			}
 		}
 	}
@@ -51,14 +50,10 @@ public:
 			return;
 		}
 
-		UINT foundID = Resources::Inst().GetBufferIDFromName(scene->mMeshes[0]->mName.C_Str());
-		if (foundID == ID_INVALID)
-			mesh = AnimatedMesh(scene->mMeshes[0], skeleton, scene);
-		else
-			ApplyMesh(scene->mMeshes[0]->mName.C_Str());
+		mesh = AnimatedMesh(scene->mMeshes[0], skeleton, scene);
 
 		const std::string materialName = std::string(scene->mMeshes[0]->mName.C_Str()) + "_" + std::string(scene->mMaterials[0]->GetName().C_Str());
-		foundID = Resources::Inst().GetMaterialIDFromName(materialName);
+		UINT foundID = Resources::Inst().GetMaterialIDFromName(materialName);
 		if (foundID == ID_INVALID)
 			MaterialLoader::Load(scene->mMeshes[0]->mName.C_Str(), scene->mMaterials[0]);
 
@@ -67,13 +62,15 @@ public:
 		animator = new Animator(scene, skeleton);
 
 		ProcessAnimations(fileName);
+
+		animationController = new AnimationStateMachine(animator, scene, skeleton);
 	}
 	
-	~AnimatedModel() { delete animator; }
+	~AnimatedModel() { delete animator; if (animationController) delete animationController; }
 
 	void Draw(bool useTextures = true, bool useMaterial = true) 
 	{ 
-		animator->BindMatricesBuffer();
+		animationController->BindMatrices();
 
 		if (useTextures) 
 			Resources::Inst().BindMaterial(mesh.materialID, useMaterial); 
@@ -99,15 +96,25 @@ public:
 			mesh.bufferID = ID;
 	}
 
-	void PlayAnimation(const std::string& animation, const bool& onRepeat, const float& speedFactor = 1.f)
+	void PlayAnimation(const std::string& animation, bool onRepeat, float speedFactor = 1.f)
 	{
 		animator->PlayAnimation(animation, onRepeat, speedFactor);
 	}
 
-	// Inherited via Drawable
-	virtual void Update() override
+	void PlayAnimation(const std::string& name)
+	{
+		animationController->PlayAnimation(name);
+	}
+
+	void PlayOverrideAnimation(const std::string& name, const std::string& startBone, bool hold, bool fullImpact = false)
+	{
+		animationController->PlayOverrideAnimation(name, startBone, hold, fullImpact);
+	}
+
+	void Update(Camera* camera = nullptr, const std::string& rotationJoint = "")
 	{
 		UpdateMatrix();
-		animator->Update(scene, skeleton);
+
+		animationController->Update(skeleton, scene, camera, rotation, rotationJoint);
 	}
 };

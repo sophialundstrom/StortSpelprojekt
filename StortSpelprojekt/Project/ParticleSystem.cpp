@@ -41,6 +41,8 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 		reader >> timeBetweenParticles;
 		reader >> particlesLifetime;
 		reader >> size;
+		reader >> width;
+		reader >> depth;
 
 		reader >> minVelocity;
 		reader >> maxVelocity;
@@ -127,11 +129,11 @@ void ParticleSystem::Update()
 
 			case EmitterType::CUBE:
 			{
-				newParticle.direction = { 0.0f, -1.0f, 0.0f };
+				newParticle.direction = { 0.0f, 1.0f, 0.0f };
 				//newParticle.color = { 55.0f / 255.0f, 71.0f / 255.0f, 75.0f / 255.0f };
 
-				newParticle.position.x = Random::Real(position.x - size / 2.0f, position.x + size / 2.0f);
-				newParticle.position.z = Random::Real(position.z - size / 2.0f, position.z + size / 2.0f);
+				newParticle.position.x = Random::Real(position.x - width / 2.0f, position.x + width / 2.0f);
+				newParticle.position.z = Random::Real(position.z - depth / 2.0f, position.z + depth / 2.0f);
 				newParticle.position.y = position.y;
 				break;
 			}
@@ -188,6 +190,18 @@ void ParticleSystem::Update()
 	for (auto& particle : particles)
 	{
 		index++;
+		//if (type == EmitterType::CONE)
+		//{
+		//	if (particle.lifeTime > particlesLifetime * 0.5f)
+		//	{
+		//		float yDir = particle.direction.y;
+		//		particle.direction *= sin(particle.lifeTime);
+		//		particle.direction.y = yDir;
+		//		//particle.direction += Vector3(0.0f, 1.0f, 0.0f);
+		//		particle.direction.Normalize();
+		//	}
+		//}
+		
 		particle.position += particle.direction * Time::GetDelta() * particle.velocity;
 		particle.lifeTime += Time::GetDelta();
 

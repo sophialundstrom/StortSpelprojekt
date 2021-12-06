@@ -26,7 +26,7 @@ private:
 	};
 
 	Texture* texture;
-	std::vector<std::string> backgrounds{ "LoadingScreen.png" };
+	std::vector<std::string> backgrounds{ "LS1.png", "LS2.png", "LS3.png", "LS4.png" };
 	ID3D11VertexShader* vShader;
 	ID3D11PixelShader* pShader;
 	ID3D11InputLayout* layout;

@@ -57,8 +57,10 @@ public:
 	void AddPointLight(Vector3 position, float range, Vector3 attenuation = { 0.05f, 0.05f, 0.05f }, Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f });
 	PointLight* GetPointLights() { return pointLights.data(); }
 	UINT GetNumberOfPointlights() { return (UINT)pointLights.size(); }
+	void UpdatePointLights();
 
 	void UpdateDirectionalLight(const Vector3& position) { directionalLight.SetTargetPosition(position); }
+	void UpdateDirectionalLightColor(const Vector4 color) { directionalLight.data.color = color; }
 	void SetDirectionalLight(float range, Vector4 color = { 1, 1, 1, 1 }, float startAngle = 0.0f, int startDir = 1);
 	void SetCamera(float FOV, float aspectRatio, float nearZ, float farZ, float rotationSpeed, float moveSpeed, Vector3 position = { 0.0f, 0.0f, 0.0f }, Vector3 forward = { 0.0f, 0.0f, 1.0f }, Vector3 up = { 0.0f, 1.0f, 0.0f });
 };

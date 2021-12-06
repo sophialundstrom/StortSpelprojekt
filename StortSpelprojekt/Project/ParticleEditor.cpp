@@ -1,5 +1,6 @@
 #include "ParticleEditor.h"
 #include <fstream>
+#include "Renderers.h"
 
 void ParticleEditor::Save(const std::string& file)
 {
@@ -14,6 +15,9 @@ void ParticleEditor::Save(const std::string& file)
 	writer << particleSystem->GetTimeBetweenParticles() << space;
 	writer << particleSystem->GetParticlesLifetime() << space;
 	writer << particleSystem->GetSize() << space;
+	writer << particleSystem->GetWidth() << space;
+	writer << particleSystem->GetDepth() << space;
+
 
 	writer << particleSystem->GetMinVelocity() << space;
 	writer << particleSystem->GetMaxVelocity() << space;
@@ -39,9 +43,9 @@ void ParticleEditor::Load(const std::string& file)
 	if (file == "" || std::filesystem::path(file).extension() != ".ps")
 		return;
 
-	renderer.Clear();
+	PR->Clear();
 	particleSystem = std::make_shared<ParticleSystem>(file, true);
-	renderer.Bind(particleSystem);
+	PR->Bind(particleSystem);
 
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
 
@@ -50,6 +54,10 @@ void ParticleEditor::Load(const std::string& file)
 	window.SetValue<SliderFloatComponent, float>("LIFETIME", particleSystem->GetParticlesLifetime());
 	window.SetValue<SliderFloatComponent, float>("DELTA SPAWN", particleSystem->GetTimeBetweenParticles());
 	window.SetValue<SliderFloatComponent, float>("SYSTEM SIZE", particleSystem->GetSize());
+
+	window.SetValue<SliderFloatComponent, float>("CUBE WIDTH", particleSystem->GetWidth());
+	window.SetValue<SliderFloatComponent, float>("CUBE DEPTH", particleSystem->GetDepth());
+
 	window.SetValue<SliderFloatComponent, float>("MIN VELOCITY", particleSystem->GetMinVelocity());
 	window.SetValue<SliderFloatComponent, float>("MAX VELOCITY", particleSystem->GetMaxVelocity());
 
@@ -98,8 +106,9 @@ void ParticleEditor::Render()
 {
 	BeginViewportFrame();
 
-	colliderRenderer.Render();
-	renderer.Render();
+	CR->Render();
+
+	PR->Render();
 
 	BeginFrame();
 
@@ -110,13 +119,15 @@ void ParticleEditor::Render()
 }
 
 ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
-	:renderer(FORWARD), colliderRenderer(FORWARD)
 {
+	RND.InitColliderRenderer();
+	RND.InitParticleRenderer();
+
 	camera = new Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0, 0, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
 
 	source = std::make_shared<BoundingSphere>();
 	source->SetScale(0.5f);
-	colliderRenderer.Bind(source);
+	CR->Bind(source);
 
 	AddWindow("PARTICLE SYSTEM EDITOR");
 	auto& window = windows["PARTICLE SYSTEM EDITOR"];
@@ -129,6 +140,8 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	window.AddSliderFloatComponent("DELTA SPAWN");
 	window.AddSliderFloatComponent("LIFETIME", 0.0f, 10.0f);
 	window.AddSliderFloatComponent("SYSTEM SIZE", 0.0f, 50.0f);
+	window.AddSliderFloatComponent("CUBE WIDTH", 0.0f, 50.0f);
+	window.AddSliderFloatComponent("CUBE DEPTH", 0.0f, 50.0f);
 	window.AddSeperatorComponent();
 
 	window.AddTextComponent("VELOCITY");
@@ -180,6 +193,11 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 
 	Load("default.ps");
 	(void)Run();
+}
+
+ParticleEditor::~ParticleEditor()
+{
+	RND.ShutDown();
 }
 
 APPSTATE ParticleEditor::Run()
@@ -314,6 +332,17 @@ APPSTATE ParticleEditor::Run()
 	else if (window.Changed("SYSTEM SIZE"))
 	{
 		particleSystem->SetSize(window.GetValue<SliderFloatComponent>("SYSTEM SIZE"));
+		particleSystem->Reset();
+	}
+
+	else if (window.Changed("CUBE WIDTH"))
+	{
+		particleSystem->SetCubeWidth(window.GetValue<SliderFloatComponent>("CUBE WIDTH"));
+		particleSystem->Reset();
+	}
+	else if (window.Changed("CUBE DEPTH"))
+	{
+		particleSystem->SetCubeDepth(window.GetValue<SliderFloatComponent>("CUBE DEPTH"));
 		particleSystem->Reset();
 	}
 

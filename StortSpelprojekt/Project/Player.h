@@ -8,66 +8,38 @@
 #include "Canvas.h"
 #include "ArrowHandler.h"
 #include "AnimatedModel.h"
+#include "Biome.h"
+#include "Inventory.h"
 
-#undef Ray
-
-struct Inventory
-{
-	//std::unordered_map here?
-	std::map<RESOURCE, UINT> items; //ID , NUM OF ITEM
-	std::map<RESOURCE, std::string> names;
-
-	Inventory()
-	{
-		names[RESOURCE::WOOD] = "Wood";
-		names[RESOURCE::STONE] = "Stone";
-		names[RESOURCE::FOOD] = "Food";
-		names[RESOURCE::NONE] = "NONE";
-	}
-
-	void AddItem(enum RESOURCE ID)
-	{
-		items[ID]++;
-	}
-
-	void RemoveItem(enum RESOURCE ID, UINT amount = 1)
-	{
-		if (items[ID] <= amount)
-		{
-			items[ID] = 0;
-			return;
-		}
-
-		items[ID] -= amount;
-	}
-
-	UINT NumOf(enum RESOURCE ID)
-
-	{
-		return items[ID];
-	}
-
-	void GetResources(enum RESOURCE ID)
-	{
-		std::cout << names[ID] << " " << items[ID] << std::endl;
-	}
-};
+class Building;
 
 struct Stats
 {
 	UINT barbariansKilled = 0;
 	float movementSpeed = 20.0f;
-	float sprintSpeed = 70.0f;
-	UINT maxHealthPoints = 1;
-	UINT healthPoints = 1;
+	float sprintSpeed = 60.0f;
+	UINT maxHealthPoints = 10;
+	UINT healthPoints = 10;
 	UINT level = 1;
 	float currentSpeed = movementSpeed;
+	int resist = 0;
+	int damage = 1;
+	int HPGain = 1;
 
 	void SetMaxHealthPoints(UINT newMaxHealthPoints) { this->maxHealthPoints = newMaxHealthPoints; }
 	void SetHealthPoints(UINT newHealthPoints) { this->healthPoints = newHealthPoints; }
 	void SetMovementSpeed(float newMovementSpeed) { this->movementSpeed = newMovementSpeed; }
 	void SetSprintSpeed(float newSprintSpeed) { this->sprintSpeed = newSprintSpeed; }
-	void IncreaseHealthPoints() { if (healthPoints < maxHealthPoints) this->healthPoints++; };
+	void IncreaseHealthPoints()
+	{ 
+		if (healthPoints < maxHealthPoints)
+		{
+			this->healthPoints += HPGain; 
+			if (this->healthPoints > 10)
+				this->healthPoints = 10;
+		}
+	}
+
 	void DecreaseHealthPoint() { if (healthPoints != 0) this->healthPoints--; };
 };
 
@@ -76,11 +48,10 @@ class Player : public AnimatedModel
 private:
 	Stats stats;
 
-	Camera* sceneCamera;
+	std::shared_ptr<AnimatedModel> bow;
 
 	std::shared_ptr<Canvas> ingameCanvas;
 
-	//std::vector<std::shared_ptr<Arrow>>arrows;
 	ArrowHandler arrowHandler;
 
 	bool hasCollided;
@@ -92,10 +63,9 @@ private:
 	float currentGroundLevel = 0.0f;
 	float heightMapGroundLevel = 0.0f;
 
-	const float mouseDefaultSensitivity = 3.f;
-	const float mouseAimSensitivity = 2.f;
+	const float mouseDefaultSensitivity = 10.f;
+	const float mouseAimSensitivity = 4.f;
 	float mouseCurrentSensitivity = mouseDefaultSensitivity;
-	float mouseSensitivity = 5.f;
 
 	float gravity = 9.82f;
 	float timePassed = 0;
@@ -103,7 +73,7 @@ private:
 	bool jumping = false;
 	bool maxJumpHeight = false;
 	bool pressed = false;
-	bool sprint = false;
+	bool isSprinting = false;
 
 	float airTime = 0;
 	float jumpHeight = 5.0f;
@@ -111,8 +81,9 @@ private:
 	float defaultCameraDistance = 17.0f;
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
+	float minCameraDistance = 0.5f;
 	float closestColliderToCam = 9999;
-	Vector3 cameraLocationSocket = { 1.3f, 5.0, -2.f };
+	Vector3 cameraLocationSocket = { -1.3f, 8.0, -4.f };
 
 	void CalcHeight(HeightMap* heightMap);
 	float CalcHeightForCamera(HeightMap* heightMap);
@@ -134,25 +105,26 @@ private:
 	float duration = 1.f;
 	bool inAir = false;
 
-	void UpdateHealthUI()
-	{
-		auto image = ingameCanvas->GetImage("hp");
-		if (image->FileName() == "HP" + std::to_string(stats.healthPoints) + ".png")
-			return;
-
-		auto position = image->GetPosition();
-		ingameCanvas->RemoveImage("hp");
-		ingameCanvas->AddImage(position, "hp", "HP" + std::to_string(stats.healthPoints) + ".png");
-	}
+	//ANIMATION HANDLING
+	bool isAiming = false;
 
 public:
+	Camera* sceneCamera;
+	BIOME currentBiome;
+	BIOME previousBiome;
+	bool test = false;
+	bool biomeChanged = false;
+
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
-	void Update(HeightMap* heightMap, ModelRenderer& mRenderer, ColliderRenderer& cRenderer);
+	void Update(HeightMap* heightMap);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
-	void TakeDamage();
+	void TakeDamage(int x);
+	bool inCombat = false;
+	void SwitchBiomeMusic();
+	void SetDamage(int x) { stats.damage = x; }
 
-	Player(const std::string file, Camera* camera, std::shared_ptr<Canvas> ingameCanvas/*, std::vector<std::shared_ptr<Arrow>> arrows*/, const UINT& maxArrows);
+	Player(const std::string file, Camera* camera, const UINT& maxArrows);
 
 public:
 	// TEMP STATS PRINT
@@ -177,9 +149,10 @@ public:
 
 	void HandleCollidedObjects(const std::vector<std::shared_ptr<Collider>> colliders);
 	void ResetToLastPosition() { position = lastPosition; }
-	void AddHealthPoint() { stats.IncreaseHealthPoints(); UpdateHealthUI(); }
+	void AddHealthPoint() { stats.IncreaseHealthPoints(); }
 	void SetClosestColliderToCam(float range)
 	{
 		closestColliderToCam = range;
 	}
+	void HandleUpgrades(std::shared_ptr<Building> building);
 };
