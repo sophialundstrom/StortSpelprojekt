@@ -115,7 +115,7 @@ HRESULT Graphics::CreateDeviceSwapchain(UINT clientWidth, UINT clientHeight, HWN
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.BufferCount = 1;
 	swapChainDesc.OutputWindow = hWnd;
-	swapChainDesc.Windowed = true;
+	swapChainDesc.Windowed = windowed;
 
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;

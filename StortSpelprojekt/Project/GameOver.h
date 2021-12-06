@@ -60,10 +60,6 @@ public:
 	GameOver(UINT clientWidth, UINT clientHeight, HWND window);
 	~GameOver();
 
-
-
-
-
 	virtual APPSTATE Run() override;
 
 };

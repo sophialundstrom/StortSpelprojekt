@@ -28,7 +28,7 @@ void MainMenu::Quit()
 
 void MainMenu::Form()
 {
-	ShellExecute(0, 0, L"https://docs.google.com/forms/d/1wSGU7CwBNTTCu50nsunQX2Q9DC06SEi5SAqbgJstgb0/viewform?edit_requested=true", 0, 0, SW_SHOW);
+	ShellExecute(0, 0, L"https://forms.gle/Bf36fwdMFhnNfk6D8", 0, 0, SW_SHOW);
 }
 
 void MainMenu::HoveringContinue()
@@ -92,9 +92,9 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	{
 		// CONTINUE
 		menuCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "Continue", "Continue.png", 1.f, 1.0f, true, false);
-		menuCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f, true, false);
+		/*menuCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f, true, false);
 		auto image = menuCanvas->GetImage("Continue");
-		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "ContinueButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringContinue(); });
+		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "ContinueButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringContinue(); });*/
 	}
 
 	{
@@ -131,8 +131,8 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	{
 		// FORM
-		menuCanvas->AddImage({ clientWidth - 250.f, clientHeight / 2.0f + 450 }, "Form", "Form.png", 1.0f, 1.0f, true, false);
-		menuCanvas->AddImage({ clientWidth - 250.f, clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.0f, 1.0f, true, false);
+		menuCanvas->AddImage({ clientWidth - 200.0f, (float)clientHeight - 100 }, "Form", "Form.png", 1.0f, 1.0f, true);
+		menuCanvas->AddImage({ clientWidth - 200.0f, (float)clientHeight - 100 }, "FormLeaves", "FormLeaves.png", 1.0f, 1.0f, true);
 		auto image = menuCanvas->GetImage("Form");
 		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "FormButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Form(); }, [this] {HoveringForm(); });
 	}
@@ -201,7 +201,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	scene.AddPointLight({ -42.f, 40.0f, -687.4f }, 200, { 1.0f, 0.0f, 0.05f }, { 190.0f / 255.0f, 83.0f / 255.0f, 21.0f / 255.0f, 1.0f });
 
 
-	auto menuFireSystem = std::make_shared<ParticleSystem>("MainMenuPS.ps");
+	auto menuFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
 	scene.AddParticleSystem("MenuFireSystem", menuFireSystem, Vector3{ -42, 35, -687 });
 	PR->Bind(menuFireSystem);
 		
@@ -212,13 +212,11 @@ MainMenu::~MainMenu()
 {
 	for (auto& [name, canvas] : canvases)
 		delete canvas;
-
-	Audio::StopEngine();
+	Resources::Inst().Clear();
 }
 
 void MainMenu::Initialize()
 {
-	//Audio::Initialize();
 	Audio::StartMusic("Menu.wav");
 
 	//LOAD SCENE
@@ -269,7 +267,7 @@ APPSTATE MainMenu::Run()
 {
 	// LEAVES
 	canvases["MAIN MENU"]->GetImage("NewGameLeaves")->Hide();
-	canvases["MAIN MENU"]->GetImage("ContinueLeaves")->Hide();
+	//canvases["MAIN MENU"]->GetImage("ContinueLeaves")->Hide();
 	canvases["MAIN MENU"]->GetImage("QuitLeaves")->Hide();
 	canvases["MAIN MENU"]->GetImage("HowToPlayLeaves")->Hide();
 	canvases["MAIN MENU"]->GetImage("FormLeaves")->Hide();

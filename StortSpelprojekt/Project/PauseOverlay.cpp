@@ -23,7 +23,7 @@ PauseOverlay::PauseOverlay()
 
 	//LEFT BORDER WOOD
 	AddImage({ 25, Window::ClientHeight() / 2.0f }, "MenuStick", "MenuStick.png", 0.8f, 1.0f, true, true);
-	AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f }, "ABPauseBackground", "PauseBackground.png", 1.0f, 1.0f);
+	AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 2.0f }, "ABPauseBackground", "PauseBackground.png", 2.0f, 1.0f);
 
 
 	{
@@ -94,7 +94,7 @@ PauseOverlay::PauseOverlay()
 		float yPos = Window::ClientHeight() / 2.0f + 100.0f;
 
 		htpCanvas->AddImage({ Window::ClientWidth() / 2.0f, Window::ClientHeight() / 8.0f }, "HTPTitle", "HowToPlaySmall.png", 1.f, 1.0f);
-		htpCanvas->AddImage({ std::roundf(xPos), std::roundf(yPos) }, "Controls", "ControlsBig.png", 1.f, 1.0f);
+		htpCanvas->AddImage({ std::roundf(xPos), std::roundf(yPos) }, "Controls", "ControlsSmall.png", 1.f, 1.0f);
 	}
 	canvases["HTP"] = htpCanvas;
 
@@ -161,7 +161,7 @@ void PauseOverlay::Render()
 
 	if (currentCanvas)
 	{
-		currentCanvas->DrawButtons();
+		//currentCanvas->DrawButtons();
 		currentCanvas->DrawImages();
 		currentCanvas->DrawTexts();
 		currentCanvas->DrawSliders();

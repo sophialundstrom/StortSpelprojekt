@@ -69,6 +69,7 @@ public:
 		this->matrix = (viewMatrix * ortoMatrix).Transpose();
 	}
 	float GetRange() { return this->range; }
+	void SetColor(Vector4 clr) { data.color = clr; }
 	Vector3 GetRepresentativePosition() const { return this->position; }
 	Matrix GetMatrix() const { return this->matrix; }
 };

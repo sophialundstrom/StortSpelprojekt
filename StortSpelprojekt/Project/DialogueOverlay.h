@@ -13,16 +13,16 @@ private:
 	Text* dialogueText;
 
 	float speed = 0;
-	const float holdSpeed = 100;
-	const float regularSpeed = 10;
-	const float timeBetweenChars = 0.2f;
+	const float holdSpeed = 1000;
+	const float regularSpeed = 5;
+	const float timeBetweenChars = 0.1f;
 	float timeSinceChar = 0.0f;
 	UINT numCharacters = 0;
 
 	float lastInteraction = 0.0f;
 
 	float delay = 0.0f;
-	const float doneDelay = 2.0f;
+	const float doneDelay = 1.5f;
 	bool done = true;
 public:
 	DialogueOverlay();

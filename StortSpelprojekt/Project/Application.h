@@ -32,7 +32,7 @@ public:
 		
 		graphics = std::make_unique<Graphics>(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND(), false);
 
-		RunLoadingScreen();
+		//RunLoadingScreen();
 
 		shaderData = std::make_unique<ShaderData>();
 
@@ -45,7 +45,7 @@ public:
 		//SWAP TO MAINMENU TO NOT SKIP IT
 		Window::DeactivateCursor();
 
-		Audio::Initialize();
+		Audio::Initialize(false);
 
 		state = new MainMenu(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND());
 	}
@@ -54,6 +54,7 @@ public:
 	{
 		ui.reset();
 		Window::ShutDown();
+		Audio::StopEngine();
 	}
 
 	int Run()

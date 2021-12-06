@@ -43,7 +43,7 @@ void Quest::AddLocationObjective(const Vector3& location, float radius)
 	objectives.emplace_back(new LocationObjective(location, radius));
 }
 
-void Quest::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets)
+void Quest::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets, std::vector<std::shared_ptr<FriendlyNPC>> frendlyNPCs)
 {
 	UINT numCompleted = 0;
 
@@ -80,6 +80,14 @@ void Quest::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Locat
 		auto talk = dynamic_cast<TalkObjective*>(objective);
 		if (talk)
 		{
+			for (auto& NPC: frendlyNPCs)
+			{
+			if (NPC->GetName() == talk->GetNPCName())
+			{
+				talk->Update(NPC);
+				break;
+			}
+			}
 			if (talk->IsCompleted())
 				numCompleted++;
 
