@@ -243,12 +243,20 @@ void QuadTree::DivideQuadTree()
 
 void QuadTree::DeleteMemory()
 {
+
 	if (divided)
 	{
 		delete TopL;
 		delete TopR;
 		delete BotL;
 		delete BotR;
+	}
+	else
+	{
+		TopL->DeleteMemory();
+		TopR->DeleteMemory();
+		BotL->DeleteMemory();
+		BotR->DeleteMemory();
 	}
 	
 }
