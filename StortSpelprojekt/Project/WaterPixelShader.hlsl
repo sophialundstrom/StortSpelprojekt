@@ -57,7 +57,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     float4 color = diffuseTexture.Sample(wrapSampler, input.texCoords * 50.0f);
     float4 normalMap1 = normalMapTex1.Sample(wrapSampler, nm1 * 100.0f);
     float4 normalMap2 = normalMapTex2.Sample(wrapSampler, nm2 * 50.0f);
-    float4 noiseTex = noiseTexture.Sample(wrapSampler, input.texCoords * 50.0f);
+    float4 noiseTex = noiseTexture.Sample(wrapSampler, -nm2 * 50.0f);
 
     //Range from [0, 1] to [-1, 1]
     normalMap1.x = (2.0f * normalMap1.x) - 1.0f;
@@ -71,7 +71,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     input.tangent = normalize(input.tangent - dot(input.tangent, input.normal) * input.normal);
 
     float3x3 texSpace = float3x3(input.tangent, biTangent, input.normal);
-    input.normal = normalize(mul(normalMap1 + normalMap2, texSpace));
+    input.normal = normalize(mul((normalMap1 + normalMap2) * 2, texSpace));
 
     //FOG
     float4 fogColor = float4(0.8f, 0.8f, 0.8f, 1.0f);
@@ -84,7 +84,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     finalColor = color * directionalLight.lightColor;
     finalColor += saturate(dot(directionalLight.lightDirection, input.normal) * directionalLight.lightColor * color);
 
-    finalColor += (input.worldPosition.y * (noiseTex) * 0.2f);
+    finalColor += ((input.worldPosition.y + 1.0f) * (noiseTex * 0.2f));
 
     return float4((lerp((input.worldPosition, 1.0f) * saturate(finalColor), fogColor, fogFactor)), color.a);
 }

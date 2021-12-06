@@ -63,7 +63,7 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 public:
-	WaterRenderer(float tesselationAmount = 100);
+	WaterRenderer(float tesselationAmount = 1000);
 	~WaterRenderer();
 
 	virtual void Render() override;
