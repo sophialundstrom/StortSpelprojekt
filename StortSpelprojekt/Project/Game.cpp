@@ -845,7 +845,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	//LOAD SCENE
 	Initialize();
 
-	SetupAudio();
+	//SetupAudio();
 
 	//SET SCENE CAMERA + DIRECTIONAL LIGHT
 

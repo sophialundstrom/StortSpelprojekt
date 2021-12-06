@@ -81,7 +81,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitShadowRenderer();
 
 	Initialize();
-	Audio::StartEngine();
+	//Audio::StartEngine();
 
 	auto menuCanvas = new Canvas();
 	float xPos = 75;
@@ -217,7 +217,7 @@ MainMenu::~MainMenu()
 
 void MainMenu::Initialize()
 {
-	Audio::StartMusic("Menu.wav");
+	//Audio::StartMusic("Menu.wav");
 
 	//LOAD SCENE
 	FBXLoader levelLoader("Models");

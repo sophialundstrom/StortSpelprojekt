@@ -103,7 +103,7 @@ void Audio::SetVolume(const std::string& name, float volume)
 
 void Audio::StartMusic(const std::string& name)
 {
-	for (auto& music : sMusic)
+	/*for (auto& music : sMusic)
 	{
 		music.second->Stop(0);
 	}
@@ -113,18 +113,18 @@ void Audio::StartMusic(const std::string& name)
 	if (FAILED(hr = sMusic[name]->SubmitSourceBuffer(&audioBuffers[name])))
 		std::cout << "COULD NOT START MUSIC - SOURCE BUFFER FAILED" << std::endl;
 	if (FAILED(hr = sMusic[name]->Start(0)))
-		std::cout << "COULD NOT START MUSIC - COULD NOT START AUDIO" << std::endl;
+		std::cout << "COULD NOT START MUSIC - COULD NOT START AUDIO" << std::endl;*/
 }
 
 void Audio::StartEffect(const std::string& name)
 {
-	sEffects[name]->Stop(0);
+	/*sEffects[name]->Stop(0);
 	sEffects[name]->FlushSourceBuffers();
 	HRESULT hr;
 	if (FAILED(hr = sEffects[name]->SubmitSourceBuffer(&audioBuffers[name])))
 		std::cout << "COULD NOT SUBMIT SOURCE BUFFER" << std::endl;
 	if (FAILED(hr = sEffects[name]->Start(0)))
-		std::cout << "COULD NOT START AUDIO" << std::endl;
+		std::cout << "COULD NOT START AUDIO" << std::endl;*/
 }
 
 void Audio::StartVoice(const std::string& name)
