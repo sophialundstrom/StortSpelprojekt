@@ -30,7 +30,7 @@ public:
 		data.direction.Normalize();
 		data.color = color;
 
-		this->ortoMatrix = Matrix::CreateOrthographicOffCenter(-range, range, -range, range, 0.1f, range * 2);
+		this->ortoMatrix = Matrix::CreateOrthographicOffCenter(-range, range, -range, range, 0.1f, range);
 		this->viewMatrix = Matrix::CreateLookAt(position + -data.direction * range, position, { 0.0f, 1.0f, 0.0f });
 		this->matrix = (viewMatrix * ortoMatrix).Transpose();
 	}
