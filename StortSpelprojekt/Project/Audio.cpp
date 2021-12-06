@@ -34,37 +34,37 @@ bool Audio::MuteAllVolume()
 
 void Audio::SetMasterVolume(float volume)
 {
-	pMasterVoice->SetVolume(volume);
-	masterVolume = volume;
-	Print(masterVolume);
+	////pMasterVoice->SetVolume(volume);
+	//masterVolume = volume;
+	//Print(masterVolume);
 }
 
 void Audio::SetMusicVolume(float volume)
 {
-	for (auto& [key, source] : sMusic)
-	{
-		source->SetVolume(volume);
-		musicVolume = volume;
-	}
-	Print(volume);
+	//for (auto& [key, source] : sMusic)
+	//{
+	//	source->SetVolume(volume);
+	//	musicVolume = volume;
+	//}
+	//Print(volume);
 }
 
 void Audio::SetSoundEffectsVolume(float volume)
 {
-	for (auto& [key, source] : sEffects)
-	{
-		source->SetVolume(volume);
-		effectsVolume = volume;
-	}
+	//for (auto& [key, source] : sEffects)
+	//{
+	//	source->SetVolume(volume);
+	//	effectsVolume = volume;
+	//}
 }
 
 void Audio::SetVoiceVolume(float volume)
 {
-	for (auto& [key, source] : sVoices)
-	{
-		source->SetVolume(volume);
-		voiceVolume = volume;
-	}
+	//for (auto& [key, source] : sVoices)
+	//{
+	//	source->SetVolume(volume);
+	//	voiceVolume = volume;
+	//}
 }
 
 void Audio::StartEngine()
@@ -74,7 +74,7 @@ void Audio::StartEngine()
 
 void Audio::StopEngine()
 {
-	MusicEngine->StopEngine();
+	//MusicEngine->StopEngine();
 	sMusic.clear();
 	sEffects.clear();
 	sVoices.clear();
