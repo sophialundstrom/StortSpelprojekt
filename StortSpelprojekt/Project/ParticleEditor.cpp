@@ -18,7 +18,6 @@ void ParticleEditor::Save(const std::string& file)
 	writer << particleSystem->GetWidth() << space;
 	writer << particleSystem->GetDepth() << space;
 
-
 	writer << particleSystem->GetMinVelocity() << space;
 	writer << particleSystem->GetMaxVelocity() << space;
 
@@ -55,6 +54,12 @@ void ParticleEditor::Load(const std::string& file)
 	window.SetValue<SliderFloatComponent, float>("DELTA SPAWN", particleSystem->GetTimeBetweenParticles());
 	window.SetValue<SliderFloatComponent, float>("SYSTEM SIZE", particleSystem->GetSize());
 
+	//POSITIONS
+	window.SetValue<SliderFloatComponent, float>("X-POS", particleSystem->GetPosition().x);
+	window.SetValue<SliderFloatComponent, float>("Y-POS", particleSystem->GetPosition().y);
+	window.SetValue<SliderFloatComponent, float>("Z-POS", particleSystem->GetPosition().z);
+
+
 	window.SetValue<SliderFloatComponent, float>("WIDTH", particleSystem->GetWidth());
 	window.SetValue<SliderFloatComponent, float>("DEPTH", particleSystem->GetDepth());
 
@@ -83,19 +88,6 @@ void ParticleEditor::Load(const std::string& file)
 
 void ParticleEditor::Update()
 {
-	//if (Event::ScrolledUp())
-	//{
-	//	Vector3 newPos = { camera->GetPosition().x + 1, camera->GetPosition().y, camera->GetPosition().z };
-	//	camera->SetPosition(newPos);
-	//}
-
-	//else if (Event::ScrolledDown())
-	//{
-	//	Vector3 newPos = { camera->GetPosition().x - 1, camera->GetPosition().y, camera->GetPosition().z };
-
-	//	camera->SetPosition(newPos);
-	//}
-
 	if (GetAsyncKeyState('W'))
 	{
 		camera->MoveForward();
@@ -142,6 +134,8 @@ void ParticleEditor::Update()
 	else
 		camera->SetSpeedMultiplier(1);
 
+	source->SetPosition(particleSystem->GetPosition());
+	source->Update();
 
 	particleSystem->Update();
 	camera->Update();
@@ -155,6 +149,8 @@ void ParticleEditor::Render()
 
 	CR->Render();
 	SBR->Render();
+	
+	MR->Render();
 
 	PR->Render();
 
@@ -171,10 +167,13 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	RND.InitColliderRenderer();
 	RND.InitParticleRenderer();
 	RND.InitSkyBoxRenderer("ParticleEditor", "ParticleEditor");
+	RND.InitModelRenderer();
 
-	camera = new Camera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 0.75f, 2.0f, { 0.0f, 0.0f, -2.5f });
+	camera = new Camera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 0.75f, 2.0f, { 0.0f, 2.0f, -2.5f });
 	//camera = new Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0.25f, 2.0f, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
 	
+	auto terrain = std::shared_ptr<Model>("MainMenuTerrain", "");
+
 	source = std::make_shared<BoundingSphere>();
 	source->SetScale(0.5f);
 	CR->Bind(source);
@@ -189,6 +188,9 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	window.AddSliderIntComponent("MAX PARTICLES", 1, 1500 /*ParticleSystem::ABSOLUTE_MAX_PARTICLES*/);
 	window.AddSliderFloatComponent("DELTA SPAWN");
 	window.AddSliderFloatComponent("LIFETIME", 0.0f, 10.0f);
+	window.AddSliderFloatComponent("X-POS", -50.0f, 50.0f, 0.0f);
+	window.AddSliderFloatComponent("Y-POS", -50.0f, 50.0f, 0.0f);
+	window.AddSliderFloatComponent("Z-POS", -50.0f, 50.0f, 0.0f);
 	window.AddSeperatorComponent();
 	window.AddTextComponent("CONE AND SPHERE");
 	window.AddSliderFloatComponent("SYSTEM SIZE", 0.0f, 50.0f);
@@ -322,6 +324,24 @@ APPSTATE ParticleEditor::Run()
 	else if (window.Changed("DELTA SPAWN"))
 	{
 		particleSystem->SetTimeBetweenPartilces(window.GetValue<SliderFloatComponent>("DELTA SPAWN"));
+		particleSystem->Reset();
+	}
+
+	else if (window.Changed("X-POS"))
+	{
+		particleSystem->SetXPosition(window.GetValue<SliderFloatComponent>("X-POS"));
+		particleSystem->Reset();
+	}
+
+	else if (window.Changed("Y-POS"))
+	{
+		particleSystem->SetYPosition(window.GetValue<SliderFloatComponent>("Y-POS"));
+		particleSystem->Reset();
+	}
+
+	else if (window.Changed("Z-POS"))
+	{
+		particleSystem->SetZPosition(window.GetValue<SliderFloatComponent>("Z-POS"));
 		particleSystem->Reset();
 	}
 

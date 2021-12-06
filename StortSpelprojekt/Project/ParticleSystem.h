@@ -35,7 +35,6 @@ private:
 	float size;
 	float width;
 	float depth;
-	Vector3 position;
 
 	Vector2 particleExtents;
 
@@ -86,6 +85,11 @@ public:
 	void SetParticlesLifetime(float amount) { this->particlesLifetime = amount; }
 	void SetTimeBetweenPartilces(float amount) { this->timeBetweenParticles = amount; }
 	void SetPosition(Vector3 pos) { this->position = pos; }
+
+	void SetXPosition(float xPos) { this->position.x = xPos; }
+	void SetYPosition(float yPos) { this->position.y = yPos; }
+	void SetZPosition(float zPos) { this->position.z = zPos; }
+
 	void StartSpawn() { this->stopSpawn = false; this->done = false; }
 	void StopSpawn() { this->stopSpawn = true; }
 	bool IsDone() { return this->done; }

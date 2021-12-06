@@ -17,11 +17,13 @@ std::string GetNthString(const std::string& line, UINT n)
 }
 
 ParticleSystem::ParticleSystem(const std::string& file, bool preview)
-	:maxParticles(0), timeBetweenParticles(0), particlesLifetime(0), minVelocity(0), maxVelocity(0), size(0), particleExtents(0, 0), position(0, 0, 0), type(EmitterType::SPHERE),
+	:maxParticles(0), timeBetweenParticles(0), particlesLifetime(0), minVelocity(0), maxVelocity(0), size(0), particleExtents(0, 0), type(EmitterType::SPHERE),
 	timeSinceLastParticle(0), particleCount(0)
 {
 	std::string path = file;
 	std::string line = "";
+
+	this->position = { 0.0f, 0.0f, 0.0f };
 
 	if (file == "default.ps" || file.find("\\") == std::string::npos)
 		path = FileSystem::ProjectDirectory::path + "\\ParticleSystems\\" + file;
@@ -81,9 +83,10 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 }
 
 ParticleSystem::ParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type)
-	:maxParticles(maxParticles), size(size), position(position), maxVelocity(maxVelocity), minVelocity(minVelocity), particleExtents(particleExtents),
+	:maxParticles(maxParticles), size(size), maxVelocity(maxVelocity), minVelocity(minVelocity), particleExtents(particleExtents),
 	timeBetweenParticles(timeBetweenParticles), particlesLifetime(particlesLifetime), type(type), timeSinceLastParticle(0), particleCount(0)
 {
+	this->position = { 0.0f, 0.0f, 0.0f };
 	CreateDynamicVertexBuffer(vertexBuffer, sizeof(Particle), sizeof(Particle) * maxParticles);
 }
 
