@@ -342,11 +342,11 @@ void Game::AddFriendlyNPCs()
 			NPC->AddDialogue("Hello my best friend! I think you should get rid of all barbarians in that camp to the south to damage their numbers.");
 			NPC->AddDialogue("Go back and wipe out the camp to the southwest. I believe you can do it.");
 			NPC->AddDialogue("Great work buddy! You really showed them. Maybe we finally can get some peace in the village.");
-			auto onActiveFunc = [this, quest]() mutable
-			{
-				quest->ResetObjectiveResources(player, camps, targets);
-			};
-			quest->AddOnActivateFunction(onActiveFunc);
+			//auto onActiveFunc = [this, quest]() mutable
+			//{
+			//	quest->ResetObjectiveResources(player, camps, targets);
+			//};
+			//quest->AddOnActivateFunction(onActiveFunc);
 		}
 
 		NPC->AddDialogue("Keep your eyes open, the barbarians are relentless.");
@@ -376,11 +376,11 @@ void Game::AddFriendlyNPCs()
 			NPC->AddDialogue("We needo do somethin' abou'it befo' they do somethin' awful.");
 			NPC->AddDialogue(" Down with the bastards! Remembe' to stock u' on arrows at Lydia's.");
 			NPC->AddDialogue("Wha' a remarkable job! They won' bo'er us now.");
-			auto onActiveFunc = [this, quest]() mutable
-			{
-				quest->ResetObjectiveResources(player, camps, targets);
-			};
-			quest->AddOnActivateFunction(onActiveFunc);
+			//auto onActiveFunc = [this, quest]() mutable
+			//{
+			//	quest->ResetObjectiveResources(player, camps, targets);
+			//};
+			//quest->AddOnActivateFunction(onActiveFunc);
 		}
 
 		NPC->AddDialogue("Make't sure ye ready fo the barbs. They have a big camp to the north");
@@ -400,10 +400,16 @@ void Game::AddFriendlyNPCs()
 			NPC->AddDialogue("Thank you! Now we can finally start rebuilding the tent.");
 		}
 		{
-			NPC->AddQuest("Sticks And Stones");
+			auto quest = NPC->AddQuest("Sticks And Stones");
 			NPC->AddDialogue("I will still need some resources for the structure. Please look around for some sticks and rocks that we can use.");
 			NPC->AddDialogue("I really need those sticks and rocks right now, it can't be that hard to find");
 			NPC->AddDialogue("Great work! Now that wont be enough to rebuild the structure but I will trade you some arrows for it, whenever you are in need of some more arrows, just come back here.");
+			
+			auto onCompleteFunc = [this, quest]() mutable
+			{
+				quest->ResetObjectiveResources(player, camps, targets);
+			};
+			quest->AddOnCompleteFunction(onCompleteFunc);
 		}
 		{
 			auto quest = NPC->AddQuest("Target Aquired");
@@ -423,7 +429,7 @@ void Game::AddFriendlyNPCs()
 			NPC->AddDialogue("Amazing! Thanks for saving us.");
 			auto onActiveFunc = [this, quest]() mutable
 			{
-				quest->ResetObjectiveResources(player, camps, targets);
+				SpawnInvasion();
 			};
 			quest->AddOnActivateFunction(onActiveFunc);
 		}
@@ -435,14 +441,14 @@ void Game::AddFriendlyNPCs()
 		}
 		{
 			auto quest = NPC->AddQuest("Payback");
-			NPC->AddDialogue("Hi! I was out searching for raw materials in the woods to craft arrows with and encountered a couple of those damn barbarians. I managed to get a few of them but I can�t take them. Would you help me with the rest of them? I think they came from the eastern camp.");
+			NPC->AddDialogue("Hi! I was out searching for raw materials in the woods to craft arrows with and encountered a couple of those damn barbarians. I managed to get a few of them but I can't take them. Would you help me with the rest of them? I think they came from the eastern camp.");
 			NPC->AddDialogue("If the mountains are in due north... And the desert is are in the west... Then the east must be in...?");
 			NPC->AddDialogue("Did you get them all? Nice! Now I'll be able to craft all the arrows in the world without interruption!");
-			auto onActiveFunc = [this, quest]() mutable
-			{
-				quest->ResetObjectiveResources(player, camps, targets);
-			};
-			quest->AddOnActivateFunction(onActiveFunc);
+			//auto onActiveFunc = [this, quest]() mutable
+			//{
+			//	quest->ResetObjectiveResources(player, camps, targets);
+			//};
+			//quest->AddOnActivateFunction(onActiveFunc);
 		}
 
 		NPC->AddDialogue("You have helped me so much, I can never repay you for what you have done for me. By the way, when you're ready you should try to clear out the northern camp!");
@@ -525,14 +531,9 @@ void Game::AddBarbarianCamps()
 void Game::SpawnInvasion()
 {
 	camps[BarbarianCamp::Location::Village]->Reset();
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { -14, 48, 439 }, hostiles, player, CombatStyle::consistantDelay, { -16.5, 20, -567 });
 	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 7, 56, -398 }, hostiles, player, CombatStyle::consistantDelay, { 2, 20, -579 });
 	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 73, 50, -422 }, hostiles, player, CombatStyle::consistantDelay, { 57, 21, -574 });
 	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 293, 22, -628 }, hostiles, player, CombatStyle::consistantDelay, { 122, 20, -624 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 243, 24, -576 }, hostiles, player, CombatStyle::consistantDelay, { 71, 20, -626 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 207, 18, -736 }, hostiles, player, CombatStyle::consistantDelay, { 97, 18, -681 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 200, 10, -791 }, hostiles, player, CombatStyle::consistantDelay, { 47, 18, -675 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { -314, 7, -644 }, hostiles, player, CombatStyle::consistantDelay, { -88, 18, -652 });
 }
 
 void Game::CheckTargetCollision()
@@ -683,24 +684,41 @@ void Game::HandleHouseUpgrades()
 		{
 			if (Collision::Intersection(*building->GetCollider(), *player->GetFrustum()))
 			{
-				ingameOverlay->ShowInteract();
-
 				if (Event::KeyIsPressed('E') && CheckBuildRequirements(building))
 				{
 					player->HandleUpgrades(building);
 					building->Upgrade();
 				}
+
 				else if (Event::KeyIsPressed('E') && !CheckBuildRequirements(building))
 				{
 					if (building->GetBuildingName() == "ArcherTent")
 					{
 						if (building->GetCurrentState() == 1)
-							player->numArrows = 10;
+							player->numArrows = 15;
 						if (building->GetCurrentState() == 2)
-							player->numArrows = 20;
-						if (building->GetCurrentState() == 3)
 							player->numArrows = 30;
+						if (building->GetCurrentState() == 3)
+							player->numArrows = 50;
 					}
+				}
+
+				switch (building->GetCurrentState())
+				{
+					case 1:
+						ingameOverlay->ShowUpgrade({ (float)building->reqStick1, (float)building->reqStone1 }, { (float)player->Inventory().NumOf(Item::Type::Stick), (float)player->Inventory().NumOf(Item::Type::Stone)});
+						break;
+
+					case 2:
+						ingameOverlay->ShowUpgrade({ (float)building->reqStick2, (float)building->reqStone2 }, { (float)player->Inventory().NumOf(Item::Type::Stick), (float)player->Inventory().NumOf(Item::Type::Stone)});
+						break;
+
+					case 3:
+					{
+						if (building->GetBuildingName() == "ArcherTent")
+							ingameOverlay->ShowUpgrade(Vector2(), Vector2(), "Refill Arrows [E]");
+						break;
+					}	
 				}
 			}
 		}
@@ -736,10 +754,10 @@ void Game::CheckItemCollision()
 {
 	for (auto& item : items)
 	{
+		item->Update();
+
 		if ((player->GetPosition() - item->GetPosition()).Length() < 70.f)
 		{
-			item->Update();
-
 			if (IR->IsBound(item))
 				IR->Unbind(item);
 
@@ -814,7 +832,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitStaticModelRenderer();
 	RND.InitParticleRenderer();
 	RND.InitShadowRenderer();
-	RND.InitSkeletonRenderer();
+	//RND.InitSkeletonRenderer();
 	RND.InitTerrainRenderer();
 	RND.InitWaterRenderer();
 	RND.InitInteractableRenderer();
@@ -839,13 +857,13 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	overlay = ingameOverlay;
 
 	//PLAYER
-	UINT maxArrows = 5;
+	UINT maxArrows = 0;
 	player = std::make_shared<Player>(file, scene.GetCamera(), maxArrows);
 	player->SetPosition(-75.0f, 20.0f, -725.0f);
 	auto collider = player->GetBounds();
 	collider->SetParent(player);
 	CR->Bind(collider);
-	SKR->Bind(player);
+	//SKR->Bind(player);
 	AMR->Bind(player);
 
 	CR->Bind(player->GetFrustum());
@@ -861,7 +879,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[0]->SetScale(5.85);
 	buildings[0]->MoveCollider({ 10, 0, 2 });
 	buildings[0]->SetColliderRadius(20.0f);
-	buildings[0]->SetRequirements(20,20,40,40);
+	buildings[0]->SetRequirements(5, 5, 10, 10);
 
 	std::string meshNamesTent[] = { "ArcherTent1", "ArcherTent2", "ArcherTent3" };
 	std::string materialNamesTent[] = { "ArcherTentTexture", "ArcherTentTexture", "ArcherTentTexture" };
@@ -869,7 +887,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[1]->SetRotation(0, -DirectX::XM_PIDIV4, 0);
 	buildings[1]->SetScale(1.566);
 	buildings[1]->SetColliderRadius(17.0f);
-	buildings[1]->SetRequirements(20, 20, 40, 40);
+	buildings[1]->SetRequirements(5, 5, 10, 10);
 
 	std::string meshNamesBS[] = { "BSLevel1", "BSLevel2", "BSLevel3" };
 	std::string materialNamesBS[] = { "albedoBlacksmith", "albedoBlacksmith", "albedoBlacksmith" };
@@ -878,7 +896,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[2]->SetScale(1.776);
 	buildings[2]->MoveCollider({ 13, 0, 0 });
 	buildings[2]->SetColliderRadius(20.0f);
-	buildings[2]->SetRequirements(20, 20, 40, 40);
+	buildings[2]->SetRequirements(5, 5, 10, 10);
 
 	scene.AddDrawable("FarmHouse", buildings[0]);
 	scene.AddDrawable("ArcherTent", buildings[1]);
@@ -891,7 +909,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 		CR->Bind(buildings[i]->GetCollider());
 	}
 
-
 	//ITEMS
 	AddItem(Item::Type::Hammer, { -175.0f, 148.0f, 336.0f });
 	AddItem(Item::Type::Rope, { -100.0f, 12.3f, -778.0f });
@@ -899,6 +916,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 	//RANDOM ITEMS
 	GenerateRandomItems({ 58.0f, 20.3f, -574.5f }, 55, 100);
+	GenerateRandomItems({ 370, 75, -269 }, 200, 400);
 
 	//FRIENDLY NPCS
 	AddFriendlyNPCs();
@@ -907,9 +925,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	AddBarbarianCamps();
 
 	//TARGETS
-	AddTarget("TargetDummy", { -150, 23, -600 }, { 0,0,0 });
-	AddTarget("TargetDummy", { -170, 23, -600 }, { 0,0,0 });
-	AddTarget("TargetDummy", { -190, 23, -600 }, { 0,0,0 });
+	AddTarget("TargetDummy", { 175.0f, 18.0f, -691.5f }, { 0,-0.05f,0 });
+	AddTarget("TargetDummy", { 158.0f, 18.0f, -701.0f }, { 0,0.15f,0 });
+	AddTarget("TargetDummy", { 143.6f, 18.0f, -685.0f }, { 0, 0.1f ,0 });
 
 	//PARTICLE SYSTEM
 	auto campFireSystem = std::make_shared<ParticleSystem>("newFire.ps");
@@ -959,6 +977,9 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 
 Game::~Game()
 {
+	delete ingameOverlay;
+	delete pauseOverlay;
+	delete dialogueOverlay;
 	RND.ShutDown();
 	QuestLog::ShutDown();
 	delete quadTree;
@@ -1146,37 +1167,8 @@ APPSTATE Game::Run()
 
 	Render();
 
-	static float lastClick = 0;
-
-	if (Time::Get() - lastClick > 0.5f)
-	{
-		if (Event::KeyIsPressed('1'))
-		{
-			Graphics::Inst().ActivateWireframe();
-			lastClick = Time::Get();
-		}
-		if (Event::KeyIsPressed('2'))
-		{
-			Graphics::Inst().DeactivateWireframe();
-			lastClick = Time::Get();
-		}
-		if (Event::KeyIsPressed('K'))
-		{
-			PrintVector3(player->GetPosition());
-			lastClick = Time::Get();
-		}
-		if (Event::KeyIsPressed('H'))
-		{
-			SpawnInvasion();
-			lastClick = Time::Get();
-		}
-
-	}
-
-	if (Event::KeyIsPressed('L'))
-		player->Inventory().AddItem(Item::Type::Hammer);
-
-	UpdateInventoryUI();
+	if (camps[BarbarianCamp::Location::North]->NumDead() == camps[BarbarianCamp::Location::North]->NumBarbarians())
+		done = true;
 
 	static float counter = 0;
 	if (done)
@@ -1207,10 +1199,10 @@ APPSTATE Game::Run()
 		return APPSTATE::GAMEOVER;
 	}
 
-	if (Event::KeyIsPressed('X'))
-	{
-		return APPSTATE::EXIT;
-	}
+	//if (Event::KeyIsPressed('X'))
+	//{
+	//	return APPSTATE::EXIT;
+	//}
 
 	return APPSTATE::NO_CHANGE;
 }

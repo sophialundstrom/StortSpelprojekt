@@ -18,7 +18,7 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
 	frustum->SetPosition(0, 3, 0);
 
-	Load(file);
+	//Load(file);
 
 	PlayAnimation("Idle");
 
@@ -32,6 +32,7 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	AMR->Bind(bow);
 	minCameraDistance = 0.5f;
 
+	numArrows = 0;
 }
 
 void Player::CalcHeight(HeightMap* heightMap)
@@ -498,8 +499,8 @@ void Player::HandleUpgrades(std::shared_ptr<Building> building)
 	{
 		if (state == 1)
 		{
-			maxArrows = 20;
-			numArrows = 20;
+			maxArrows = 15;
+			numArrows = 15;
 		}
 		if (state == 2)
 		{
@@ -507,7 +508,11 @@ void Player::HandleUpgrades(std::shared_ptr<Building> building)
 			numArrows = 30;
 		}
 		if (state == 3)
-			numArrows = 30;
+		{
+			numArrows = 50;
+			maxArrows = 50;
+		}
+			
 	}
 	if (buildingName == "Blacksmith")
 	{

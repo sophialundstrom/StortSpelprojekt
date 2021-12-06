@@ -32,7 +32,7 @@ public:
 		
 		graphics = std::make_unique<Graphics>(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND(), false);
 
-		RunLoadingScreen();
+		//RunLoadingScreen();
 
 		shaderData = std::make_unique<ShaderData>();
 

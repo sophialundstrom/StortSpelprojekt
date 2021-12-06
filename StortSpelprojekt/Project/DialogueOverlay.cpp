@@ -13,6 +13,8 @@ DialogueOverlay::DialogueOverlay()
 
 	dialogueName = new Text(L"TEMP NAME", { center.x - 450, Window::ClientHeight() - 310.0f }, UI::TEXTFORMAT::TITLE_SMALL, color, 900, 30);
 	dialogueText = new Text(L"TEMP TEXT", { center.x - 450, Window::ClientHeight() - 290.0f}, UI::TEXTFORMAT::TITLE_SMALL, color, 900, 250);
+
+	AddText({ Window::ClientWidth() / 2.0f + 150.0f, Window::ClientHeight() - 100.0f }, "AnyKey", "- Press E To Boost / Exit -", UI::COLOR::YELLOW, UI::TEXTFORMAT::TITLE_SMALL);
 }
 
 DialogueOverlay::~DialogueOverlay()
@@ -78,6 +80,7 @@ void DialogueOverlay::Render()
 	UI::Inst().BeginFrame();
 
 	DrawImages();
+	DrawTexts();
 
 	dialogueName->Draw();
 	dialogueText->Draw(false, numCharacters);
