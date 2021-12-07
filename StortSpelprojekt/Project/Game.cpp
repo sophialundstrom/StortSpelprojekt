@@ -483,37 +483,37 @@ void Game::AddBarbarianCamps()
 		camps[BarbarianCamp::Location::South] = camp;
 	}
 
-	{ // EASTERN CAMP
-		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::East, 40.0f);
-		camp->AddBarbarian("BarbarianAnim", { 597.0f, 77.0f, -461.0f }, hostiles, player, CombatStyle::consistantDelay, { 597.0f, 77.0f, -461.0f }, pathing, false, 1, 3, false);
-		camp->AddBarbarian("BarbarianAnim", { 650.0f, 80.0f, -516.5f }, hostiles, player, CombatStyle::consistantDelay, { 650.0f, 80.0f, -516.5f }, pathing, false, 1, 3, false);
-		camp->AddBarbarian("BarbarianAnim", { 606.0f, 60.0f, -501.5f }, hostiles, player, CombatStyle::consistantDelay, { 606.0f, 60.0f, -501.5f }, pathing, false, 1, 3, false);
+	//{ // EASTERN CAMP
+	//	auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::East, 40.0f);
+	//	camp->AddBarbarian("BarbarianAnim", { 597.0f, 77.0f, -461.0f }, hostiles, player, CombatStyle::consistantDelay, { 597.0f, 77.0f, -461.0f }, pathing, false, 1, 3, false);
+	//	camp->AddBarbarian("BarbarianAnim", { 650.0f, 80.0f, -516.5f }, hostiles, player, CombatStyle::consistantDelay, { 650.0f, 80.0f, -516.5f }, pathing, false, 1, 3, false);
+	//	camp->AddBarbarian("BarbarianAnim", { 606.0f, 60.0f, -501.5f }, hostiles, player, CombatStyle::consistantDelay, { 606.0f, 60.0f, -501.5f }, pathing, false, 1, 3, false);
 
-		camps[BarbarianCamp::Location::East] = camp;
-	}
+	//	camps[BarbarianCamp::Location::East] = camp;
+	//}
 
-	{ // WESTERN CAMP
-		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::West, 40.0f);
-		camp->AddBarbarian("BarbarianAnim", { -533.5f, 199.0f, 628.0f }, hostiles, player, CombatStyle::consistantDelay, { -533.5f, 199.0f, 628.0f }, pathing, false, 2, 8, false);
-		camp->AddBarbarian("BarbarianAnim", { -643.0f, 198.0f, 637.0f }, hostiles, player, CombatStyle::consistantDelay, { -643.0f, 198.0f, 637.0f }, pathing, false, 2, 8, false);
-		camp->AddBarbarian("BarbarianAnim", { -574.0f, 172.0f, 578.0f }, hostiles, player, CombatStyle::consistantDelay, { -574.0f, 172.0f, 578.0f }, pathing, false, 2, 8, false);
-		camp->AddBarbarian("BarbarianAnim", { -615.0f, 181.0f, 623.0f }, hostiles, player, CombatStyle::consistantDelay, { -615.0f, 181.0f, 623.0f }, pathing, false, 2, 8, false);
-		camp->AddBarbarian("BarbarianAnim", { -596.0f, 190.0f, 668.0f }, hostiles, player, CombatStyle::consistantDelay, { -596.0f, 190.0f, 668.0f }, pathing, false, 2, 8, false);
+	//{ // WESTERN CAMP
+	//	auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::West, 40.0f);
+	//	camp->AddBarbarian("BarbarianAnim", { -533.5f, 199.0f, 628.0f }, hostiles, player, CombatStyle::consistantDelay, { -533.5f, 199.0f, 628.0f }, pathing, false, 2, 8, false);
+	//	camp->AddBarbarian("BarbarianAnim", { -643.0f, 198.0f, 637.0f }, hostiles, player, CombatStyle::consistantDelay, { -643.0f, 198.0f, 637.0f }, pathing, false, 2, 8, false);
+	//	camp->AddBarbarian("BarbarianAnim", { -574.0f, 172.0f, 578.0f }, hostiles, player, CombatStyle::consistantDelay, { -574.0f, 172.0f, 578.0f }, pathing, false, 2, 8, false);
+	//	camp->AddBarbarian("BarbarianAnim", { -615.0f, 181.0f, 623.0f }, hostiles, player, CombatStyle::consistantDelay, { -615.0f, 181.0f, 623.0f }, pathing, false, 2, 8, false);
+	//	camp->AddBarbarian("BarbarianAnim", { -596.0f, 190.0f, 668.0f }, hostiles, player, CombatStyle::consistantDelay, { -596.0f, 190.0f, 668.0f }, pathing, false, 2, 8, false);
 
-		camps[BarbarianCamp::Location::West] = camp;
-	}
+	//	camps[BarbarianCamp::Location::West] = camp;
+	//}
 
-	{ // NORTHERN CAMP
-		auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::North, 40.0f);
-		camp->AddBarbarian("BarbarianAnim", { 588.3f, 414.5f, 371.0f }, hostiles, player, CombatStyle::consistantDelay, { 588.3f, 414.5f, 371.0f }, pathing, false, 3, 15, false);
-		camp->AddBarbarian("BarbarianAnim", { 654.0f, 414.5f, 472.0f }, hostiles, player, CombatStyle::consistantDelay, { 654.0f, 414.5f, 472.0f }, pathing, false, 3, 15, false);
-		camp->AddBarbarian("BarbarianAnim", { 556.5f, 419.5f, 517.0f }, hostiles, player, CombatStyle::consistantDelay, { 556.5f, 419.5f, 517.0f }, pathing, false, 3, 15, false);
-		camp->AddBarbarian("BarbarianAnim", { 480.5f, 419.5f, 476.5f }, hostiles, player, CombatStyle::consistantDelay, { 480.5f, 419.5f, 476.5f }, pathing, false, 3, 15, false);
-		camp->AddBarbarian("BarbarianAnim", { 571.0f, 400.0f, 413.0f }, hostiles, player, CombatStyle::consistantDelay, { 571.0f, 400.0f, 413.0f }, pathing, false, 3, 15, false);
-		camp->AddBarbarian("BarbarianAnim", { 608.0f, 401.5f, 460.0f }, hostiles, player, CombatStyle::consistantDelay, { 608.0f, 401.5f, 460.0f }, pathing, false, 3, 15, false);
-		camp->AddBarbarian("BarbarianAnim", { 536.0f, 402.0f, 472.0f }, hostiles, player, CombatStyle::consistantDelay, { 536.0f, 402.0f, 472.0f }, pathing, false, 3, 15, false);
-		camps[BarbarianCamp::Location::North] = camp;
-	}
+	//{ // NORTHERN CAMP
+	//	auto camp = new BarbarianCamp({ 0.0f, 0.0f, 0.0f }, BarbarianCamp::Location::North, 40.0f);
+	//	camp->AddBarbarian("BarbarianAnim", { 588.3f, 414.5f, 371.0f }, hostiles, player, CombatStyle::consistantDelay, { 588.3f, 414.5f, 371.0f }, pathing, false, 3, 15, false);
+	//	camp->AddBarbarian("BarbarianAnim", { 654.0f, 414.5f, 472.0f }, hostiles, player, CombatStyle::consistantDelay, { 654.0f, 414.5f, 472.0f }, pathing, false, 3, 15, false);
+	//	camp->AddBarbarian("BarbarianAnim", { 556.5f, 419.5f, 517.0f }, hostiles, player, CombatStyle::consistantDelay, { 556.5f, 419.5f, 517.0f }, pathing, false, 3, 15, false);
+	//	camp->AddBarbarian("BarbarianAnim", { 480.5f, 419.5f, 476.5f }, hostiles, player, CombatStyle::consistantDelay, { 480.5f, 419.5f, 476.5f }, pathing, false, 3, 15, false);
+	//	camp->AddBarbarian("BarbarianAnim", { 571.0f, 400.0f, 413.0f }, hostiles, player, CombatStyle::consistantDelay, { 571.0f, 400.0f, 413.0f }, pathing, false, 3, 15, false);
+	//	camp->AddBarbarian("BarbarianAnim", { 608.0f, 401.5f, 460.0f }, hostiles, player, CombatStyle::consistantDelay, { 608.0f, 401.5f, 460.0f }, pathing, false, 3, 15, false);
+	//	camp->AddBarbarian("BarbarianAnim", { 536.0f, 402.0f, 472.0f }, hostiles, player, CombatStyle::consistantDelay, { 536.0f, 402.0f, 472.0f }, pathing, false, 3, 15, false);
+	//	camps[BarbarianCamp::Location::North] = camp;
+	//}
 
 	{ // VILLAGE INVADERS
 		auto camp = new BarbarianCamp({ -11.5f, 18.0f, -126.0f }, BarbarianCamp::Location::Village, 40.0f, true);

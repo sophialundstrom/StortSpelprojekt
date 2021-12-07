@@ -53,7 +53,7 @@ private:
 	float shootDeelayPattern[3];
 	int shootPatternIndex = 0;
 
-	int enemyShootDetectionRadius = 100;
+	int enemyShootDetectionRadius = 60;
 	float movementXRadiant;
 	float movementYRadiant;
 };

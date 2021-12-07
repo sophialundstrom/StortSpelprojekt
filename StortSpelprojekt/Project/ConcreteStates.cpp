@@ -349,23 +349,25 @@ NPCState& ShootingState::GetInstance()
 
 void IdlingState::Enter(HostileNPC& hostile)
 {
-
+    hostile.path.clear();
 }
 
 void IdlingState::Update(HostileNPC& hostile)
 {
-    if (hostile.distanceToPlayer < hostile.viewDistance )
+    if (hostile.distanceToPlayer < 60 )
     {
         PrintS("CHANGED FROM IDLE -> SHOOT");
         Audio::StartEffect("BarbNoticed.wav");
-        hostile.currentState = &ShootingState::GetInstance();
+        hostile.SetState(ShootingState::GetInstance());
+        //hostile.currentState = &ShootingState::GetInstance();
         return;
     }
-    if (hostile.distanceToPlayer > hostile.viewDistance && (hostile.GetPosition() - hostile.targetPosition).Length() > 3.f)
+    if (hostile.distanceToPlayer < 100)
     {
         PrintS("CHANGED FROM IDLE -> MOVING");
-        hostile.currentState = &MovingState::GetInstance();
+       // hostile.currentState = &MovingState::GetInstance();
         hostile.SetRotation(hostile.originalRotation);
+        hostile.SetState(MovingState::GetInstance());
         return;
     }
 }

@@ -17,7 +17,7 @@ HostileNPC::HostileNPC(const std::string& file, std::shared_ptr<Player> player, 
     this->targetPosition = targetPosition;
     this->viewDistance = 100.f;
     currentState = &IdlingState::GetInstance();
-    SetState(MovingState::GetInstance());
+    SetState(IdlingState::GetInstance());
     //SetState(IdlingState::)
 
     arrowHandler.SetPullbackFactor(0.6f);
