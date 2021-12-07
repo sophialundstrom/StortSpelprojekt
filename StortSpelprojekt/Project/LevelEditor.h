@@ -28,6 +28,7 @@ private:
 	bool renderVolumes = true;
 	bool renderTerrain = true;
 	bool renderShadows = true;
+	bool renderSkybox = true;
 	bool divideFlipped = false;
 
 	//PerformanceStuff
@@ -42,6 +43,7 @@ private:
 	float terrainTime = 0.0f;
 	float volumeTime = 0.0f;
 	float renderUITime = 0.0f;
+	float skyboxTime = 0.0f;
 
 
 	UINT wWidth, wHeight;
@@ -67,6 +69,7 @@ private:
 	void ShowVolumes();
 	void ShowTerrain();
 	void ShowShadows();
+	void ShowSkybox();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

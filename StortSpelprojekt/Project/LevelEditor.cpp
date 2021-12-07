@@ -404,6 +404,20 @@ void LevelEditor::ShowShadows()
 	}
 }
 
+void LevelEditor::ShowSkybox()
+{
+	bool changed = false;
+	if (renderSkybox)
+	{
+		renderSkybox = false;
+		changed = true;
+	}
+	if (!renderSkybox && !changed)
+	{
+		renderSkybox = true;
+	}
+}
+
 void LevelEditor::Update()
 {
 	if (Event::LeftIsClicked() && !ImGuizmo::IsOver() && viewportPanel.Hovered())
@@ -589,38 +603,44 @@ void LevelEditor::Render()
 		IDR->BeginFrame(dsv, viewport);
 		IDR->Render();
 	}
+	
 	timer.Start();
-
 	SR->Render();
 	shadowTime = timer.DeltaTime();
+	
 	timer.Start();
-
 	BeginViewportFrame();
-
 	ShaderData::Inst().BindFrameConstants();
-
 	MR->Render();
 	modelTime = timer.DeltaTime();
+	
 	timer.Start();
-
 	if (renderTerrain)
 	{
 		TR->Render(*terrain);
-		terrainTime = timer.DeltaTime();
 	}
+	terrainTime = timer.DeltaTime();
+
 	timer.Start();
 	if (renderWater)
 	{
 		WR->Render(water);
-		waterTime = timer.DeltaTime();
 	}
-	timer.Start();
+	waterTime = timer.DeltaTime();
 
+	timer.Start();
 	if (renderVolumes)
 	{
 		VR->Render();
-		volumeTime = timer.DeltaTime();
 	}
+	volumeTime = timer.DeltaTime();
+
+	timer.Start();
+	if (renderSkybox)
+	{
+		SBR->Render();
+	}
+	skyboxTime = timer.DeltaTime();
 
 	timer.Start();
 	BeginFrame();
@@ -668,6 +688,9 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitShadowRenderer();
 	RND.InitWaterRenderer();
 	RND.InitVolumeRenderer();
+	RND.InitSkyBoxRenderer();
+
+	SBR->PullDayNightSlider(1);
 
 	//WINDOWS
 	{
@@ -685,6 +708,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddCheckBoxComponent("WATER", true);
 		window.AddCheckBoxComponent("VOLUMES", true);
 		window.AddCheckBoxComponent("SHADOWS", true);
+		window.AddCheckBoxComponent("SKYBOX", true);
 		window.AddTextComponent("CULL:");
 		window.AddSliderIntComponent("RENDER DIVIDE", -2000, 2000, -2000, false);
 		window.AddCheckBoxComponent("FLIP DIVIDE", false);
@@ -745,12 +769,14 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddTextComponent("VOLUME TIME");
 		window.AddTextComponent("WATER TIME");
 		window.AddTextComponent("UI RENDER TIME");
+		window.AddTextComponent("SKYBOX TIME");
 		window.SetValue<TextComponent, std::string>("MODEL TIME", "    Models:");
 		window.SetValue<TextComponent, std::string>("SHADOW TIME", "    Shadows:");
 		window.SetValue<TextComponent, std::string>("TERRAIN TIME", "    Terrain:");
 		window.SetValue<TextComponent, std::string>("VOLUME TIME", "    Volumes:");
 		window.SetValue<TextComponent, std::string>("WATER TIME", "    Water:");
 		window.SetValue<TextComponent, std::string>("UI RENDER TIME", "    UI:");
+		window.SetValue<TextComponent, std::string>("SKYBOX TIME", "    SKYBOX:");
 	}
 
 	{
@@ -1011,6 +1037,9 @@ APPSTATE LevelEditor::Run()
 		if (window.Changed("SHADOWS"))
 			ShowShadows();
 
+		if (window.Changed("SKYBOX"))
+			ShowSkybox();
+
 		if (window.Changed("TERRAIN SUBDIV"))
 		{
 			if (terrain)
@@ -1083,6 +1112,7 @@ APPSTATE LevelEditor::Run()
 			window.SetValue<TextComponent, std::string>("VOLUME TIME", "    Volumes: " + std::to_string(volumeTime * 1000) + " ms");
 			window.SetValue<TextComponent, std::string>("WATER TIME", "    Water: " + std::to_string(waterTime * 1000) + " ms");
 			window.SetValue<TextComponent, std::string>("UI RENDER TIME", "    UI: " + std::to_string(renderUITime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("SKYBOX TIME", "    SKYBOX:" + std::to_string(skyboxTime * 1000) + " ms");
 		}
 	}
 
