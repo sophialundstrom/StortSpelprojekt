@@ -26,10 +26,10 @@ struct Stats
 	int damage = 1;
 	int HPGain = 1;
 
-	void SetMaxHealthPoints(UINT newMaxHealthPoints) { this->maxHealthPoints = newMaxHealthPoints; }
-	void SetHealthPoints(UINT newHealthPoints) { this->healthPoints = newHealthPoints; }
-	void SetMovementSpeed(float newMovementSpeed) { this->movementSpeed = newMovementSpeed; }
-	void SetSprintSpeed(float newSprintSpeed) { this->sprintSpeed = newSprintSpeed; }
+	void SetMaxHealthPoints(UINT newMaxHealthPoints)	{ this->maxHealthPoints = newMaxHealthPoints; }
+	void SetHealthPoints(UINT newHealthPoints)			{ this->healthPoints = newHealthPoints; }
+	void SetMovementSpeed(float newMovementSpeed)		{ this->movementSpeed = newMovementSpeed; }
+	void SetSprintSpeed(float newSprintSpeed)			{ this->sprintSpeed = newSprintSpeed; }
 	void IncreaseHealthPoints()
 	{ 
 		if (healthPoints < maxHealthPoints)
@@ -56,12 +56,12 @@ private:
 
 	bool hasCollided;
 
-	float movementYRadiant = 0;
-	float movementXRadiant = 0;
-
 	float preJumpGroundLevel = 0.0f;
 	float currentGroundLevel = 0.0f;
 	float heightMapGroundLevel = 0.0f;
+
+	float movementYRadiant = 0.0f;
+	float movementXRadiant = 0.0f;
 
 	const float mouseDefaultSensitivity = 10.f;
 	const float mouseAimSensitivity = 4.f;
@@ -82,6 +82,7 @@ private:
 	float currentCameraDistance = defaultCameraDistance;
 	float maxCameraDistance = defaultCameraDistance + 7.0f;
 	float minCameraDistance = 0.5f;
+
 	float closestColliderToCam = 9999;
 	Vector3 cameraLocationSocket = { -1.3f, 8.0, -4.f };
 
@@ -92,31 +93,21 @@ private:
 	std::shared_ptr<BoundingBox> bounds;
 	std::shared_ptr<FrustumCollider> frustum;
 
-	bool isRightPressed;
-	bool isLeftPressed;
 	bool gameOver = false;
 
 	Inventory inventory;
 
-	Vector3 lastPosition = Vector3(0, 0, 0); // 
-	float sinceLastShot = 0;
-	float shootingAnimationLenght = 1.f;
-	float currentLerp = 0.f;
-	float duration = 1.f;
-	bool inAir = false;
+	Vector3 lastPosition = Vector3(0, 0, 0);
 
-	//ANIMATION HANDLING
 	bool isAiming = false;
-
 public:
 	Camera* sceneCamera;
 	BIOME currentBiome;
 	BIOME previousBiome;
-	bool test = false;
-	bool biomeChanged = false;
-
+	
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
+
 	void Update(HeightMap* heightMap);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void TakeDamage(int x);

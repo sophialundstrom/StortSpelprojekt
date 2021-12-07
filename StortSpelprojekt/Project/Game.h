@@ -57,7 +57,6 @@ private:
 
     bool hovering = false;
     bool done = false;
-    //bool paused = false;
     const std::string file = "Default"; //"Test"
 
     float lastStateChange = 0.0f;
@@ -106,14 +105,6 @@ private:
     void Update();
     void Render();
 
-    // UI FUNC
-    void Pause();
-    void Options();
-    void HowToPlay();
-    void BacktoPause();
-    void MainMenu();
-    void QuitCanvas();
-
     std::vector<AudioSource>audioSources;
   
     bool mainMenu = false;
@@ -147,7 +138,6 @@ private:
 
     void SetupAudio();
     void UpdateQuadTree();
-    void UpdateInventoryUI();
 
     void Initialize();
 public:

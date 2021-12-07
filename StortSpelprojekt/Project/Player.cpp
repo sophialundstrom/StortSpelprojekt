@@ -5,9 +5,6 @@
 Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 	:AnimatedModel("MainCharacter", "Player"), sceneCamera(camera)
 {
-	isRightPressed = false;
-	isLeftPressed = false;
-
 	arrowHandler.SetPullbackFactor(1.f);
 
 	bounds = std::make_shared<BoundingBox>();
@@ -17,8 +14,6 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 
 	frustum = std::make_shared<FrustumCollider>(-0.5f, 0.5f, -0.5f, 0.5f, 0.1f, 10.0f);
 	frustum->SetPosition(0, 3, 0);
-
-	//Load(file);
 
 	PlayAnimation("Idle");
 
@@ -88,8 +83,6 @@ void Player::Update(HeightMap* heightMap)
 {
 	lastPosition = position;
 
-	/*std::cout << "Player X: " << position.x << "        " << "Player Y: " << position.y << "        "  << "Player Z: " << position.z << "\n";*/
-
 	CalcHeight(heightMap);
 
 	if (!hasCollided)
@@ -103,7 +96,6 @@ void Player::Update(HeightMap* heightMap)
 
 	//MOVEMENT DIRECTION
 	Vector3 moveDirection;
-
 	if (Event::KeyIsPressed('W'))
 		moveDirection += Vector3(0, 0, 1);
 	if (Event::KeyIsPressed('S'))
@@ -112,19 +104,19 @@ void Player::Update(HeightMap* heightMap)
 		moveDirection += Vector3(-1, 0, 0);
 	if (Event::KeyIsPressed('D'))
 		moveDirection += Vector3(1, 0, 0);
+	moveDirection.Normalize();
 
+	//RESTORE HEALTH
 	static float lastEat = 0;
 	if (Event::KeyIsPressed('R') && Time::Get() - lastEat > 1.0f)
 	{
 		if (stats.healthPoints < 10 && inventory.NumOf(Item::Type::Food) > 0)
 		{
-		stats.IncreaseHealthPoints();
+			stats.IncreaseHealthPoints();
 		    inventory.RemoveItem(Item::Type::Food, 1);
 		}
 		lastEat = Time::Get();
 	}
-
-	moveDirection.Normalize();
 
 	//SPRINTING
 	if (Event::KeyIsPressed(VK_SHIFT))
@@ -132,41 +124,42 @@ void Player::Update(HeightMap* heightMap)
 		// IF PLAYER SPRINTS AND JUMPS THE SOUND WILL STOP UNTIL SHIFT IS PRESSED AGAIN...
 		if (!isSprinting)
 		{
-			
 			Audio::StartEffect("Running.wav");
 			Audio::SetVolume("Running.wav", Audio::effectsVolume * 0.25f);
 			isSprinting = true;
 		}
 
 		stats.currentSpeed += 70.0f * Time::GetDelta();
+
 		if (stats.currentSpeed > stats.sprintSpeed)
 			stats.currentSpeed = stats.sprintSpeed;
 
 		currentCameraDistance += Time::GetDelta() * 20.0f;
+
 		if (currentCameraDistance > maxCameraDistance)
 			currentCameraDistance = maxCameraDistance;
 
 		if (currentCameraDistance < minCameraDistance)
-		{
 			currentCameraDistance = minCameraDistance;
-		}
 	}
+
 	else
 	{
 		isSprinting = false;
 		Audio::StopEffect("Running.wav");
+
 		stats.currentSpeed -= 12.0f * Time::GetDelta();
+
 		if (stats.currentSpeed < stats.movementSpeed)
 			stats.currentSpeed = stats.movementSpeed;
 
 		currentCameraDistance -= Time::GetDelta() * 10.0f;
+
 		if (currentCameraDistance < defaultCameraDistance)
 			currentCameraDistance = defaultCameraDistance;
 
 		if (currentCameraDistance < minCameraDistance)
-		{
 			currentCameraDistance = minCameraDistance;
-		}
 	}
 
 	//Calculate the radians between the cameras yAxis direction and {0, 0, 1}-Vector.
@@ -227,39 +220,22 @@ void Player::Update(HeightMap* heightMap)
 	}
 
 	if (closestColliderToCam < currentCameraDistance && closestColliderToCam > minCameraDistance)
-
-	{
 		currentCameraDistance = closestColliderToCam;
-		PrintS("FORCE");
-	}
 
 	position = newPlayerPos;
 
-	Vector3 newCameraPos;
+	Vector3 newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
 
-	bool approvedCam = false;
-
-	newCameraPos = position + (lookDirection * -currentCameraDistance) + Vector3(0.0f, 5.0f, 0.0f);
-
+	//CAMERA HEIGHTMAP COLLISION
 	float newY = CalcHeightForCamera(heightMap);
 	if (newY < 1.f)
 		newY += 1.f;
 
-	
 	if (newY > newCameraPos.y)
-	{
 		newCameraPos.y = newY;
-	}
 	
+	//SHOOTING
 	static float lastClick = 0;
-
-
-	sinceLastShot += Time::GetDelta();
-	if (sinceLastShot > shootingAnimationLenght) {
-
-		bool hasMoved = (position == lastPosition) ? false : true;
-	}
-
 	if (Event::RightIsClicked())
 	{
 		if (!isAiming)
@@ -284,10 +260,7 @@ void Player::Update(HeightMap* heightMap)
 				arrowHandler.AddArrow(lookDirection, bow->GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
 
 				Audio::StartEffect("Fire.wav");
-
-				int currentIndex = 0;
 				numArrows--;
-				sinceLastShot = 0.f;
 				lastClick = Time::Get();
 
 				PlayOverrideAnimation("Reload", "Spine1", true, true);
@@ -350,23 +323,18 @@ void Player::Update(HeightMap* heightMap)
 
 void Player::TakeDamage(int x)
 {
-	if (stats.healthPoints - 1 == 0 /*|| stats.healthPoints < 0*/)
+	if (stats.healthPoints - 1 == 0)
 	{
 		stats.healthPoints--;
 		gameOver = true;
-		return; // Return here because hp will be -1. This leads to a hp image not being found which in turn leads to a crash during Draw().
+		return;
 	}
-
-	//SoundEffect::AddAudio(L"Audio/Damage.wav", 2);
-	//SoundEffect::SetVolume(0.5, 2);
-	//SoundEffect::StartAudio(2);
 
 	int totalDamage = x - stats.resist;
 	if (totalDamage <= 1)
 		stats.healthPoints--;
 	else
 		stats.healthPoints -= totalDamage;
-	
 }
 
 void Player::SwitchBiomeMusic()
@@ -374,16 +342,17 @@ void Player::SwitchBiomeMusic()
 	switch (this->currentBiome)
 	{
 	case BIOME::DESERT:
-
 		Audio::StartMusic("SoundDesert.wav");
 		break;
-	case BIOME::MOUNTAIN:
 
+	case BIOME::MOUNTAIN:
 		Audio::StartMusic("SoundMountain.wav");
 		break;
+
 	case BIOME::OCEAN:
 		Audio::StartMusic("SoundOcean.wav");
 		break;
+
 	case BIOME::DEFAULT:
 		Audio::StartMusic("SoundForest.wav");
 		break;
@@ -482,6 +451,7 @@ void Player::HandleUpgrades(std::shared_ptr<Building> building)
 {
 	std::string buildingName = building->GetBuildingName();
 	int state = building->GetCurrentState();
+
 	if (buildingName == "FarmHouse")
 	{
 		if (state == 1)
@@ -489,12 +459,14 @@ void Player::HandleUpgrades(std::shared_ptr<Building> building)
 			stats.resist = 1;
 			stats.HPGain = 2;
 		}
+
 		if (state == 2)
 		{
 			stats.resist = 2;
 			stats.HPGain = 3;
 		}
 	}
+
 	if (buildingName == "ArcherTent")
 	{
 		if (state == 1)
@@ -502,18 +474,20 @@ void Player::HandleUpgrades(std::shared_ptr<Building> building)
 			maxArrows = 15;
 			numArrows = 15;
 		}
+
 		if (state == 2)
 		{
 			maxArrows = 30;
 			numArrows = 30;
 		}
+
 		if (state == 3)
 		{
 			numArrows = 50;
 			maxArrows = 50;
 		}
-			
 	}
+
 	if (buildingName == "Blacksmith")
 	{
 		if (state == 1)
