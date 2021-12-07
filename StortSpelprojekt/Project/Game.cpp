@@ -142,9 +142,9 @@ void Game::Initialize()
 	}
 	
 	//For Future work do not remove atm:
-	/*quadTree->GetAllDrawables(noCullingDrawables);
-	//quadTree->OptimizeBounds();
-	quadTree->PrintTree();*/
+	//quadTree->GetAllDrawables(noCullingDrawables);
+	//quadTree->PrintTree();
+	quadTree->OptimizeBounds();
 
 	//SAVE STATIONS
 	saveStations[0] = SaveStation({ -20, 0, 20 }, 0, scene.GetDrawables());
@@ -1379,17 +1379,19 @@ void Game::UpdateQuadTree()
 
 	frustrumCollider.Update(scene.GetCamera());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+	//std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (model)
 		{
+			SR->BindStatic(drawable);
 			SMR->Bind(drawable);
 		}
 	}
 
-	orthographicCollider.Update(scene.GetDirectionalLight());
+	orthographicCollider.Update(scene.GetDirectionalLight(), player->GetPosition());
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
 
 	for (auto& [name, drawable] : drawablesToBeRendered)
