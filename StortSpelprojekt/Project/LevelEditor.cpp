@@ -799,6 +799,10 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.SetValue<TextComponent, std::string>("WATER TIME", "    Water:");
 		window.SetValue<TextComponent, std::string>("UI RENDER TIME", "    UI:");
 		window.SetValue<TextComponent, std::string>("SKYBOX TIME", "    SKYBOX:");
+		window.AddSeperatorComponent();
+
+		window.AddTextComponent("SELECTED OBJECT TIME");
+		window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time:");
 	}
 
 	{
@@ -1142,6 +1146,18 @@ APPSTATE LevelEditor::Run()
 			window.SetValue<TextComponent, std::string>("WATER TIME", "    Water: " + std::to_string(waterTime * 1000) + " ms");
 			window.SetValue<TextComponent, std::string>("UI RENDER TIME", "    UI: " + std::to_string(renderUITime * 1000) + " ms");
 			window.SetValue<TextComponent, std::string>("SKYBOX TIME", "    SKYBOX:" + std::to_string(skyboxTime * 1000) + " ms");
+
+			if (selectedObject != "")
+			{
+				auto selected = scene.Get<Drawable>(selectedObject);
+				auto model = std::dynamic_pointer_cast<Model>(selected);
+				if(model)
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time: " + std::to_string(model->GetTTD()) + " ms");
+				else
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time: ");
+			}
+			else
+				window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time: ");
 		}
 	}
 

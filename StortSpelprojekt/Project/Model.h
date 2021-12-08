@@ -16,6 +16,7 @@ class Model : public Drawable
 	friend class LevelEditor;
 private:
 	Mesh mesh;
+	float ttd = 0.0f;
 public:
 	Model() = default;
 	Model(const std::string& meshName, const std::string name)
@@ -59,6 +60,9 @@ public:
 			mesh.vertexCount = Resources::Inst().GetVertexCountFromID(ID);
 		}
 	}
+
+	void SetTTD(float nr) { ttd = nr; }
+	float GetTTD() { return ttd; }
 
 	Vector3* GetMeshBoundingBoxValues()
 	{
