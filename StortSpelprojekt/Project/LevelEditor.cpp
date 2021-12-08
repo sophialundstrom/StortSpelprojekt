@@ -60,6 +60,27 @@ void LevelEditor::BindDrawables()
 	}
 }
 
+void LevelEditor::LoadScene(const std::string& file)
+{
+	std::filesystem::path path = std::filesystem::path(file);
+	if (file == "" || path.extension() != ".objs")
+		return;
+	else
+	{
+		sceneName = path.stem().string();
+		VR->Clear();
+		SR->Clear();
+		IDR->Clear();
+		MR->Clear();
+		scene.GetDrawables().clear();
+		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+		component->Clear();
+		GameLoader loader;
+		loader.Load(sceneName, scene.GetDrawables());
+		BindDrawables();
+	}
+}
+
 void LevelEditor::Save(const std::string& file)
 {
 
@@ -691,8 +712,9 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	{
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];
-		window.AddButtonComponent("LOAD FBX", 120, 30);
+		window.AddButtonComponent("LOAD SCENE", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
+		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("CREATE BBOX", 120, 30);
 		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
 		window.AddTextComponent("");
@@ -1012,6 +1034,8 @@ APPSTATE LevelEditor::Run()
 
 	{
 		auto& window = windows["TOOLS"];
+		if (window.GetValue<ButtonComponent>("LOAD SCENE"))
+			LoadScene(FileSystem::LoadFile("SaveData"));
 
 		if (window.GetValue<ButtonComponent>("LOAD FBX"))
 			Load(FileSystem::LoadFile("Models"));
@@ -1057,7 +1081,7 @@ APPSTATE LevelEditor::Run()
 		if (window.GetValue<ButtonComponent>("SAVE WORLD"))
 		{
 			GameLoader loader;
-			loader.Save("Default", scene.GetDrawables());
+			loader.Save(sceneName, scene.GetDrawables());
 		}
 
 		if (window.GetValue<ButtonComponent>("RETURN TO MENU"))

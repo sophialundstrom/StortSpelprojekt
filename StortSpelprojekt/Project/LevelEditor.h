@@ -9,6 +9,7 @@ class LevelEditor : public Editor, public ApplicationState
 {
 private:
 	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE;
+	std::string sceneName = "Default";
 
 	int totalPolygonsLastFrame;
 	int totalPolygonCount;
@@ -55,6 +56,7 @@ private:
 	virtual void Load(const std::string& file) override;
 	virtual void Update() override;
 	virtual void Render() override;
+	void LoadScene(const std::string& file);
 	void CreateBoundingBox();
 	void CreateBoundingSphere();
 	void RemoveItem(std::string name);
