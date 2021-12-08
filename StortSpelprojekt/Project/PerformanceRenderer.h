@@ -16,8 +16,15 @@ private:
 	} matrices;
 
 	//SHADER PATHS
+
+#ifdef _DEBUG
 	const std::string vs_path = "../x64/Debug/PerformanceVertexShader.cso";
 	const std::string ps_path = "../x64/Debug/PerformancePixelShader.cso";
+#else
+	const std::string vs_path = "../x64/Release/PerformanceVertexShader.cso";
+	const std::string ps_path = "../x64/Release/PerformancePixelShader.cso";
+#endif
+
 
 	//SHADERS
 	ID3D11VertexShader* vertexShader = nullptr;
