@@ -6,8 +6,7 @@
 class BarbarianCamp
 {
 public:
-	enum class Location { South, East, North, West, Village };
-	static const std::string Locations[];
+
 private:
 	bool active;
 	float radius;
@@ -32,4 +31,3 @@ public:
 	void Reset();
 };
 
-inline const std::string BarbarianCamp::Locations[] = { "Southern", "Eastern", "Northern", "Western", "Village" };

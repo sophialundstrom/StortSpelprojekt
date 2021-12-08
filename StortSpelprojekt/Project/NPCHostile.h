@@ -16,6 +16,7 @@ private:
 	ArrowHandler arrowHandler;
 	int damage;
 	void CalcHeight(HeightMap* heightMap);
+	CampData campData;
 public:
 	bool isMoving;
 	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, std::shared_ptr<Pathfinding> pathing, int health, bool moving);
@@ -32,7 +33,8 @@ public:
 
 	std::shared_ptr<Player> GetPlayer() { return this->player; }
 
-	std::shared_ptr<Pathfinding> GetPath()			{ return this->pathing; }
+	std::shared_ptr<Pathfinding> GetPath()	{ return this->pathing; }
+	CampData GetCampData()					{ return this->campData;}
 
 	void SetPlayerPtr(std::shared_ptr<Player> p)	{ this->player = p; }
 	void SetState(NPCState& newState);// { currentState = &newState; }
@@ -53,3 +55,27 @@ public:
 
                                                                                                                                                                                                                                                              
 };
+
+struct CampData
+{
+	CampData()
+	{
+		locationPosition.emplace(Location::South, Vector3(-617.626160f, 70.000000f, -252.823212f));
+		locationPosition.emplace(Location::East, Vector3(0, 0, 0));
+		locationPosition.emplace(Location::North, Vector3(0, 0, 0));
+		locationPosition.emplace(Location::West, Vector3(0, 0, 0));
+		locationPosition.emplace(Location::Village, Vector3(0, 0, 0));
+
+		locationCutoff.emplace(Location::South, 160);
+		locationCutoff.emplace(Location::South, 160);
+		locationCutoff.emplace(Location::South, 160);
+		locationCutoff.emplace(Location::South, 160);
+		locationCutoff.emplace(Location::South, 160);
+
+	}
+	enum class Location { South, East, North, West, Village };
+	static const std::string Locations[];
+	static std::map<Location, Vector3> locationPosition;
+	static std::map<Location, int> locationCutoff;
+};
+inline const std::string CampData::Locations[] = { "Southern", "Eastern", "Northern", "Western", "Village" };

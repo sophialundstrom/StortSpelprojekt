@@ -18,7 +18,7 @@ void Grid::CreateGrid(std::vector<std::shared_ptr<Collider>> colliders, Vector3 
 	Timer timer;
 	timer.Start();
 	auto filePath = FileSystem::ProjectDirectory::path;
-	in.open(filePath + "\\SaveData\\Nodes.txt");
+	in.open(filePath + "\\Nodes.txt");
 	std::string str;
 	std::string fill;
 	std::string id;
