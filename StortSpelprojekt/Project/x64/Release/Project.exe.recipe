@@ -67,6 +67,12 @@
       <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Release\ParticleVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Release\PerformancePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Release\PerformanceVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Release\ShadowVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>

@@ -19,6 +19,7 @@ class ShaderData : public Singleton<ShaderData>
 	friend class WaterRenderer;
 	friend class SkyBoxRenderer;
 	friend class InteractableRenderer;
+	friend class PerformanceRenderer;
 private:
 	//CAMERA
 	Matrix cameraMatrix;

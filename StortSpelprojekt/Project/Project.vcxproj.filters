@@ -42,6 +42,8 @@
     <FxCompile Include="WaterGeometryShader.hlsl" />
     <FxCompile Include="WaterHullShader.hlsl" />
     <FxCompile Include="WaterVertexShader.hlsl" />
+    <FxCompile Include="PerformanceVertexShader.hlsl" />
+    <FxCompile Include="PerformancePixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedModelRenderer.cpp" />
@@ -114,6 +116,7 @@
     <ClCompile Include="PlaneWithNormals.cpp" />
     <ClCompile Include="AnimationStateMachine.cpp" />
     <ClCompile Include="Slider.cpp" />
+    <ClCompile Include="PerformanceRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
@@ -241,6 +244,7 @@
     <ClInclude Include="PlaneWithNormals.h" />
     <ClInclude Include="AnimationStateMachine.h" />
     <ClInclude Include="Slider.h" />
+    <ClInclude Include="PerformanceRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LightCalculations.hlsli" />

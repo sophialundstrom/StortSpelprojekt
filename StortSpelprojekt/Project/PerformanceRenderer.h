@@ -14,7 +14,6 @@ private:
 		Matrix world;
 		Matrix viewPerspective;
 	} matrices;
-	ID3D11Buffer* idBuffer = nullptr;
 
 	//SHADER PATHS
 	const std::string vs_path = "../x64/Debug/PerformanceVertexShader.cso";

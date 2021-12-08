@@ -705,6 +705,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitWaterRenderer();
 	RND.InitVolumeRenderer();
 	RND.InitSkyBoxRenderer();
+	RND.InitPerformanceRenderer();
 
 	SBR->PullDayNightSlider(1);
 
