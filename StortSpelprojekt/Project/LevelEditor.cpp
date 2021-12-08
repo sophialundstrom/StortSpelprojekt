@@ -806,7 +806,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddTextComponent("Tools", false);
 		window.SetValue<TextComponent, std::string>("Tools","Using the 'Delete' button will remove the selected item.\nThis can also be achieved by pressing 'Del' on your keyboard.\nWhen items are removed, the Scene Component list will update and sort itself.\n\nThe 'Duplicate' button creates a copy of the selected item.\nThe copy will automatically be selected.\nThis can also be achieved by pressing CTRL + D on your keyboard.\n\nWhen an item is selected, use 'CreateBBox' or 'CreateBSphere' to create an appropriate bounding-volume for the item.\nThe volume can be moved, scaled and rotated.\nThe volume is Not connected to any item, but an item must be selected to create a new volume.\nLike items, bounding-volumes can be duplicated.\n\n");
 		window.AddTextComponent("Scene", false);
-		window.SetValue<TextComponent, std::string>("Scene", "For now the editor only has one scene-file. This scene-file is the one that the game loads.\nTo Save changes to the file, press 'Save World'.\nUse the 'Load FBX' button to import new items.");
+		window.SetValue<TextComponent, std::string>("Scene", "To Load a scene, press the 'Load Scene' button.\nTo Save changes to the file, press 'Save World'.\nUse the 'Load FBX' button to import new items.\n\nIf you want to create a new scene, press the 'Load Scene' button. \nIn the file-manager, create a txt-file with the desired name. \nChange the file-extension to '.objs' and select it. \nPress 'Open'.");
 	}	
 
 	//LOAD SCENE
