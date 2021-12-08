@@ -70,7 +70,7 @@ void QuestLog::CreateQuests()
 	q2->AddCollectObjective(Item::Type::Stone, 5);
 	quests.emplace_back(q2);
 
-	auto q3 = q2->AddChildQuest("Target Aquired");			//FIGHT THE BARBARIANS ATTACKING THE VILLAGE
+	auto q3 = q2->AddChildQuest("Target Acquired");			//FIGHT THE BARBARIANS ATTACKING THE VILLAGE
 	q3->AddTargetObjective(0);
 	q3->AddTargetObjective(1);
 	q3->AddTargetObjective(2);
