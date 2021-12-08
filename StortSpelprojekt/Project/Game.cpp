@@ -367,8 +367,8 @@ void Game::AddFriendlyNPCs()
 		}
 		{
 			NPC->AddQuest("Spy In The Making");
-			NPC->AddDialogue("Did you see the camp in the desert? It is kinda suspicious. Would you be able to go an have a look? Just spy on them to see what they're u'to. But be careful, they are quite dangerous.");
-			NPC->AddDialogue(" I saw some bushes you should be able to hide in withou' bein' seen to the left o' the camp.");
+			NPC->AddDialogue("Did you see the camp in the desert? It is kinda suspicious. Would you be able to go an have a look at the old temple? Just spy on them to see what they're doing. But be careful, they are quite dangerous.");
+			NPC->AddDialogue("Just go to tha' desert and there you will find a temple very close to the barbs camp.");
 			NPC->AddDialogue("You're back! How di'it go? I knew they were u'to somethin'!");
 		}
 		{
