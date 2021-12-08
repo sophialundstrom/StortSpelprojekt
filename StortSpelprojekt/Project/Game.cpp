@@ -342,11 +342,6 @@ void Game::AddFriendlyNPCs()
 			NPC->AddDialogue("Hello my best friend! I think you should get rid of all barbarians in that camp to the south to damage their numbers.");
 			NPC->AddDialogue("Go back and wipe out the camp to the southwest. I believe you can do it.");
 			NPC->AddDialogue("Great work buddy! You really showed them. Maybe we finally can get some peace in the village.");
-			//auto onActiveFunc = [this, quest]() mutable
-			//{
-			//	quest->ResetObjectiveResources(player, camps, targets);
-			//};
-			//quest->AddOnActivateFunction(onActiveFunc);
 		}
 
 		NPC->AddDialogue("Keep your eyes open, the barbarians are relentless.");
@@ -383,7 +378,7 @@ void Game::AddFriendlyNPCs()
 	}
 	//Lydia
 	{
-		auto NPC = AddFriendlyNPC("Lydia", "VillageArcherNPC", { 117.5, 18, -655 });
+		auto NPC = AddFriendlyNPC("Lydia", "VillageArcherNPC", { 110, 18, -655 });
 		NPC->SetScale(0.4);
 		NPC->SetRotation(0, -PI_DIV2, 0);
 		{
@@ -396,8 +391,8 @@ void Game::AddFriendlyNPCs()
 			auto quest = NPC->AddQuest("Sticks And Stones");
 			NPC->AddDialogue("I will still need some resources for the structure. Please look around for some sticks and rocks that we can use.");
 			NPC->AddDialogue("I really need those sticks and rocks right now, it can't be that hard to find");
-			NPC->AddDialogue("Great work! Now that wont be enough to rebuild the structure but I will trade you some arrows for it, whenever you are in need of some more arrows, just come back here.");
-			
+			NPC->AddDialogue("Great work! By the way, whenever you are in need of some more arrows, just come back here.");
+
 			auto onCompleteFunc = [this, quest]() mutable
 			{
 				quest->ResetObjectiveResources(player, camps, targets);
@@ -405,7 +400,7 @@ void Game::AddFriendlyNPCs()
 			quest->AddOnCompleteFunction(onCompleteFunc);
 		}
 		{
-			auto quest = NPC->AddQuest("Target Aquired");
+			auto quest = NPC->AddQuest("Target Acquired");
 			NPC->AddDialogue("Now head over there to those target dummies and take a few practice shots.");
 			NPC->AddDialogue("Need more arrows? Go to the tent and refill.");
 			NPC->AddDialogue("Nice shooting!");
@@ -419,7 +414,7 @@ void Game::AddFriendlyNPCs()
 			auto quest = NPC->AddQuest("Invasion!");
 			NPC->AddDialogue("Oh no, the barbarians are returning! Quick, use your bow and take them down before they kill us all.");
 			NPC->AddDialogue("What are you doing?! Help us!");
-			NPC->AddDialogue("Amazing! Thanks for saving us.");
+			NPC->AddDialogue("That was amazing! Thanks for saving us.");
 			auto onActiveFunc = [this, quest]() mutable
 			{
 				SpawnInvasion();
@@ -428,7 +423,7 @@ void Game::AddFriendlyNPCs()
 		}
 		{
 			NPC->AddQuest("Getting Acquainted");
-			NPC->AddDialogue("I think it's time for you to talk to Sven and Ulfric.");
+			NPC->AddDialogue("I think it's time for you to talk to Sven and Ulfric. Ulfric is standing in front of the ruined forge. By helping him out he will upgrade your arrows so that they do more damage. Sven is over there by the destroyed farmhouse. If you give him a helping hand he will increase your health and you will also take less damage in combat.");
 			NPC->AddDialogue("Are you serious? They are right there...");
 			NPC->AddDialogue("Thank you! But now it's time to help the others. I think they really need it.");
 		}
