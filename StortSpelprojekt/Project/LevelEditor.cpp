@@ -598,11 +598,6 @@ void LevelEditor::Update()
 void LevelEditor::Render()
 {
 	Timer timer;
-	if (Event::LeftIsClicked())
-	{
-		IDR->BeginFrame(dsv, viewport);
-		IDR->Render();
-	}
 	
 	timer.Start();
 	SR->Render();
@@ -1001,6 +996,11 @@ LevelEditor::~LevelEditor()
 
 APPSTATE LevelEditor::Run()
 {
+	if (Event::LeftIsClicked())
+	{
+		IDR->BeginFrame(dsv, viewport);
+		IDR->Render();
+	}
 	Timer timer;
 	timer.Start();
 	Update();
