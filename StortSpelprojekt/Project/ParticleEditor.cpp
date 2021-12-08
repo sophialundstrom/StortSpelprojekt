@@ -72,8 +72,8 @@ void ParticleEditor::Load(const std::string& file)
 		auto& window = windows["PARTICLE SYSTEM EDITOR - PER PARTICLE"];
 	
 
-		window.SetValue<SliderFloatComponent, float>("MIN VELOCITY", particleSystem->GetMinVelocity());
-		window.SetValue<SliderFloatComponent, float>("MAX VELOCITY", particleSystem->GetMaxVelocity());
+		window.SetValue<SliderFloatComponent, float>("MIN", particleSystem->GetMinVelocity());
+		window.SetValue<SliderFloatComponent, float>("MAX", particleSystem->GetMaxVelocity());
 
 
 		if (particleSystem->GetParticleWidth() == particleSystem->GetParticleHeight())
@@ -81,16 +81,10 @@ void ParticleEditor::Load(const std::string& file)
 		else
 			window.SetValue<CheckBoxComponent, bool>("KEEP SQUARE", false);
 
-		window.SetValue<SliderFloatComponent, float>("PARTICLE WIDTH", particleSystem->GetParticleWidth());
-		window.SetValue<SliderFloatComponent, float>("PARTICLE HEIGHT", particleSystem->GetParticleHeight());
+		window.SetValue<SliderFloatComponent, float>("WIDTH", particleSystem->GetParticleWidth());
+		window.SetValue<SliderFloatComponent, float>("HEIGHT", particleSystem->GetParticleHeight());
 	}
 	
-
-
-	
-
-	
-
 	source->SetPosition(particleSystem->GetPosition());
 
 	source->Update();
@@ -123,6 +117,8 @@ void ParticleEditor::LoadModel(const std::string& file)
 
 void ParticleEditor::DeleteModel()
 {
+	auto& window = windows["MODEL"];
+	window.SetValue<TextComponent, std::string>("MODEL NAME", "");
 	MR->Unbind(model);
 	scene.DeleteDrawable(model->GetName());
 	model.reset();
@@ -215,7 +211,7 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	RND.InitSkyBoxRenderer("ParticleEditor", "ParticleEditor");
 	RND.InitModelRenderer(false);
 
-	camera = new Camera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 0.75f, 2.0f, { 0.0f, 2.0f, -2.5f });
+	camera = new Camera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 0.75f, 2.0f, { 0.0f, 0.0f, -2.5f });
 	//camera = new Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0.25f, 2.0f, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
 
 	FBXLoader meshLoader("Models");
@@ -228,7 +224,6 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	source->SetScale(0.5f);
 	CR->Bind(source);
 
-	
 	{
 		AddWindow("MODEL");
 		auto& window = windows["MODEL"];
@@ -247,7 +242,7 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 
 		window.AddTextComponent(loadedParticleSystem);
 		window.AddSeperatorComponent();
-		window.AddTextComponent("SYSTEM");
+		window.AddTextComponent("                     SYSTEM");
 		window.AddSliderIntComponent("MAX PARTICLES", 1, 1500 /*ParticleSystem::ABSOLUTE_MAX_PARTICLES*/);
 		window.AddSliderFloatComponent("DELTA SPAWN");
 		window.AddSliderFloatComponent("LIFETIME", 0.0f, 10.0f);
@@ -256,62 +251,61 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 		window.AddSliderFloatComponent("Z-POS", -20.0f, 20.0f, 0.0f);
 		window.AddSeperatorComponent();
 		
-		window.AddTextComponent("EMITTERS");
+		window.AddTextComponent("                     EMITTERS");
 		const std::string names[] = { "SPHERE", "CUBE", "CONE" };
 		window.AddRadioButtonComponent("EMITTER TYPES", 0, 3, names);
 		window.AddSeperatorComponent();
 
-		window.AddTextComponent("CONE AND SPHERE");
+		window.AddTextComponent("                  CONE AND SPHERE");
 		window.AddSliderFloatComponent("SYSTEM SIZE", 0.0f, 50.0f);
 		window.AddSeperatorComponent();
 
-		window.AddTextComponent("CUBE EMITTER");
+		window.AddTextComponent("                   CUBE EMITTER");
 		window.AddSliderFloatComponent("WIDTH", 0.0f, 50.0f);
 		window.AddSliderFloatComponent("DEPTH", 0.0f, 50.0f);
 		window.AddSeperatorComponent();
 
-		window.AddTextComponent("IN CASE OF DELTA TIME BUG");
-		window.AddButtonComponent("RESET", 200, 20, true);
+		window.AddTextComponent("  |||| -----> IN CASE OF DELTA TIME BUG <----- ||||");
+		window.AddButtonComponent("RESET", 380, 20, false);
 		window.AddSeperatorComponent();
 
 		// CHANGE TEXTURE BUTTON
-		window.AddButtonComponent("CHANGE FIRST IMAGE", 100, 50);
-		window.AddTextComponent("\t\t\t\t\t", true);
+		window.AddTextComponent("   |||| ---------> CHANGE TEXTURES <--------- ||||");
+		window.AddButtonComponent("CHANGE FIRST", 200, 75);
+		window.AddTextComponent("\t\t\t", true);
 		window.AddImageComponent("First Image", true, nullptr, 75, 75);
-		window.AddSeperatorComponent();
 
 		// CHANGE TEXTURE BUTTON
-		window.AddButtonComponent("CHANGE SECOND IMAGE", 100, 50);
-		window.AddTextComponent("\t\t\t\t\t", true);
+		window.AddButtonComponent("CHANGE SECOND", 200, 75);
+		window.AddTextComponent("\t\t\t", true);
 		window.AddImageComponent("Second Image", true, nullptr, 75, 75);
-		window.AddSeperatorComponent();
 
 		// CHANGE OPACITY BUTTON
-		window.AddButtonComponent("CHANGE OPACITY IMAGE", 100, 50);
-		window.AddTextComponent("\t\t\t\t\t", true);
+		window.AddButtonComponent("CHANGE OPACITY", 200, 75);
+		window.AddTextComponent("\t\t\t", true);
 		window.AddImageComponent("Opacity Image", true, nullptr, 75, 75);
 		window.AddSeperatorComponent();
 
-		window.AddButtonComponent("LOAD", 100, 50);
-		window.AddTextComponent("\t\t\t\t\t", true);
-		window.AddButtonComponent("SAVE AS", 100, 50, true);
+		window.AddButtonComponent("LOAD", 185, 50);
+		//window.AddTextComponent("\t\t\t\t\t", true);
+		window.AddButtonComponent("SAVE AS", 185, 50, true);
 		window.AddSeperatorComponent();
 
-		window.AddButtonComponent("RETURN TO MENU", 200, 60);
+		window.AddButtonComponent("RETURN TO MENU", 380, 70);
 	}
 
 	{
 		AddWindow("PARTICLE SYSTEM EDITOR - PER PARTICLE");
 		auto& window = windows["PARTICLE SYSTEM EDITOR - PER PARTICLE"];
 		window.AddTextComponent("VELOCITY");
-		window.AddSliderFloatComponent("MIN VELOCITY", 0.0f, 50.0f);
-		window.AddSliderFloatComponent("MAX VELOCITY", 0.0f, 50.0f);
+		window.AddSliderFloatComponent("MIN", 0.0f, 50.0f);
+		window.AddSliderFloatComponent("MAX", 0.0f, 50.0f);
 		window.AddSeperatorComponent();
 
 		window.AddTextComponent("DIMENSIONS");
 		window.AddCheckBoxComponent("KEEP SQUARE", true);
-		window.AddSliderFloatComponent("PARTICLE WIDTH", 0.0f, 0.5f);
-		window.AddSliderFloatComponent("PARTICLE HEIGHT", 0.0f, 0.5f);
+		window.AddSliderFloatComponent("WIDTH", 0.0f, 0.5f);
+		window.AddSliderFloatComponent("HEIGHT", 0.0f, 0.5f);
 		window.AddSeperatorComponent();
 
 		window.AddTextComponent("PARTICLE ROTATION");
@@ -334,12 +328,10 @@ ParticleEditor::~ParticleEditor()
 
 APPSTATE ParticleEditor::Run()
 {
-
 	timer.Start();
 
 	Update();
 	Render();
-
 
 	{
 		auto& window = windows["MODEL"];
@@ -380,7 +372,7 @@ APPSTATE ParticleEditor::Run()
 			return APPSTATE::MAIN_MENU;
 
 		// CHANGE TEXTURE
-		else if (window.GetValue<ButtonComponent>("CHANGE FIRST IMAGE"))
+		else if (window.GetValue<ButtonComponent>("CHANGE FIRST"))
 		{
 			std::filesystem::path filePath = FileSystem::LoadFile("ParticleTextures");
 
@@ -391,7 +383,7 @@ APPSTATE ParticleEditor::Run()
 			return APPSTATE::NO_CHANGE;
 		}
 
-		else if (window.GetValue<ButtonComponent>("CHANGE SECOND IMAGE"))
+		else if (window.GetValue<ButtonComponent>("CHANGE SECOND"))
 		{
 			std::filesystem::path filePath = FileSystem::LoadFile("ParticleTextures");
 
@@ -402,7 +394,7 @@ APPSTATE ParticleEditor::Run()
 			return APPSTATE::NO_CHANGE;
 		}
 
-		else if (window.GetValue<ButtonComponent>("CHANGE OPACITY IMAGE"))
+		else if (window.GetValue<ButtonComponent>("CHANGE OPACITY"))
 		{
 			std::filesystem::path filePath = FileSystem::LoadFile("ParticleTextures");
 
@@ -477,11 +469,11 @@ APPSTATE ParticleEditor::Run()
 	}
 
 	{
-	auto& window = windows["PARTICLE SYSTEM EDITOR - PER PARTICLE"];
-		if (window.Changed("MIN VELOCITY"))
+		auto& window = windows["PARTICLE SYSTEM EDITOR - PER PARTICLE"];
+		if (window.Changed("MIN"))
 		{
-			float minValue = window.GetValue<SliderFloatComponent>("MIN VELOCITY");
-			float maxValue = window.GetValue<SliderFloatComponent>("MAX VELOCITY");
+			float minValue = window.GetValue<SliderFloatComponent>("MIN");
+			float maxValue = window.GetValue<SliderFloatComponent>("MAX");
 
 			if (maxValue > minValue)
 			{
@@ -490,13 +482,13 @@ APPSTATE ParticleEditor::Run()
 			}
 
 			else
-				window.SetValue<SliderFloatComponent, float>("MIN VELOCITY", maxValue);
+				window.SetValue<SliderFloatComponent, float>("MIN", maxValue);
 		}
 
-		else if (window.Changed("MAX VELOCITY"))
+		else if (window.Changed("MAX"))
 		{
-			float minValue = window.GetValue<SliderFloatComponent>("MIN VELOCITY");
-			float maxValue = window.GetValue<SliderFloatComponent>("MAX VELOCITY");
+			float minValue = window.GetValue<SliderFloatComponent>("MIN");
+			float maxValue = window.GetValue<SliderFloatComponent>("MAX");
 
 			if (minValue < maxValue)
 			{
@@ -505,31 +497,31 @@ APPSTATE ParticleEditor::Run()
 			}
 
 			else
-				window.SetValue<SliderFloatComponent, float>("MAX VELOCITY", minValue);
+				window.SetValue<SliderFloatComponent, float>("MAX", minValue);
 		}
 
-		else if (window.Changed("PARTICLE WIDTH"))
+		else if (window.Changed("WIDTH"))
 			{
-			float value = window.GetValue<SliderFloatComponent>("PARTICLE WIDTH");
+			float value = window.GetValue<SliderFloatComponent>("WIDTH");
 
 			if (window.GetValue<CheckBoxComponent>("KEEP SQUARE"))
 			{
 				particleSystem->SetParticleHeight(value);
-				window.SetValue<SliderFloatComponent, float>("PARTICLE HEIGHT", value);
+				window.SetValue<SliderFloatComponent, float>("HEIGHT", value);
 			}
 
 			particleSystem->SetParticleWidth(value);
 			particleSystem->Reset();
 		}
 
-		else if (window.Changed("PARTICLE HEIGHT"))
+		else if (window.Changed("HEIGHT"))
 		{
-			float value = window.GetValue<SliderFloatComponent>("PARTICLE HEIGHT");
+			float value = window.GetValue<SliderFloatComponent>("HEIGHT");
 
 			if (window.GetValue<CheckBoxComponent>("KEEP SQUARE"))
 			{
 				particleSystem->SetParticleWidth(value);
-				window.SetValue<SliderFloatComponent, float>("PARTICLE WIDTH", value);
+				window.SetValue<SliderFloatComponent, float>("WIDTH", value);
 			}
 
 			particleSystem->SetParticleHeight(value);

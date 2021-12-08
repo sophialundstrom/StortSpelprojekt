@@ -26,8 +26,6 @@ private:
 	virtual void Update() override;
 	virtual void Render() override;
 
-	int totalPolygonCount;
-
 	bool renderModel = true;
 	void RenderModel()
 	{
