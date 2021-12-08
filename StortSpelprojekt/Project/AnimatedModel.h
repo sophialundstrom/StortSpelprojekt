@@ -101,9 +101,9 @@ public:
 		animator->PlayAnimation(animation, onRepeat, speedFactor);
 	}
 
-	void PlayAnimation(const std::string& name)
+	void PlayAnimation(const std::string& name, float playBackSpeed = 1.0f)
 	{
-		animationController->PlayAnimation(name);
+		animationController->PlayAnimation(name, playBackSpeed);
 	}
 
 	void PlayOverrideAnimation(const std::string& name, const std::string& startBone, bool hold, bool fullImpact = false)

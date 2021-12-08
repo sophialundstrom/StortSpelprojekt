@@ -14,7 +14,7 @@ struct Channel
 
 struct Animation
 {
-	float speedFactor = 1.f;
+	float playBackSpeed = 1.0f;
 	bool repeat = false;
 	bool active = false;
 	std::string name = "";
@@ -82,7 +82,7 @@ struct Animation
 		if (active)
 			timer += Time::GetDelta();
 
-		float timeInTicks = timer * ticksPerSecond * speedFactor;
+		float timeInTicks = timer * ticksPerSecond * playBackSpeed;
 		float frameTime = fmod(timeInTicks, duration);
 
 		if (timeInTicks > duration)
@@ -90,7 +90,7 @@ struct Animation
 			if (!repeat)
 			{
 				active = false;
-				timer = (duration / (ticksPerSecond * speedFactor)) - 0.000001f;
+				timer = (duration / (ticksPerSecond * playBackSpeed)) - 0.000001f;
 			}
 				
 			else
@@ -100,7 +100,7 @@ struct Animation
 
 	void Update(const std::string& joint, Matrix& localMatrix)
 	{
-		float timeInTicks = timer * ticksPerSecond * speedFactor; 
+		float timeInTicks = timer * ticksPerSecond * playBackSpeed;
 		float frameTime = fmod(timeInTicks, duration);
 
 		auto& map = channels[joint].positions;
