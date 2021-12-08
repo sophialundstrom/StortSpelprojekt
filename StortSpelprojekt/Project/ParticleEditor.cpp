@@ -117,6 +117,8 @@ void ParticleEditor::LoadModel(const std::string& file)
 	model->SetPosition({ 0.0f, -1.5f, 0.0f });
 	model->Update();
 	MR->Bind(model);
+	auto &window = windows["MODEL"];
+	window.SetValue<TextComponent, std::string>("MODEL NAME", model->GetName());
 }
 
 void ParticleEditor::DeleteModel()
@@ -231,6 +233,8 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 		AddWindow("MODEL");
 		auto& window = windows["MODEL"];
 		window.AddTextComponent("MODEL");
+		window.AddTextComponent("MODEL NAME");
+		window.SetValue<TextComponent, std::string>("MODEL NAME", "");
 		window.AddTextComponent("FPS");
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("DELETE", 120, 30);
@@ -540,6 +544,13 @@ APPSTATE ParticleEditor::Run()
 		float timeToSleep = tickInterval - dt;
 		Sleep(timeToSleep * 500.0f);
 	}
+
+	if (renderModel)
+	{
+		MR->Bind(model);
+	}
+	else
+		MR->Unbind(model);
 
 	return APPSTATE::NO_CHANGE;
 }
