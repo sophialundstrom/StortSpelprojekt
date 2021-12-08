@@ -403,7 +403,7 @@ void Game::AddFriendlyNPCs()
 			auto quest = NPC->AddQuest("Sticks And Stones");
 			NPC->AddDialogue("I will still need some resources for the structure. Please look around for some sticks and rocks that we can use.");
 			NPC->AddDialogue("I really need those sticks and rocks right now, it can't be that hard to find");
-			NPC->AddDialogue("Great work! Now that wont be enough to rebuild the structure but I will trade you some arrows for it, whenever you are in need of some more arrows, just come back here.");
+			NPC->AddDialogue("Great work! By the way, whenever you are in need of some more arrows, just come back here.");
 			
 			auto onCompleteFunc = [this, quest]() mutable
 			{
@@ -412,7 +412,7 @@ void Game::AddFriendlyNPCs()
 			quest->AddOnCompleteFunction(onCompleteFunc);
 		}
 		{
-			auto quest = NPC->AddQuest("Target Aquired");
+			auto quest = NPC->AddQuest("Target Acquired");
 			NPC->AddDialogue("Now head over there to those target dummies and take a few practice shots.");
 			NPC->AddDialogue("Need more arrows? Go to the tent and refill.");
 			NPC->AddDialogue("Nice shooting!");
@@ -435,7 +435,7 @@ void Game::AddFriendlyNPCs()
 		}
 		{
 			NPC->AddQuest("Getting Acquainted");
-			NPC->AddDialogue("I think it's time to introduce you to the rest. Go talk to Sven and Ulfric.");
+			NPC->AddDialogue("I think it's time for you to talk to Sven and Ulfric. Ulfric is standing in front of the ruined forge, and by helping him out he will upgrade your arrows so that they do more damage. Sven is over there by the destroyed farmhouse. If you give him a helping hand he will increase your health and make you take less damage.");
 			NPC->AddDialogue("Are you serious? They are right there...");
 			NPC->AddDialogue("Thank you! But now it's time to help the others. I think they really need it.");
 		}
