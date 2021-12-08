@@ -50,12 +50,12 @@ public:
 
 	void PlayAnimation(const std::string& name, bool onRepeat, float speedFactor = 1.f)
 	{
-		if (currentAnimation == animations[name]) // compare if they are the same
+		if (currentAnimation == animations[name])
 			return;
 
 		currentAnimation = animations[name];
 		currentAnimation->Play(onRepeat);
-		currentAnimation->speedFactor = speedFactor;
+		currentAnimation->playBackSpeed = speedFactor;
 	}
 
 	bool HasActiveAnimation() { if (currentAnimation) return true; return false; }
