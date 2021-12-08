@@ -40,7 +40,7 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 	drawableBounds.Extents.z *= drawable->GetScale().z;
 
 	//IF Stuff is still broken try tweak with orientation but why risk it if stuff seems to be working?
-	drawableBounds.Orientation = drawable->GetRotation();
+	drawableBounds.Orientation = Quaternion::Concatenate(drawableBounds.Orientation, drawable->GetRotation());
 
 	bool insideLeaf = drawableBounds.Intersects(quadTreeBoundsCollider);
 
@@ -243,12 +243,20 @@ void QuadTree::DivideQuadTree()
 
 void QuadTree::DeleteMemory()
 {
+
 	if (divided)
 	{
 		delete TopL;
 		delete TopR;
 		delete BotL;
 		delete BotR;
+	}
+	else
+	{
+		TopL->DeleteMemory();
+		TopR->DeleteMemory();
+		BotL->DeleteMemory();
+		BotR->DeleteMemory();
 	}
 	
 }
