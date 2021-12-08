@@ -715,20 +715,24 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddButtonComponent("LOAD SCENE", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
 		window.AddButtonComponent("LOAD FBX", 120, 30);
+		window.AddSeperatorComponent();
 		window.AddButtonComponent("CREATE BBOX", 120, 30);
 		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
-		window.AddTextComponent("");
+		window.AddSeperatorComponent();
 		window.AddSliderIntComponent("TERRAIN SUBDIV", 0, 5);
 		window.AddCheckBoxComponent("WIREFRAME", false);
+		window.AddSeperatorComponent();
 		window.AddTextComponent("SHOW:");
 		window.AddCheckBoxComponent("TERRAIN", true);
 		window.AddCheckBoxComponent("WATER", true);
 		window.AddCheckBoxComponent("VOLUMES", true);
 		window.AddCheckBoxComponent("SHADOWS", true);
 		window.AddCheckBoxComponent("SKYBOX", true);
+		window.AddSeperatorComponent();
 		window.AddTextComponent("CULL:");
 		window.AddSliderIntComponent("RENDER DIVIDE", -2000, 2000, -2000, false);
 		window.AddCheckBoxComponent("FLIP DIVIDE", false);
+		window.AddSeperatorComponent();
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
@@ -737,6 +741,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		auto& window = windows["GAME OBJECT"];
 		window.AddTextComponent("ObjectName");
 		window.AddTextComponent("PolygonCount");
+		window.AddSeperatorComponent();
 		window.AddTextComponent("Position");
 		window.AddSliderFloatComponent("X", -700, 700, 0, false);
 		window.AddSliderFloatComponent("Y", -50, 200, 0, false);
@@ -748,8 +753,9 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("Y-axis", -1, 50, 0, false);
 		window.AddSliderFloatComponent("Z-axis", -1, 50, 0, false);
 		window.AddCheckBoxComponent("Uniform scaling", false);
-		window.AddButtonComponent("Delete", 120, 30);
+		window.AddSeperatorComponent();
 		window.AddButtonComponent("Duplicate", 120, 30);
+		window.AddButtonComponent("Delete", 120, 30, true);
 	}
 
 	{
@@ -763,12 +769,10 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		auto& window = windows["PERFORMANCE VIEWER"];
 		window.AddTextComponent("FPS");
 		window.AddTextComponent("SCENE POLYGON COUNT");
-		window.AddTextComponent("SPACE");
-		window.SetValue<TextComponent, std::string>("SPACE", "");
+		window.AddSeperatorComponent();
 		window.AddTextComponent("Take performance snapshot");
 		window.AddButtonComponent("Snapshot", 120, 30);
-		window.AddTextComponent("SPACE2");
-		window.SetValue<TextComponent, std::string>("SPACE2", "");
+		window.AddSeperatorComponent();
 		window.AddTextComponent("FRAME TIME");
 		window.AddTextComponent("UI TIME");
 		window.AddTextComponent("LOGIC TIME");
