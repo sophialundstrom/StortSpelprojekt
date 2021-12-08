@@ -1,7 +1,7 @@
 #include "BarbarianCamp.h"
 #include "Renderers.h"
 
-BarbarianCamp::Location BarbarianCamp::GetLocation()    { return location; }
+CampData::Location BarbarianCamp::GetLocation()    { return location; }
 UINT BarbarianCamp::NumBarbarians()                     { return numBarbarians; }
 
 void BarbarianCamp::SetTarget(const Vector3& target)
@@ -14,7 +14,7 @@ void BarbarianCamp::Update(std::shared_ptr<Player> player, HeightMap* heightMap)
     //NOT CORRECT BUT WORKS FOR NOW
     for (auto& barbarian : barbarians)
     {
-        if (location == Location::Village)
+        if (location == CampData::Location::Village)
         {
             barbarian->Update(player, heightMap);
         }
@@ -35,7 +35,7 @@ void BarbarianCamp::Reset()
         barbarian->Reset();
 }
 
-BarbarianCamp::BarbarianCamp(const Vector3& position, Location location,  float radius, bool active)
+BarbarianCamp::BarbarianCamp(const Vector3& position, CampData::Location location,  float radius, bool active)
     :location(location), radius(radius), active(active), numBarbarians(0) 
 {}
 

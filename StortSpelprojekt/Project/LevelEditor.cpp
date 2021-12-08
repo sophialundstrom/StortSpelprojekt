@@ -618,13 +618,20 @@ void LevelEditor::Update()
 			const int lowZ = (int)std::floor(newZPos);
 			const int highZ = (int)std::ceil(newZPos);
 			const float Zdecimal = newZPos - lowZ;
+			if (newZPos < 950 && newXPos < 950)
+			{
+				const float H1 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+				const float H2 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+				const float H3 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+				const float H4 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
 
-			const float H1 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
-			const float H2 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
-			const float H3 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
-			const float H4 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+				newYPos = H1 + H2 + H3 + H4;
+			}
+			else
+			{
+				std::cout << "out of bounds" << std::endl;
+			}
 
-			newYPos = H1 + H2 + H3 + H4;
 		}
 
 		auto model = scene.Get<Drawable>(selectedObject);

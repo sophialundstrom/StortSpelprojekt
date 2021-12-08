@@ -86,7 +86,7 @@ private:
 
     std::shared_ptr<Building> buildings[3];
 
-    std::map<BarbarianCamp::Location, BarbarianCamp*> camps;
+    std::map<CampData::Location, BarbarianCamp*> camps;
 
     std::vector<std::shared_ptr<Target>> targets;
 

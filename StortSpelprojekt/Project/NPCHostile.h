@@ -6,6 +6,31 @@
 
 class NPCState;
 
+struct CampData
+{
+	enum class Location { South, East, North, West, Village };
+	std::map<Location, int> locationCutoff;
+	CampData()
+	{
+		locationPosition.emplace(Location::South, Vector3(-617.626160f, 70.000000f, -252.823212f));
+		locationPosition.emplace(Location::East, Vector3(0, 0, 0));
+		locationPosition.emplace(Location::North, Vector3(0, 0, 0));
+		locationPosition.emplace(Location::West, Vector3(0, 0, 0));
+		locationPosition.emplace(Location::Village, Vector3(0, 0, 0));
+
+		locationCutoff.emplace(Location::South, 160);
+		locationCutoff.emplace(Location::East, 160);
+		locationCutoff.emplace(Location::North, 160);
+		locationCutoff.emplace(Location::West, 160);
+		locationCutoff.emplace(Location::Village, 160);
+
+	}
+	std::map<Location, Vector3> locationPosition;
+
+	static const std::string Locations[];
+};
+inline const std::string CampData::Locations[] = { "Southern", "Eastern", "Northern", "Western", "Village" };
+
 class HostileNPC : public NPC
 {
 private:
@@ -37,7 +62,7 @@ public:
 	CampData GetCampData()					{ return this->campData;}
 
 	void SetPlayerPtr(std::shared_ptr<Player> p)	{ this->player = p; }
-	void SetState(NPCState& newState);// { currentState = &newState; }
+	void SetState(NPCState& newState);
 
 	void SetDamage(int x)							{ damage = x; }
 
@@ -56,26 +81,3 @@ public:
                                                                                                                                                                                                                                                              
 };
 
-struct CampData
-{
-	CampData()
-	{
-		locationPosition.emplace(Location::South, Vector3(-617.626160f, 70.000000f, -252.823212f));
-		locationPosition.emplace(Location::East, Vector3(0, 0, 0));
-		locationPosition.emplace(Location::North, Vector3(0, 0, 0));
-		locationPosition.emplace(Location::West, Vector3(0, 0, 0));
-		locationPosition.emplace(Location::Village, Vector3(0, 0, 0));
-
-		locationCutoff.emplace(Location::South, 160);
-		locationCutoff.emplace(Location::South, 160);
-		locationCutoff.emplace(Location::South, 160);
-		locationCutoff.emplace(Location::South, 160);
-		locationCutoff.emplace(Location::South, 160);
-
-	}
-	enum class Location { South, East, North, West, Village };
-	static const std::string Locations[];
-	static std::map<Location, Vector3> locationPosition;
-	static std::map<Location, int> locationCutoff;
-};
-inline const std::string CampData::Locations[] = { "Southern", "Eastern", "Northern", "Western", "Village" };

@@ -33,7 +33,7 @@ void Quest::AddTargetObjective(UINT targetID)
 	objectives.emplace_back(new TargetObjective(targetID));
 }
 
-void Quest::AddFightObjective(BarbarianCamp::Location location)
+void Quest::AddFightObjective(CampData::Location location)
 {
 	objectives.emplace_back(new FightObjective(location));
 }
@@ -43,7 +43,7 @@ void Quest::AddLocationObjective(const Vector3& location, float radius)
 	objectives.emplace_back(new LocationObjective(location, radius));
 }
 
-void Quest::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets, std::vector<std::shared_ptr<FriendlyNPC>> frendlyNPCs)
+void Quest::Update(std::shared_ptr<Player> player, std::map<CampData::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets, std::vector<std::shared_ptr<FriendlyNPC>> frendlyNPCs)
 {
 	UINT numCompleted = 0;
 
@@ -264,7 +264,7 @@ void Quest::LoadFromFile(File& file)
 	}
 }
 
-void Quest::ResetObjectiveResources(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets)
+void Quest::ResetObjectiveResources(std::shared_ptr<Player> player, std::map<CampData::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets)
 {
 	for (auto& objective : objectives)
 	{
