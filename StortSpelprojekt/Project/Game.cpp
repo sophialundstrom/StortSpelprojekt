@@ -695,11 +695,11 @@ void Game::HandleHouseUpgrades()
 					if (building->GetBuildingName() == "ArcherTent")
 					{
 						if (building->GetCurrentState() == 1)
-							player->numArrows = 15;
+							player->numArrows = player->maxArrows;
 						if (building->GetCurrentState() == 2)
-							player->numArrows = 30;
+							player->numArrows = player->maxArrows;
 						if (building->GetCurrentState() == 3)
-							player->numArrows = 50;
+							player->numArrows = player->maxArrows;
 					}
 				}
 

@@ -11,7 +11,6 @@ private:
 	ID3D11Buffer* tesselationBuf = nullptr;
 	ID3D11Buffer* timeBuf = nullptr;
 	ID3D11Buffer* translationBuf = nullptr;
-	ID3D11Buffer* thetaBuf = nullptr;
 
 	//VARIABLES
 	struct textureTranslation
@@ -21,14 +20,6 @@ private:
 		float padding2;
 		float padding3;
 	}translationOffset;
-
-	struct theta
-	{
-		float offset;
-		float padding1;
-		float padding2;
-		float padding;
-	}thetaOffset;
 
 	//SHADER PATHS
 #ifdef _DEBUG
