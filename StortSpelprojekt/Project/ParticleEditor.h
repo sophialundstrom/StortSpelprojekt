@@ -22,6 +22,7 @@ private:
 	virtual void Save(const std::string& file) override;
 	virtual void Load(const std::string& file) override;
 	void LoadModel(const std::string& file);
+	void DeleteModel();
 	virtual void Update() override;
 	virtual void Render() override;
 
