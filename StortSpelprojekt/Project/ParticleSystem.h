@@ -55,6 +55,7 @@ private:
 	Texture* secondTexture;
 	Texture* opacityTexture;
 
+	bool particleDirection = false;
 	bool done = false;
 	bool stopSpawn = false;
 
@@ -85,6 +86,9 @@ public:
 	void SetParticlesLifetime(float amount) { this->particlesLifetime = amount; }
 	void SetTimeBetweenPartilces(float amount) { this->timeBetweenParticles = amount; }
 	void SetPosition(Vector3 pos) { this->position = pos; }
+
+	bool GetParticleDir() { return this->particleDirection; }
+	void SetParticleDir(bool value) { particleDirection = value; }
 
 	void SetXPosition(float xPos) { this->position.x = xPos; }
 	void SetYPosition(float yPos) { this->position.y = yPos; }

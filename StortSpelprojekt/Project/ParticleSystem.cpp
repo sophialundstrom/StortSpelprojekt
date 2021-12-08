@@ -24,6 +24,7 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 	std::string line = "";
 
 	this->position = { 0.0f, 0.0f, 0.0f };
+	this->particleDirection = false;
 
 	if (file == "default.ps" || file.find("\\") == std::string::npos)
 		path = FileSystem::ProjectDirectory::path + "\\ParticleSystems\\" + file;
@@ -132,12 +133,26 @@ void ParticleSystem::Update()
 
 			case EmitterType::CUBE:
 			{
-				newParticle.direction = { 0.0f, 1.0f, 0.0f };
-				//newParticle.color = { 55.0f / 255.0f, 71.0f / 255.0f, 75.0f / 255.0f };
+				if (particleDirection)
+				{
+					newParticle.direction = { 0.0f, 1.0f, 0.0f };
+					//newParticle.color = { 55.0f / 255.0f, 71.0f / 255.0f, 75.0f / 255.0f };
 
-				newParticle.position.x = Random::Real(position.x - width / 2.0f, position.x + width / 2.0f);
-				newParticle.position.z = Random::Real(position.z - depth / 2.0f, position.z + depth / 2.0f);
-				newParticle.position.y = position.y;
+					newParticle.position.x = Random::Real(position.x - width / 2.0f, position.x + width / 2.0f);
+					newParticle.position.z = Random::Real(position.z - depth / 2.0f, position.z + depth / 2.0f);
+					newParticle.position.y = position.y;
+				}
+				else if (!particleDirection)
+				{
+					newParticle.direction = { 0.0f, -1.0f, 0.0f };
+					//newParticle.color = { 55.0f / 255.0f, 71.0f / 255.0f, 75.0f / 255.0f };
+
+					newParticle.position.x = Random::Real(position.x - width / 2.0f, position.x + width / 2.0f);
+					newParticle.position.z = Random::Real(position.z - depth / 2.0f, position.z + depth / 2.0f);
+					newParticle.position.y = position.y;
+				}
+					
+
 				break;
 			}
 

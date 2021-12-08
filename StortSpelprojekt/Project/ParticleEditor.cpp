@@ -64,12 +64,13 @@ void ParticleEditor::Load(const std::string& file)
 		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Second Image", particleSystem->GetSecondTexture());
 		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Opacity Image", particleSystem->GetOpacityTexture());
 		window.SetValue<RadioButtonComponent, UINT>("EMITTER TYPES", (UINT)particleSystem->GetType());
+		window.SetValue<CheckBoxComponent, bool>("DIRECTION", particleSystem->GetParticleDir());
 
 	}
 	
 
 	{
-		auto& window = windows["PARTICLE SYSTEM EDITOR - PER PARTICLE"];
+		auto& window = windows["PER PARTICLE"];
 	
 
 		window.SetValue<SliderFloatComponent, float>("MIN", particleSystem->GetMinVelocity());
@@ -253,7 +254,7 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 		
 		window.AddTextComponent("                     EMITTERS");
 		const std::string names[] = { "SPHERE", "CUBE", "CONE" };
-		window.AddRadioButtonComponent("EMITTER TYPES", 0, 3, names);
+		window.AddRadioButtonComponent("EMITTER TYPES", 0, 3, names, true);
 		window.AddSeperatorComponent();
 
 		window.AddTextComponent("                  CONE AND SPHERE");
@@ -263,6 +264,9 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 		window.AddTextComponent("                   CUBE EMITTER");
 		window.AddSliderFloatComponent("WIDTH", 0.0f, 50.0f);
 		window.AddSliderFloatComponent("DEPTH", 0.0f, 50.0f);
+		window.AddTextComponent("                   DIRECTION");
+		window.AddTextComponent("|| Checked = Up --- Unchecked = Down ||");
+		window.AddCheckBoxComponent("DIRECTION", false, false);
 		window.AddSeperatorComponent();
 
 		window.AddTextComponent("  |||| -----> IN CASE OF DELTA TIME BUG <----- ||||");
@@ -295,20 +299,20 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	}
 
 	{
-		AddWindow("PARTICLE SYSTEM EDITOR - PER PARTICLE");
-		auto& window = windows["PARTICLE SYSTEM EDITOR - PER PARTICLE"];
-		window.AddTextComponent("VELOCITY");
+		AddWindow("PER PARTICLE");
+		auto& window = windows["PER PARTICLE"];
+		window.AddTextComponent("     VELOCITY");
 		window.AddSliderFloatComponent("MIN", 0.0f, 50.0f);
 		window.AddSliderFloatComponent("MAX", 0.0f, 50.0f);
 		window.AddSeperatorComponent();
 
-		window.AddTextComponent("DIMENSIONS");
+		window.AddTextComponent("    DIMENSIONS");
 		window.AddCheckBoxComponent("KEEP SQUARE", true);
 		window.AddSliderFloatComponent("WIDTH", 0.0f, 0.5f);
 		window.AddSliderFloatComponent("HEIGHT", 0.0f, 0.5f);
 		window.AddSeperatorComponent();
 
-		window.AddTextComponent("PARTICLE ROTATION");
+		window.AddTextComponent("    PARTICLE ROTATION");
 		window.AddCheckBoxComponent("ROTATION", false);
 		window.AddSliderFloatComponent("X-AXIS", -5.0f, 0.0f, 5.0f);
 		window.AddSliderFloatComponent("Y-AXIS", -5.0f, 0.0f, 5.0f);
@@ -455,9 +459,17 @@ APPSTATE ParticleEditor::Run()
 			particleSystem->SetCubeWidth(window.GetValue<SliderFloatComponent>("WIDTH"));
 			particleSystem->Reset();
 		}
+
 		else if (window.Changed("DEPTH"))
 		{
 			particleSystem->SetCubeDepth(window.GetValue<SliderFloatComponent>("DEPTH"));
+			particleSystem->Reset();
+		}
+
+		else if (window.Changed("DIRECTION"))
+		{
+			auto value = window.GetValue<CheckBoxComponent>("DIRECTION");
+			particleSystem->SetParticleDir(value);
 			particleSystem->Reset();
 		}
 
@@ -469,7 +481,7 @@ APPSTATE ParticleEditor::Run()
 	}
 
 	{
-		auto& window = windows["PARTICLE SYSTEM EDITOR - PER PARTICLE"];
+		auto& window = windows["PER PARTICLE"];
 		if (window.Changed("MIN"))
 		{
 			float minValue = window.GetValue<SliderFloatComponent>("MIN");
@@ -527,6 +539,7 @@ APPSTATE ParticleEditor::Run()
 			particleSystem->SetParticleHeight(value);
 			particleSystem->Reset();
 		}
+		
 	}
 	
 	float dt = timer.DeltaTime();
