@@ -1158,8 +1158,10 @@ APPSTATE LevelEditor::Run()
 			window.SetValue<TextComponent, std::string>("SCENE POLYGON COUNT", "TOTAL POLY-COUNT: " + std::to_string(totalPolygonCount));
 			totalPolygonsLastFrame = totalPolygonCount;
 		}
+
 		if (window.Changed("VISUALIZE PERFORMANCE"))
 			ShowPerformance();
+
 		updateUITime = timer.DeltaTime();
 		frameTime = updateUITime + updateTime + renderTime;
 		if (window.GetValue<ButtonComponent>("Snapshot"))
