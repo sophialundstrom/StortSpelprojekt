@@ -30,6 +30,11 @@ void ParticleEditor::Save(const std::string& file)
 	writer << particleSystem->GetPosition().x << space;
 	writer << particleSystem->GetPosition().y << space;
 	writer << particleSystem->GetPosition().z << space;
+	writer << particleSystem->GetRotation() << space;
+	writer << particleSystem->GetMinRotation() << space;
+	writer << particleSystem->GetMaxRotation() << space;
+
+	writer << particleSystem->GetAlphaMode() << space;
 
 	writer << "'" << particleSystem->GetFirstTextureFile() << "'" << space;
 	writer << "'" << particleSystem->GetSecondTextureFile() << "'" << space;
@@ -60,12 +65,13 @@ void ParticleEditor::Load(const std::string& file)
 		window.SetValue<SliderFloatComponent, float>("X-POS", particleSystem->GetPosition().x);
 		window.SetValue<SliderFloatComponent, float>("Y-POS", particleSystem->GetPosition().y);
 		window.SetValue<SliderFloatComponent, float>("Z-POS", particleSystem->GetPosition().z);
+		window.SetValue<CheckBoxComponent, int>("USE ALPHA", particleSystem->GetAlphaMode());
+		window.SetValue<CheckBoxComponent, int>("USE OPACITY", particleSystem->GetOpacityMode());
 		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("First Image", particleSystem->GetFirstTexture());
 		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Second Image", particleSystem->GetSecondTexture());
 		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Opacity Image", particleSystem->GetOpacityTexture());
 		window.SetValue<RadioButtonComponent, UINT>("EMITTER TYPES", (UINT)particleSystem->GetType());
 		window.SetValue<CheckBoxComponent, bool>("Up", particleSystem->GetParticleDir());
-
 	}
 	
 
@@ -84,6 +90,11 @@ void ParticleEditor::Load(const std::string& file)
 
 		window.SetValue<SliderFloatComponent, float>("WIDTH", particleSystem->GetParticleWidth());
 		window.SetValue<SliderFloatComponent, float>("HEIGHT", particleSystem->GetParticleHeight());
+
+		window.SetValue<CheckBoxComponent, bool>("ROTATION", particleSystem->GetRotation());
+		window.SetValue<SliderFloatComponent, float>("R-MIN", particleSystem->GetMinRotation());
+		window.SetValue<SliderFloatComponent, float>("R-MAX", particleSystem->GetMaxRotation());
+
 	}
 	
 	source->SetPosition(particleSystem->GetPosition());
@@ -274,6 +285,9 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 		window.AddSeperatorComponent();
 
 		// CHANGE TEXTURE BUTTON
+		window.AddTextComponent("   ||| ------> TURN ON/OFF ALPHA & OPACITY <------ |||");
+		window.AddCheckBoxComponent("USE ALPHA", 1, false);
+		window.AddCheckBoxComponent("USE OPACITY", 1, true);
 		window.AddTextComponent("   |||| ---------> CHANGE TEXTURES <--------- ||||");
 		window.AddButtonComponent("CHANGE FIRST", 200, 75);
 		window.AddTextComponent("\t\t\t", true);
@@ -475,6 +489,32 @@ APPSTATE ParticleEditor::Run()
 		else if (window.Changed("EMITTER TYPES"))
 		{
 			particleSystem->SetType((EmitterType)window.GetValue<RadioButtonComponent>("EMITTER TYPES"));
+			particleSystem->Reset();
+		}
+
+		else if (window.Changed("USE ALPHA"))
+		{
+			auto value = window.GetValue<CheckBoxComponent>("USE ALPHA");
+			if (value == true)
+			{
+				value = 1;
+			}
+			else
+				value = 0;
+			particleSystem->SetAlphaMode(value);
+			particleSystem->Reset();
+		}
+
+		else if (window.Changed("USE OPACITY"))
+		{
+			auto value = window.GetValue<CheckBoxComponent>("USE OPACITY");
+			if (value == true)
+			{
+				value = 1;
+			}
+			else
+				value = 0;
+			particleSystem->SetOpacityMode(value);
 			particleSystem->Reset();
 		}
 	}

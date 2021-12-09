@@ -21,6 +21,8 @@ private:
 		float velocity;
 		int rotationDir;
 		float rotationSpeed;
+		int useAlpha;
+		int useOpacity;
 	};
 
 	const Vector3 colors[5] =
@@ -43,6 +45,9 @@ private:
 	float minVelocity;
 	float maxVelocity;
 
+	int useAlpha = 1;
+	int useOpacity = 1;
+
 	unsigned int particleCount;
 	unsigned int maxParticles;
 
@@ -52,10 +57,6 @@ private:
 	float timeSinceLastParticle;
 
 	bool rotating = false;
-
-
-
-
 
 	std::vector<Particle> particles;
 	ID3D11Buffer* vertexBuffer = nullptr;
@@ -107,8 +108,15 @@ public:
 
 	void SetMinRotationSpeed(float speed) { this->minRotationSpeed = speed; }
 	void SetMaxRotationSpeed(float speed) { this->maxRotationSpeed = speed; }
+	float GetMinRotation() { return this->minRotationSpeed; }
+	float GetMaxRotation() { return this->maxRotationSpeed; }
 	void SetRotation(bool rotating) { this->rotating = rotating; }
 	bool GetRotation() { return this->rotating; }
+
+	void SetAlphaMode(int mode) { this->useAlpha = mode; }
+	int GetAlphaMode() { return this->useAlpha; }
+	void SetOpacityMode(int mode) { this->useOpacity = mode; }
+	int GetOpacityMode() { return this->useOpacity; }
 
 	void StartSpawn() { this->stopSpawn = false; this->done = false; }
 	void StopSpawn() { this->stopSpawn = true; }

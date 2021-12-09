@@ -6,6 +6,8 @@ struct VS_INPUT
     float velocity : VELOCITY;
     int rotationDir : ROTATIONDIR;
     float rotationSpeed : ROTATIONSPEED;
+    int useAlpha : USEALPHA;
+    int useOpacity : USEOPACITY;
 };
 
 struct VS_OUTPUT
@@ -14,6 +16,9 @@ struct VS_OUTPUT
     float lifetime : LIFETIME;
     int rotationDir : ROTATIONDIR;
     float rotationSpeed : ROTATIONSPEED;
+    int useAlpha : USEALPHA;
+    int useOpacity : USEOPACITY;
+    
 };
 
 cbuffer Lifetime : register(b0)
@@ -29,6 +34,7 @@ VS_OUTPUT main(VS_INPUT input)
     output.position = float4(input.position, 1.0f);
     output.rotationDir = input.rotationDir;
     output.rotationSpeed = input.rotationSpeed;
-    
+    output.useAlpha = input.useAlpha;
+    output.useOpacity = input.useOpacity;
     return output;
 }

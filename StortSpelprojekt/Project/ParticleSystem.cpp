@@ -199,6 +199,8 @@ void ParticleSystem::Update()
 			}
 
 			newParticle.velocity = Random::Real(minVelocity, maxVelocity);
+			newParticle.useAlpha = useAlpha;
+			newParticle.useOpacity = useOpacity;
 
 			if (rotating)
 			{

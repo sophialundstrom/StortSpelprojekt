@@ -19,6 +19,9 @@ struct GS_INPUT
     float lifetime : LIFETIME;
     int rotationDir : ROTATIONDIR;
     float rotationSpeed : ROTATIONSPEED;
+    int useAlpha : USEALPHA;
+    int useOpacity : USEOPACITY;
+    
 };
 
 struct GS_OUTPUT
@@ -26,6 +29,9 @@ struct GS_OUTPUT
     float4 position : SV_POSITION;
     float2 texCoords : TEXTURECOORDS;
     float lifetime : LIFETIME;
+    int useAlpha : USEALPHA;
+    int useOpacity : USEOPACITY;
+    
     
 };
 
@@ -73,6 +79,7 @@ void main(
             float3 projection = corners[i].xyz - parallel;
             corners[i] = float4(parallel + cos(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir) * projection +
                                     sin(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir) * cross(lookAt, corners[i].xyz), 1.0f);
+            
         }
     }
 
@@ -86,7 +93,8 @@ void main(
 
     //output.texCoords = mul(corners[0], texCoords[0]);
         output.texCoords = texCoords[i];
-
+        output.useAlpha = input[0].useAlpha;
+        output.useOpacity = input[0].useOpacity;
        // output.color = input[0].color;
         outputStream.Append(output);
     }
