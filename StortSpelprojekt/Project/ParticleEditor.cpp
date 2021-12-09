@@ -314,9 +314,8 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 
 		window.AddTextComponent("    PARTICLE ROTATION");
 		window.AddCheckBoxComponent("ROTATION", false);
-		window.AddCheckBoxComponent("INVERT", true);
-		window.AddSliderFloatComponent("R-MIN", 0.0f, 0.0f, 5.0f);
-		window.AddSliderFloatComponent("R-MAX", 0.0f, 0.0f, 5.0f);
+		window.AddSliderFloatComponent("R-MIN", 0.0f, 5.0f, 0.0f);
+		window.AddSliderFloatComponent("R-MAX", 0.0f, 5.0f, 0.0f);
 
 	}
 	InitCamera(camera);
@@ -542,15 +541,39 @@ APPSTATE ParticleEditor::Run()
 
 		else if (window.Changed("ROTATION"))
 		{
-			float value = window.GetValue<CheckBoxComponent>("ROTATION");
-			bool invert = window.GetValue<CheckBoxComponent>("INVERT");
-			if (invert)
-			{
+			bool value = window.GetValue<CheckBoxComponent>("ROTATION");
+			
+			particleSystem->SetRotation(value);
+			particleSystem->Reset();
+		}
 
-			}
-			else
+		else if (particleSystem->GetRotation())
+		{
+			if (window.Changed("R-MAX"))
 			{
 				
+				auto maxValue = window.GetValue<SliderFloatComponent>("R-MAX");
+				float minValue = window.GetValue<SliderFloatComponent>("R-MIN");
+				if (maxValue > minValue)
+				{
+					particleSystem->SetMaxRotationSpeed(maxValue);
+					particleSystem->Reset();
+				}
+				else
+					window.SetValue<SliderFloatComponent, float>("R-MAX", minValue);
+			}
+
+			if (window.Changed("R-MIN"))
+			{
+				auto maxValue = window.GetValue<SliderFloatComponent>("R-MAX");
+				float minValue = window.GetValue<SliderFloatComponent>("R-MIN");
+				if (maxValue > minValue)
+				{
+					particleSystem->SetMinRotationSpeed(minValue);
+					particleSystem->Reset();
+				}
+				else
+					window.SetValue<SliderFloatComponent, float>("R-MIN", maxValue);
 			}
 		}
 		

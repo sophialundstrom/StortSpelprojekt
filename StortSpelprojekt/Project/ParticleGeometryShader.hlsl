@@ -65,9 +65,14 @@ void main(
     {
         for (int i = 0; i < 4; i++)
         {
-            corners[i] += float4(corners[i].xyz * cos(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)
-                    + cross(lookAt, corners[i].xyz) * sin(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)
-                    + lookAt * dot(lookAt, corners[i].xyz) * (1 - cos(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)), 1.0f);
+            //corners[i] += float4(corners[i].xyz * cos(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)
+            //        + cross(lookAt, corners[i].xyz) * sin(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)
+            //        + lookAt * dot(lookAt, corners[i].xyz) * (1 - cos(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)), 1.0f);
+            
+            float3 parallel = dot(lookAt, corners[i].xyz) * lookAt;
+            float3 projection = corners[i].xyz - parallel;
+            corners[i] = float4(parallel + cos(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir) * projection +
+                                    sin(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir) * cross(lookAt, corners[i].xyz), 1.0f);
         }
     }
 

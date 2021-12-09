@@ -51,7 +51,11 @@ private:
 	float timeBetweenParticles;
 	float timeSinceLastParticle;
 
-	bool rotating = true;
+	bool rotating = false;
+
+
+
+
 
 	std::vector<Particle> particles;
 	ID3D11Buffer* vertexBuffer = nullptr;
@@ -73,6 +77,9 @@ public:
 	~ParticleSystem();
 
 	void Draw() const;
+
+	float minRotationSpeed = 0.0f;
+	float maxRotationSpeed = 0.0f;
 
 	void Reset();
 	void Update();
@@ -97,6 +104,11 @@ public:
 	void SetXPosition(float xPos) { this->position.x = xPos; }
 	void SetYPosition(float yPos) { this->position.y = yPos; }
 	void SetZPosition(float zPos) { this->position.z = zPos; }
+
+	void SetMinRotationSpeed(float speed) { this->minRotationSpeed = speed; }
+	void SetMaxRotationSpeed(float speed) { this->maxRotationSpeed = speed; }
+	void SetRotation(bool rotating) { this->rotating = rotating; }
+	bool GetRotation() { return this->rotating; }
 
 	void StartSpawn() { this->stopSpawn = false; this->done = false; }
 	void StopSpawn() { this->stopSpawn = true; }

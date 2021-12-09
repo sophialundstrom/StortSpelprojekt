@@ -202,8 +202,8 @@ void ParticleSystem::Update()
 
 			if (rotating)
 			{
-				newParticle.rotationSpeed = Random::Real(1, 5);
-				auto rotDir = Random::Integer(0, 1);
+				newParticle.rotationSpeed = Random::Real(minRotationSpeed, maxRotationSpeed);
+				auto rotDir = Random::Integer(0,1);
 				if (rotDir == 0)
 					newParticle.rotationDir = -1;
 				else
