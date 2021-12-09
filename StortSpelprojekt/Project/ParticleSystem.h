@@ -19,6 +19,8 @@ private:
 		Vector3 direction;
 		float lifeTime;
 		float velocity;
+		int rotationDir;
+		float rotationSpeed;
 	};
 
 	const Vector3 colors[5] =
@@ -48,6 +50,8 @@ private:
 
 	float timeBetweenParticles;
 	float timeSinceLastParticle;
+
+	bool rotating = true;
 
 	std::vector<Particle> particles;
 	ID3D11Buffer* vertexBuffer = nullptr;

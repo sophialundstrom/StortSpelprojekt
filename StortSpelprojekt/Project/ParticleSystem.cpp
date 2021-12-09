@@ -151,6 +151,7 @@ void ParticleSystem::Update()
 					newParticle.position.z = Random::Real(position.z - depth / 2.0f, position.z + depth / 2.0f);
 					newParticle.position.y = position.y;
 				}
+
 					
 
 				break;
@@ -198,6 +199,16 @@ void ParticleSystem::Update()
 			}
 
 			newParticle.velocity = Random::Real(minVelocity, maxVelocity);
+
+			if (rotating)
+			{
+				newParticle.rotationSpeed = Random::Real(1, 5);
+				auto rotDir = Random::Integer(0, 1);
+				if (rotDir == 0)
+					newParticle.rotationDir = -1;
+				else
+					newParticle.rotationDir = 1;
+			}
 
 			particles.push_back(newParticle);
 			particleCount++;

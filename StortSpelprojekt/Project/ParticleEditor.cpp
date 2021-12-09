@@ -64,7 +64,7 @@ void ParticleEditor::Load(const std::string& file)
 		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Second Image", particleSystem->GetSecondTexture());
 		window.SetValue<ImageComponent, ID3D11ShaderResourceView*>("Opacity Image", particleSystem->GetOpacityTexture());
 		window.SetValue<RadioButtonComponent, UINT>("EMITTER TYPES", (UINT)particleSystem->GetType());
-		window.SetValue<CheckBoxComponent, bool>("DIRECTION", particleSystem->GetParticleDir());
+		window.SetValue<CheckBoxComponent, bool>("Up", particleSystem->GetParticleDir());
 
 	}
 	
@@ -266,7 +266,7 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 		window.AddSliderFloatComponent("DEPTH", 0.0f, 50.0f);
 		window.AddTextComponent("                   DIRECTION");
 		window.AddTextComponent("|| Checked = Up --- Unchecked = Down ||");
-		window.AddCheckBoxComponent("DIRECTION", false, false);
+		window.AddCheckBoxComponent("Up", false, false);
 		window.AddSeperatorComponent();
 
 		window.AddTextComponent("  |||| -----> IN CASE OF DELTA TIME BUG <----- ||||");
@@ -314,9 +314,9 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 
 		window.AddTextComponent("    PARTICLE ROTATION");
 		window.AddCheckBoxComponent("ROTATION", false);
-		window.AddSliderFloatComponent("X-AXIS", -5.0f, 0.0f, 5.0f);
-		window.AddSliderFloatComponent("Y-AXIS", -5.0f, 0.0f, 5.0f);
-		window.AddSliderFloatComponent("Z-AXIS", -5.0f, 0.0f, 5.0f);
+		window.AddCheckBoxComponent("INVERT", true);
+		window.AddSliderFloatComponent("R-MIN", 0.0f, 0.0f, 5.0f);
+		window.AddSliderFloatComponent("R-MAX", 0.0f, 0.0f, 5.0f);
 
 	}
 	InitCamera(camera);
@@ -466,9 +466,9 @@ APPSTATE ParticleEditor::Run()
 			particleSystem->Reset();
 		}
 
-		else if (window.Changed("DIRECTION"))
+		else if (window.Changed("Up"))
 		{
-			auto value = window.GetValue<CheckBoxComponent>("DIRECTION");
+			auto value = window.GetValue<CheckBoxComponent>("Up");
 			particleSystem->SetParticleDir(value);
 			particleSystem->Reset();
 		}
@@ -538,6 +538,20 @@ APPSTATE ParticleEditor::Run()
 
 			particleSystem->SetParticleHeight(value);
 			particleSystem->Reset();
+		}
+
+		else if (window.Changed("ROTATION"))
+		{
+			float value = window.GetValue<CheckBoxComponent>("ROTATION");
+			bool invert = window.GetValue<CheckBoxComponent>("INVERT");
+			if (invert)
+			{
+
+			}
+			else
+			{
+				
+			}
 		}
 		
 	}

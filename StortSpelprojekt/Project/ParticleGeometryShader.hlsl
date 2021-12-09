@@ -17,6 +17,8 @@ struct GS_INPUT
 {
     float4 position : SV_POSITION;
     float lifetime : LIFETIME;
+    int rotationDir : ROTATIONDIR;
+    float rotationSpeed : ROTATIONSPEED;
 };
 
 struct GS_OUTPUT
@@ -24,6 +26,7 @@ struct GS_OUTPUT
     float4 position : SV_POSITION;
     float2 texCoords : TEXTURECOORDS;
     float lifetime : LIFETIME;
+    
 };
 
 [maxvertexcount(4)]
@@ -58,7 +61,18 @@ void main(
         
     };
 
-    GS_OUTPUT output;
+    if (input[0].rotationDir != 0)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            corners[i] += float4(corners[i].xyz * cos(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)
+                    + cross(lookAt, corners[i].xyz) * sin(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)
+                    + lookAt * dot(lookAt, corners[i].xyz) * (1 - cos(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)), 1.0f);
+        }
+    }
+
+    
+        GS_OUTPUT output;
     output.lifetime = input[0].lifetime;
     for (int i = 0; i < 4; ++i)
     {
