@@ -30,6 +30,7 @@ private:
 	bool renderTerrain = true;
 	bool renderShadows = true;
 	bool renderSkybox = true;
+	bool renderPerformance = false;
 	bool divideFlipped = false;
 
 	//PerformanceStuff
@@ -72,6 +73,7 @@ private:
 	void ShowTerrain();
 	void ShowShadows();
 	void ShowSkybox();
+	void ShowPerformance();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

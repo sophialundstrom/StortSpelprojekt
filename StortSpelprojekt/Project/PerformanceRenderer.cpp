@@ -72,6 +72,8 @@ void PerformanceRenderer::Render()
 		UpdateBuffer(matricesBuf, matrices);
 		BindBuffer(matricesBuf);
 
-		model->Draw(true, false);
+		model->Draw(false, false);
 	}
+
+	Print("Done rendering performance");
 }

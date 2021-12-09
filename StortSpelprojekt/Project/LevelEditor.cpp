@@ -17,6 +17,7 @@ void LevelEditor::BindDrawables()
 			MR->Bind(model);
 			SR->Bind(model);
 			IDR->Bind(model);
+			PFR->Bind(model);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 			component->AddName(name);
 			totalPolygonCount += model->mesh.vertexCount / 3.0f;
@@ -72,6 +73,7 @@ void LevelEditor::LoadScene(const std::string& file)
 		SR->Clear();
 		IDR->Clear();
 		MR->Clear();
+		PFR->Clear();
 		scene.GetDrawables().clear();
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->Clear();
@@ -99,6 +101,7 @@ void LevelEditor::Load(const std::string& file)
 	IDR->Bind(model);
 	MR->Bind(model);
 	SR->Bind(model);
+	PFR->Bind(model);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(fileName);
 	totalPolygonCount += model->mesh.vertexCount / 3.0f;
@@ -129,6 +132,7 @@ void LevelEditor::DuplicateObject()
 		IDR->Bind(model);
 		MR->Bind(model);
 		SR->Bind(model);
+		PFR->Bind(model);
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->AddName(modelName);
 		totalPolygonCount += model->mesh.vertexCount / 3.0f;
@@ -290,6 +294,7 @@ void LevelEditor::DivideRendering()
 					MR->Unbind(drawable);
 					IDR->Unbind(drawable);
 					SR->Unbind(drawable);
+					PFR->Unbind(drawable);
 				}
 				else
 				{
@@ -307,6 +312,7 @@ void LevelEditor::DivideRendering()
 						MR->Bind(drawable);
 						IDR->Bind(drawable);
 						SR->Bind(drawable);
+						PFR->Bind(drawable);
 					}
 				}
 				else
@@ -329,6 +335,7 @@ void LevelEditor::DivideRendering()
 					MR->Unbind(drawable);
 					IDR->Unbind(drawable);
 					SR->Unbind(drawable);
+					PFR->Unbind(drawable);
 				}
 				else
 				{
@@ -346,6 +353,7 @@ void LevelEditor::DivideRendering()
 						MR->Bind(drawable);
 						IDR->Bind(drawable);
 						SR->Bind(drawable);
+						PFR->Bind(drawable);
 					}
 				}
 				else
@@ -436,6 +444,20 @@ void LevelEditor::ShowSkybox()
 	if (!renderSkybox && !changed)
 	{
 		renderSkybox = true;
+	}
+}
+
+void LevelEditor::ShowPerformance()
+{
+	bool changed = false;
+	if (renderPerformance)
+	{
+		renderPerformance = false;
+		changed = true;
+	}
+	if (!renderPerformance && !changed)
+	{
+		renderPerformance = true;
 	}
 }
 
@@ -629,6 +651,9 @@ void LevelEditor::Render()
 	ShaderData::Inst().BindFrameConstants();
 	MR->Render();
 	modelTime = timer.DeltaTime();
+
+	if (renderPerformance)
+		PFR->Render();
 	
 	timer.Start();
 	if (renderTerrain)
@@ -771,6 +796,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddTextComponent("FPS");
 		window.AddTextComponent("SCENE POLYGON COUNT");
 		window.AddSeperatorComponent();
+		window.AddCheckBoxComponent("VISUALIZE PERFORMANCE", false);
 		window.AddTextComponent("Take performance snapshot");
 		window.AddButtonComponent("Snapshot", 120, 30);
 		window.AddSeperatorComponent();
@@ -864,6 +890,8 @@ void LevelEditor::RemoveItem(std::string name)
 		totalPolygonCount -= model->mesh.vertexCount / 3.0f;
 		MR->Unbind(model);
 		IDR->Unbind(model);
+		PFR->Unbind(model);
+		SR->Unbind(model);
 
 		scene.DeleteDrawable(name);
 		name = Resources::Inst().GetBufferNameFromID(model->mesh.bufferID);
@@ -1130,6 +1158,8 @@ APPSTATE LevelEditor::Run()
 			window.SetValue<TextComponent, std::string>("SCENE POLYGON COUNT", "TOTAL POLY-COUNT: " + std::to_string(totalPolygonCount));
 			totalPolygonsLastFrame = totalPolygonCount;
 		}
+		if (window.Changed("VISUALIZE PERFORMANCE"))
+			ShowPerformance();
 		updateUITime = timer.DeltaTime();
 		frameTime = updateUITime + updateTime + renderTime;
 		if (window.GetValue<ButtonComponent>("Snapshot"))
