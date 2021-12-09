@@ -98,6 +98,26 @@ struct Animation
 		}
 	}
 
+	auto FindLower(const std::map<float, Vector3>& map, float time)
+	{
+		float lowest = 0.0f;
+		float highest = map.upper_bound(time)->first;
+
+		for (auto& [timeStamp, value] : map)
+		{
+			if (timeStamp == 0.0f)
+				continue;
+
+			if (timeStamp > lowest && timeStamp < highest)
+				lowest = timeStamp;
+
+			else
+				break;
+		}
+
+		return map.find(lowest);
+	}
+
 	void Update(const std::string& joint, Matrix& localMatrix)
 	{
 		float timeInTicks = timer * ticksPerSecond * playBackSpeed;
@@ -107,7 +127,7 @@ struct Animation
 		if (map.empty())
 			return;
 
-		auto lower = map.upper_bound(frameTime - 1);
+		auto lower = FindLower(map, frameTime); //map.upper_bound(frameTime - 1);
 		auto higher = map.upper_bound(frameTime);
 
 		float lowerTimestamp = lower->first;

@@ -20,7 +20,7 @@ Player::Player(const std::string file, Camera* camera, const UINT& maxArrows)
 
 	//Load(file);
 
-	PlayAnimation("Idle");
+	PlayAnimation("Take 001");
 
 	sceneCamera->updatecamRay(position + Vector3(0.0f, 5.0f, 0.0f), 1000);
 
@@ -311,12 +311,12 @@ void Player::Update(HeightMap* heightMap)
 		
 	arrowHandler.Update();
 
-	if (moveDirection.Length() == 0)
-		PlayAnimation("Idle");
-	else if (isSprinting)
-		PlayAnimation("Run");
-	else
-		PlayAnimation("Walk");
+	//if (moveDirection.Length() == 0)
+	//	PlayAnimation("Idle");
+	//else if (isSprinting)
+	//	PlayAnimation("Run");
+	//else
+	//	PlayAnimation("Walk");
 
 	if (isAiming)
 		AnimatedModel::Update(sceneCamera, "Spine3");
