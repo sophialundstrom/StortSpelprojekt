@@ -13,9 +13,11 @@ void Game::Update()
 	scene.Update();
 
 	if (overlay != dialogueOverlay)
-		player->Update(terrain.GetHeightMap());
+		player->Update(terrain.GetHeightMap(), freeCamera);
 
-	scene.GetCamera()->Update();
+	
+
+	HandleCamera();
 
 	CheckItemCollision();
 
@@ -85,7 +87,8 @@ void Game::Render()
 
 	PR->Render();
 
-	overlay->Render();
+	if(showUI)
+		overlay->Render();
 
 	Graphics::Inst().EndFrame();
 
@@ -296,6 +299,64 @@ std::shared_ptr<FriendlyNPC> Game::AddFriendlyNPC(const std::string& name, const
 	MR->Bind(marker);
 
 	return NPC;
+}
+
+void Game::HandleCamera()
+{
+	scene.GetCamera()->Update();
+
+	if (Event::KeyIsPressed(VK_F5))
+	{
+		freeCamera = false;
+		cullFromPlayer = false;
+	}
+
+	if (Event::KeyIsPressed(VK_F6))
+	{
+		freeCamera = true;
+		cullFromPlayer = false;
+	}
+
+	if (Event::KeyIsPressed(VK_F7))
+	{
+		freeCamera = true;
+		cullFromPlayer = true;
+	}
+
+	if (Event::KeyIsPressed(VK_F8))
+	{
+		showUI = true;
+	}
+
+	if (Event::KeyIsPressed(VK_F9))
+	{
+		showUI = false;
+	}
+
+	if (freeCamera)
+	{
+		//Rotate camera by cursor movement 
+		float camMoveSpeed = 1;
+		float mouseDefaultSensitivity = 10.f;
+		scene.GetCamera()->Rotate(Event::ReadRawDelta().x * mouseDefaultSensitivity, Event::ReadRawDelta().y * mouseDefaultSensitivity);
+		//Get players position last frame and cameras current look-direction
+		Vector3 lookDirection = scene.GetCamera()->GetDirection();
+
+		Vector3 moveDirection;
+		//Move direction code
+		if (Event::KeyIsPressed(VK_UP))
+			scene.GetCamera()->MoveForward(camMoveSpeed);
+		if (Event::KeyIsPressed(VK_DOWN))
+			scene.GetCamera()->MoveForward(-camMoveSpeed);
+		if (Event::KeyIsPressed(VK_LEFT))
+			scene.GetCamera()->MoveRight(-camMoveSpeed);
+		if (Event::KeyIsPressed(VK_RIGHT))
+			scene.GetCamera()->MoveRight(camMoveSpeed);
+		
+	}
+
+	
+	
 }
 
 void Game::UpdateAndHandleLoot()
@@ -1378,6 +1439,11 @@ void Game::UpdateQuadTree()
 
 
 	frustrumCollider.Update(scene.GetCamera());
+	if (cullFromPlayer)
+	{
+		frustrumCollider.bounds.Origin = player->GetPosition();
+		frustrumCollider.bounds.Orientation = player->GetRotation();
+	}
 	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
 	//std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
 
