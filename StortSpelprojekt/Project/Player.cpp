@@ -84,7 +84,7 @@ float Get2DAngle(Vector2 a, Vector2 b)
 	return acos(a.x * b.x + a.y * b.y);
 };
 
-void Player::Update(HeightMap* heightMap)
+void Player::Update(HeightMap* heightMap, bool freeCamera)
 {
 	lastPosition = position;
 
@@ -95,15 +95,18 @@ void Player::Update(HeightMap* heightMap)
 	if (!hasCollided)
 		currentGroundLevel = heightMapGroundLevel;
 
-	//Rotate camera by cursor movement 
-	sceneCamera->Rotate(Event::ReadRawDelta().x * mouseCurrentSensitivity, Event::ReadRawDelta().y * mouseCurrentSensitivity);
-
-	//Get players position last frame and cameras current look-direction
-	Vector3 lookDirection = sceneCamera->GetDirection();
-
 	//MOVEMENT DIRECTION
-	Vector3 moveDirection;
+	Vector3 moveDirection = { 0, 0, 0 };
 
+	if (freeCamera == false)
+	{
+		//Rotate camera by cursor movement 
+		sceneCamera->Rotate(Event::ReadRawDelta().x * mouseCurrentSensitivity, Event::ReadRawDelta().y * mouseCurrentSensitivity);
+	}
+	//Get players position last frame and cameras current look-direction
+	lookDirection = sceneCamera->GetDirection();
+
+	//Move direction code
 	if (Event::KeyIsPressed('W'))
 		moveDirection += Vector3(0, 0, 1);
 	if (Event::KeyIsPressed('S'))
@@ -112,7 +115,9 @@ void Player::Update(HeightMap* heightMap)
 		moveDirection += Vector3(-1, 0, 0);
 	if (Event::KeyIsPressed('D'))
 		moveDirection += Vector3(1, 0, 0);
-
+	moveDirection.Normalize();
+	
+	
 	static float lastEat = 0;
 	if (Event::KeyIsPressed('R') && Time::Get() - lastEat > 1.0f)
 	{
@@ -124,10 +129,10 @@ void Player::Update(HeightMap* heightMap)
 		lastEat = Time::Get();
 	}
 
-	moveDirection.Normalize();
+	
 
 	//SPRINTING
-	if (Event::KeyIsPressed(VK_SHIFT))
+	if (Event::KeyIsPressed(VK_SHIFT) && freeCamera == false)
 	{
 		// IF PLAYER SPRINTS AND JUMPS THE SOUND WILL STOP UNTIL SHIFT IS PRESSED AGAIN...
 		if (!isSprinting)
@@ -160,10 +165,10 @@ void Player::Update(HeightMap* heightMap)
 			stats.currentSpeed = stats.movementSpeed;
 
 		currentCameraDistance -= Time::GetDelta() * 10.0f;
-		if (currentCameraDistance < defaultCameraDistance)
+		if (currentCameraDistance < defaultCameraDistance && freeCamera == false)
 			currentCameraDistance = defaultCameraDistance;
 
-		if (currentCameraDistance < minCameraDistance)
+		if (currentCameraDistance < minCameraDistance && freeCamera == false)
 		{
 			currentCameraDistance = minCameraDistance;
 		}
@@ -226,7 +231,7 @@ void Player::Update(HeightMap* heightMap)
 		newPlayerPos = Vector3(newPlayerPos.x, currentGroundLevel, newPlayerPos.z);
 	}
 
-	if (closestColliderToCam < currentCameraDistance && closestColliderToCam > minCameraDistance)
+	if (closestColliderToCam < currentCameraDistance && closestColliderToCam > minCameraDistance && freeCamera == false)
 
 	{
 		currentCameraDistance = closestColliderToCam;
@@ -272,8 +277,12 @@ void Player::Update(HeightMap* heightMap)
 
 		newCameraPos = position + camSocketUpdate;
 		mouseCurrentSensitivity = mouseAimSensitivity;
-		sceneCamera->SetSpeedMultiplier(5.0f);
-		sceneCamera->MoveTowards(newCameraPos);
+		if (freeCamera == false)
+		{
+			sceneCamera->SetSpeedMultiplier(5.0f);
+			sceneCamera->MoveTowards(newCameraPos);
+		}
+		
 
 		if (Time::Get() - lastClick > 1.0f)
 		{
@@ -303,10 +312,14 @@ void Player::Update(HeightMap* heightMap)
 			Audio::StopEffect("Bow.wav");
 			PlayOverrideAnimation("Stop", "Spine1", false);
 		}
-
-		sceneCamera->SetSpeedMultiplier(1.0f);
 		mouseCurrentSensitivity = mouseDefaultSensitivity;
-		sceneCamera->MoveTowards(newCameraPos);
+
+		if (freeCamera == false)
+		{
+			sceneCamera->SetSpeedMultiplier(1.0f);
+			sceneCamera->MoveTowards(newCameraPos);
+		}
+		
 	}
 		
 	arrowHandler.Update();
