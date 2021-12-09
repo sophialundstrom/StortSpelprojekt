@@ -84,6 +84,4 @@ void PerformanceRenderer::Render()
 	}
 
 	Graphics::Inst().GetContext().OMSetDepthStencilState(nullptr, 0);
-	Print(nrOBJ);
-	Print("Done rendering performance");
 }
