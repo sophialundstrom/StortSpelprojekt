@@ -33,12 +33,10 @@ IDRenderer::IDRenderer()
 	Print("SUCCEEDED LOADING SHADERS", "ID RENDERER");
 
 	//INPUT LAYOUT
-	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
-	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
+	D3D11_INPUT_ELEMENT_DESC inputDesc =
+	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 
-	HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(&inputDesc, 1, byteCode.c_str(), byteCode.length(), &inputLayout);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE INPUT LAYOUT", "ID RENDERER");
@@ -46,10 +44,10 @@ IDRenderer::IDRenderer()
 	}
 	Print("SUCCEEDED TO CREATE INPUT LAYOUT", "ID RENDERER");
 
-	D3D11_INPUT_ELEMENT_DESC vInputDesc[] =
-	{ {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0} };
+	D3D11_INPUT_ELEMENT_DESC vInputDesc =
+	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 
-	hr = Graphics::Inst().GetDevice().CreateInputLayout(vInputDesc, ARRAYSIZE(vInputDesc), vByteCode.c_str(), vByteCode.length(), &volumeInputLayout);
+	hr = Graphics::Inst().GetDevice().CreateInputLayout(&vInputDesc, 1, vByteCode.c_str(), vByteCode.length(), &volumeInputLayout);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE INPUT LAYOUT", "ID RENDERER (VOLUME)");

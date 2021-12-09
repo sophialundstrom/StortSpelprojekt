@@ -6,6 +6,12 @@ PerformanceRenderer::PerformanceRenderer()
 	//BUFFER
 	CreateBuffer(matricesBuf, sizeof(Matrices));
 
+	//DEPTH STENCIL STATE
+	D3D11_DEPTH_STENCIL_DESC dssDesc = {};
+	dssDesc.DepthEnable = false;
+	Graphics::Inst().GetDevice().CreateDepthStencilState(&dssDesc, &depthStencilState);
+	Print("SUCCEEDED CREATING DEPTH STENCIL STATE", "PERFORMANCE RENDERER");
+
 	//SHADERS
 	std::string byteCode;
 	if (!LoadShader(vertexShader, vs_path, byteCode))
@@ -17,12 +23,10 @@ PerformanceRenderer::PerformanceRenderer()
 	Print("SUCCEEDED LOADING SHADERS", "PERFORMANCE RENDERER");
 
 	//INPUT LAYOUT
-	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
-	{
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
+	D3D11_INPUT_ELEMENT_DESC inputDesc =
+	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 
-	HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
+	HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(&inputDesc, 1, byteCode.c_str(), byteCode.length(), &inputLayout);
 	if FAILED(hr)
 	{
 		Print("FAILED TO CREATE INPUT LAYOUT", "PERFORMANCE RENDERER");
@@ -40,6 +44,7 @@ PerformanceRenderer::~PerformanceRenderer()
 	vertexShader->Release();
 	pixelShader->Release();
 	inputLayout->Release();
+	depthStencilState->Release();
 }
 
 void PerformanceRenderer::Render()
@@ -61,6 +66,8 @@ void PerformanceRenderer::Render()
 
 	matrices.viewPerspective = shaderData.cameraMatrix;
 
+	Graphics::Inst().GetContext().OMSetDepthStencilState(depthStencilState, 0);
+	int nrOBJ = 0;
 	for (auto& drawable : drawables)
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
@@ -73,7 +80,10 @@ void PerformanceRenderer::Render()
 		BindBuffer(matricesBuf);
 
 		model->Draw(false, false);
+		nrOBJ++;
 	}
 
+	Graphics::Inst().GetContext().OMSetDepthStencilState(nullptr, 0);
+	Print(nrOBJ);
 	Print("Done rendering performance");
 }

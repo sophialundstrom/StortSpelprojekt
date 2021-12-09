@@ -33,6 +33,8 @@ private:
 	//INPUT LAYOUT
 	ID3D11InputLayout* inputLayout = nullptr;
 
+	ID3D11DepthStencilState* depthStencilState = nullptr;
+
 public:
 	PerformanceRenderer();
 	~PerformanceRenderer();
