@@ -15,6 +15,8 @@ private:
 		Matrix viewPerspective;
 	} matrices;
 
+	ID3D11Buffer* modelMsBuffer = nullptr;
+
 	//SHADER PATHS
 
 #ifdef _DEBUG

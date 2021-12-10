@@ -5,6 +5,7 @@ PerformanceRenderer::PerformanceRenderer()
 {
 	//BUFFER
 	CreateBuffer(matricesBuf, sizeof(Matrices));
+	CreateBuffer(modelMsBuffer);
 
 	//DEPTH STENCIL STATE
 	D3D11_DEPTH_STENCIL_DESC dssDesc = {};
@@ -73,6 +74,9 @@ void PerformanceRenderer::Render()
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
 		if (!model)
 			continue;
+
+		UpdateBuffer(modelMsBuffer, model->GetTTD());
+		BindBuffer(modelMsBuffer, Shader::PS, 1);
 
 		matrices.world = model->GetMatrix();
 
