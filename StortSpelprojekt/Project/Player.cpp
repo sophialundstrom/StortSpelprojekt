@@ -88,8 +88,6 @@ void Player::Update(HeightMap* heightMap, bool freeCamera)
 {
 	lastPosition = position;
 
-	/*std::cout << "Player X: " << position.x << "        " << "Player Y: " << position.y << "        "  << "Player Z: " << position.z << "\n";*/
-
 	CalcHeight(heightMap);
 
 	if (!hasCollided)

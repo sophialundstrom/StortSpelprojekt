@@ -19,6 +19,11 @@ private:
 		Vector3 direction;
 		float lifeTime;
 		float velocity;
+		int rotationDir;
+		float rotationSpeed;
+		int useAlpha;
+		int useOpacity;
+		float scalingOverTime;
 	};
 
 	const Vector3 colors[5] =
@@ -35,12 +40,15 @@ private:
 	float size;
 	float width;
 	float depth;
-	Vector3 position;
 
 	Vector2 particleExtents;
 
 	float minVelocity;
 	float maxVelocity;
+
+
+	int useAlpha = 1;
+	int useOpacity = 1;
 
 	unsigned int particleCount;
 	unsigned int maxParticles;
@@ -50,12 +58,16 @@ private:
 	float timeBetweenParticles;
 	float timeSinceLastParticle;
 
+	bool rotating = false;
+	bool scaling = false;
+
 	std::vector<Particle> particles;
 	ID3D11Buffer* vertexBuffer = nullptr;
 	Texture* firstTexture;
 	Texture* secondTexture;
 	Texture* opacityTexture;
 
+	bool particleDirection = true;
 	bool done = false;
 	bool stopSpawn = false;
 
@@ -70,6 +82,10 @@ public:
 
 	void Draw() const;
 
+	float minRotationSpeed = 0.0f;
+	float maxRotationSpeed = 0.0f;
+	float scaleOverTime = 0.0f;
+
 	void Reset();
 	void Update();
 
@@ -78,6 +94,7 @@ public:
 	void SetSize(float size) { this->size = size; }
 	void SetParticleExtents(Vector2 extents) { this->particleExtents = extents; }
 	void SetParticleExtents(float width, float height) { this->particleExtents = Vector2(width, height); }
+	void SetParticleExtents(float scale) { this->particleExtents = Vector2(scale, scale); }
 	void SetParticleWidth(float value) { this->particleExtents.x = value; }
 	void SetParticleHeight(float value) { this->particleExtents.y = value; }
 	void SetMinVelocity(float value) { this->minVelocity = value; }
@@ -86,6 +103,31 @@ public:
 	void SetParticlesLifetime(float amount) { this->particlesLifetime = amount; }
 	void SetTimeBetweenPartilces(float amount) { this->timeBetweenParticles = amount; }
 	void SetPosition(Vector3 pos) { this->position = pos; }
+
+	bool GetParticleDir() { return this->particleDirection; }
+	void SetParticleDir(bool value) { particleDirection = value; }
+
+	void SetXPosition(float xPos) { this->position.x = xPos; }
+	void SetYPosition(float yPos) { this->position.y = yPos; }
+	void SetZPosition(float zPos) { this->position.z = zPos; }
+
+	void SetMinRotationSpeed(float speed) { this->minRotationSpeed = speed; }
+	void SetMaxRotationSpeed(float speed) { this->maxRotationSpeed = speed; }
+	float GetMinRotation() { return this->minRotationSpeed; }
+	float GetMaxRotation() { return this->maxRotationSpeed; }
+	void SetRotation(bool rotating) { this->rotating = rotating; }
+	bool GetRotation() { return this->rotating; }
+
+	bool GetScaling() { return this->scaling; }
+	void SetScaling(bool scaling) { this->scaling = scaling; }
+	void SetScale(float scale) 	{ this->scaleOverTime = scale; }
+
+
+	void SetAlphaMode(int mode) { this->useAlpha = mode; }
+	int GetAlphaMode() { return this->useAlpha; }
+	void SetOpacityMode(int mode) { this->useOpacity = mode; }
+	int GetOpacityMode() { return this->useOpacity; }
+
 	void StartSpawn() { this->stopSpawn = false; this->done = false; }
 	void StopSpawn() { this->stopSpawn = true; }
 	bool IsDone() { return this->done; }
