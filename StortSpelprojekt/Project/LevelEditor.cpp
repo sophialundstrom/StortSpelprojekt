@@ -299,7 +299,6 @@ void LevelEditor::DivideRendering()
 					IDR->Unbind(drawable);
 					SR->Unbind(drawable);
 					PFR->Unbind(drawable);
-					nrOfModels--;
 				}
 				else
 				{
@@ -318,7 +317,6 @@ void LevelEditor::DivideRendering()
 						IDR->Bind(drawable);
 						SR->Bind(drawable);
 						PFR->Bind(drawable);
-						nrOfModels++;
 					}
 				}
 				else
@@ -342,7 +340,6 @@ void LevelEditor::DivideRendering()
 					IDR->Unbind(drawable);
 					SR->Unbind(drawable);
 					PFR->Unbind(drawable);
-					nrOfModels--;
 				}
 				else
 				{
@@ -361,7 +358,6 @@ void LevelEditor::DivideRendering()
 						IDR->Bind(drawable);
 						SR->Bind(drawable);
 						PFR->Bind(drawable);
-						nrOfModels++;
 					}
 				}
 				else
