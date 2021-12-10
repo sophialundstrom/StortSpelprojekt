@@ -13,6 +13,9 @@ private:
 
 	int totalPolygonsLastFrame;
 	int totalPolygonCount;
+	int targetFPS = 60;
+	int mrTimeFactor = 20;
+	int nrOfModels = 0;
 	std::string selectedObject;
 	HWND appWindow;
 	float wRatioX;

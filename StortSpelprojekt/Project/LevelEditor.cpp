@@ -21,6 +21,7 @@ void LevelEditor::BindDrawables()
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 			component->AddName(name);
 			totalPolygonCount += model->mesh.vertexCount / 3.0f;
+			nrOfModels++;
 		}
 
 		auto box = std::dynamic_pointer_cast<BoundingBox>(drawable);
@@ -106,6 +107,7 @@ void LevelEditor::Load(const std::string& file)
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(fileName);
 	totalPolygonCount += model->mesh.vertexCount / 3.0f;
+	nrOfModels++;
 }
 
 void LevelEditor::DuplicateObject()
@@ -138,6 +140,7 @@ void LevelEditor::DuplicateObject()
 		component->AddName(modelName);
 		totalPolygonCount += model->mesh.vertexCount / 3.0f;
 		selectedObject = modelName;
+		nrOfModels++;
 	}
 }
 
@@ -296,6 +299,7 @@ void LevelEditor::DivideRendering()
 					IDR->Unbind(drawable);
 					SR->Unbind(drawable);
 					PFR->Unbind(drawable);
+					nrOfModels--;
 				}
 				else
 				{
@@ -314,6 +318,7 @@ void LevelEditor::DivideRendering()
 						IDR->Bind(drawable);
 						SR->Bind(drawable);
 						PFR->Bind(drawable);
+						nrOfModels++;
 					}
 				}
 				else
@@ -337,6 +342,7 @@ void LevelEditor::DivideRendering()
 					IDR->Unbind(drawable);
 					SR->Unbind(drawable);
 					PFR->Unbind(drawable);
+					nrOfModels--;
 				}
 				else
 				{
@@ -355,6 +361,7 @@ void LevelEditor::DivideRendering()
 						IDR->Bind(drawable);
 						SR->Bind(drawable);
 						PFR->Bind(drawable);
+						nrOfModels--;
 					}
 				}
 				else
@@ -796,7 +803,10 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		auto& window = windows["PERFORMANCE VIEWER"];
 		window.AddTextComponent("FPS");
 		window.AddTextComponent("SCENE POLYGON COUNT");
+		window.AddTextComponent("MODELS DRAWCOUNT");
 		window.AddSeperatorComponent();
+		window.AddSliderIntComponent("TARGET FPS", 0, 300, 60);
+		window.AddSliderIntComponent("MRF QUOTA", 0, 100, 20);
 		window.AddCheckBoxComponent("VISUALIZE PERFORMANCE", false);
 		window.AddTextComponent("Take performance snapshot");
 		window.AddButtonComponent("Snapshot", 120, 30);
@@ -893,6 +903,7 @@ void LevelEditor::RemoveItem(std::string name)
 		IDR->Unbind(model);
 		PFR->Unbind(model);
 		SR->Unbind(model);
+		nrOfModels--;
 
 		scene.DeleteDrawable(name);
 		name = Resources::Inst().GetBufferNameFromID(model->mesh.bufferID);
@@ -1148,6 +1159,12 @@ APPSTATE LevelEditor::Run()
 		static float time = 0.0f;
 		time += Time::GetDelta();
 		frames++;
+		if (window.Changed("TARGET FPS"))
+			targetFPS = window.GetValue<SliderIntComponent>("TARGET FPS");
+
+		if (window.Changed("MRF QUOTA"))
+			mrTimeFactor = window.GetValue<SliderIntComponent>("MRF QUOTA");
+
 		if (time >= 1)
 		{
 			window.SetValue<TextComponent, std::string>("FPS", "FPS: " + std::to_string(frames));
@@ -1162,6 +1179,8 @@ APPSTATE LevelEditor::Run()
 
 		if (window.Changed("VISUALIZE PERFORMANCE"))
 			ShowPerformance();
+
+		window.SetValue<TextComponent, std::string>("MODELS DRAWCOUNT", "Models Drawcount: " + std::to_string(nrOfModels));
 
 		updateUITime = timer.DeltaTime();
 		frameTime = updateUITime + updateTime + renderTime;
