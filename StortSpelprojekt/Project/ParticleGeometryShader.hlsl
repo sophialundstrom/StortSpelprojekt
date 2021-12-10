@@ -21,7 +21,7 @@ struct GS_INPUT
     float rotationSpeed : ROTATIONSPEED;
     int useAlpha : USEALPHA;
     int useOpacity : USEOPACITY;
-    
+    float scaleOverTime : SCALEOVERTIME;
 };
 
 struct GS_OUTPUT
@@ -31,8 +31,6 @@ struct GS_OUTPUT
     float lifetime : LIFETIME;
     int useAlpha : USEALPHA;
     int useOpacity : USEOPACITY;
-    
-    
 };
 
 [maxvertexcount(4)]
@@ -50,12 +48,26 @@ void main(
     up = cross(lookAt, right);
     up = normalize(up);
     
+    float scale;
+    
+    if (input[0].scaleOverTime > 0.0f)
+    {
+         scale = input[0].scaleOverTime * input[0].lifetime;
+    }
+    
+    else
+    {
+        scale = input[0].scaleOverTime + (1 - input[0].lifetime);
+    }
+    
+    float2 scaledExtents = scale * extents;
+   
     float4 corners[] =
     {
-        { input[0].position.xyz + extents.x * right + extents.y * up, 1.0f },
-        { input[0].position.xyz - extents.x * right + extents.y * up, 1.0f },
-        { input[0].position.xyz + extents.x * right - extents.y * up, 1.0f },
-        { input[0].position.xyz - extents.x * right - extents.y * up, 1.0f }
+        { input[0].position.xyz + scaledExtents.x * right + scaledExtents.y * up, 1.0f },
+        { input[0].position.xyz - scaledExtents.x * right + scaledExtents.y * up, 1.0f },
+        { input[0].position.xyz + scaledExtents.x * right - scaledExtents.y * up, 1.0f },
+        { input[0].position.xyz - scaledExtents.x * right - scaledExtents.y * up, 1.0f }
     };
 
     float2 texCoords[] =
@@ -64,40 +76,27 @@ void main(
         { 1.0f, 0.0f },
         { 0.0f, 1.0f },
         { 1.0f, 1.0f }
-        
     };
 
     if (input[0].rotationDir != 0)
     {
         for (int i = 0; i < 4; i++)
         {
-            //corners[i] += float4(corners[i].xyz * cos(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)
-            //        + cross(lookAt, corners[i].xyz) * sin(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)
-            //        + lookAt * dot(lookAt, corners[i].xyz) * (1 - cos(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir)), 1.0f);
-            
             float3 parallel = dot(lookAt, corners[i].xyz) * lookAt;
             float3 projection = corners[i].xyz - parallel;
             corners[i] = float4(parallel + cos(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir) * projection +
-                                    sin(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir) * cross(lookAt, corners[i].xyz), 1.0f);
-            
+                         sin(input[0].lifetime * input[0].rotationSpeed * input[0].rotationDir) * cross(lookAt, corners[i].xyz), 1.0f);   
         }
     }
-
-    
-        GS_OUTPUT output;
+        
+    GS_OUTPUT output;
     output.lifetime = input[0].lifetime;
     for (int i = 0; i < 4; ++i)
     {
-
         output.position = mul(corners[i], viewPerspective);
-
-    //output.texCoords = mul(corners[0], texCoords[0]);
         output.texCoords = texCoords[i];
         output.useAlpha = input[0].useAlpha;
         output.useOpacity = input[0].useOpacity;
-       // output.color = input[0].color;
         outputStream.Append(output);
     }
-        
-  
 }

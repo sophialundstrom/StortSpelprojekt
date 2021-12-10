@@ -23,6 +23,7 @@ private:
 		float rotationSpeed;
 		int useAlpha;
 		int useOpacity;
+		float scalingOverTime;
 	};
 
 	const Vector3 colors[5] =
@@ -45,6 +46,7 @@ private:
 	float minVelocity;
 	float maxVelocity;
 
+
 	int useAlpha = 1;
 	int useOpacity = 1;
 
@@ -57,6 +59,7 @@ private:
 	float timeSinceLastParticle;
 
 	bool rotating = false;
+	bool scaling = false;
 
 	std::vector<Particle> particles;
 	ID3D11Buffer* vertexBuffer = nullptr;
@@ -64,7 +67,7 @@ private:
 	Texture* secondTexture;
 	Texture* opacityTexture;
 
-	bool particleDirection = false;
+	bool particleDirection = true;
 	bool done = false;
 	bool stopSpawn = false;
 
@@ -81,6 +84,7 @@ public:
 
 	float minRotationSpeed = 0.0f;
 	float maxRotationSpeed = 0.0f;
+	float scaleOverTime = 0.0f;
 
 	void Reset();
 	void Update();
@@ -90,6 +94,7 @@ public:
 	void SetSize(float size) { this->size = size; }
 	void SetParticleExtents(Vector2 extents) { this->particleExtents = extents; }
 	void SetParticleExtents(float width, float height) { this->particleExtents = Vector2(width, height); }
+	void SetParticleExtents(float scale) { this->particleExtents = Vector2(scale, scale); }
 	void SetParticleWidth(float value) { this->particleExtents.x = value; }
 	void SetParticleHeight(float value) { this->particleExtents.y = value; }
 	void SetMinVelocity(float value) { this->minVelocity = value; }
@@ -112,6 +117,11 @@ public:
 	float GetMaxRotation() { return this->maxRotationSpeed; }
 	void SetRotation(bool rotating) { this->rotating = rotating; }
 	bool GetRotation() { return this->rotating; }
+
+	bool GetScaling() { return this->scaling; }
+	void SetScaling(bool scaling) { this->scaling = scaling; }
+	void SetScale(float scale) 	{ this->scaleOverTime = scale; }
+
 
 	void SetAlphaMode(int mode) { this->useAlpha = mode; }
 	int GetAlphaMode() { return this->useAlpha; }

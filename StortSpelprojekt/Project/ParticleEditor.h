@@ -14,6 +14,8 @@ private:
 
 	std::shared_ptr<BoundingSphere>source;
 
+	std::shared_ptr<Model> terrain;
+
 	Timer timer;
 	float FPS = 60.0f;
 	float tickInterval = 1.0f / FPS;
@@ -25,6 +27,22 @@ private:
 	void DeleteModel();
 	virtual void Update() override;
 	virtual void Render() override;
+
+	bool renderTerrain = true;
+	void RenderTerrain()
+	{
+		bool changed = false;
+		if (renderTerrain)
+		{
+			renderTerrain = false;
+			changed = true;
+		}
+
+		if(!renderTerrain && !changed)
+		{
+			renderTerrain = true;
+		}
+	}
 
 	bool renderModel = true;
 	void RenderModel()

@@ -8,6 +8,7 @@ struct VS_INPUT
     float rotationSpeed : ROTATIONSPEED;
     int useAlpha : USEALPHA;
     int useOpacity : USEOPACITY;
+    float scaleOverTime : SCALEOVERTIME;
 };
 
 struct VS_OUTPUT
@@ -18,6 +19,7 @@ struct VS_OUTPUT
     float rotationSpeed : ROTATIONSPEED;
     int useAlpha : USEALPHA;
     int useOpacity : USEOPACITY;
+    float scaleOverTime : SCALEOVERTIME;
     
 };
 
@@ -36,5 +38,6 @@ VS_OUTPUT main(VS_INPUT input)
     output.rotationSpeed = input.rotationSpeed;
     output.useAlpha = input.useAlpha;
     output.useOpacity = input.useOpacity;
+    output.scaleOverTime = input.scaleOverTime;
     return output;
 }

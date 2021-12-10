@@ -24,7 +24,7 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 	std::string line = "";
 
 	this->position = { 0.0f, 0.0f, 0.0f };
-	this->particleDirection = false;
+	this->particleDirection = true;
 
 	if (file == "default.ps" || file.find("\\") == std::string::npos)
 		path = FileSystem::ProjectDirectory::path + "\\ParticleSystems\\" + file;
@@ -202,6 +202,11 @@ void ParticleSystem::Update()
 			newParticle.useAlpha = useAlpha;
 			newParticle.useOpacity = useOpacity;
 
+			if (scaling)
+			{
+				newParticle.scalingOverTime = scaleOverTime;
+			}
+
 			if (rotating)
 			{
 				newParticle.rotationSpeed = Random::Real(minRotationSpeed, maxRotationSpeed);
@@ -211,7 +216,7 @@ void ParticleSystem::Update()
 				else
 					newParticle.rotationDir = 1;
 			}
-
+			
 			particles.push_back(newParticle);
 			particleCount++;
 		}

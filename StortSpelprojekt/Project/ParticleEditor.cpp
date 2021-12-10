@@ -227,7 +227,7 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	//camera = new Camera(PI_DIV4, (float)clientWidth / (float)clientHeight, 0.1f, 200.0f, 0.25f, 2.0f, { -2.5f, 0.0f, 0.0f }, { 5.0f, 0.0f, 0.0f });
 
 	FBXLoader meshLoader("Models");
-	auto terrain = std::make_shared<Model>("MainMenuTerrain", "");
+	terrain = std::make_shared<Model>("MainMenuTerrain", "");
 	terrain->SetPosition({ 0.0f,-2.0f,0.0f });
 	terrain->Update();
 	MR->Bind(terrain);
@@ -246,6 +246,10 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 		window.AddButtonComponent("LOAD FBX", 120, 30);
 		window.AddButtonComponent("DELETE", 120, 30);
 		window.AddCheckBoxComponent("RENDER MODEL", true);
+		window.AddSeperatorComponent();
+		window.AddTextComponent("TERRAIN");
+		window.AddCheckBoxComponent("RENDER TERRAIN", true, false);
+
 	}
 
 	{
@@ -277,7 +281,7 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 		window.AddSliderFloatComponent("DEPTH", 0.0f, 50.0f);
 		window.AddTextComponent("                   DIRECTION");
 		window.AddTextComponent("|| Checked = Up --- Unchecked = Down ||");
-		window.AddCheckBoxComponent("Up", false, false);
+		window.AddCheckBoxComponent("Up", true, false);
 		window.AddSeperatorComponent();
 
 		window.AddTextComponent("  |||| -----> IN CASE OF DELTA TIME BUG <----- ||||");
@@ -315,23 +319,28 @@ ParticleEditor::ParticleEditor(UINT clientWidth, UINT clientHeight)
 	{
 		AddWindow("PER PARTICLE");
 		auto& window = windows["PER PARTICLE"];
-		window.AddTextComponent("     VELOCITY");
+		window.AddTextComponent("  VELOCITY");
 		window.AddSliderFloatComponent("MIN", 0.0f, 50.0f);
 		window.AddSliderFloatComponent("MAX", 0.0f, 50.0f);
 		window.AddSeperatorComponent();
 
-		window.AddTextComponent("    DIMENSIONS");
+		window.AddTextComponent("  DIMENSIONS");
 		window.AddCheckBoxComponent("KEEP SQUARE", true);
 		window.AddSliderFloatComponent("WIDTH", 0.0f, 0.5f);
 		window.AddSliderFloatComponent("HEIGHT", 0.0f, 0.5f);
 		window.AddSeperatorComponent();
 
-		window.AddTextComponent("    PARTICLE ROTATION");
+		window.AddTextComponent("  PARTICLE ROTATION");
 		window.AddCheckBoxComponent("ROTATION", false);
 		window.AddSliderFloatComponent("R-MIN", 0.0f, 5.0f, 0.0f);
 		window.AddSliderFloatComponent("R-MAX", 0.0f, 5.0f, 0.0f);
+		window.AddSeperatorComponent();
 
+		window.AddTextComponent("  PARTICLE SCALE");
+		window.AddCheckBoxComponent("SCALING", false);
+		window.AddSliderFloatComponent("SCALE", 0.0f, 5.0f, 0.0f);
 	}
+
 	InitCamera(camera);
 
 	Load("default.ps");
@@ -371,6 +380,9 @@ APPSTATE ParticleEditor::Run()
 
 		if (window.Changed("RENDER MODEL"))
 			RenderModel();
+
+		if (window.Changed("RENDER TERRAIN"))
+			RenderTerrain();
 	}
 	
 	{
@@ -616,6 +628,25 @@ APPSTATE ParticleEditor::Run()
 					window.SetValue<SliderFloatComponent, float>("R-MIN", maxValue);
 			}
 		}
+
+		else if (window.Changed("SCALING"))
+		{
+			bool value = window.GetValue<CheckBoxComponent>("SCALING");
+
+			particleSystem->SetScaling(value);
+			particleSystem->Reset();
+
+		}
+
+		else if (particleSystem->GetScaling())
+		{
+			if (window.Changed("SCALE"))
+			{
+				float value = window.GetValue<SliderFloatComponent>("SCALE");
+				particleSystem->SetScale(value);
+				particleSystem->Reset();
+			}
+		}
 		
 	}
 	
@@ -633,6 +664,13 @@ APPSTATE ParticleEditor::Run()
 	}
 	else
 		MR->Unbind(model);
+
+	if (renderTerrain)
+	{
+		MR->Bind(terrain);
+	}
+	else
+		MR->Unbind(terrain);
 
 	return APPSTATE::NO_CHANGE;
 }
