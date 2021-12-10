@@ -471,6 +471,7 @@ void LevelEditor::UpdatePerformanceLimit()
 	float MRT = (1000.0f / targetFPS) * (mrTimeFactor / 100.0f);
 	float limit = MRT / nrOfModels;
 
+	windows["PERFORMANCE VIEWER"].SetValue<TextComponent, std::string>("LIMIT", "DrawTimeLimit: " + std::to_string(limit) + " ms");
 	PFR->UpdateLimit(limit);
 }
 
@@ -812,6 +813,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSeperatorComponent();
 		window.AddSliderIntComponent("TARGET FPS", 1, 300, 60);
 		window.AddSliderIntComponent("MRF QUOTA", 1, 100, 20);
+		window.AddTextComponent("LIMIT");
 		window.AddCheckBoxComponent("VISUALIZE PERFORMANCE", false);
 		window.AddTextComponent("Take performance snapshot");
 		window.AddButtonComponent("Snapshot", 120, 30);
