@@ -77,6 +77,7 @@ private:
 	void ShowShadows();
 	void ShowSkybox();
 	void ShowPerformance();
+	void UpdatePerformanceLimit();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

@@ -16,6 +16,7 @@ private:
 	} matrices;
 
 	ID3D11Buffer* modelMsBuffer = nullptr;
+	ID3D11Buffer* limitBuffer = nullptr;
 
 	//SHADER PATHS
 
@@ -42,4 +43,5 @@ public:
 	~PerformanceRenderer();
 
 	virtual void Render() override;
+	void UpdateLimit(float limit);
 };

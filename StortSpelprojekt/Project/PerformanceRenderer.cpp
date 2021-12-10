@@ -6,6 +6,7 @@ PerformanceRenderer::PerformanceRenderer()
 	//BUFFER
 	CreateBuffer(matricesBuf, sizeof(Matrices));
 	CreateBuffer(modelMsBuffer);
+	CreateBuffer(limitBuffer);
 
 	//DEPTH STENCIL STATE
 	D3D11_DEPTH_STENCIL_DESC dssDesc = {};
@@ -68,7 +69,6 @@ void PerformanceRenderer::Render()
 	matrices.viewPerspective = shaderData.cameraMatrix;
 
 	Graphics::Inst().GetContext().OMSetDepthStencilState(depthStencilState, 0);
-	int nrOBJ = 0;
 	for (auto& drawable : drawables)
 	{
 		auto model = std::dynamic_pointer_cast<Model>(drawable);
@@ -77,6 +77,7 @@ void PerformanceRenderer::Render()
 
 		UpdateBuffer(modelMsBuffer, model->GetTTD());
 		BindBuffer(modelMsBuffer, Shader::PS, 1);
+		BindBuffer(limitBuffer, Shader::PS, 2);
 
 		matrices.world = model->GetMatrix();
 
@@ -84,8 +85,15 @@ void PerformanceRenderer::Render()
 		BindBuffer(matricesBuf);
 
 		model->Draw(false, false);
-		nrOBJ++;
 	}
 
 	Graphics::Inst().GetContext().OMSetDepthStencilState(nullptr, 0);
+}
+
+void PerformanceRenderer::UpdateLimit(float limit)
+{
+	UpdateBuffer(limitBuffer, limit);
+	BindBuffer(limitBuffer, Shader::PS, 2);
+	Print(limit);
+	Print("Inside PFR");
 }

@@ -466,6 +466,14 @@ void LevelEditor::ShowPerformance()
 	}
 }
 
+void LevelEditor::UpdatePerformanceLimit()
+{
+	float MRT = (1000.0f / targetFPS) * (mrTimeFactor / 100.0f);
+	float limit = MRT / nrOfModels;
+
+	PFR->UpdateLimit(limit);
+}
+
 void LevelEditor::Update()
 {
 	if (Event::LeftIsClicked() && !ImGuizmo::IsOver() && viewportPanel.Hovered())
@@ -802,8 +810,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddTextComponent("SCENE POLYGON COUNT");
 		window.AddTextComponent("MODELS DRAWCOUNT");
 		window.AddSeperatorComponent();
-		window.AddSliderIntComponent("TARGET FPS", 0, 300, 60);
-		window.AddSliderIntComponent("MRF QUOTA", 0, 100, 20);
+		window.AddSliderIntComponent("TARGET FPS", 1, 300, 60);
+		window.AddSliderIntComponent("MRF QUOTA", 1, 100, 20);
 		window.AddCheckBoxComponent("VISUALIZE PERFORMANCE", false);
 		window.AddTextComponent("Take performance snapshot");
 		window.AddButtonComponent("Snapshot", 120, 30);
@@ -876,6 +884,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	wRatioY = (float)clientHeight / GetSystemMetrics(SM_CYSCREEN);
 
 	terrain = new Terrain(2);
+
+	UpdatePerformanceLimit();
 
 	(void*)Run();
 }
@@ -1159,10 +1169,16 @@ APPSTATE LevelEditor::Run()
 		time += Time::GetDelta();
 		frames++;
 		if (window.Changed("TARGET FPS"))
+		{
 			targetFPS = window.GetValue<SliderIntComponent>("TARGET FPS");
+			UpdatePerformanceLimit();
+		}
 
 		if (window.Changed("MRF QUOTA"))
+		{
 			mrTimeFactor = window.GetValue<SliderIntComponent>("MRF QUOTA");
+			UpdatePerformanceLimit();
+		}
 
 		if (time >= 1)
 		{
