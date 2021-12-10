@@ -361,7 +361,7 @@ void LevelEditor::DivideRendering()
 						IDR->Bind(drawable);
 						SR->Bind(drawable);
 						PFR->Bind(drawable);
-						nrOfModels--;
+						nrOfModels++;
 					}
 				}
 				else
@@ -1124,8 +1124,10 @@ APPSTATE LevelEditor::Run()
 			DivideRendering();
 
 		if (window.Changed("FLIP DIVIDE"))
+		{
 			FlipRenderingDivider();
 			DivideRendering();
+		}
 
 		if (window.GetValue<ButtonComponent>("SAVE WORLD"))
 		{
