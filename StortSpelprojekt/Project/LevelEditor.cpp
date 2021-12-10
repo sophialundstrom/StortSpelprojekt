@@ -468,7 +468,7 @@ void LevelEditor::ShowPerformance()
 
 void LevelEditor::UpdatePerformanceLimit()
 {
-	float MRT = (1000.0f / targetFPS) * (mrTimeFactor / 100.0f);
+	float MRT = (1.0f / targetFPS) * (mrTimeFactor / 100.0f);
 	float limit = MRT / nrOfModels;
 
 	windows["PERFORMANCE VIEWER"].SetValue<TextComponent, std::string>("LIMIT", "DrawTimeLimit: " + std::to_string(limit) + " ms");
