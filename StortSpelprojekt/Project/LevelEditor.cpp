@@ -371,6 +371,7 @@ void LevelEditor::DivideRendering()
 			}
 		}
 	}
+	nrOfModels = MR->GetNrOfBinded();
 }
 
 void LevelEditor::FlipRenderingDivider()

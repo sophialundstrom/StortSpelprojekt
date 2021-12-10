@@ -68,8 +68,10 @@ public:
 			}
 	}
 
+
 	void Clear() { drawables.clear(); }
 	void ClearStatic() { staticDrawables.clear(); }
 	virtual void Render() = 0;
 	virtual void OnResize(float width, float height) {}
+	int GetNrOfBinded() { return drawables.size(); }
 };	
