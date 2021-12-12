@@ -63,6 +63,14 @@ public:
 
 	void SetTTD(float nr) { ttd = nr; }
 	float GetTTD() { return ttd; }
+	Vector2 GetTextureDimensions()
+	{
+		return Resources::Inst().GetMaterialFromID(mesh.materialID)->diffuseTextures[0]->GetDimensions();
+	}
+	std::string GetTextureName()
+	{
+		return Resources::Inst().GetMaterialFromID(mesh.materialID)->diffuseTextures[0]->GetFile();
+	}
 
 	Vector3* GetMeshBoundingBoxValues()
 	{

@@ -7,6 +7,7 @@ class Texture
 private:
 	std::string file;
 	std::string path;
+	Vector2 dimensions;
 	ID3D11ShaderResourceView* srv = nullptr;
 public:
 	Texture() = default;
@@ -16,6 +17,7 @@ public:
 	ID3D11ShaderResourceView* Get()					                  { return srv; }
 	std::string GetPath()										      { return this->path; }
 	std::string GetFile()				     					      { return this->file; }
+	Vector2 GetDimensions()										  	  { return this->dimensions; }
 
 	void Bind(int slot = 0, Shader shader = Shader::PS) const
 	{

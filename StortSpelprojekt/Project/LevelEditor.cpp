@@ -665,10 +665,10 @@ void LevelEditor::Render()
 	ShaderData::Inst().BindFrameConstants();
 	MR->Render();
 	modelTime = timer.DeltaTime();
-
+	
 	if (renderPerformance)
 		PFR->Render();
-	
+
 	timer.Start();
 	if (renderTerrain)
 	{
@@ -847,6 +847,10 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 
 		window.AddTextComponent("SELECTED OBJECT TIME");
 		window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time:");
+		window.AddTextComponent("SELECTED OBJECT TEXTURENAME");
+		window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURENAME", "Texture:");
+		window.AddTextComponent("SELECTED OBJECT TEXTURE DIMENSIONS");
+		window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURE DIMENSIONS", "Dimensions:");
 	}
 
 	{
@@ -1220,13 +1224,25 @@ APPSTATE LevelEditor::Run()
 			{
 				auto selected = scene.Get<Drawable>(selectedObject);
 				auto model = std::dynamic_pointer_cast<Model>(selected);
-				if(model)
+				if (model)
+				{
 					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time: " + std::to_string(model->GetTTD()) + " ms");
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURENAME", "Texture: " + model->GetTextureName());
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURE DIMENSIONS", "Dimensions: " + std::to_string(model->GetTextureDimensions().x) + "x" + std::to_string(model->GetTextureDimensions().y));
+				}
 				else
+				{
 					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time: ");
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURENAME", "Texture:");
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURE DIMENSIONS", "Dimensions:");
+				}
 			}
 			else
+			{
 				window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time: ");
+				window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURENAME", "Texture:");
+				window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURE DIMENSIONS", "Dimensions:");
+			}
 		}
 	}
 

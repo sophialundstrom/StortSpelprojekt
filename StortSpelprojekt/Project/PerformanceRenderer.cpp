@@ -10,7 +10,8 @@ PerformanceRenderer::PerformanceRenderer()
 
 	//DEPTH STENCIL STATE
 	D3D11_DEPTH_STENCIL_DESC dssDesc = {};
-	dssDesc.DepthEnable = false;
+	dssDesc.DepthEnable = true;
+	dssDesc.DepthFunc = D3D11_COMPARISON_EQUAL;
 	Graphics::Inst().GetDevice().CreateDepthStencilState(&dssDesc, &depthStencilState);
 	Print("SUCCEEDED CREATING DEPTH STENCIL STATE", "PERFORMANCE RENDERER");
 
