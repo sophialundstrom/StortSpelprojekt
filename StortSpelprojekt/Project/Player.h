@@ -116,7 +116,7 @@ public:
 	bool test = false;
 	bool biomeChanged = false;
 
-	UINT maxArrows = 10;
+	UINT maxArrows = 15;
 	UINT numArrows = 5;
 	void Update(HeightMap* heightMap, bool freeCamera);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }

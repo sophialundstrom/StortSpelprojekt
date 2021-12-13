@@ -510,13 +510,13 @@ void Player::HandleUpgrades(std::shared_ptr<Building> building)
 	{
 		if (state == 1)
 		{
-			maxArrows = 15;
-			numArrows = 15;
+			maxArrows = 30;
+			numArrows = 30;
 		}
 		if (state == 2)
 		{
-			maxArrows = 30;
-			numArrows = 30;
+			maxArrows = 50;
+			numArrows = 50;
 		}
 		if (state == 3)
 		{
