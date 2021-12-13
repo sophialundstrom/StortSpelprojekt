@@ -4,6 +4,70 @@
 #include "FBXLoader.h"
 #include "Renderers.h"
 
+void LevelEditor::AddNode()
+{
+	out << "node1\t0.2\t0.4\t0.8\n\n";
+}
+
+void LevelEditor::AddEdge()
+{
+	out << "node1\tnode2";
+}
+
+void LevelEditor::test()
+{
+	auto filePath = FileSystem::ProjectDirectory::path;
+	out.open(filePath + "\\Test.txt");
+	AddNode();
+	AddEdge();
+	out.close();
+	OutputDebugStringA("done");
+}
+
+void LevelEditor::LoadNodes()
+{
+	std::map<std::string, std::shared_ptr<Drawable>> objects = scene.GetDrawables();
+	std::string str;
+
+	for (auto& [name, drawable] : scene.GetDrawables())
+	{
+		std::string x;
+		std::string y;
+		std::string z;
+
+
+		str.insert(0, name, 0, 5);
+		if (str == "Node1")
+		{
+			str = name;
+			x = std::to_string(drawable->GetPosition().x);
+			y = std::to_string(drawable->GetPosition().y);
+			z = std::to_string(drawable->GetPosition().z);
+
+			str += "\t" + x + "\t" + y + "\t" + z + "\n";
+
+
+			nodes.push_back(str);
+		}
+		str.clear();
+	}
+
+	//this->e.append(str);
+	str.clear();
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		str += nodes[i];
+	}
+
+
+	auto filePath = FileSystem::ProjectDirectory::path;
+	out.open(filePath + "\\SaveData\\NodesReplacement.txt");
+	out << str;
+	out.close();
+	OutputDebugStringA("done");
+	std::cout << "done";
+}
+
 void LevelEditor::BindDrawables()
 {
 	for (auto& [name, drawable] : scene.GetDrawables())
@@ -14,6 +78,7 @@ void LevelEditor::BindDrawables()
 			scene.GetObjectNames().push_back(name);
 			model->SetID((UINT)scene.GetObjectNames().size());
 			MR->Bind(model);
+			SR->Bind(model);
 			IDR->Bind(model);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 			component->AddName(name);
@@ -75,6 +140,7 @@ void LevelEditor::Load(const std::string& file)
 	model->SetID((UINT)scene.GetObjectNames().size());
 	IDR->Bind(model);
 	MR->Bind(model);
+	SR->Bind(model);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(fileName);
 	totalPolygonCount += model->mesh.vertexCount / 3.0f;
@@ -104,10 +170,19 @@ void LevelEditor::DuplicateObject()
 		model->SetID((UINT)scene.GetObjectNames().size());
 		IDR->Bind(model);
 		MR->Bind(model);
+		SR->Bind(model);
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->AddName(modelName);
 		totalPolygonCount += model->mesh.vertexCount / 3.0f;
+
+		auto selected = scene.Get<Drawable>(modelName);
+		std::string Nstr = selectedObject + "\t" + std::to_string(selected->GetPosition().x) + "\t" + std::to_string(selected->GetPosition().y) + "\t" + std::to_string(selected->GetPosition().z) + "\n";
+		this->n.append(Nstr);
+		std::string tmpStr = selectedObject;
 		selectedObject = modelName;
+		std::string Estr = std::string("E") + "\t" + selectedObject + "\t" + tmpStr + "\n";
+		this->e.append(Estr);
+		Print(Nstr + "\n" + Estr);
 	}
 }
 
@@ -264,6 +339,7 @@ void LevelEditor::DivideRendering()
 				{
 					MR->Unbind(drawable);
 					IDR->Unbind(drawable);
+					SR->Unbind(drawable);
 				}
 				else
 				{
@@ -280,6 +356,7 @@ void LevelEditor::DivideRendering()
 					{
 						MR->Bind(drawable);
 						IDR->Bind(drawable);
+						SR->Bind(drawable);
 					}
 				}
 				else
@@ -301,6 +378,7 @@ void LevelEditor::DivideRendering()
 				{
 					MR->Unbind(drawable);
 					IDR->Unbind(drawable);
+					SR->Unbind(drawable);
 				}
 				else
 				{
@@ -317,6 +395,7 @@ void LevelEditor::DivideRendering()
 					{
 						MR->Bind(drawable);
 						IDR->Bind(drawable);
+						SR->Bind(drawable);
 					}
 				}
 				else
@@ -374,8 +453,36 @@ void LevelEditor::ShowTerrain()
 	}
 }
 
+void LevelEditor::ShowShadows()
+{
+	auto& drawables = scene.GetDrawables();
+	bool changed = false;
+	if (renderShadows)
+	{
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+				SR->Unbind(model);
+		}
+		renderShadows = false;
+		changed = true;
+	}
+	if (!renderShadows && !changed)
+	{
+		for (auto& [drawableName, drawable] : drawables)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+				SR->Bind(model);
+		}
+		renderShadows = true;
+	}
+}
+
 void LevelEditor::Update()
 {
+
 	if (Event::LeftIsClicked() && !ImGuizmo::IsOver() && viewportPanel.Hovered())
 	{
 		auto mousePos = viewportPanel.GetMousePosition();
@@ -387,14 +494,22 @@ void LevelEditor::Update()
 			if (id > 0)
 			{
 				std::string name = scene.GetObjectNames()[id - 1];
+				//test();
 				if (name != "")
+				{
+					if(name != selectedObject)
+						lastSelectedObject = selectedObject;
+
 					UpdateToolUI(name);
+				}
 			}
 
 			if (id == 0)
 				ClearToolUI();
 		}
 	}
+
+
 
 	if (Event::KeyIsPressed('C'))
 		ClearToolUI();
@@ -405,16 +520,16 @@ void LevelEditor::Update()
 	if (Event::RightIsClicked())
 	{
 		if (Event::ReadRawDelta().y > 0)
-			scene.GetCamera()->Rotate(0, 3);
+			scene.GetCamera()->Rotate(0, 1.5f);
 
 		if (Event::ReadRawDelta().y < 0)
-			scene.GetCamera()->Rotate(0, -3);
+			scene.GetCamera()->Rotate(0, -1.5f);
 
 		if (Event::ReadRawDelta().x > 0)
-			scene.GetCamera()->Rotate(3, 0);
+			scene.GetCamera()->Rotate(1.5f, 0);
 
 		if (Event::ReadRawDelta().x < 0)
-			scene.GetCamera()->Rotate(-3, 0);
+			scene.GetCamera()->Rotate(-1.5f, 0);
 	}
 
 	if (Event::KeyIsPressed('W'))
@@ -448,7 +563,41 @@ void LevelEditor::Update()
 			else
 				DuplicateVolume();
 			lastClick = Time::Get();
+
 		}
+
+
+		if (Event::KeyIsPressed('N'))
+		{
+			auto selected = scene.Get<Drawable>(selectedObject);
+			std::string str = selectedObject + "\t" + std::to_string(selected->GetPosition().x) + "\t" + std::to_string(selected->GetPosition().y) + "\t" + std::to_string(selected->GetPosition().z) + "\n";
+			this->n.append(str);
+			lastClick = Time::Get();
+
+		}
+
+		if (Event::KeyIsPressed('E'))
+		{
+			std::string str = 'E' + "\t" + selectedObject + "\t" + lastSelectedObject + "\n";
+			this->e.append(str);
+			lastClick = Time::Get();
+
+		}
+
+		if (Event::KeyIsPressed('I'))
+		{
+			auto filePath = FileSystem::ProjectDirectory::path;
+			out.open(filePath + "\\Nodes.txt");
+			out << n;
+			out << "\n";
+			if (!e.empty())
+				out << e;
+			out.close();
+			OutputDebugStringA("done");
+			lastClick = Time::Get();
+
+		}
+
 	}
 
 	if (Event::KeyIsPressed(VK_SHIFT))
@@ -477,13 +626,20 @@ void LevelEditor::Update()
 			const int lowZ = (int)std::floor(newZPos);
 			const int highZ = (int)std::ceil(newZPos);
 			const float Zdecimal = newZPos - lowZ;
+			if (newZPos < 950 && newXPos < 950)
+			{
+				const float H1 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+				const float H2 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+				const float H3 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+				const float H4 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
 
-			const float H1 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
-			const float H2 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
-			const float H3 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
-			const float H4 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+				newYPos = H1 + H2 + H3 + H4;
+			}
+			else
+			{
+				std::cout << "out of bounds" << std::endl;
+			}
 
-			newYPos = H1 + H2 + H3 + H4;
 		}
 
 		auto model = scene.Get<Drawable>(selectedObject);
@@ -553,10 +709,17 @@ void LevelEditor::Update()
 
 void LevelEditor::Render()
 {
+
 	IDR->BeginFrame(dsv, viewport);
 	IDR->Render();
 
+	SR->Render();
+
 	BeginViewportFrame();
+
+	ShaderData::Inst().BindFrameConstants();
+
+	MR->Render();
 
 	if(renderTerrain)
 		TR->Render(*terrain);
@@ -564,7 +727,6 @@ void LevelEditor::Render()
 	if(renderWater)
 		WR->Render(water);
 
-	MR->Render();
 
 	if(renderVolumes)
 		VR->Render();
@@ -611,6 +773,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitModelRenderer(false);
 	RND.InitIDRenderer();
 	RND.InitTerrainRenderer();
+	RND.InitShadowRenderer();
 	RND.InitWaterRenderer();
 	RND.InitVolumeRenderer();
 
@@ -631,6 +794,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddCheckBoxComponent("TERRAIN", true);
 		window.AddCheckBoxComponent("WATER", true);
 		window.AddCheckBoxComponent("VOLUMES", true);
+		window.AddCheckBoxComponent("SHADOWS", true);
 		window.AddTextComponent("CULL:");
 		window.AddSliderIntComponent("RENDER DIVIDE", -2000, 2000, -2000, false);
 		window.AddCheckBoxComponent("FLIP DIVIDE", false);
@@ -686,8 +850,10 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	gameLoader.Load("Default", scene.GetDrawables());
 	BindDrawables();
 
+	//CALL LOADPATHSTRUCTURE HERE
+	LoadNodes();
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 1.0f, 25.0f, {0, 90, 0});
-	scene.SetDirectionalLight(40);
+	scene.SetDirectionalLight(1000, { 1, 1, 1, 1 }, 4, 4);
 
 	InitCamera(scene.GetCamera());
 
@@ -700,6 +866,12 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	wRatioY = (float)clientHeight / GetSystemMetrics(SM_CYSCREEN);
 
 	terrain = new Terrain(2);
+
+	//LoadNodes();
+	//path = new Pathfinding;
+	//path = path->PGetInstance();
+	//path->CreateGrid({ 0,0,0 });
+	//path->FindPath(Vector3(-16, 22, -565), Vector3(86, 60, -233));
 
 	(void*)Run();
 }
@@ -888,6 +1060,8 @@ APPSTATE LevelEditor::Run()
 	Update();
 	Render();
 
+
+
 	{
 		auto& window = windows["TOOLS"];
 		static int frames = 0;
@@ -925,6 +1099,9 @@ APPSTATE LevelEditor::Run()
 
 		if (window.Changed("VOLUMES"))
 			ShowVolumes();
+
+		if (window.Changed("SHADOWS"))
+			ShowShadows();
 
 		if (window.Changed("TERRAIN SUBDIV"))
 		{

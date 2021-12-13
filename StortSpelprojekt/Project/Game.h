@@ -67,7 +67,7 @@ private:
     float lastStateChange = 0.0f;
 
     //-----TEMP-----//
-    Pathfinding pathing;
+    std::shared_ptr<Pathfinding> pathing;
 
     SaveStation saveStations[2];
 
@@ -91,7 +91,7 @@ private:
 
     std::shared_ptr<Building> buildings[3];
 
-    std::map<BarbarianCamp::Location, BarbarianCamp*> camps;
+    std::map<CampData::Location, BarbarianCamp*> camps;
 
     std::vector<std::shared_ptr<Target>> targets;
 

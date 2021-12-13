@@ -50,6 +50,8 @@ public:
 	void DeactivateWireframe() { context->RSSetState(nullptr); }
 	void ToggleWireframe() { ID3D11RasterizerState* currentState = nullptr; context->RSGetState(&currentState); if (!currentState) context->RSSetState(wireframeState); else context->RSSetState(nullptr); }
 
+	void ClearDSView() { context->ClearDepthStencilView(dsView, D3D11_CLEAR_DEPTH, 1.0f, 0);  }
+
 	ID3D11Device& GetDevice() { return *device; };
 	ID3D11DeviceContext& GetContext() { return *context; };
 	ID3D11DepthStencilView& GetDSV() { return  *dsView; }

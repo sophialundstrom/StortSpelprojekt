@@ -4,6 +4,7 @@
 #include "ApplicationState.h"
 #include "ImGui.h"
 #include "WaterRenderer.h"
+#include "Pathfinding.h"
 
 class LevelEditor : public Editor, public ApplicationState
 {
@@ -23,9 +24,10 @@ private:
 	Terrain* terrain;
 	Water water;
 	bool renderWater = true;
-	bool divideFlipped = false;
 	bool renderVolumes = true;
 	bool renderTerrain = true;
+	bool renderShadows = true;
+	bool divideFlipped = false;
 
 	UINT wWidth, wHeight;
 
@@ -49,6 +51,22 @@ private:
 	void FlipRenderingDivider();
 	void ShowVolumes();
 	void ShowTerrain();
+
+private:
+	std::ofstream out;
+	std::vector<std::string> nodes;
+	std::vector<std::string> edges;
+
+	std::string n;
+	std::string e;
+	std::string lastSelectedObject;
+	void AddNode();
+	void AddEdge();
+	void test();
+	std::ifstream in;
+	void LoadNodes();
+	Pathfinding* path;
+	void ShowShadows();
 public:
 	LevelEditor(UINT clientWidth, UINT clientHeight, HWND window);
 

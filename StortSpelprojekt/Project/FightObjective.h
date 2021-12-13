@@ -8,13 +8,13 @@ class FightObjective : public Objective
 private:
 	UINT cleared;
 	UINT total;
-	BarbarianCamp::Location location;
+	CampData::Location location;
 public:
 	FightObjective() = default;
-	FightObjective(BarbarianCamp::Location location);
+	FightObjective(CampData::Location location);
 	void Update(BarbarianCamp* camp);
 
-	BarbarianCamp::Location CampLocation() { return location; }
+	CampData::Location CampLocation() { return location; }
 
 	// Inherited via Objective
 	virtual std::string Info() override;

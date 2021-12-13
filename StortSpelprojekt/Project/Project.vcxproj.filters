@@ -38,29 +38,27 @@
     <FxCompile Include="VolumePixelShader.hlsl" />
     <FxCompile Include="VolumeVertexShader.hlsl" />
     <FxCompile Include="WaterDomainShader.hlsl" />
-    <FxCompile Include="WaterPixelShader.hlsl" />
     <FxCompile Include="WaterGeometryShader.hlsl" />
     <FxCompile Include="WaterHullShader.hlsl" />
+    <FxCompile Include="WaterPixelShader.hlsl" />
     <FxCompile Include="WaterVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimatedModelRenderer.cpp" />
+    <ClCompile Include="AnimationStateMachine.cpp" />
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="ArrowHandler.cpp" />
     <ClCompile Include="Audio.cpp" />
     <ClCompile Include="AudioChunks.cpp" />
-    <ClCompile Include="BarbarianCamp.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="CollectObjective.cpp" />
     <ClCompile Include="ColliderRenderer.cpp" />
-    <ClCompile Include="ConcreteStates.cpp" />
     <ClCompile Include="DialogueOverlay.cpp" />
     <ClCompile Include="DockSpacePanel.cpp" />
     <ClCompile Include="DynamicPlane.cpp" />
     <ClCompile Include="FightObjective.cpp" />
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameLoader.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -73,7 +71,6 @@
     <ClCompile Include="InteractableRenderer.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="Item.cpp" />
-    <ClCompile Include="LevelEditor.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
     <ClCompile Include="LocationObjective.cpp" />
     <ClCompile Include="Loot.cpp" />
@@ -83,13 +80,12 @@
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NPCBase.cpp" />
     <ClCompile Include="NPCFriendly.cpp" />
-    <ClCompile Include="NPCHostile.cpp" />
     <ClCompile Include="Objective.cpp" />
     <ClCompile Include="ParticleEditor.cpp" />
     <ClCompile Include="ParticleRenderer.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
-    <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="PauseOverlay.cpp" />
+    <ClCompile Include="PlaneWithNormals.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="QuestLog.cpp" />
@@ -111,24 +107,41 @@
     <ClCompile Include="WaterRenderer.cpp" />
     <ClCompile Include="Win.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="LevelEditor.cpp">
+      <Filter>UsefulShit</Filter>
+    </ClCompile>
+    <ClCompile Include="NPCHostile.cpp">
+      <Filter>UsefulShit</Filter>
+    </ClCompile>
+    <ClCompile Include="ConcreteStates.cpp">
+      <Filter>UsefulShit</Filter>
+    </ClCompile>
+    <ClCompile Include="Pathfinding.cpp">
+      <Filter>UsefulShit</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>UsefulShit</Filter>
+    </ClCompile>
     <ClCompile Include="PlaneWithNormals.cpp" />
     <ClCompile Include="AnimationStateMachine.cpp" />
     <ClCompile Include="Slider.cpp" />
+    <ClCompile Include="BarbarianCamp.cpp">
+      <Filter>UsefulShit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationStateMachine.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="ArrowHandler.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="AudioChunks.h" />
-    <ClInclude Include="BarbarianCamp.h" />
     <ClInclude Include="BoundingVolumes.h" />
     <ClInclude Include="BuildingEffect.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Canvas.h" />
     <ClInclude Include="CollectObjective.h" />
     <ClInclude Include="CollectQuest.h" />
-    <ClInclude Include="ConcreteStates.h" />
     <ClInclude Include="DialogueOverlay.h" />
     <ClInclude Include="DockSpacePanel.h" />
     <ClInclude Include="DynamicPlane.h" />
@@ -153,8 +166,8 @@
     <ClInclude Include="NPCFriendly.h" />
     <ClInclude Include="Objective.h" />
     <ClInclude Include="Overlay.h" />
-    <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="PauseOverlay.h" />
+    <ClInclude Include="PlaneWithNormals.h" />
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="Quest.h" />
     <ClInclude Include="AnimatedMesh.h" />
@@ -175,21 +188,18 @@
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="FileSystem.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="ApplicationState.h" />
     <ClInclude Include="ImGuiWin.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="ImGui.h" />
     <ClInclude Include="ImGuiWinComponents.h" />
-    <ClInclude Include="LevelEditor.h" />
     <ClInclude Include="MaterialLoader.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="ModelRenderer.h" />
     <ClInclude Include="NPCBase.h" />
-    <ClInclude Include="NPCHostile.h" />
     <ClInclude Include="ParticleEditor.h" />
     <ClInclude Include="ParticleRenderer.h" />
     <ClInclude Include="ParticleSystem.h" />
@@ -238,11 +248,34 @@
     <ClInclude Include="WaterRenderer.h" />
     <ClInclude Include="Win.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="LevelEditor.h">
+      <Filter>UsefulShit</Filter>
+    </ClInclude>
+    <ClInclude Include="NPCHostile.h">
+      <Filter>UsefulShit</Filter>
+    </ClInclude>
+    <ClInclude Include="ConcreteStates.h">
+      <Filter>UsefulShit</Filter>
+    </ClInclude>
+    <ClInclude Include="Pathfinding.h">
+      <Filter>UsefulShit</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>UsefulShit</Filter>
+    </ClInclude>
     <ClInclude Include="PlaneWithNormals.h" />
     <ClInclude Include="AnimationStateMachine.h" />
     <ClInclude Include="Slider.h" />
+    <ClInclude Include="BarbarianCamp.h">
+      <Filter>UsefulShit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="LightCalculations.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="UsefulShit">
+      <UniqueIdentifier>{f7bd33fa-5bd8-4ad3-8072-9d70effa06ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

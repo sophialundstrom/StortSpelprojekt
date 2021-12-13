@@ -1,6 +1,6 @@
 #include "FightObjective.h"
 
-FightObjective::FightObjective(BarbarianCamp::Location location)
+FightObjective::FightObjective(CampData::Location location)
 	:Objective(Type::FIGHT, false), location(location) {}
 
 void FightObjective::Update(BarbarianCamp* camp)
@@ -14,8 +14,8 @@ void FightObjective::Update(BarbarianCamp* camp)
 
 std::string FightObjective::Info()
 {
-	if (BarbarianCamp::Locations[UINT(location)] != "Village")
-		return "Clear The Baribarians At The " + BarbarianCamp::Locations[UINT(location)] + " Camp. " + std::to_string(cleared) + "/" + std::to_string(total) + ".";
+	if (CampData::Locations[UINT(location)] != "Village")
+		return "Clear The Baribarians At The " + CampData::Locations[UINT(location)] + " Camp. " + std::to_string(cleared) + "/" + std::to_string(total) + ".";
 	else
 		return "Fight The Barbarians Attacking The Village! " + std::to_string(cleared) + "/" + std::to_string(total) + ".";;
 }

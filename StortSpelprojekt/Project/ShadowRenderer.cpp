@@ -43,11 +43,11 @@ ShadowRenderer::~ShadowRenderer()
 
 void ShadowRenderer::Render()
 {
-	if (drawables.empty() && staticDrawables.empty())
-		return;
-
 	//SET SHADOW MAP AS RENDER TARGET
 	ShaderData::Inst().shadowMap.BindAsRenderTarget();
+
+	if (drawables.empty() && staticDrawables.empty())
+		return;
 
 	//INPUT LAYOUT
 	Graphics::Inst().GetContext().IASetInputLayout(inputLayout);

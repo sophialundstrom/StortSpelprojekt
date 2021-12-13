@@ -30,6 +30,7 @@ protected:
 	}
 public:
 	Vector3 GetPosition()		const { return this->position; }
+	Vector3& GetPositionRef()	{ return this->position; }
 	Quaternion GetRotation()	const { return this->rotation; }
 	Vector3 GetScale()			const { return this->scale; }
 

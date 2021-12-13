@@ -19,15 +19,6 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 	Node *startNode = grid.NodeFromWorldPoint(startPos);
 	startNode->gCost = 0;
 	Node *targetNode = grid.NodeFromWorldPoint(TargetPos);
-	startNode->walkable = true;
-	targetNode->walkable = true;
-
-	if (GetDistance(startNode, targetNode) < 28.0f)
-	{
-		this->grid.GetPathRef().clear(); //= std::vector<Vector3>();
-		return;
-	}
-
 
 	std::vector<Node*> openSet;
 	std::unordered_set<Node*> closedSet;
@@ -58,36 +49,48 @@ void Pathfinding::FindPath(Vector3 startPos, Vector3 TargetPos)
 		{
 			//retrace path. fills up a path vector in Grid
 			grid.RetracePath(startNode, targetNode);
-			for (int x = 0; x < grid.gridWorldSizeInt; x++)
+			for (auto [i,n] : grid.GetNodes())
 			{
-				for (int y = 0; y < grid.gridWorldSizeInt; y++)
-				{
-					grid.grid[x][y].gCost = BIG_INT;
-					grid.grid[x][y].hCost = 0;
-				}
+				n->gCost = BIG_INT;
 			}
 			return;
 		}
 
-		for (auto neighbour : grid.GetNeighbours(node))
+		for (auto [id,neighbour] : grid.GetNeighbours(node))
 		{
-
-			if (neighbour->walkable == false)
-			{
-				continue;
-			}
+			//if (neighbour->walkable == false)
+			//	continue;
 
 			int newCostToNeighbour = node->gCost + GetDistance(node, neighbour);
-			if (newCostToNeighbour < neighbour->gCost /*|| !(std::find(openSet.begin(), openSet.end(), neighbour) != openSet.end())*/)
+			if (newCostToNeighbour < neighbour->gCost)
 			{
 				neighbour->gCost = newCostToNeighbour;
 				neighbour->hCost = GetDistance(neighbour, targetNode);
 				neighbour->parent = node;
 
 				//if openset does not contains "neighbour" node
-				if ((std::find(openSet.begin(), openSet.end(), neighbour) == openSet.end()))//	!std::any_of(openSet.begin(), openSet.end(), (Node)*neighbour))
+				if ((std::find(openSet.begin(), openSet.end(), neighbour) == openSet.end()))
 					openSet.push_back(neighbour);
 			}
 		}
 	}
+}
+
+Pathfinding& Pathfinding::GetInstance()
+{
+	static Pathfinding singleton;
+	return singleton;
+}
+
+Pathfinding* Pathfinding::PGetInstance()
+{
+	static Pathfinding* singleton;
+	return singleton;
+}
+
+
+
+Node* Pathfinding::GetClosestNode(Vector3 worldPoint, int cutoff)
+{
+	return grid.NodeFromWorldPoint(worldPoint, cutoff);
 }

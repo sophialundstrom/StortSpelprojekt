@@ -35,6 +35,7 @@ public:
 	std::string AddDrawable(const std::string& name, std::shared_ptr<Drawable> drawable);
 	std::string AddDrawable(std::shared_ptr<Drawable> drawable);
 	std::string AddModel(const std::string& file, const std::string path);
+	std::string AddModel(std::string fileName, const std::string& file, const std::string path);
 	void AddModel(const std::string& name,std::shared_ptr <Drawable> drawable);
 	void AddBoundingVolume(const std::string& name, std::shared_ptr <Drawable> drawable);
 
