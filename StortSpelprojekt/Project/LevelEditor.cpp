@@ -1228,7 +1228,7 @@ APPSTATE LevelEditor::Run()
 				{
 					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time: " + std::to_string(model->GetTTD()) + " ms");
 					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURENAME", "Texture: " + model->GetTextureName());
-					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURE DIMENSIONS", "Dimensions: " + std::to_string(model->GetTextureDimensions().x) + "x" + std::to_string(model->GetTextureDimensions().y));
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURE DIMENSIONS", "Dimensions: " + std::to_string(int(model->GetTextureDimensions().x)) + "x" + std::to_string(int(model->GetTextureDimensions().y)));
 				}
 				else
 				{
