@@ -6,29 +6,18 @@
 
 class NPCState;
 
+
 struct CampData
 {
 	enum class Location { South, East, North, West, Village };
-	std::map<Location, int> locationCutoff;
-	CampData()
-	{
-		locationPosition.emplace(Location::South, Vector3(-617.626160f, 70.000000f, -252.823212f));
-		locationPosition.emplace(Location::East, Vector3(0, 0, 0));
-		locationPosition.emplace(Location::North, Vector3(0, 0, 0));
-		locationPosition.emplace(Location::West, Vector3(0, 0, 0));
-		locationPosition.emplace(Location::Village, Vector3(0, 0, 0));
+	CampData();
 
-		locationCutoff.emplace(Location::South, 160);
-		locationCutoff.emplace(Location::East, 160);
-		locationCutoff.emplace(Location::North, 160);
-		locationCutoff.emplace(Location::West, 160);
-		locationCutoff.emplace(Location::Village, 160);
-
-	}
-	std::map<Location, Vector3> locationPosition;
+	static std::map<Location, Vector3> locationPosition;
+	static std::map<Location, int> locationCutoff;
 
 	static const std::string Locations[];
 };
+
 inline const std::string CampData::Locations[] = { "Southern", "Eastern", "Northern", "Western", "Village" };
 
 class HostileNPC : public NPC
@@ -40,8 +29,9 @@ private:
 	std::shared_ptr<Player> player;
 	ArrowHandler arrowHandler;
 	int damage;
+	bool haveCheckedHeight = false;
+
 	void CalcHeight(HeightMap* heightMap);
-	CampData campData;
 public:
 	bool isMoving;
 	HostileNPC(const std::string& file, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, std::shared_ptr<Pathfinding> pathing, int health, bool moving);
@@ -49,34 +39,38 @@ public:
 	virtual void Update() override;
 	void Update(const std::shared_ptr<Player> player, HeightMap* heightMap);
 
-	ArrowHandler& GetArrowHandler() { return this->arrowHandler; }
 
 	void Reset();
 	void SetSpawnPosition(const Vector3& position);
 
 	void CheckPlayerCollision(std::shared_ptr<Player> player);
 
-	std::shared_ptr<Player> GetPlayer() { return this->player; }
-
+	ArrowHandler& GetArrowHandler()			{ return this->arrowHandler; }
+	std::shared_ptr<Player> GetPlayer()		{ return this->player; }
 	std::shared_ptr<Pathfinding> GetPath()	{ return this->pathing; }
-	CampData GetCampData()					{ return this->campData;}
+	CampData::Location GetCampData()		{ return this->assignedCampLocation;}
 
 	void SetPlayerPtr(std::shared_ptr<Player> p)	{ this->player = p; }
+	void SetDamage(int x)							{ this->damage = x; }
 	void SetState(NPCState& newState);
+	// set position and various campdata
+	void SetPosition(Vector3 pos, Vector3 campPos, int cutoff, CampData::Location);
 
-	void SetDamage(int x)							{ damage = x; }
 
-	float lastShot = 0.f;
-	int pathIndex = -1;
-	Quaternion originalRotation;
-	std::vector<Vector3> path;
+	int		pathIndex = -1;
+	int		campCutOff;
+	float	lastShot = 0.f;
+	float	speed = 9.0f;
+	float	heightMapGroundLevel = 0.f;
+	float	viewDistance;
+	float	distanceToPlayer;
 	Vector3 targetPosition;
-	float speed = 9.0f;
-	float heightMapGroundLevel = 0.f;
-	NPCState* currentState;
-	float viewDistance;
-	float distanceToPlayer;
 	Vector3 startPos;
+	Vector3 assignedCampPos;
+	NPCState* currentState;
+	Quaternion originalRotation;
+	CampData::Location assignedCampLocation;
+	std::vector<Vector3> path;
 
                                                                                                                                                                                                                                                              
 };

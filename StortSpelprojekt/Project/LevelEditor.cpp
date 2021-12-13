@@ -26,38 +26,46 @@ void LevelEditor::test()
 
 void LevelEditor::LoadNodes()
 {
-	auto filePath = FileSystem::ProjectDirectory::path;
-	in.open(filePath + "\\Test.txt");
+	std::map<std::string, std::shared_ptr<Drawable>> objects = scene.GetDrawables();
 	std::string str;
-	std::string fill;
-	bool nodeYes = false;
-	while (std::getline(in, str))
-	{
-		if (str == "")
-		{
-			break;
-		}
-		for (size_t i = 0; i < str.size(); i++)
-		{
-			if (str.at(i) == '\t')
-			{
-				break;
-			}
-			fill += (str.at(i));
-		}
-		std::filesystem::path path = filePath + "\\Models";
-		std::string fileName = "Node1";
 
-		fileName = scene.AddModel(fill, fileName, path.string());
-		auto model = scene.Get<Model>(fileName);
-		model->SetID((UINT)scene.GetObjectNames().size());
-		IDR->Bind(model);
-		MR->Bind(model);
-		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
-		component->AddName(fileName);
-		totalPolygonCount += model->mesh.vertexCount / 3.0f;
-		fill.clear();
+	for (auto& [name, drawable] : scene.GetDrawables())
+	{
+		std::string x;
+		std::string y;
+		std::string z;
+
+
+		str.insert(0, name, 0, 5);
+		if (str == "Node1")
+		{
+			str = name;
+			x = std::to_string(drawable->GetPosition().x);
+			y = std::to_string(drawable->GetPosition().y);
+			z = std::to_string(drawable->GetPosition().z);
+
+			str += "\t" + x + "\t" + y + "\t" + z + "\n";
+
+
+			nodes.push_back(str);
+		}
+		str.clear();
 	}
+
+	//this->e.append(str);
+	str.clear();
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		str += nodes[i];
+	}
+
+
+	auto filePath = FileSystem::ProjectDirectory::path;
+	out.open(filePath + "\\SaveData\\NodesReplacement.txt");
+	out << str;
+	out.close();
+	OutputDebugStringA("done");
+	std::cout << "done";
 }
 
 void LevelEditor::BindDrawables()
@@ -170,11 +178,11 @@ void LevelEditor::DuplicateObject()
 		auto selected = scene.Get<Drawable>(modelName);
 		std::string Nstr = selectedObject + "\t" + std::to_string(selected->GetPosition().x) + "\t" + std::to_string(selected->GetPosition().y) + "\t" + std::to_string(selected->GetPosition().z) + "\n";
 		this->n.append(Nstr);
-
 		std::string tmpStr = selectedObject;
 		selectedObject = modelName;
 		std::string Estr = std::string("E") + "\t" + selectedObject + "\t" + tmpStr + "\n";
 		this->e.append(Estr);
+		Print(Nstr + "\n" + Estr);
 	}
 }
 
@@ -842,6 +850,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	gameLoader.Load("Default", scene.GetDrawables());
 	BindDrawables();
 
+	//CALL LOADPATHSTRUCTURE HERE
+	LoadNodes();
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 1.0f, 25.0f, {0, 90, 0});
 	scene.SetDirectionalLight(1000, { 1, 1, 1, 1 }, 4, 4);
 

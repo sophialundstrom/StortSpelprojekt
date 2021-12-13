@@ -54,6 +54,9 @@ private:
 
 private:
 	std::ofstream out;
+	std::vector<std::string> nodes;
+	std::vector<std::string> edges;
+
 	std::string n;
 	std::string e;
 	std::string lastSelectedObject;

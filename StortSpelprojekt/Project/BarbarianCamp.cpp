@@ -42,10 +42,10 @@ BarbarianCamp::BarbarianCamp(const Vector3& position, CampData::Location locatio
 void BarbarianCamp::AddBarbarian(const std::string& file, const Vector3& position, std::vector<std::shared_ptr<HostileNPC>>& hostiles, std::shared_ptr<Player> player, CombatStyle combatStyle, const Vector3& targetPosition, std::shared_ptr<Pathfinding> pathing, bool dynamic, int damage, int health, bool moving)
 {
     auto barbarian = std::make_shared<HostileNPC>(file, player, combatStyle, targetPosition, pathing, health, moving);
-    barbarian->SetPosition(position);
+    auto cut = CampData::locationCutoff.at(location);
+    auto loc = CampData::locationPosition.at(location);
+    barbarian->SetPosition(position, loc, cut, location);
     barbarian->SetDamage(damage);
-   // auto barbarian = std::make_shared<HostileNPC>(file, position, player, combatStyle, targetPosition, );
-   // barbarian->SetPosition(position);
 
     barbarians.emplace_back(barbarian);
     hostiles.emplace_back(barbarian);

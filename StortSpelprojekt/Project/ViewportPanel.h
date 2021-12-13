@@ -30,15 +30,15 @@ public:
 	{
 		auto cursor = ImGui::GetMousePos();
 
-		std::cout << "=====================\n";
+		//std::cout << "=====================\n";
 
-		std::cout << "CURSOR: " << cursor.x << " " << cursor.y << std::endl;
+		//std::cout << "CURSOR: " << cursor.x << " " << cursor.y << std::endl;
 
-		std::cout << "TOP LEFT: " << topLeft.x << " " << topLeft.y << std::endl;
+		//std::cout << "TOP LEFT: " << topLeft.x << " " << topLeft.y << std::endl;
 
 		auto temp = Vector2(cursor.x - topLeft.x, cursor.y - topLeft.y);
 
-		std::cout << "WINDOW RELATIVE: " << temp.x << " " << temp.y << std::endl;
+		//std::cout << "WINDOW RELATIVE: " << temp.x << " " << temp.y << std::endl;
 
 		return temp;
 	}

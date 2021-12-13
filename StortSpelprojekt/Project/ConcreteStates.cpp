@@ -9,7 +9,7 @@ void ShootingState::SwapCombatStyle(CombatStyle newCombatStyle)
     float normalDelay = 2.f;
     float quickDelay = 0.2f;
     float breakTime = 2.4f;
-    float superSlow = 864000; //86 400 seconds aka 1 real life day
+    float superSlow = 864000;
 
     switch (combatStyle)
     {
@@ -41,16 +41,18 @@ void ShootingState::SwapCombatStyle(CombatStyle newCombatStyle)
 void MovingState::Enter(HostileNPC& hostile)
 {
     Node* startNode = hostile.GetPath()->GetClosestNode(hostile.GetPosition(), 1000);
-    if (Vector3::Distance(hostile.GetPosition(), hostile.startPos) > 20.0f)
+    Node* endNode = hostile.GetPath()->GetClosestNode(hostile.startPos, 140);
+
+    if (startNode && endNode)
     {
-        Node* endNode = hostile.GetPath()->GetClosestNode(hostile.startPos, 100);
-        if (startNode && endNode)
-            hostile.GetPath()->FindPath(startNode->position, endNode->position);
-        else
-        {
-            hostile.SetState(IdlingState::GetInstance());
-            return;
-        }
+        hostile.GetPath()->FindPath(startNode->position, endNode->position);
+        std::cout << "found path\n";
+    }
+    else
+    {
+        Print("Moving back, Node nullptr: Going to IDLING");
+        hostile.SetState(IdlingState::GetInstance());
+        return;
     }
     hostile.path = hostile.GetPath()->GetGrid()->GetPathRef();
     for (int i = 0; i < hostile.GetPath()->GetGrid()->GetIDs().size(); i++)
@@ -58,14 +60,13 @@ void MovingState::Enter(HostileNPC& hostile)
         if (startNode->id == hostile.GetPath()->GetGrid()->GetIDs()[i])
             hostile.pathIndex = i;
     }
-    //hostile.pathIndex = node->id;
 }
 
 void MovingState::Update(HostileNPC& hostile)
 {
     //TODO: Implement walking behaviour
     Vector3 moveDirection;
-    Vector3 aimDir;// = hostile.GetPlayer()->GetPosition() + Vector3(0.f, 4.5f, 0.f) - hostile.GetPosition();
+    Vector3 aimDir;
 
     if (hostile.pathIndex < hostile.path.size())
     {
@@ -83,6 +84,7 @@ void MovingState::Update(HostileNPC& hostile)
             
         hostile.path.clear();
         hostile.SetState(IdlingState::GetInstance());
+        std::cout << "MOVING -> IDLING\n";
         return;
     }
 
@@ -123,7 +125,7 @@ void MovingState::Update(HostileNPC& hostile)
         PrintNumber(hostile.viewDistance, "VIEW DIST: ");
         PrintNumber(hostile.distanceToPlayer, "DIST TO PLAYER: ");
     }
-    if (hostile.distanceToPlayer < hostile.viewDistance)
+    if (hostile.distanceToPlayer < 61)
     {
         PrintS("CHANGED FROM MOVING -> SHOOT");
         Audio::StartEffect("BarbNoticed.wav");
@@ -133,35 +135,39 @@ void MovingState::Update(HostileNPC& hostile)
 
 void MovingState::Exit(HostileNPC& hostile)
 {
-
-}
-
-NPCState& MovingState::GetInstance()
-{
-    static MovingState singleton;
-    return singleton;
+    hostile.path.clear();
 }
 
 //--------------Hunting state-------------------//
 
 void HuntingState::Enter(HostileNPC& hostile)
 {
-    Node* node = hostile.GetPath()->GetClosestNode(hostile.GetPosition(), 1000);
-    if (hostile.GetPath()->GetClosestNode(hostile.GetPosition(), 1000) != nullptr)
+    Node* startNode = hostile.GetPath()->GetClosestNode(hostile.GetPosition(), 1000);
+    if (Vector3::Distance(hostile.GetPosition(), hostile.GetPlayer()->GetPosition()) > 20.0f)
     {
-        hostile.GetPath()->FindPath(hostile.GetPath()->GetClosestNode(hostile.GetPosition(), 1000)->position, hostile.GetPlayer()->GetPosition());
+        Node* endNode = hostile.GetPath()->GetClosestNode(hostile.GetPlayer()->GetPosition(), 200);
+        if (startNode && endNode)
+        {
+            hostile.GetPath()->FindPath(startNode->position, endNode->position);
+            std::cout << "found path\n";
+        }
+        else
+        {
+            if (Vector3::Distance(hostile.assignedCampPos, hostile.GetPlayer()->GetPosition()) > hostile.campCutOff)//if player is far away from camp go back to default behaviour
+            {
+                Print("player too far away: HUNTING -> MOVEING");
+                hostile.SetState(MovingState::GetInstance());
+                return;
+            }
+            Print("HUNTING -> IDLING");
+            hostile.SetState(IdlingState::GetInstance());
+            return;
+        }
     }
-    else
-    {
-        hostile.SetState(IdlingState::GetInstance());
-        //delete node;
-        return;
-    }
-
     hostile.path = hostile.GetPath()->GetGrid()->GetPathRef();
     for (int i = 0; i < hostile.GetPath()->GetGrid()->GetIDs().size(); i++)
     {
-        if (node->id == hostile.GetPath()->GetGrid()->GetIDs()[i])
+        if (startNode->id == hostile.GetPath()->GetGrid()->GetIDs()[i])
             hostile.pathIndex = i;
     }
     //hostile.pathIndex = node->id;
@@ -169,10 +175,21 @@ void HuntingState::Enter(HostileNPC& hostile)
 
 void HuntingState::Update(HostileNPC& hostile)
 {
+    if (Vector3::Distance(hostile.GetPosition(), hostile.assignedCampPos) > hostile.campCutOff)
+    {
+        hostile.SetState(ShootingState::GetInstance());
+        if (hostile.distanceToPlayer > hostile.viewDistance)
+        {
+            hostile.SetState(MovingState::GetInstance());
+        }
+        return;
+    }
+
+
     Vector3 moveDirection;
     Vector3 aimDir;// = hostile.GetPlayer()->GetPosition() + Vector3(0.f, 4.5f, 0.f) - hostile.GetPosition();
 
-    if (Vector3::Distance(hostile.GetPosition(), hostile.GetPlayer()->GetPosition()) > 40.0f)
+    if (Vector3::Distance(hostile.GetPosition(), hostile.GetPlayer()->GetPosition()) > hostile.viewDistance/1.4f)
     {
 
         if (hostile.pathIndex < hostile.path.size())
@@ -189,14 +206,16 @@ void HuntingState::Update(HostileNPC& hostile)
         else
         {
             // find a new path here
-            hostile.SetState(IdlingState::GetInstance());
+            PrintS("at target node, checking around: SHOOTING");
+            hostile.SetState(ShootingState::GetInstance());
             return;
         }
     }
     else // delete path because we want to stop before collision 
     {
+        Print("too close: Shooting player");
         hostile.path.clear();
-        hostile.SetState(IdlingState::GetInstance());
+        hostile.SetState(ShootingState::GetInstance());
         return;
     }
     float additionalRadians = 0;
@@ -238,39 +257,22 @@ void HuntingState::Exit(HostileNPC& hostile)
     hostile.path.clear();
 }
 
-NPCState& HuntingState::GetInstance()
-{
-    static HuntingState singleton;
-    return singleton;
-}
-
 //-----------------SHOOTING STATE------------------//
 
 void ShootingState::Enter(HostileNPC& hostile)
 {
     this->combatStyle = CombatStyle::consistantDelay;
-
 }
 
 void ShootingState::Update(HostileNPC& hostile)
 {
-    // hostile.state = &NPCState::shooting;
-         // This stops multiple instances of this class from shooting at once. All instances of the same class has the same static variable... 
-     // static float lastClick = 0;
-
-    if ((hostile.GetPosition() - hostile.targetPosition).Length() >= 3.f && hostile.distanceToPlayer > hostile.viewDistance)
+    if (hostile.distanceToPlayer > hostile.viewDistance)
     {
-        PrintS("CHANGED FROM SHOOT -> MOVING");
-        hostile.currentState = &MovingState::GetInstance();
+        PrintS("CHANGED FROM SHOOT -> HUNTING");
+        hostile.SetState(HuntingState::GetInstance());
         hostile.SetRotation(hostile.originalRotation);
         return;
     }
-    if ((hostile.GetPosition() - hostile.targetPosition).Length() < 3.f && hostile.distanceToPlayer > hostile.viewDistance)
-    {
-        PrintS("CHANGED FROM SHOOT -> MOVING");
-        hostile.currentState = &IdlingState::GetInstance();
-        return;
-    } 
 
     SwapCombatStyle(CombatStyle::consistantDelay);
     Vector3 aimDir = hostile.GetPlayer()->GetPosition() - hostile.GetPosition();
@@ -320,29 +322,11 @@ void ShootingState::Update(HostileNPC& hostile)
             PrintS("SHOT");
             hostile.lastShot = Time::Get();
         }
-        else if (Time::Get() - hostile.lastShot > 3 && combatStyle == CombatStyle::wideArrow)
-        {
-            float arrowWidth = PI / 32.f;
-            Audio::StartEffect("Fire.wav");
-            hostile.GetArrowHandler().AddArrow(aimDir, hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
-            hostile.GetArrowHandler().AddArrow(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(arrowWidth)), hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant + arrowWidth, 0 });
-            hostile.GetArrowHandler().AddArrow(DirectX::XMVector3Transform(aimDir, DirectX::XMMatrixRotationY(-arrowWidth)), hostile.GetPosition(), { PI_DIV2 - movementXRadiant, movementYRadiant - arrowWidth, 0 });
-
-            DirectX::XMMatrixRotationX(-arrowWidth);
-            hostile.lastShot = Time::Get();
-
-        }
     }
 }
 
 void ShootingState::Exit(HostileNPC& hostile)
 {
-}
-
-NPCState& ShootingState::GetInstance()
-{
-    static ShootingState singleton;
-    return singleton;
 }
 
 //----------------IDLING STATE----------------//
@@ -354,20 +338,21 @@ void IdlingState::Enter(HostileNPC& hostile)
 
 void IdlingState::Update(HostileNPC& hostile)
 {
-    if (hostile.distanceToPlayer < 60 )
+
+    if (Vector3::Distance(hostile.GetPlayer()->GetPosition(), hostile.assignedCampPos) < hostile.campCutOff + 40)
+    {
+        PrintS("CHANGED FROM IDLE -> MOVING");
+        // hostile.currentState = &MovingState::GetInstance();
+         //hostile.SetRotation(hostile.originalRotation);
+        hostile.SetState(HuntingState::GetInstance());
+        return;
+    }
+    if (hostile.distanceToPlayer < hostile.viewDistance - 30.0f )
     {
         PrintS("CHANGED FROM IDLE -> SHOOT");
         Audio::StartEffect("BarbNoticed.wav");
         hostile.SetState(ShootingState::GetInstance());
         //hostile.currentState = &ShootingState::GetInstance();
-        return;
-    }
-    if (hostile.distanceToPlayer < 100)
-    {
-        PrintS("CHANGED FROM IDLE -> MOVING");
-       // hostile.currentState = &MovingState::GetInstance();
-        hostile.SetRotation(hostile.originalRotation);
-        hostile.SetState(MovingState::GetInstance());
         return;
     }
 }
@@ -376,10 +361,94 @@ void IdlingState::Exit(HostileNPC& hostile)
 {
 }
 
-NPCState& IdlingState::GetInstance()
+//------------GUARD STATE------------//
+
+void GuardState::Enter(HostileNPC& hostile)
 {
-    static IdlingState singleton;
-    return singleton;
-    // TODO: insert return statement here
+    this->combatStyle = CombatStyle::consistantDelay;
+
 }
 
+void GuardState::Update(HostileNPC& hostile)
+{
+    SwapCombatStyle(CombatStyle::consistantDelay);
+    Vector3 aimDir = hostile.GetPlayer()->GetPosition() - hostile.GetPosition();
+
+    if (aimDir.Length() <= enemyShootDetectionRadius)
+    {
+
+        aimDir.Normalize();
+        shootPatternIndex = ((shootPatternIndex++) % 3);
+        float additionalRadians = 0;
+
+        Vector3 yRadiantVecReference;
+        float aimDirXIgnoranceLevel = 0.2f;
+
+        if (aimDir.x > -aimDirXIgnoranceLevel && aimDir.x < aimDirXIgnoranceLevel)
+        {
+            if (aimDir.z < 0)
+            {
+                yRadiantVecReference = { 1, 0, 0 };
+                additionalRadians = PI_DIV2;
+            }
+            else if (aimDir.z > 0)
+            {
+                yRadiantVecReference = { -1, 0, 0 };
+                additionalRadians = -PI_DIV2;
+            }
+        }
+        else if (aimDir.x > 0)
+        {
+            yRadiantVecReference = { 0, 0, 1 };
+            additionalRadians = 0;
+        }
+        else
+        {
+            yRadiantVecReference = { 0, 0, -1 };
+            additionalRadians = PI;
+        }
+        movementYRadiant = additionalRadians + acos(aimDir.Dot(yRadiantVecReference) / aimDir.Length());
+        movementXRadiant = acos(aimDir.Dot(Vector3(0, 1, 0)) / aimDir.Length());
+
+        hostile.SetRotation({ 0, movementYRadiant, 0 });
+
+        if (Time::Get() - hostile.lastShot > shootDeelayPattern[shootPatternIndex] && combatStyle != CombatStyle::wideArrow) // CURRENTLY THE ONLY WORKING MODE...
+        {
+            hostile.GetArrowHandler().AddArrow(aimDir, hostile.GetPosition() + Vector3(0, 6, 0), { PI_DIV2 - movementXRadiant, movementYRadiant, 0 });
+            Audio::StartEffect("Fire.wav");
+            PrintS("SHOT");
+            hostile.lastShot = Time::Get();
+        }
+    }
+}
+
+void GuardState::Exit(HostileNPC& hostile)
+{
+}
+
+// GetInstance of states
+
+NPCState& IdlingState::GetInstance(){
+    static IdlingState singleton;
+    return singleton;
+}
+
+NPCState& MovingState::GetInstance(){
+    static MovingState singleton;
+    return singleton;
+}
+
+NPCState& ShootingState::GetInstance(){
+    static ShootingState singleton;
+    return singleton;
+}
+
+NPCState& HuntingState::GetInstance(){
+    static HuntingState singleton;
+    return singleton;
+}
+
+NPCState& GuardState::GetInstance(){
+    static GuardState singleton;
+    return singleton;
+}
