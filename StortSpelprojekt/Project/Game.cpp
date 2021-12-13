@@ -944,7 +944,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[0]->SetRotation(0, -DirectX::XM_PI, 0);
 	buildings[0]->SetScale(5.85);
 	buildings[0]->MoveCollider({ 10, 0, 2 });
-	buildings[0]->SetColliderRadius(20.0f);
+	buildings[0]->SetColliderRadius(15.0f);
 	buildings[0]->SetRequirements(5, 5, 10, 10);
 
 	std::string meshNamesTent[] = { "ArcherTent1", "ArcherTent2", "ArcherTent3" };
@@ -952,7 +952,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[1] = std::make_shared<Building>(meshNamesTent, materialNamesTent, "ArcherTent", Vector3{ 128.86f, 18.12f, -643.05f }, scene, "tentSmoke.ps");
 	buildings[1]->SetRotation(0, -DirectX::XM_PIDIV4, 0);
 	buildings[1]->SetScale(1.566);
-	buildings[1]->SetColliderRadius(17.0f);
+	buildings[1]->SetColliderRadius(12.0f);
 	buildings[1]->SetRequirements(5, 5, 10, 10);
 
 	std::string meshNamesBS[] = { "BSLevel1", "BSLevel2", "BSLevel3" };
@@ -961,7 +961,7 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	buildings[2]->SetRotation(0, 0, 0);
 	buildings[2]->SetScale(1.776);
 	buildings[2]->MoveCollider({ 13, 0, 0 });
-	buildings[2]->SetColliderRadius(20.0f);
+	buildings[2]->SetColliderRadius(18.0f);
 	buildings[2]->SetRequirements(5, 5, 10, 10);
 
 	scene.AddDrawable("FarmHouse", buildings[0]);
