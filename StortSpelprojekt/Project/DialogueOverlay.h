@@ -15,7 +15,7 @@ private:
 	float speed = 0;
 	const float holdSpeed = 1000;
 	const float regularSpeed = 5;
-	const float timeBetweenChars = 0.1f;
+	const float timeBetweenChars = 0.02f;
 	float timeSinceChar = 0.0f;
 	UINT numCharacters = 0;
 

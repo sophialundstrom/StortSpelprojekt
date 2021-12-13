@@ -91,7 +91,7 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	{
 		// CONTINUE
-		menuCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "Continue", "Continue.png", 1.f, 1.0f, true, false);
+		//menuCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "Continue", "Continue.png", 1.f, 1.0f, true, false);
 		/*menuCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f, true, false);
 		auto image = menuCanvas->GetImage("Continue");
 		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "ContinueButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringContinue(); });*/
