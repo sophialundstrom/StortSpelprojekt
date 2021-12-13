@@ -17,11 +17,14 @@ std::string GetNthString(const std::string& line, UINT n)
 }
 
 ParticleSystem::ParticleSystem(const std::string& file, bool preview)
-	:maxParticles(0), timeBetweenParticles(0), particlesLifetime(0), minVelocity(0), maxVelocity(0), size(0), particleExtents(0, 0), position(0, 0, 0), type(EmitterType::SPHERE),
+	:maxParticles(0), timeBetweenParticles(0), particlesLifetime(0), minVelocity(0), maxVelocity(0), size(0), particleExtents(0, 0), type(EmitterType::SPHERE),
 	timeSinceLastParticle(0), particleCount(0)
 {
 	std::string path = file;
 	std::string line = "";
+
+	this->position = { 0.0f, 0.0f, 0.0f };
+	this->particleDirection = true;
 
 	if (file == "default.ps" || file.find("\\") == std::string::npos)
 		path = FileSystem::ProjectDirectory::path + "\\ParticleSystems\\" + file;
@@ -81,9 +84,10 @@ ParticleSystem::ParticleSystem(const std::string& file, bool preview)
 }
 
 ParticleSystem::ParticleSystem(unsigned int maxParticles, float timeBetweenParticles, float particlesLifetime, float minVelocity, float maxVelocity, float size, Vector2 particleExtents, Vector3 position, EmitterType type)
-	:maxParticles(maxParticles), size(size), position(position), maxVelocity(maxVelocity), minVelocity(minVelocity), particleExtents(particleExtents),
+	:maxParticles(maxParticles), size(size), maxVelocity(maxVelocity), minVelocity(minVelocity), particleExtents(particleExtents),
 	timeBetweenParticles(timeBetweenParticles), particlesLifetime(particlesLifetime), type(type), timeSinceLastParticle(0), particleCount(0)
 {
+	this->position = { 0.0f, 0.0f, 0.0f };
 	CreateDynamicVertexBuffer(vertexBuffer, sizeof(Particle), sizeof(Particle) * maxParticles);
 }
 
@@ -129,12 +133,27 @@ void ParticleSystem::Update()
 
 			case EmitterType::CUBE:
 			{
-				newParticle.direction = { 0.0f, 1.0f, 0.0f };
-				//newParticle.color = { 55.0f / 255.0f, 71.0f / 255.0f, 75.0f / 255.0f };
+				if (particleDirection)
+				{
+					newParticle.direction = { 0.0f, 1.0f, 0.0f };
+					//newParticle.color = { 55.0f / 255.0f, 71.0f / 255.0f, 75.0f / 255.0f };
 
-				newParticle.position.x = Random::Real(position.x - width / 2.0f, position.x + width / 2.0f);
-				newParticle.position.z = Random::Real(position.z - depth / 2.0f, position.z + depth / 2.0f);
-				newParticle.position.y = position.y;
+					newParticle.position.x = Random::Real(position.x - width / 2.0f, position.x + width / 2.0f);
+					newParticle.position.z = Random::Real(position.z - depth / 2.0f, position.z + depth / 2.0f);
+					newParticle.position.y = position.y;
+				}
+				else if (!particleDirection)
+				{
+					newParticle.direction = { 0.0f, -1.0f, 0.0f };
+					//newParticle.color = { 55.0f / 255.0f, 71.0f / 255.0f, 75.0f / 255.0f };
+
+					newParticle.position.x = Random::Real(position.x - width / 2.0f, position.x + width / 2.0f);
+					newParticle.position.z = Random::Real(position.z - depth / 2.0f, position.z + depth / 2.0f);
+					newParticle.position.y = position.y;
+				}
+
+					
+
 				break;
 			}
 
@@ -180,7 +199,24 @@ void ParticleSystem::Update()
 			}
 
 			newParticle.velocity = Random::Real(minVelocity, maxVelocity);
+			newParticle.useAlpha = useAlpha;
+			newParticle.useOpacity = useOpacity;
 
+			if (scaling)
+			{
+				newParticle.scalingOverTime = scaleOverTime;
+			}
+
+			if (rotating)
+			{
+				newParticle.rotationSpeed = Random::Real(minRotationSpeed, maxRotationSpeed);
+				auto rotDir = Random::Integer(0,1);
+				if (rotDir == 0)
+					newParticle.rotationDir = -1;
+				else
+					newParticle.rotationDir = 1;
+			}
+			
 			particles.push_back(newParticle);
 			particleCount++;
 		}

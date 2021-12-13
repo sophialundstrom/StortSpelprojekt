@@ -16,10 +16,10 @@ class Building;
 struct Stats
 {
 	UINT barbariansKilled = 0;
-	float movementSpeed = 10.0f;
-	float sprintSpeed = 110.0f;
-	UINT maxHealthPoints = 1;
-	UINT healthPoints = 1;
+	float movementSpeed = 20.0f;
+	float sprintSpeed = 60.0f;
+	UINT maxHealthPoints = 10;
+	UINT healthPoints = 10;
 	UINT level = 1;
 	float currentSpeed = movementSpeed;
 	int resist = 0;
@@ -84,6 +84,7 @@ private:
 	float minCameraDistance = 0.5f;
 	float closestColliderToCam = 9999;
 	Vector3 cameraLocationSocket = { -1.3f, 8.0, -4.f };
+	Vector3 lookDirection = {0, 0, 1};
 
 	void CalcHeight(HeightMap* heightMap);
 	float CalcHeightForCamera(HeightMap* heightMap);
@@ -117,7 +118,7 @@ public:
 
 	UINT maxArrows = 10;
 	UINT numArrows = 5;
-	void Update(HeightMap* heightMap);
+	void Update(HeightMap* heightMap, bool freeCamera);
 	ArrowHandler GetArrowHandler() { return this->arrowHandler; }
 	void TakeDamage(int x);
 	bool inCombat = false;

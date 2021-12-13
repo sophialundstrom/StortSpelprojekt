@@ -115,6 +115,54 @@ SkyBoxRenderer::SkyBoxRenderer()
 	Print("=======================================");
 }
 
+SkyBoxRenderer::SkyBoxRenderer(std::string skyBoxDayFolderName, std::string skyBoxNightFolderName)
+{
+	BuildCubeMap(skyBoxDayFolderName, dayTexture, dayTextureView);
+	BuildCubeMap(skyBoxNightFolderName, nightTexture, nightTextureView);
+
+	std::string byteCode;
+	//Shaders
+	if (!LoadShader(skyBoxVertexShader, vs_path, byteCode))
+		return;
+
+	if (!LoadShader(skyBoxPixelShader, ps_path))
+		return;
+	Print("SUCCEEDED LOADING SHADERS", "SKYBOX RENDERER");
+
+	//BUFFERS
+	CreateIndexBuffer(skyBoxIndices, BoxVolumeData::INDICES, BoxVolumeData::reversedindices);
+	CreateVertexBuffer(skyboxMesh, stride, BoxVolumeData::VERTICES * stride, BoxVolumeData::vertices);
+
+	CreateBuffer(matricesBuf, sizeof(Matrix));
+	CreateBuffer(fadeBuffer, sizeof(TransitionProperties));
+
+	//INPUT LAYOUT
+	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
+	{
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0}
+	};
+
+	HRESULT hr = Graphics::Inst().GetDevice().CreateInputLayout(inputDesc, ARRAYSIZE(inputDesc), byteCode.c_str(), byteCode.length(), &inputLayout);
+	if FAILED(hr)
+	{
+		Print("FAILED TO CREATE INPUT LAYOUT", "SKYBOX RENDERER");
+		return;
+	}
+
+	//DepthStencilState
+	D3D11_DEPTH_STENCIL_DESC dsDesc = CD3D11_DEPTH_STENCIL_DESC{ CD3D11_DEFAULT{} };
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	Graphics::Inst().GetDevice().CreateDepthStencilState(&dsDesc, &skyboxDepthStencil);
+
+	Graphics::Inst();
+
+	Print("SUCCEEDED TO CREATE INPUT LAYOUT", "SKYBOX RENDERER");
+
+	Print("SUCCEEDED TO INITIALIZE SKYBOX RENDERER");
+	Print("=======================================");
+}
+
 SkyBoxRenderer::~SkyBoxRenderer()
 {
 	dayTexture->Release();

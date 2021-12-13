@@ -21,6 +21,7 @@ private:
 	void BuildCubeMap(std::string skyboxFolderName, ID3D11Texture2D*& texture, ID3D11ShaderResourceView*& textureView);
 public:
 	SkyBoxRenderer();
+	SkyBoxRenderer(std::string skyBoxDayFolderName, std::string skyBoxNightFolderName);
 	~SkyBoxRenderer();
 	void PullDayNightSlider(float newValue);
 	virtual void Render() override;
@@ -48,7 +49,7 @@ public:
 	const std::string ps_path = "../x64/Debug/skyBoxPixelShader.cso";
 #else
 	const std::string vs_path = "../x64/Release/skyBoxVertexShader.cso";
-	const std::string ps_path = "../x64/Debug/skyBoxPixelShader.cso";
+	const std::string ps_path = "../x64/Release/skyBoxPixelShader.cso";
 #endif
 	const std::string skyboxTexturePath = "Skybox/";
 

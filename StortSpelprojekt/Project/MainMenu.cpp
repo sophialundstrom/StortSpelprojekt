@@ -92,9 +92,9 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 	{
 		// CONTINUE
 		menuCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "Continue", "Continue.png", 1.f, 1.0f, true, false);
-		menuCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f, true, false);
+		/*menuCanvas->AddImage({ xPos, clientHeight / 2.0f - 75 }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f, true, false);
 		auto image = menuCanvas->GetImage("Continue");
-		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "ContinueButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringContinue(); });
+		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "ContinueButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Play(); }, [this] {HoveringContinue(); });*/
 	}
 
 	{
@@ -131,8 +131,8 @@ MainMenu::MainMenu(UINT clientWidth, UINT clientHeight, HWND window)
 
 	{
 		// FORM
-		menuCanvas->AddImage({ clientWidth - 250.f, clientHeight / 2.0f + 450 }, "Form", "Form.png", 1.0f, 1.0f, true, false);
-		menuCanvas->AddImage({ clientWidth - 250.f, clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.0f, 1.0f, true, false);
+		menuCanvas->AddImage({ clientWidth - 200.0f, (float)clientHeight - 100 }, "Form", "Form.png", 1.0f, 1.0f, true);
+		menuCanvas->AddImage({ clientWidth - 200.0f, (float)clientHeight - 100 }, "FormLeaves", "FormLeaves.png", 1.0f, 1.0f, true);
 		auto image = menuCanvas->GetImage("Form");
 		menuCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "FormButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Form(); }, [this] {HoveringForm(); });
 	}
@@ -212,7 +212,7 @@ MainMenu::~MainMenu()
 {
 	for (auto& [name, canvas] : canvases)
 		delete canvas;
-
+	Resources::Inst().Clear();
 }
 
 void MainMenu::Initialize()
@@ -267,7 +267,7 @@ APPSTATE MainMenu::Run()
 {
 	// LEAVES
 	canvases["MAIN MENU"]->GetImage("NewGameLeaves")->Hide();
-	canvases["MAIN MENU"]->GetImage("ContinueLeaves")->Hide();
+	//canvases["MAIN MENU"]->GetImage("ContinueLeaves")->Hide();
 	canvases["MAIN MENU"]->GetImage("QuitLeaves")->Hide();
 	canvases["MAIN MENU"]->GetImage("HowToPlayLeaves")->Hide();
 	canvases["MAIN MENU"]->GetImage("FormLeaves")->Hide();

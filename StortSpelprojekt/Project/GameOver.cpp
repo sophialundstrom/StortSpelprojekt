@@ -96,41 +96,41 @@ GameOver::GameOver(UINT clientWidth, UINT clientHeight, HWND window)
 
 	float xPos = 75;
 	auto gameOverCanvas = std::make_shared<Canvas>();
-	gameOverCanvas->AddImage({ clientWidth / 2.0f, 150.0f }, "Form", "Form.png", 1.f, true, true);
+	gameOverCanvas->AddImage({ clientWidth / 2.0f, 150.0f }, "GameOver", "GameOver.png", 1.f, true, true);
 
 	{
 		//FORM
-		gameOverCanvas->AddImage({ clientWidth - 250.0f, (float)clientHeight / 2.0f + 450}, "Form", "Form.png", 1.f, 1.0f, true, false);
-		gameOverCanvas->AddImage({ clientWidth - 250.0f, (float)clientHeight / 2.0f + 450 }, "FormLeaves", "FormLeaves.png", 1.f, 1.0f, true, false);
+		gameOverCanvas->AddImage({ clientWidth - 200.0f, (float)clientHeight - 100 }, "Form", "Form.png");
+		gameOverCanvas->AddImage({ clientWidth - 200.0f, (float)clientHeight - 100 }, "FormLeaves", "FormLeaves.png");
 		auto image = gameOverCanvas->GetImage("Form");
 		gameOverCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "FormButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Form(); }, [this] { HoveringForm(); });
 
 	}
 	{
 		// QUIT
-		gameOverCanvas->AddImage({ xPos, (float)clientHeight / 2.0f + 150 }, "Quit", "Quit.png", 1.f, 1.0f, true, false);
-		gameOverCanvas->AddImage({ xPos, (float)clientHeight / 2.0f + 150 }, "QuitLeaves", "QuitLeaves.png", 1.f, 1.0f, true, false);
+		gameOverCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight / 2.0f + 150 }, "Quit", "Quit.png");
+		gameOverCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight / 2.0f + 150 }, "QuitLeaves", "QuitLeaves.png");
 		auto image = gameOverCanvas->GetImage("Quit");
  		gameOverCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "QuitButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { QuitGame(); }, [this] { HoveringQuit(); });
 	}
 	{
 		// QUIT
-		gameOverCanvas->AddImage({ xPos, (float)clientHeight / 2.0f + 75.0f }, "MainMenu", "MainMenu.png", 0.95f, 1.0f, true, false);
-		gameOverCanvas->AddImage({ xPos, (float)clientHeight / 2.0f + 75.0f }, "MainMenuLeaves", "MainMenuLeaves.png", 0.95f, 1.0f, true, false);
+		gameOverCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight / 2.0f + 50.0f }, "MainMenu", "MainMenu.png", 0.95f);
+		gameOverCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight / 2.0f + 50.0f }, "MainMenuLeaves", "MainMenuLeaves.png", 0.95f);
 		auto image = gameOverCanvas->GetImage("MainMenu");
 		gameOverCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "MainMenuButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { MainMenu(); }, [this] { HoveringMainMenu(); });
 	}
-	{
-		gameOverCanvas->AddImage({ xPos, (float)clientHeight / 2.0f }, "Continue", "Continue.png", 1.f, 1.0f, true, false);
-		gameOverCanvas->AddImage({ xPos, (float)clientHeight / 2.0f }, "ContinueLeaves", "ContinueLeaves.png", 1.f, 1.0f, true, false);
-		auto image = gameOverCanvas->GetImage("Continue");
-		gameOverCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "ContinueButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Continue(); }, [this] { HoveringContinue(); });
-	}
-	{
-		gameOverCanvas->AddImage({ 25, clientHeight / 2.0f }, "MenuStick", "MenuStick.png", 0.8f, 1.0f, true, true);
-		//gameOverCanvas->AddImage({ clientWidth - 25.0f, clientHeight / 2.0f }, "MenuStick2", "MenuStick.png", -0.8f, 1.0f, true, true);
-		gameOverCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight / 7.0f }, "GameOver", "GameOver.png", 0.8f, 1.0f, true, true);
-	}
+	//{
+	//	gameOverCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight / 2.0f }, "Continue", "Continue.png");
+	//	gameOverCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight / 2.0f }, "ContinueLeaves", "ContinueLeaves.png");
+	//	auto image = gameOverCanvas->GetImage("Continue");
+	//	gameOverCanvas->AddButton({ image->GetLeftSidePosition().x + image->GetWidth() / 2, image->GetLeftSidePosition().y + image->GetHeight() / 2 }, "ContinueButton", image->GetWidth(), image->GetHeight(), UI::COLOR::GRAY, [this] { Continue(); }, [this] { HoveringContinue(); });
+	//}
+	//{
+	//	gameOverCanvas->AddImage({ 25, clientHeight / 2.0f }, "MenuStick", "MenuStick.png", 0.8f, 1.0f, true, true);
+	//	//gameOverCanvas->AddImage({ clientWidth - 25.0f, clientHeight / 2.0f }, "MenuStick2", "MenuStick.png", -0.8f, 1.0f, true, true);
+	//	gameOverCanvas->AddImage({ clientWidth / 2.0f, (float)clientHeight / 7.0f }, "GameOver", "GameOver.png", 0.8f, 1.0f, true, true);
+	//}
 	canvases["GAMEOVER"] = gameOverCanvas;
 	currentCanvas = gameOverCanvas;
 
@@ -235,7 +235,7 @@ APPSTATE GameOver::Run()
 	canvases["GAMEOVER"]->GetImage("FormLeaves")->Hide();
 	canvases["GAMEOVER"]->GetImage("QuitLeaves")->Hide();
 	canvases["GAMEOVER"]->GetImage("MainMenuLeaves")->Hide();
-	canvases["GAMEOVER"]->GetImage("ContinueLeaves")->Hide();
+	//canvases["GAMEOVER"]->GetImage("ContinueLeaves")->Hide();
 	canvases["QUIT"]->GetImage("YesLeaves")->Hide();
 	canvases["QUIT"]->GetImage("NoLeaves")->Hide();
 	canvases["MAINMENU"]->GetImage("NoLeaves")->Hide();

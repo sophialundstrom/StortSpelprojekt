@@ -44,6 +44,11 @@ private:
     bool updateFrustrum = true;
     int cullingProfile = 0;
 
+    //CameraSettnings
+    bool freeCamera = false;
+    bool cullFromPlayer = false;
+    bool showUI = true;
+
     //DayNightCycleConfig
     float worldClockTime = 0;
     float dayLength = 300;
@@ -130,6 +135,7 @@ private:
 
     void SpawnInvasion();
 
+    void HandleCamera();
     void UpdateAndHandleLoot();
     void CheckNearbyCollision();
     void CheckSaveStationCollision();

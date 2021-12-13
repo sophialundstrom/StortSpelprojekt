@@ -17,6 +17,17 @@ private:
 	std::map<std::string, Line> lines;
 	ID2D1SolidColorBrush* lineBrush;
 
+	struct BuildingRequirements
+	{
+		Text* requirements;
+		Text* stickRequirement;
+		Text* stoneRequirement;
+		Text* upgrade;
+
+		void Show() { requirements->Show(); stickRequirement->Show(); stoneRequirement->Show(); upgrade->Show(); }
+		void Hide() { requirements->Hide(); stickRequirement->Hide(); stoneRequirement->Hide(); upgrade->Hide(); }
+	} buildingRequirements;
+
 	void ClearQuests();
 public:
 	InGameOverlay();
@@ -27,7 +38,9 @@ public:
 	void UpdateArrowCounter(UINT amount);
 	void UpdateHealth(UINT amount);
 	void UpdateFPS(UINT FPS);
+
 	void ShowInteract();
+	void ShowUpgrade(Vector2 requirements, Vector2 requirementsCompleted, const std::string& completedCustomString = "");
 
 	// Inherited via Overlay
 	virtual void Render() override;

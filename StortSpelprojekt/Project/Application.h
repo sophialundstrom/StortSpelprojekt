@@ -32,7 +32,7 @@ public:
 		
 		graphics = std::make_unique<Graphics>(Window::ClientWidth(), Window::ClientHeight(), Window::GetHWND(), false);
 
-		RunLoadingScreen();
+		//RunLoadingScreen();
 
 		shaderData = std::make_unique<ShaderData>();
 
@@ -60,7 +60,7 @@ public:
 	int Run()
 	{
 		Timer timer;
-		float FPS = 60.0f;
+		float FPS = 144.0f;
 		float tickInterval = 1.0f / FPS;
 
 		MSG msg = {};
