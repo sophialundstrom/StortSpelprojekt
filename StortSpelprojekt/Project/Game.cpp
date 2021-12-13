@@ -595,10 +595,10 @@ void Game::AddBarbarianCamps()
 
 void Game::SpawnInvasion()
 {
-	camps[BarbarianCamp::Location::Village]->Reset();
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 7, 56, -398 }, hostiles, player, CombatStyle::consistantDelay, { 2, 20, -579 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 73, 50, -422 }, hostiles, player, CombatStyle::consistantDelay, { 57, 21, -574 });
-	camps[BarbarianCamp::Location::Village]->AddBarbarian("BarbarianAnim", { 293, 22, -628 }, hostiles, player, CombatStyle::consistantDelay, { 122, 20, -624 });
+	camps[CampData::Location::Village]->Reset();
+	camps[CampData::Location::Village]->AddBarbarian("BarbarianAnim", { 7, 56, -398 }, hostiles, player, CombatStyle::consistantDelay, { 2, 20, -579 }, pathing);
+	camps[CampData::Location::Village]->AddBarbarian("BarbarianAnim", { 73, 50, -422 }, hostiles, player, CombatStyle::consistantDelay, { 57, 21, -574 }, pathing);
+	camps[CampData::Location::Village]->AddBarbarian("BarbarianAnim", { 293, 22, -628 }, hostiles, player, CombatStyle::consistantDelay, { 122, 20, -624 }, pathing);
 }
 
 void Game::CheckTargetCollision()
@@ -1234,7 +1234,7 @@ APPSTATE Game::Run()
 
 	Render();
 
-	if (camps[BarbarianCamp::Location::North]->NumDead() == camps[BarbarianCamp::Location::North]->NumBarbarians())
+	if (camps[CampData::Location::North]->NumDead() == camps[CampData::Location::North]->NumBarbarians())
 		done = true;
 
 	static float counter = 0;
