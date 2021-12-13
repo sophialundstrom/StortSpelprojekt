@@ -44,6 +44,11 @@ private:
     bool updateFrustrum = true;
     int cullingProfile = 0;
 
+    //CameraSettnings
+    bool freeCamera = false;
+    bool cullFromPlayer = false;
+    bool showUI = true;
+
     //DayNightCycleConfig
     float worldClockTime = 0;
     float dayLength = 300;
@@ -62,7 +67,7 @@ private:
     float lastStateChange = 0.0f;
 
     //-----TEMP-----//
-    Pathfinding pathing;
+    std::shared_ptr<Pathfinding> pathing;
 
     SaveStation saveStations[2];
 
@@ -86,7 +91,7 @@ private:
 
     std::shared_ptr<Building> buildings[3];
 
-    std::map<BarbarianCamp::Location, BarbarianCamp*> camps;
+    std::map<CampData::Location, BarbarianCamp*> camps;
 
     std::vector<std::shared_ptr<Target>> targets;
 
@@ -130,6 +135,7 @@ private:
 
     void SpawnInvasion();
 
+    void HandleCamera();
     void UpdateAndHandleLoot();
     void CheckNearbyCollision();
     void CheckSaveStationCollision();

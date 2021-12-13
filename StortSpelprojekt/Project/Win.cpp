@@ -104,6 +104,8 @@ Win::Win(UINT clientWidth, UINT clientHeight, HWND window)
 Win::~Win()
 {
 	RND.ShutDown();
+	scene.Clear();
+	Resources::Inst().Clear();
 }
 
 void Win::Render()

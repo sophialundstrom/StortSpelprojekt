@@ -4,6 +4,7 @@
 #include "ApplicationState.h"
 #include "ImGui.h"
 #include "WaterRenderer.h"
+#include "Pathfinding.h"
 
 class LevelEditor : public Editor, public ApplicationState
 {
@@ -74,6 +75,21 @@ private:
 	void FlipRenderingDivider();
 	void ShowVolumes();
 	void ShowTerrain();
+
+private:
+	std::ofstream out;
+	std::vector<std::string> nodes;
+	std::vector<std::string> edges;
+
+	std::string n;
+	std::string e;
+	std::string lastSelectedObject;
+	void AddNode();
+	void AddEdge();
+	void test();
+	std::ifstream in;
+	void LoadNodes();
+	Pathfinding* path;
 	void ShowShadows();
 	void ShowSkybox();
 	void ShowPerformance();

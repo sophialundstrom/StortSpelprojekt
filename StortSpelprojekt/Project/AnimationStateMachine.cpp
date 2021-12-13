@@ -104,48 +104,7 @@ void AnimationStateMachine::Update(Skeleton& skeleton, const aiScene* scene, Cam
 			if (pitch > maxMin)
 				pitch = maxMin;
 
-			Quaternion q = modelRotation;
-
-			auto rotYaw = atan2(2 * q.y * q.w - 2 * q.x * q.z, 1 - 2 * q.y * q.y - 2 * q.z * q.z);
-			rotYaw = (rotYaw < 0) ? (rotYaw + PI * 2) : rotYaw;
-
-			auto yaw = 0.0f;// camera->GetJaw();
-
-			//if (rotYaw > yaw)
-			//{
-			//	Print("PLAYER > CAMERA");
-			//	if (rotYaw - yaw > PI_DIV4)
-			//	{
-			//		Print("SET YAW TO +");
-			//		yaw = PI_DIV4;
-			//	}
-			//		
-			//}
-
-			//else
-			//{
-			//	Print("PLAYER < CAMERA");
-
-			//	if (yaw -  rotYaw > PI_DIV4)
-			//	{
-			//		Print("SET YAW TO -");
-			//		yaw = PI_DIV4;
-			//	}
-			//}
-
-			////if (abs(rotYaw - yaw) > PI_DIV4)
-			////{
-			////	Print("TOO FAR");
-
-			////	if (yaw > rotYaw)
-			////		yaw = -PI_DIV4;
-			////	else
-			////		yaw = PI_DIV4;
-			////}
-
-			//yaw *= 0.5f;
-
-			skeleton.PostTransformNodes(scene->mRootNode->FindNode(rotationJoint.c_str()), Matrix::CreateFromYawPitchRoll(yaw, pitch, 0.0f), matrices);
+			skeleton.PostTransformNodes(scene->mRootNode->FindNode(rotationJoint.c_str()), Matrix::CreateFromYawPitchRoll(0.0f, pitch, 0.0f), matrices);
 		}
 		
 		skeleton.transforms.emplace_back(matrix);
@@ -157,12 +116,14 @@ void AnimationStateMachine::Update(Skeleton& skeleton, const aiScene* scene, Cam
 	UpdateBuffer(structuredBuffer, finalTransforms.data(), (UINT)finalTransforms.size() * sizeof(Matrix));
 }
 
-void AnimationStateMachine::PlayAnimation(const std::string& name)
+void AnimationStateMachine::PlayAnimation(const std::string& name, float playBackSpeed)
 {
 	auto animation = animator->animations[name];
 	if (!animation)
 		return;
-	
+
+	animation->playBackSpeed = playBackSpeed;
+
 	bool found = false;
 	for (UINT i = 0; i < (UINT)queuedAnimations.size(); ++i)
 	{
@@ -187,8 +148,6 @@ void AnimationStateMachine::PlayAnimation(const std::string& name)
 
 		animation->active = true;
 		animation->repeat = true;
-
-		//Print("PUSHED ANIMATION " + name);
 
 		queuedAnimations.push_back(clip);
 	}

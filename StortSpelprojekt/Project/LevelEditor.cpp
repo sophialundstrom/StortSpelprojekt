@@ -5,6 +5,70 @@
 #include "Renderers.h"
 #include <dxgi.h>
 
+void LevelEditor::AddNode()
+{
+	out << "node1\t0.2\t0.4\t0.8\n\n";
+}
+
+void LevelEditor::AddEdge()
+{
+	out << "node1\tnode2";
+}
+
+void LevelEditor::test()
+{
+	auto filePath = FileSystem::ProjectDirectory::path;
+	out.open(filePath + "\\Test.txt");
+	AddNode();
+	AddEdge();
+	out.close();
+	OutputDebugStringA("done");
+}
+
+void LevelEditor::LoadNodes()
+{
+	std::map<std::string, std::shared_ptr<Drawable>> objects = scene.GetDrawables();
+	std::string str;
+
+	for (auto& [name, drawable] : scene.GetDrawables())
+	{
+		std::string x;
+		std::string y;
+		std::string z;
+
+
+		str.insert(0, name, 0, 5);
+		if (str == "Node1")
+		{
+			str = name;
+			x = std::to_string(drawable->GetPosition().x);
+			y = std::to_string(drawable->GetPosition().y);
+			z = std::to_string(drawable->GetPosition().z);
+
+			str += "\t" + x + "\t" + y + "\t" + z + "\n";
+
+
+			nodes.push_back(str);
+		}
+		str.clear();
+	}
+
+	//this->e.append(str);
+	str.clear();
+	for (int i = 0; i < nodes.size(); i++)
+	{
+		str += nodes[i];
+	}
+
+
+	auto filePath = FileSystem::ProjectDirectory::path;
+	out.open(filePath + "\\SaveData\\NodesReplacement.txt");
+	out << str;
+	out.close();
+	OutputDebugStringA("done");
+	std::cout << "done";
+}
+
 void LevelEditor::BindDrawables()
 {
 	for (auto& [name, drawable] : scene.GetDrawables())
@@ -139,8 +203,18 @@ void LevelEditor::DuplicateObject()
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->AddName(modelName);
 		totalPolygonCount += model->mesh.vertexCount / 3.0f;
+
+		auto selected = scene.Get<Drawable>(modelName);
+		std::string Nstr = selectedObject + "\t" + std::to_string(selected->GetPosition().x) + "\t" + std::to_string(selected->GetPosition().y) + "\t" + std::to_string(selected->GetPosition().z) + "\n";
+		this->n.append(Nstr);
+		std::string tmpStr = selectedObject;
 		selectedObject = modelName;
+
 		nrOfModels++;
+
+		std::string Estr = std::string("E") + "\t" + selectedObject + "\t" + tmpStr + "\n";
+		this->e.append(Estr);
+		Print(Nstr + "\n" + Estr);
 	}
 }
 
@@ -477,6 +551,7 @@ void LevelEditor::UpdatePerformanceLimit()
 
 void LevelEditor::Update()
 {
+
 	if (Event::LeftIsClicked() && !ImGuizmo::IsOver() && viewportPanel.Hovered())
 	{
 		auto mousePos = viewportPanel.GetMousePosition();
@@ -488,14 +563,22 @@ void LevelEditor::Update()
 			if (id > 0)
 			{
 				std::string name = scene.GetObjectNames()[id - 1];
+				//test();
 				if (name != "")
+				{
+					if(name != selectedObject)
+						lastSelectedObject = selectedObject;
+
 					UpdateToolUI(name);
+				}
 			}
 
 			if (id == 0)
 				ClearToolUI();
 		}
 	}
+
+
 
 	if (Event::KeyIsPressed('C'))
 		ClearToolUI();
@@ -506,16 +589,16 @@ void LevelEditor::Update()
 	if (Event::RightIsClicked())
 	{
 		if (Event::ReadRawDelta().y > 0)
-			scene.GetCamera()->Rotate(0, 3);
+			scene.GetCamera()->Rotate(0, 1.5f);
 
 		if (Event::ReadRawDelta().y < 0)
-			scene.GetCamera()->Rotate(0, -3);
+			scene.GetCamera()->Rotate(0, -1.5f);
 
 		if (Event::ReadRawDelta().x > 0)
-			scene.GetCamera()->Rotate(3, 0);
+			scene.GetCamera()->Rotate(1.5f, 0);
 
 		if (Event::ReadRawDelta().x < 0)
-			scene.GetCamera()->Rotate(-3, 0);
+			scene.GetCamera()->Rotate(-1.5f, 0);
 	}
 
 	if (Event::KeyIsPressed('W'))
@@ -549,7 +632,41 @@ void LevelEditor::Update()
 			else
 				DuplicateVolume();
 			lastClick = Time::Get();
+
 		}
+
+
+		if (Event::KeyIsPressed('N'))
+		{
+			auto selected = scene.Get<Drawable>(selectedObject);
+			std::string str = selectedObject + "\t" + std::to_string(selected->GetPosition().x) + "\t" + std::to_string(selected->GetPosition().y) + "\t" + std::to_string(selected->GetPosition().z) + "\n";
+			this->n.append(str);
+			lastClick = Time::Get();
+
+		}
+
+		if (Event::KeyIsPressed('E'))
+		{
+			std::string str = 'E' + "\t" + selectedObject + "\t" + lastSelectedObject + "\n";
+			this->e.append(str);
+			lastClick = Time::Get();
+
+		}
+
+		if (Event::KeyIsPressed('I'))
+		{
+			auto filePath = FileSystem::ProjectDirectory::path;
+			out.open(filePath + "\\Nodes.txt");
+			out << n;
+			out << "\n";
+			if (!e.empty())
+				out << e;
+			out.close();
+			OutputDebugStringA("done");
+			lastClick = Time::Get();
+
+		}
+
 	}
 
 	if (Event::KeyIsPressed(VK_SHIFT))
@@ -578,13 +695,20 @@ void LevelEditor::Update()
 			const int lowZ = (int)std::floor(newZPos);
 			const int highZ = (int)std::ceil(newZPos);
 			const float Zdecimal = newZPos - lowZ;
+			if (newZPos < 950 && newXPos < 950)
+			{
+				const float H1 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
+				const float H2 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
+				const float H3 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
+				const float H4 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
 
-			const float H1 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)lowZ)) * (1 - Xdecimal) * (1 - Zdecimal);
-			const float H2 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)highZ)) * Xdecimal * Zdecimal;
-			const float H3 = terrain->GetHeightMap()->data.at(Vector2((float)lowX, (float)highZ)) * (1 - Xdecimal) * Zdecimal;
-			const float H4 = terrain->GetHeightMap()->data.at(Vector2((float)highX, (float)lowZ)) * Xdecimal * (1 - Zdecimal);
+				newYPos = H1 + H2 + H3 + H4;
+			}
+			else
+			{
+				std::cout << "out of bounds" << std::endl;
+			}
 
-			newYPos = H1 + H2 + H3 + H4;
 		}
 
 		auto model = scene.Get<Drawable>(selectedObject);
@@ -876,6 +1000,8 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	gameLoader.Load("Default", scene.GetDrawables());
 	BindDrawables();
 
+	//CALL LOADPATHSTRUCTURE HERE
+	LoadNodes();
 	scene.SetCamera(PI_DIV4, float(clientWidth) / float(clientHeight), 0.1f, 10000.0f, 1.0f, 25.0f, {0, 90, 0});
 	scene.SetDirectionalLight(1000, { 1, 1, 1, 1 }, 4, 4);
 
@@ -891,7 +1017,14 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 
 	terrain = new Terrain(2);
 
+
 	UpdatePerformanceLimit();
+
+	//LoadNodes();
+	//path = new Pathfinding;
+	//path = path->PGetInstance();
+	//path->CreateGrid({ 0,0,0 });
+	//path->FindPath(Vector3(-16, 22, -565), Vector3(86, 60, -233));
 
 	(void*)Run();
 }
@@ -1093,6 +1226,8 @@ APPSTATE LevelEditor::Run()
 	Render();
 	renderTime = timer.DeltaTime();
 	timer.Start();
+
+
 
 	{
 		auto& window = windows["TOOLS"];

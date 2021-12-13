@@ -11,7 +11,7 @@ void QuestLog::LoadQuest(Quest* quest)
 		LoadQuest(child);
 }
 
-void QuestLog::Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets, std::vector<std::shared_ptr<FriendlyNPC>> frendlyNPCs)
+void QuestLog::Update(std::shared_ptr<Player> player, std::map<CampData::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets, std::vector<std::shared_ptr<FriendlyNPC>> frendlyNPCs)
 {
 	for (UINT i = 0; i < activeQuests.size(); ++i)
 	{
@@ -70,14 +70,14 @@ void QuestLog::CreateQuests()
 	q2->AddCollectObjective(Item::Type::Stone, 5);
 	quests.emplace_back(q2);
 
-	auto q3 = q2->AddChildQuest("Target Aquired");			//FIGHT THE BARBARIANS ATTACKING THE VILLAGE
+	auto q3 = q2->AddChildQuest("Target Acquired");			//FIGHT THE BARBARIANS ATTACKING THE VILLAGE
 	q3->AddTargetObjective(0);
 	q3->AddTargetObjective(1);
 	q3->AddTargetObjective(2);
 	quests.emplace_back(q3);
 
 	auto q4 = q3->AddChildQuest("Invasion!");
-	q4->AddFightObjective(BarbarianCamp::Location::Village);
+	q4->AddFightObjective(CampData::Location::Village);
 	quests.emplace_back(q4);
 
 	auto q5 = q4->AddChildQuest("Getting Acquainted");
@@ -86,7 +86,7 @@ void QuestLog::CreateQuests()
 	quests.emplace_back(q5);
 
 	auto q6 = q5->AddChildQuest("Payback");
-	q6->AddFightObjective(BarbarianCamp::Location::East);
+	q6->AddFightObjective(CampData::Location::East);
 	quests.emplace_back(q6);
 
 	//=====================================================
@@ -100,7 +100,7 @@ void QuestLog::CreateQuests()
 	quests.emplace_back(q8);
 
 	auto q9 = q8->AddChildQuest("Barbarians No Mo'");
-	q9->AddFightObjective(BarbarianCamp::Location::West);
+	q9->AddFightObjective(CampData::Location::West);
 	quests.emplace_back(q9);
 
 
@@ -115,7 +115,7 @@ void QuestLog::CreateQuests()
 	quests.emplace_back(q11);
 
 	auto q12 = q11->AddChildQuest("Bye Bye Barbarians");
-	q12->AddFightObjective(BarbarianCamp::Location::South);
+	q12->AddFightObjective(CampData::Location::South);
 	quests.emplace_back(q12);
 
 
@@ -126,7 +126,7 @@ void QuestLog::CreateQuests()
 	//SAME STUFF HERE KINDA I THIK U GET IT, IF ANY QUEST DEPENDS ON ANOTHER (CANT BE TWO) YOU HAVE TO CREATE THE FIRST ONE FIRST, 
 	//AND ALL QUESTS THAT SHOULD BE "UNLOCKED" AFTER THE ATTACK SHOULD BE CHILD OF Q3
 
-	Save("Default");
+	//Save("Default");
 
 	//ShutDown();
 
@@ -138,6 +138,8 @@ void QuestLog::ShutDown()
 {
 	for (auto quest : quests)
 		delete quest;
+	quests.clear();
+	activeQuests.clear();
 }
 
 void QuestLog::Activate(Quest* quest)

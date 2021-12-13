@@ -8,7 +8,7 @@ private:
 	static std::vector<Quest*> activeQuests;
 	static void LoadQuest(Quest* quest);
 public:
-	static void Update(std::shared_ptr<Player> player, std::map<BarbarianCamp::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets, std::vector<std::shared_ptr<FriendlyNPC>> frendlyNPCs);
+	static void Update(std::shared_ptr<Player> player, std::map<CampData::Location, BarbarianCamp*> camps, std::vector<std::shared_ptr<Target>> targets, std::vector<std::shared_ptr<FriendlyNPC>> frendlyNPCs);
 	
 	static void Save(const std::string& fileName);
 	static void Load(const std::string& fileName);

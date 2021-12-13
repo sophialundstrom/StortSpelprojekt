@@ -34,20 +34,22 @@ public:
 	Renderers() :Singleton(this) {}
 	~Renderers() { ShutDown(); }
 
-	static void InitAnimatedModelRenderer()							{ amr = new AnimatedModelRenderer(); }
-	static void InitColliderRenderer()								{ cr = new ColliderRenderer(); }
-	static void InitIDRenderer()									{ idr = new IDRenderer(); }
-	static void InitModelRenderer(bool isLit = true)				{ mr = new ModelRenderer(isLit); }
-	static void InitStaticModelRenderer(bool isLit = true)			{ smr = new ModelRenderer(isLit); }
-	static void InitParticleRenderer()								{ pr = new ParticleRenderer(); }
-	static void InitShadowRenderer()								{ sr = new ShadowRenderer(); }
-	static void InitSkeletonRenderer()								{ skr = new SkeletonRenderer(); }
-	static void InitTerrainRenderer(float tesselationAmount = 63.0f){ tr = new TerrainRenderer(tesselationAmount); }
-	static void InitVolumeRenderer()								{ vr = new VolumeRenderer(); }
-	static void InitWaterRenderer(float tesselationAmount = 63.0f)	{ wr = new WaterRenderer(tesselationAmount); }
-	static void InitInteractableRenderer()							{ ir = new InteractableRenderer(); }
-	static void InitSkyBoxRenderer()								{ sbr = new SkyBoxRenderer(); }
-	static void InitPerformanceRenderer()							{ pfr = new PerformanceRenderer(); }
+
+	static void InitAnimatedModelRenderer()																{ amr = new AnimatedModelRenderer(); }
+	static void InitColliderRenderer()																	{ cr = new ColliderRenderer(); }
+	static void InitIDRenderer()																		{ idr = new IDRenderer(); }
+	static void InitModelRenderer(bool isLit = true)													{ mr = new ModelRenderer(isLit); }
+	static void InitStaticModelRenderer(bool isLit = true)												{ smr = new ModelRenderer(isLit); }
+	static void InitParticleRenderer()																	{ pr = new ParticleRenderer(); }
+	static void InitShadowRenderer()																	{ sr = new ShadowRenderer(); }
+	static void InitSkeletonRenderer()																	{ skr = new SkeletonRenderer(); }
+	static void InitTerrainRenderer(float tesselationAmount = 63.0f)									{ tr = new TerrainRenderer(tesselationAmount); }
+	static void InitVolumeRenderer()																	{ vr = new VolumeRenderer(); }
+	static void InitWaterRenderer(float tesselationAmount = 63.0f)										{ wr = new WaterRenderer(tesselationAmount); }
+	static void InitInteractableRenderer()																{ ir = new InteractableRenderer(); }
+	static void InitSkyBoxRenderer()																	{ sbr = new SkyBoxRenderer(); }
+	static void InitSkyBoxRenderer(std::string skyBoxDayFolderName, std::string skyBoxNightFolderName)  { sbr = new SkyBoxRenderer(skyBoxDayFolderName, skyBoxNightFolderName); }
+	static void InitPerformanceRenderer() { pfr = new PerformanceRenderer(); }
 
 	static AnimatedModelRenderer* AMR() { return amr; }
 	static ColliderRenderer* CR()		{ return cr; }
@@ -62,7 +64,7 @@ public:
 	static WaterRenderer* WR()			{ return wr; }
 	static InteractableRenderer* IR()	{ return ir; }
 	static SkyBoxRenderer* SBR()		{ return sbr; }
-	static PerformanceRenderer* PFR() { return pfr; }
+	static PerformanceRenderer* PFR()	{ return pfr; }
 
 	static void Clear()
 	{

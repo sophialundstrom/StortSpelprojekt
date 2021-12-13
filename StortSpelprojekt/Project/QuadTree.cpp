@@ -40,7 +40,7 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 	drawableBounds.Extents.z *= drawable->GetScale().z;
 
 	//IF Stuff is still broken try tweak with orientation but why risk it if stuff seems to be working?
-	//drawableBounds.Orientation = drawable->GetRotation();
+	drawableBounds.Orientation = Quaternion::Concatenate(drawableBounds.Orientation, drawable->GetRotation());
 
 	bool insideLeaf = drawableBounds.Intersects(quadTreeBoundsCollider);
 
@@ -55,11 +55,19 @@ void QuadTree::InsertModel(std::shared_ptr<Drawable>& drawable)
 			}
 			else
 			{
-				if (highestY < (drawableBounds.Center.y + (drawableBounds.Extents.y * 0.5f)))
-					highestY = (drawableBounds.Center.y + (drawableBounds.Extents.y * 0.5f));
+				float sizes[] = {
+					drawableBounds.Extents.x,
+					drawableBounds.Extents.y,
+					drawableBounds.Extents.z
+				};
+				for (int i = 0; i < 3; i++)
+				{
+					if (lowestY > drawableBounds.Center.y - sizes[i])
+						lowestY = (drawableBounds.Center.y - sizes[i]);
 
-				if (lowestY > (drawableBounds.Center.y - (drawableBounds.Extents.y * 0.5f)))
-					highestY = (drawableBounds.Center.y - (drawableBounds.Extents.y * 0.5f));
+					if (highestY < drawableBounds.Center.y + sizes[i])
+						highestY = (drawableBounds.Center.y + sizes[i]);
+				}
 
 				collectedDrawables.emplace(drawable->GetName(), drawable);
 			}
@@ -171,19 +179,44 @@ void QuadTree::OptimizeBounds()
 {
 	if (divided)
 	{
-		TopL->PrintTree();
-		TopR->PrintTree();
-		BotL->PrintTree();
-		BotR->PrintTree();
+		TopL->OptimizeBounds();
+		TopR->OptimizeBounds();
+		BotL->OptimizeBounds();
+		BotR->OptimizeBounds();
 	}
 	else
 	{
-		float extentY = highestY - lowestY;
-		float centerY = lowestY + (extentY / 2.f);
-		Vector3 newBounds = { quadTreeBoundsCollider.Extents.x, extentY, quadTreeBoundsCollider.Extents.z };
-		Vector3 newCenterPos = { quadTreeBoundsCollider.Center.x, centerY, quadTreeBoundsCollider.Center.z };
-		quadTreeBoundsCollider.Extents = newBounds;
-		quadTreeBoundsCollider.Center = newCenterPos;
+		if (lowestY == D3D11_FLOAT32_MAX)
+			lowestY = -0.5f;
+
+		if (highestY == -D3D11_FLOAT32_MAX)
+			highestY = 0.5f;
+
+		if (lowestY > highestY)
+		{
+			float temp = highestY;
+			highestY = lowestY;
+			lowestY = temp;
+		}
+
+		/*if (highestY < lowestY + 400)
+			highestY += 400;*/
+
+		/*lowestY -= 100;
+		highestY += 100;*/
+
+		std::cout << "---\n";
+		std::cout << "lowestY: " << lowestY << std::endl;
+		std::cout << "HighestY: " << highestY << std::endl;
+
+		
+
+		
+
+		Vector3 newExtent = { quadTreeBoundsCollider.Extents.x, (highestY - lowestY) / 2.f, quadTreeBoundsCollider.Extents.z };
+		Vector3 newYcenter = { quadTreeBoundsCollider.Center.x, lowestY + newExtent.y, quadTreeBoundsCollider.Center.z };
+		quadTreeBoundsCollider.Center = newYcenter;
+		quadTreeBoundsCollider.Extents = newExtent;
 	}
 }
 
@@ -210,12 +243,20 @@ void QuadTree::DivideQuadTree()
 
 void QuadTree::DeleteMemory()
 {
+
 	if (divided)
 	{
 		delete TopL;
 		delete TopR;
 		delete BotL;
 		delete BotR;
+	}
+	else
+	{
+		TopL->DeleteMemory();
+		TopR->DeleteMemory();
+		BotL->DeleteMemory();
+		BotR->DeleteMemory();
 	}
 	
 }
