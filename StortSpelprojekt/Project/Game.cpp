@@ -15,7 +15,6 @@ void Game::Update()
 	if (overlay != dialogueOverlay)
 		player->Update(terrain.GetHeightMap(), freeCamera);
 
-	
 
 	HandleCamera();
 
@@ -792,6 +791,8 @@ void Game::HandleHouseUpgrades()
 
 bool Game::CheckBuildRequirements(std::shared_ptr<Building> building)
 {
+	if (building->upgrading)
+		return false;
 	bool canBuild = false;
 	if (building->GetCurrentState() == 1)
 	{
@@ -1036,8 +1037,6 @@ Game::Game(UINT clientWidth, UINT clientHeight, HWND window)
 	biomes.emplace_back(ocean);
 
 	audioSources.emplace_back(AudioSource(Vector3(38.f, 20.f, -574.f), 60.f, "Fireplace.wav"));
-
-	SpawnInvasion();
 
 	(void)Run();
 }

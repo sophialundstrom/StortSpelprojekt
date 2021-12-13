@@ -8,7 +8,6 @@
 class Building :public Model
 {
 private:
-	bool upgrading = false;
 	static const UINT stages = 3;
 	std::string meshNames[stages];
 	std::string materialNames[stages];
@@ -21,6 +20,7 @@ public:
 	int reqStone1 = 0;
 	int reqStick2 = 0;
 	int reqStone2 = 0;
+	bool upgrading = false;
 	std::unique_ptr<BuildingEffect> effect;
 	Building() = default;
 
