@@ -16,6 +16,7 @@ class Model : public Drawable
 	friend class LevelEditor;
 private:
 	Mesh mesh;
+	float ttd = 0.0f;
 public:
 	Model() = default;
 	Model(const std::string& meshName, const std::string name)
@@ -58,6 +59,17 @@ public:
 			mesh.bufferID = ID;
 			mesh.vertexCount = Resources::Inst().GetVertexCountFromID(ID);
 		}
+	}
+
+	void SetTTD(float nr) { ttd = nr; }
+	float GetTTD() { return ttd; }
+	Vector2 GetTextureDimensions()
+	{
+		return Resources::Inst().GetMaterialFromID(mesh.materialID)->diffuseTextures[0]->GetDimensions();
+	}
+	std::string GetTextureName()
+	{
+		return Resources::Inst().GetMaterialFromID(mesh.materialID)->diffuseTextures[0]->GetFile();
 	}
 
 	Vector3* GetMeshBoundingBoxValues()

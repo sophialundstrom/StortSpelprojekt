@@ -11,6 +11,7 @@
 #include "WaterRenderer.h"				//WR
 #include "InteractableRenderer.h"		//IR
 #include "SkyBoxRenderer.h"				//SBR
+#include "PerformanceRenderer.h"		//PFR
 
 class Renderers : public Singleton<Renderers>
 {
@@ -28,9 +29,11 @@ private:
 	static WaterRenderer* wr;
 	static InteractableRenderer* ir;
 	static SkyBoxRenderer* sbr;
+	static PerformanceRenderer* pfr;
 public:
 	Renderers() :Singleton(this) {}
 	~Renderers() { ShutDown(); }
+
 
 	static void InitAnimatedModelRenderer()																{ amr = new AnimatedModelRenderer(); }
 	static void InitColliderRenderer()																	{ cr = new ColliderRenderer(); }
@@ -46,6 +49,7 @@ public:
 	static void InitInteractableRenderer()																{ ir = new InteractableRenderer(); }
 	static void InitSkyBoxRenderer()																	{ sbr = new SkyBoxRenderer(); }
 	static void InitSkyBoxRenderer(std::string skyBoxDayFolderName, std::string skyBoxNightFolderName)  { sbr = new SkyBoxRenderer(skyBoxDayFolderName, skyBoxNightFolderName); }
+	static void InitPerformanceRenderer() { pfr = new PerformanceRenderer(); }
 
 	static AnimatedModelRenderer* AMR() { return amr; }
 	static ColliderRenderer* CR()		{ return cr; }
@@ -60,6 +64,7 @@ public:
 	static WaterRenderer* WR()			{ return wr; }
 	static InteractableRenderer* IR()	{ return ir; }
 	static SkyBoxRenderer* SBR()		{ return sbr; }
+	static PerformanceRenderer* PFR()	{ return pfr; }
 
 	static void Clear()
 	{
@@ -85,6 +90,8 @@ public:
 			wr->Clear();
 		if (sbr)
 			sbr->Clear();
+		if (pfr)
+			pfr->Clear();
 	}
 	static void ShutDown()
 	{
@@ -159,6 +166,12 @@ public:
 			delete sbr;
 			sbr = nullptr;
 		}
+
+		if (pfr)
+		{
+			delete pfr;
+			pfr = nullptr;
+		}
 	}
 };
 inline AnimatedModelRenderer*	Renderers::amr	= nullptr;
@@ -174,6 +187,7 @@ inline VolumeRenderer*			Renderers::vr	= nullptr;
 inline WaterRenderer*			Renderers::wr	= nullptr;
 inline InteractableRenderer*	Renderers::ir   = nullptr;
 inline SkyBoxRenderer*			Renderers::sbr	= nullptr;
+inline PerformanceRenderer*		Renderers::pfr = nullptr;
 
 inline Renderers& GetRenderersInstance() { return Renderers::Inst(); }
 #define RND GetRenderersInstance()
@@ -229,3 +243,7 @@ inline InteractableRenderer* RendererIR() { return RND.IR(); }
 inline SkyBoxRenderer* RendererSBR() { return RND.SBR(); }
 //SKYBOX RENDERER
 #define SBR RendererSBR()
+
+inline PerformanceRenderer* RendererPFR() { return RND.PFR(); }
+//PERFORMANCE RENDERER
+#define PFR RendererPFR()

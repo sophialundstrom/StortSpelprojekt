@@ -86,14 +86,18 @@ void ModelRenderer::Render()
 		if (!model)
 			continue;
 
+		Timer timer;
+		timer.Start();
 		matrices.world = model->GetMatrix();
 
 		UpdateBuffer(matricesBuf, matrices);
 		BindBuffer(matricesBuf);
 
+
 		if (isLit)
 			model->Draw();
 		else
 			model->Draw(true, false);
+		model->SetTTD(timer.DeltaTime());
 	}
 }

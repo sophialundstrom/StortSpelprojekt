@@ -17,9 +17,15 @@ private:
 	ID3D11Buffer* idBuffer = nullptr;
 
 	//SHADER PATHS
+#ifdef _DEBUG
 	const std::string vs_path = "../x64/Debug/IDVertexShader.cso";
 	const std::string volume_vs_path = "../x64/Debug/VolumeIDVertexShader.cso";
 	const std::string ps_path = "../x64/Debug/IDPixelShader.cso";
+#else
+	const std::string vs_path = "../x64/Release/IDVertexShader.cso";
+	const std::string volume_vs_path = "../x64/Release/VolumeIDVertexShader.cso";
+	const std::string ps_path = "../x64/Release/IDPixelShader.cso";
+#endif
 
 	//SHADERS
 	ID3D11VertexShader* volumeVertexShader = nullptr;

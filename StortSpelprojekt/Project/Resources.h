@@ -47,6 +47,8 @@ public:
 			buffer->Release();
 	}
 
+	std::shared_ptr<Material> GetMaterialFromID(UINT id) { return materials[id]; }
+
 	//NUM MATERIALS
 	UINT NumMaterials() const { return (UINT)materials.size(); }
 

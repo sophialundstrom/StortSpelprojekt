@@ -67,7 +67,17 @@
       <FullPath>D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\ParticleVertexShader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+<<<<<<< HEAD
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\PerformancePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\PerformanceVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\phili\Documents\GitHub\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowVertexShader.cso</FullPath>
+=======
       <FullPath>D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\ShadowVertexShader.cso</FullPath>
+>>>>>>> main
     </ContentFile>
     <ContentFile>
       <FullPath>D:\Onedrive\OneDrive - BTH Student\LillaSpel\StortSpelprojekt\StortSpelprojekt\x64\Debug\SkeletonPixelShader.cso</FullPath>

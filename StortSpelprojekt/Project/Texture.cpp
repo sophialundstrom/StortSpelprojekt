@@ -22,6 +22,9 @@ Texture::Texture(const std::string& path, std::string file)
 	textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	textureDesc.CPUAccessFlags = 0;
 
+	dimensions.x = imgWidth;
+	dimensions.y = imgHeight;
+
 	D3D11_SUBRESOURCE_DATA data = {};
 	data.pSysMem = image;
 	data.SysMemPitch = imgWidth * STBI_rgb_alpha;

@@ -3,6 +3,7 @@
 #include "GameLoader.h"
 #include "FBXLoader.h"
 #include "Renderers.h"
+#include <dxgi.h>
 
 void LevelEditor::AddNode()
 {
@@ -80,9 +81,11 @@ void LevelEditor::BindDrawables()
 			MR->Bind(model);
 			SR->Bind(model);
 			IDR->Bind(model);
+			PFR->Bind(model);
 			ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 			component->AddName(name);
 			totalPolygonCount += model->mesh.vertexCount / 3.0f;
+			nrOfModels++;
 		}
 
 		auto box = std::dynamic_pointer_cast<BoundingBox>(drawable);
@@ -123,6 +126,29 @@ void LevelEditor::BindDrawables()
 	}
 }
 
+void LevelEditor::LoadScene(const std::string& file)
+{
+	std::filesystem::path path = std::filesystem::path(file);
+	if (file == "" || path.extension() != ".objs")
+		return;
+	else
+	{
+		sceneName = path.stem().string();
+		VR->Clear();
+		SR->Clear();
+		IDR->Clear();
+		MR->Clear();
+		PFR->Clear();
+		totalPolygonCount = 0;
+		scene.GetDrawables().clear();
+		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
+		component->Clear();
+		GameLoader loader;
+		loader.Load(sceneName, scene.GetDrawables());
+		BindDrawables();
+	}
+}
+
 void LevelEditor::Save(const std::string& file)
 {
 
@@ -141,9 +167,11 @@ void LevelEditor::Load(const std::string& file)
 	IDR->Bind(model);
 	MR->Bind(model);
 	SR->Bind(model);
+	PFR->Bind(model);
 	ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 	component->AddName(fileName);
 	totalPolygonCount += model->mesh.vertexCount / 3.0f;
+	nrOfModels++;
 }
 
 void LevelEditor::DuplicateObject()
@@ -171,6 +199,7 @@ void LevelEditor::DuplicateObject()
 		IDR->Bind(model);
 		MR->Bind(model);
 		SR->Bind(model);
+		PFR->Bind(model);
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->AddName(modelName);
 		totalPolygonCount += model->mesh.vertexCount / 3.0f;
@@ -180,6 +209,9 @@ void LevelEditor::DuplicateObject()
 		this->n.append(Nstr);
 		std::string tmpStr = selectedObject;
 		selectedObject = modelName;
+
+		nrOfModels++;
+
 		std::string Estr = std::string("E") + "\t" + selectedObject + "\t" + tmpStr + "\n";
 		this->e.append(Estr);
 		Print(Nstr + "\n" + Estr);
@@ -340,6 +372,7 @@ void LevelEditor::DivideRendering()
 					MR->Unbind(drawable);
 					IDR->Unbind(drawable);
 					SR->Unbind(drawable);
+					PFR->Unbind(drawable);
 				}
 				else
 				{
@@ -357,6 +390,7 @@ void LevelEditor::DivideRendering()
 						MR->Bind(drawable);
 						IDR->Bind(drawable);
 						SR->Bind(drawable);
+						PFR->Bind(drawable);
 					}
 				}
 				else
@@ -379,6 +413,7 @@ void LevelEditor::DivideRendering()
 					MR->Unbind(drawable);
 					IDR->Unbind(drawable);
 					SR->Unbind(drawable);
+					PFR->Unbind(drawable);
 				}
 				else
 				{
@@ -396,6 +431,7 @@ void LevelEditor::DivideRendering()
 						MR->Bind(drawable);
 						IDR->Bind(drawable);
 						SR->Bind(drawable);
+						PFR->Bind(drawable);
 					}
 				}
 				else
@@ -409,6 +445,7 @@ void LevelEditor::DivideRendering()
 			}
 		}
 	}
+	nrOfModels = MR->GetNrOfBinded();
 }
 
 void LevelEditor::FlipRenderingDivider()
@@ -459,12 +496,7 @@ void LevelEditor::ShowShadows()
 	bool changed = false;
 	if (renderShadows)
 	{
-		for (auto& [drawableName, drawable] : drawables)
-		{
-			auto model = std::dynamic_pointer_cast<Model>(drawable);
-			if (model)
-				SR->Unbind(model);
-		}
+		SR->Clear();
 		renderShadows = false;
 		changed = true;
 	}
@@ -478,6 +510,43 @@ void LevelEditor::ShowShadows()
 		}
 		renderShadows = true;
 	}
+}
+
+void LevelEditor::ShowSkybox()
+{
+	bool changed = false;
+	if (renderSkybox)
+	{
+		renderSkybox = false;
+		changed = true;
+	}
+	if (!renderSkybox && !changed)
+	{
+		renderSkybox = true;
+	}
+}
+
+void LevelEditor::ShowPerformance()
+{
+	bool changed = false;
+	if (renderPerformance)
+	{
+		renderPerformance = false;
+		changed = true;
+	}
+	if (!renderPerformance && !changed)
+	{
+		renderPerformance = true;
+	}
+}
+
+void LevelEditor::UpdatePerformanceLimit()
+{
+	float MRT = (1.0f / targetFPS) * (mrTimeFactor / 100.0f);
+	float limit = MRT / nrOfModels;
+
+	windows["PERFORMANCE VIEWER"].SetValue<TextComponent, std::string>("LIMIT", "DrawTimeLimit: " + std::to_string(limit) + " ms");
+	PFR->UpdateLimit(limit);
 }
 
 void LevelEditor::Update()
@@ -709,29 +778,50 @@ void LevelEditor::Update()
 
 void LevelEditor::Render()
 {
-
-	IDR->BeginFrame(dsv, viewport);
-	IDR->Render();
-
+	Timer timer;
+	
+	timer.Start();
 	SR->Render();
-
+	shadowTime = timer.DeltaTime();
+	
+	timer.Start();
 	BeginViewportFrame();
-
 	ShaderData::Inst().BindFrameConstants();
-
 	MR->Render();
+	modelTime = timer.DeltaTime();
+	
+	if (renderPerformance)
+		PFR->Render();
 
-	if(renderTerrain)
+	timer.Start();
+	if (renderTerrain)
+	{
 		TR->Render(*terrain);
+	}
+	terrainTime = timer.DeltaTime();
 
-	if(renderWater)
+	timer.Start();
+	if (renderWater)
+	{
 		WR->Render(water);
+	}
+	waterTime = timer.DeltaTime();
 
-
-	if(renderVolumes)
+	timer.Start();
+	if (renderVolumes)
+	{
 		VR->Render();
+	}
+	volumeTime = timer.DeltaTime();
 
+	timer.Start();
+	if (renderSkybox)
+	{
+		SBR->Render();
+	}
+	skyboxTime = timer.DeltaTime();
 
+	timer.Start();
 	BeginFrame();
 
 	if (!selectedObject.empty())
@@ -760,6 +850,7 @@ void LevelEditor::Render()
 
 	ImGui::End();
 	ImGui::PopStyleVar();
+	renderUITime = timer.DeltaTime();
 
 	EndFrame();
 
@@ -776,28 +867,36 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 	RND.InitShadowRenderer();
 	RND.InitWaterRenderer();
 	RND.InitVolumeRenderer();
+	RND.InitSkyBoxRenderer();
+	RND.InitPerformanceRenderer();
+
+	SBR->PullDayNightSlider(1);
 
 	//WINDOWS
 	{
 		AddWindow("TOOLS");
 		auto& window = windows["TOOLS"];
-		window.AddTextComponent("FPS");
-		window.AddTextComponent("SCENE POLYGON COUNT");
-		window.AddButtonComponent("LOAD FBX", 120, 30);
+		window.AddButtonComponent("LOAD SCENE", 120, 30);
 		window.AddButtonComponent("SAVE WORLD", 120, 30, true);
+		window.AddButtonComponent("LOAD FBX", 120, 30);
+		window.AddSeperatorComponent();
 		window.AddButtonComponent("CREATE BBOX", 120, 30);
 		window.AddButtonComponent("CREATE BSPHERE", 120, 30, true);
-		window.AddTextComponent("");
+		window.AddSeperatorComponent();
 		window.AddSliderIntComponent("TERRAIN SUBDIV", 0, 5);
 		window.AddCheckBoxComponent("WIREFRAME", false);
+		window.AddSeperatorComponent();
 		window.AddTextComponent("SHOW:");
 		window.AddCheckBoxComponent("TERRAIN", true);
 		window.AddCheckBoxComponent("WATER", true);
 		window.AddCheckBoxComponent("VOLUMES", true);
 		window.AddCheckBoxComponent("SHADOWS", true);
+		window.AddCheckBoxComponent("SKYBOX", true);
+		window.AddSeperatorComponent();
 		window.AddTextComponent("CULL:");
 		window.AddSliderIntComponent("RENDER DIVIDE", -2000, 2000, -2000, false);
 		window.AddCheckBoxComponent("FLIP DIVIDE", false);
+		window.AddSeperatorComponent();
 		window.AddButtonComponent("RETURN TO MENU", 120, 30);
 	}
 
@@ -806,6 +905,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		auto& window = windows["GAME OBJECT"];
 		window.AddTextComponent("ObjectName");
 		window.AddTextComponent("PolygonCount");
+		window.AddSeperatorComponent();
 		window.AddTextComponent("Position");
 		window.AddSliderFloatComponent("X", -700, 700, 0, false);
 		window.AddSliderFloatComponent("Y", -50, 200, 0, false);
@@ -817,14 +917,64 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddSliderFloatComponent("Y-axis", -1, 50, 0, false);
 		window.AddSliderFloatComponent("Z-axis", -1, 50, 0, false);
 		window.AddCheckBoxComponent("Uniform scaling", false);
-		window.AddButtonComponent("Delete", 120, 30);
+		window.AddSeperatorComponent();
 		window.AddButtonComponent("Duplicate", 120, 30);
+		window.AddButtonComponent("Delete", 120, 30, true);
 	}
 
 	{
 		AddWindow("SCENE COMPONENTS");
 		auto& window = windows["SCENE COMPONENTS"];
 		window.AddListBoxComponent("NameList", false);
+	}
+
+	{
+		AddWindow("PERFORMANCE VIEWER");
+		auto& window = windows["PERFORMANCE VIEWER"];
+		window.AddTextComponent("FPS");
+		window.AddTextComponent("SCENE POLYGON COUNT");
+		window.AddTextComponent("MODELS DRAWCOUNT");
+		window.AddSeperatorComponent();
+		window.AddSliderIntComponent("TARGET FPS", 1, 300, 60);
+		window.AddSliderIntComponent("MRF QUOTA", 1, 100, 20);
+		window.AddTextComponent("LIMIT");
+		window.AddCheckBoxComponent("VISUALIZE PERFORMANCE", false);
+		window.AddTextComponent("Take performance snapshot");
+		window.AddButtonComponent("Snapshot", 120, 30);
+		window.AddSeperatorComponent();
+		window.AddTextComponent("FRAME TIME");
+		window.AddTextComponent("UI TIME");
+		window.AddTextComponent("LOGIC TIME");
+		window.AddTextComponent("GRAPHICS TIME");
+
+		window.SetValue<TextComponent, std::string>("Take performance snapshot", "Take performance snapshot");
+		window.SetValue<TextComponent, std::string>("FRAME TIME", "Frame: No snapshot taken.");
+		window.SetValue<TextComponent, std::string>("UI TIME", "  UI Time:");
+		window.SetValue<TextComponent, std::string>("LOGIC TIME", "  Logic Time:");
+		window.SetValue<TextComponent, std::string>("GRAPHICS TIME", "  Graphics Time:");
+		window.AddTextComponent("    Details:");
+		window.AddTextComponent("MODEL TIME");
+		window.AddTextComponent("SHADOW TIME");
+		window.AddTextComponent("TERRAIN TIME");
+		window.AddTextComponent("VOLUME TIME");
+		window.AddTextComponent("WATER TIME");
+		window.AddTextComponent("UI RENDER TIME");
+		window.AddTextComponent("SKYBOX TIME");
+		window.SetValue<TextComponent, std::string>("MODEL TIME", "    Models:");
+		window.SetValue<TextComponent, std::string>("SHADOW TIME", "    Shadows:");
+		window.SetValue<TextComponent, std::string>("TERRAIN TIME", "    Terrain:");
+		window.SetValue<TextComponent, std::string>("VOLUME TIME", "    Volumes:");
+		window.SetValue<TextComponent, std::string>("WATER TIME", "    Water:");
+		window.SetValue<TextComponent, std::string>("UI RENDER TIME", "    UI:");
+		window.SetValue<TextComponent, std::string>("SKYBOX TIME", "    SKYBOX:");
+		window.AddSeperatorComponent();
+
+		window.AddTextComponent("SELECTED OBJECT TIME");
+		window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time:");
+		window.AddTextComponent("SELECTED OBJECT TEXTURENAME");
+		window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURENAME", "Texture:");
+		window.AddTextComponent("SELECTED OBJECT TEXTURE DIMENSIONS");
+		window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURE DIMENSIONS", "Dimensions:");
 	}
 
 	{
@@ -837,7 +987,7 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 		window.AddTextComponent("Tools", false);
 		window.SetValue<TextComponent, std::string>("Tools","Using the 'Delete' button will remove the selected item.\nThis can also be achieved by pressing 'Del' on your keyboard.\nWhen items are removed, the Scene Component list will update and sort itself.\n\nThe 'Duplicate' button creates a copy of the selected item.\nThe copy will automatically be selected.\nThis can also be achieved by pressing CTRL + D on your keyboard.\n\nWhen an item is selected, use 'CreateBBox' or 'CreateBSphere' to create an appropriate bounding-volume for the item.\nThe volume can be moved, scaled and rotated.\nThe volume is Not connected to any item, but an item must be selected to create a new volume.\nLike items, bounding-volumes can be duplicated.\n\n");
 		window.AddTextComponent("Scene", false);
-		window.SetValue<TextComponent, std::string>("Scene", "For now the editor only has one scene-file. This scene-file is the one that the game loads.\nTo Save changes to the file, press 'Save World'.\nUse the 'Load FBX' button to import new items.");
+		window.SetValue<TextComponent, std::string>("Scene", "To Load a scene, press the 'Load Scene' button.\nTo Save changes to the file, press 'Save World'.\nUse the 'Load FBX' button to import new items.\n\nIf you want to create a new scene, press the 'Load Scene' button. \nIn the file-manager, create a txt-file with the desired name. \nChange the file-extension to '.objs' and select it. \nPress 'Open'.");
 	}	
 
 	//LOAD SCENE
@@ -867,6 +1017,9 @@ LevelEditor::LevelEditor(UINT clientWidth, UINT clientHeight, HWND window)
 
 	terrain = new Terrain(2);
 
+
+	UpdatePerformanceLimit();
+
 	//LoadNodes();
 	//path = new Pathfinding;
 	//path = path->PGetInstance();
@@ -894,6 +1047,9 @@ void LevelEditor::RemoveItem(std::string name)
 		totalPolygonCount -= model->mesh.vertexCount / 3.0f;
 		MR->Unbind(model);
 		IDR->Unbind(model);
+		PFR->Unbind(model);
+		SR->Unbind(model);
+		nrOfModels--;
 
 		scene.DeleteDrawable(name);
 		name = Resources::Inst().GetBufferNameFromID(model->mesh.bufferID);
@@ -1057,28 +1213,27 @@ LevelEditor::~LevelEditor()
 
 APPSTATE LevelEditor::Run()
 {
+	if (Event::LeftIsClicked())
+	{
+		IDR->BeginFrame(dsv, viewport);
+		IDR->Render();
+	}
+	Timer timer;
+	timer.Start();
 	Update();
+	updateTime = timer.DeltaTime();
+	timer.Start();
 	Render();
+	renderTime = timer.DeltaTime();
+	timer.Start();
 
 
 
 	{
 		auto& window = windows["TOOLS"];
-		static int frames = 0;
-		static float time = 0.0f;
-		time += Time::GetDelta();
-		frames++;
-		if (time >= 1)
-		{
-			window.SetValue<TextComponent, std::string>("FPS", std::to_string(frames));
-			frames = 0;
-			time = 0.0f;
-		}
-		if (totalPolygonCount > totalPolygonsLastFrame || totalPolygonCount < totalPolygonsLastFrame)
-		{
-			window.SetValue<TextComponent, std::string>("SCENE POLYGON COUNT", "SCENE POLYGON COUNT: " + std::to_string(totalPolygonCount));
-			totalPolygonsLastFrame = totalPolygonCount;
-		}
+		if (window.GetValue<ButtonComponent>("LOAD SCENE"))
+			LoadScene(FileSystem::LoadFile("SaveData"));
+
 		if (window.GetValue<ButtonComponent>("LOAD FBX"))
 			Load(FileSystem::LoadFile("Models"));
 
@@ -1103,6 +1258,9 @@ APPSTATE LevelEditor::Run()
 		if (window.Changed("SHADOWS"))
 			ShowShadows();
 
+		if (window.Changed("SKYBOX"))
+			ShowSkybox();
+
 		if (window.Changed("TERRAIN SUBDIV"))
 		{
 			if (terrain)
@@ -1114,13 +1272,15 @@ APPSTATE LevelEditor::Run()
 			DivideRendering();
 
 		if (window.Changed("FLIP DIVIDE"))
+		{
 			FlipRenderingDivider();
 			DivideRendering();
+		}
 
 		if (window.GetValue<ButtonComponent>("SAVE WORLD"))
 		{
 			GameLoader loader;
-			loader.Save("Default", scene.GetDrawables());
+			loader.Save(sceneName, scene.GetDrawables());
 		}
 
 		if (window.GetValue<ButtonComponent>("RETURN TO MENU"))
@@ -1142,6 +1302,85 @@ APPSTATE LevelEditor::Run()
 			}
 		}
 	}
+
+	{
+		auto& window = windows["PERFORMANCE VIEWER"];
+		static int frames = 0;
+		static float time = 0.0f;
+		time += Time::GetDelta();
+		frames++;
+		if (window.Changed("TARGET FPS"))
+		{
+			targetFPS = window.GetValue<SliderIntComponent>("TARGET FPS");
+			UpdatePerformanceLimit();
+		}
+
+		if (window.Changed("MRF QUOTA"))
+		{
+			mrTimeFactor = window.GetValue<SliderIntComponent>("MRF QUOTA");
+			UpdatePerformanceLimit();
+		}
+
+		if (time >= 1)
+		{
+			window.SetValue<TextComponent, std::string>("FPS", "FPS: " + std::to_string(frames));
+			frames = 0;
+			time = 0.0f;
+		}
+		if (totalPolygonCount > totalPolygonsLastFrame || totalPolygonCount < totalPolygonsLastFrame)
+		{
+			window.SetValue<TextComponent, std::string>("SCENE POLYGON COUNT", "TOTAL POLY-COUNT: " + std::to_string(totalPolygonCount));
+			totalPolygonsLastFrame = totalPolygonCount;
+		}
+
+		if (window.Changed("VISUALIZE PERFORMANCE"))
+			ShowPerformance();
+
+		window.SetValue<TextComponent, std::string>("MODELS DRAWCOUNT", "Models Drawcount: " + std::to_string(nrOfModels));
+
+		updateUITime = timer.DeltaTime();
+		frameTime = updateUITime + updateTime + renderTime;
+		if (window.GetValue<ButtonComponent>("Snapshot"))
+		{
+			window.SetValue<TextComponent, std::string>("FRAME TIME", "Frame: " + std::to_string(frameTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("UI TIME", "  UI Time: " + std::to_string(updateUITime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("LOGIC TIME", "  Logic Time: " + std::to_string(updateTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("GRAPHICS TIME", "  Graphics Time: " + std::to_string(renderTime * 1000) + " ms");
+
+			window.SetValue<TextComponent, std::string>("MODEL TIME", "    Models: " + std::to_string(modelTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("SHADOW TIME", "    Shadows: " + std::to_string(shadowTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("TERRAIN TIME", "    Terrain: " + std::to_string(terrainTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("VOLUME TIME", "    Volumes: " + std::to_string(volumeTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("WATER TIME", "    Water: " + std::to_string(waterTime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("UI RENDER TIME", "    UI: " + std::to_string(renderUITime * 1000) + " ms");
+			window.SetValue<TextComponent, std::string>("SKYBOX TIME", "    SKYBOX:" + std::to_string(skyboxTime * 1000) + " ms");
+
+			if (selectedObject != "")
+			{
+				auto selected = scene.Get<Drawable>(selectedObject);
+				auto model = std::dynamic_pointer_cast<Model>(selected);
+				if (model)
+				{
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time: " + std::to_string(model->GetTTD()) + " ms");
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURENAME", "Texture: " + model->GetTextureName());
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURE DIMENSIONS", "Dimensions: " + std::to_string(int(model->GetTextureDimensions().x)) + "x" + std::to_string(int(model->GetTextureDimensions().y)));
+				}
+				else
+				{
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time: ");
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURENAME", "Texture:");
+					window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURE DIMENSIONS", "Dimensions:");
+				}
+			}
+			else
+			{
+				window.SetValue<TextComponent, std::string>("SELECTED OBJECT TIME", "Selected model time: ");
+				window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURENAME", "Texture:");
+				window.SetValue<TextComponent, std::string>("SELECTED OBJECT TEXTURE DIMENSIONS", "Dimensions:");
+			}
+		}
+	}
+
 
 	return APPSTATE::NO_CHANGE;
 }
