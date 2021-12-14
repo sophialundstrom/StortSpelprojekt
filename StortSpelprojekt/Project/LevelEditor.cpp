@@ -140,7 +140,9 @@ void LevelEditor::LoadScene(const std::string& file)
 		MR->Clear();
 		PFR->Clear();
 		totalPolygonCount = 0;
+		nrOfModels = 0;
 		scene.GetDrawables().clear();
+		scene.GetObjectNames().clear();
 		ListBoxComponent* component = windows["SCENE COMPONENTS"].Get<ListBoxComponent>("NameList");
 		component->Clear();
 		GameLoader loader;
