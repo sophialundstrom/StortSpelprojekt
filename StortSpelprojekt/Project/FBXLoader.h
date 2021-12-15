@@ -21,56 +21,105 @@ private:
 public:
 	FBXLoader(const std::string& directory)
 	{
-		size_t numFBX = 0;
-		std::vector<std::string> names;
-
-		using directory_iterator = std::filesystem::directory_iterator;
-		for (const auto& dirEntry : directory_iterator(directory + "/"))
+		bool mtOn = true;
+		if (mtOn)
 		{
-			if (dirEntry.path().extension() == ".fbx")
+			Timer timer;
+			timer.Start();
+			size_t numFBX = 0;
+			std::vector<std::string> names;
+
+			using directory_iterator = std::filesystem::directory_iterator;
+			for (const auto& dirEntry : directory_iterator(directory + "/"))
 			{
-				names.emplace_back(dirEntry.path().string());
-				numFBX++;
+				if (dirEntry.path().extension() == ".fbx")
+				{
+					names.emplace_back(dirEntry.path().string());
+					numFBX++;
+				}
 			}
+
+			std::vector<TempMeshData*> tempMeshData = std::vector<TempMeshData*>(numFBX);
+			std::vector<Material*> tempMaterials = std::vector<Material*>(numFBX);
+
+			{
+				std::atomic<int> fbxLeft;
+				fbxLeft = (int)numFBX;
+				auto& resources = Resources::Inst();
+				ThreadPool pool(4);
+
+				for (UINT i = 0; i < numFBX; ++i) {
+					pool.Enqueue([=, &tempMaterials, &tempMeshData, &fbxLeft, &resources] {
+
+						Assimp::Importer importer;
+						const aiScene* scene = importer.ReadFile(names[i], aiProcess_FlipUVs);
+						if (!scene)
+						{
+							Print("COULD NOT LOAD .FBX FILE: " + names[i]);
+							return;
+						}
+
+
+						if (scene->HasMaterials())
+						{
+							tempMaterials[i] = LoadMaterial(scene->mMeshes[0]->mName.C_Str(), scene->mMaterials[0]);
+						}
+
+						if (scene->HasMeshes())
+						{
+
+							tempMeshData[i] = LoadMeshData(scene->mMeshes[0]);
+						}
+
+
+						fbxLeft.fetch_sub(1);
+
+						});
+
+				}
+
+				while (fbxLeft.load() != 0);
+
+			} // thread pool gets destroyed
+
+			PassToResources(tempMeshData, tempMaterials);
+			PrintNumber(timer.DeltaTime(), "TIME MT: ");
 		}
-
-		std::vector<TempMeshData*> tempMeshData = std::vector<TempMeshData*>(numFBX);
-		std::vector<Material*> tempMaterials = std::vector<Material*>(numFBX);
-
+		else
 		{
-			std::atomic<int> fbxLeft;
-			fbxLeft = (int)numFBX;
-			
-			ThreadPool pool(HardwareSupport::numThreads);
-			
-			for (UINT i = 0; i < numFBX; ++i) {
-				pool.Enqueue([=, &tempMaterials, &tempMeshData, &fbxLeft] {
+			Timer timer;
+			timer.Start();
+			auto& resources = Resources::Inst();
 
+			using directory_iterator = std::filesystem::directory_iterator;
+			for (const auto& dirEntry : directory_iterator(directory + "/"))
+			{
+				if (dirEntry.path().extension() == ".fbx")
+				{
 					Assimp::Importer importer;
-					const aiScene* scene = importer.ReadFile(names[i], aiProcess_FlipUVs);
+					const aiScene* scene = importer.ReadFile(dirEntry.path().string(), aiProcess_FlipUVs);
 					if (!scene)
 					{
-						Print("COULD NOT LOAD .FBX FILE: " + names[i]);
+						Print("COULD NOT LOAD .FBX FILE: " + dirEntry.path().string());
 						return;
 					}
 
 					if (scene->HasMaterials())
-						tempMaterials[i] = LoadMaterial(scene->mMeshes[0]->mName.C_Str(), scene->mMaterials[0]);
+					{
+						resources.AddMaterial(LoadMaterial(scene->mMeshes[0]->mName.C_Str(), scene->mMaterials[0]));
+					}
 
 					if (scene->HasMeshes())
-						tempMeshData[i] = LoadMeshData(scene->mMeshes[0]);
-
-					fbxLeft.fetch_sub(1);
-
-					});
-
+					{
+						TempMeshData* tempMeshData = LoadMeshData(scene->mMeshes[0]);
+						resources.AddVertexBuffer(tempMeshData->name, tempMeshData->buffer, tempMeshData->vertexCount, tempMeshData->vertMaxVals, tempMeshData->vertMinVals);
+					}
+				}
 			}
+			PrintNumber(timer.DeltaTime(), "TIME ST: ");
+		}
 
-			while (fbxLeft.load() != 0);
 
-		} // thread pool gets destroyed
-			
-		PassToResources(tempMeshData, tempMaterials);
 	}
 
 private:
@@ -165,6 +214,7 @@ private:
 
 		//BUT WITH DEFERRED CONTEXT
 		CreateVertexBuffer(resource->buffer, sizeof(Vertex), sizeof(Vertex) * resource->vertexCount, vertices.data());
+		//delete resource;
 
 		return resource;
 	}
