@@ -44,6 +44,7 @@ private:
     bool updateFrustrum = true;
     int cullingProfile = 0;
 
+
     //DayNightCycleConfig
     float worldClockTime = 0;
     float dayLength = 300;

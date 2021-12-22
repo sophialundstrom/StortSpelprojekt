@@ -205,9 +205,10 @@ WindowCreator::WindowCreator(Window window, UINT width, UINT height, LPCWSTR tit
 	RegisterRawInputDevices(&rid, 1, sizeof(rid));
 
 	#ifdef _DEBUG
-		AllocConsole();
-		(void)freopen("conout$", "w", stdout);
+		
 	#endif
+	AllocConsole();
+	(void)freopen("conout$", "w", stdout);
 
 	RECT clientRect;
 	GetClientRect(window.hWnd, &clientRect);

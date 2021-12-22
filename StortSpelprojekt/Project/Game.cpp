@@ -1372,41 +1372,86 @@ void Game::CheckNearbyEnemies()
 
 void Game::UpdateQuadTree()
 {
+	//DebugVariant
+	int models = 0;
+	int shadows = 0;
 	drawablesToBeRendered.clear();
 	SMR->Clear();
 	SR->ClearStatic();
 
-
-	frustrumCollider.Update(scene.GetCamera());
-	quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
-	//std::cout << "Models drawn " << drawablesToBeRendered.size() << "		";
-
-	for (auto& [name, drawable] : drawablesToBeRendered)
+	switch (cullingProfile)
 	{
-		auto model = std::dynamic_pointer_cast<Model>(drawable);
-		if (model)
+	case 0:
+		// cull from camera and light source
+
+		frustrumCollider.Update(scene.GetCamera());
+		quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+
+		for (auto& [name, drawable] : drawablesToBeRendered)
 		{
-			SR->BindStatic(drawable);
-			SMR->Bind(drawable);
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+			{
+				SMR->Bind(drawable);
+				models++;
+			}
 		}
+
+		orthographicCollider.Update(scene.GetDirectionalLight(), player->GetPosition());
+		quadTree->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
+
+		for (auto& [name, drawable] : drawablesToBeRendered)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+			{
+				SR->BindStatic(drawable);
+				shadows++;
+			}
+		}
+
+		
+
+		break;
+	case 1:
+		// Cull from camera
+
+		frustrumCollider.Update(scene.GetCamera());
+		quadTree->CheckModelsWithinView(drawablesToBeRendered, frustrumCollider);
+
+		for (auto& [name, drawable] : drawablesToBeRendered)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+			{
+				SR->BindStatic(drawable);
+				SMR->Bind(drawable);
+				models++;
+				shadows++;
+			}
+		}
+
+
+		break;
+	case 2:
+		//No Culling
+		quadTree->GetAllDrawables(drawablesToBeRendered);
+		for (auto& [name, drawable] : drawablesToBeRendered)
+		{
+			auto model = std::dynamic_pointer_cast<Model>(drawable);
+			if (model)
+			{
+				SR->BindStatic(drawable);
+				SMR->Bind(drawable);
+				models++;
+				shadows++;
+			}
+		}
+		break;
+
 	}
 
-	orthographicCollider.Update(scene.GetDirectionalLight(), player->GetPosition());
-	quadTree->CheckModelsWithinView(drawablesToBeRendered, orthographicCollider);
-
-	for (auto& [name, drawable] : drawablesToBeRendered)
-	{
-		auto model = std::dynamic_pointer_cast<Model>(drawable);
-		if (model)
-		{
-			SR->BindStatic(drawable);
-		}
-	}
-
-	//std::cout << "Shadows drawn " << drawablesToBeRendered.size() << std::endl << std::endl;
-	
-	//DebugVariant
-	/*
+	//Profile Picking and nrOfDrawCallsPrint
 	int click;
 	static float lastClick = 0;
 	if (Time::Get() - lastClick > 0.5f)
@@ -1417,68 +1462,26 @@ void Game::UpdateQuadTree()
 			cullingProfile++;
 			cullingProfile = cullingProfile % 3;
 
-			switch (cullingProfile)
-			{
-			case 0:
-				std::cout << "Use culling\nFrustrum update \n";
-				useQuadTreeCulling = true;
-				updateFrustrum = true;
-				break;
 
-			case 1:
-				std::cout << "Use culling\nNo frustrum update \n";
-				useQuadTreeCulling = true;
-				updateFrustrum = false;
-				break;
-
-			case 2:
-				std::cout << "No culling\n";
-				useQuadTreeCulling = false;
-				updateFrustrum = false;
-				break;
-			default:
-				break;
-			}
 			std::cout << "Culling PROFILE: " << cullingProfile << std::endl;
 		}
 
 		if (Event::KeyIsPressed('L'))
 		{
 			lastClick = Time::Get();
-			std::cout << drawablesToBeRendered.size() << std::endl;
+			std::cout << "Models drawn: " << models << "			Shadows drawn: "  << shadows << "\n";
 		}
 
-	}
-
-	if(updateFrustrum)
-		frustrumCollider.Update(scene.GetCamera());
-
-	drawablesToBeRendered.clear();
-	quadTree->GetRelevantDrawables(drawablesToBeRendered, frustrumCollider);
-
-	if (useQuadTreeCulling)
-	{
-		staticMeshModelRender.Clear();
-		for (auto& [name, drawable] : drawablesToBeRendered)
+		if (Event::KeyIsPressed('J'))
 		{
-			auto model = std::dynamic_pointer_cast<Model>(drawable);
-			if (model)
-				staticMeshModelRender.Bind(drawable);
+			lastClick = Time::Get();
+			std::cout << "PlayerPos" << player->GetPosition().x << " " << player->GetPosition().y << " " << player->GetPosition().z << std::endl;
+			std::cout << "CamDir" << scene.GetCamera()->GetDirection().x << " " << scene.GetCamera()->GetDirection().y << " " << scene.GetCamera()->GetDirection().z << std::endl;
 		}
 
 	}
-	else
-	{
-		staticMeshModelRender.Clear();
-		for (auto& [name, drawable] : noCullingDrawables)
-		{
-			//std::cout << noCullingDrawables.size() << std::endl;
-			auto model = std::dynamic_pointer_cast<Model>(drawable);
-			if (model)
-				staticMeshModelRender.Bind(drawable);
-		}
 
-	}
-	*/
+	
+	
 
 }
