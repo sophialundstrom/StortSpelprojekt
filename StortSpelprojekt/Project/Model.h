@@ -16,6 +16,7 @@ class Model : public Drawable
 	friend class LevelEditor;
 private:
 	Mesh mesh;
+	bool overrideModelsToCube = true;
 public:
 	Model() = default;
 	Model(const std::string& meshName, const std::string name)
@@ -44,14 +45,25 @@ public:
 
 	void ApplyMaterial(const std::string& name)
 	{
-		UINT ID = Resources::Inst().GetMaterialIDFromName(name);
+		UINT ID;
+		std::string altName = "debugCube";
+		if (overrideModelsToCube)
+			ID = Resources::Inst().GetMaterialIDFromName(altName);
+		else
+			ID = Resources::Inst().GetMaterialIDFromName(name);
+
 		if (ID != ID_INVALID)
 			mesh.materialID = ID;
 	}
 
 	void ApplyMesh(const std::string& name)
 	{
-		UINT ID = Resources::Inst().GetBufferIDFromName(name);
+		UINT ID;
+		std::string altName = "debugCube";
+		if(overrideModelsToCube)
+			ID = Resources::Inst().GetBufferIDFromName(altName);
+		else
+			ID = Resources::Inst().GetBufferIDFromName(name);
 
 		if (ID != ID_INVALID) 
 		{
