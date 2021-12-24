@@ -16,7 +16,7 @@ class Model : public Drawable
 	friend class LevelEditor;
 private:
 	Mesh mesh;
-	bool overrideModelsToCube = true;
+	bool overrideModelsToCube = false;
 public:
 	Model() = default;
 	Model(const std::string& meshName, const std::string name)
